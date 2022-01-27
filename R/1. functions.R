@@ -8,10 +8,6 @@
 ##maxden: is the constant log(C) in Appendix A.1.3.
 ######################################################################
 
-
-library(coda)
-library(MCMCpack)
-
 rhybrid <- function(n,p,beta0,ALs,bL,maxden)
 {
 

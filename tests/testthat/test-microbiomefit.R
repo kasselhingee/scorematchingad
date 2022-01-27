@@ -84,19 +84,19 @@ propreal=comb
 #dimension
 p=5
 
+#set beta (this is fixed here)
+beta0=matrix(0,p,1)
+beta0[1]=-0.8
+beta0[2]=-0.85
+beta0[3]=0
+beta0[4]=-0.2
+beta0[5]=0
 
+#a_c for h function:
+acut=0.01
 
 test_that("estimator1 and SE is historically correct with b_L included (article Table 4)", {
-  #set beta (this is fixed here)
-  beta0=matrix(0,p,1)
-  beta0[1]=-0.8
-  beta0[2]=-0.85
-  beta0[3]=0
-  beta0[4]=-0.2
-  beta0[5]=0
 
-  #a_c for h function:
-  acut=0.01
 
   #calculate scoring estimate:
   estimator= cdabyppi:::estimator1(propreal,acut,1, beta0)
@@ -106,10 +106,8 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   #estimate of W matrix
   W_est=estimator$W_est
   expect_snapshot_value(round(max(W_est), 8), style = "json2") #have to use round here because the json conversion doesn't necessarily show it in scientific notation
-  expect_snapshot_value(signif(mean(W_est), 8), style = "json2",
-                        tolerance = 1E-10)
-  expect_snapshot_value(signif(which.max(W_est), 8), style = "json",
-                        tolerance = 1E-1)
+  expect_snapshot_value(signif(mean(W_est), 8), style = "json2")
+  expect_snapshot_value(signif(which.max(W_est), 8), style = "json")
 
   #standard errors
   std1=cdabyppi:::estimator1SE(propreal,acut,estimate1,W_est,1, beta0)
@@ -141,7 +139,50 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   	k=k+1
   }
 
+  #values in Table 4 in the article:
+  expect_snapshot_value(signif(ALs[upper.tri(ALs, diag = TRUE)], 8), style = "json2")
+  expect_snapshot_value(signif(bL, 8), style = "json2")
+  expect_snapshot_value(signif(estimate1/std1, 8), style = "json2")
+
 })
 
-# test_that("estimator1 and SE is historically correct with b_L ommitted (article table 3)", {
+test_that("estimator1 and SE is historically correct with b_L ommitted (article table 3)", {
 
+  #calculate scoring estimate:
+  estimator=cdabyppi:::estimator1(propreal,acut,0, beta0)
+  estimate1=estimator$estimator1
+  expect_snapshot_value(signif(estimate1, 8), style = "json2")
+
+  #estimate of W matrix
+  W_est=estimator$W_est
+  expect_snapshot_value(round(max(W_est), 8), style = "json2") #have to use round here because the json conversion doesn't necessarily show it in scientific notation
+  expect_snapshot_value(signif(mean(W_est), 8), style = "json2")
+  expect_snapshot_value(signif(which.max(W_est), 8), style = "json")
+
+  #standard errors
+  std1=estimator1SE(propreal,acut,estimate1,W_est,0, beta0)
+
+  #estimated parameters
+  ALs=matrix(0,p-1,p-1)
+  bL=matrix(0,p-1,1)
+  sp=p-1
+  xx=c(1:sp)
+  ind=combn(xx, 2, FUN = NULL, simplify = TRUE)
+  qind=length(ind[1,])
+  for (j in 1:sp)
+  {
+  	ALs[j,j]=estimate1[j]
+  }
+  true2=estimate1[p:sum(qind,sp)]
+  for (j in 1:qind)
+  {
+  	ALs[ind[1,j],ind[2,j]]=true2[j]
+  	ALs[ind[2,j],ind[1,j]]=true2[j]
+  }
+
+
+  #values in Table 3 in the article:
+  expect_snapshot_value(signif(ALs[upper.tri(ALs, diag = TRUE)], 8), style = "json2")
+  expect_snapshot_value(round(estimate1/std1, 8), style = "json2")
+
+})
