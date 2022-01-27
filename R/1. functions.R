@@ -19,7 +19,7 @@ rhybrid <- function(n,p,beta0,ALs,bL,maxden)
 	{
 
 		count2=count2+1
-		Uni=rdirichlet(1, alpha)
+		Uni=MCMCpack::rdirichlet(1, alpha)
 		u=runif(1,0,1)
 		num=t(Uni[1:sum(p,-1)])%*%ALs%*%t(t(Uni[1:sum(p,-1)]))+t(bL)%*%t(t(Uni[1:sum(p-1)]))-maxden
 		if (num > 0){maxden=num+maxden}
@@ -2109,6 +2109,8 @@ return(matrix(mom))
 
 estimatorall1 <- function(prop,acut,incb)
 {
+  n = nrow(prop)
+  p = ncol(prop)
 
 	#response on sphere scale
 	z=sqrt(prop)
