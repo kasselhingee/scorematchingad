@@ -1,6 +1,4 @@
-#############################################
-#preparing microbiome data
-#############################################
+#### Preparing microbiome data #############################################
 data("microdata", package = "cdabyppi")
 countdata=as.matrix(microdata[,12:31])
 
@@ -26,9 +24,7 @@ for (j in 1:n)
 }
 
 
-##########################################################
-##Calculate summary statistics
-##########################################################
+####Calculate summary statistics####
 
 
 #means (relative abundances):
@@ -66,9 +62,7 @@ pzero[16]
 pzero[5]
 
 
-##########################################################
-##Reduce dimensions to p=5
-##########################################################
+####Reduce dimensions to p=5####
 
 
 #calculate 5D dataset
@@ -95,6 +89,7 @@ beta0[5]=0
 #a_c for h function:
 acut=0.01
 
+#### Test including b_L ####
 test_that("estimator1 and SE is historically correct with b_L included (article Table 4)", {
 
 
@@ -146,6 +141,7 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
 
 })
 
+#### Test omitting b_L ####
 test_that("estimator1 and SE is historically correct with b_L ommitted (article table 3)", {
 
   #calculate scoring estimate:
@@ -185,4 +181,10 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
   expect_snapshot_value(signif(ALs[upper.tri(ALs, diag = TRUE)], 8), style = "json2")
   expect_snapshot_value(round(estimate1/std1, 8), style = "json2")
 
+})
+
+#### Dirchlet Model ####
+test_that("Dirchlet moment fitting is historically correct", {
+  alpha_dir=cdabyppi:::dirichmom(propreal)
+  expect_snapshot_value(signif(alpha_dir, 8), style = "json2")
 })
