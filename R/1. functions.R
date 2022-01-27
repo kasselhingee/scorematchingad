@@ -4,7 +4,7 @@
 ##p: dimension
 ##beta0: beta shape parameter vector
 ##ALs: A_L parameter matrix
-##bL: b_L parameter vector 
+##bL: b_L parameter vector
 ##maxden: is the constant log(C) in Appendix A.1.3.
 ######################################################################
 
@@ -144,7 +144,7 @@ estimator2 <- function(prop,acut,incb)
 			else if (ind[2,i]==ind[2,j]){BB[i,j]=mean((h^2)*16*z[,ind[1,j]]^2*z[,ind[1,i]]^2*z[,ind[2,j]]^2)}
 			else if (ind[1,i]==ind[2,j]){BB[i,j]=mean((h^2)*16*z[,ind[2,i]]^2*z[,ind[1,j]]^2*z[,ind[2,j]]^2)}
 			else if (ind[2,i]==ind[1,j]){BB[i,j]=mean((h^2)*16*z[,ind[1,i]]^2*z[,ind[2,j]]^2*z[,ind[1,j]]^2)}
-		
+
 		}
 	}
 
@@ -157,8 +157,8 @@ estimator2 <- function(prop,acut,incb)
 	{
 		for (j in 1:sp)
 		{
-			if (j==ind[1,i]){BC[i,j]=mean(h^2*z[,ind[2,i]]^2*z[,ind[1,i]]^2*8)} 
-			else if (j==ind[2,i]){BC[i,j]=mean(h^2*z[,ind[1,i]]^2*z[,ind[2,i]]^2*8)} 
+			if (j==ind[1,i]){BC[i,j]=mean(h^2*z[,ind[2,i]]^2*z[,ind[1,i]]^2*8)}
+			else if (j==ind[2,i]){BC[i,j]=mean(h^2*z[,ind[1,i]]^2*z[,ind[2,i]]^2*8)}
 		}
 	}
 
@@ -269,8 +269,8 @@ estimator2 <- function(prop,acut,incb)
 	{
 		for (j in 1:p)
 		{
-			if (j==ind[1,i]){BD[i,j]=mean(4*h^2*z[,ind[2,i]]^2)} 
-			else if (j==ind[2,i]){BD[i,j]=mean(4*h^2*z[,ind[1,i]]^2)} 
+			if (j==ind[1,i]){BD[i,j]=mean(4*h^2*z[,ind[2,i]]^2)}
+			else if (j==ind[2,i]){BD[i,j]=mean(4*h^2*z[,ind[1,i]]^2)}
 		}
 	}
 
@@ -322,12 +322,12 @@ estimator2 <- function(prop,acut,incb)
 	pi2=1+2*beta0
 
 	ev=-1*Wnew%*%pi2
-	
+
 	###################
 	##calculate d(1)
 	##################
 
-	
+
 	lambda4=4*(4+p-2)
 	lambda2=2*(2+p-2)
 
@@ -399,13 +399,13 @@ estimator2 <- function(prop,acut,incb)
 		num1=sp+qind
 	}
 
-	
 
-	
+
+
 
 	#save W
 	W_est=W
-	
+
 	#scoring estimator
 	quartic_sphere=solve(W[1:num1,1:num1])%*%t(t(d[1:num1]))
 
@@ -428,7 +428,7 @@ estimator2 <- function(prop,acut,incb)
 estimator2SE <- function(prop,acut,estimate2,W_est,incb)
 {
 
-	
+
 
 	#response on sphere scale
 	z=sqrt(prop)
@@ -459,7 +459,7 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb)
 		#omit bL from the model
 		num1=sp+qind
 	}
-	
+
 	AD_big=array(0, dim=c(sp, p, n))
 	for (i in 1:n)
 	{
@@ -483,8 +483,8 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb)
 		{
 			for (j in 1:p)
 			{
-				if (j==ind[1,i]){BD[i,j]=mean(4*h[k]^2*z[k,ind[2,i]]^2)} 
-				else if (j==ind[2,i]){BD[i,j]=mean(4*h[k]^2*z[k,ind[1,i]]^2)} 
+				if (j==ind[1,i]){BD[i,j]=mean(4*h[k]^2*z[k,ind[2,i]]^2)}
+				else if (j==ind[2,i]){BD[i,j]=mean(4*h[k]^2*z[k,ind[1,i]]^2)}
 			}
 		}
 		BD_big[1:qind,1:p,k]=BD
@@ -564,7 +564,7 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb)
 		evm[,k]=-1*Wnew%*%pi2
 	}
 
-	
+
 	lambda4=4*(4+p-2)
 	lambda2=2*(2+p-2)
 
@@ -588,7 +588,7 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb)
 
 	dm=rbind(d_A,d_B,d_C)
 
-	
+
 	ind2=matrix(1,n,1)
 	for (j in 1:n)
 	{
@@ -661,7 +661,7 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb)
 				else if (ind[2,i]==ind[2,j]){BB[i,j]=((h[k]^2)*16*z[k,ind[1,j]]^2*z[k,ind[1,i]]^2*z[k,ind[2,j]]^2)}
 				else if (ind[1,i]==ind[2,j]){BB[i,j]=((h[k]^2)*16*z[k,ind[2,i]]^2*z[k,ind[1,j]]^2*z[k,ind[2,j]]^2)}
 				else if (ind[2,i]==ind[1,j]){BB[i,j]=((h[k]^2)*16*z[k,ind[1,i]]^2*z[k,ind[2,j]]^2*z[k,ind[1,j]]^2)}
-		
+
 			}
 		}
 		BB_big[1:qind,1:qind,k]=BB
@@ -694,8 +694,8 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb)
 		{
 			for (j in 1:sp)
 			{
-				if (j==ind[1,i]){BC[i,j]=(h[k]^2*z[k,ind[2,i]]^2*z[k,ind[1,i]]^2*8)} 
-				else if (j==ind[2,i]){BC[i,j]=(h[k]^2*z[k,ind[1,i]]^2*z[k,ind[2,i]]^2*8)} 
+				if (j==ind[1,i]){BC[i,j]=(h[k]^2*z[k,ind[2,i]]^2*z[k,ind[1,i]]^2*8)}
+				else if (j==ind[2,i]){BC[i,j]=(h[k]^2*z[k,ind[1,i]]^2*z[k,ind[2,i]]^2*8)}
 			}
 		}
 		BC_big[1:qind,1:sp,k]=BC
@@ -855,7 +855,7 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb)
 		W=W0-W2
 
 		diff[1:num1,k]=t(t(dm[1:num1,k]))-W[1:num1,1:num1]%*%estimate2
-	
+
 	}
 
 	Sig0=(diff[1:num1,]%*%t(diff[1:num1,]))/n
@@ -864,7 +864,7 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb)
 
 
 	std=sqrt(diag(var0))
-	
+
 	return(std)
 }
 
@@ -875,13 +875,15 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb)
 ##prop: compositional data (n by p matrix)
 ##acut: a_c for h function (if acut > 1 then this is Score1)
 ##incb: if incb=1 then b_L is estimated otherwise b_L is fixed at zero (omitted)
+##beta0: beta0 passed to function
 #######################################################
 
 
 
-estimator1 <- function(prop,acut,incb)
+estimator1 <- function(prop,acut,incb, beta0)
 {
-
+  n <- nrow(prop) #number of samples
+  p <- ncol(prop) #number of dimensions, although what happens when the beta need to be estimated?
 	#response on sphere scale
 	z=sqrt(prop)
 
@@ -897,7 +899,7 @@ estimator1 <- function(prop,acut,incb)
 	{
 		indh[j]=1
 		zmin=z[j,1]
-	
+
 		for (i in 2:p)
 		{
 			zmin_prev=zmin
@@ -908,7 +910,7 @@ estimator1 <- function(prop,acut,incb)
 		zmin=min(zmin,acut)
 		if (zmin_prev > zmin){indh[j]=0}
 		h2[j]=zmin
-	
+
 	}
 	h=h2
 
@@ -959,7 +961,7 @@ estimator1 <- function(prop,acut,incb)
 			else if (ind[2,i]==ind[2,j]){BB[i,j]=mean((h^2)*16*z[,ind[1,j]]^2*z[,ind[1,i]]^2*z[,ind[2,j]]^2)}
 			else if (ind[1,i]==ind[2,j]){BB[i,j]=mean((h^2)*16*z[,ind[2,i]]^2*z[,ind[1,j]]^2*z[,ind[2,j]]^2)}
 			else if (ind[2,i]==ind[1,j]){BB[i,j]=mean((h^2)*16*z[,ind[1,i]]^2*z[,ind[2,j]]^2*z[,ind[1,j]]^2)}
-		
+
 		}
 	}
 
@@ -972,8 +974,8 @@ estimator1 <- function(prop,acut,incb)
 	{
 		for (j in 1:sp)
 		{
-			if (j==ind[1,i]){BC[i,j]=mean(h^2*z[,ind[2,i]]^2*z[,ind[1,i]]^2*8)} 
-			else if (j==ind[2,i]){BC[i,j]=mean(h^2*z[,ind[1,i]]^2*z[,ind[2,i]]^2*8)} 
+			if (j==ind[1,i]){BC[i,j]=mean(h^2*z[,ind[2,i]]^2*z[,ind[1,i]]^2*8)}
+			else if (j==ind[2,i]){BC[i,j]=mean(h^2*z[,ind[1,i]]^2*z[,ind[2,i]]^2*8)}
 		}
 	}
 
@@ -1084,8 +1086,8 @@ estimator1 <- function(prop,acut,incb)
 	{
 		for (j in 1:p)
 		{
-			if (j==ind[1,i]){BD[i,j]=mean(4*h^2*z[,ind[2,i]]^2)} 
-			else if (j==ind[2,i]){BD[i,j]=mean(4*h^2*z[,ind[1,i]]^2)} 
+			if (j==ind[1,i]){BD[i,j]=mean(4*h^2*z[,ind[2,i]]^2)}
+			else if (j==ind[2,i]){BD[i,j]=mean(4*h^2*z[,ind[1,i]]^2)}
 		}
 	}
 
@@ -1137,12 +1139,12 @@ estimator1 <- function(prop,acut,incb)
 	pi2=1+2*beta0
 
 	ev=-1*Wnew%*%pi2
-	
+
 	###################
 	##calculate d(1)
 	##################
 
-	
+
 	lambda4=4*(4+p-2)
 	lambda2=2*(2+p-2)
 
@@ -1243,7 +1245,7 @@ estimator1 <- function(prop,acut,incb)
 
 	#save W
 	W_est=W
-	
+
 	#scoring estimator
 	quartic_sphere=solve(W[1:num1,1:num1])%*%t(t(d[1:num1]))
 
@@ -1259,15 +1261,17 @@ estimator1 <- function(prop,acut,incb)
 ##estimate1: the value of the Score1ac estimate
 ##W_est: Estimated W matrix
 ##incb: if incb=1 then b_L is estimated otherwise b_L is fixed at zero (omitted)
+##beta0: passed beta0
 #######################################################
 
 
 
 
-estimator1SE <- function(prop,acut,estimate1,W_est,incb)
+estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 {
+  n<-nrow(prop)
+  p<-ncol(prop)
 
-	
 
 	#response on sphere scale
 	z=sqrt(prop)
@@ -1284,7 +1288,7 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb)
 	{
 		indh[j]=1
 		zmin=z[j,1]
-	
+
 		for (i in 2:p)
 		{
 			zmin_prev=zmin
@@ -1295,7 +1299,7 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb)
 		zmin=min(zmin,acut)
 		if (zmin_prev > zmin){indh[j]=0}
 		h2[j]=zmin
-	
+
 	}
 	h=h2
 
@@ -1317,7 +1321,7 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb)
 	}
 
 
-	
+
 	AD_big=array(0, dim=c(sp, p, n))
 	for (i in 1:n)
 	{
@@ -1341,8 +1345,8 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb)
 		{
 			for (j in 1:p)
 			{
-				if (j==ind[1,i]){BD[i,j]=mean(4*h[k]^2*z[k,ind[2,i]]^2)} 
-				else if (j==ind[2,i]){BD[i,j]=mean(4*h[k]^2*z[k,ind[1,i]]^2)} 
+				if (j==ind[1,i]){BD[i,j]=mean(4*h[k]^2*z[k,ind[2,i]]^2)}
+				else if (j==ind[2,i]){BD[i,j]=mean(4*h[k]^2*z[k,ind[1,i]]^2)}
 			}
 		}
 		BD_big[1:qind,1:p,k]=BD
@@ -1533,7 +1537,7 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb)
 				else if (ind[2,i]==ind[2,j]){BB[i,j]=((h[k]^2)*16*z[k,ind[1,j]]^2*z[k,ind[1,i]]^2*z[k,ind[2,j]]^2)}
 				else if (ind[1,i]==ind[2,j]){BB[i,j]=((h[k]^2)*16*z[k,ind[2,i]]^2*z[k,ind[1,j]]^2*z[k,ind[2,j]]^2)}
 				else if (ind[2,i]==ind[1,j]){BB[i,j]=((h[k]^2)*16*z[k,ind[1,i]]^2*z[k,ind[2,j]]^2*z[k,ind[1,j]]^2)}
-		
+
 			}
 		}
 		BB_big[1:qind,1:qind,k]=BB
@@ -1566,8 +1570,8 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb)
 		{
 			for (j in 1:sp)
 			{
-				if (j==ind[1,i]){BC[i,j]=(h[k]^2*z[k,ind[2,i]]^2*z[k,ind[1,i]]^2*8)} 
-				else if (j==ind[2,i]){BC[i,j]=(h[k]^2*z[k,ind[1,i]]^2*z[k,ind[2,i]]^2*8)} 
+				if (j==ind[1,i]){BC[i,j]=(h[k]^2*z[k,ind[2,i]]^2*z[k,ind[1,i]]^2*8)}
+				else if (j==ind[2,i]){BC[i,j]=(h[k]^2*z[k,ind[1,i]]^2*z[k,ind[2,i]]^2*8)}
 			}
 		}
 		BC_big[1:qind,1:sp,k]=BC
@@ -1651,7 +1655,7 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb)
 		}
 		BC2_big[1:qind,1:sp,k]=BC2
 	}
-	
+
 
 	AC2_big=array(0, dim=c(sp, sp, n))
 	for (k in 1:n)
@@ -1736,8 +1740,8 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb)
 
 	std=sqrt(diag(var0))
 
-	
-		
+
+
 	return(std)
 }
 
@@ -1746,8 +1750,8 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb)
 ##multestimator calculates the ScoreMult estimator in the article (p=3 only)
 ##and assumes beta=beta0 is the same in each category.
 ##Note: beta0 is fixed and not estimated.
-##Currently only A_L is estimated (b_L is fixed at zero, but this can 
-##be modified by including components 4 and 5 in the estimator 
+##Currently only A_L is estimated (b_L is fixed at zero, but this can
+##be modified by including components 4 and 5 in the estimator
 ##pp in the last part of the code).
 ##x: count data (n by 3 matrix)
 #######################################################
@@ -1894,10 +1898,10 @@ estimator2_dir <- function(dirfit,acut)
 	for (k in 1:p)
 	{
 		for (j in 1:p)
-		{	
+		{
 			if (k != j){homit[,k]=homit[,k]*z[,j]}
 		}
-		
+
 	}
 
 
@@ -1915,7 +1919,7 @@ estimator2_dir <- function(dirfit,acut)
 		{
 			if (h[i] > 0){h4s[i,j]=(h[i]^2)/z[i,j]^2}
 			else {h4s[i,j]=homit[i,j]^2}
-		
+
 		}
 		h4m[j]=mean(h4s[,j])
 	}
@@ -1952,7 +1956,7 @@ estimator2_dir <- function(dirfit,acut)
 		{
 			if (h[i] > 0){h4s[i,j]=ind2[i]*(h[i]^2)/z[i,j]^2}
 			else {h4s[i,j]=ind2[i]*homit[i,j]^2}
-		
+
 		}
 		h4m[j]=mean(h4s[,j])
 	}
@@ -1999,7 +2003,7 @@ estimator1_dir <- function(dirfit,acut)
 	{
 		indh[j]=1
 		zmin=z[j,1]
-	
+
 		for (i in 2:p)
 		{
 			zmin_prev=zmin
@@ -2010,7 +2014,7 @@ estimator1_dir <- function(dirfit,acut)
 		zmin=min(zmin,acut)
 		if (zmin_prev > zmin){indh[j]=0}
 		h2[j]=zmin
-	
+
 	}
 	h=h2
 
@@ -2028,7 +2032,7 @@ estimator1_dir <- function(dirfit,acut)
 		{
 			if (h[i] > 0){h4s[i,j]=(h[i]^2)/z[i,j]^2}
 			else if (indh[i]==j){h4s[i,j]=1}
-		
+
 		}
 		h4m[j]=mean(h4s[,j])
 	}
@@ -2125,7 +2129,7 @@ estimatorall1 <- function(prop,acut,incb)
 	{
 		indh[j]=1
 		zmin=z[j,1]
-	
+
 		for (i in 2:p)
 		{
 			zmin_prev=zmin
@@ -2136,7 +2140,7 @@ estimatorall1 <- function(prop,acut,incb)
 		zmin=min(zmin,acut)
 		if (zmin_prev > zmin){indh[j]=0}
 		h2[j]=zmin
-	
+
 	}
 	h=h2
 
@@ -2187,7 +2191,7 @@ estimatorall1 <- function(prop,acut,incb)
 			else if (ind[2,i]==ind[2,j]){BB[i,j]=mean((h^2)*16*z[,ind[1,j]]^2*z[,ind[1,i]]^2*z[,ind[2,j]]^2)}
 			else if (ind[1,i]==ind[2,j]){BB[i,j]=mean((h^2)*16*z[,ind[2,i]]^2*z[,ind[1,j]]^2*z[,ind[2,j]]^2)}
 			else if (ind[2,i]==ind[1,j]){BB[i,j]=mean((h^2)*16*z[,ind[1,i]]^2*z[,ind[2,j]]^2*z[,ind[1,j]]^2)}
-		
+
 		}
 	}
 
@@ -2200,8 +2204,8 @@ estimatorall1 <- function(prop,acut,incb)
 	{
 		for (j in 1:sp)
 		{
-			if (j==ind[1,i]){BC[i,j]=mean(h^2*z[,ind[2,i]]^2*z[,ind[1,i]]^2*8)} 
-			else if (j==ind[2,i]){BC[i,j]=mean(h^2*z[,ind[1,i]]^2*z[,ind[2,i]]^2*8)} 
+			if (j==ind[1,i]){BC[i,j]=mean(h^2*z[,ind[2,i]]^2*z[,ind[1,i]]^2*8)}
+			else if (j==ind[2,i]){BC[i,j]=mean(h^2*z[,ind[1,i]]^2*z[,ind[2,i]]^2*8)}
 		}
 	}
 
@@ -2314,8 +2318,8 @@ estimatorall1 <- function(prop,acut,incb)
 	{
 		for (j in 1:p)
 		{
-			if (j==ind[1,i]){BD[i,j]=mean(4*h^2*z[,ind[2,i]]^2)} 
-			else if (j==ind[2,i]){BD[i,j]=mean(4*h^2*z[,ind[1,i]]^2)} 
+			if (j==ind[1,i]){BD[i,j]=mean(4*h^2*z[,ind[2,i]]^2)}
+			else if (j==ind[2,i]){BD[i,j]=mean(4*h^2*z[,ind[1,i]]^2)}
 		}
 	}
 
@@ -2369,12 +2373,12 @@ estimatorall1 <- function(prop,acut,incb)
 	#pi2=1+2*beta0
 
 	#ev=-1*Wnew%*%pi2
-	
+
 	###################
 	##calculate d(1)
 	##################
 
-	
+
 	lambda4=4*(4+p-2)
 	lambda2=2*(2+p-2)
 
@@ -2477,7 +2481,7 @@ estimatorall1 <- function(prop,acut,incb)
 	{
 		indh[j]=1
 		zmin=z[j,1]
-	
+
 		for (i in 2:p)
 		{
 			zmin_prev=zmin
@@ -2488,7 +2492,7 @@ estimatorall1 <- function(prop,acut,incb)
 		zmin=min(zmin,acut)
 		if (zmin_prev > zmin){indh[j]=0}
 		h2[j]=zmin
-	
+
 	}
 	h=h2
 
@@ -2506,7 +2510,7 @@ estimatorall1 <- function(prop,acut,incb)
 		{
 			if (h[i] > 0){h4s[i,j]=(h[i]^2)/z[i,j]^2}
 			else if (indh[i]==j){h4s[i,j]=1}
-		
+
 		}
 		h4m[j]=mean(h4s[,j])
 	}
@@ -2552,7 +2556,7 @@ estimatorall1 <- function(prop,acut,incb)
 	}
 
 	d=d1-t(d3)
-	
+
 	ddir=d
 
 
@@ -2580,7 +2584,7 @@ estimatorall1 <- function(prop,acut,incb)
 
 	#save W
 	W_est=W
-	
+
 	#scoring estimator
 	quartic_sphere=solve(W[1:num1,1:num1])%*%t(t(d[1:num1]))
 
