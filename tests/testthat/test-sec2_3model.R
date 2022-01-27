@@ -55,7 +55,7 @@ thetaB <- beta0[-3]
 expect_true(all(abs(thetaA - estimate1all[1:5]) <= 2*std1))
 message("Misuse of estimator1SE for estimatorall1 results in this test")
 #invented bounds for beta0 estimates for now
-expect_true(all(abs(thetaB - estimate1all[6:7]) <= 2*0.15))
+expect_true(all(abs(thetaB - estimate1all[6:7]) <= 2*3/sqrt(n)))
 
 #calculate scoring estimate with beta fixed at beta0:
 estimator=cdabyppi:::estimator1(samp3,acut,1, beta0)
