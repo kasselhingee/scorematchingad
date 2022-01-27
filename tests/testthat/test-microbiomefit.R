@@ -1,9 +1,7 @@
-context("microbiome data")
-
 #############################################
 #preparing microbiome data
 #############################################
-microdata <- readxl::read_excel("microbiome_data.xlsx")
+data("microdata", package = "cdabyppi")
 countdata=as.matrix(microdata[,12:31])
 
 #sample size
@@ -101,16 +99,16 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   acut=0.01
 
   #calculate scoring estimate:
-  estimator=estimator1(propreal,acut,1)
-  expect_snapshot_value(estimator)
+  estimator= cdabyppi:::estimator1(propreal,acut,1, beta0)
+  expect_snapshot_value(estimator, style = "serialize")
   estimate1=estimator$estimator1
 
   #estimate of W matrix
   W_est=estimator$W_est
 
   #standard errors
-  std1=estimator1SE(propreal,acut,estimate1,W_est,1)
-  expect_snapshot_value(std1)
+  std1=estimator1SE(propreal,acut,estimate1,W_est,1, beta0)
+  expect_snapshot_value(std1, style = "serialize")
 
   #estimated parameters
   ALs=matrix(0,p-1,p-1)
