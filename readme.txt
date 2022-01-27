@@ -1,7 +1,3 @@
-APPENDIX
-
-The pdf file AppendixSupp.pdf contains the Appendix to the article to be published as online supplementary material. This contains all proofs and further numerical results. 
-
 DATA
 
 The excel datafile microbiome_data contains counts of 18 bacterial phyla from 92 individuals who were infected with helminths in 2008 (two observations were deleted from the file because they were deemed to be outliers in our analysis). For further details see Martin et al. (2018) which is a cited reference in the article.
