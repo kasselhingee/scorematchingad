@@ -100,15 +100,20 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
 
   #calculate scoring estimate:
   estimator= cdabyppi:::estimator1(propreal,acut,1, beta0)
-  expect_snapshot_value(estimator, style = "serialize")
   estimate1=estimator$estimator1
+  expect_snapshot_value(signif(estimate1, 8), style = "json2") #8 is the default number of digits for jsonlite::serializeJSON
 
   #estimate of W matrix
   W_est=estimator$W_est
+  expect_snapshot_value(round(max(W_est), 8), style = "json2") #have to use round here because the json conversion doesn't necessarily show it in scientific notation
+  expect_snapshot_value(signif(mean(W_est), 8), style = "json2",
+                        tolerance = 1E-10)
+  expect_snapshot_value(signif(which.max(W_est), 8), style = "json",
+                        tolerance = 1E-1)
 
   #standard errors
-  std1=estimator1SE(propreal,acut,estimate1,W_est,1, beta0)
-  expect_snapshot_value(std1, style = "serialize")
+  std1=cdabyppi:::estimator1SE(propreal,acut,estimate1,W_est,1, beta0)
+  expect_snapshot_value(signif(std1, 8), style = "json2")
 
   #estimated parameters
   ALs=matrix(0,p-1,p-1)
