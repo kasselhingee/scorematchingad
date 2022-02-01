@@ -77,8 +77,10 @@ rtGaussian <- function(n,p,muL,SigA)
 
 
 
-estimator2 <- function(prop,acut,incb)
+estimator2 <- function(prop,acut,incb, beta0)
 {
+  n=nrow(prop)
+  p=ncol(prop)
 
 	#response on sphere scale
 	z=sqrt(prop)
@@ -421,7 +423,7 @@ estimator2 <- function(prop,acut,incb)
 
 
 
-estimator2SE <- function(prop,acut,estimate2,W_est,incb)
+estimator2SE <- function(prop,acut,estimate2,W_est,incb, beta0)
 {
 
 
@@ -1750,12 +1752,13 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 ##be modified by including components 4 and 5 in the estimator
 ##pp in the last part of the code).
 ##x: count data (n by 3 matrix)
+##ni: see 5. model1.R for an example of use
 #######################################################
 
 
 
 
-multestimator <- function(x)
+multestimator <- function(x, ni, beta0)
 {
 
 	X1=x
