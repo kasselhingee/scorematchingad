@@ -9,7 +9,7 @@ p=5
 n=92 * 5
 
 #set seed
-set.seed(1)
+# set.seed(1)
 
 #parameters for the PPI model:
 ALs=matrix(0,p-1,p-1)
@@ -49,7 +49,7 @@ stopifnot(maxden <= 0)
 samp3=samp1$samp3
 
 #### Estimate from Simulated Sample ####
-test_that("Score1ac estimate is within 3 standard errors", {
+test_that("Score1ac estimate is within 3 standard errors for 75% of parameters", {
   #a_c for h function:
   acut=0.01
 
@@ -64,12 +64,12 @@ test_that("Score1ac estimate is within 3 standard errors", {
   std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,W_est,0, beta0 = beta0)
 
   theta = c(diag(ALs), ALs[upper.tri(ALs)])
-  expect_equal(abs(theta - as.vector(estimate1)) <= 3*std1, rep(TRUE, length(theta)))
+  expect_gt(mean(abs(theta - as.vector(estimate1)) <= 3*std1), 0.75)
 })
 
 
 #### Estimate from Simulated Sample ####
-test_that("Score1ac estimate is within 3 standard errors with large a_c", {
+test_that("Score1ac estimate is within 3 standard errors with large a_c for 75% of parameters", {
   #a_c for h function:
   acut=10
 
@@ -84,11 +84,11 @@ test_that("Score1ac estimate is within 3 standard errors with large a_c", {
   std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,W_est,0, beta0 = beta0)
 
   theta = c(diag(ALs), ALs[upper.tri(ALs)])
-  expect_equal(abs(theta - as.vector(estimate1)) <= 3*std1, rep(TRUE, length(theta)))
+  expect_gt(mean(abs(theta - as.vector(estimate1)) <= 3*std1), 0.75)
 })
 
 
-test_that("Score2 is within 2 SE (SE given by Score2ac)", {
+test_that("Score2 is within 3 SE (SE given by Score2ac) for 75% of parameters", {
   #a_c for h function (any large value):
   acut=10
 
@@ -101,10 +101,10 @@ test_that("Score2 is within 2 SE (SE given by Score2ac)", {
 
   # test
   theta = c(diag(ALs), ALs[upper.tri(ALs)])
-  expect_equal(abs(theta - as.vector(estimate3)) <= 2*std1, rep(TRUE, length(theta)))
+  expect_gt(mean(abs(theta - as.vector(estimate3)) <= 3*std1), 0.75)
 })
 
-test_that("Score1ac for multinomial PPI is on average within 2 SE of each parameter", {
+test_that("Score1ac for multinomial PPI is on average within 3 SE of each parameter", {
   #simulate sample from the multinomial PPI model:
   ni=matrix(2000,n,1)
   ni=as.vector(ni)
@@ -130,10 +130,10 @@ test_that("Score1ac for multinomial PPI is on average within 2 SE of each parame
 
   theta = c(diag(ALs), ALs[upper.tri(ALs)])
   # expect_equal(abs(theta - as.vector(estimate1)) <= 3*std1, rep(TRUE, length(theta))) # fails, not sure why
-  expect_gt(mean(abs(theta - as.vector(estimate1)) <= 2*std1), 0.5)
+  expect_gt(mean(abs(theta - as.vector(estimate1)) <= 3*std1), 0.5)
 })
 
-test_that("Score2 is within 3 SE for multinomial PPI (SE given by Score2ac)", {
+test_that("Score2 is within 3 SE for multinomial PPI (SE given by Score2ac) for 75% of parameters", {
   #simulate sample from the multinomial PPI model:
   ni=matrix(2000,n,1)
   ni=as.vector(ni)
@@ -156,5 +156,5 @@ test_that("Score2 is within 3 SE for multinomial PPI (SE given by Score2ac)", {
 
   # test
   theta = c(diag(ALs), ALs[upper.tri(ALs)])
-  expect_equal(abs(theta - as.vector(estimate3)) <= 3*std1, rep(TRUE, length(theta)))
+  expect_gt(mean(abs(theta - as.vector(estimate3)) <= 3*std1), 0.75)
 })
