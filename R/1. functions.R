@@ -427,6 +427,8 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb, beta0)
 {
 
 
+  n=nrow(prop)
+  p=ncol(prop)
 
 	#response on sphere scale
 	z=sqrt(prop)
