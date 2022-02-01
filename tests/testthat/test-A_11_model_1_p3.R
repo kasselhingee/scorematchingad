@@ -9,7 +9,7 @@ p=3
 n=92
 
 #set seed
-set.seed(1)
+# set.seed(1)
 
 #parameters for the PPI model:
 ALs=matrix(0,p-1,p-1)
