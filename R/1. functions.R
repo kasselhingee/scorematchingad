@@ -1883,6 +1883,8 @@ multestimator <- function(x, ni, beta0)
 
 estimator2_dir <- function(dirfit,acut)
 {
+  n=nrow(dirfit)
+  p=ncol(dirfit)
 	z=sqrt(dirfit)
 
 	h=matrix(1,n,1)
@@ -1989,7 +1991,8 @@ estimator2_dir <- function(dirfit,acut)
 
 estimator1_dir <- function(dirfit,acut)
 {
-
+  n=nrow(dirfit)
+  p=ncol(dirfit)
 
 	z=sqrt(dirfit)
 
