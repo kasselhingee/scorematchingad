@@ -54,7 +54,7 @@ rtGaussian <- function(n,p,muL,SigA)
 	while (coun < n)
 	{
 		count2=count2+1
-		rand=mvrnorm(1,mu=muL,Sigma=SigA)
+		rand=MASS::mvrnorm(1,mu=muL,Sigma=SigA)
 		if (min(rand) >= 0 && sum(rand) < 1){samp2=rbind(samp2,rand);coun=coun+1}
 		#print(coun)
 	}
