@@ -87,5 +87,5 @@ test_that("Score1 estimate with 3 Score1ac-SE for 75% of parameters", {
   # Get SE with a hack
   std=cdabyppi:::estimator1SE(prop,acut, estimator$estimator1, estimator$W_est,1, beta0)
   theta = c(diag(ALs), ALs[upper.tri(ALs)], bL)
-  expect_gt(mean(abs(theta - estimate3) <= 3*std), 0.75)
+  expect_gt(mean(abs(theta - estimate4) <= 3*std), 0.75)
 })
