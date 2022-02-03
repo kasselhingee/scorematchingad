@@ -2,7 +2,10 @@
 
 export(estimator1)
 export(estimator1SE)
+export(estimator1_dir)
 export(estimator2)
 export(estimator2SE)
+export(estimator2_dir)
+export(multestimator)
 export(rhybrid)
 export(rtGaussian)

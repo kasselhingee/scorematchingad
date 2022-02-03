@@ -1,13 +1,11 @@
-#######################################################
-##estimator2_dir calculates estimators Score2ac and Score2 in the article
-##for the Dirichlet distribution
-##dirfit: compositional data (n by p matrix)
-##acut: a_c for h function (if acut > 1 then this is Score2)
-#######################################################
-
-
-
-
+#' @title Score matching estimates for the Dirichlet distribution
+#' @description Score matching estimates for the Dirichlet distribution, which is the PPI with \eqn{A_L=0} and \eqn{b_L=0}. The parameters to be estimates are the \eqn{\beta}{beta}.
+#' @param dirfit Compositional data (n by p matrix)
+#' @param acut \eqn{a_c} for \eqn{h} function.
+#' @return A vector of estimates.
+#' @describeIn estimator_dir The score matching estimator using the product-based Hyvarinen weight
+#' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2).}
+#' @export
 estimator2_dir <- function(dirfit,acut)
 {
   n=nrow(dirfit)
@@ -106,16 +104,9 @@ estimator2_dir <- function(dirfit,acut)
 
 }
 
-
-#######################################################
-##estimator1_dir calculates estimators Score1ac and Score1 in the article
-##for the Dirichlet distribution
-##dirfit: compositional data (n by p matrix)
-##acut: a_c for h function (if acut > 1 then this is Score1)
-#######################################################
-
-
-
+#' @describeIn estimator_dir The score matching estimator using the minima-based Hyvarinen weight function 
+#' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2).}
+#' @export
 estimator1_dir <- function(dirfit,acut)
 {
   n=nrow(dirfit)
@@ -727,5 +718,6 @@ estimatorall1 <- function(prop,acut,incb)
 
 	return(list(estimator1=quartic_sphere,W_est=W_est))
 }
+
 
 
