@@ -1,36 +1,3 @@
-######################################################################
-##rhybrid generates random observations from the PPI model
-##n: sample size
-##p: dimension
-##beta0: beta shape parameter vector
-##ALs: A_L parameter matrix
-##bL: b_L parameter vector
-##maxden: is the constant log(C) in Appendix A.1.3.
-######################################################################
-
-rhybrid <- function(n,p,beta0,ALs,bL,maxden)
-{
-
-	alpha=beta0+1
-	coun=0
-	samp1=matrix(0,1,p)
-	count2=0
-	while (coun < n)
-	{
-
-		count2=count2+1
-		Uni=MCMCpack::rdirichlet(1, alpha)
-		u=runif(1,0,1)
-		num=t(Uni[1:sum(p,-1)])%*%ALs%*%t(t(Uni[1:sum(p,-1)]))+t(bL)%*%t(t(Uni[1:sum(p-1)]))-maxden
-		if (num > 0){maxden=num+maxden}
-		#print(maxden)
-		if (u < exp(num)){samp1=rbind(samp1,Uni);coun=coun+1}
-		#print(coun)
-	}
-	samp3=samp1[2:length(samp1[,1]),]
-
-	return(list(samp3=samp3,maxden=maxden))
-}
 
 
 #############################################################
