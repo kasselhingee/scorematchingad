@@ -1,247 +1,22 @@
-#######################################################
-##estimator2_dir calculates estimators Score2ac and Score2 in the article
-##for the Dirichlet distribution
-##dirfit: compositional data (n by p matrix)
-##acut: a_c for h function (if acut > 1 then this is Score2)
-#######################################################
-
-
-
-
-estimator2_dir <- function(dirfit,acut)
-{
-  n=nrow(dirfit)
-  p=ncol(dirfit)
-	z=sqrt(dirfit)
-
-	h=matrix(1,n,1)
-	for (j in 1:p)
-	{
-		h=h*z[,j]
-	}
-	for (j in 1:n)
-	{
-		if (h[j] > acut) {h[j]=acut}
-	}
-
-	homit=matrix(1,n,p)
-	for (k in 1:p)
-	{
-		for (j in 1:p)
-		{
-			if (k != j){homit[,k]=homit[,k]*z[,j]}
-		}
-
-	}
-
-
-	sp=p-1
-
-	x=c(1:sp)
-	ind=combn(x, 2, FUN = NULL, simplify = TRUE)
-	qind=length(ind[1,])
-
-	h4s=matrix(0,n,p)
-	h4m=matrix(0,1,p)
-	for (j in 1:p)
-	{
-		for (i in 1:n)
-		{
-			if (h[i] > 0){h4s[i,j]=(h[i]^2)/z[i,j]^2}
-			else {h4s[i,j]=homit[i,j]^2}
-
-		}
-		h4m[j]=mean(h4s[,j])
-	}
-
-
-	DD=matrix(0,p,p)
-	for (i in 1:p)
-	{
-		for (j in 1:p)
-		{
-			if (i==j){DD[i,j]=h4m[i]}
-		}
-	}
-
-	DD2=matrix(mean(h^2),p,p)
-
-
-	W=DD-DD2
-
-	d1=t(((p-2)*mean(h^2)+h4m))
-
-	ind2=matrix(1,n,1)
-	for (j in 1:n)
-	{
-		if (h[j] == acut) {ind2[j]=0}
-	}
-
-
-	h4s=matrix(0,n,p)
-	h4m=matrix(0,1,p)
-	for (j in 1:p)
-	{
-		for (i in 1:n)
-		{
-			if (h[i] > 0){h4s[i,j]=ind2[i]*(h[i]^2)/z[i,j]^2}
-			else {h4s[i,j]=ind2[i]*homit[i,j]^2}
-
-		}
-		h4m[j]=mean(h4s[,j])
-	}
-
-
-
-	d2=t(2*h4m-2*p*mean(ind2*h^2))
-
-	d=d1-d2
-
-	pp=solve(W)%*%d
-
-
-	estimate2=(pp-1)/2
-
-	return(estimate2)
-
-}
-
-
-#######################################################
-##estimator1_dir calculates estimators Score1ac and Score1 in the article
-##for the Dirichlet distribution
-##dirfit: compositional data (n by p matrix)
-##acut: a_c for h function (if acut > 1 then this is Score1)
-#######################################################
-
-
-
-estimator1_dir <- function(dirfit,acut)
-{
-  n=nrow(dirfit)
-  p=ncol(dirfit)
-
-	z=sqrt(dirfit)
-
-	h=matrix(1,n,1)
-	for (j in 1:p)
-	{
-		h=h*z[,j]
-	}
-	indh=matrix(0,n,1)
-	h2=h
-	for (j in 1:n)
-	{
-		indh[j]=1
-		zmin=z[j,1]
-
-		for (i in 2:p)
-		{
-			zmin_prev=zmin
-			zmin=min(zmin,z[j,i])
-			if (zmin_prev > zmin){indh[j]=i}
-		}
-		zmin_prev=zmin
-		zmin=min(zmin,acut)
-		if (zmin_prev > zmin){indh[j]=0}
-		h2[j]=zmin
-
-	}
-	h=h2
-
-	sp=p-1
-
-	x=c(1:sp)
-	ind=combn(x, 2, FUN = NULL, simplify = TRUE)
-	qind=length(ind[1,])
-
-	h4s=matrix(0,n,p)
-	h4m=matrix(0,1,p)
-	for (j in 1:p)
-	{
-		for (i in 1:n)
-		{
-			if (h[i] > 0){h4s[i,j]=(h[i]^2)/z[i,j]^2}
-			else if (indh[i]==j){h4s[i,j]=1}
-
-		}
-		h4m[j]=mean(h4s[,j])
-	}
-
-
-	DD=matrix(0,p,p)
-	for (i in 1:p)
-	{
-		for (j in 1:p)
-		{
-			if (i==j){DD[i,j]=h4m[i]}
-		}
-	}
-
-	DD2=matrix(mean(h^2),p,p)
-
-
-	W=DD-DD2
-
-	d1=t(((p-2)*mean(h^2)+h4m))
-
-
-	d2=matrix(0,n,p)
-
-	for (i in 1:n)
-	{
-		for (j in 1:p)
-		{
-			if (indh[i]==j){d2[i,j]=2*(1-z[i,j]^2)}
-			else if (indh[i]==0){d2[i,j]=0}
-			else {d2[i,j]=-2*(z[i,indh[i]]^2)}
-		}
-	}
-
-
-	d3=matrix(0,1,p)
-	for (j in 1:p)
-	{
-		d3[j]=mean(d2[,j])
-	}
-
-
-	d=d1-t(d3)
-
-	pp=solve(W)%*%d
-	estimate1=(pp-1)/2
-
-	return(estimate1)
-}
-
-
-
-####################################################################
-##method of moments estimator for Dirichlet distribution
-####################################################################
-
-dirichmom <- function(X) {
-# Method of Moments estimates of the Dirichlet Distribution
-temp <- dim(X); n <- temp[1]; m <- temp[2]
-# X <- cbind(X,matrix(1-apply(X,1,sum)))
-mom <- apply(X,2,mean)*(mean(X[,1])-mean(X[,1]^2))/(mean(X[,1]^2) - ((mean(X[,1]))^2))
-return(matrix(mom))
-}
-
-
-
-
-
-#######################################################
-##estimatorall1 calculates estimators Score1 and Score1ac in the article
-##for the full model (including A_L, b_L and beta all estimated).
-##prop: compositional data (n by p matrix)
-##acut: a_c for h function (if acut > 1 then this is Score1)
-##incb: if incb=1 then beta[p] is estimated otherwise beta[p] is fixed at -0.5
-#######################################################
-
-
-
+#' @title Score matching estimators for PPI model include beta
+#' @description Score matching estimators for the PPI model that estimate \eqn{A_L}, \eqn{b_L} and \eqn{\beta}{beta}.
+#' @param prop compositional data (n by p matrix)
+#' @param acut \eqn{a_c} for the weighting function \eqn{h}.
+#' @param incb if `incb=1` then the pth element of \eqn{\beta}{beta} is estimated, otherwise it is fixed at -0.5.
+#' @details The PPI model is given in equation 3 of (Scealy and Wood, 2021). The matrix \eqn{A_L} and vectors \eqn{b_L} and \eqn{\beta}{beta} must be estimated.
+#' This function implements the score matching estimator,
+#' \deqn{\hat{W}^{-1}\hat{d},}{W^{-1}d,}
+#' using a minima-based Hyvarinen weight function
+#' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
+#' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
+#' and \eqn{z_j}{zj} is the jth component of z.
+#' For details of the score matching estimator see equations 16 - 19 in (Scealy and Wood, 2021).
+#' If \eqn{a_c} is greater than or equal to 1 then this Hyvarinen weight function corresponds to (Scealy and Wood, 2021; eqn 11), if it is less than 1 then it corresponds to (Scealy and Wood, 2021; eqn 12).
+#' For more on the Hyvarinen weight (see equation 7 and Section 3.2 of (Scealy and Wood, 2021)).
+
+#' @return A vector of the estimates for individual entries of \eqn{A_L}, \eqn{b_L}, and \eqn{\beta}{beta}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A_L}, then the upper triangle of \eqn{A_L}, then the elements of \eqn{b_L}, and then finally the estimates of \eqn{\beta}{beta}.
+
+#' @export
 estimatorall1 <- function(prop,acut,incb)
 {
   n = nrow(prop)
@@ -727,5 +502,6 @@ estimatorall1 <- function(prop,acut,incb)
 
 	return(list(estimator1=quartic_sphere,W_est=W_est))
 }
+
 
 
