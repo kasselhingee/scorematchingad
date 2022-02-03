@@ -16,4 +16,7 @@ Suggests:
     tibble
 Depends: 
     R (>= 2.10)
+Imports:
+    MCMCpack,
+    MASS
 Config/testthat/edition: 3
