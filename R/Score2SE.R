@@ -2,8 +2,8 @@
 #' @description Estimates the standard errors of Score2 estimates. See (Scealy and Wood, 2021; Sec. 3.2).
 #' @param prop compositional data (n by p matrix)
 #' @param acut \eqn{a_c} for the Hyvarinen weight function \eqn{h}
-#' @param estimate2 the value of [estimate2()] estimates
-#' @param W_est The \eqn{\hat{W}}{W} matrix estimated by [estimate2()]
+#' @param estimate2 the value of [estimator2()] estimates
+#' @param W_est The \eqn{\hat{W}}{W} matrix estimated by [estimator2()]
 #' @param incb if `incb=1` then \eqn{b_L} is estimated otherwise \eqn{b_L} is fixed at zero.
 #' @param beta0 The fixed \eqn{beta_0}{beta0}.
 #' @return A vector of standard errors corresponding to each entry of the estimate by [estimator2()].
