@@ -1,7 +1,7 @@
 #' @title Score matching estimate of the PPI model using product-like Hyvarinen weight function
 #' @description Estimates \eqn{A_L} and \eqn{b_L} of the PPI model using score matching and a product-like Hyvarinen weight function. \eqn{\beta_0}{beta0} is fixed.
 #' @param prop compositional data (each row is a sample, each column corresponds to a component)
-#' @param  acut \eqn{a_c} for the weighting function \eqn{h}. Set `acut` <= 1 for Score 2 ac or `acut` > 1 for Score 2.
+#' @param  acut \eqn{a_c} for the weighting function \eqn{h}.
 #' @param incb if `incb=1` then \eqn{b_L} is estimated, otherwise \eqn{b_L} is fixed at zero
 #' @param beta0 The (fixed) beta0 of the model.
 #' @details The PPI model is given in equation 3 of (Scealy and Wood, 2021). The matrices \eqn{A_L} and \eqn{b_L} must be estimated.
