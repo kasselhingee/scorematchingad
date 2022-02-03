@@ -66,7 +66,7 @@ estimator1 <- function(prop,acut,incb, beta0)
 	}
 
 	x=c(1:sp)
-	ind=combn(x, 2, FUN = NULL, simplify = TRUE)
+	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
 	qind=length(ind[1,])
 
 

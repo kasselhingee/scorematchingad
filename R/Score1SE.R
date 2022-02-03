@@ -47,7 +47,7 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 
 	sp=p-1
 	x=c(1:sp)
-	ind=combn(x, 2, FUN = NULL, simplify = TRUE)
+	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
 	qind=length(ind[1,])
 
 	if (incb==1)

@@ -36,7 +36,7 @@ estimator2_dir <- function(dirfit,acut)
 	sp=p-1
 
 	x=c(1:sp)
-	ind=combn(x, 2, FUN = NULL, simplify = TRUE)
+	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
 	qind=length(ind[1,])
 
 	h4s=matrix(0,n,p)
@@ -143,7 +143,7 @@ estimator1_dir <- function(dirfit,acut)
 	sp=p-1
 
 	x=c(1:sp)
-	ind=combn(x, 2, FUN = NULL, simplify = TRUE)
+	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
 	qind=length(ind[1,])
 
 	h4s=matrix(0,n,p)

@@ -20,7 +20,7 @@ rhybrid <- function(n,p,beta0,ALs,bL,maxden)
 
 		count2=count2+1
 		Uni=MCMCpack::rdirichlet(1, alpha)
-		u=runif(1,0,1)
+		u=stats::runif(1,0,1)
 		num=t(Uni[1:sum(p,-1)])%*%ALs%*%t(t(Uni[1:sum(p,-1)]))+t(bL)%*%t(t(Uni[1:sum(p-1)]))-maxden
 		if (num > 0){maxden=num+maxden}
 		#print(maxden)
