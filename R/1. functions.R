@@ -1,39 +1,5 @@
 
 
-#############################################################
-##rtGaussian generates random observations from the truncated
-##Gaussian model (beta=0)
-##n: sample size
-##p: dimension
-##muL: untruncated Gaussian mean (see Appendix A.1.1)
-##SigA: untruncated Gaussian covariance matrix (see Appendix A.1.1)
-#############################################################
-
-
-library(MASS)
-
-rtGaussian <- function(n,p,muL,SigA)
-{
-
-	coun=0
-	samp2=matrix(0,1,p-1)
-	count2=0
-	while (coun < n)
-	{
-		count2=count2+1
-		rand=MASS::mvrnorm(1,mu=muL,Sigma=SigA)
-		if (min(rand) >= 0 && sum(rand) < 1){samp2=rbind(samp2,rand);coun=coun+1}
-		#print(coun)
-	}
-	samp2=samp2[2:length(samp2[,1]),]
-	com=matrix(0,n,1)
-	samp2=cbind(samp2,com)
-	samp2[,p]=1-rowSums(samp2[,1:sum(p,-1)])
-	samp3=samp2
-
-	return(samp3)
-}
-
 
 
 
