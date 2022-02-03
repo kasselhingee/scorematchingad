@@ -2,3 +2,4 @@
 
 export(estimator1)
 export(estimator2)
+export(estimator2SE)
