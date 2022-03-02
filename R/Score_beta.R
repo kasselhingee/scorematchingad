@@ -272,7 +272,7 @@ estimatorall1 <- function(prop,acut,incb)
 
 	Wnew=Wnew1-Wnew2
 
-	Wboth=Wnew
+	Wboth=Wnew #the final column corresponds to the pth element of beta
 
 	#pi2=1+2*beta0
 
