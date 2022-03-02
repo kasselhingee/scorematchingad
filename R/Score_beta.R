@@ -62,106 +62,15 @@ estimatorall1 <- function(prop,acut,incb)
 
 	Whybrid=W
 
-
 	################### ##calculate d(6) ##################
-
-	D1=matrix(0,1,sp)
-	for (j in 1:sp)
-	{
-		D1[j]=mean(4*(h^2)*z[,j]^2)
-	}
-	AD1=diag(as.vector(D1))
-	AD=matrix(0,sp,p)
-	AD[1:sp,1:sp]=AD1
-
-
-
-	BD=matrix(0,qind,p)
-	for (i in 1:qind)
-	{
-		for (j in 1:p)
-		{
-			if (j==ind[1,i]){BD[i,j]=mean(4*h^2*z[,ind[2,i]]^2)}
-			else if (j==ind[2,i]){BD[i,j]=mean(4*h^2*z[,ind[1,i]]^2)}
-		}
-	}
-
-
-	D2=matrix(0,1,sp)
-	for (j in 1:sp)
-	{
-		D2[j]=mean(2*(h^2))
-	}
-	CD0=diag(as.vector(D2))
-	CD=matrix(0,sp,p)
-	CD[1:sp,1:sp]=CD0
-
-
-	AD2=AD
-	for (i in 1:sp)
-	{
-		for (j in 1:p)
-		{
-			AD2[i,j]=4*mean((h^2)*z[,i]^4)
-		}
-	}
-
-	BD2=BD
-	for (i in 1:qind)
-	{
-		for (j in 1:p)
-		{
-			BD2[i,j]=8*mean((h^2)*(z[,ind[1,i]]^2*z[,ind[2,i]]^2))
-		}
-	}
-
-	CD2=CD
-	for (i in 1:sp)
-	{
-		for (j in 1:p)
-		{
-			CD2[i,j]=2*mean((h^2)*z[,i]^2)
-		}
-	}
-
-
-	Wnew1=rbind(AD,BD,CD)
-
-	Wnew2=rbind(AD2,BD2,CD2)
-
-	Wnew=Wnew1-Wnew2
-
-	Wboth=Wnew #the final column corresponds to the pth element of beta
+	Wboth <- calcd6_W(p, sp, z, h, ind, qind) #the final column corresponds to the pth element of beta
 
 	#pi2=1+2*beta0
 
 	#ev=-1*Wnew%*%pi2
 
 	################### ##calculate d(1) ##################
-
-
-	lambda4=4*(4+p-2)
-	lambda2=2*(2+p-2)
-
-	d_A=matrix(0,sp,1)
-	for (j in 1:sp)
-	{
-		d_A[j]=mean((h^2)*(lambda4*z[,j]^4-12*z[,j]^2))
-	}
-
-	d_B=matrix(0,qind,1)
-	for (j in 1:qind)
-	{
-		d_B[j]=2*mean((h^2)*(lambda4*z[,ind[1,j]]^2*z[,ind[2,j]]^2-2*z[,ind[1,j]]^2-2*z[,ind[2,j]]^2))
-	}
-
-	d_C=matrix(0,sp,1)
-	for (j in 1:sp)
-	{
-		d_C[j]=mean((h^2)*(lambda2*z[,j]^2-2))
-	}
-
-	d=rbind(d_A,d_B,d_C)
+	d <- calcd1A(p, sp, z, h, ind, qind)
 
 	d1hybrid=d
 
