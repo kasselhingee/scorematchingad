@@ -36,9 +36,7 @@ estimator2 <- function(prop,acut,incb, beta0)
 		if (h[j] > acut){h[j]=acut}
 	}
 
-	###################
-	##calculate W
-	##################
+	################### ##calculate W ##################
 
 	sp=p-1
 
@@ -187,9 +185,7 @@ estimator2 <- function(prop,acut,incb, beta0)
 	W=W0-W2
 
 
-	###################
-	##calculate d(6)
-	##################
+	################### ##calculate d(6) ##################
 
 	D1=matrix(0,1,sp)
 	for (j in 1:sp)
@@ -261,9 +257,7 @@ estimator2 <- function(prop,acut,incb, beta0)
 
 	ev=-1*Wnew%*%pi2
 
-	###################
-	##calculate d(1)
-	##################
+	################### ##calculate d(1) ##################
 
 
 	lambda4=4*(4+p-2)
@@ -289,9 +283,7 @@ estimator2 <- function(prop,acut,incb, beta0)
 
 	d=rbind(d_A,d_B,d_C)
 
-	###################
-	##calculate d(2)
-	##################
+	################### ##calculate d(2) ##################
 
 	ind2=matrix(1,n,1)
 	for (j in 1:n)
@@ -319,9 +311,7 @@ estimator2 <- function(prop,acut,incb, beta0)
 
 	dv=rbind(dv_A,dv_B,dv_C)
 
-	###################
-	##calculate d total and scoring estimate
-	##################
+	################### ##calculate d total and scoring estimate ##################
 
 	d=d+dv+ev
 

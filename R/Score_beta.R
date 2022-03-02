@@ -53,9 +53,7 @@ estimatorall1 <- function(prop,acut,incb)
 	h=h2
 
 
-	###################
-	##calculate W
-	##################
+	####calculate W ##################
 
 	sp=p-1
 
@@ -206,9 +204,7 @@ estimatorall1 <- function(prop,acut,incb)
 	Whybrid=W
 
 
-	###################
-	##calculate d(6)
-	##################
+	################### ##calculate d(6) ##################
 
 	D1=matrix(0,1,sp)
 	for (j in 1:sp)
@@ -282,9 +278,7 @@ estimatorall1 <- function(prop,acut,incb)
 
 	#ev=-1*Wnew%*%pi2
 
-	###################
-	##calculate d(1)
-	##################
+	################### ##calculate d(1) ##################
 
 
 	lambda4=4*(4+p-2)
@@ -312,9 +306,7 @@ estimatorall1 <- function(prop,acut,incb)
 
 	d1hybrid=d
 
-	###################
-	##calculate d(2)
-	##################
+	################### ##calculate d(2) ##################
 
 
 
@@ -372,9 +364,7 @@ estimatorall1 <- function(prop,acut,incb)
 
 	d2hybrid=dv
 
-	##############################################
-	##dirichlet part
-	###############################################
+	############################################## ##dirichlet part ###############################################
 
 	z=sqrt(prop)
 
@@ -469,9 +459,7 @@ estimatorall1 <- function(prop,acut,incb)
 
 
 
-	###################
-	##calculate d total and scoring estimate
-	##################
+	################### ##calculate d total and scoring estimate ##################
 
 	dhybrid=d1hybrid-d2hybrid
 
