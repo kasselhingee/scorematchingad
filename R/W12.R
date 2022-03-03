@@ -1,6 +1,6 @@
 
 calcd6_fixedbeta <- function(p, sp, z, h, ind, qind, beta0){
-  Wnew <- calcd6_W(p, sp, z, h, ind, qind)
+  Wnew <- calcW12(p, sp, z, h, ind, qind)
 	pi2=1+2*beta0
 
 	ev=-1*Wnew%*%pi2
