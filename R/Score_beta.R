@@ -79,73 +79,10 @@ estimatorall1 <- function(prop,acut,incb)
 	d2hybrid=dv
 
 	############################################## ##dirichlet part ###############################################
+	Wdir <- calcW22(p, sp, n, z, h, ind, qind)
+	h4m <- h2onz2_mean(p, n, z, h, indh)
 
-	z=sqrt(prop)
-
-	h=matrix(1,n,1)
-	for (j in 1:p)
-	{
-		h=h*z[,j]
-	}
-	indh=matrix(0,n,1)
-	h2=h
-	for (j in 1:n)
-	{
-		indh[j]=1
-		zmin=z[j,1]
-
-		for (i in 2:p)
-		{
-			zmin_prev=zmin
-			zmin=min(zmin,z[j,i])
-			if (zmin_prev > zmin){indh[j]=i}
-		}
-		zmin_prev=zmin
-		zmin=min(zmin,acut)
-		if (zmin_prev > zmin){indh[j]=0}
-		h2[j]=zmin
-
-	}
-	h=h2
-
-	sp=p-1
-
-	x=c(1:sp)
-	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
-	qind=length(ind[1,])
-
-	h4s=matrix(0,n,p)
-	h4m=matrix(0,1,p)
-	for (j in 1:p)
-	{
-		for (i in 1:n)
-		{
-			if (h[i] > 0){h4s[i,j]=(h[i]^2)/z[i,j]^2}
-			else if (indh[i]==j){h4s[i,j]=1}
-
-		}
-		h4m[j]=mean(h4s[,j])
-	}
-
-
-
-	DD=matrix(0,p,p)
-	for (i in 1:p)
-	{
-		for (j in 1:p)
-		{
-			if (i==j){DD[i,j]=h4m[i]}
-		}
-	}
-
-	DD2=matrix(mean(h^2),p,p)
-
-
-	W=DD-DD2
-
-	Wdir=W
-
-	d1=t(((p-2)*mean(h^2)+h4m))
+	d1=t(((p-2)*mean(h^2)+h4m))  #this is d(1)_B as defined in Section A.5
 
 
 	d2=matrix(0,n,p)
