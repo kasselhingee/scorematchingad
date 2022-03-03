@@ -69,12 +69,12 @@ estimatorall1 <- function(prop,acut,incb)
 
 	#ev=-1*Wnew%*%pi2
 
-	################### ##calculate d(1) ##################
+	################### ##calculate d(1) A ##################
 	d <- calcd1A(p, sp, z, h, ind, qind)
 
 	d1hybrid=d
 
-	################### ##calculate d(2) ##################
+	################### ##calculate d(2) A ##################
 	dv <- calcd2A_minimah(sp, n, z, ind, qind, indh)
 	d2hybrid=dv
 
@@ -82,9 +82,11 @@ estimatorall1 <- function(prop,acut,incb)
 	Wdir <- calcW22(p, sp, n, z, h, ind, qind)
 	h4m <- h2onz2_mean(p, n, z, h, indh)
 
+	##### Calculate d(1) B #####
 	d1=t(((p-2)*mean(h^2)+h4m))  #this is d(1)_B as defined in Section A.5
 
-
+  ##### Calculate d(2) B #####
+	# is sensitive to choise of weight function
 	d2=matrix(0,n,p)
 
 	for (i in 1:n)
