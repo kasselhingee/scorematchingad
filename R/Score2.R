@@ -43,7 +43,7 @@ estimator2 <- function(prop,acut,incb, beta0)
 	qind <- ind_qind$qind
   W <- calcW11(p, z, h, ind, qind)
 	################### ##calculate d(6) ##################
-  ev <- calcd6(p, sp, z, h, ind, qind, beta0)
+  ev <- calcd6_fixedbeta(p, sp, z, h, ind, qind, beta0)
 	################### ##calculate d(1) ##################
   d <- calcd1A(p, sp, z, h, ind, qind)
 	################### ##calculate d(2) ##################

@@ -63,7 +63,7 @@ estimatorall1 <- function(prop,acut,incb)
 	Whybrid=W
 
 	################### ##calculate d(6) ##################
-	Wboth <- calcd6_W(p, sp, z, h, ind, qind) #the final column corresponds to the pth element of beta
+	Wboth <- calcW12(p, sp, z, h, ind, qind) #the final column corresponds to the pth element of beta
 
 	#pi2=1+2*beta0
 

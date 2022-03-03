@@ -1,5 +1,5 @@
 
-calcd6 <- function(p, sp, z, h, ind, qind, beta0){
+calcd6_fixedbeta <- function(p, sp, z, h, ind, qind, beta0){
   Wnew <- calcd6_W(p, sp, z, h, ind, qind)
 	pi2=1+2*beta0
 
@@ -7,7 +7,7 @@ calcd6 <- function(p, sp, z, h, ind, qind, beta0){
 	return(ev)
 }
 
-calcd6_W <- function(p, sp, z, h, ind, qind){
+calcW12 <- function(p, sp, z, h, ind, qind){
 	D1=matrix(0,1,sp)
 	for (j in 1:sp)
 	{
