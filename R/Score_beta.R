@@ -53,29 +53,22 @@ estimatorall1 <- function(prop,acut,incb)
 	h=h2
 
 
-	####calculate W ##################
+	####calculate W11 ##################
 	sp <- p - 1
 	ind_qind <- indexcombinations(sp)
 	ind <- ind_qind$ind
 	qind <- ind_qind$qind
-	W <- calcW11(p, z, h, ind, qind)
+	W11 <- calcW11(p, z, h, ind, qind)
 
-	Whybrid=W
-
-	################### ##calculate d(6) ##################
-	Wboth <- calcW12(p, sp, z, h, ind, qind) #the final column corresponds to the pth element of beta
-
-	#pi2=1+2*beta0
-
-	#ev=-1*Wnew%*%pi2
+	################### ##calculate W12 ##################
+	W12 <- calcW12(p, sp, z, h, ind, qind) #the final column corresponds to the pth element of beta
 
 	################### ##calculate d(1) A ##################
-	d <- calcd1A(p, sp, z, h, ind, qind)
+	d1A <- calcd1A(p, sp, z, h, ind, qind)
 
-	d1hybrid=d
 
 	################### ##calculate d(2) A ##################
-	d2hybrid <- calcd2A_minimah(sp, n, z, ind, qind, indh)
+	d2A <- calcd2A_minimah(sp, n, z, ind, qind, indh)
 
 	############################################## ##dirichlet part ###############################################
 	Wdir <- calcW22(p, sp, n, z, h, ind, qind)
@@ -113,11 +106,11 @@ estimatorall1 <- function(prop,acut,incb)
 
 	################### ##calculate d total and scoring estimate ##################
 
-	dhybrid=d1hybrid+d2hybrid
+	dA=d1A+d2A
 
-	d=rbind(dhybrid,ddir)
+	d=rbind(dA,ddir)
 
-	W=rbind(cbind(Whybrid,Wboth),cbind(t(Wboth),Wdir))
+	W=rbind(cbind(W11,W12),cbind(t(W12),Wdir))
 
 	if (incb==1)
 	{
