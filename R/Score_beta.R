@@ -75,8 +75,7 @@ estimatorall1 <- function(prop,acut,incb)
 	d1hybrid=d
 
 	################### ##calculate d(2) A ##################
-	dv <- calcd2A_minimah(sp, n, z, ind, qind, indh)
-	d2hybrid=dv
+	d2hybrid <- calcd2A_minimah(sp, n, z, ind, qind, indh)
 
 	############################################## ##dirichlet part ###############################################
 	Wdir <- calcW22(p, sp, n, z, h, ind, qind)
@@ -114,7 +113,7 @@ estimatorall1 <- function(prop,acut,incb)
 
 	################### ##calculate d total and scoring estimate ##################
 
-	dhybrid=d1hybrid-d2hybrid
+	dhybrid=d1hybrid+d2hybrid
 
 	d=rbind(dhybrid,ddir)
 

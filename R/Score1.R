@@ -71,7 +71,7 @@ estimator1 <- function(prop,acut,incb, beta0)
 
 	################### ##calculate d total and scoring estimate ##################
 
-	d=d-dv+ev
+	d=d+dv+ev
 
 	if (incb==1)
 	{

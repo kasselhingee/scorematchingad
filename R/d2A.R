@@ -50,6 +50,6 @@ calcd2A_minimah <- function(sp, n, z, ind, qind, indh){
 		dv_C_mean[j]=mean(dv_C[,j])
 	}
 
-	dv=t(cbind(dv_A_mean,dv_B_mean,dv_C_mean))
+	dv=-t(cbind(dv_A_mean,dv_B_mean,dv_C_mean))
   return(dv)
 }
