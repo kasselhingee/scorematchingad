@@ -24,6 +24,7 @@ bL=solve(SigA)%*%muL
 # beta0[p]=0
 theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL)
 
+#### Tests ####
 test_that("Score1ac estimator can estimate beta0[0] large, and others correctly", {
   #sample size
   n=1000
@@ -86,7 +87,6 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   #invented bounds for beta0 estimates for now, for the first two components
   expect_true(all(abs(beta0[-p] - estimate1all[6:7]) <= 2*3/sqrt(n)))
 })
-
 
 test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but misspecified", {
   #sample size

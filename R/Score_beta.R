@@ -139,6 +139,7 @@ estimatorall1 <- function(prop,acut,betap = NULL)
 
 	tot=sp+qind+sp
 
+	# from estimates of 1 + 2beta, to estimates of beta
 	quartic_sphere[sum(tot,1):num1]=(quartic_sphere[sum(tot,1):num1]-1)/2
 
 	return(list(estimator1=quartic_sphere,W_est=W_est))
