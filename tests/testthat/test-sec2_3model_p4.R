@@ -48,7 +48,7 @@ test_that("Score1ac estimator works on highly concentrated data, with some compo
   acut=1.6e-02
 
   #calculate scoring estimate for full model (only beta[p] fixed at -0.5):
-  estimator=cdabyppi:::estimatorall1(samp3,acut,0)
+  estimator=cdabyppi:::estimatorall1(samp3,acut,betap = -0.5)
   estimate1all=estimator$estimator1
   # use SE estimates as if beta0 was fixed at the estimate (not estimated)
   std1=cdabyppi:::estimator1SE(samp3,acut,estimate1all[1:9, , drop = FALSE],estimator$W_est,1, beta0 = c(estimate1all[10:12], beta0[p]))

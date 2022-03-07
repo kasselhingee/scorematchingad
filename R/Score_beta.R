@@ -2,7 +2,7 @@
 #' @description Score matching estimators for the PPI model that estimate \eqn{A_L}, \eqn{b_L} and \eqn{\beta}{beta}.
 #' @param prop compositional data (n by p matrix)
 #' @param acut \eqn{a_c} for the weighting function \eqn{h}.
-#' @param incb if `incb=1` then the pth element of \eqn{\beta}{beta} is estimated, otherwise it is fixed at -0.5.
+#' @param betap the pth element of \eqn{\beta}{beta}, if NULL then this element is estimated.
 #' @details The PPI model is given in equation 3 of (Scealy and Wood, 2021). The matrix \eqn{A_L} and vectors \eqn{b_L} and \eqn{\beta}{beta} must be estimated.
 #' This function implements the score matching estimator,
 #' \deqn{\hat{W}^{-1}\hat{d},}{W^{-1}d,}
@@ -17,7 +17,7 @@
 #' @return A vector of the estimates for individual entries of \eqn{A_L}, \eqn{b_L}, and \eqn{\beta}{beta}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A_L}, then the upper triangle of \eqn{A_L}, then the elements of \eqn{b_L}, and then finally the estimates of \eqn{\beta}{beta}.
 
 #' @export
-estimatorall1 <- function(prop,acut,incb)
+estimatorall1 <- function(prop,acut,betap = NULL)
 {
   n = nrow(prop)
   p = ncol(prop)
@@ -102,7 +102,13 @@ estimatorall1 <- function(prop,acut,incb)
 
 	ddir=d
 
-
+  ################### Calculate d(6) when beta0[p] is fixed ######
+	# this is -W12 * pi for the fixed beta, For this function beta[p] may be fixed
+	if (!is.null(betap)){
+	  pi2 <- rep(0, p)
+	  pi2[p] <- 1 + 2*betap
+	  d6=-1*rbind(W12, Wdir) %*%pi2
+	}
 
 	################### ##calculate d total and scoring estimate ##################
 
@@ -112,15 +118,17 @@ estimatorall1 <- function(prop,acut,incb)
 
 	W=rbind(cbind(W11,W12),cbind(t(W12),Wdir))
 
-	if (incb==1)
+	if (is.null(betap))
 	{
-		#include beta[p] in the model
+		#estimate beta[p] in the model
 		num1=sp+qind+sp+p
 	}
 	else
 	{
 		#fix beta[p] in model
 		num1=sp+qind+sp+sp
+		# add offset
+		d <- d + d6
 	}
 
 	#save W
