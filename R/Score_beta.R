@@ -2,7 +2,7 @@
 #' @description Score matching estimators for the PPI model that estimate \eqn{A_L}, \eqn{b_L} and \eqn{\beta}{beta}.
 #' @param prop compositional data (n by p matrix)
 #' @param acut \eqn{a_c} for the weighting function \eqn{h}.
-#' @param betap the pth element of \eqn{\beta}{beta}, if NULL then this element is estimated.
+#' @param betap the pth element of \eqn{\beta}{beta}, if NULL then this element is estimated. Here the beta are parameterised as uj^(betaj + 0.5).
 #' @details The PPI model is given in equation 3 of (Scealy and Wood, 2021). The matrix \eqn{A_L} and vectors \eqn{b_L} and \eqn{\beta}{beta} must be estimated.
 #' This function implements the score matching estimator,
 #' \deqn{\hat{W}^{-1}\hat{d},}{W^{-1}d,}
