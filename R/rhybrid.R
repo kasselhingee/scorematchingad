@@ -27,6 +27,7 @@
 #' bL=solve(SigA)%*%muL
 #'
 #' rhybrid(n,p,beta0,ALs,bL,4)
+#' profvis::profvis({rhybrid(n,p,beta0,ALs,bL,4)})
 #'
 #' @export
 rhybrid <- function(n,p,beta0,ALs,bL,maxden)
@@ -36,13 +37,16 @@ rhybrid <- function(n,p,beta0,ALs,bL,maxden)
 	coun=0
 	samp1=matrix(0,1,p)
 	count2=0
+	tbL <- t(bL)
 	while (coun < n)
 	{
 
 		count2=count2+1
 		Uni=MCMCpack::rdirichlet(1, alpha)
 		u=stats::runif(1,0,1)
-		num=t(Uni[1:sum(p,-1)])%*%ALs%*%t(t(Uni[1:sum(p,-1)]))+t(bL)%*%t(t(Uni[1:sum(p-1)]))-maxden
+		Uni_nop <- Uni[1:(p-1)]
+		tUni_nop <- t(Uni[1:(p-1)])
+		num=tUni_nop%*%ALs%*%Uni_nop + tbL%*%Uni_nop - maxden
 		if (num > 0){maxden=num+maxden}
 		#print(maxden)
 		if (u < exp(num)){samp1=rbind(samp1,Uni);coun=coun+1}
