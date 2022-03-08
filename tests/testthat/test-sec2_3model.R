@@ -8,9 +8,6 @@ test_that("Score1ac estimator works on highly concentrated data, with some compo
   #sample size
   n=100
 
-  #set seed
-  set.seed(1)
-
   #parameters for the PPI model
   muL=matrix(0,p-1,1)
   muL[1:sum(p,-1)]=0.12

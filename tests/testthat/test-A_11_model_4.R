@@ -9,7 +9,7 @@ p=10
 n=1000
 
 #set seed
-set.seed(1)
+# set.seed(1)
 
 #parameters for the tGaussian model:
 muL=matrix(0,p-1,1)

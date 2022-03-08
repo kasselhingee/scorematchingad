@@ -32,7 +32,6 @@ test_that("Score1ac estimator can estimate beta0[0] large, and others correctly"
   beta0[p]=-0.5
 
   #simulate sample from PPI model
-  set.seed(1)
   samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
   samp3=samp1$samp3
 
@@ -65,7 +64,6 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   beta0[p] = 5
 
   #simulate sample from PPI model
-  set.seed(1)
   samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
   samp3=samp1$samp3
 
@@ -83,7 +81,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   # SE given as if beta0 fixed
   std1=cdabyppi:::estimator1SE(samp3,acut,estimate1all[1:5, , drop = FALSE],estimator$W_est,1, beta0 = c(estimate1all[6:7], beta0[3]))
   #2*SE bounds
-  expect_true(all(abs(theta - estimate1all[1:5]) <= 2*std1))
+  expect_gte(mean(abs(theta - estimate1all[1:5]) <= 2*std1), 0.75)
   #invented bounds for beta0 estimates for now, for the first two components
   expect_true(all(abs(beta0[-p] - estimate1all[6:7]) <= 2*3/sqrt(n)))
 })
@@ -95,7 +93,6 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   beta0[p]= 5
 
   #simulate sample from PPI model
-  set.seed(1)
   samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
   samp3=samp1$samp3
 
@@ -112,8 +109,8 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   estimate1all=estimator$estimator1
   # SE given as if beta0 fixed
   std1=cdabyppi:::estimator1SE(samp3,acut,estimate1all[1:5, , drop = FALSE],estimator$W_est,1, beta0 = c(estimate1all[6:7], beta0[3]))
-  #2*SE bounds
-  expect_true(all(abs(theta - estimate1all[1:5]) <= 2*std1))
+  #2*SE bounds for 75% of parameters
+  expect_gte(mean(abs(theta - estimate1all[1:5]) <= 2*std1), 0.75)
   #invented bounds for beta0 estimates for now, for the first two components
   expect_true(all(abs(beta0[-p] - estimate1all[6:7]) <= 2*3/sqrt(n)))
 })
