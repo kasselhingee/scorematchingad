@@ -45,6 +45,8 @@ rhybrid <- function(n,p,beta0,ALs,bL,maxden){
     # continue until n or more samples accepted
   }
 
+  samples <- samples[1:n, ] # remove extra samples
+
   return(list(samp3=samples,maxden=maxden))
 }
 
@@ -92,7 +94,7 @@ rhybrid_block <- function(n,p,beta0,ALs,bL,maxden){
 
   # accept some of points
   unif <- stats::runif(n,0,1)
-  accepted <- Uni[unif < exp(nums), ]
+  accepted <- Uni[unif < exp(nums), , drop = FALSE]
 
   return(list(accepted = accepted, maxden = maxden))
 }
