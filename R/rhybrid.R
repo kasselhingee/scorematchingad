@@ -6,7 +6,28 @@
 #' @param ALs The \eqn{A_L} parameter matrix
 #' @param bL The \eqn{b_L} parameter vector
 #' @param maxden This is the constant \eqn{log(C)} in (Scealy and Wood, 2021; Appendix A.1.1)
-#' @return A matrix with `n` rows and `p` columns and the maxden updated based on whether the sample exceeds the input maxden.
+#' @return A list. The first element is the sample in the form of a matrix with `n` rows and `p` columns.
+#' The second element is the maxden updated based on whether the sample exceeds the input maxden.
+#' @examples
+#' n=100
+#' p=3
+#' beta0=matrix(-0.8,p,1)
+#' beta0[p]=-0.5
+#'
+#' muL=matrix(0,p-1,1)
+#' muL[1:sum(p,-1)]=0.12
+#' aa=matrix(1/500,p-1,1)
+#' D=diag(as.vector(aa))
+#' SigA=D
+#' SigA[1,1]=SigA[1,1]*2
+#' cor=0.5
+#' SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
+#' SigA[2,1]=SigA[1,2]
+#' ALs=-0.5*solve(SigA)
+#' bL=solve(SigA)%*%muL
+#'
+#' rhybrid(n,p,beta0,ALs,bL,4)
+#'
 #' @export
 rhybrid <- function(n,p,beta0,ALs,bL,maxden)
 {
