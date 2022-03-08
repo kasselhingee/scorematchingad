@@ -27,10 +27,30 @@
 #' bL=solve(SigA)%*%muL
 #'
 #' rhybrid(n,p,beta0,ALs,bL,4)
+#' cdabyppi:::rhybrid_block(n,p,beta0,ALs,bL,4)
 #' profvis::profvis({rhybrid(n,p,beta0,ALs,bL,4)})
 #'
 #' @export
-rhybrid <- function(n,p,beta0,ALs,bL,maxden)
+rhybrid <- function(n,p,beta0,ALs,bL,maxden){
+  # first simulate starting with a block of Dirichlet samples of size n.
+  firstaccepted <- rhybrid_block(n,p,beta0,ALs,bL,maxden)
+  maxden <- firstaccepted$maxden
+  samples <- firstaccepted$accepted
+  propaccepted <- max(nrow(samples) / n, 1E-3)
+  # based on the number of samples that came out, simulate the remaining
+  while (nrow(samples) < n){
+    newsamples <- rhybrid_block(ceiling((n - nrow(samples)) * 1/propaccepted),p,beta0,ALs,bL,maxden)
+    maxden <- newsamples$maxden
+    samples <- rbind(samples, newsamples$accepted)
+    # continue until n or more samples accepted
+  }
+
+  return(list(samp3=samples,maxden=maxden))
+}
+
+
+# simulates samples one at a time
+rhybrid_singly <- function(n,p,beta0,ALs,bL,maxden)
 {
 
 	alpha=beta0+1
@@ -57,3 +77,22 @@ rhybrid <- function(n,p,beta0,ALs,bL,maxden)
 	return(list(samp3=samp3,maxden=maxden))
 }
 
+
+
+# try generating samples without a 'while' loop
+rhybrid_block <- function(n,p,beta0,ALs,bL,maxden){
+  Uni <- MCMCpack::rdirichlet(n, beta0+1)
+  Uni_nop <- Uni[, -p]
+  nums <- .rowSums((Uni_nop %*% ALs) * Uni_nop, n, p-1) + #uT * ALs * u
+    as.vector(Uni_nop %*% bL)  - maxden#t(bL) * u
+
+  # update maxdens
+  max_num <- max(nums)
+  if (max_num > 0) {maxden=max_num+maxden}
+
+  # accept some of points
+  unif <- stats::runif(n,0,1)
+  accepted <- Uni[unif < exp(nums), ]
+
+  return(list(accepted = accepted, maxden = maxden))
+}
