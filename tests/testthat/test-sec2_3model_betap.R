@@ -62,7 +62,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   #sample size
   n=100
   beta0=matrix(-0.8,p,1)
-  beta0[p]= 5
+  beta0[p] = 5
 
   #simulate sample from PPI model
   set.seed(1)
