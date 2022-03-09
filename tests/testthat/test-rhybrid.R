@@ -27,14 +27,11 @@ test_that("current PPI simulation method gives samples with similar empirical de
   H <- ks::Hpi(samp2$samp3[, -p])
   kde_historic <- ks::kde(samp2$samp3[, -p], H)
   #simulate sample from PPI model
-  samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
+  samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL * 2,4)
   H <- ks::Hpi(samp1$samp3[, -p])
   kde_current <- ks::kde(samp1$samp3[, -p], H)
-                         # eval.points = do.call(cbind, kde_historic$eval.points))
 
-  # rmse <- sqrt(mean(kde_current$estimate - kde_historic$estimate)^2)
-  par(mfcol = c(1, 2))
-  plot(kde_current)
-  plot(kde_historic)
+  testresult <- ks::kde.test(samp2$samp3[, -p], samp1$samp3[, -p])
+  expect_gte(testresult$pvalue, 0.01)
 })
 

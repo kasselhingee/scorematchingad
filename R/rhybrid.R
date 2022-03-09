@@ -9,7 +9,7 @@
 #' @return A list. The first element is the sample in the form of a matrix with `n` rows and `p` columns.
 #' The second element is the maxden updated based on whether the sample exceeds the input maxden.
 #' @examples
-#' n=100
+#' n=1000
 #' p=3
 #' beta0=matrix(-0.8,p,1)
 #' beta0[p]=-0.5
@@ -27,8 +27,6 @@
 #' bL=solve(SigA)%*%muL
 #'
 #' rhybrid(n,p,beta0,ALs,bL,4)
-#' cdabyppi:::rhybrid_block(n,p,beta0,ALs,bL,4)
-#' profvis::profvis({rhybrid(n,p,beta0,ALs,bL,4)})
 #'
 #' @export
 rhybrid <- function(n,p,beta0,ALs,bL,maxden){
