@@ -11,8 +11,7 @@
 #' @examples
 #' n=1000
 #' p=3
-#' beta0=matrix(-0.8,p,1)
-#' beta0[p]=-0.5
+#' beta0=c(-0.8, -0.8, -0.5)
 #'
 #' muL=matrix(0,p-1,1)
 #' muL[1:sum(p,-1)]=0.12
@@ -26,7 +25,12 @@
 #' ALs=-0.5*solve(SigA)
 #' bL=solve(SigA)%*%muL
 #'
-#' rhybrid(n,p,beta0,ALs,bL,4)
+#' samp <- rhybrid(n,p,beta0,ALs,bL,4)
+#' plot(ks::kde(samp$samp3[,-p]),
+#'  xlim = c(0, 1), ylim = c(0, 1))
+#' segments(0, 0, 0, 1)
+#' segments(0, 1, 1, 0)
+#' segments(1, 0, 0, 0)
 #'
 #' @export
 rhybrid <- function(n,p,beta0,ALs,bL,maxden){
