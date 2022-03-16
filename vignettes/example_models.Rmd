@@ -1,0 +1,171 @@
+---
+title: "Example Parameter Simulations"
+author: "Kassel Hingee"
+date: "16/03/2022"
+output: 
+  html_document: 
+    toc: yes
+---
+
+This document contains plots of a number of example PPI models.
+
+```{r setup, include=FALSE}
+library(cdabyppi)
+library(Ternary)
+library(ggtern)
+library(ggplot2)
+library(dplyr)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Model from Section 2.3 of JASA Paper
+```{r simulateS2_3model}
+#dimension
+p=3
+
+#sample size
+n=1000
+
+#parameters for the PPI model
+muL=matrix(0,p-1,1)
+muL[1:sum(p,-1)]=0.12 #location is close to u1=0, u2=0.
+aa=matrix(1/500,p-1,1)
+D=diag(as.vector(aa))
+SigA=D
+SigA[1,1]=SigA[1,1]*2
+cor=0.5
+SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
+SigA[2,1]=SigA[1,2]
+ALs=-0.5*solve(SigA)
+bL=solve(SigA)%*%muL
+beta0=matrix(-0.8,p,1)
+beta0[p]=-0.5
+
+#simulate sample from PPI model
+samp=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
+```
+
+```{r plot1_ternarypackage}
+colMeans(samp$samp3)
+Ternary::TernaryPlot("u1", "u2", "u3",
+                     "larger u1 \U2192")
+# Ternary::ColourTernary(Ternary::TernaryDensity(coordinates = samp$samp3) )
+Ternary::AddToTernary(points, samp$samp3, pch = "+")
+```
+
+```{r s2_3modelplot}
+data.frame(samp$samp3) %>%
+  dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
+  ggplot(aes(x = u1, y = u2, z = u3)) +
+  coord_tern() +
+  geom_density_tern(bins = 5, bdl = 0.01) + 
+  geom_point(size = 1, alpha = 0.5, shape = "+")
+```
+
+# Centre of Simplex
+For a model with points focused on the interior of the simplex, change muL (influences bL) to close to 0.5, and make the beta exponents large.
+
+```{r centresimplex_simulate}
+#parameters for the PPI model
+muL=matrix(0,p-1,1)
+muL[1:sum(p,-1)]=0.3
+aa=matrix(1/500,p-1,1)
+D=diag(as.vector(aa))
+SigA=D
+SigA[1,1]=SigA[1,1]*2
+cor=0.5
+SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
+SigA[2,1]=SigA[1,2]
+ALs=-0.5*solve(SigA)
+bL=solve(SigA)%*%muL
+beta0=matrix(1,p,1)
+samp=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
+```
+
+```{r centresimplex_plot}
+colMeans(samp$samp3)
+data.frame(samp$samp3) %>%
+  dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
+  ggplot(aes(x = u1, y = u2, z = u3)) +
+  coord_tern() +
+  geom_density_tern(bins = 5, bdl = 0.01) + 
+  geom_point(size = 1, alpha = 0.5, shape = "+")
+```
+
+# Centre of Simplex with Near Zeros
+An implausible model with points that are interior to the simplex and extra density near the simplex edges.
+```{r centresimplex_wedge_simulate}
+#parameters for the PPI model
+muL=matrix(0,p-1,1)
+muL[1:sum(p,-1)]=0.3
+aa=matrix(1/500,p-1,1)
+D=diag(as.vector(aa))
+SigA=D
+SigA[1,1]=SigA[1,1]*2
+cor=0.5
+SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
+SigA[2,1]=SigA[1,2]
+ALs=-0.5*solve(SigA)
+bL=solve(SigA)%*%muL
+beta0=matrix(-0.8,p,1)
+samp=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
+```
+
+```{r centresimplex_w_edge_plot}
+colMeans(samp$samp3)
+data.frame(samp$samp3) %>%
+  dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
+  ggplot(aes(x = u1, y = u2, z = u3)) +
+  coord_tern() +
+  geom_density_tern(bins = 5, bdl = 0.01) + 
+  geom_point(size = 1, alpha = 0.5, shape = "+")
+```
+
+# Large u1
+```{r largeu1}
+#parameters for the PPI model
+muL=matrix(0,p-1,1)
+muL[1, 1] <- 0.9
+muL[2, 1] <- 0.12
+aa=matrix(1/500,p-1,1)
+D=diag(as.vector(aa))
+SigA=D
+SigA[1,1]=SigA[1,1]*2
+cor=0.5
+SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
+SigA[2,1]=SigA[1,2]
+ALs=-0.5*solve(SigA)
+bL=solve(SigA)%*%muL
+beta0=matrix(c(-0.5, -0.5, -0.5),p,1)
+
+#simulate sample from PPI model
+samp=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
+```
+
+```{r largeu1_plot}
+data.frame(samp$samp3) %>%
+  dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
+  ggplot(aes(x = u1, y = u2, z = u3)) +
+  coord_tern() +
+  geom_density_tern(bins = 5, bdl = 0.01) + 
+  geom_point(size = 1, alpha = 0.5, shape = "+")
+```
+
+# Dirichlet
+```{r dirichlet_simulate}
+beta0=matrix(-0.8,p,1)
+beta0[p]=-0.5
+
+#simulate sample from PPI model
+samp=cdabyppi:::rhybrid(n,p,beta0,matrix(0, 2, 2), matrix(0, 2, 1),4)
+```
+
+```{r dirichlet_plot}
+data.frame(samp$samp3) %>%
+  dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
+  ggplot(aes(x = u1, y = u2, z = u3)) +
+  coord_tern() +
+  geom_density_tern(bins = 5, bdl = 0.01) + 
+  geom_point(size = 1, alpha = 0.5, shape = "+")
+```
