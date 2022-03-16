@@ -8,6 +8,11 @@
 #' @param maxden This is the constant \eqn{log(C)} in (Scealy and Wood, 2021; Appendix A.1.1)
 #' @return A list. The first element is the sample in the form of a matrix with `n` rows and `p` columns.
 #' The second element is the maxden updated based on whether the sample exceeds the input maxden.
+#' @details
+#' \eqn{A_L} controls the covariance between components.
+#' \eqn{b_L} controls the location of the distribution within the simplex
+#' \eqn{\beta_0[i]}{beta0[i]} controls the shap of the density when the ith component is close to zero.
+#' If \eqn{b_L} is such that the ith component is typically far from zero, then \eqn{\beta_0[i]}{beta0[i]} will have negligible effect.
 #' @examples
 #' n=1000
 #' p=3
