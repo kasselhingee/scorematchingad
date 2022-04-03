@@ -77,4 +77,15 @@ test_that("Score1ac runs", {
   expect_gt(mean(abs(estimate1 - alpha) < abs(alpha)) , 0.6)
 })
 
+test_that("Dirichlet score matching estimates are historically correct", {
+  acut=0.01
+
+  estimate1=cdabyppi:::estimator1_dir(dirfit,acut)
+  expect_snapshot_value(signif(estimate1, 8), style = "json2")
+
+  estimate2=cdabyppi:::estimator2_dir(dirfit,acut)
+  expect_snapshot_value(signif(estimate2, 8), style = "json2")
+})
+
+
 
