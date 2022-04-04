@@ -40,8 +40,8 @@ estimator1_dir <- function(dirfit,acut)
 	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
 	qind=length(ind[1,])
 
-        h4m <- h2onz2_mean(p, n, z, h, indh)
-        W <- calcW22(p, sp, n, z, h, ind, qind, indh)
+  h4m <- h2onz2_mean(p, n, z, h, indh)
+  W <- calcW22(p, h, h4m)
 
 	d1=t(((p-2)*mean(h^2)+h4m))
 

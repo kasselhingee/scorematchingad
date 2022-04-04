@@ -71,8 +71,8 @@ estimatorall1 <- function(prop,acut,betap = NULL)
 	d2A <- calcd2A_minimah(sp, n, z, ind, qind, indh)
 
 	############################################## ##dirichlet part ###############################################
-	Wdir <- calcW22(p, sp, n, z, h, ind, qind)
 	h4m <- h2onz2_mean(p, n, z, h, indh)
+	Wdir <- calcW22(p, h, h4m)
 
 	##### Calculate d(1) B #####
 	d1=t(((p-2)*mean(h^2)+h4m))  #this is d(1)_B as defined in Section A.5

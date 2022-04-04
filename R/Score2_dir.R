@@ -41,39 +41,12 @@ estimator2_dir <- function(dirfit,acut)
 	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
 	qind=length(ind[1,])
 
-	h4s=matrix(0,n,p)
-	h4m=matrix(0,1,p)
-	for (j in 1:p)
-	{
-		for (i in 1:n)
-		{
-			if (h[i] > 0){h4s[i,j]=(h[i]^2)/z[i,j]^2}
-			else {h4s[i,j]=homit[i,j]^2} 
-                       # when h is zero, (i.e. z on boundary) then h4s is the product of the other z values
-                       # this is the limit of h(z) as z approaches the boundary
-
-		}
-		h4m[j]=mean(h4s[,j])
-	}
-
-
-	DD=matrix(0,p,p)
-	for (i in 1:p)
-	{
-		for (j in 1:p)
-		{
-			if (i==j){DD[i,j]=h4m[i]}
-		}
-	}
-
-	DD2=matrix(mean(h^2),p,p)
-
-
-	W=DD-DD2
+	h4m <- h2onz2_mean(p, n, z, h, indh, hstyle = "product")
+  W <- calcW22(p, h, h4m)
 
 	d1=t(((p-2)*mean(h^2)+h4m))
 
-	#ind2 is the matrix
+	#ind2 indicates whether the acut constraint was hit
 	ind2=matrix(1,n,1)
 	for (j in 1:n)
 	{
