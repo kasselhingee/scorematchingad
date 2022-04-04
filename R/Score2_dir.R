@@ -22,17 +22,6 @@ estimator2_dir <- function(dirfit,acut)
 		if (h[j] > acut) {h[j]=acut}
 	}
 
-	#homit matrix. For a given component, k, homit is the multiple
-	# of the z entries in the other components. I.e. prod(z_j)/z_k when z_k is not zero.
-	homit=matrix(1,n,p)
-	for (k in 1:p)
-	{
-		for (j in 1:p)
-		{
-			if (k != j){homit[,k]=homit[,k]*z[,j]}
-		}
-
-	}
 
 
 	sp=p-1
@@ -57,6 +46,17 @@ estimator2_dir <- function(dirfit,acut)
 	# whenever the acut constraint is hit
 	# this is the first half of the equation for d(2)B at the end of
 	# page 22 in the appendix
+	#homit matrix. For a given component, k, homit is the multiple
+	# of the z entries in the other components. I.e. prod(z_j)/z_k when z_k is not zero.
+	homit=matrix(1,n,p)
+	for (k in 1:p)
+	{
+		for (j in 1:p)
+		{
+			if (k != j){homit[,k]=homit[,k]*z[,j]}
+		}
+
+	}
 	h4s=matrix(0,n,p)
 	h4m=matrix(0,1,p)
 	for (j in 1:p)
