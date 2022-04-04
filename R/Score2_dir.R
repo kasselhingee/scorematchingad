@@ -53,7 +53,10 @@ estimator2_dir <- function(dirfit,acut)
 		if (h[j] == acut) {ind2[j]=0}
 	}
 
-
+  # the following is h4m as above, except that h4s is zero
+	# whenever the acut constraint is hit
+	# this is the first half of the equation for d(2)B at the end of
+	# page 22 in the appendix
 	h4s=matrix(0,n,p)
 	h4m=matrix(0,1,p)
 	for (j in 1:p)
