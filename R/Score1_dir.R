@@ -40,33 +40,8 @@ estimator1_dir <- function(dirfit,acut)
 	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
 	qind=length(ind[1,])
 
-	h4s=matrix(0,n,p)
-	h4m=matrix(0,1,p)
-	for (j in 1:p)
-	{
-		for (i in 1:n)
-		{
-			if (h[i] > 0){h4s[i,j]=(h[i]^2)/z[i,j]^2}
-			else if (indh[i]==j){h4s[i,j]=1}
-
-		}
-		h4m[j]=mean(h4s[,j])
-	}
-
-
-	DD=matrix(0,p,p)
-	for (i in 1:p)
-	{
-		for (j in 1:p)
-		{
-			if (i==j){DD[i,j]=h4m[i]}
-		}
-	}
-
-	DD2=matrix(mean(h^2),p,p)
-
-
-	W=DD-DD2
+        h4m <- h2onz2_mean(p, n, z, h, indh)
+        W <- calcW22(p, sp, n, z, h, ind, qind, indh)
 
 	d1=t(((p-2)*mean(h^2)+h4m))
 

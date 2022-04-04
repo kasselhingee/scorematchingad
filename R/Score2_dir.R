@@ -22,6 +22,8 @@ estimator2_dir <- function(dirfit,acut)
 		if (h[j] > acut) {h[j]=acut}
 	}
 
+	#homit matrix. For a given component, k, homit is the multiple
+	# of the z entries in the other components. I.e. prod(z_j)/z_k when z_k is not zero.
 	homit=matrix(1,n,p)
 	for (k in 1:p)
 	{
@@ -46,7 +48,9 @@ estimator2_dir <- function(dirfit,acut)
 		for (i in 1:n)
 		{
 			if (h[i] > 0){h4s[i,j]=(h[i]^2)/z[i,j]^2}
-			else {h4s[i,j]=homit[i,j]^2}
+			else {h4s[i,j]=homit[i,j]^2} 
+                       # when h is zero, (i.e. z on boundary) then h4s is the product of the other z values
+                       # this is the limit of h(z) as z approaches the boundary
 
 		}
 		h4m[j]=mean(h4s[,j])
@@ -69,6 +73,7 @@ estimator2_dir <- function(dirfit,acut)
 
 	d1=t(((p-2)*mean(h^2)+h4m))
 
+	#ind2 is the matrix
 	ind2=matrix(1,n,1)
 	for (j in 1:n)
 	{

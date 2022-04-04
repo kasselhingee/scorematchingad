@@ -25,13 +25,16 @@ estimator1 <- function(prop,acut,incb, beta0)
 	#response on sphere scale
 	z=sqrt(prop)
 
-	#h function
+	#h is the h function without taking the bound acut into account
 	h=matrix(1,n,1)
 	for (j in 1:p)
 	{
 		h=h*z[,j]
 	}
 	indh=matrix(0,n,1)
+	# in the following indh is either 0, 1, ..,p for each row
+  # 0 means the acut contraint hit and h2 is given acut
+	# 1, .., p means the minimum h occured at that component
 	h2=h
 	for (j in 1:n)
 	{
