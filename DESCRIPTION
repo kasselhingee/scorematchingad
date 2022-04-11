@@ -18,5 +18,8 @@ Depends:
     R (>= 2.10)
 Imports:
     MCMCpack,
+    Rcpp (>= 1.0.7),
     MASS
+LinkingTo: Rcpp
 Config/testthat/edition: 3
+
