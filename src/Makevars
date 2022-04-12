@@ -12,6 +12,7 @@ all: $(SHLIB)
 $(SHLIB): mylibs
 
 mylibs:
-	mkdir -p CppAD/external/eigen.git/build; cd CppAD/external/eigen.git/build; cmake .. -DCMAKE_INSTALL_PREFIX="prefix"; make install
+	mkdir -p CppAD/external/eigen.git/build; cd CppAD/external/eigen.git/build; cmake .. -DCMAKE_INSTALL_PREFIX="prefix"; make install;
+	touch CppAD/external/eigen-3.3.7.configured
 
 
