@@ -72,11 +72,9 @@ CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
     return(smofun);
 }
 
-// main program
-int main(int argc, char** argv)
-{   using CppAD::AD;   // use AD as abbreviation for CppAD::AD
-
-    // vector of exponents and values
+//calc smo and additions
+vecd smo_n_grad(vecd xin, vecd betain){
+    // vector of exponents and values for taping
     size_t n = 3;                  // number of dimensions
     vecd xbeta(2*n); //outer container of arguments. First half the x, second half the beta
     for(int i = 0; i < n; i++){
@@ -87,28 +85,10 @@ int main(int argc, char** argv)
     //tape of smo
     CppAD::ADFun<double> smofun;
     smofun = tapesmo(xbeta, n);
-
+    
     /////////////////////Calculate SMO/////////// 
-    //read inputs
-    vecd xin(n);
-    vecd betain(n);
-    for(int i=0; i < n; i++){
-       xin[i] = 3.;
-       betain[i] = 1.;
-    }
-    if (argc > 1){
-       for(int i=0; i < n; i++){
-         xin[i] = strtod(argv[i + 1], NULL);
-         betain[i] = strtod(argv[i + n + 1], NULL);
-       }
-    }
-    std::cout << "x in is " << xin.transpose() << std::endl;
-    std::cout << "beta in is " << betain.transpose() << std::endl;
-    std::cout << "h2 is " << prodsq(xin) << std::endl;
-    std::cout << "grad(h2) is " << gradprodsq(xin).transpose() << std::endl;
-
     //compute score matching objective
-    vecd xbetain(2 * n);
+    vecd xbetain(xin.size() + betain.size());
     xbetain << xin, betain;
     vecd smo_val(1);
     smo_val = smofun.Forward(0, xbetain);
@@ -134,6 +114,35 @@ int main(int argc, char** argv)
     
     std::cout << "Score objective is:" << std::endl;
     std::cout << smo_val << std::endl;
+    return(smo_val);
+}
+
+
+// main program
+int main(int argc, char** argv)
+{   using CppAD::AD;   // use AD as abbreviation for CppAD::AD
+    //read inputs
+    size_t n = 3;
+    vecd xin(n);
+    vecd betain(n);
+    for(int i=0; i < n; i++){
+       xin[i] = 3.;
+       betain[i] = 1.;
+    }
+    if (argc > 1){
+       for(int i=0; i < n; i++){
+         xin[i] = strtod(argv[i + 1], NULL);
+         betain[i] = strtod(argv[i + n + 1], NULL);
+       }
+    }
+    std::cout << "x in is " << xin.transpose() << std::endl;
+    std::cout << "beta in is " << betain.transpose() << std::endl;
+    std::cout << "h2 is " << prodsq(xin) << std::endl;
+    std::cout << "grad(h2) is " << gradprodsq(xin).transpose() << std::endl;
+
+    vecd smo_val(1);
+    smo_val = smo_n_grad(xin, betain);
+    //compute score matching objective
 
     return 0;
 }
