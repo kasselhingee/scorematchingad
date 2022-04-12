@@ -5,24 +5,20 @@
 # include "mycpp/sm_possphere.cpp"
 # include "mycpp/dirichlet.cpp"
 
-// main program
-int smo(int argc, char** argv)
-{   using CppAD::AD;   // use AD as abbreviation for CppAD::AD
-    typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vecd; //a vector of a1type values
+typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vecd; //a vector of a1type values
     
-    typedef CppAD::AD<double> a1type;   // for first (outer) level of taping
-    typedef Eigen::Matrix<a1type, Eigen::Dynamic, 1> veca1; //a vector of a1type values
-    typedef CppAD::AD<a1type> a2type;  // for second (inner) level of taping
-    typedef Eigen::Matrix<a2type, Eigen::Dynamic, 1> veca2;
+typedef CppAD::AD<double> a1type;   // for first (outer) level of taping
+typedef Eigen::Matrix<a1type, Eigen::Dynamic, 1> veca1; //a vector of a1type values
+typedef CppAD::AD<a1type> a2type;  // for second (inner) level of taping
+typedef Eigen::Matrix<a2type, Eigen::Dynamic, 1> veca2;
 
-    // vector of exponents and values
-    size_t n = 3;                  // number of dimensions
-    veca1 xbeta(2*n); //outer container of arguments. First half the x, second half the beta
-    for(int i = 0; i < n; i++){
-        xbeta[i] = 3.;                 // value at which function is recorded
-        xbeta[i + n] = 1.;                 // value of exponents
+// smo functions
+CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
+    veca1 xbeta(xbetain.size());
+    for (int i=0; i < xbetain.size(); i++){
+       xbeta[i] = xbetain[i];
     }
-    
+
     //Projection matrix
     Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n); 
 
@@ -73,7 +69,24 @@ int smo(int argc, char** argv)
     smofun.Dependent(xbeta, smo);
     smofun.optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
     smofun.check_for_nan(false); //no error if some of the results of the Jacobian are nan.
-   
+    return(smofun);
+}
+
+// main program
+int main(int argc, char** argv)
+{   using CppAD::AD;   // use AD as abbreviation for CppAD::AD
+
+    // vector of exponents and values
+    size_t n = 3;                  // number of dimensions
+    vecd xbeta(2*n); //outer container of arguments. First half the x, second half the beta
+    for(int i = 0; i < n; i++){
+        xbeta[i] = 3.;                 // value at which function is recorded
+        xbeta[i + n] = 1.;                 // value of exponents
+    }
+    
+    //tape of smo
+    CppAD::ADFun<double> smofun;
+    smofun = tapesmo(xbeta, n);
 
     /////////////////////Calculate SMO/////////// 
     //read inputs
