@@ -5,3 +5,13 @@ PKG_CXXFLAGS = -I/usr/local/include -I/home/kassel/Documents/professional/ANU_Co
 PKG_LIBS = -L/usr/local/lib -lcppad_lib
 
 
+
+.PHONY: all mylibs
+
+all: $(SHLIB)
+$(SHLIB): mylibs
+
+mylibs:
+	mkdir -p CppAD/external/eigen.git/build; cd CppAD/external/eigen.git/build; cmake .. -DCMAKE_INSTALL_PREFIX="prefix"; make install
+
+
