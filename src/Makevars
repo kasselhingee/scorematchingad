@@ -9,9 +9,12 @@ PKG_LIBS = -L/usr/local/lib -lcppad_lib
 .PHONY: all mylibs
 
 all: $(SHLIB)
-$(SHLIB): mylibs
+$(SHLIB): cppadmake
 
-mylibs:
+cppadmake: eigenmake
+	mkdir -p CppAD/build; cd CppAD/build; cmake -D include_eigen=true -D cppad_cxx_flags="-I./CppAD/external/eigen.git" ..
+
+eigenmake:
 	mkdir -p CppAD/external/eigen.git/build; cd CppAD/external/eigen.git/build; cmake .. -DCMAKE_INSTALL_PREFIX="prefix"; make install;
 	touch CppAD/external/eigen-3.3.7.configured
 

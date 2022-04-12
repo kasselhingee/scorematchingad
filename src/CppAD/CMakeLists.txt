@@ -253,6 +253,7 @@ SET(remove_coin_or FALSE)
 #
 # eigen
 IF( include_eigen )
+    SET(ENV{PKG_CONFIG_PATH} "${cppad_SOURCE_DIR}/external/eigen.git/build" )
     pkgconfig_info(eigen3 ${system_include} ${remove_coin_or})
     SET(eigen_LIBRARIES "${eigen3_LIBRARIES}")
     SET(cppad_has_eigen 1)
