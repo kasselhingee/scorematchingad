@@ -1,6 +1,6 @@
 CXX_STD = CXX11
 
-PKG_CXXFLAGS = -I/usr/local/include -I/home/kassel/Documents/professional/ANU_Compositional/AlgorithmicDifferentiation/cppad.git/external/eigen.git
+PKG_CXXFLAGS = -I/usr/local/include -I./CppAD/external/eigen.git -I./CppAD/include/
 
 PKG_LIBS = -L/usr/local/lib -lcppad_lib
 

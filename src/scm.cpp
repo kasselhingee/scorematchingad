@@ -2,11 +2,11 @@
 # include <vector>          // standard vector
 # include <cppad/example/cppad_eigen.hpp>  //load eigen
 # include <cppad/cppad.hpp> // the CppAD package
-# include "sm_possphere.cpp"
-# include "dirichlet.cpp"
+# include "mycpp/sm_possphere.cpp"
+# include "mycpp/dirichlet.cpp"
 
 // main program
-int main(int argc, char** argv)
+int smo(int argc, char** argv)
 {   using CppAD::AD;   // use AD as abbreviation for CppAD::AD
     typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vecd; //a vector of a1type values
     
