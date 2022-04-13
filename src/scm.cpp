@@ -75,6 +75,12 @@ CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
 }
 
 //calc smo and additions
+//' @title The value of the score matching objective.
+//'
+//' @param xin the composition after sqrt transform
+//' @param betain the beta values
+//' @return the score matching objective for `xin`
+//' @export
 // [[Rcpp::export]]
 double smo_n_grad(svecd xin, svecd betain){
     // vector of exponents and values for taping

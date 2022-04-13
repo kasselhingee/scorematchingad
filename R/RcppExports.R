@@ -9,6 +9,12 @@ rcpp_hello_world <- function() {
     .Call('_cdabyppi_rcpp_hello_world', PACKAGE = 'cdabyppi')
 }
 
+#' @title The value of the score matching objective.
+#'
+#' @param xin the composition after sqrt transform
+#' @param betain the beta values
+#' @return the score matching objective for `xin`
+#' @export
 smo_n_grad <- function(xin, betain) {
     .Call('_cdabyppi_smo_n_grad', PACKAGE = 'cdabyppi', xin, betain)
 }
