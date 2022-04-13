@@ -44,13 +44,10 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _rcpp_module_boot_class_ADFun();
-
 static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_corels", (DL_FUNC) &_cdabyppi_corels, 0},
     {"_cdabyppi_rcpp_hello_world", (DL_FUNC) &_cdabyppi_rcpp_hello_world, 0},
     {"_cdabyppi_smo_n_grad", (DL_FUNC) &_cdabyppi_smo_n_grad, 2},
-    {"_rcpp_module_boot_class_ADFun", (DL_FUNC) &_rcpp_module_boot_class_ADFun, 0},
     {NULL, NULL, 0}
 };
 
