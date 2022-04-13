@@ -4,9 +4,11 @@
 # include <cppad/cppad.hpp> // the CppAD package
 # include "mycpp/sm_possphere.cpp"
 # include "mycpp/dirichlet.cpp"
+# include <Rcpp.h>
+using namespace Rcpp;
 
+typedef std::vector<double> svecd;
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vecd; //a vector of a1type values
-    
 typedef CppAD::AD<double> a1type;   // for first (outer) level of taping
 typedef Eigen::Matrix<a1type, Eigen::Dynamic, 1> veca1; //a vector of a1type values
 typedef CppAD::AD<a1type> a2type;  // for second (inner) level of taping
@@ -20,7 +22,7 @@ CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
     }
 
     //Projection matrix
-    Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n); 
+    Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n);
 
     //START TAPING
     CppAD::Independent(xbeta);
@@ -32,11 +34,11 @@ CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
     h2 = prodsq(x);
 
     // taping ll (log likelihood) store operation sequence
-    CppAD::ADFun<a1type> ll; 
+    CppAD::ADFun<a1type> ll;
     ll = tapellS(xbeta);
 
     //grad(ll)
-    veca1 jac(n); // Jacobian of ll 
+    veca1 jac(n); // Jacobian of ll
     jac  = ll.Jacobian(x);      // Jacobian for operation sequence
 
     //hgPg
@@ -49,7 +51,7 @@ CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
     for(int i=0; i < n; i++){
        lapl[0] += Pmat.row(i) * dPmat_S(x, i) * jac;
     }
-    Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> hess(n * n, 1); 
+    Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> hess(n * n, 1);
     hess = ll.Hessian(x, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
     hess.resize(n, n);
     lapl[0] += (Pmat*hess).trace();
@@ -62,8 +64,8 @@ CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
 
     //combine components
     veca1 smo(1);
-    smo = lapl + hgPg + ghPg; 
-    
+    smo = lapl + hgPg + ghPg;
+
     //finish taping
     CppAD::ADFun<double> smofun;
     smofun.Dependent(xbeta, smo);
@@ -73,7 +75,8 @@ CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
 }
 
 //calc smo and additions
-vecd smo_n_grad(vecd xin, vecd betain){
+// [[Rcpp::export]]
+double smo_n_grad(svecd xin, svecd betain){
     // vector of exponents and values for taping
     size_t n = 3;                  // number of dimensions
     vecd xbeta(2*n); //outer container of arguments. First half the x, second half the beta
@@ -81,22 +84,27 @@ vecd smo_n_grad(vecd xin, vecd betain){
         xbeta[i] = 3.;                 // value at which function is recorded
         xbeta[i + n] = 1.;                 // value of exponents
     }
-    
+
     //tape of smo
     CppAD::ADFun<double> smofun;
     smofun = tapesmo(xbeta, n);
-    
-    /////////////////////Calculate SMO/////////// 
+
+    /////////////////////Calculate SMO///////////
     //compute score matching objective
     vecd xbetain(xin.size() + betain.size());
-    xbetain << xin, betain;
+    for (int i=0; i<xin.size(); i++){
+      xbetain[i] = xin[i];
+    }
+    for (int i=0; i<betain.size(); i++){
+      xbetain[i + xin.size()] = betain[i];
+    }
     vecd smo_val(1);
     smo_val = smofun.Forward(0, xbetain);
 
     //if xin on boundary and smo_val is nan, interpolate from nearby
     if (std::isnan(smo_val[0])){
       std::cout << "SMO is NAN" << std::endl;
-      if (xin.minCoeff() < 1E-5){
+      if (xbetain.block(0,0,n,1).minCoeff() < 1E-5){ //can't used xin because it is svecd, not part of Eigen
         smo_val = taylorapprox_bdry(smofun, 100, xbetain, 1E-4);
       }
     }
@@ -105,16 +113,16 @@ vecd smo_n_grad(vecd xin, vecd betain){
     sc_grad = smofun.Jacobian(xbetain);
     std::cout << "Gradient: " << std::endl;
     std::cout << sc_grad.block(n,0,n,1).transpose() << std::endl;
-    
+
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> sc_hess(2 * n * 2 * n, 1);
     sc_hess += smofun.Hessian(xbetain, 0);
     sc_hess.resize(2 * n, 2 * n);
     std::cout << "Hessian: " << std::endl;
     std::cout << sc_hess.block(n,n,n,n) << std::endl;
-    
+
     std::cout << "Score objective is:" << std::endl;
     std::cout << smo_val << std::endl;
-    return(smo_val);
+    return(smo_val[0]);
 }
 
 
@@ -123,8 +131,8 @@ int main(int argc, char** argv)
 {   using CppAD::AD;   // use AD as abbreviation for CppAD::AD
     //read inputs
     size_t n = 3;
-    vecd xin(n);
-    vecd betain(n);
+    svecd xin(n);
+    svecd betain(n);
     for(int i=0; i < n; i++){
        xin[i] = 3.;
        betain[i] = 1.;
@@ -135,12 +143,12 @@ int main(int argc, char** argv)
          betain[i] = strtod(argv[i + n + 1], NULL);
        }
     }
-    std::cout << "x in is " << xin.transpose() << std::endl;
-    std::cout << "beta in is " << betain.transpose() << std::endl;
-    std::cout << "h2 is " << prodsq(xin) << std::endl;
-    std::cout << "grad(h2) is " << gradprodsq(xin).transpose() << std::endl;
+    // std::cout << "x in is " << xin.transpose() << std::endl;
+    // std::cout << "beta in is " << betain.transpose() << std::endl;
+    // std::cout << "h2 is " << prodsq(xin) << std::endl;
+    // std::cout << "grad(h2) is " << gradprodsq(xin).transpose() << std::endl;
 
-    vecd smo_val(1);
+    double smo_val;
     smo_val = smo_n_grad(xin, betain);
     //compute score matching objective
 
