@@ -85,8 +85,8 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
   CppAD::ADFun<double> outobj;
   outobj = tapesmo(xbetain, n);
   CppAD::ADFun<double>* out; //returning a pointer
-  // *out = tapesmo(xbetain, n);
-  out = &outobj;
+  *out = tapesmo(xbetain, n);
+  // out = &outobj;
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
@@ -108,6 +108,7 @@ double psmo_n_grad(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
     xbetain[i + xin.size()] = betain[i];
   }
   vecd smo_val(1);
+  std::cout << "Attempting to use pfun" << std::endl;
   std::cout << pfun->Domain() << std::endl;
   smo_val = pfun->Forward(0, xbetain);  //treat the XPtr as a regular pointer
   return(smo_val[0]);
