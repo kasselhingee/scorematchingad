@@ -9,6 +9,15 @@ rcpp_hello_world <- function() {
     .Call('_cdabyppi_rcpp_hello_world', PACKAGE = 'cdabyppi')
 }
 
+#' @title The score matching objective calculator.
+#' @param xbetain a concatenated vector of sqrt(x) and beta
+#' @param n The dimension of x.
+#' @return An RCpp::XPtr object pointing to the ADFun
+#' @export
+ptapesmo <- function(xbetain, n) {
+    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n)
+}
+
 #' @title The value of the score matching objective.
 #'
 #' @param xin the composition after sqrt transform

@@ -15,7 +15,7 @@ typedef CppAD::AD<a1type> a2type;  // for second (inner) level of taping
 typedef Eigen::Matrix<a2type, Eigen::Dynamic, 1> veca2;
 
 // smo functions
-CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
+CppAD::ADFun<double> tapesmo(svecd xbetain, size_t n){
     veca1 xbeta(xbetain.size());
     for (int i=0; i < xbetain.size(); i++){
        xbeta[i] = xbetain[i];
@@ -74,6 +74,22 @@ CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
     return(smofun);
 }
 
+//in R store a pointer to the ADFun object
+//' @title The score matching objective calculator.
+//' @param xbetain a concatenated vector of sqrt(x) and beta
+//' @param n The dimension of x.
+//' @return An RCpp::XPtr object pointing to the ADFun
+//' @export
+// [[Rcpp::export]]
+XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
+  CppAD::ADFun<double> outobj;
+  outobj = tapesmo(xbetain, n);
+  CppAD::ADFun<double>* out; //returning a pointer
+  out = &outobj;
+  XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}
+
 //calc smo and additions
 //' @title The value of the score matching objective.
 //'
@@ -85,7 +101,7 @@ CppAD::ADFun<double> tapesmo(vecd xbetain, size_t n){
 double smo_n_grad(svecd xin, svecd betain){
     // vector of exponents and values for taping
     size_t n = 3;                  // number of dimensions
-    vecd xbeta(2*n); //outer container of arguments. First half the x, second half the beta
+    svecd xbeta(2*n); //outer container of arguments. First half the x, second half the beta
     for(int i = 0; i < n; i++){
         xbeta[i] = 3.;                 // value at which function is recorded
         xbeta[i + n] = 1.;                 // value of exponents
