@@ -85,12 +85,36 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
   CppAD::ADFun<double> outobj;
   outobj = tapesmo(xbetain, n);
   CppAD::ADFun<double>* out; //returning a pointer
+  // *out = tapesmo(xbetain, n);
   out = &outobj;
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
 
 //calc smo and additions
+//use a pointer to an ADFun object to compute the function evaluated  at a location
+//' @title The score matching objective calculator.
+//' @param xbetain a concatenated vector of sqrt(x) and beta
+//' @param n The dimension of x.
+//' @return An RCpp::XPtr object pointing to the ADFun
+//' @export
+// [[Rcpp::export]]
+double psmo_n_grad(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
+  vecd xbetain(xin.size() + betain.size());
+  for (int i=0; i<xin.size(); i++){
+    xbetain[i] = xin[i];
+  }
+  for (int i=0; i<betain.size(); i++){
+    xbetain[i + xin.size()] = betain[i];
+  }
+  vecd smo_val(1);
+  std::cout << pfun->Domain() << std::endl;
+  smo_val = pfun->Forward(0, xbetain);  //treat the XPtr as a regular pointer
+  return(smo_val[0]);
+}
+
+
+
 //' @title The value of the score matching objective.
 //'
 //' @param xin the composition after sqrt transform
@@ -110,6 +134,7 @@ double smo_n_grad(svecd xin, svecd betain){
     //tape of smo
     CppAD::ADFun<double> smofun;
     smofun = tapesmo(xbeta, n);
+    std::cout << smofun.Domain() << std::endl;
 
     /////////////////////Calculate SMO///////////
     //compute score matching objective
