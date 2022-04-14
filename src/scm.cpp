@@ -82,11 +82,11 @@ CppAD::ADFun<double> tapesmo(svecd xbetain, size_t n){
 //' @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
-  static CppAD::ADFun<double> outobj;
+  CppAD::ADFun<double> outobj;
   outobj = tapesmo(xbetain, n);
-  static CppAD::ADFun<double>* out; //returning a pointer
-  // *out = tapesmo(xbetain, n);
-  out = &outobj;
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  *out = tapesmo(xbetain, n);
+  // out = &outobj;
   XPtr< CppAD::ADFun<double> > pout(out, true);
   std::cout << "XPtr Domain: " << pout->Domain() << std::endl;
   return(pout);
