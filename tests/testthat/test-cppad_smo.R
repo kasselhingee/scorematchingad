@@ -43,30 +43,19 @@ test_that("ADFun XPtr for computing values", {
   set.seed(134)
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
-  psmo_n_grad(smofun, sqrt(utabl[1, ]), beta)
   smobj <- function(beta, utabl){
     ztabl <- sqrt(utabl)
     sc_perpt <- lapply(1:n, function(i){
-      scobj <- smo_n_grad(ztabl[i, ], beta)
-      args = paste(c(ztabl[i, ], beta), sep = " ", collapse = " ")
-      grad = NA #as.numeric(unlist(strsplit(trimws(out[grep("Gradient:", out) + 1]), " +")))
-      hess = NA #as.numeric(unlist(strsplit(trimws(out[grep("Hessian:", out) + 1:length(beta)]), " +")))
-      return(list(grad = grad,
-                  hess = hess,
-                  scmo = scobj))
+      scobj <- psmo_n_grad(smofun, ztabl[i, ], beta)
+      return(scobj)
     })
-    grad <- NA #colMeans(do.call(rbind, lapply(sc_perpt, "[[", "grad")))
-    hess <- NA #apply(simplify2array(lapply(sc_perpt, "[[", "hess")), MARGIN = c(1,2), FUN = mean)
-    scmo <- mean(vapply(sc_perpt, "[[", "scmo", FUN.VALUE = -0.1))
-    return(list(
-      grad = grad,
-      hess = hess,
-      scmo = scmo))
+    scmo <- mean(unlist(sc_perpt))
+    return(scmo)
   }
 
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
   out <- optim(par = beta*0,
-               fn = function(beta){smobj(beta,utabl)[["scmo"]]},
+               fn = function(beta){smobj(beta,utabl)},
                # gr = function(beta){smobj(beta, utabl)[["grad"]]},
                method = "BFGS")
 

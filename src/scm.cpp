@@ -85,7 +85,6 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   *out = tapesmo(xbetain, n);
   XPtr< CppAD::ADFun<double> > pout(out, true);
-  std::cout << "XPtr Domain: " << pout->Domain() << std::endl;
   return(pout);
 }
 
@@ -106,10 +105,7 @@ double psmo_n_grad(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
     xbetain[i + xin.size()] = betain[i];
   }
   vecd smo_val(1);
-  std::cout << "Attempting to use pfun" << std::endl;
-  std::cout << pfun->Domain() << std::endl;
   smo_val = pfun->Forward(0, xbetain);  //treat the XPtr as a regular pointer
-  std::cout << "Freeing pfun memory" << std::endl;
   return(smo_val[0]);
 }
 
@@ -134,7 +130,6 @@ double smo_n_grad(svecd xin, svecd betain){
     //tape of smo
     CppAD::ADFun<double> smofun;
     smofun = tapesmo(xbeta, n);
-    std::cout << smofun.Domain() << std::endl;
 
     /////////////////////Calculate SMO///////////
     //compute score matching objective
@@ -156,19 +151,19 @@ double smo_n_grad(svecd xin, svecd betain){
       }
     }
 
-    vecd sc_grad(2 * n);
-    sc_grad = smofun.Jacobian(xbetain);
-    std::cout << "Gradient: " << std::endl;
-    std::cout << sc_grad.block(n,0,n,1).transpose() << std::endl;
+    // vecd sc_grad(2 * n);
+    // sc_grad = smofun.Jacobian(xbetain);
+    // std::cout << "Gradient: " << std::endl;
+    // std::cout << sc_grad.block(n,0,n,1).transpose() << std::endl;
 
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> sc_hess(2 * n * 2 * n, 1);
-    sc_hess += smofun.Hessian(xbetain, 0);
-    sc_hess.resize(2 * n, 2 * n);
-    std::cout << "Hessian: " << std::endl;
-    std::cout << sc_hess.block(n,n,n,n) << std::endl;
+    // Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> sc_hess(2 * n * 2 * n, 1);
+    // sc_hess += smofun.Hessian(xbetain, 0);
+    // sc_hess.resize(2 * n, 2 * n);
+    // std::cout << "Hessian: " << std::endl;
+    // std::cout << sc_hess.block(n,n,n,n) << std::endl;
 
-    std::cout << "Score objective is:" << std::endl;
-    std::cout << smo_val << std::endl;
+    // std::cout << "Score objective is:" << std::endl;
+    // std::cout << smo_val << std::endl;
     return(smo_val[0]);
 }
 
