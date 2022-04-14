@@ -82,11 +82,8 @@ CppAD::ADFun<double> tapesmo(svecd xbetain, size_t n){
 //' @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
-  CppAD::ADFun<double> outobj;
-  outobj = tapesmo(xbetain, n);
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   *out = tapesmo(xbetain, n);
-  // out = &outobj;
   XPtr< CppAD::ADFun<double> > pout(out, true);
   std::cout << "XPtr Domain: " << pout->Domain() << std::endl;
   return(pout);
@@ -109,12 +106,11 @@ double psmo_n_grad(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
     xbetain[i + xin.size()] = betain[i];
   }
   vecd smo_val(1);
-  std::cout << "Attempting to copy pfun" << std::endl;
-  // CppAD::ADFun<double> f;
-  // f = *pfun;
   std::cout << "Attempting to use pfun" << std::endl;
   std::cout << pfun->Domain() << std::endl;
   smo_val = pfun->Forward(0, xbetain);  //treat the XPtr as a regular pointer
+  std::cout << "Freeing pfun memory" << std::endl;
+  delete pfun.get();  //.get() returns the underlying pointer in an XPtr object
   return(smo_val[0]);
 }
 
