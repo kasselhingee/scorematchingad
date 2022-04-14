@@ -19,7 +19,8 @@ Depends:
 Imports:
     MCMCpack,
     Rcpp (>= 1.0.7),
+    RcppEigen,
     MASS
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppEigen
 Config/testthat/edition: 3
 

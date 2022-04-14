@@ -19,12 +19,21 @@ ptapesmo <- function(xbetain, n) {
 }
 
 #' @title The score matching objective calculator.
+#' @param xin
+#' @param betain
+#' @return The score matching objective value
+#' @export
+psmo_single <- function(pfun, xin, betain) {
+    .Call('_cdabyppi_psmo_single', PACKAGE = 'cdabyppi', pfun, xin, betain)
+}
+
+#' @title The score matching objective calculator for a matrix.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
 #' @param n The dimension of x.
-#' @return An RCpp::XPtr object pointing to the ADFun
+#' @return The score matching objective value.
 #' @export
-psmo_n_grad <- function(pfun, xin, betain) {
-    .Call('_cdabyppi_psmo_n_grad', PACKAGE = 'cdabyppi', pfun, xin, betain)
+psmo <- function(pfun, xin, betain) {
+    .Call('_cdabyppi_psmo', PACKAGE = 'cdabyppi', pfun, xin, betain)
 }
 
 #' @title The value of the score matching objective.

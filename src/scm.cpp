@@ -5,6 +5,7 @@
 # include "mycpp/sm_possphere.cpp"
 # include "mycpp/dirichlet.cpp"
 # include <Rcpp.h>
+# include <RcppEigen.h>
 using namespace Rcpp;
 
 typedef std::vector<double> svecd;
@@ -91,12 +92,12 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
 //calc smo and additions
 //use a pointer to an ADFun object to compute the function evaluated  at a location
 //' @title The score matching objective calculator.
-//' @param xbetain a concatenated vector of sqrt(x) and beta
-//' @param n The dimension of x.
-//' @return An RCpp::XPtr object pointing to the ADFun
+//' @param xin
+//' @param betain
+//' @return The score matching objective value
 //' @export
 // [[Rcpp::export]]
-double psmo_n_grad(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
+double psmo_single(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
   vecd xbetain(xin.size() + betain.size());
   for (int i=0; i<xin.size(); i++){
     xbetain[i] = xin[i];
@@ -109,6 +110,24 @@ double psmo_n_grad(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
   return(smo_val[0]);
 }
 
+//use a pointer to an ADFun object to compute the function evaluated  at a location
+//' @title The score matching objective calculator for a matrix.
+//' @param xbetain a concatenated vector of sqrt(x) and beta
+//' @param n The dimension of x.
+//' @return The score matching objective value.
+//' @export
+// [[Rcpp::export]]
+// double psmo(XPtr< CppAD::ADFun<double> > pfun, Rcpp::NumericMatrix xin, svecd betain){
+//   size_t n = xin.nrow(); //number of observations
+//   double smo = 0.0;
+//   std::vector<double> anx = xin.row(0);
+//   for (int i=0; i<n; i++){
+//     anx = xin.row(i);
+//     smo += psmo_single(pfun, svecd anx, svecd betain)
+//   }
+//
+//   return(smo);
+// }
 
 
 //' @title The value of the score matching objective.
