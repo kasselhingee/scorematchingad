@@ -110,7 +110,6 @@ double psmo_n_grad(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
   std::cout << pfun->Domain() << std::endl;
   smo_val = pfun->Forward(0, xbetain);  //treat the XPtr as a regular pointer
   std::cout << "Freeing pfun memory" << std::endl;
-  delete pfun.get();  //.get() returns the underlying pointer in an XPtr object
   return(smo_val[0]);
 }
 
