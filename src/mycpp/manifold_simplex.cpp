@@ -18,7 +18,7 @@ namespace simplex { // begin the empty namespace
   template <class Type>
   Type logdetJ_fromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z){
      Type out;
-     out = 1.;
+     out = 0.;
      return(out);
   }
 
