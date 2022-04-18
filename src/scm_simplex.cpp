@@ -32,7 +32,7 @@ CppAD::ADFun<double> tapesmo_simplex(svecd xbetain, size_t n){
 
     veca1 x(n);
     x = xbeta.block(0,0,n,1);
-    Pmat = Spos::Pmat_S(x);
+    Pmat = simplex::Pmat_M(x);
     a1type h2;
     h2 = prodsq(x);
 
@@ -52,7 +52,7 @@ CppAD::ADFun<double> tapesmo_simplex(svecd xbetain, size_t n){
     veca1 lapl(1);
     lapl[0] = 0.;
     for(int i=0; i < n; i++){
-       lapl[0] += Pmat.row(i) * Spos::dPmat_S(x, i) * jac;
+       lapl[0] += Pmat.row(i) * simplex::dPmat_M(x, i) * jac;
     }
     Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> hess(n * n, 1);
     hess = ll.Hessian(x, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
@@ -63,7 +63,7 @@ CppAD::ADFun<double> tapesmo_simplex(svecd xbetain, size_t n){
 
     //ghPg
     veca1 ghPg(1);
-    ghPg = gradprodsq(x).transpose() * Spos::Pmat_S(x) * jac;//jac; //gradprodsq(x).transpose().eval() *
+    ghPg = gradprodsq(x).transpose() * simplex::Pmat_M(x) * jac;//jac; //gradprodsq(x).transpose().eval() *
 
     //combine components
     veca1 smo(1);
