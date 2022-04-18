@@ -40,5 +40,5 @@ namespace { // begin the empty namespace
   }
     
 
-
+}
 
