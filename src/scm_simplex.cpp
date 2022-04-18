@@ -34,7 +34,7 @@ CppAD::ADFun<double> tapesmo_simplex(svecd xbetain, size_t n){
     x = xbeta.block(0,0,n,1);
     Pmat = simplex::Pmat_M(x);
     a1type h2;
-    h2 = prodsq(x);
+    h2 = hprod(x);
 
     // taping ll (log likelihood) store operation sequence
     CppAD::ADFun<a1type> ll;
@@ -63,7 +63,7 @@ CppAD::ADFun<double> tapesmo_simplex(svecd xbetain, size_t n){
 
     //ghPg
     veca1 ghPg(1);
-    ghPg = gradprodsq(x).transpose() * simplex::Pmat_M(x) * jac;//jac; //gradprodsq(x).transpose().eval() *
+    ghPg = gradhprod(x).transpose() * simplex::Pmat_M(x) * jac;//jac;
 
     //combine components
     veca1 smo(1);
