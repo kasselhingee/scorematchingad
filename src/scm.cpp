@@ -91,24 +91,28 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
 //calc smo and additions
 //use a pointer to an ADFun object to compute the function evaluated  at a location
 //' @title The score matching objective calculator.
-//' @param xin
+//' @param u A vector in the simplex. 
 //' @param betain
 //' @return The score matching objective value
 //' @export
 // [[Rcpp::export]]
-double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
+double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
   //convert input to an Eigen vectors
-  vecd x_e(xin.size());
-  for (int i=0; i<xin.size(); i++){
-    x_e[i] = xin[i];
+  vecd u_e(u.size());
+  for (int i=0; i<u.size(); i++){
+    u_e[i] = u[i];
   }
   vecd beta_e(betain.size());
   for (int i=0; i<betain.size(); i++){
     beta_e[i] = betain[i];
   }
 
+
+  vecd z(u_e.size());
+  z = toS(u_e);
+
   vecd xbetain(x_e.size() + beta_e.size());
-  xbetain << x_e, beta_e;
+  xbetain << z, beta_e;
   vecd smo_val(1);
   smo_val = pfun->Forward(0, xbetain);  //treat the XPtr as a regular pointer
   return(smo_val[0]);
