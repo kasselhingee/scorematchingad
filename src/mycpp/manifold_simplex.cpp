@@ -37,7 +37,7 @@ namespace simplex { // begin the empty namespace
 
   //partial derivative of the tangent-plane projection matrix
   template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> dPmat_S(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const int &d){
+  Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> dPmat_M(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const int &d){
     int n = x.size();
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> bvx(n, n);
     bvx.setZero();
