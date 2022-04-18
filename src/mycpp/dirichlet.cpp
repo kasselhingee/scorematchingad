@@ -4,11 +4,13 @@ namespace { // begin the empty namespace
     // define the log likelihood, with transformation to the sphere, for the Dirichlet distribution
     template <class a1type, class a2type>
     a1type llS(const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &a,
-	       const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &x)
+	       const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &z)
     {   size_t n  = a.size();
+	Eigen::Matrix<a1type, Eigen::Dynamic, 1> u(z.size());
+	u = fromS(z);
         a1type y(0.);  // initialize summation
         for(size_t i = 0; i < n; i++)
-        {   y   += (1 + 2 * a[i]) * log(x[i]);  
+        {   y   += a[i] * log(u[i]) + log(z[i]);  
         }
         return y;
     }

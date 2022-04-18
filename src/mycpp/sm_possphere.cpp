@@ -11,7 +11,7 @@ namespace { // begin the empty namespace
   template <class Type>
   Eigen::Matrix<Type, Eigen::Dynamic, 1> fromS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
-     out = x.array().pow(2.);
+     out = x.array().pow(2.).matrix();
      return(out);
   }
 
