@@ -120,6 +120,44 @@ double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
   return(smo_val[0]);
 }
 
+//calc smo and additions
+//use a pointer to an ADFun object to compute the function evaluated  at a location
+//' @title The score matching objective calculator.
+//' @param u A vector in the simplex.
+//' @param betain
+//' @return The score matching objective value
+//' @export
+// [[Rcpp::export]]
+svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
+  //convert input to an Eigen vectors
+  vecd u_e(u.size());
+  for (int i=0; i<u.size(); i++){
+    u_e[i] = u[i];
+  }
+  vecd beta_e(betain.size());
+  for (int i=0; i<betain.size(); i++){
+    beta_e[i] = betain[i];
+  }
+
+
+  vecd z(u_e.size());
+  z = Spos::toS(u_e);
+
+  vecd xbetain(z.size() + beta_e.size());
+  xbetain << z, beta_e;
+  vecd sc_grad(2 * n);
+  vecd out_e(n);
+  svecd out(n);
+  sc_grad = pfun->Jacobian(xbetain);  //treat the XPtr as a regular pointer
+  out_e = sc_grad.block(n,0,n,1);
+
+  //convert to std::vector
+  for (int i = 0; i<n; i++){
+    out[i] = out_e[i]
+  }
+  return(out);
+}
+
 //' @title The value of the score matching objective.
 //'
 //' @param xin the composition after sqrt transform
