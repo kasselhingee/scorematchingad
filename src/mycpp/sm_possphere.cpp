@@ -100,18 +100,4 @@ namespace { // begin the empty namespace
      return(out);
   }
 
-/////////////////////////////////////////////////////////////////
-  // The score matching components
-
-  //calcgPg
-  template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> calcgPg(
-    Eigen::Matrix<Type, Eigen::Dynamic, 1> jac, //f.Jacobian()
-    Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat){ //Pmat_S(x)
-      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(1);
-      out[0] = (Pmat * jac).dot(jac);
-      return(out);
-  }
-
-
 }
