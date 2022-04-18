@@ -1,17 +1,27 @@
 
 namespace { // begin the empty namespace
 
+    template <class a1type, class a2type>
+    a1type ll(const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &a,
+	      const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &u){
+        a1type y(0.);  // initialize summation
+        for(size_t i = 0; i < n; i++)
+        {   y   += a[i] * log(u[i]);  
+        }
+	return(y);
+    }
+
+
     // define the log likelihood, with transformation to the sphere, for the Dirichlet distribution
     template <class a1type, class a2type>
     a1type llS(const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &a,
 	       const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &z)
     {   size_t n  = a.size();
 	Eigen::Matrix<a1type, Eigen::Dynamic, 1> u(z.size());
-	u = fromS(z);
+	u = fromS(z); //transform from sphere
         a1type y(0.);  // initialize summation
-        for(size_t i = 0; i < n; i++)
-        {   y   += a[i] * log(u[i]) + log(z[i]);  
-        }
+	y += ll(u);
+	y += logdetJ_fromS(z); //add the measure correction (determinant of Jacobian) for the transformation
         return y;
     }
    

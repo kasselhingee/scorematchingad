@@ -9,12 +9,19 @@ namespace { // begin the empty namespace
   }
   
   template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> fromS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
-     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
-     out = x.array().pow(2.).matrix();
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> fromS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z){
+     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(z.size());
+     out = z.array().pow(2.).matrix();
      return(out);
   }
 
+  //the log of the Jacobian determinant for the transform - needed for converting the model pdf on the simplex to the equivalent pdf on the sphere
+  template <class Type>
+  Type logdetJ_fromS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z){
+     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(z.size());
+     out = z.array().log().sum();
+     return(out);
+  }
 
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
   template <class Type>
