@@ -44,7 +44,6 @@ test_that("ADFun XPtr for computing values", {
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
   smobj <- function(beta, utabl){
-    ztabl <- sqrt(utabl)
     sc_perpt <- lapply(1:n, function(i){
       scobj <- psmo(smofun, utabl[i, ], beta)
       return(scobj)
@@ -53,10 +52,19 @@ test_that("ADFun XPtr for computing values", {
     return(scmo)
   }
 
+  smobjgrad <- function(beta, utabl){
+    sc_perpt <- lapply(1:n, function(i){
+      scobj <- psmograd(smofun, utabl[i, ], beta)
+      return(scobj)
+    })
+    scmo <- colMeans(do.call(rbind, sc_perpt))
+    return(scmo)
+  }
+
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
   out <- optim(par = beta*0,
                fn = function(beta){smobj(beta,utabl)},
-               # gr = function(beta){smobj(beta, utabl)[["grad"]]},
+               gr = function(beta){smobjgrad(beta, utabl)},
                method = "BFGS")
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation

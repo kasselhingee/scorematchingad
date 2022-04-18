@@ -27,6 +27,15 @@ psmo <- function(pfun, u, betain) {
     .Call('_cdabyppi_psmo', PACKAGE = 'cdabyppi', pfun, u, betain)
 }
 
+#' @title The score matching objective calculator.
+#' @param u A vector in the simplex.
+#' @param betain
+#' @return The score matching objective value
+#' @export
+psmograd <- function(pfun, u, betain) {
+    .Call('_cdabyppi_psmograd', PACKAGE = 'cdabyppi', pfun, u, betain)
+}
+
 #' @title The value of the score matching objective.
 #'
 #' @param xin the composition after sqrt transform

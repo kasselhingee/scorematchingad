@@ -56,6 +56,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// psmograd
+svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain);
+RcppExport SEXP _cdabyppi_psmograd(SEXP pfunSEXP, SEXP uSEXP, SEXP betainSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< svecd >::type u(uSEXP);
+    Rcpp::traits::input_parameter< svecd >::type betain(betainSEXP);
+    rcpp_result_gen = Rcpp::wrap(psmograd(pfun, u, betain));
+    return rcpp_result_gen;
+END_RCPP
+}
 // smo_n_grad
 double smo_n_grad(svecd xin, svecd betain);
 RcppExport SEXP _cdabyppi_smo_n_grad(SEXP xinSEXP, SEXP betainSEXP) {
@@ -86,6 +99,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_rcpp_hello_world", (DL_FUNC) &_cdabyppi_rcpp_hello_world, 0},
     {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 2},
     {"_cdabyppi_psmo", (DL_FUNC) &_cdabyppi_psmo, 3},
+    {"_cdabyppi_psmograd", (DL_FUNC) &_cdabyppi_psmograd, 3},
     {"_cdabyppi_smo_n_grad", (DL_FUNC) &_cdabyppi_smo_n_grad, 2},
     {"_cdabyppi_ptapesmo_simplex", (DL_FUNC) &_cdabyppi_ptapesmo_simplex, 2},
     {NULL, NULL, 0}

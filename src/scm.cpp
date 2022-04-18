@@ -145,15 +145,15 @@ svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
 
   vecd xbetain(z.size() + beta_e.size());
   xbetain << z, beta_e;
-  vecd sc_grad(2 * n);
-  vecd out_e(n);
-  svecd out(n);
+  vecd sc_grad(xbetain.size());
+  vecd out_e(beta_e.size());
+  svecd out(beta_e.size());
   sc_grad = pfun->Jacobian(xbetain);  //treat the XPtr as a regular pointer
-  out_e = sc_grad.block(n,0,n,1);
+  out_e = sc_grad.block(z.size(),0,beta_e.size(),1);
 
   //convert to std::vector
-  for (int i = 0; i<n; i++){
-    out[i] = out_e[i]
+  for (int i = 0; i<z.size(); i++){
+    out[i] = out_e[i];
   }
   return(out);
 }
