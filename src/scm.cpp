@@ -2,7 +2,9 @@
 # include <vector>          // standard vector
 # include <cppad/example/cppad_eigen.hpp>  //load eigen
 # include <cppad/cppad.hpp> // the CppAD package
+# include "mycpp/approx.cpp"
 # include "mycpp/sm_possphere.cpp"
+# include "mycpp/hfuns.cpp"
 # include "mycpp/dirichlet.cpp"
 # include <Rcpp.h>
 using namespace Rcpp;
@@ -29,7 +31,7 @@ CppAD::ADFun<double> tapesmo(svecd xbetain, size_t n){
 
     veca1 x(n);
     x = xbeta.block(0,0,n,1);
-    Pmat = Pmat_S(x);
+    Pmat = Spos::Pmat_S(x);
     a1type h2;
     h2 = prodsq(x);
 
@@ -49,7 +51,7 @@ CppAD::ADFun<double> tapesmo(svecd xbetain, size_t n){
     veca1 lapl(1);
     lapl[0] = 0.;
     for(int i=0; i < n; i++){
-       lapl[0] += Pmat.row(i) * dPmat_S(x, i) * jac;
+       lapl[0] += Pmat.row(i) * Spos::dPmat_S(x, i) * jac;
     }
     Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> hess(n * n, 1);
     hess = ll.Hessian(x, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
@@ -60,7 +62,7 @@ CppAD::ADFun<double> tapesmo(svecd xbetain, size_t n){
 
     //ghPg
     veca1 ghPg(1);
-    ghPg = gradprodsq(x).transpose() * Pmat_S(x) * jac;//jac; //gradprodsq(x).transpose().eval() *
+    ghPg = gradprodsq(x).transpose() * Spos::Pmat_S(x) * jac;//jac; //gradprodsq(x).transpose().eval() *
 
     //combine components
     veca1 smo(1);
@@ -109,7 +111,7 @@ double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
 
 
   vecd z(u_e.size());
-  z = toS(u_e);
+  z = Spos::toS(u_e);
 
   vecd xbetain(z.size() + beta_e.size());
   xbetain << z, beta_e;
@@ -154,7 +156,7 @@ double smo_n_grad(svecd xin, svecd betain){
     if (std::isnan(smo_val[0])){
       std::cout << "SMO is NAN" << std::endl;
       if (xbetain.block(0,0,n,1).minCoeff() < 1E-5){ //can't used xin because it is svecd, not part of Eigen
-        smo_val = taylorapprox_bdry(smofun, 100, xbetain, 1E-4);
+        smo_val = Spos::taylorapprox_bdry(smofun, 100, xbetain, 1E-4);
       }
     }
 

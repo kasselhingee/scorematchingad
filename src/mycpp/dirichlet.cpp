@@ -17,10 +17,10 @@ namespace { // begin the empty namespace
 	       const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &z)
     {   size_t n  = a.size();
 	      Eigen::Matrix<a1type, Eigen::Dynamic, 1> u(z.size());
-	      u = fromS(z);
+	      u = Spos::fromS(z);
         a1type y(0.);  // initialize summation
         y += ll(a, u);
-        y += logdetJ_fromS(z);
+        y += Spos::logdetJ_fromS(z);
         return y;
     }
 
