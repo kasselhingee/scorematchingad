@@ -114,26 +114,6 @@ double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
   return(smo_val[0]);
 }
 
-//use a pointer to an ADFun object to compute the function evaluated  at a location
-//' @title The score matching objective calculator for a matrix.
-//' @param xbetain a concatenated vector of sqrt(x) and beta
-//' @param n The dimension of x.
-//' @return The score matching objective value.
-//' @export
-// [[Rcpp::export]]
-// double psmo(XPtr< CppAD::ADFun<double> > pfun, Rcpp::NumericMatrix xin, svecd betain){
-//   size_t n = xin.nrow(); //number of observations
-//   double smo = 0.0;
-//   std::vector<double> anx = xin.row(0);
-//   for (int i=0; i<n; i++){
-//     anx = xin.row(i);
-//     smo += psmo_single(pfun, svecd anx, svecd betain)
-//   }
-//
-//   return(smo);
-// }
-
-
 //' @title The value of the score matching objective.
 //'
 //' @param xin the composition after sqrt transform
