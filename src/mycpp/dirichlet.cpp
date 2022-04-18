@@ -1,7 +1,6 @@
 
 namespace { // begin the empty namespace
 
-    template <class a1type, class a2type>
     a1type ll(const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &a,
 	      const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &u){
         a1type y(0.);  // initialize summation
@@ -20,7 +19,7 @@ namespace { // begin the empty namespace
 	Eigen::Matrix<a1type, Eigen::Dynamic, 1> u(z.size());
 	u = fromS(z); //transform from sphere
         a1type y(0.);  // initialize summation
-	y += ll(u);
+	y += ll(a, u);
 	y += logdetJ_fromS(z); //add the measure correction (determinant of Jacobian) for the transformation
         return y;
     }
