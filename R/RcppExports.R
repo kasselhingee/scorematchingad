@@ -23,8 +23,8 @@ ptapesmo <- function(xbetain, n) {
 #' @param betain
 #' @return The score matching objective value
 #' @export
-psmo_single <- function(pfun, xin, betain) {
-    .Call('_cdabyppi_psmo_single', PACKAGE = 'cdabyppi', pfun, xin, betain)
+psmo <- function(pfun, xin, betain) {
+    .Call('_cdabyppi_psmo', PACKAGE = 'cdabyppi', pfun, xin, betain)
 }
 
 #' @title The score matching objective calculator for a matrix.

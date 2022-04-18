@@ -1,6 +1,20 @@
-// code for computing the score matching components on the sphere
-// given an ADFun object that has taped the log likelihood
+// code for various tools for the positive quadrant of the sphere
 namespace { // begin the empty namespace
+
+  template <class Type>
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> toS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
+     out = x.cwiseSqrt();
+     return(out);
+  }
+  
+  template <class Type>
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> fromS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
+     out = x.cwiseSqrt();
+     return(out);
+  }
+
 
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
   template <class Type>

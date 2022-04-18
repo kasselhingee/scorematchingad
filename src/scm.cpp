@@ -5,7 +5,6 @@
 # include "mycpp/sm_possphere.cpp"
 # include "mycpp/dirichlet.cpp"
 # include <Rcpp.h>
-# include <RcppEigen.h>
 using namespace Rcpp;
 
 typedef std::vector<double> svecd;
@@ -97,14 +96,19 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
 //' @return The score matching objective value
 //' @export
 // [[Rcpp::export]]
-double psmo_single(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
-  vecd xbetain(xin.size() + betain.size());
+double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd xin, svecd betain){
+  //convert input to an Eigen vectors
+  vecd x_e(xin.size());
   for (int i=0; i<xin.size(); i++){
-    xbetain[i] = xin[i];
+    x_e[i] = xin[i];
   }
+  vecd beta_e(betain.size());
   for (int i=0; i<betain.size(); i++){
-    xbetain[i + xin.size()] = betain[i];
+    beta_e[i] = betain[i];
   }
+
+  vecd xbetain(x_e.size() + beta_e.size());
+  xbetain << x_e, beta_e;
   vecd smo_val(1);
   smo_val = pfun->Forward(0, xbetain);  //treat the XPtr as a regular pointer
   return(smo_val[0]);
