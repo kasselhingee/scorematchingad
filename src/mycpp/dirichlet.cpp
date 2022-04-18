@@ -1,40 +1,35 @@
 
 namespace { // begin the empty namespace
 
-    typedef CppAD::AD<double> a1type;   // for first (outer) level of taping
-    typedef CppAD::AD<a1type> a2type;  // for second (inner) level of taping
-
-    template <class a1type, class a2type>
-    a2type ll(const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &a,
+    a1type ll(const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &a,
 	      const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &u){
-        size_t n = u.size();
-        a2type y(0.);  // initialize summation
+        a1type y(0.);  // initialize summation
         for(size_t i = 0; i < n; i++)
-        {   y += log(u[i]) * a[i];
+        {   y   += a[i] * log(u[i]);  
         }
-      	return(y);
+	return(y);
     }
+
 
     // define the log likelihood, with transformation to the sphere, for the Dirichlet distribution
     template <class a1type, class a2type>
-    a2type llS(const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &a,
+    a1type llS(const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &a,
 	       const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &z)
-      {
-      size_t n  = a.size();
-      Eigen::Matrix<a1type, Eigen::Dynamic, 1> u(z.size());
-	    u = fromS(z); //transform from sphere
-      a2type y(0.);  // initialize summation
-      a2type logdetJ(logdetJ_fromS(z));
-	    y += ll(a, u);
-	    y += logdetJ; //add the measure correction (determinant of Jacobian) for the transformation
-      return(y);
+    {   size_t n  = a.size();
+	Eigen::Matrix<a1type, Eigen::Dynamic, 1> u(z.size());
+	u = fromS(z); //transform from sphere
+        a1type y(0.);  // initialize summation
+	y += ll(a, u);
+	y += logdetJ_fromS(z); //add the measure correction (determinant of Jacobian) for the transformation
+        return y;
     }
-
-    // define a function that tapes the above function
+   
+    // define a function that tapes the above function 
+    template <class a1type>
       CppAD::ADFun<a1type> tapellS(Eigen::Matrix<a1type, Eigen::Dynamic, 1> xbeta){
       typedef CppAD::AD<a1type> a2type;  // for second (inner) level of taping
       size_t n = 3;                  // number of dimensions
-
+      
       Eigen::Matrix<a1type, Eigen::Dynamic, 1> a(n); // vector of exponents in the outer type
       //declare dummy internal level of taping variables:
       Eigen::Matrix<a2type, Eigen::Dynamic, 1> ax(n); // vector of domain space variables
@@ -42,7 +37,7 @@ namespace { // begin the empty namespace
          a[i] = xbeta[i + n];
          ax[i] = 3.;
       }
-
+    
       //tape relationship between x and log-likelihood
       CppAD::Independent(ax);
 
@@ -54,7 +49,7 @@ namespace { // begin the empty namespace
       f.Dependent(ax, ay);
       return(f);
   }
-
+    
 
 }
 
