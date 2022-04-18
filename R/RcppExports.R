@@ -37,3 +37,12 @@ smo_n_grad <- function(xin, betain) {
     .Call('_cdabyppi_smo_n_grad', PACKAGE = 'cdabyppi', xin, betain)
 }
 
+#' @title The score matching objective calculator.
+#' @param xbetain a concatenated vector of sqrt(x) and beta
+#' @param n The dimension of x.
+#' @return An RCpp::XPtr object pointing to the ADFun
+#' @export
+ptapesmo_simplex <- function(xbetain, n) {
+    .Call('_cdabyppi_ptapesmo_simplex', PACKAGE = 'cdabyppi', xbetain, n)
+}
+
