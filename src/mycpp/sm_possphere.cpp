@@ -15,6 +15,13 @@ namespace { // begin the empty namespace
      return(out);
   }
 
+  template <class Type>
+  Type logdetJ_fromS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z){
+     Type out;
+     out = z.array().log().sum();
+     return(out);
+  }
+
 
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
   template <class Type>

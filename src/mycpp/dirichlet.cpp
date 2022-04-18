@@ -20,9 +20,7 @@ namespace { // begin the empty namespace
 	      u = fromS(z);
         a1type y(0.);  // initialize summation
         y += ll(a, u);
-        for(size_t i = 0; i < n; i++)
-        {   y   += log(z[i]);
-        }
+        y += logdetJ_fromS(z);
         return y;
     }
 
