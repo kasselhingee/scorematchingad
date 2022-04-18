@@ -7,11 +7,11 @@ namespace { // begin the empty namespace
      out = x.cwiseSqrt();
      return(out);
   }
-  
+
   template <class Type>
   Eigen::Matrix<Type, Eigen::Dynamic, 1> fromS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
-     out = x.array().pow(2.).matrix();
+     out = x.cwiseProduct(x);
      return(out);
   }
 
@@ -20,11 +20,11 @@ namespace { // begin the empty namespace
   template <class Type>
   Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat_S(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
     int n = x.size();
-    Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n); 
+    Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n);
     Pmat = Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>::Identity(n,n) - x*x.transpose();
     return(Pmat);
   }
- 
+
   //partial derivative of the tangent-plane projection matrix
   template <class Type>
   Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> dPmat_S(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const int &d){
@@ -68,7 +68,7 @@ namespace { // begin the empty namespace
   Eigen::Matrix<Type, Eigen::Dynamic, 1> taylorapprox(
 		  CppAD::ADFun<Type> &f,
 		  const Eigen::Matrix<Type, Eigen::Dynamic, 1> centre,
-		  const size_t order, 
+		  const size_t order,
 		  const Eigen::Matrix<Type, Eigen::Dynamic, 1> x){
     //In CppAD speak consider the input function X(t) to be
     //X(t) = centre + t*(x - centre). So X(0) = centre, X(1) = x.
@@ -90,12 +90,12 @@ namespace { // begin the empty namespace
     }
     return(out);
   }
- 
-  //automatically choose approximation centre 
+
+  //automatically choose approximation centre
   template <class Type>
   Eigen::Matrix<Type, Eigen::Dynamic, 1> taylorapprox_bdry(
 		  CppAD::ADFun<Type> &f,
-		  const size_t order, 
+		  const size_t order,
 		  const Eigen::Matrix<Type, Eigen::Dynamic, 1> xbeta,
 		  double shiftsize=1E-5){
      Eigen::Matrix<Type, Eigen::Dynamic, 1> x(xbeta.size() / 2);
