@@ -46,7 +46,7 @@ test_that("ADFun XPtr for computing values", {
   smobj <- function(beta, utabl){
     ztabl <- sqrt(utabl)
     sc_perpt <- lapply(1:n, function(i){
-      scobj <- psmo_n_grad(smofun, ztabl[i, ], beta)
+      scobj <- psmo(smofun, utabl[i, ], beta)
       return(scobj)
     })
     scmo <- mean(unlist(sc_perpt))
