@@ -17,31 +17,39 @@ typedef CppAD::AD<a1type> a2type;  // for second (inner) level of taping
 typedef Eigen::Matrix<a2type, Eigen::Dynamic, 1> veca2;
 
 // smo functions
-CppAD::ADFun<double> tapesmo(svecd xbetain, size_t n){
-    veca1 xbeta(xbetain.size());
-    for (int i=0; i < xbetain.size(); i++){
-       xbeta[i] = xbetain[i];
+CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n){
+    veca1 ubeta(ubetain.size());
+    for (int i=0; i < ubetain.size(); i++){
+       ubeta[i] = ubetain[i];
     }
 
     //Projection matrix
     Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n);
 
     //START TAPING
-    CppAD::Independent(xbeta);
+    CppAD::Independent(ubeta);
 
-    veca1 x(n);
-    x = xbeta.block(0,0,n,1);
-    Pmat = Spos::Pmat_S(x);
+    veca1 u(n);
+    u = ubeta.block(0,0,n,1);
+    veca1 z(n);
+    z = Spos::toS(u); //transform u to the sphere
+    veca1 zbeta(ubeta.size());
+    for (int i=0; i<n; i++){
+      zbeta[i] = z[i];
+      zbeta[n + i] = ubeta[n+i];
+    }
+
+    Pmat = Spos::Pmat_S(z);
     a1type h2;
-    h2 = prodsq(x);
+    h2 = prodsq(z);
 
     // taping ll (log likelihood) store operation sequence
     CppAD::ADFun<a1type> ll;
-    ll = tapellS(xbeta);
+    ll = tapellS(zbeta);
 
     //grad(ll)
     veca1 jac(n); // Jacobian of ll
-    jac  = ll.Jacobian(x);      // Jacobian for operation sequence
+    jac  = ll.Jacobian(z);      // Jacobian for operation sequence
 
     //hgPg
     veca1 hgPg(1);
@@ -51,10 +59,10 @@ CppAD::ADFun<double> tapesmo(svecd xbetain, size_t n){
     veca1 lapl(1);
     lapl[0] = 0.;
     for(int i=0; i < n; i++){
-       lapl[0] += Pmat.row(i) * Spos::dPmat_S(x, i) * jac;
+       lapl[0] += Pmat.row(i) * Spos::dPmat_S(z, i) * jac;
     }
     Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> hess(n * n, 1);
-    hess = ll.Hessian(x, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
+    hess = ll.Hessian(z, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
     hess.resize(n, n);
     lapl[0] += (Pmat*hess).trace();
     lapl[0] *= h2; //weight by h2
@@ -62,7 +70,7 @@ CppAD::ADFun<double> tapesmo(svecd xbetain, size_t n){
 
     //ghPg
     veca1 ghPg(1);
-    ghPg = gradprodsq(x).transpose() * Spos::Pmat_S(x) * jac;//jac; //gradprodsq(x).transpose().eval() *
+    ghPg = gradprodsq(z).transpose() * Spos::Pmat_S(z) * jac;//jac; //gradprodsq(x).transpose().eval() *
 
     //combine components
     veca1 smo(1);
@@ -70,7 +78,7 @@ CppAD::ADFun<double> tapesmo(svecd xbetain, size_t n){
 
     //finish taping
     CppAD::ADFun<double> smofun;
-    smofun.Dependent(xbeta, smo);
+    smofun.Dependent(ubeta, smo);
     smofun.optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
     smofun.check_for_nan(false); //no error if some of the results of the Jacobian are nan.
     return(smofun);
@@ -109,12 +117,8 @@ double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
     beta_e[i] = betain[i];
   }
 
-
-  vecd z(u_e.size());
-  z = Spos::toS(u_e);
-
-  vecd xbetain(z.size() + beta_e.size());
-  xbetain << z, beta_e;
+  vecd xbetain(u_e.size() + beta_e.size());
+  xbetain << u_e, beta_e;
   vecd smo_val(1);
   smo_val = pfun->Forward(0, xbetain);  //treat the XPtr as a regular pointer
   return(smo_val[0]);
@@ -140,19 +144,16 @@ svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
   }
 
 
-  vecd z(u_e.size());
-  z = Spos::toS(u_e);
-
-  vecd xbetain(z.size() + beta_e.size());
-  xbetain << z, beta_e;
+  vecd xbetain(u_e.size() + beta_e.size());
+  xbetain << u_e, beta_e;
   vecd sc_grad(xbetain.size());
   vecd out_e(beta_e.size());
   svecd out(beta_e.size());
   sc_grad = pfun->Jacobian(xbetain);  //treat the XPtr as a regular pointer
-  out_e = sc_grad.block(z.size(),0,beta_e.size(),1);
+  out_e = sc_grad.block(u_e.size(),0,beta_e.size(),1);
 
   //convert to std::vector
-  for (int i = 0; i<z.size(); i++){
+  for (int i = 0; i<u_e.size(); i++){
     out[i] = out_e[i];
   }
   return(out);

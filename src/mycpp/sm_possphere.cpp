@@ -4,6 +4,9 @@ namespace Spos { // begin the empty namespace
   template <class Type>
   Eigen::Matrix<Type, Eigen::Dynamic, 1> toS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
+     // for (int i=0; i<x.size(); i++){
+     //   out[i] = CppAD::sqrt(x[i]);
+     // }
      out = x.cwiseSqrt();
      return(out);
   }
