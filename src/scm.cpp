@@ -121,8 +121,16 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 //' @return An RCpp::XPtr object pointing to the ADFun
 //' @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
+XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
+                                      size_t n,
+                                      std::string weightname){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  if (weightname.compare("prodsq") == 0){
+    std::cout << "Using product weight function" << std::endl;
+  } else {
+    std::cout << "Not using product weight function" << std::endl;
+    std::cout << weightname << std::endl;
+  }
   *out = tapesmo(xbetain, n, ll,
                  Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
                  Spos::fromS, Spos::logdetJ_fromS,
@@ -138,7 +146,8 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
 //' @return An RCpp::XPtr object pointing to the ADFun
 //' @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > ptapesmo_simplex(svecd xbetain, size_t n){
+XPtr< CppAD::ADFun<double> > ptapesmo_simplex(svecd xbetain,
+                                              size_t n){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   *out = tapesmo(xbetain, n, ll,
                  simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
