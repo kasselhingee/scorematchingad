@@ -44,7 +44,12 @@ namespace { // begin the empty namespace
       // range space vector
       size_t m = 1;               // number of ranges space variables
       Eigen::Matrix<a2type, Eigen::Dynamic, 1> y(m); // vector of ranges space variables
-      y[0] = llS(beta, z);     // record operations that compute ay[0]
+      Eigen::Matrix<a2type, Eigen::Dynamic, 1> u(z.size());
+      u = Spos::fromS(z);
+      y.setZero();
+      y[0] += ll(beta, u);
+      y[0] += Spos::logdetJ_fromS(z);
+
       CppAD::ADFun<a1type> f;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
       f.Dependent(z, y);
       return(f);
