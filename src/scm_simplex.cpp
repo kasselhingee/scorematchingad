@@ -34,12 +34,12 @@ CppAD::ADFun<double> tapesmo_simplex(svecd xbetain, size_t n){
     h2 = prodsq(x);
 
     // taping ll (log likelihood) store operation sequence
-    CppAD::ADFun<a1type> ll;
-    ll = tapellsimplex(xbeta);
+    CppAD::ADFun<a1type> lltape;
+    lltape = tapellS(xbeta, ll, simplex::fromM, simplex::logdetJ_fromM);
 
     //grad(ll)
     veca1 jac(n); // Jacobian of ll
-    jac  = ll.Jacobian(x);      // Jacobian for operation sequence
+    jac  = lltape.Jacobian(x);      // Jacobian for operation sequence
 
     //hgPg
     veca1 hgPg(1);
@@ -52,7 +52,7 @@ CppAD::ADFun<double> tapesmo_simplex(svecd xbetain, size_t n){
        lapl[0] += Pmat.row(i) * simplex::dPmat_M(x, i) * jac;
     }
     Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> hess(n * n, 1);
-    hess = ll.Hessian(x, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
+    hess = lltape.Hessian(x, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
     hess.resize(n, n);
     lapl[0] += (Pmat*hess).trace();
     lapl[0] *= h2; //weight by h2
