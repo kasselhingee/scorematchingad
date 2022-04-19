@@ -1,8 +1,8 @@
 
 namespace { // begin the empty namespace
 
-    a2type ll(const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &beta,
-	       const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &u)
+    a2type ll(const veca1 &beta,
+	       const veca2 &u)
     {   size_t n  = beta.size();
         a2type y(0.);  // initialize summation
         for(size_t i = 0; i < n; i++)
@@ -12,7 +12,9 @@ namespace { // begin the empty namespace
     }
 
     // define a function that tapes the above function
-      CppAD::ADFun<a1type> tapellS(Eigen::Matrix<a1type, Eigen::Dynamic, 1> zbeta){
+      CppAD::ADFun<a1type> tapellS(veca1 zbeta,
+                                   a2type (*f)(const veca1 &, const veca2 &)
+                                   ){
       size_t n = 3;                  // number of dimensions
 
       Eigen::Matrix<a1type, Eigen::Dynamic, 1> beta(n); // vector of exponents in the outer type
@@ -35,9 +37,9 @@ namespace { // begin the empty namespace
       y[0] += ll(beta, u);
       y[0] += Spos::logdetJ_fromS(z);
 
-      CppAD::ADFun<a1type> f;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
-      f.Dependent(z, y);
-      return(f);
+      CppAD::ADFun<a1type> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
+      tape.Dependent(z, y);
+      return(tape);
   }
 
     template <class a1type>
