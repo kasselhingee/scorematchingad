@@ -1,26 +1,13 @@
 
 namespace { // begin the empty namespace
 
-    template <class a1type, class a2type>
-    a1type ll(const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &a,
-	       const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &u)
-    {   size_t n  = a.size();
-        a1type y(0.);  // initialize summation
+    a2type ll(const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &beta,
+	       const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &u)
+    {   size_t n  = beta.size();
+        a2type y(0.);  // initialize summation
         for(size_t i = 0; i < n; i++)
-        {   y   += a[i] * log(u[i]);
+        {   y   += beta[i] * log(u[i]);
         }
-        return y;
-    }
-
-    template <class a1type, class a2type>
-    a1type llS(const Eigen::Matrix<a2type, Eigen::Dynamic, 1> &a,
-	       const Eigen::Matrix<a1type, Eigen::Dynamic, 1> &z)
-    {   size_t n  = a.size();
-	      Eigen::Matrix<a1type, Eigen::Dynamic, 1> u(z.size());
-	      u = Spos::fromS(z);
-        a1type y(0.);  // initialize summation
-        y += ll(a, u);
-        y += Spos::logdetJ_fromS(z);
         return y;
     }
 

@@ -1,12 +1,8 @@
-# include <iostream>        // standard input/output
-# include <vector>          // standard vector
-# include <cppad/example/cppad_eigen.hpp>  //load eigen
-# include <cppad/cppad.hpp> // the CppAD package
+# include "cdabyppi_types.h"
 # include "mycpp/approx.cpp"
 # include "mycpp/sm_possphere.cpp"
 # include "mycpp/hfuns.cpp"
 # include "mycpp/dirichlet.cpp"
-# include <Rcpp.h>
 using namespace Rcpp;
 
 typedef std::vector<double> svecd;
