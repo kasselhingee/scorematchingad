@@ -1,8 +1,8 @@
 
 test_that("cppad-based Score2 estimate leads to a match for large number of observations", {
   smofun <- ptapesmo_simplex(c(1,1,1,3,3,3), 3)
-  beta = c(0.3, 0.2, 3)
-  n = 1E6
+  beta = c(-0.3, -0.1, 3)
+  n = 1000
   set.seed(134)
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
