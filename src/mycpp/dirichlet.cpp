@@ -11,35 +11,6 @@ namespace { // begin the empty namespace
         return y;
     }
 
-// define a function that tapes a log likelihood
-CppAD::ADFun<a1type> tapell(veca1 zbeta,
-                               a2type (*llf)(const veca1 &, const veca2 &), //the log likelihood function
-                               veca2 (*fromM)(const veca2 &), //transformation from manifold to simplex
-                               a2type (*logdetJfromM)(const veca2 &) //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-                               ){
-  size_t n = 3;                  // number of dimensions
-  veca1 beta(n); // vector of exponents in the outer type
-  //declare dummy internal level of taping variables:
-  veca2 z(n); // vector of domain space variables
-  for(int i = 0; i < n; i++){
-     beta[i] = zbeta[i + n];
-     z[i] = zbeta[i];
-  }
-
-  //tape relationship between x and log-likelihood
-  CppAD::Independent(z);
-  // range space vector
-  size_t m = 1;               // number of ranges space variables
-  veca2 y(m); // vector of ranges space variables
-  veca2 u(z.size());
-  u = fromM(z);
-  y.setZero();
-  y[0] += llf(beta, u);
-  y[0] += logdetJfromM(z);
-  CppAD::ADFun<a1type> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
-  tape.Dependent(z, y);
-  return(tape);
-}
 
 }
 
