@@ -123,6 +123,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
                                       size_t n,
+                                      std::string manifoldname,
                                       std::string weightname){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   a1type (*h2fun)(const veca1 &);
@@ -137,10 +138,19 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
     h2fun = hprod;
     gradh2fun = gradhprod;
   }
+
+  if (manifoldname.compare("sphere") == 0){
   *out = tapesmo(xbetain, n, ll,
                  Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
                  Spos::fromS, Spos::logdetJ_fromS,
                  h2fun, gradh2fun);
+  }
+  if (manifoldname.compare("simplex") == 0){
+  *out = tapesmo(xbetain, n, ll,
+                 simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
+                 simplex::fromM, simplex::logdetJ_fromM,
+                 h2fun, gradh2fun);
+  }
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
