@@ -15,7 +15,8 @@ namespace { // begin the empty namespace
     // define a function that tapes the above function
       CppAD::ADFun<a1type> tapellS(veca1 zbeta,
                                    a2type (*llf)(const veca1 &, const veca2 &),
-                                   veca2 (*fromM)(const veca2 &)
+                                   veca2 (*fromM)(const veca2 &),
+                                   a2type (*logdetJfromM)(const veca2 &)
                                    ){
       size_t n = 3;                  // number of dimensions
 
@@ -37,7 +38,7 @@ namespace { // begin the empty namespace
       u = fromM(z);
       y.setZero();
       y[0] += llf(beta, u);
-      y[0] += Spos::logdetJ_fromS(z);
+      y[0] += logdetJfromM(z);
 
       CppAD::ADFun<a1type> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
       tape.Dependent(z, y);
