@@ -19,6 +19,15 @@ ptapesmo <- function(xbetain, n) {
 }
 
 #' @title The score matching objective calculator.
+#' @param xbetain a concatenated vector of sqrt(x) and beta
+#' @param n The dimension of x.
+#' @return An RCpp::XPtr object pointing to the ADFun
+#' @export
+ptapesmo_simplex <- function(xbetain, n) {
+    .Call('_cdabyppi_ptapesmo_simplex', PACKAGE = 'cdabyppi', xbetain, n)
+}
+
+#' @title The score matching objective calculator.
 #' @param u A vector in the simplex.
 #' @param betain
 #' @return The score matching objective value
@@ -34,14 +43,5 @@ psmo <- function(pfun, u, betain) {
 #' @export
 psmograd <- function(pfun, u, betain) {
     .Call('_cdabyppi_psmograd', PACKAGE = 'cdabyppi', pfun, u, betain)
-}
-
-#' @title The score matching objective calculator.
-#' @param xbetain a concatenated vector of sqrt(x) and beta
-#' @param n The dimension of x.
-#' @return An RCpp::XPtr object pointing to the ADFun
-#' @export
-ptapesmo_simplex <- function(xbetain, n) {
-    .Call('_cdabyppi_ptapesmo_simplex', PACKAGE = 'cdabyppi', xbetain, n)
 }
 

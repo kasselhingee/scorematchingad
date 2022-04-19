@@ -1,6 +1,7 @@
 # include "cdabyppi_types.h"
 # include "mycpp/approx.cpp"
 # include "mycpp/sm_possphere.cpp"
+# include "mycpp/manifold_simplex.cpp"
 # include "mycpp/hfuns.cpp"
 # include "mycpp/dirichlet.cpp"
 using namespace Rcpp;
@@ -94,6 +95,23 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
   *out = tapesmo(xbetain, n,
                  Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
                  ll, Spos::fromS, Spos::logdetJ_fromS,
+                 prodsq, gradprodsq);
+  XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}
+
+//in R store a pointer to the ADFun object
+//' @title The score matching objective calculator.
+//' @param xbetain a concatenated vector of sqrt(x) and beta
+//' @param n The dimension of x.
+//' @return An RCpp::XPtr object pointing to the ADFun
+//' @export
+// [[Rcpp::export]]
+XPtr< CppAD::ADFun<double> > ptapesmo_simplex(svecd xbetain, size_t n){
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  *out = tapesmo(xbetain, n,
+                 simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
+                 ll, simplex::fromM, simplex::logdetJ_fromM,
                  prodsq, gradprodsq);
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
