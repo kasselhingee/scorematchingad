@@ -13,10 +13,9 @@ namespace { // begin the empty namespace
 
 
     // define a function that tapes the above function
-    template <template<typename Type> typename Func(Eigen::Matrix<Type, Eigen::Dynamic, 1>)> //so called 'template template' argument https://stackoverflow.com/questions/1282914/pass-pointer-to-template-function-as-function-argument
       CppAD::ADFun<a1type> tapellS(veca1 zbeta,
                                    a2type (*llf)(const veca1 &, const veca2 &),
-                                   Func fromM
+                                   veca2 (*fromM)(const veca2 &)
                                    ){
       size_t n = 3;                  // number of dimensions
 
@@ -35,7 +34,7 @@ namespace { // begin the empty namespace
       size_t m = 1;               // number of ranges space variables
       veca2 y(m); // vector of ranges space variables
       veca2 u(z.size());
-      u = fromM<veca2>(z);
+      u = fromM(z);
       y.setZero();
       y[0] += llf(beta, u);
       y[0] += Spos::logdetJ_fromS(z);
