@@ -37,15 +37,16 @@ CppAD::ADFun<a1type> tapell(veca1 zbeta,
 }
 
 // function that tapes the score-matching objective
-CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n,
-                             veca1 (*toM)(const veca1 &),
-                             mata1 (*Pmatfun)(const veca1 &),
-                             mata1 (*dPmatfun)(const veca1 &, const int &),
+CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is the measurement, the remaining elements are the parameters
+                             size_t n, //the dimension of the measurements (number of components)
                              a2type (*llf)(const veca1 &, const veca2 &), //the log likelihood function
+                             veca1 (*toM)(const veca1 &), //map from simplex to manifold
+                             mata1 (*Pmatfun)(const veca1 &), //projection matrix for manifold
+                             mata1 (*dPmatfun)(const veca1 &, const int &),//elementwise derivative of projection matrix for manifold
                              veca2 (*fromM)(const veca2 &), //transformation from manifold to simplex
                              a2type (*logdetJfromM)(const veca2 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-                             a1type (*h2fun)(const veca1 &),
-                             veca1 (*gradh2fun)(const veca1 &)
+                             a1type (*h2fun)(const veca1 &), // the weight function h^2
+                             veca1 (*gradh2fun)(const veca1 &)// the gradient of the weight function h^2
                              ){
     veca1 ubeta(ubetain.size());
     for (int i=0; i < ubetain.size(); i++){
@@ -122,9 +123,9 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n,
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapesmo(xbetain, n,
+  *out = tapesmo(xbetain, n, ll,
                  Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
-                 ll, Spos::fromS, Spos::logdetJ_fromS,
+                 Spos::fromS, Spos::logdetJ_fromS,
                  prodsq, gradprodsq);
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
@@ -139,9 +140,9 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo_simplex(svecd xbetain, size_t n){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapesmo(xbetain, n,
+  *out = tapesmo(xbetain, n, ll,
                  simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
-                 ll, simplex::fromM, simplex::logdetJ_fromM,
+                 simplex::fromM, simplex::logdetJ_fromM,
                  prodsq, gradprodsq);
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
