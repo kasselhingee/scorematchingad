@@ -69,18 +69,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// smo_n_grad
-double smo_n_grad(svecd xin, svecd betain);
-RcppExport SEXP _cdabyppi_smo_n_grad(SEXP xinSEXP, SEXP betainSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< svecd >::type xin(xinSEXP);
-    Rcpp::traits::input_parameter< svecd >::type betain(betainSEXP);
-    rcpp_result_gen = Rcpp::wrap(smo_n_grad(xin, betain));
-    return rcpp_result_gen;
-END_RCPP
-}
 // ptapesmo_simplex
 XPtr< CppAD::ADFun<double> > ptapesmo_simplex(svecd xbetain, size_t n);
 RcppExport SEXP _cdabyppi_ptapesmo_simplex(SEXP xbetainSEXP, SEXP nSEXP) {
@@ -100,7 +88,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 2},
     {"_cdabyppi_psmo", (DL_FUNC) &_cdabyppi_psmo, 3},
     {"_cdabyppi_psmograd", (DL_FUNC) &_cdabyppi_psmograd, 3},
-    {"_cdabyppi_smo_n_grad", (DL_FUNC) &_cdabyppi_smo_n_grad, 2},
     {"_cdabyppi_ptapesmo_simplex", (DL_FUNC) &_cdabyppi_ptapesmo_simplex, 2},
     {NULL, NULL, 0}
 };

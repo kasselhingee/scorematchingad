@@ -36,16 +36,6 @@ psmograd <- function(pfun, u, betain) {
     .Call('_cdabyppi_psmograd', PACKAGE = 'cdabyppi', pfun, u, betain)
 }
 
-#' @title The value of the score matching objective.
-#'
-#' @param xin the composition after sqrt transform
-#' @param betain the beta values
-#' @return the score matching objective for `xin`
-#' @export
-smo_n_grad <- function(xin, betain) {
-    .Call('_cdabyppi_smo_n_grad', PACKAGE = 'cdabyppi', xin, betain)
-}
-
 #' @title The score matching objective calculator.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
 #' @param n The dimension of x.
