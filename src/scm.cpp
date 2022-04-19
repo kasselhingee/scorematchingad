@@ -9,7 +9,12 @@ using namespace Rcpp;
 CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n,
                              veca1 (*toM)(const veca1 &),
                              mata1 (*Pmatfun)(const veca1 &),
-                             mata1 (*dPmatfun)(const veca1 &, const int &)
+                             mata1 (*dPmatfun)(const veca1 &, const int &),
+                             a2type (*llf)(const veca1 &, const veca2 &), //the log likelihood function
+                             veca2 (*fromM)(const veca2 &), //transformation from manifold to simplex
+                             a2type (*logdetJfromM)(const veca2 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+                             a1type (*h2fun)(const veca1 &),
+                             veca1 (*gradh2fun)(const veca1 &)
                              ){
     veca1 ubeta(ubetain.size());
     for (int i=0; i < ubetain.size(); i++){
@@ -34,11 +39,11 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n,
 
     Pmat = Pmatfun(z);
     a1type h2;
-    h2 = prodsq(z);
+    h2 = h2fun(z);
 
     // taping ll (log likelihood) store operation sequence
     CppAD::ADFun<a1type> lltape;
-    lltape = tapell(zbeta, ll, Spos::fromS, Spos::logdetJ_fromS);
+    lltape = tapell(zbeta, llf, fromM, logdetJfromM);
 
     //grad(ll)
     veca1 jac(n); // Jacobian of ll
@@ -63,7 +68,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n,
 
     //ghPg
     veca1 ghPg(1);
-    ghPg = gradprodsq(z).transpose() * Pmat * jac;//jac; //gradprodsq(x).transpose().eval() *
+    ghPg = gradh2fun(z).transpose() * Pmat * jac;//jac; //gradprodsq(x).transpose().eval() *
 
     //combine components
     veca1 smo(1);
@@ -86,7 +91,10 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n,
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapesmo(xbetain, n, Spos::toS, Spos::Pmat_S, Spos::dPmat_S);
+  *out = tapesmo(xbetain, n,
+                 Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
+                 ll, Spos::fromS, Spos::logdetJ_fromS,
+                 prodsq, gradprodsq);
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
