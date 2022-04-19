@@ -16,3 +16,4 @@ test_that("ADFun XPtr for computing values", {
   directestimate <- estimator2_dir(utabl, 1)
   expect_equal(out$par, directestimate, tolerance = 1E-3, ignore_attr = TRUE)
 })
+
