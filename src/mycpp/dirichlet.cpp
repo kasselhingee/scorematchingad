@@ -12,9 +12,7 @@ namespace { // begin the empty namespace
     }
 
     // define a function that tapes the above function
-    template <class a1type>
       CppAD::ADFun<a1type> tapellS(Eigen::Matrix<a1type, Eigen::Dynamic, 1> zbeta){
-      typedef CppAD::AD<a1type> a2type;  // for second (inner) level of taping
       size_t n = 3;                  // number of dimensions
 
       Eigen::Matrix<a1type, Eigen::Dynamic, 1> beta(n); // vector of exponents in the outer type
