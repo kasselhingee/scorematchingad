@@ -15,7 +15,7 @@
     Eigen::Matrix<Type, Eigen::Dynamic, 1> avoidone(n-1);
     Type prodx;
     prodx = 2 * x.array().prod();
-    for (int i=0; i < n; i++){
+    for (size_t i=0; i < n; i++){
 	avoidone << x.head(i), x.tail(n-i-1);
 	out[i] = prodx * avoidone.prod();
     }
@@ -35,7 +35,7 @@
     size_t n = x.size();
     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(n);
     Eigen::Matrix<Type, Eigen::Dynamic, 1> avoidone(n-1);
-    for (int i=0; i < n; i++){
+    for (size_t i=0; i < n; i++){
       avoidone << x.head(i), x.tail(n-i-1);
       out[i] = avoidone.prod();
     }

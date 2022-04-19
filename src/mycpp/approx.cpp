@@ -17,7 +17,7 @@
       out += f.Forward(1, diff); //now out[0] is evaluation of a linear approximation of f
     }
     if (order >= 2){
-      for (int i=2; i<=order; i++){
+      for (size_t i=2; i<=order; i++){
 	diff.setZero();
         out += f.Forward(i, diff); //now out[0] is evaluation of a quadratic approximation of f
       }
