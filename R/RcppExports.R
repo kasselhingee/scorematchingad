@@ -14,17 +14,8 @@ rcpp_hello_world <- function() {
 #' @param n The dimension of x.
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapesmo <- function(xbetain, n) {
-    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n)
-}
-
-#' @title The score matching objective calculator.
-#' @param xbetain a concatenated vector of sqrt(x) and beta
-#' @param n The dimension of x.
-#' @return An RCpp::XPtr object pointing to the ADFun
-#' @export
-ptapesmo_simplex <- function(xbetain, n) {
-    .Call('_cdabyppi_ptapesmo_simplex', PACKAGE = 'cdabyppi', xbetain, n)
+ptapesmo <- function(xbetain, n, manifoldname, weightname) {
+    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n, manifoldname, weightname)
 }
 
 #' @title The score matching objective calculator.

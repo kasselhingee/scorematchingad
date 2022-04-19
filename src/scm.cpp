@@ -16,7 +16,7 @@ CppAD::ADFun<a1type> tapell(veca1 zbeta,
   veca1 beta(n); // vector of exponents in the outer type
   //declare dummy internal level of taping variables:
   veca2 z(n); // vector of domain space variables
-  for(int i = 0; i < n; i++){
+  for(size_t i = 0; i < n; i++){
      beta[i] = zbeta[i + n];
      z[i] = zbeta[i];
   }
@@ -49,7 +49,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
                              veca1 (*gradh2fun)(const veca1 &)// the gradient of the weight function h^2
                              ){
     veca1 ubeta(ubetain.size());
-    for (int i=0; i < ubetain.size(); i++){
+    for (size_t i=0; i < ubetain.size(); i++){
        ubeta[i] = ubetain[i];
     }
 
@@ -174,11 +174,11 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
 double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
   //convert input to an Eigen vectors
   vecd u_e(u.size());
-  for (int i=0; i<u.size(); i++){
+  for (size_t i=0; i<u.size(); i++){
     u_e[i] = u[i];
   }
   vecd beta_e(betain.size());
-  for (int i=0; i<betain.size(); i++){
+  for (size_t i=0; i<betain.size(); i++){
     beta_e[i] = betain[i];
   }
 
@@ -200,11 +200,11 @@ double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
 svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
   //convert input to an Eigen vectors
   vecd u_e(u.size());
-  for (int i=0; i<u.size(); i++){
+  for (size_t i=0; i<u.size(); i++){
     u_e[i] = u[i];
   }
   vecd beta_e(betain.size());
-  for (int i=0; i<betain.size(); i++){
+  for (size_t i=0; i<betain.size(); i++){
     beta_e[i] = betain[i];
   }
 
@@ -218,7 +218,7 @@ svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
   out_e = sc_grad.block(u_e.size(),0,beta_e.size(),1);
 
   //convert to std::vector
-  for (int i = 0; i<u_e.size(); i++){
+  for (size_t i = 0; i<u_e.size(); i++){
     out[i] = out_e[i];
   }
   return(out);

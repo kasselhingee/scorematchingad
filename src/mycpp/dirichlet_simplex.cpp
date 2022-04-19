@@ -20,7 +20,7 @@
       Eigen::Matrix<a1type, Eigen::Dynamic, 1> a(n); // vector of exponents in the outer type
       //declare dummy internal level of taping variables:
       Eigen::Matrix<a2type, Eigen::Dynamic, 1> ax(n); // vector of domain space variables
-      for(int i = 0; i < n; i++){
+      for(size_t i = 0; i < n; i++){
          a[i] = xbeta[i + n];
          ax[i] = 3.;
       }
