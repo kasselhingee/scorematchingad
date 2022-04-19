@@ -125,16 +125,22 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
                                       size_t n,
                                       std::string weightname){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  a1type (*h2fun)(const veca1 &);
+  veca1 (*gradh2fun)(const veca1 &);// the gradient of the weight function h^2
   if (weightname.compare("prodsq") == 0){
-    std::cout << "Using product weight function" << std::endl;
-  } else {
-    std::cout << "Not using product weight function" << std::endl;
-    std::cout << weightname << std::endl;
+    std::cout << "Using product squared weight function" << std::endl;
+    h2fun = prodsq;
+    gradh2fun = gradprodsq;
+  }
+  if (weightname.compare("prod1") == 0){
+    std::cout << "Using product power 1 weight function" << std::endl;
+    h2fun = hprod;
+    gradh2fun = gradhprod;
   }
   *out = tapesmo(xbetain, n, ll,
                  Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
                  Spos::fromS, Spos::logdetJ_fromS,
-                 prodsq, gradprodsq);
+                 h2fun, gradh2fun);
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
