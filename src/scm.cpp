@@ -8,7 +8,8 @@ using namespace Rcpp;
 // smo functions
 CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n,
                              veca1 (*toM)(const veca1 &),
-                             mat1 (*Pmatfun)(const veca1 &)
+                             mata1 (*Pmatfun)(const veca1 &),
+                             mata1 (*dPmatfun)(const veca1 &, const int &)
                              ){
     veca1 ubeta(ubetain.size());
     for (int i=0; i < ubetain.size(); i++){
@@ -26,7 +27,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n,
     veca1 z(n);
     z = toM(u); //transform u to the manifold
     veca1 zbeta(ubeta.size());
-    for (int i=0; i<n; i++){
+    for (size_t i=0; i<n; i++){
       zbeta[i] = z[i];
       zbeta[n + i] = ubeta[n+i];
     }
@@ -50,8 +51,8 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n,
     //hlap
     veca1 lapl(1);
     lapl[0] = 0.;
-    for(int i=0; i < n; i++){
-       lapl[0] += Pmat.row(i) * Spos::dPmat_S(z, i) * jac;
+    for(size_t i=0; i < n; i++){
+       lapl[0] += Pmat.row(i) * dPmatfun(z, i) * jac;
     }
     mata1 hess(n * n, 1);
     hess = lltape.Hessian(z, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
@@ -85,7 +86,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n,
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapesmo(xbetain, n, Spos::toS, Spos::Pmat_S);
+  *out = tapesmo(xbetain, n, Spos::toS, Spos::Pmat_S, Spos::dPmat_S);
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
