@@ -126,17 +126,24 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
                                       std::string manifoldname,
                                       std::string weightname){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  a1type (*h2fun)(const veca1 &);
-  veca1 (*gradh2fun)(const veca1 &);// the gradient of the weight function h^2
+
+  //choose weight function
+  a1type (*h2fun)(const veca1 &) = nullptr;
+  veca1 (*gradh2fun)(const veca1 &) = nullptr;// the gradient of the weight function h^2
   if (weightname.compare("prodsq") == 0){
-    std::cout << "Using product squared weight function" << std::endl;
     h2fun = prodsq;
     gradh2fun = gradprodsq;
   }
   if (weightname.compare("prod1") == 0){
-    std::cout << "Using product power 1 weight function" << std::endl;
     h2fun = hprod;
     gradh2fun = gradhprod;
+  }
+  //check weight function
+  if (h2fun == nullptr){
+    throw std::invalid_argument("Matching weight function not found");
+  }
+  if (gradh2fun == nullptr){
+    throw std::invalid_argument("Matching weight function gradient not found");
   }
 
   if (manifoldname.compare("sphere") == 0){
@@ -151,24 +158,7 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
                  simplex::fromM, simplex::logdetJ_fromM,
                  h2fun, gradh2fun);
   }
-  XPtr< CppAD::ADFun<double> > pout(out, true);
-  return(pout);
-}
 
-//in R store a pointer to the ADFun object
-//' @title The score matching objective calculator.
-//' @param xbetain a concatenated vector of sqrt(x) and beta
-//' @param n The dimension of x.
-//' @return An RCpp::XPtr object pointing to the ADFun
-//' @export
-// [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > ptapesmo_simplex(svecd xbetain,
-                                              size_t n){
-  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapesmo(xbetain, n, ll,
-                 simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
-                 simplex::fromM, simplex::logdetJ_fromM,
-                 prodsq, gradprodsq);
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
