@@ -41,7 +41,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, size_t n){
 
     // taping ll (log likelihood) store operation sequence
     CppAD::ADFun<a1type> lltape;
-    lltape = tapellS(zbeta, ll);
+    lltape = tapellS(zbeta, ll, Spos::fromS);
 
     //grad(ll)
     veca1 jac(n); // Jacobian of ll

@@ -11,15 +11,18 @@ namespace { // begin the empty namespace
         return y;
     }
 
+
     // define a function that tapes the above function
+    template <template<typename Type> typename Func(Eigen::Matrix<Type, Eigen::Dynamic, 1>)> //so called 'template template' argument https://stackoverflow.com/questions/1282914/pass-pointer-to-template-function-as-function-argument
       CppAD::ADFun<a1type> tapellS(veca1 zbeta,
-                                   a2type (*llf)(const veca1 &, const veca2 &)
+                                   a2type (*llf)(const veca1 &, const veca2 &),
+                                   Func fromM
                                    ){
       size_t n = 3;                  // number of dimensions
 
-      Eigen::Matrix<a1type, Eigen::Dynamic, 1> beta(n); // vector of exponents in the outer type
+      veca1 beta(n); // vector of exponents in the outer type
       //declare dummy internal level of taping variables:
-      Eigen::Matrix<a2type, Eigen::Dynamic, 1> z(n); // vector of domain space variables
+      veca2 z(n); // vector of domain space variables
       for(int i = 0; i < n; i++){
          beta[i] = zbeta[i + n];
          z[i] = zbeta[i];
@@ -30,9 +33,9 @@ namespace { // begin the empty namespace
 
       // range space vector
       size_t m = 1;               // number of ranges space variables
-      Eigen::Matrix<a2type, Eigen::Dynamic, 1> y(m); // vector of ranges space variables
-      Eigen::Matrix<a2type, Eigen::Dynamic, 1> u(z.size());
-      u = Spos::fromS(z);
+      veca2 y(m); // vector of ranges space variables
+      veca2 u(z.size());
+      u = fromM<veca2>(z);
       y.setZero();
       y[0] += llf(beta, u);
       y[0] += Spos::logdetJ_fromS(z);
