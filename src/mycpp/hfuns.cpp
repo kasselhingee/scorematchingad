@@ -48,25 +48,19 @@
   Eigen::Matrix<Type, Eigen::Dynamic, 1> gradminsq(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
     size_t n = x.size();
     typename Eigen::Matrix<Type, Eigen::Dynamic, 1>::Index min_index;
-    Type minval;
-    minval = x.array().minCoeff(&min_index);
+    Type gradsize;
+    gradsize = 2.0 * x.array().minCoeff(&min_index);
+
+    //apply constraint to size
+    Type acutb(acut * acut);
+    Type one(1.0);
+    Type mult = CppAD::CondExpLe(gradsize/2, acutb, one, one * 0.);
+    gradsize *= mult;
 
     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(n);
-    Eigen::Matrix<Type, Eigen::Dynamic, 1> avoidone(n-1);
-    Type prodx;
-    prodx = 2 * x.array().prod();
-    for (size_t i=0; i < n; i++){
-      avoidone << x.head(i), x.tail(n-i-1);
-      out[i] = prodx * avoidone.prod();
-    }
-    //apply constraint, need to do prodsq again
-    Type acutb(acut * acut);
-    Type prd;
-    prd = x.array().square().prod();
-    Type one(1.0);
-    Type mult = CppAD::CondExpLe(prd, acutb, one, one * 0.);
-    Eigen::Matrix<Type, Eigen::Dynamic, 1> outc = out * mult;
-    return(outc);
+    out.setZero();
+    out(min_index) = gradsize;
+    return(out);
   }
 
   //hprod
