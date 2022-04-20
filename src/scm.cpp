@@ -23,6 +23,8 @@ CppAD::ADFun<a1type> tapell(veca1 zbeta,
 
   //tape relationship between x and log-likelihood
   CppAD::Independent(z);
+  std::cout << "Taping ll using the following values: ";
+  std::cout << z.transpose() << " " << beta.transpose() << std::endl;
   // range space vector
   size_t m = 1;               // number of ranges space variables
   veca2 y(m); // vector of ranges space variables
@@ -59,6 +61,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     //START TAPING
     CppAD::Independent(ubeta);
+    std::cout << "Taping smo using the following values: " << ubeta.transpose() << std::endl;
 
     veca1 u(n);
     u = ubeta.block(0,0,n,1);
