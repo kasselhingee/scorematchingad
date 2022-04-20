@@ -79,7 +79,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     for(size_t i=1; i<z.size(); i++){
       CppAD::PrintFor(" ", z[i]);
     }
-    CppAD::PrintFor(" The value of h2 is: ", h2, ".");
+    CppAD::PrintFor(" The value of h2 is: ", h2);
 
     // taping ll (log likelihood) store operation sequence
     CppAD::ADFun<a1type> lltape;
