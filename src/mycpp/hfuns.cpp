@@ -35,8 +35,11 @@
   //hprod
   template <class Type>
   Type hprod(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
-    Type out;
-    out = x.array().prod();
+    Type prd;
+    prd = x.array().prod();
+    //constraint
+    Type acutb(acut);
+    Type out = CppAD::CondExpLe(prd, acutb, prd, acutb);
     return(out);
   }
 
@@ -49,5 +52,12 @@
       avoidone << x.head(i), x.tail(n-i-1);
       out[i] = avoidone.prod();
     }
-    return(out);
+    //apply constraint, need to do prod again
+    Type acutb(acut);
+    Type prd;
+    prd = prd = x.array().prod();
+    Type one(1.0);
+    Type mult = CppAD::CondExpLe(prd, acutb, one, one * 0.);
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> outc = out * mult;
+    return(outc);
   }
