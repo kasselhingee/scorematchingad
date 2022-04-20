@@ -6,7 +6,7 @@
     Type prd;
     prd = x.array().square().prod();
     //constraint
-    Type acutb(acut^2);
+    Type acutb(acut * acut);
     Type out = CppAD::CondExpLt(prd, acutb, prd, acutb);
     return(out);
   }
@@ -23,7 +23,7 @@
     	out[i] = prodx * avoidone.prod();
     }
     //apply constraint, need to do prodsq again
-    Type acutb(acut^2);
+    Type acutb(acut * acut);
     Type prd;
     prd = x.array().square().prod();
     Type one(1.0);
