@@ -29,7 +29,7 @@ test_that("minsq weights match estimator2", {
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
   out <- optim(par = beta*0,
                fn = function(beta){smobj(smofun, beta, utabl)},
-               gr = function(beta){smobjgrad(smofun, beta, utabl)},
+               # gr = function(beta){smobjgrad(smofun, beta, utabl)},
                method = "BFGS")
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
