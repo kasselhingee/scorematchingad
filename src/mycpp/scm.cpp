@@ -22,8 +22,6 @@ CppAD::ADFun<a1type> tapell(veca1 zbeta,
 
   //tape relationship between x and log-likelihood
   CppAD::Independent(z);
-  std::cout << "Taping ll using the following values: ";
-  std::cout << z.transpose() << " " << beta.transpose() << std::endl;
   // range space vector
   size_t m = 1;               // number of ranges space variables
   veca2 y(m); // vector of ranges space variables
@@ -46,8 +44,6 @@ CppAD::ADFun<a1type> tapeh2(veca1 zin,
   }
   //tape relationship between z and h2
   CppAD::Independent(z);
-  std::cout << "Taping h2 using the following values: ";
-  std::cout << z.transpose() << std::endl;
   // range space vector
   size_t m = 1;               // number of ranges space variables
   veca2 y(m); // vector of ranges space variables
@@ -80,7 +76,6 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     //START TAPING
     CppAD::Independent(ubeta);
-    std::cout << "Taping smo using the following values: " << ubeta.transpose() << std::endl;
 
     veca1 u(n);
     u = ubeta.block(0,0,n,1);
@@ -99,15 +94,15 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     h2tape = tapeh2(z, h2fun, acut);
     h2 = h2tape.Forward(0, z);
     gradh2 = h2tape.Jacobian(z);
-    CppAD::PrintFor("For h2fun, z is: ", z[0]);
-    for(size_t i=1; i<z.size(); i++){
-      CppAD::PrintFor(" ", z[i]);
-    }
-    CppAD::PrintFor(" The value of h2 is: ", h2[0]);
-    CppAD::PrintFor("The value of gradh2 is: ", gradh2[0]);
-    for(size_t i=1; i<gradh2.size(); i++){
-      CppAD::PrintFor(" ", gradh2[i]);
-    }
+    // CppAD::PrintFor("For h2fun, z is: ", z[0]);
+    // for(size_t i=1; i<z.size(); i++){
+      // CppAD::PrintFor(" ", z[i]);
+    // }
+    // CppAD::PrintFor(" The value of h2 is: ", h2[0]);
+    // CppAD::PrintFor("The value of gradh2 is: ", gradh2[0]);
+    // for(size_t i=1; i<gradh2.size(); i++){
+      // CppAD::PrintFor(" ", gradh2[i]);
+    // }
 
     // taping ll (log likelihood) store operation sequence
     CppAD::ADFun<a1type> lltape;
