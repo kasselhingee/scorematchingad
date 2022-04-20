@@ -52,9 +52,11 @@
     gradsize = 2.0 * x.array().minCoeff(&min_index);
 
     //apply constraint to size
+    Type minval;
+    minval = x.array().square().minCoeff();
     Type acutb(acut * acut);
     Type one(1.0);
-    Type mult = CppAD::CondExpLe(gradsize/2, acutb, one, one * 0.);
+    Type mult = CppAD::CondExpLe(minval, acutb, one, one * 0.);
     gradsize *= mult;
 
     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(n);
@@ -62,6 +64,9 @@
     out(min_index) = gradsize;
     return(out);
   }
+
+
+
 
   //hprod
   template <class Type>
