@@ -37,6 +37,26 @@ CppAD::ADFun<a1type> tapell(veca1 zbeta,
   return(tape);
 }
 
+CppAD::ADFun<a1type> tapeh2(veca1 zin,
+                            a2type (*h2fun)(const veca2 &, const double &),
+                            const double & acut){
+  veca2 z(zin.size());
+  for (size_t i = 0; i < zin.size(); i++){
+    z[i] = zin[i];
+  }
+  //tape relationship between z and h2
+  CppAD::Independent(z);
+  std::cout << "Taping h2 using the following values: ";
+  std::cout << z.transpose() << std::endl;
+  // range space vector
+  size_t m = 1;               // number of ranges space variables
+  veca2 y(m); // vector of ranges space variables
+  y[0] = h2fun(z, acut);
+  CppAD::ADFun<a1type> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
+  tape.Dependent(z, y);
+  return(tape);
+}
+
 // function that tapes the score-matching objective
 CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is the measurement, the remaining elements are the parameters
                              size_t n, //the dimension of the measurements (number of components)
@@ -74,12 +94,18 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     Pmat = Pmatfun(z);
     a1type h2;
+    veca1 gradh2(z.size());
     h2 = h2fun(z, acut);
+    gradh2 = gradh2fun(z, acut);
     CppAD::PrintFor("For h2fun, z is: ", z[0]);
     for(size_t i=1; i<z.size(); i++){
       CppAD::PrintFor(" ", z[i]);
     }
     CppAD::PrintFor(" The value of h2 is: ", h2);
+    CppAD::PrintFor("The value of gradh2 is: ", gradh2[0]);
+    for(size_t i=1; i<gradh2.size(); i++){
+      CppAD::PrintFor(" ", gradh2[i]);
+    }
 
     // taping ll (log likelihood) store operation sequence
     CppAD::ADFun<a1type> lltape;
@@ -108,7 +134,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     //ghPg
     veca1 ghPg(1);
-    ghPg = gradh2fun(z, acut).transpose() * Pmat * jac;//jac; //gradprodsq(x).transpose().eval() *
+    ghPg = gradh2.transpose() * Pmat * jac;//jac; //gradprodsq(x).transpose().eval() *
 
     //combine components
     veca1 smo(1);
