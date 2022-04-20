@@ -1,4 +1,4 @@
-# Simplex estimates calculations are historically consistent
+# Simplex calculations are historically consistent
 
     {
       "type": "double",

@@ -1,6 +1,8 @@
 
 test_that("cppad-based Score2 estimate leads to a match for large number of observations", {
-  smofun <- ptapesmo(c(1,1,1,3,3,3), 3, manifoldname = "simplex", weightname = "prodsq")
+  smofun <- ptapesmo(c(1,1,1,3,3,3), 3,
+                     manifoldname = "simplex", weightname = "prodsq",
+                     acut = 0.01)
   beta = c(-0.3, -0.1, 3)
   n = 1000
   set.seed(134)
@@ -14,8 +16,10 @@ test_that("cppad-based Score2 estimate leads to a match for large number of obse
   expect_equal(out$par, beta, tolerance = 1E-1, ignore_attr = TRUE)
 })
 
-test_that("Simplex estimates calculations are historically consistent", {
-  smofun <- ptapesmo(c(1,1,1,3,3,3), 3,  manifoldname = "simplex", weightname = "prodsq")
+test_that("Simplex calculations are historically consistent", {
+  smofun <- ptapesmo(c(1,1,1,3,3,3), 3,
+                     manifoldname = "simplex", weightname = "prodsq",
+                     acut = 1)
   beta = c(-0.3, -0.1, 3)
   n = 10
   set.seed(134)
