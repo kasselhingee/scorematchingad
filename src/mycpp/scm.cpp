@@ -1,9 +1,9 @@
-# include "cdabyppi_types.h"
-# include "mycpp/approx.cpp"
-# include "mycpp/sm_possphere.cpp"
-# include "mycpp/manifold_simplex.cpp"
-# include "mycpp/hfuns.cpp"
-# include "mycpp/dirichlet.cpp"
+# include "../cdabyppi_types.h"
+# include "approx.cpp"
+# include "sm_possphere.cpp"
+# include "manifold_simplex.cpp"
+# include "hfuns.cpp"
+# include "dirichlet.cpp"
 
 // define a function that tapes a log likelihood
 CppAD::ADFun<a1type> tapell(veca1 zbeta,

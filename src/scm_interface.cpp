@@ -1,6 +1,6 @@
 //for content that is Rcpp specific
 
-#include "scm.cpp"
+#include "mycpp/scm.cpp"
 using namespace Rcpp;
 
 //in R store a pointer to the ADFun object
@@ -21,7 +21,7 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
 
   //choose weight function
-  a1type (*h2fun)(const veca1 &, const double &) = nullptr;
+  a2type (*h2fun)(const veca2 &, const double &) = nullptr;
   veca1 (*gradh2fun)(const veca1 &, const double &) = nullptr;// the gradient of the weight function h^2
   if (weightname.compare("prodsq") == 0){
     h2fun = prodsq;
