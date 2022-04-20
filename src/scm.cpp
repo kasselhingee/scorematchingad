@@ -66,7 +66,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
                              mata1 (*dPmatfun)(const veca1 &, const int &),//elementwise derivative of projection matrix for manifold
                              veca2 (*fromM)(const veca2 &), //transformation from manifold to simplex
                              a2type (*logdetJfromM)(const veca2 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-                             a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
+                             a2type (*h2fun)(const veca2 &, const double &), // the weight function h^2
                              veca1 (*gradh2fun)(const veca1 &, const double &),// the gradient of the weight function h^2
                              const double & acut //the acut constraint for the weight functions
                              ){
@@ -93,15 +93,17 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     }
 
     Pmat = Pmatfun(z);
-    a1type h2;
+    veca1 h2(1);
     veca1 gradh2(z.size());
-    h2 = h2fun(z, acut);
-    gradh2 = gradh2fun(z, acut);
+    CppAD::ADFun<a1type> h2tape;
+    h2tape = tapeh2(z, h2fun, acut);
+    h2 = h2tape.Forward(0, z);
+    gradh2 = h2tape.Jacobian(z);
     CppAD::PrintFor("For h2fun, z is: ", z[0]);
     for(size_t i=1; i<z.size(); i++){
       CppAD::PrintFor(" ", z[i]);
     }
-    CppAD::PrintFor(" The value of h2 is: ", h2);
+    CppAD::PrintFor(" The value of h2 is: ", h2[0]);
     CppAD::PrintFor("The value of gradh2 is: ", gradh2[0]);
     for(size_t i=1; i<gradh2.size(); i++){
       CppAD::PrintFor(" ", gradh2[i]);
@@ -117,7 +119,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     //hgPg
     veca1 hgPg(1);
-    hgPg[0] = 0.5 * h2 * (Pmat * jac).dot(jac);
+    hgPg[0] = 0.5 * h2[0] * (Pmat * jac).dot(jac);
 
     //hlap
     veca1 lapl(1);
@@ -129,7 +131,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     hess = lltape.Hessian(z, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
     hess.resize(n, n);
     lapl[0] += (Pmat*hess).trace();
-    lapl[0] *= h2; //weight by h2
+    lapl[0] *= h2[0]; //weight by h2
 
 
     //ghPg
