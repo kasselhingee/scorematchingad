@@ -2,8 +2,8 @@
 # include <vector>          // standard vector
 # include <cppad/example/cppad_eigen.hpp>  //load eigen
 # include <cppad/cppad.hpp> // the CppAD package
-//# include <Rcpp.h>
-//using namespace Rcpp;
+# include <Rcpp.h>
+using namespace Rcpp;
 
 typedef std::vector<double> svecd;
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vecd; //a vector of a1type values
