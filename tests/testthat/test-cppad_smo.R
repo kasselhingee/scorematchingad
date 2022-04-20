@@ -13,7 +13,7 @@ test_that("ADFun XPtr for computing values", {
                method = "BFGS")
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
-  directestimate <- estimator2_dir(utabl, 1)
+  directestimate <- estimator2_dir(utabl, sqrt(0.001))
   expect_equal(out$par, directestimate, tolerance = 1E-3, ignore_attr = TRUE)
 })
 

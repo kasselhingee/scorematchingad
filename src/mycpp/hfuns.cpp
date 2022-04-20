@@ -12,17 +12,22 @@
   }
 
   template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> gradprodsq(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> gradprodsq(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
     size_t n = x.size();
     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(n);
     Eigen::Matrix<Type, Eigen::Dynamic, 1> avoidone(n-1);
     Type prodx;
     prodx = 2 * x.array().prod();
     for (size_t i=0; i < n; i++){
-	avoidone << x.head(i), x.tail(n-i-1);
-	out[i] = prodx * avoidone.prod();
+    	avoidone << x.head(i), x.tail(n-i-1);
+    	out[i] = prodx * avoidone.prod();
     }
-    return(out);
+    //apply constraint
+    Type acutb(acut);
+    Type one(1.0);
+    Type mult = CppAD::CondExpLt(prodx/2.0, acutb, one, one * 0.);
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> outc = out * mult;
+    return(outc);
   }
 
   //hprod
@@ -34,7 +39,7 @@
   }
 
   template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> gradhprod(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> gradhprod(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
     size_t n = x.size();
     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(n);
     Eigen::Matrix<Type, Eigen::Dynamic, 1> avoidone(n-1);

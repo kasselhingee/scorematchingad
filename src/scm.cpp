@@ -46,7 +46,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
                              veca2 (*fromM)(const veca2 &), //transformation from manifold to simplex
                              a2type (*logdetJfromM)(const veca2 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
                              a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
-                             veca1 (*gradh2fun)(const veca1 &)// the gradient of the weight function h^2
+                             veca1 (*gradh2fun)(const veca1 &, const double &)// the gradient of the weight function h^2
                              ){
     veca1 ubeta(ubetain.size());
     for (size_t i=0; i < ubetain.size(); i++){
@@ -100,7 +100,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     //ghPg
     veca1 ghPg(1);
-    ghPg = gradh2fun(z).transpose() * Pmat * jac;//jac; //gradprodsq(x).transpose().eval() *
+    ghPg = gradh2fun(z, 0.001).transpose() * Pmat * jac;//jac; //gradprodsq(x).transpose().eval() *
 
     //combine components
     veca1 smo(1);
@@ -129,7 +129,7 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
 
   //choose weight function
   a1type (*h2fun)(const veca1 &, const double &) = nullptr;
-  veca1 (*gradh2fun)(const veca1 &) = nullptr;// the gradient of the weight function h^2
+  veca1 (*gradh2fun)(const veca1 &, const double &) = nullptr;// the gradient of the weight function h^2
   if (weightname.compare("prodsq") == 0){
     h2fun = prodsq;
     gradh2fun = gradprodsq;
