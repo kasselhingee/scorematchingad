@@ -7,7 +7,7 @@
     prd = x.array().square().prod();
     //constraint
     Type acutb(acut * acut);
-    Type out = CppAD::CondExpLt(prd, acutb, prd, acutb);
+    Type out = CppAD::CondExpLe(prd, acutb, prd, acutb);
     return(out);
   }
 
@@ -27,7 +27,7 @@
     Type prd;
     prd = x.array().square().prod();
     Type one(1.0);
-    Type mult = CppAD::CondExpLt(prd, acutb, one, one * 0.);
+    Type mult = CppAD::CondExpLe(prd, acutb, one, one * 0.);
     Eigen::Matrix<Type, Eigen::Dynamic, 1> outc = out * mult;
     return(outc);
   }
