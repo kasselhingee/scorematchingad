@@ -11,8 +11,15 @@ test_that("On sphere with prodsq, objective values independent of tape", {
                       manifoldname = "sphere", "prodsq",
                       acut = 0.1)
 
+  tapeval3 = c(u[c(2, 1, 3)],3,3,3)
+  smofun3 <- ptapesmo(tapeval3, 3,
+                      manifoldname = "sphere", "prodsq",
+                      acut = 0.1)
+
   expect_equal(smobj(smofun1, c(1, 1, 1), u), smobj(smofun2, c(1, 1, 1), u))
+  expect_equal(smobj(smofun1, c(1, 1, 1), u), smobj(smofun3, c(1, 1, 1), u))
   expect_equal(smobjgrad(smofun1, c(1, 1, 1), u), smobjgrad(smofun2, c(1, 1, 1), u))
+  expect_equal(smobjgrad(smofun1, c(1, 1, 1), u), smobjgrad(smofun3, c(1, 1, 1), u))
 })
 
 test_that("On sphere with minsq, objective values independent of tape", {
