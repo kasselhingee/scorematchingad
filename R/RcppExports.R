@@ -12,6 +12,9 @@ rcpp_hello_world <- function() {
 #' @title The score matching objective calculator.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
 #' @param n The dimension of x.
+#' @param manifoldname The name of the manifold to transform to
+#' @param weightname The name of the weight function to use
+#' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
 ptapesmo <- function(xbetain, n, manifoldname, weightname, acut) {
