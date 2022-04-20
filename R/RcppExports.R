@@ -14,8 +14,8 @@ rcpp_hello_world <- function() {
 #' @param n The dimension of x.
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapesmo <- function(xbetain, n, manifoldname, weightname) {
-    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n, manifoldname, weightname)
+ptapesmo <- function(xbetain, n, manifoldname, weightname, acut) {
+    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n, manifoldname, weightname, acut)
 }
 
 #' @title The score matching objective calculator.

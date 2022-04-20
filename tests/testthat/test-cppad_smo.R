@@ -1,6 +1,7 @@
 
 test_that("ADFun XPtr for computing values", {
-  smofun <- ptapesmo(c(1,1,1,3,3,3), 3, manifoldname = "sphere", "prodsq") #tape of the score function
+  acut = 0.01
+  smofun <- ptapesmo(c(1,1,1,3,3,3), 3, manifoldname = "sphere", "prodsq", acut = acut) #tape of the score function
   beta = c(-0.3, -0.1, 3)
   n = 10
   set.seed(134)
@@ -13,7 +14,7 @@ test_that("ADFun XPtr for computing values", {
                method = "BFGS")
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
-  directestimate <- estimator2_dir(utabl, 0.001)
+  directestimate <- estimator2_dir(utabl, acut)
   expect_equal(out$par, directestimate, tolerance = 1E-3, ignore_attr = TRUE)
 })
 

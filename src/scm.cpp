@@ -46,7 +46,8 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
                              veca2 (*fromM)(const veca2 &), //transformation from manifold to simplex
                              a2type (*logdetJfromM)(const veca2 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
                              a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
-                             veca1 (*gradh2fun)(const veca1 &, const double &)// the gradient of the weight function h^2
+                             veca1 (*gradh2fun)(const veca1 &, const double &),// the gradient of the weight function h^2
+                             const double & acut //the acut constraint for the weight functions
                              ){
     veca1 ubeta(ubetain.size());
     for (size_t i=0; i < ubetain.size(); i++){
@@ -71,7 +72,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     Pmat = Pmatfun(z);
     a1type h2;
-    h2 = h2fun(z, 0.001);
+    h2 = h2fun(z, acut);
 
     // taping ll (log likelihood) store operation sequence
     CppAD::ADFun<a1type> lltape;
@@ -100,7 +101,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     //ghPg
     veca1 ghPg(1);
-    ghPg = gradh2fun(z, 0.001).transpose() * Pmat * jac;//jac; //gradprodsq(x).transpose().eval() *
+    ghPg = gradh2fun(z, acut).transpose() * Pmat * jac;//jac; //gradprodsq(x).transpose().eval() *
 
     //combine components
     veca1 smo(1);
@@ -118,13 +119,17 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 //' @title The score matching objective calculator.
 //' @param xbetain a concatenated vector of sqrt(x) and beta
 //' @param n The dimension of x.
+//' @param manifoldname The name of the manifold to transform to
+//' @param weightname The name of the weight function to use
+//' @param acut The constraint a_c in the weight function
 //' @return An RCpp::XPtr object pointing to the ADFun
 //' @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
                                       size_t n,
                                       std::string manifoldname,
-                                      std::string weightname){
+                                      std::string weightname,
+                                      const double acut){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
 
   //choose weight function
@@ -150,13 +155,13 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
   *out = tapesmo(xbetain, n, ll,
                  Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
                  Spos::fromS, Spos::logdetJ_fromS,
-                 h2fun, gradh2fun);
+                 h2fun, gradh2fun, acut);
   }
   if (manifoldname.compare("simplex") == 0){
   *out = tapesmo(xbetain, n, ll,
                  simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
                  simplex::fromM, simplex::logdetJ_fromM,
-                 h2fun, gradh2fun);
+                 h2fun, gradh2fun, acut);
   }
 
   XPtr< CppAD::ADFun<double> > pout(out, true);

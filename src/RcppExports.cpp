@@ -32,8 +32,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapesmo
-XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n, std::string manifoldname, std::string weightname);
-RcppExport SEXP _cdabyppi_ptapesmo(SEXP xbetainSEXP, SEXP nSEXP, SEXP manifoldnameSEXP, SEXP weightnameSEXP) {
+XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n, std::string manifoldname, std::string weightname, const double acut);
+RcppExport SEXP _cdabyppi_ptapesmo(SEXP xbetainSEXP, SEXP nSEXP, SEXP manifoldnameSEXP, SEXP weightnameSEXP, SEXP acutSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -41,7 +41,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< size_t >::type n(nSEXP);
     Rcpp::traits::input_parameter< std::string >::type manifoldname(manifoldnameSEXP);
     Rcpp::traits::input_parameter< std::string >::type weightname(weightnameSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapesmo(xbetain, n, manifoldname, weightname));
+    Rcpp::traits::input_parameter< const double >::type acut(acutSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapesmo(xbetain, n, manifoldname, weightname, acut));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -75,7 +76,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_corels", (DL_FUNC) &_cdabyppi_corels, 0},
     {"_cdabyppi_rcpp_hello_world", (DL_FUNC) &_cdabyppi_rcpp_hello_world, 0},
-    {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 4},
+    {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 5},
     {"_cdabyppi_psmo", (DL_FUNC) &_cdabyppi_psmo, 3},
     {"_cdabyppi_psmograd", (DL_FUNC) &_cdabyppi_psmograd, 3},
     {NULL, NULL, 0}
