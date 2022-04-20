@@ -75,6 +75,11 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     Pmat = Pmatfun(z);
     a1type h2;
     h2 = h2fun(z, acut);
+    CppAD::PrintFor("For h2fun, z is: ", z[0]);
+    for(size_t i=1; i<z.size(); i++){
+      CppAD::PrintFor(" ", z[i]);
+    }
+    CppAD::PrintFor(" The value of h2 is: ", h2, ".");
 
     // taping ll (log likelihood) store operation sequence
     CppAD::ADFun<a1type> lltape;

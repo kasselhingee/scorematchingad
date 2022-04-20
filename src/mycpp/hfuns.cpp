@@ -41,10 +41,6 @@
     //constraint
     Type acutb(acut * acut);
     Type out = CppAD::CondExpLe(minval, acutb, minval, acutb);
-    for(size_t i=0; i<x.size(); i++){
-      CppAD::PrintFor("In minsq, x is: ", x[i]);
-    }
-    CppAD::PrintFor("In minsq, out is: ", out);
     return(out);
   }
 
