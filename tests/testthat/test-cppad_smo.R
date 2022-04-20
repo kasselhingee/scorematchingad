@@ -22,7 +22,7 @@ test_that("minsq weights match estimator2", {
   acut = 0.1
   smofun <- ptapesmo(c(1,1,1,3,3,3), 3, manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
   beta = c(-0.3, -0.1, 3)
-  n = 1000
+  n = 10
   set.seed(134)
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
