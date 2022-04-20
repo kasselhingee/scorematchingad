@@ -45,7 +45,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
                              mata1 (*dPmatfun)(const veca1 &, const int &),//elementwise derivative of projection matrix for manifold
                              veca2 (*fromM)(const veca2 &), //transformation from manifold to simplex
                              a2type (*logdetJfromM)(const veca2 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-                             a1type (*h2fun)(const veca1 &), // the weight function h^2
+                             a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
                              veca1 (*gradh2fun)(const veca1 &)// the gradient of the weight function h^2
                              ){
     veca1 ubeta(ubetain.size());
@@ -71,7 +71,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     Pmat = Pmatfun(z);
     a1type h2;
-    h2 = h2fun(z);
+    h2 = h2fun(z, 0.001);
 
     // taping ll (log likelihood) store operation sequence
     CppAD::ADFun<a1type> lltape;
@@ -128,7 +128,7 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
 
   //choose weight function
-  a1type (*h2fun)(const veca1 &) = nullptr;
+  a1type (*h2fun)(const veca1 &, const double &) = nullptr;
   veca1 (*gradh2fun)(const veca1 &) = nullptr;// the gradient of the weight function h^2
   if (weightname.compare("prodsq") == 0){
     h2fun = prodsq;

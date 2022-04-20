@@ -2,9 +2,12 @@
   // weight function and grad(h^2) functions
   // squared without constraint
   template <class Type>
-  Type prodsq(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
-    Type out;
-    out = x.array().square().prod();
+  Type prodsq(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
+    Type prd;
+    prd = x.array().square().prod();
+    //constraint
+    Type acutb(acut);
+    Type out = CppAD::CondExpLt(prd, acutb, prd, acutb);
     return(out);
   }
 
@@ -24,7 +27,7 @@
 
   //hprod
   template <class Type>
-  Type hprod(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+  Type hprod(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
     Type out;
     out = x.array().prod();
     return(out);
