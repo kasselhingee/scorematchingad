@@ -1,6 +1,6 @@
 
 test_that("ADFun XPtr for computing values", {
-  smofun <- ptapesmo(c(0.2,0.2,0.6,-0.3,-0.1,3), 3, manifoldname = "sphere", "prodsq") #tape of the score function
+  smofun <- ptapesmo(c(1,1,1,3,3,3), 3, manifoldname = "sphere", "prodsq") #tape of the score function
   beta = c(-0.3, -0.1, 3)
   n = 10
   set.seed(134)
