@@ -1,6 +1,7 @@
   //////////////////////////////////////////
   // weight function and grad(h^2) functions
-  // squared without constraint
+
+  //prodsq
   template <class Type>
   Type prodsq(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
     Type prd;
@@ -21,6 +22,42 @@
     for (size_t i=0; i < n; i++){
     	avoidone << x.head(i), x.tail(n-i-1);
     	out[i] = prodx * avoidone.prod();
+    }
+    //apply constraint, need to do prodsq again
+    Type acutb(acut * acut);
+    Type prd;
+    prd = x.array().square().prod();
+    Type one(1.0);
+    Type mult = CppAD::CondExpLe(prd, acutb, one, one * 0.);
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> outc = out * mult;
+    return(outc);
+  }
+
+  //minsq
+  template <class Type>
+  Type minsq(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
+    Type minval;
+    minval = x.array().square().minCoeff(); //this version may need retaping!
+    //constraint
+    Type acutb(acut * acut);
+    Type out = CppAD::CondExpLe(minval, acutb, minval, acutb);
+    return(out);
+  }
+
+  template <class Type>
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> gradminsq(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
+    size_t n = x.size();
+    typename Eigen::Matrix<Type, Eigen::Dynamic, 1>::Index min_index;
+    Type minval;
+    minval = x.array().minCoeff(&min_index);
+
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> out(n);
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> avoidone(n-1);
+    Type prodx;
+    prodx = 2 * x.array().prod();
+    for (size_t i=0; i < n; i++){
+      avoidone << x.head(i), x.tail(n-i-1);
+      out[i] = prodx * avoidone.prod();
     }
     //apply constraint, need to do prodsq again
     Type acutb(acut * acut);

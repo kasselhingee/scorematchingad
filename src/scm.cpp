@@ -139,6 +139,10 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
     h2fun = prodsq;
     gradh2fun = gradprodsq;
   }
+  if (weightname.compare("minsq") == 0){
+    h2fun = minsq;
+    gradh2fun = gradminsq;
+  }
   if (weightname.compare("prod1") == 0){
     h2fun = hprod;
     gradh2fun = gradhprod;
