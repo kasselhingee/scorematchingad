@@ -53,11 +53,7 @@ CppAD::ADFun<double> tapeh2(veca1 z,
 CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is the measurement, the remaining elements are the parameters
                              size_t n, //the dimension of the measurements (number of components)
                              a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
-                             veca1 (*toM)(const veca1 &), //map from simplex to manifold
-                             mata1 (*Pmatfun)(const veca1 &), //projection matrix for manifold
-                             mata1 (*dPmatfun)(const veca1 &, const int &),//elementwise derivative of projection matrix for manifold
-                             veca1 (*fromM)(const veca1 &), //transformation from manifold to simplex
-                             a1type (*logdetJfromM)(const veca1 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+                             manifold<a1type> &M,
                              a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
                              const double & acut //the acut constraint for the weight functions
                              ){
@@ -74,7 +70,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     veca1 u(n);
     u = ubeta.block(0,0,n,1);
     veca1 z(n);
-    z = toM(u); //transform u to the manifold
+    z = M.toM(u); //transform u to the manifold
     CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
 
@@ -85,21 +81,21 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
       zbeta[n + i] = ubeta[n+i];
     }
     CppAD::ADFun<a1type, double> lltape;
-    lltape = tapell(zbeta, llf, fromM, logdetJfromM).base2ad();
+    lltape = tapell(zbeta, llf, M.fromM, M.logdetJfromM).base2ad();
 
     //START TAPING
     CppAD::Independent(ubeta);
 
     // veca1 u(n);
     u = ubeta.block(0,0,n,1);
-    z = toM(u); //transform u to the manifold
+    z = M.toM(u); //transform u to the manifold
     // veca1 zbeta(ubeta.size());
     for (size_t i=0; i<n; i++){
       zbeta[i] = z[i];
       zbeta[n + i] = ubeta[n+i];
     }
 
-    Pmat = Pmatfun(z);
+    Pmat = M.Pmatfun(z);
     veca1 h2(1);
     veca1 gradh2(z.size());
     h2 = h2tape.Forward(0, z);
@@ -131,7 +127,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     veca1 lapl(1);
     lapl[0] = 0.;
     for(size_t i=0; i < n; i++){
-       lapl[0] += Pmat.row(i) * dPmatfun(z, i) * jac;
+       lapl[0] += Pmat.row(i) * M.dPmatfun(z, i) * jac;
     }
     mata1 hess(n * n, 1);
     hess = lltape.Hessian(z, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.

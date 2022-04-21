@@ -20,6 +20,12 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
                                       const double acut){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
 
+  //instantiate the Spos manifold
+  manifold<a1type> Spos = {
+    Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
+    Spos::fromS, Spos::logdetJ_fromS,
+    };
+
   //choose weight function
   a1type (*h2fun)(const veca1 &, const double &) = nullptr;
   veca1 (*gradh2fun)(const veca1 &, const double &) = nullptr;// the gradient of the weight function h^2
@@ -39,15 +45,14 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
 
   if (manifoldname.compare("sphere") == 0){
   *out = tapesmo(xbetain, n, ll,
-                 Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
-                 Spos::fromS, Spos::logdetJ_fromS,
+                 Spos,
                  h2fun, acut);
   }
   if (manifoldname.compare("simplex") == 0){
-  *out = tapesmo(xbetain, n, ll,
-                 simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
-                 simplex::fromM, simplex::logdetJ_fromM,
-                 h2fun, acut);
+  // *out = tapesmo(xbetain, n, ll,
+  //                simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
+  //                simplex::fromM, simplex::logdetJ_fromM,
+  //                h2fun, acut);
   }
 
   XPtr< CppAD::ADFun<double> > pout(out, true);

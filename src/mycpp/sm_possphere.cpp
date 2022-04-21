@@ -1,3 +1,13 @@
+template <typename T>
+struct manifold {
+  Eigen::Matrix<T, Eigen::Dynamic, 1> (*toM)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &); //map from simplex to manifold
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> (*Pmatfun)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &); //projection matrix for manifold
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> (*dPmatfun)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &, const int &); //elementwise derivative of projection matrix for manifold
+  Eigen::Matrix<T, Eigen::Dynamic, 1> (*fromM)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &); //transformation from manifold to simplex
+  T (*logdetJfromM)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &); //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+};
+
+
 // code for various tools for the positive quadrant of the sphere
 namespace Spos { // begin the empty namespace
 
