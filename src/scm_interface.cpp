@@ -15,6 +15,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
                                       size_t n,
+                                      std::string llname,
                                       std::string manifoldname,
                                       std::string weightname,
                                       const double acut){
@@ -54,6 +55,19 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
   }
   if (manifoldname.compare("simplex") == 0){
     manobj = simplex;
+  }
+
+  //choose ll function
+  a1type (*ll)(const veca1 &, const veca1 &) = nullptr;
+  if (llname.compare("dirichlet") == 0){
+    ll = ll_dirichlet;
+  }
+  if (llname.compare("ppi") == 0){
+    ll = ll_ppi;
+  }
+  //check ll function
+  if (ll == nullptr){
+    throw std::invalid_argument("Matching ll function not found");
   }
 
   *out = tapesmo(xbetain, n, ll,

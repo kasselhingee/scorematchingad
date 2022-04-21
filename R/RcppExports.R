@@ -17,8 +17,8 @@ rcpp_hello_world <- function() {
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapesmo <- function(xbetain, n, manifoldname, weightname, acut) {
-    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n, manifoldname, weightname, acut)
+ptapesmo <- function(xbetain, n, llname, manifoldname, weightname, acut) {
+    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n, llname, manifoldname, weightname, acut)
 }
 
 #' @title The score matching objective calculator.
