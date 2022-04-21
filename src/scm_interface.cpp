@@ -26,6 +26,11 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
     Spos::fromS, Spos::logdetJ_fromS,
     };
 
+  manifold<a1type> simplex = {
+    simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
+    simplex::fromM, simplex::logdetJ_fromM
+  };
+
   //choose weight function
   a1type (*h2fun)(const veca1 &, const double &) = nullptr;
   veca1 (*gradh2fun)(const veca1 &, const double &) = nullptr;// the gradient of the weight function h^2
@@ -49,10 +54,9 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
                  h2fun, acut);
   }
   if (manifoldname.compare("simplex") == 0){
-  // *out = tapesmo(xbetain, n, ll,
-  //                simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
-  //                simplex::fromM, simplex::logdetJ_fromM,
-  //                h2fun, acut);
+  *out = tapesmo(xbetain, n, ll,
+                 simplex,
+                 h2fun, acut);
   }
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
