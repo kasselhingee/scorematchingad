@@ -35,20 +35,16 @@ CppAD::ADFun<a1type> tapell(veca1 zbeta,
   return(tape);
 }
 
-CppAD::ADFun<a1type> tapeh2(veca1 zin,
-                            a2type (*h2fun)(const veca2 &, const double &),
+CppAD::ADFun<double> tapeh2(veca1 z,
+                            a1type (*h2fun)(const veca1 &, const double &),
                             const double & acut){
-  veca2 z(zin.size());
-  for (size_t i = 0; i < zin.size(); i++){
-    z[i] = zin[i];
-  }
   //tape relationship between z and h2
   CppAD::Independent(z);
   // range space vector
   size_t m = 1;               // number of ranges space variables
-  veca2 y(m); // vector of ranges space variables
+  veca1 y(m); // vector of ranges space variables
   y[0] = h2fun(z, acut);
-  CppAD::ADFun<a1type> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
+  CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
   return(tape);
 }
@@ -62,7 +58,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
                              mata1 (*dPmatfun)(const veca1 &, const int &),//elementwise derivative of projection matrix for manifold
                              veca2 (*fromM)(const veca2 &), //transformation from manifold to simplex
                              a2type (*logdetJfromM)(const veca2 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-                             a2type (*h2fun)(const veca2 &, const double &), // the weight function h^2
+                             a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
                              const double & acut //the acut constraint for the weight functions
                              ){
     veca1 ubeta(ubetain.size());
@@ -73,10 +69,18 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     //Projection matrix
     mata1 Pmat(n, n);
 
+    //get h2 tape
+    CppAD::ADFun<double> dh2tape;
+    veca1 u(n);
+    u = ubeta.block(0,0,n,1);
+    dh2tape = tapeh2(toM(u), h2fun, acut);
+    CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
+    h2tape = dh2tape.base2ad(); //convert to a function of a1type rather than double
+
     //START TAPING
     CppAD::Independent(ubeta);
 
-    veca1 u(n);
+    // veca1 u(n);
     u = ubeta.block(0,0,n,1);
     veca1 z(n);
     z = toM(u); //transform u to the manifold
@@ -89,8 +93,6 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     Pmat = Pmatfun(z);
     veca1 h2(1);
     veca1 gradh2(z.size());
-    CppAD::ADFun<a1type> h2tape;
-    h2tape = tapeh2(z, h2fun, acut);
     h2 = h2tape.Forward(0, z);
     gradh2 = h2tape.Jacobian(z);
     // CppAD::PrintFor("For h2fun, z is: ", z[0]);
