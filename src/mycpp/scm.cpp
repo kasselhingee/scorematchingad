@@ -63,7 +63,6 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
                              veca2 (*fromM)(const veca2 &), //transformation from manifold to simplex
                              a2type (*logdetJfromM)(const veca2 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
                              a2type (*h2fun)(const veca2 &, const double &), // the weight function h^2
-                             veca1 (*gradh2fun)(const veca1 &, const double &),// the gradient of the weight function h^2
                              const double & acut //the acut constraint for the weight functions
                              ){
     veca1 ubeta(ubetain.size());

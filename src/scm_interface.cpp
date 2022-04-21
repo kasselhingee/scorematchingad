@@ -25,35 +25,29 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
   veca1 (*gradh2fun)(const veca1 &, const double &) = nullptr;// the gradient of the weight function h^2
   if (weightname.compare("prodsq") == 0){
     h2fun = prodsq;
-    gradh2fun = gradprodsq;
   }
   if (weightname.compare("minsq") == 0){
     h2fun = minsq;
-    gradh2fun = gradminsq;
   }
   if (weightname.compare("prod1") == 0){
     h2fun = hprod;
-    gradh2fun = gradhprod;
   }
   //check weight function
   if (h2fun == nullptr){
     throw std::invalid_argument("Matching weight function not found");
-  }
-  if (gradh2fun == nullptr){
-    throw std::invalid_argument("Matching weight function gradient not found");
   }
 
   if (manifoldname.compare("sphere") == 0){
   *out = tapesmo(xbetain, n, ll,
                  Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
                  Spos::fromS, Spos::logdetJ_fromS,
-                 h2fun, gradh2fun, acut);
+                 h2fun, acut);
   }
   if (manifoldname.compare("simplex") == 0){
   *out = tapesmo(xbetain, n, ll,
                  simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
                  simplex::fromM, simplex::logdetJ_fromM,
-                 h2fun, gradh2fun, acut);
+                 h2fun, acut);
   }
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
