@@ -7,17 +7,19 @@
 
 // define a function that tapes a log likelihood
 CppAD::ADFun<double> tapell(veca1 zbeta,
+                            size_t n, //number of dimensions
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
                                veca1 (*fromM)(const veca1 &), //transformation from manifold to simplex
                                a1type (*logdetJfromM)(const veca1 &) //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
                                ){
-  size_t n = 3;                  // number of dimensions
-  veca1 beta(n); // vector of exponents in the outer type
+  veca1 beta(zbeta.size() - n); // vector of exponents in the outer type
   //declare dummy internal level of taping variables:
   veca1 z(n); // vector of domain space variables
   for(size_t i = 0; i < n; i++){
-     beta[i] = zbeta[i + n];
      z[i] = zbeta[i];
+  }
+  for(size_t i = 0; i < beta.size(); i++){
+     beta[i] = zbeta[i + n];
   }
 
   //tape relationship between x and log-likelihood
@@ -61,6 +63,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     for (size_t i=0; i < ubetain.size(); i++){
        ubeta[i] = ubetain[i];
     }
+    size_t betasize = ubetain.size() - n;
 
     //Projection matrix
     mata1 Pmat(n, n);
@@ -78,10 +81,12 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     veca1 zbeta(ubeta.size());
     for (size_t i=0; i<n; i++){
       zbeta[i] = z[i];
+    }
+    for (size_t i=0; i<betasize; i++){
       zbeta[n + i] = ubeta[n+i];
     }
     CppAD::ADFun<a1type, double> lltape;
-    lltape = tapell(zbeta, llf, M.fromM, M.logdetJfromM).base2ad();
+    lltape = tapell(zbeta, n, llf, M.fromM, M.logdetJfromM).base2ad();
 
     //START TAPING
     CppAD::Independent(ubeta);
@@ -92,12 +97,14 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     // veca1 zbeta(ubeta.size());
     for (size_t i=0; i<n; i++){
       zbeta[i] = z[i];
+    }
+    for (size_t i=0; i<betasize; i++){
       zbeta[n + i] = ubeta[n+i];
     }
 
     Pmat = M.Pmatfun(z);
     veca1 h2(1);
-    veca1 gradh2(z.size());
+    veca1 gradh2(n);
     h2 = h2tape.Forward(0, z);
     gradh2 = h2tape.Jacobian(z);
     // CppAD::PrintFor("For h2fun, z is: ", z[0]);
@@ -111,8 +118,8 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     // }
 
     //update parameters ('dynamic' values) of lltape
-    veca1 beta(n);
-    beta = ubeta.block(n,0,n,1);
+    veca1 beta(betasize);
+    beta = ubeta.block(n,0,betasize,1);
     lltape.new_dynamic(beta);
 
     //grad(ll)
