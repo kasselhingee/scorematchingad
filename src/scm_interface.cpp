@@ -139,5 +139,27 @@ svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
   return(out);
 }
 
+//for testing
+//' @title The ppi likelihood calculation
+//' @param u A vector in the simplex.
+//' @param beta a vector of parameters
+//' @return The loglikelihood value (unnormalised).
+//' @export
+// [[Rcpp::export]]
+double ppill(const svecd &beta,
+         const svecd & u){
+  //convert input to an Eigen vectors
+  vecd u_e(u.size());
+  for (size_t i=0; i<u.size(); i++){
+    u_e[i] = u[i];
+  }
+  vecd beta_e(beta.size());
+  for (size_t i=0; i<beta.size(); i++){
+    beta_e[i] = beta[i];
+  }
 
+  double y;
+  y = ll_ppi(beta_e, u_e);
+  return(y);
+}
 
