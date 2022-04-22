@@ -42,7 +42,7 @@ namespace { // begin the empty namespace
         }
         //populate the diagonal
         vecidx = 0;
-        for (size_t row=1; row < d-1; row++){
+        for (size_t row=0; row < d-1; row++){
             Amat(row,row) = theta(vecidx, 1);
             vecidx +=1;
         }
