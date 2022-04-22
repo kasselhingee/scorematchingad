@@ -133,7 +133,7 @@ svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
   out_e = sc_grad.block(u_e.size(),0,beta_e.size(),1);
 
   //convert to std::vector
-  for (size_t i = 0; i<u_e.size(); i++){
+  for (size_t i = 0; i<out_e.size(); i++){
     out[i] = out_e[i];
   }
   return(out);
