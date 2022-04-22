@@ -59,8 +59,8 @@ namespace { // begin the empty namespace
         y += u.transpose()*Amat*u;
         y += bvec.transpose()*u;
         //dirichlet component
-        for(size_t i = theta.size() - d; i < d; i++)
-        {   y   += theta[i] * log(u[i]);
+        for(size_t i = 0; i < d; i++)
+        {   y   += theta[theta.size() - d + i] * log(u[i]);
         }
         return y;
     }
