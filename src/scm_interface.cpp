@@ -158,8 +158,19 @@ double ppill(const svecd &beta,
     beta_e[i] = beta[i];
   }
 
-  double y;
-  y = ll_ppi(beta_e, u_e);
-  return(y);
+  veca1 ubetatape(u_e.size() + beta_e.size());
+  ubetatape.setOnes();
+  CppAD::ADFun<double> ppitape;
+  ppitape = tapell(ubetatape,
+                   u_e.size(), //number of dimensions
+                   ll_ppi,
+                   simplex::fromM, //transformation from manifold to simplex
+                   simplex::logdetJ_fromM); //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+
+  vecd y(1);
+  vecd ubeta(u_e.size() + beta_e.size());
+  ubeta << u_e, beta_e;
+  y = ppitape.Forward(0, ubeta);
+  return(y[0]);
 }
 

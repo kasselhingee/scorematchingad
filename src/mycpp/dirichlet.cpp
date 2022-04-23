@@ -1,3 +1,4 @@
+// # include <cppad/example/atomic_three/mat_mul.hpp> // for matrix multiplication tapesmo's matrix multiplication don't seem to need this though :S
 
 namespace { // begin the empty namespace
 
@@ -30,15 +31,9 @@ namespace { // begin the empty namespace
         for (size_t col=1; col < d-1; col++){
           for (size_t row=0; row < col; row++){
             Amat(row, col) = upptriblock(vecidx, 1);
+            Amat(col, row) = upptriblock(vecidx, 1);
             vecidx +=1;
           }
-        }
-        vecidx = 0;
-        for (size_t row=1; row < d-1; row++){
-            for (size_t col=0; col < row; col++){
-                Amat(row, col) = upptriblock(vecidx, 1);
-                vecidx +=1;
-            }
         }
         //populate the diagonal
         vecidx = 0;
