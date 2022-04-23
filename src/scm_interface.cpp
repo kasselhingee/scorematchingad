@@ -168,9 +168,8 @@ double ppill(const svecd &beta,
                    simplex::logdetJ_fromM); //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
 
   vecd y(1);
-  vecd ubeta(u_e.size() + beta_e.size());
-  ubeta << u_e, beta_e;
-  y = ppitape.Forward(0, ubeta);
+  ppitape.new_dynamic(beta_e);
+  y = ppitape.Forward(0, u_e);
   return(y[0]);
 }
 
