@@ -73,6 +73,57 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ptapell
+XPtr< CppAD::ADFun<double> > ptapell(size_t d, size_t bd, std::string llname);
+RcppExport SEXP _cdabyppi_ptapell(SEXP dSEXP, SEXP bdSEXP, SEXP llnameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< size_t >::type d(dSEXP);
+    Rcpp::traits::input_parameter< size_t >::type bd(bdSEXP);
+    Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapell(d, bd, llname));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ppill
+double ppill(const svecd& beta, const svecd& u);
+RcppExport SEXP _cdabyppi_ppill(SEXP betaSEXP, SEXP uSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const svecd& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const svecd& >::type u(uSEXP);
+    rcpp_result_gen = Rcpp::wrap(ppill(beta, u));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pJacobian
+svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain);
+RcppExport SEXP _cdabyppi_pJacobian(SEXP pfunSEXP, SEXP uSEXP, SEXP betainSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< svecd >::type u(uSEXP);
+    Rcpp::traits::input_parameter< svecd >::type betain(betainSEXP);
+    rcpp_result_gen = Rcpp::wrap(pJacobian(pfun, u, betain));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pForward0
+double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain);
+RcppExport SEXP _cdabyppi_pForward0(SEXP pfunSEXP, SEXP uSEXP, SEXP betainSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< svecd >::type u(uSEXP);
+    Rcpp::traits::input_parameter< svecd >::type betain(betainSEXP);
+    rcpp_result_gen = Rcpp::wrap(pForward0(pfun, u, betain));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_corels", (DL_FUNC) &_cdabyppi_corels, 0},
@@ -80,6 +131,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 6},
     {"_cdabyppi_psmo", (DL_FUNC) &_cdabyppi_psmo, 3},
     {"_cdabyppi_psmograd", (DL_FUNC) &_cdabyppi_psmograd, 3},
+    {"_cdabyppi_ptapell", (DL_FUNC) &_cdabyppi_ptapell, 3},
+    {"_cdabyppi_ppill", (DL_FUNC) &_cdabyppi_ppill, 2},
+    {"_cdabyppi_pJacobian", (DL_FUNC) &_cdabyppi_pJacobian, 3},
+    {"_cdabyppi_pForward0", (DL_FUNC) &_cdabyppi_pForward0, 3},
     {NULL, NULL, 0}
 };
 

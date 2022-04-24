@@ -139,6 +139,45 @@ svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
   return(out);
 }
 
+//' @title Tape of a log-likelihood calculation
+//' @param p dimension of measurements
+//' @param bd dimension of the parameter vector
+//' @param llname name of the likelihood function
+//' @return An RCpp::XPtr object pointing to the ADFun
+//' @export
+// [[Rcpp::export]]
+XPtr< CppAD::ADFun<double> > ptapell(
+                                      size_t d, //dimensions of measurments
+                                      size_t bd, //dimension of parameters
+                                      std::string llname){
+  //choose ll function
+  a1type (*ll)(const veca1 &, const veca1 &) = nullptr;
+  if (llname.compare("dirichlet") == 0){
+    ll = ll_dirichlet;
+  }
+  if (llname.compare("ppi") == 0){
+    ll = ll_ppi;
+  }
+  //check ll function
+  if (ll == nullptr){
+    throw std::invalid_argument("Matching ll function not found");
+  }
+
+  veca1 ubetatape(d+bd);
+  ubetatape.setOnes();
+  CppAD::ADFun<double> ppitape;
+
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  *out = tapell(ubetatape,
+                   d, //number of dimensions
+                   ll,
+                   simplex::fromM, //transformation from manifold to simplex
+                   simplex::logdetJ_fromM); //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+
+  XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}
+
 //for testing
 //' @title The ppi likelihood calculation
 //' @param u A vector in the simplex.
@@ -173,3 +212,61 @@ double ppill(const svecd &beta,
   return(y[0]);
 }
 
+//for testing
+//' @title The Jacobian of recorded function
+//' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+//' @param u A vector in the simplex.
+//' @param beta a vector of the dynamic parameters
+//' @return The Jacobian of pfun
+//' @export
+// [[Rcpp::export]]
+svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
+  //convert input to an Eigen vectors
+  vecd u_e(u.size());
+  for (size_t i=0; i<u.size(); i++){
+    u_e[i] = u[i];
+  }
+  vecd beta_e(betain.size());
+  for (size_t i=0; i<betain.size(); i++){
+    beta_e[i] = betain[i];
+  }
+
+
+  vecd grad(u_e.size());
+  svecd out(u_e.size());
+  pfun->new_dynamic(beta_e);
+  grad = pfun->Jacobian(u_e);  //treat the XPtr as a regular pointer
+
+  //convert to std::vector
+  for (size_t i = 0; i<grad.size(); i++){
+    out[i] = grad[i];
+  }
+  return(out);
+}
+
+//for testing
+//' @title The value of a recorded function
+//' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+//' @param u A vector in the simplex.
+//' @param beta a vector of the dynamic parameters
+//' @return The value of pfun
+//' @export
+// [[Rcpp::export]]
+double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
+  //convert input to an Eigen vectors
+  vecd u_e(u.size());
+  for (size_t i=0; i<u.size(); i++){
+    u_e[i] = u[i];
+  }
+  vecd beta_e(betain.size());
+  for (size_t i=0; i<betain.size(); i++){
+    beta_e[i] = betain[i];
+  }
+
+
+  vecd out_e(1);
+  pfun->new_dynamic(beta_e);
+  out_e = pfun->Forward(0, u_e);  //treat the XPtr as a regular pointer
+
+  return(out_e[0]);
+}

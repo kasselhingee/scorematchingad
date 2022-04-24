@@ -1,0 +1,52 @@
+# test Jacobian of ll function using numerical differentiation
+test_that("ppi likelihood Jacobian matches numerical estimates", {
+  p=4
+  #parameters for the PPI model
+  muL=matrix(0,p-1,1)
+  muL[1:sum(p,-1)]=0.12
+  aa=matrix(1/500,p-1,1)
+  D=diag(as.vector(aa))
+  SigA=D
+  SigA[1,1]=SigA[1,1]*2
+  cor=0.5
+  SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
+  SigA[2,1]=SigA[1,2]
+  ALs=-0.5*solve(SigA)
+  bL=solve(SigA)%*%muL
+  beta0=matrix(-0.8,p,1)
+  beta0[p]=-0.5
+  theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0)
+
+  u <- cdabyppi:::rhybrid(1,p,beta0,ALs,bL,4)$samp3
+
+  ppill_r <- function(u, beta0, ALs, bL){
+    p=length(u)
+    A = matrix(0, nrow = p, ncol = p)
+    A[1:p-1, 1:p-1] = ALs
+    b = matrix(c(bL, 0), nrow = p, ncol =1)
+    out = sum(beta0 * log(u)) + t(u) %*% A %*% u + t(b) %*% u
+    return(out)
+  }
+
+  lltape <- ptapell(length(u), length(theta), llname = "ppi")
+  expect_equal(ppill_r(u, beta0, ALs, bL), pForward0(lltape, u, theta), ignore_attr = TRUE)
+
+  #gradiant
+  numderiv <- numericDeriv(quote(ppill_r(u, beta0, ALs, bL)), c("u"))
+  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, theta))
+})
+
+test_that("dirichlet ll evaluation and Jacobian matches expected", {
+  beta = c(-0.3, -0.1, 3)
+  u <- MCMCpack::rdirichlet(1, beta+1)
+
+  dirichlet_r <- function(u, beta){sum(beta * log(u))}
+
+  lltape <- ptapell(length(beta), length(beta), llname = "dirichlet")
+  #forward0
+  expect_equal(dirichlet_r(u, beta), pForward0(lltape, u, beta), ignore_attr = TRUE)
+
+  #gradiant
+  numderiv <- numericDeriv(quote(dirichlet_r(u, beta)), c("u"))
+  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, beta))
+})
