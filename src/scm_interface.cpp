@@ -179,6 +179,46 @@ XPtr< CppAD::ADFun<double> > ptapell(
 }
 
 //for testing
+//' @title Tape a likelihood tape wrt theta
+//' @param u A vector in the simplex.
+//' @param theta a vector of parameters
+//' @return A pointer to an ADFun
+//' @export
+// [[Rcpp::export]]
+XPtr< CppAD::ADFun<double> > ptapell_theta(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd thetain){
+  //convert input to an Eigen vectors
+  veca1 u_e(u.size());
+  for (size_t i=0; i<u.size(); i++){
+    u_e[i] = u[i];
+  }
+  veca1 theta_e(thetain.size());
+  for (size_t i=0; i<thetain.size(); i++){
+    theta_e[i] = thetain[i];
+  }
+
+  //convert taped object to higher order
+  CppAD::ADFun<a1type, double> lltape;
+  lltape = pfun->base2ad();
+
+  veca1 y(1);
+
+  //START TAPING
+  CppAD::Independent(theta_e, u_e);
+
+  lltape.new_dynamic(theta_e);
+  y = lltape.Forward(0, u_e);
+
+  //end taping
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  out->Dependent(theta_e, y);
+  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  out->check_for_nan(false);
+
+  XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}
+
+//for testing
 //' @title The ppi likelihood calculation
 //' @param u A vector in the simplex.
 //' @param beta a vector of parameters
