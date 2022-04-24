@@ -17,7 +17,7 @@ int main(int argc, char** argv)
              xbetain[i] = xin[i];
              xbetain[i + n] = betain[i];
      }
-     smotape = tapesmo(xbetain, n, ll,
+     smotape = tapesmo(xbetain, n, ll_dirichlet,
                        Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
                        Spos::fromS, Spos::logdetJ_fromS,
                        minsq, gradminsq, 0.1);
@@ -39,6 +39,8 @@ int main(int argc, char** argv)
        std::cout << "beta in is " << betain << std::endl;
        // std::cout << "h2 is " << minsq(xin, 1.) << std::endl;
        // std::cout << "grad(h2) is " << gradminsq(xin, 1.) << std::endl;
+
+       std::cout << ll_ppi(betain, xin) << std::endl;
 
         svecd smo_val(1);
         smo_val = smotape.Forward(0, xbetain);
