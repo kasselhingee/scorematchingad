@@ -17,6 +17,7 @@ test_that("ppi likelihood Jacobian matches numerical estimates", {
   beta0[p]=-0.5
   theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0)
 
+  set.seed(123)
   u <- cdabyppi:::rhybrid(1,p,beta0,ALs,bL,4)$samp3
 
   ppill_r <- function(u, beta0, ALs, bL){
@@ -33,7 +34,20 @@ test_that("ppi likelihood Jacobian matches numerical estimates", {
 
   #gradiant
   numderiv <- numericDeriv(quote(ppill_r(u, beta0, ALs, bL)), c("u"))
-  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, theta))
+  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, theta), ignore_attr = TRUE, tolerance = 1E-3)
+
+  #gradient wrt theta
+  lltape_theta <- ptapell_theta(lltape, u, theta)
+  numderiv <- numericDeriv(quote(ppill_r(u,  beta0, ALs, bL)), c("ALs", "bL", "beta0"))
+  numgrad = attr(numderiv,"gradient")
+  inthetaform = c(numgrad[c(1, 5, 9)], #diag of ALs
+                  sum(numgrad[c(2, 4)]), #1,2 and 2,1 element of ALs
+                  sum(numgrad[c(3, 7)]), #1,3 and 3,1 element of ALs
+                  sum(numgrad[c(6, 8)]), #2,3 and 3,2 element of ALs
+                  numgrad[10:12], #bL
+                  numgrad[13:16]) #beta0
+  expect_equal(inthetaform, pJacobian(lltape_theta, theta, u),
+               ignore_attr = TRUE, tolerance = 1E-7)
 })
 
 test_that("dirichlet ll evaluation and Jacobian matches expected", {
@@ -46,7 +60,12 @@ test_that("dirichlet ll evaluation and Jacobian matches expected", {
   #forward0
   expect_equal(dirichlet_r(u, beta), pForward0(lltape, u, beta), ignore_attr = TRUE)
 
-  #gradiant
+  #gradiant wrt u
   numderiv <- numericDeriv(quote(dirichlet_r(u, beta)), c("u"))
-  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, beta))
+  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, beta), ignore_attr = TRUE)
+
+  #gradient wrt beta
+  lltape_theta <- ptapell_theta(lltape, u, beta)
+  numderiv <- numericDeriv(quote(dirichlet_r(u, beta)), c("beta"))
+  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape_theta, beta, u), ignore_attr = TRUE)
 })
