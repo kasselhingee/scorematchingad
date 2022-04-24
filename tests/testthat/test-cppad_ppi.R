@@ -1,9 +1,9 @@
 test_that("ppi with minsq weights match estimator1 for p = 3", {
-  acut = 0.1
+  acut = 1
   p=4
-  smofun <- ptapesmo(c(1,1,1,1,3,3,3,3,3,3,3), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
+  # smofun <- ptapesmo(c(1,1,1,1,3,3,3,3,3,3,3,3,3), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
   #sample size
-  n=10
+  n=100
 
   #parameters for the PPI model
   muL=matrix(0,p-1,1)
@@ -22,7 +22,8 @@ test_that("ppi with minsq weights match estimator1 for p = 3", {
   theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0)
 
   set.seed(134)
-  utabl <- cdabyppi:::rhybrid_singly(n,p,beta0,ALs,bL,4)$samp3
+  utabl <- cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)$samp3
+  smofun <- ptapesmo(c(utabl[1, ], theta)*0 + 1, p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
 
   ppill_r <- function(u, beta0, ALs, bL){
     p=length(u)
@@ -33,10 +34,9 @@ test_that("ppi with minsq weights match estimator1 for p = 3", {
     return(out)
   }
 
-  smofun <- ptapesmo(c(utabl[1, ], theta), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
 
-  ppill_r(utabl[1,], beta0, ALs, bL)
-  cdabyppi::ppill(theta, utabl[1, ])
+  ppill_r(utabl[3,], beta0, ALs, bL)
+  cdabyppi::ppill(theta, utabl[3, ])
 
   smobj(smofun, theta, utabl)
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
