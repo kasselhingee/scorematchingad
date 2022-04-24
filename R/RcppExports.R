@@ -39,3 +39,51 @@ psmograd <- function(pfun, u, betain) {
     .Call('_cdabyppi_psmograd', PACKAGE = 'cdabyppi', pfun, u, betain)
 }
 
+#' @title Tape of a log-likelihood calculation
+#' @param p dimension of measurements
+#' @param bd dimension of the parameter vector
+#' @param llname name of the likelihood function
+#' @return An RCpp::XPtr object pointing to the ADFun
+#' @export
+ptapell <- function(d, bd, llname) {
+    .Call('_cdabyppi_ptapell', PACKAGE = 'cdabyppi', d, bd, llname)
+}
+
+#' @title Tape a likelihood tape wrt theta
+#' @param u A vector in the simplex.
+#' @param theta a vector of parameters
+#' @return A pointer to an ADFun
+#' @export
+ptapell_theta <- function(pfun, u, thetain) {
+    .Call('_cdabyppi_ptapell_theta', PACKAGE = 'cdabyppi', pfun, u, thetain)
+}
+
+#' @title The ppi likelihood calculation
+#' @param u A vector in the simplex.
+#' @param beta a vector of parameters
+#' @return The loglikelihood value (unnormalised).
+#' @export
+ppill <- function(beta, u) {
+    .Call('_cdabyppi_ppill', PACKAGE = 'cdabyppi', beta, u)
+}
+
+#' @title The Jacobian of recorded function
+#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+#' @param u A vector in the simplex.
+#' @param beta a vector of the dynamic parameters
+#' @return The Jacobian of pfun
+#' @export
+pJacobian <- function(pfun, u, betain) {
+    .Call('_cdabyppi_pJacobian', PACKAGE = 'cdabyppi', pfun, u, betain)
+}
+
+#' @title The value of a recorded function
+#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+#' @param u A vector in the simplex.
+#' @param beta a vector of the dynamic parameters
+#' @return The value of pfun
+#' @export
+pForward0 <- function(pfun, u, betain) {
+    .Call('_cdabyppi_pForward0', PACKAGE = 'cdabyppi', pfun, u, betain)
+}
+

@@ -86,6 +86,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ptapell_theta
+XPtr< CppAD::ADFun<double> > ptapell_theta(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd thetain);
+RcppExport SEXP _cdabyppi_ptapell_theta(SEXP pfunSEXP, SEXP uSEXP, SEXP thetainSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< svecd >::type u(uSEXP);
+    Rcpp::traits::input_parameter< svecd >::type thetain(thetainSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapell_theta(pfun, u, thetain));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ppill
 double ppill(const svecd& beta, const svecd& u);
 RcppExport SEXP _cdabyppi_ppill(SEXP betaSEXP, SEXP uSEXP) {
@@ -132,6 +145,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_psmo", (DL_FUNC) &_cdabyppi_psmo, 3},
     {"_cdabyppi_psmograd", (DL_FUNC) &_cdabyppi_psmograd, 3},
     {"_cdabyppi_ptapell", (DL_FUNC) &_cdabyppi_ptapell, 3},
+    {"_cdabyppi_ptapell_theta", (DL_FUNC) &_cdabyppi_ptapell_theta, 3},
     {"_cdabyppi_ppill", (DL_FUNC) &_cdabyppi_ppill, 2},
     {"_cdabyppi_pJacobian", (DL_FUNC) &_cdabyppi_pJacobian, 3},
     {"_cdabyppi_pForward0", (DL_FUNC) &_cdabyppi_pForward0, 3},
