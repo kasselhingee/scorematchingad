@@ -55,8 +55,9 @@ test_that("ppi with minsq weights match estimator1 for p = 4", {
   beta = c(-0.3, -0.2, -0.1, 3)
   p = length(beta)
   ALs = matrix(0, nrow = p-1, ncol = p-1)
+  ALs[1, 2] <- 1
+  ALs[2, 1] <- 1
   bL = matrix(0, nrow = p-1, ncol = 1)
-  bL[1, 1] = 1
   theta <- toPPIparamvec(ALs, bL, beta)
 
   set.seed(134)
@@ -65,8 +66,8 @@ test_that("ppi with minsq weights match estimator1 for p = 4", {
   smofun <- ptapesmo(c(u, 1:length(theta)), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
 
   psmo(smofun, u, theta) #very strange that the 4th component of the gradient of the ll on the sphere is zero
-  # deriv of log ppi ll on sphere wrt z[1] is:
-  # (1 + 2beta[1]) / z[1] + 0 + 2*z[1]
+  # deriv of log ppi ll on sphere wrt z[1] is:   deriv(z2 * (z2[2], z2[1], 0, 0)) = deriv(z[1]^2 * z[2]^2 + z[2]^2 + z[1]^2)
+  # (1 + 2beta[1]) / z[1] + 2z[1]z[2]^2 + 0
   (1 + 2 * beta[1]) / sqrt(u[1]) + 2 * sqrt(u[1])
   (1 + 2 * beta[4]) / sqrt(u[4])
   lltape <- ptapell(p, length(theta), llname = "ppi")
