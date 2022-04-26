@@ -68,8 +68,19 @@ test_that("ppi with minsq weights match estimator1 for p = 4", {
   psmo(smofun, u, theta) #very strange that the 4th component of the gradient of the ll on the sphere is zero
   # deriv of log ppi ll on sphere wrt z[1] is:   deriv(z2 * (z2[2], z2[1], 0, 0)) = deriv(z[1]^2 * z[2]^2 + z[2]^2 + z[1]^2)
   # (1 + 2beta[1]) / z[1] + 2z[1]z[2]^2 + 0
-  (1 + 2 * beta[1]) / sqrt(u[1]) + 2 * sqrt(u[1])
-  (1 + 2 * beta[4]) / sqrt(u[4])
+  (1 + 2 * beta[1]) / sqrt(u[1]) + 2 * sqrt(u[1]) * u[2]
+
+  ppill_S_r <- function(z, beta0, ALs, bL){
+    p=length(u)
+    A = matrix(0, nrow = p, ncol = p)
+    A[1:p-1, 1:p-1] = ALs
+    b = matrix(c(bL, 0), nrow = p, ncol =1)
+    out = 2 + sum((1 + 2 * beta0) * log(z)) + t(z^2) %*% A %*% (z^2) + t(b) %*% (z^2)
+    return(out)
+  }
+  z = sqrt(u)
+  numericDeriv(quote(ppill_S_r(z, beta, ALs, bL)), c("z"))
+
   lltape <- ptapell(p, length(theta), llname = "ppi")
   pJacobian(lltape, utabl[1,], theta)
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
