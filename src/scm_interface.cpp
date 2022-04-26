@@ -97,10 +97,9 @@ double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
     beta_e[i] = betain[i];
   }
 
-  vecd xbetain(u_e.size() + beta_e.size());
-  xbetain << u_e, beta_e;
+  pfun->new_dynamic(u_e); //for smo the non-derivative param is u
   vecd smo_val(1);
-  smo_val = pfun->Forward(0, xbetain);  //treat the XPtr as a regular pointer
+  smo_val = pfun->Forward(0, beta_e);  //treat the XPtr as a regular pointer
   return(smo_val[0]);
 }
 
@@ -123,14 +122,10 @@ svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
     beta_e[i] = betain[i];
   }
 
-
-  vecd xbetain(u_e.size() + beta_e.size());
-  xbetain << u_e, beta_e;
-  vecd sc_grad(xbetain.size());
+  pfun->new_dynamic(u_e); //for smo the non-derivative param is u
   vecd out_e(beta_e.size());
   svecd out(beta_e.size());
-  sc_grad = pfun->Jacobian(xbetain);  //treat the XPtr as a regular pointer
-  out_e = sc_grad.block(u_e.size(),0,beta_e.size(),1);
+  out_e = pfun->Jacobian(beta_e);  //treat the XPtr as a regular pointer
 
   //convert to std::vector
   for (size_t i = 0; i<out_e.size(); i++){

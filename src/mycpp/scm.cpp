@@ -74,10 +74,9 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     lltape = tapell(z, beta, llf, M.fromM, M.logdetJfromM).base2ad();
 
     //START TAPING
-    CppAD::Independent(ubeta);
+    CppAD::Independent(beta, u); //differentiate wrt beta, dynamic parameter is u
 
     // veca1 u(n);
-    u = ubeta.block(0,0,n,1);
     z = M.toM(u); //transform u to the manifold
 
     Pmat = M.Pmatfun(z);
@@ -96,7 +95,6 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     // }
 
     //update parameters ('dynamic' values) of lltape
-    beta = ubeta.block(n,0,beta.size(),1); // record dependence between ubeta and beta
     lltape.new_dynamic(beta);
 
     //grad(ll)
@@ -130,7 +128,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     //finish taping
     CppAD::ADFun<double> smofun;
-    smofun.Dependent(ubeta, smo);
+    smofun.Dependent(beta, smo);
     smofun.optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
     smofun.check_for_nan(false); //no error if some of the results of the Jacobian are nan.
     return(smofun);
