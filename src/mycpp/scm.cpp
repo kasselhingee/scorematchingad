@@ -4,6 +4,7 @@
 # include "manifold_simplex.cpp"
 # include "hfuns.cpp"
 # include "dirichlet.cpp"
+# include "PrintFor.cpp"
 
 // define a function that tapes a log likelihood
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
@@ -88,11 +89,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     // for(size_t i=1; i<z.size(); i++){
       // CppAD::PrintFor(" ", z[i]);
     // }
-    // CppAD::PrintFor(" The value of h2 is: ", h2[0]);
-    // CppAD::PrintFor("The value of gradh2 is: ", gradh2[0]);
-    // for(size_t i=1; i<gradh2.size(); i++){
-      // CppAD::PrintFor(" ", gradh2[i]);
-    // }
+
 
     //update parameters ('dynamic' values) of lltape
     lltape.new_dynamic(beta);
@@ -100,6 +97,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     //grad(ll)
     veca1 jac(n); // Jacobian of ll
     jac  = lltape.Jacobian(z);      // Jacobian for operation sequence
+    PrintForVec("The value of ll jac is: ", jac);
 
     //hgPg
     veca1 hgPg(1);
