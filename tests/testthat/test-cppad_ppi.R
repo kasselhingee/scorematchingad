@@ -1,3 +1,39 @@
+test_that("ppi and dirichlet smo match when AL and bL is zero and p = 3", {
+  beta = c(-0.3, -0.1, 3)
+  p = length(beta)
+  ALs = matrix(0, nrow = p-1, ncol = p-1)
+  bL = matrix(0, nrow = p-1, ncol = 1)
+  theta = toPPIparamvec(ALs, bL, beta)
+
+  utabl <- cdabyppi:::rhybrid(10,p,beta,ALs,bL,4)$samp3
+
+  acut = 1
+  smoppi <- ptapesmo(c(utabl[2, ], 1:length(theta)), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
+  smodir <- ptapesmo(c(utabl[2, ], 1:length(theta)), p, llname = "dirichlet", manifoldname = "sphere", "minsq", acut = acut)
+
+  ppival <- psmo(smoppi, utabl[2, ], theta)
+  dirval <- psmo(smodir, utabl[2, ], beta)
+  expect_equal(ppival, dirval)
+})
+
+test_that("ppi and dirichlet smo match when AL and bL is zero and p = 4", {
+  beta = c(-0.3, -0.2, -0.1, 3)
+  p = length(beta)
+  ALs = matrix(0, nrow = p-1, ncol = p-1)
+  bL = matrix(0, nrow = p-1, ncol = 1)
+  theta = toPPIparamvec(ALs, bL, beta)
+
+  utabl <- cdabyppi:::rhybrid(10,p,beta,ALs,bL,4)$samp3
+
+  acut = 1
+  smoppi <- ptapesmo(c(utabl[2, ], 1:length(theta)), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
+  smodir <- ptapesmo(c(utabl[2, ], 1:length(theta)), p, llname = "dirichlet", manifoldname = "sphere", "minsq", acut = acut)
+
+  ppival <- psmo(smoppi, utabl[2, ], theta)
+  dirval <- psmo(smodir, utabl[2, ], beta)
+  expect_equal(ppival, dirval)
+})
+
 test_that("ppi with minsq weights match estimator1 for p = 3", {
   acut = 1
   p=4
@@ -23,8 +59,11 @@ test_that("ppi with minsq weights match estimator1 for p = 3", {
 
   set.seed(134)
   utabl <- cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)$samp3
-  smofun <- ptapesmo(c(utabl[1, ], 1:length(theta)), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
+  smofun <- ptapesmo(c(utabl[2, ], 1:length(theta)), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
 
+  psmo(smofun, utabl[2, ], theta) #very strange that the 4th component of the gradient of the ll on the sphere is zero
+  lltape <- ptapell(p, length(theta), llname = "ppi")
+  pJacobian(lltape, utabl[1,], theta)
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
   out <- optim(par = theta*0,
                fn = function(theta){smobj(smofun, theta, utabl)},

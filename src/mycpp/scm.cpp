@@ -112,6 +112,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     mata1 hess(n * n, 1);
     hess = lltape.Hessian(z, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
     hess.resize(n, n);
+    PrintForMatrix("The value of ll Hessian is: ", hess);
     lapl[0] += (Pmat*hess).trace();
     lapl[0] *= h2[0]; //weight by h2
 
