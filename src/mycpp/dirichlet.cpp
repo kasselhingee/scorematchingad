@@ -43,19 +43,26 @@ namespace { // begin the empty namespace
         }
         // ALmat.diagonal() << theta.block(0,0,d-1,1);
         // Amat.block(0,0,d-1,d-1) = ALmat;
+        std::cout << "A matrix:" << std::endl;
         std::cout << Amat << std::endl;
 
         Eigen::Matrix<T, Eigen::Dynamic, 1> bvec(d);
         bvec.setZero();
         bvec.block(0,0,d-1,1) = theta.block(d-1 + upptriblock.size(), 0, d-1, 1);
+        std::cout << "b vector:" << std::endl;
         std::cout << bvec.transpose() << std::endl;
+
+        Eigen::Matrix<T, Eigen::Dynamic, 1> beta(d);
+        beta = theta.block(theta.size() - d, 0, d,1);
+        std::cout << "beta vector:" << std::endl;
+        std::cout << beta.transpose() << std::endl;
 
         T y(0.);  // initialize summation
         y += u.transpose()*Amat*u;
         y += bvec.transpose()*u;
         //dirichlet component
         for(size_t i = 0; i < d; i++)
-        {   y   += theta[theta.size() - d + i] * log(u[i]);
+        {   y   += beta[i] * log(u[i]);
         }
         return y;
     }

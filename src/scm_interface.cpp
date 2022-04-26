@@ -163,13 +163,15 @@ XPtr< CppAD::ADFun<double> > ptapell(
     throw std::invalid_argument("Matching ll function not found");
   }
 
-  veca1 ubetatape(d+bd);
-  ubetatape.setOnes();
+  veca1 utape(d);
+  veca1 thetatape(bd);
+  utape.setOnes();
+  thetatape.setOnes();
   CppAD::ADFun<double> ppitape;
 
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapell(ubetatape,
-                   d, //number of dimensions
+  *out = tapell(utape,
+                thetatape,
                    ll,
                    simplex::fromM, //transformation from manifold to simplex
                    simplex::logdetJ_fromM); //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
@@ -216,40 +218,6 @@ XPtr< CppAD::ADFun<double> > ptapell_theta(XPtr< CppAD::ADFun<double> > pfun, sv
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
-}
-
-//for testing
-//' @title The ppi likelihood calculation
-//' @param u A vector in the simplex.
-//' @param beta a vector of parameters
-//' @return The loglikelihood value (unnormalised).
-//' @export
-// [[Rcpp::export]]
-double ppill(const svecd &beta,
-         const svecd & u){
-  //convert input to an Eigen vectors
-  vecd u_e(u.size());
-  for (size_t i=0; i<u.size(); i++){
-    u_e[i] = u[i];
-  }
-  vecd beta_e(beta.size());
-  for (size_t i=0; i<beta.size(); i++){
-    beta_e[i] = beta[i];
-  }
-
-  veca1 ubetatape(u_e.size() + beta_e.size());
-  ubetatape.setOnes();
-  CppAD::ADFun<double> ppitape;
-  ppitape = tapell(ubetatape,
-                   u_e.size(), //number of dimensions
-                   ll_ppi,
-                   simplex::fromM, //transformation from manifold to simplex
-                   simplex::logdetJ_fromM); //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-
-  vecd y(1);
-  ppitape.new_dynamic(beta_e);
-  y = ppitape.Forward(0, u_e);
-  return(y[0]);
 }
 
 //for testing
@@ -309,4 +277,36 @@ double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
   out_e = pfun->Forward(0, u_e);  //treat the XPtr as a regular pointer
 
   return(out_e[0]);
+}
+
+//for testing
+//' @title The Hessian of recorded function
+//' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+//' @param u A vector in the simplex.
+//' @param beta a vector of the dynamic parameters
+//' @return The Hessian of pfun
+//' @export
+// [[Rcpp::export]]
+svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
+  //convert input to an Eigen vectors
+  vecd u_e(u.size());
+  for (size_t i=0; i<u.size(); i++){
+    u_e[i] = u[i];
+  }
+  vecd beta_e(betain.size());
+  for (size_t i=0; i<betain.size(); i++){
+    beta_e[i] = betain[i];
+  }
+
+
+  vecd hess(u_e.size() * u_e.size(), 1);
+  svecd out(hess.size());
+  pfun->new_dynamic(beta_e);
+  hess = pfun->Hessian(u_e, 0);  //treat the XPtr as a regular pointer
+
+  //convert to std::vector
+  for (size_t i = 0; i<hess.size(); i++){
+    out[i] = hess[i];
+  }
+  return(out);
 }

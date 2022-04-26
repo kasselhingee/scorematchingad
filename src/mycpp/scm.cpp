@@ -6,31 +6,21 @@
 # include "dirichlet.cpp"
 
 // define a function that tapes a log likelihood
-CppAD::ADFun<double> tapell(veca1 zbeta,
-                            size_t n, //number of dimensions
+CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
+                            veca1 theta, //theta parameter
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
                                veca1 (*fromM)(const veca1 &), //transformation from manifold to simplex
                                a1type (*logdetJfromM)(const veca1 &) //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
                                ){
-  veca1 beta(zbeta.size() - n); // vector of exponents in the outer type
-  //declare dummy internal level of taping variables:
-  veca1 z(n); // vector of domain space variables
-  for(size_t i = 0; i < n; i++){
-     z[i] = zbeta[i];
-  }
-  for(size_t i = 0; i < beta.size(); i++){
-     beta[i] = zbeta[i + n];
-  }
 
   //tape relationship between x and log-likelihood
-  CppAD::Independent(z, beta);  //for this tape, beta must be altered using new_dynamic
+  CppAD::Independent(z, theta);  //for this tape, beta must be altered using new_dynamic
   // range space vector
-  size_t m = 1;               // number of ranges space variables
-  veca1 y(m); // vector of ranges space variables
+  veca1 y(1); // vector of ranges space variables
   veca1 u(z.size());
   u = fromM(z);
   y.setZero();
-  y[0] += llf(beta, u);
+  y[0] += llf(theta, u);
   y[0] += logdetJfromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
@@ -78,15 +68,10 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
 
     // taping ll (log likelihood) store operation sequence
-    veca1 zbeta(ubeta.size());
-    for (size_t i=0; i<n; i++){
-      zbeta[i] = z[i];
-    }
-    for (size_t i=0; i<betasize; i++){
-      zbeta[n + i] = ubeta[n+i];
-    }
+    veca1 beta(ubeta.size() - n);
+    beta = ubeta.block(n, 0, beta.size(), 1);
     CppAD::ADFun<a1type, double> lltape;
-    lltape = tapell(zbeta, n, llf, M.fromM, M.logdetJfromM).base2ad();
+    lltape = tapell(z, beta, llf, M.fromM, M.logdetJfromM).base2ad();
 
     //START TAPING
     CppAD::Independent(ubeta);
@@ -94,13 +79,6 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     // veca1 u(n);
     u = ubeta.block(0,0,n,1);
     z = M.toM(u); //transform u to the manifold
-    // veca1 zbeta(ubeta.size());
-    for (size_t i=0; i<n; i++){
-      zbeta[i] = z[i];
-    }
-    for (size_t i=0; i<betasize; i++){
-      zbeta[n + i] = ubeta[n+i];
-    }
 
     Pmat = M.Pmatfun(z);
     veca1 h2(1);
@@ -118,8 +96,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     // }
 
     //update parameters ('dynamic' values) of lltape
-    veca1 beta(betasize);
-    beta = ubeta.block(n,0,betasize,1);
+    beta = ubeta.block(n,0,beta.size(),1); // record dependence between ubeta and beta
     lltape.new_dynamic(beta);
 
     //grad(ll)

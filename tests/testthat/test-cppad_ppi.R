@@ -3,7 +3,7 @@ test_that("ppi with minsq weights match estimator1 for p = 3", {
   p=4
   # smofun <- ptapesmo(c(1,1,1,1,3,3,3,3,3,3,3,3,3), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
   #sample size
-  n=100
+  n=1000
 
   #parameters for the PPI model
   muL=matrix(0,p-1,1)
@@ -23,29 +23,16 @@ test_that("ppi with minsq weights match estimator1 for p = 3", {
 
   set.seed(134)
   utabl <- cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)$samp3
-  smofun <- ptapesmo(c(utabl[1, ], theta)*0 + 1, p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
+  smofun <- ptapesmo(c(utabl[1, ], 1:length(theta)), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
 
-  ppill_r <- function(u, beta0, ALs, bL){
-    p=length(u)
-    A = matrix(0, nrow = p, ncol = p)
-    A[1:p-1, 1:p-1] = ALs
-    b = matrix(c(bL, 0), nrow = p, ncol =1)
-    out = sum(beta0 * log(u)) + t(u) %*% A %*% u + t(b) %*% u
-    return(out)
-  }
-
-
-  ppill_r(utabl[3,], beta0, ALs, bL)
-  cdabyppi::ppill(theta, utabl[3, ])
-
-  smobj(smofun, theta, utabl)
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
   out <- optim(par = theta*0,
                fn = function(theta){smobj(smofun, theta, utabl)},
-               gr = function(theta){smobjgrad(smofun, theta, utabl)},
+               # gr = function(theta){smobjgrad(smofun, theta, utabl)},
                method = "BFGS")
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimatorall1(utabl, acut)
   expect_equal(out$par, directestimate$estimator1, tolerance = 1E-3, ignore_attr = TRUE)
+  expect_equal(out$par, theta, tolerance = 1E-3, ignore_attr = TRUE)
 })

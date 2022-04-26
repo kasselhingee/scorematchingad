@@ -99,18 +99,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ppill
-double ppill(const svecd& beta, const svecd& u);
-RcppExport SEXP _cdabyppi_ppill(SEXP betaSEXP, SEXP uSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const svecd& >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< const svecd& >::type u(uSEXP);
-    rcpp_result_gen = Rcpp::wrap(ppill(beta, u));
-    return rcpp_result_gen;
-END_RCPP
-}
 // pJacobian
 svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain);
 RcppExport SEXP _cdabyppi_pJacobian(SEXP pfunSEXP, SEXP uSEXP, SEXP betainSEXP) {
@@ -137,6 +125,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pHessian
+svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain);
+RcppExport SEXP _cdabyppi_pHessian(SEXP pfunSEXP, SEXP uSEXP, SEXP betainSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< svecd >::type u(uSEXP);
+    Rcpp::traits::input_parameter< svecd >::type betain(betainSEXP);
+    rcpp_result_gen = Rcpp::wrap(pHessian(pfun, u, betain));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_corels", (DL_FUNC) &_cdabyppi_corels, 0},
@@ -146,9 +147,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_psmograd", (DL_FUNC) &_cdabyppi_psmograd, 3},
     {"_cdabyppi_ptapell", (DL_FUNC) &_cdabyppi_ptapell, 3},
     {"_cdabyppi_ptapell_theta", (DL_FUNC) &_cdabyppi_ptapell_theta, 3},
-    {"_cdabyppi_ppill", (DL_FUNC) &_cdabyppi_ppill, 2},
     {"_cdabyppi_pJacobian", (DL_FUNC) &_cdabyppi_pJacobian, 3},
     {"_cdabyppi_pForward0", (DL_FUNC) &_cdabyppi_pForward0, 3},
+    {"_cdabyppi_pHessian", (DL_FUNC) &_cdabyppi_pHessian, 3},
     {NULL, NULL, 0}
 };
 

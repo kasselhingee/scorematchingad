@@ -58,15 +58,6 @@ ptapell_theta <- function(pfun, u, thetain) {
     .Call('_cdabyppi_ptapell_theta', PACKAGE = 'cdabyppi', pfun, u, thetain)
 }
 
-#' @title The ppi likelihood calculation
-#' @param u A vector in the simplex.
-#' @param beta a vector of parameters
-#' @return The loglikelihood value (unnormalised).
-#' @export
-ppill <- function(beta, u) {
-    .Call('_cdabyppi_ppill', PACKAGE = 'cdabyppi', beta, u)
-}
-
 #' @title The Jacobian of recorded function
 #' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 #' @param u A vector in the simplex.
@@ -85,5 +76,15 @@ pJacobian <- function(pfun, u, betain) {
 #' @export
 pForward0 <- function(pfun, u, betain) {
     .Call('_cdabyppi_pForward0', PACKAGE = 'cdabyppi', pfun, u, betain)
+}
+
+#' @title The Hessian of recorded function
+#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+#' @param u A vector in the simplex.
+#' @param beta a vector of the dynamic parameters
+#' @return The Hessian of pfun
+#' @export
+pHessian <- function(pfun, u, betain) {
+    .Call('_cdabyppi_pHessian', PACKAGE = 'cdabyppi', pfun, u, betain)
 }
 
