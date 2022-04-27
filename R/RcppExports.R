@@ -25,26 +25,8 @@ pmanifold <- function(manifoldname) {
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapesmo <- function(u, theta, n, pll, pman, weightname, acut) {
-    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', u, theta, n, pll, pman, weightname, acut)
-}
-
-#' @title The score matching objective calculator.
-#' @param u A vector in the simplex.
-#' @param betain
-#' @return The score matching objective value
-#' @export
-psmo <- function(pfun, u, betain) {
-    .Call('_cdabyppi_psmo', PACKAGE = 'cdabyppi', pfun, u, betain)
-}
-
-#' @title The score matching objective calculator.
-#' @param u A vector in the simplex.
-#' @param betain
-#' @return The score matching objective value
-#' @export
-psmograd <- function(pfun, u, betain) {
-    .Call('_cdabyppi_psmograd', PACKAGE = 'cdabyppi', pfun, u, betain)
+ptapesmo <- function(u, theta, pll, pman, weightname, acut) {
+    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', u, theta, pll, pman, weightname, acut)
 }
 
 #' @title Tape of a log-likelihood calculation
@@ -74,8 +56,8 @@ swapDynamic <- function(pfun, newvalue, newdynparam) {
 #' @param beta a vector of the dynamic parameters
 #' @return The Jacobian of pfun
 #' @export
-pJacobian <- function(pfun, u, betain) {
-    .Call('_cdabyppi_pJacobian', PACKAGE = 'cdabyppi', pfun, u, betain)
+pJacobian <- function(pfun, value, theta) {
+    .Call('_cdabyppi_pJacobian', PACKAGE = 'cdabyppi', pfun, value, theta)
 }
 
 #' @title The value of a recorded function
@@ -84,8 +66,8 @@ pJacobian <- function(pfun, u, betain) {
 #' @param beta a vector of the dynamic parameters
 #' @return The value of pfun
 #' @export
-pForward0 <- function(pfun, u, betain) {
-    .Call('_cdabyppi_pForward0', PACKAGE = 'cdabyppi', pfun, u, betain)
+pForward0 <- function(pfun, value, theta) {
+    .Call('_cdabyppi_pForward0', PACKAGE = 'cdabyppi', pfun, value, theta)
 }
 
 #' @title The Hessian of recorded function
@@ -94,7 +76,7 @@ pForward0 <- function(pfun, u, betain) {
 #' @param beta a vector of the dynamic parameters
 #' @return The Hessian of pfun
 #' @export
-pHessian <- function(pfun, u, betain) {
-    .Call('_cdabyppi_pHessian', PACKAGE = 'cdabyppi', pfun, u, betain)
+pHessian <- function(pfun, value, theta) {
+    .Call('_cdabyppi_pHessian', PACKAGE = 'cdabyppi', pfun, value, theta)
 }
 

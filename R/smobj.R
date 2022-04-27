@@ -1,12 +1,12 @@
 #' @title Compute value of score matching objective for multiple observations
 #' @description The value of the score matching objective for a given beta
 #' @param smofun A tape of the score matching objective calculation
-#' @param beta A parameter set
+#' @param theta A parameter set
 #' @param utabl A matrix of observations, each row being an observation.
 #' @export
-smobj <- function(smofun, beta, utabl){
+smobj <- function(smofun, theta, utabl){
   sc_perpt <- lapply(1:nrow(utabl), function(i){
-    scobj <- psmo(smofun, utabl[i, ], beta)
+    scobj <- pForward0(smofun, theta, utabl[i,])
     return(scobj)
   })
   scmo <- mean(unlist(sc_perpt))
@@ -15,9 +15,9 @@ smobj <- function(smofun, beta, utabl){
 
 #' @describeIn smobj The gradient of the score matching objective function at given beta
 #' @export
-smobjgrad <- function(smofun, beta, utabl){
+smobjgrad <- function(smofun, theta, utabl){
   sc_perpt <- lapply(1:nrow(utabl), function(i){
-    scobj <- psmograd(smofun, utabl[i, ], beta)
+    scobj <- pJacobian(smofun, theta, utabl[i,])
     return(scobj)
   })
   scmo <- colMeans(do.call(rbind, sc_perpt))

@@ -41,7 +41,6 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
                                       svecd theta,
-                                      size_t n,
                                       XPtr< CppAD::ADFun<double> > pll,
                                       XPtr< manifold<a1type> > pman,
                                       std::string weightname,
@@ -83,62 +82,6 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
-}
-
-//calc smo and additions
-//use a pointer to an ADFun object to compute the function evaluated  at a location
-//' @title The score matching objective calculator.
-//' @param u A vector in the simplex.
-//' @param betain
-//' @return The score matching objective value
-//' @export
-// [[Rcpp::export]]
-double psmo(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
-  //convert input to an Eigen vectors
-  vecd u_e(u.size());
-  for (size_t i=0; i<u.size(); i++){
-    u_e[i] = u[i];
-  }
-  vecd beta_e(betain.size());
-  for (size_t i=0; i<betain.size(); i++){
-    beta_e[i] = betain[i];
-  }
-
-  pfun->new_dynamic(u_e); //for smo the non-derivative param is u
-  vecd smo_val(1);
-  smo_val = pfun->Forward(0, beta_e);  //treat the XPtr as a regular pointer
-  return(smo_val[0]);
-}
-
-//calc smo and additions
-//use a pointer to an ADFun object to compute the function evaluated  at a location
-//' @title The score matching objective calculator.
-//' @param u A vector in the simplex.
-//' @param betain
-//' @return The score matching objective value
-//' @export
-// [[Rcpp::export]]
-svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
-  //convert input to an Eigen vectors
-  vecd u_e(u.size());
-  for (size_t i=0; i<u.size(); i++){
-    u_e[i] = u[i];
-  }
-  vecd beta_e(betain.size());
-  for (size_t i=0; i<betain.size(); i++){
-    beta_e[i] = betain[i];
-  }
-
-  pfun->new_dynamic(u_e); //for smo the non-derivative param is u
-  vecd out_e(beta_e.size());
-  svecd out(beta_e.size());
-  out_e = pfun->Jacobian(beta_e);  //treat the XPtr as a regular pointer
-
-  //convert to std::vector
-  for (size_t i = 0; i<out_e.size(); i++){
-    out[i] = out_e[i];
-  }
-  return(out);
 }
 
 //' @title Tape of a log-likelihood calculation
@@ -237,22 +180,22 @@ XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svec
 //' @return The Jacobian of pfun
 //' @export
 // [[Rcpp::export]]
-svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
+svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
-  vecd u_e(u.size());
-  for (size_t i=0; i<u.size(); i++){
-    u_e[i] = u[i];
+  vecd value_e(value.size());
+  for (size_t i=0; i<value.size(); i++){
+    value_e[i] = value[i];
   }
-  vecd beta_e(betain.size());
-  for (size_t i=0; i<betain.size(); i++){
-    beta_e[i] = betain[i];
+  vecd theta_e(theta.size());
+  for (size_t i=0; i<theta.size(); i++){
+    theta_e[i] = theta[i];
   }
 
 
-  vecd grad(u_e.size());
-  svecd out(u_e.size());
-  pfun->new_dynamic(beta_e);
-  grad = pfun->Jacobian(u_e);  //treat the XPtr as a regular pointer
+  vecd grad(value_e.size());
+  svecd out(value_e.size());
+  pfun->new_dynamic(theta_e);
+  grad = pfun->Jacobian(value_e);  //treat the XPtr as a regular pointer
 
   //convert to std::vector
   for (size_t i = 0; i<grad.size(); i++){
@@ -269,21 +212,21 @@ svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
 //' @return The value of pfun
 //' @export
 // [[Rcpp::export]]
-double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
+double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
-  vecd u_e(u.size());
-  for (size_t i=0; i<u.size(); i++){
-    u_e[i] = u[i];
+  vecd value_e(value.size());
+  for (size_t i=0; i<value.size(); i++){
+    value_e[i] = value[i];
   }
-  vecd beta_e(betain.size());
-  for (size_t i=0; i<betain.size(); i++){
-    beta_e[i] = betain[i];
+  vecd theta_e(theta.size());
+  for (size_t i=0; i<theta.size(); i++){
+    theta_e[i] = theta[i];
   }
 
 
   vecd out_e(1);
-  pfun->new_dynamic(beta_e);
-  out_e = pfun->Forward(0, u_e);  //treat the XPtr as a regular pointer
+  pfun->new_dynamic(theta_e);
+  out_e = pfun->Forward(0, value_e);  //treat the XPtr as a regular pointer
 
   return(out_e[0]);
 }
@@ -296,22 +239,22 @@ double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
 //' @return The Hessian of pfun
 //' @export
 // [[Rcpp::export]]
-svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
+svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
-  vecd u_e(u.size());
-  for (size_t i=0; i<u.size(); i++){
-    u_e[i] = u[i];
+  vecd value_e(value.size());
+  for (size_t i=0; i<value.size(); i++){
+    value_e[i] = value[i];
   }
-  vecd beta_e(betain.size());
-  for (size_t i=0; i<betain.size(); i++){
-    beta_e[i] = betain[i];
+  vecd theta_e(theta.size());
+  for (size_t i=0; i<theta.size(); i++){
+    theta_e[i] = theta[i];
   }
 
 
-  vecd hess(u_e.size() * u_e.size(), 1);
+  vecd hess(value_e.size() * value_e.size(), 1);
   svecd out(hess.size());
-  pfun->new_dynamic(beta_e);
-  hess = pfun->Hessian(u_e, 0);  //treat the XPtr as a regular pointer
+  pfun->new_dynamic(theta_e);
+  hess = pfun->Hessian(value_e, 0);  //treat the XPtr as a regular pointer
 
   //convert to std::vector
   for (size_t i = 0; i<hess.size(); i++){
