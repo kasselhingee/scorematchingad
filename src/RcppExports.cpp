@@ -43,18 +43,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapesmo
-XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n, std::string llname, XPtr< manifold<a1type> > pman, std::string weightname, const double acut);
-RcppExport SEXP _cdabyppi_ptapesmo(SEXP xbetainSEXP, SEXP nSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP weightnameSEXP, SEXP acutSEXP) {
+XPtr< CppAD::ADFun<double> > ptapesmo(svecd u, svecd theta, size_t n, XPtr< CppAD::ADFun<double> > pll, XPtr< manifold<a1type> > pman, std::string weightname, const double acut);
+RcppExport SEXP _cdabyppi_ptapesmo(SEXP uSEXP, SEXP thetaSEXP, SEXP nSEXP, SEXP pllSEXP, SEXP pmanSEXP, SEXP weightnameSEXP, SEXP acutSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< svecd >::type xbetain(xbetainSEXP);
+    Rcpp::traits::input_parameter< svecd >::type u(uSEXP);
+    Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< size_t >::type n(nSEXP);
-    Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
+    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pll(pllSEXP);
     Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
     Rcpp::traits::input_parameter< std::string >::type weightname(weightnameSEXP);
     Rcpp::traits::input_parameter< const double >::type acut(acutSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapesmo(xbetain, n, llname, pman, weightname, acut));
+    rcpp_result_gen = Rcpp::wrap(ptapesmo(u, theta, n, pll, pman, weightname, acut));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -85,28 +86,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapell
-XPtr< CppAD::ADFun<double> > ptapell(size_t d, size_t bd, std::string llname);
-RcppExport SEXP _cdabyppi_ptapell(SEXP dSEXP, SEXP bdSEXP, SEXP llnameSEXP) {
+XPtr< CppAD::ADFun<double> > ptapell(svecd z, svecd theta, std::string llname, XPtr< manifold<a1type> > pman);
+RcppExport SEXP _cdabyppi_ptapell(SEXP zSEXP, SEXP thetaSEXP, SEXP llnameSEXP, SEXP pmanSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< size_t >::type d(dSEXP);
-    Rcpp::traits::input_parameter< size_t >::type bd(bdSEXP);
+    Rcpp::traits::input_parameter< svecd >::type z(zSEXP);
+    Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapell(d, bd, llname));
+    Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapell(z, theta, llname, pman));
     return rcpp_result_gen;
 END_RCPP
 }
-// ptapell_theta
-XPtr< CppAD::ADFun<double> > ptapell_theta(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd thetain);
-RcppExport SEXP _cdabyppi_ptapell_theta(SEXP pfunSEXP, SEXP uSEXP, SEXP thetainSEXP) {
+// swapDynamic
+XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svecd newvalue, svecd newdynparam);
+RcppExport SEXP _cdabyppi_swapDynamic(SEXP pfunSEXP, SEXP newvalueSEXP, SEXP newdynparamSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< svecd >::type u(uSEXP);
-    Rcpp::traits::input_parameter< svecd >::type thetain(thetainSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapell_theta(pfun, u, thetain));
+    Rcpp::traits::input_parameter< svecd >::type newvalue(newvalueSEXP);
+    Rcpp::traits::input_parameter< svecd >::type newdynparam(newdynparamSEXP);
+    rcpp_result_gen = Rcpp::wrap(swapDynamic(pfun, newvalue, newdynparam));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -154,11 +156,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_corels", (DL_FUNC) &_cdabyppi_corels, 0},
     {"_cdabyppi_rcpp_hello_world", (DL_FUNC) &_cdabyppi_rcpp_hello_world, 0},
     {"_cdabyppi_pmanifold", (DL_FUNC) &_cdabyppi_pmanifold, 1},
-    {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 6},
+    {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 7},
     {"_cdabyppi_psmo", (DL_FUNC) &_cdabyppi_psmo, 3},
     {"_cdabyppi_psmograd", (DL_FUNC) &_cdabyppi_psmograd, 3},
-    {"_cdabyppi_ptapell", (DL_FUNC) &_cdabyppi_ptapell, 3},
-    {"_cdabyppi_ptapell_theta", (DL_FUNC) &_cdabyppi_ptapell_theta, 3},
+    {"_cdabyppi_ptapell", (DL_FUNC) &_cdabyppi_ptapell, 4},
+    {"_cdabyppi_swapDynamic", (DL_FUNC) &_cdabyppi_swapDynamic, 3},
     {"_cdabyppi_pJacobian", (DL_FUNC) &_cdabyppi_pJacobian, 3},
     {"_cdabyppi_pForward0", (DL_FUNC) &_cdabyppi_pForward0, 3},
     {"_cdabyppi_pHessian", (DL_FUNC) &_cdabyppi_pHessian, 3},

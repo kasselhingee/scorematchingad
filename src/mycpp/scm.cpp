@@ -43,61 +43,47 @@ CppAD::ADFun<double> tapeh2(veca1 z,
 }
 
 // function that tapes the score-matching objective
-CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is the measurement, the remaining elements are the parameters
-                             size_t n, //the dimension of the measurements (number of components)
-                             a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
+CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement for taping
+                             veca1 theta, //a vector of parameters for taping
+                             CppAD::ADFun<double> & lltape,
                              manifold<a1type> &M,
                              a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
                              const double & acut //the acut constraint for the weight functions
                              ){
-    veca1 ubeta(ubetain.size());
-    for (size_t i=0; i < ubetain.size(); i++){
-       ubeta[i] = ubetain[i];
-    }
-    size_t betasize = ubetain.size() - n;
-
+    size_t p(u.size());
     //Projection matrix
-    mata1 Pmat(n, n);
+    mata1 Pmat(p, p);
 
     //get h2 tape
     CppAD::ADFun<double> dh2tape;
-    veca1 u(n);
-    u = ubeta.block(0,0,n,1);
-    veca1 z(n);
+    veca1 z(p);
     z = M.toM(u); //transform u to the manifold
     CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
 
-    // taping ll (log likelihood) store operation sequence
-    veca1 beta(ubeta.size() - n);
-    beta = ubeta.block(n, 0, beta.size(), 1);
-    CppAD::ADFun<a1type, double> lltape;
-    lltape = tapell(z, beta, llf, M.fromM, M.logdetJfromM).base2ad();
+    // make ll tape higher order (i.e. as if it was taped using a2type instead of a1type)
+    CppAD::ADFun<a1type, double> lltapehigher;
+    lltapehigher = lltape.base2ad();
 
     //START TAPING
-    CppAD::Independent(beta, u); //differentiate wrt beta, dynamic parameter is u
+    CppAD::Independent(theta, u); //differentiate wrt beta, dynamic parameter is u
 
     // veca1 u(n);
     z = M.toM(u); //transform u to the manifold
 
     Pmat = M.Pmatfun(z);
     veca1 h2(1);
-    veca1 gradh2(n);
+    veca1 gradh2(p);
     h2 = h2tape.Forward(0, z);
     gradh2 = h2tape.Jacobian(z);
-    // CppAD::PrintFor("For h2fun, z is: ", z[0]);
-    // for(size_t i=1; i<z.size(); i++){
-      // CppAD::PrintFor(" ", z[i]);
-    // }
-
 
     //update parameters ('dynamic' values) of lltape
-    lltape.new_dynamic(beta);
+    lltapehigher.new_dynamic(theta);
 
     //grad(ll)
-    veca1 jac(n); // Jacobian of ll
-    jac  = lltape.Jacobian(z);      // Jacobian for operation sequence
-    PrintForVec("The value of ll jac is: ", jac);
+    veca1 jac(p); // Jacobian of ll
+    jac  = lltapehigher.Jacobian(z);      // Jacobian for operation sequence
+    PrintForVec("\nThe value of ll jac is: ", jac);
 
     //hgPg
     veca1 hgPg(1);
@@ -106,13 +92,13 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
     //hlap
     veca1 lapl(1);
     lapl[0] = 0.;
-    for(size_t i=0; i < n; i++){
+    for(size_t i=0; i < p; i++){
        lapl[0] += Pmat.row(i) * M.dPmatfun(z, i) * jac;
     }
-    mata1 hess(n * n, 1);
-    hess = lltape.Hessian(z, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
-    hess.resize(n, n);
-    PrintForMatrix("The value of ll Hessian is: ", hess);
+    mata1 hess(p * p, 1);
+    hess = lltapehigher.Hessian(z, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
+    hess.resize(p, p);
+    PrintForMatrix("\nThe value of ll Hessian is: \n", hess);
     lapl[0] += (Pmat*hess).trace();
     lapl[0] *= h2[0]; //weight by h2
 
@@ -127,7 +113,7 @@ CppAD::ADFun<double> tapesmo(svecd ubetain, //a vector. The first n elements is 
 
     //finish taping
     CppAD::ADFun<double> smofun;
-    smofun.Dependent(beta, smo);
+    smofun.Dependent(theta, smo);
     smofun.optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
     smofun.check_for_nan(false); //no error if some of the results of the Jacobian are nan.
     return(smofun);

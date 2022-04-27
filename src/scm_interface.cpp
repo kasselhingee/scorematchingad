@@ -39,9 +39,10 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
 //' @return An RCpp::XPtr object pointing to the ADFun
 //' @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
+XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
+                                      svecd theta,
                                       size_t n,
-                                      std::string llname,
+                                      XPtr< CppAD::ADFun<double> > pll,
                                       XPtr< manifold<a1type> > pman,
                                       std::string weightname,
                                       const double acut){
@@ -63,22 +64,22 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain,
     throw std::invalid_argument("Matching weight function not found");
   }
 
-  //choose ll function
-  a1type (*ll)(const veca1 &, const veca1 &) = nullptr;
-  if (llname.compare("dirichlet") == 0){
-    ll = ll_dirichlet;
+  //convert svecd to veca1
+  veca1 u_ad(u.size());
+  for (size_t i=0; i<u.size(); i++){
+    u_ad[i] = u[i];
   }
-  if (llname.compare("ppi") == 0){
-    ll = ll_ppi;
-  }
-  //check ll function
-  if (ll == nullptr){
-    throw std::invalid_argument("Matching ll function not found");
+  veca1 theta_ad(theta.size());
+  for (size_t i=0; i<theta.size(); i++){
+    theta_ad[i] = theta[i];
   }
 
-  *out = tapesmo(xbetain, n, ll,
+  *out = tapesmo(u_ad,
+                 theta_ad,
+                 *pll,
                  *pman,
-                 h2fun, acut);
+                 h2fun,
+                 acut);
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
@@ -147,10 +148,11 @@ svecd psmograd(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd betain){
 //' @return An RCpp::XPtr object pointing to the ADFun
 //' @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > ptapell(
-                                      size_t d, //dimensions of measurments
-                                      size_t bd, //dimension of parameters
-                                      std::string llname){
+XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifold
+                                     svecd theta,
+                                     std::string llname,
+                                     XPtr< manifold<a1type> > pman
+                                     ){
   //choose ll function
   a1type (*ll)(const veca1 &, const veca1 &) = nullptr;
   if (llname.compare("dirichlet") == 0){
@@ -164,62 +166,68 @@ XPtr< CppAD::ADFun<double> > ptapell(
     throw std::invalid_argument("Matching ll function not found");
   }
 
-  veca1 utape(d);
-  veca1 thetatape(bd);
-  utape.setOnes();
-  thetatape.setOnes();
-  CppAD::ADFun<double> ppitape;
+  veca1 z_ad(z.size());
+  for (size_t i=0; i<z.size(); i++){
+    z_ad[i] = z[i];
+  }
+  veca1 theta_ad(theta.size());
+  for (size_t i=0; i<theta.size(); i++){
+    theta_ad[i] = theta[i];
+  }
 
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapell(utape,
-                thetatape,
-                   ll,
-                   simplex::fromM, //transformation from manifold to simplex
-                   simplex::logdetJ_fromM); //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+  *out = tapell(z_ad,
+                theta_ad,
+                ll,
+                pman->fromM, //transformation from manifold to simplex
+                pman->logdetJfromM); //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
 
 //for testing
-//' @title Tape a likelihood tape wrt theta
-//' @param u A vector in the simplex.
-//' @param theta a vector of parameters
+//' @title Switch Dynamic and pure Independent values
+//' @description Convert an ADFun so that the independent values become dynamic parameters
+//' and the dynamic parameters become independent values
+//' @param newvalue The value (in the sense after the switch has occured) at which to tape the ADFun
+//' @param newdynparam The value of the now dynamic parameters at which to tape the ADFun
 //' @return A pointer to an ADFun
 //' @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > ptapell_theta(XPtr< CppAD::ADFun<double> > pfun, svecd u, svecd thetain){
+XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svecd newvalue, svecd newdynparam){
   //convert input to an Eigen vectors
-  veca1 u_e(u.size());
-  for (size_t i=0; i<u.size(); i++){
-    u_e[i] = u[i];
+  veca1 value(newvalue.size());
+  for (size_t i=0; i<newvalue.size(); i++){
+    value[i] = newvalue[i];
   }
-  veca1 theta_e(thetain.size());
-  for (size_t i=0; i<thetain.size(); i++){
-    theta_e[i] = thetain[i];
+  veca1 dynparam(newdynparam.size());
+  for (size_t i=0; i<newdynparam.size(); i++){
+    dynparam[i] = newdynparam[i];
   }
 
   //convert taped object to higher order
-  CppAD::ADFun<a1type, double> lltape;
-  lltape = pfun->base2ad();
+  CppAD::ADFun<a1type, double> pfunhigher;
+  pfunhigher = pfun->base2ad();
 
   veca1 y(1);
 
   //START TAPING
-  CppAD::Independent(theta_e, u_e);
+  CppAD::Independent(value, dynparam);
 
-  lltape.new_dynamic(theta_e);
-  y = lltape.Forward(0, u_e);
+  pfunhigher.new_dynamic(value); //before switch the value is the dynamic parameter vector
+  y = pfunhigher.Forward(0, dynparam); //before the switch the dynparam is the independent value
 
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  out->Dependent(theta_e, y);
+  out->Dependent(value, y);
   out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
   out->check_for_nan(false);
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
+
 
 //for testing
 //' @title The Jacobian of recorded function

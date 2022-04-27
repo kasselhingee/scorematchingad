@@ -25,8 +25,8 @@ pmanifold <- function(manifoldname) {
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapesmo <- function(xbetain, n, llname, pman, weightname, acut) {
-    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n, llname, pman, weightname, acut)
+ptapesmo <- function(u, theta, n, pll, pman, weightname, acut) {
+    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', u, theta, n, pll, pman, weightname, acut)
 }
 
 #' @title The score matching objective calculator.
@@ -53,17 +53,19 @@ psmograd <- function(pfun, u, betain) {
 #' @param llname name of the likelihood function
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapell <- function(d, bd, llname) {
-    .Call('_cdabyppi_ptapell', PACKAGE = 'cdabyppi', d, bd, llname)
+ptapell <- function(z, theta, llname, pman) {
+    .Call('_cdabyppi_ptapell', PACKAGE = 'cdabyppi', z, theta, llname, pman)
 }
 
-#' @title Tape a likelihood tape wrt theta
-#' @param u A vector in the simplex.
-#' @param theta a vector of parameters
+#' @title Switch Dynamic and pure Independent values
+#' @description Convert an ADFun so that the independent values become dynamic parameters
+#' and the dynamic parameters become independent values
+#' @param newvalue The value (in the sense after the switch has occured) at which to tape the ADFun
+#' @param newdynparam The value of the now dynamic parameters at which to tape the ADFun
 #' @return A pointer to an ADFun
 #' @export
-ptapell_theta <- function(pfun, u, thetain) {
-    .Call('_cdabyppi_ptapell_theta', PACKAGE = 'cdabyppi', pfun, u, thetain)
+swapDynamic <- function(pfun, newvalue, newdynparam) {
+    .Call('_cdabyppi_swapDynamic', PACKAGE = 'cdabyppi', pfun, newvalue, newdynparam)
 }
 
 #' @title The Jacobian of recorded function
