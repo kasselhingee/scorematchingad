@@ -31,19 +31,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pmanifold
+XPtr< manifold<a1type> > pmanifold(std::string manifoldname);
+RcppExport SEXP _cdabyppi_pmanifold(SEXP manifoldnameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type manifoldname(manifoldnameSEXP);
+    rcpp_result_gen = Rcpp::wrap(pmanifold(manifoldname));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ptapesmo
-XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n, std::string llname, std::string manifoldname, std::string weightname, const double acut);
-RcppExport SEXP _cdabyppi_ptapesmo(SEXP xbetainSEXP, SEXP nSEXP, SEXP llnameSEXP, SEXP manifoldnameSEXP, SEXP weightnameSEXP, SEXP acutSEXP) {
+XPtr< CppAD::ADFun<double> > ptapesmo(svecd xbetain, size_t n, std::string llname, XPtr< manifold<a1type> > pman, std::string weightname, const double acut);
+RcppExport SEXP _cdabyppi_ptapesmo(SEXP xbetainSEXP, SEXP nSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP weightnameSEXP, SEXP acutSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< svecd >::type xbetain(xbetainSEXP);
     Rcpp::traits::input_parameter< size_t >::type n(nSEXP);
     Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
-    Rcpp::traits::input_parameter< std::string >::type manifoldname(manifoldnameSEXP);
+    Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
     Rcpp::traits::input_parameter< std::string >::type weightname(weightnameSEXP);
     Rcpp::traits::input_parameter< const double >::type acut(acutSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapesmo(xbetain, n, llname, manifoldname, weightname, acut));
+    rcpp_result_gen = Rcpp::wrap(ptapesmo(xbetain, n, llname, pman, weightname, acut));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -142,6 +153,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_corels", (DL_FUNC) &_cdabyppi_corels, 0},
     {"_cdabyppi_rcpp_hello_world", (DL_FUNC) &_cdabyppi_rcpp_hello_world, 0},
+    {"_cdabyppi_pmanifold", (DL_FUNC) &_cdabyppi_pmanifold, 1},
     {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 6},
     {"_cdabyppi_psmo", (DL_FUNC) &_cdabyppi_psmo, 3},
     {"_cdabyppi_psmograd", (DL_FUNC) &_cdabyppi_psmograd, 3},

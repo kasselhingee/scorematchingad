@@ -1,7 +1,8 @@
 
 test_that("prodsq weights match estimator2", {
   acut = 0.01
-  smofun <- ptapesmo(c(1,1,1,3,3,3), 3, llname = "dirichlet", manifoldname = "sphere", "prodsq", acut = acut) #tape of the score function
+  pman <- pmanifold("sphere")
+  smofun <- ptapesmo(c(1,1,1,3,3,3), 3, llname = "dirichlet", pman = pman, "prodsq", acut = acut) #tape of the score function
   beta = c(-0.3, -0.1, 3)
   n = 10
   set.seed(134)
@@ -22,7 +23,8 @@ test_that("prodsq weights match estimator2", {
 
 test_that("minsq weights match estimator2", {
   acut = 0.1
-  smofun <- ptapesmo(c(1,1,1,3,3,3), 3, llname = "dirichlet", manifoldname = "sphere", weightname = "minsq", acut = acut) #tape of the score function
+  psphere <- pmanifold("sphere")
+  smofun <- ptapesmo(c(1,1,1,3,3,3), 3, llname = "dirichlet", pman = psphere, weightname = "minsq", acut = acut) #tape of the score function
   beta = c(-0.3, -0.1, 3)
   n = 10
   set.seed(134)

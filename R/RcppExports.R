@@ -9,6 +9,14 @@ rcpp_hello_world <- function() {
     .Call('_cdabyppi_rcpp_hello_world', PACKAGE = 'cdabyppi')
 }
 
+#' @title Generate manifold object
+#' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
+#' @return An RCpp::XPtr object pointing to the C++ manifold object
+#' @export
+pmanifold <- function(manifoldname) {
+    .Call('_cdabyppi_pmanifold', PACKAGE = 'cdabyppi', manifoldname)
+}
+
 #' @title The score matching objective calculator.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
 #' @param n The dimension of x.
@@ -17,8 +25,8 @@ rcpp_hello_world <- function() {
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapesmo <- function(xbetain, n, llname, manifoldname, weightname, acut) {
-    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n, llname, manifoldname, weightname, acut)
+ptapesmo <- function(xbetain, n, llname, pman, weightname, acut) {
+    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n, llname, pman, weightname, acut)
 }
 
 #' @title The score matching objective calculator.
