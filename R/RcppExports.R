@@ -35,8 +35,8 @@ ptapesmo <- function(u, theta, pll, pman, weightname, acut) {
 #' @param llname name of the likelihood function
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapell <- function(z, theta, llname, pman) {
-    .Call('_cdabyppi_ptapell', PACKAGE = 'cdabyppi', z, theta, llname, pman)
+ptapell <- function(z, theta, llname, pman, fixedtheta) {
+    .Call('_cdabyppi_ptapell', PACKAGE = 'cdabyppi', z, theta, llname, pman, fixedtheta)
 }
 
 #' @title Switch Dynamic and pure Independent values

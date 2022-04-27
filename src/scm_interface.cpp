@@ -94,8 +94,14 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
 XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifold
                                      svecd theta,
                                      std::string llname,
-                                     XPtr< manifold<a1type> > pman
+                                     XPtr< manifold<a1type> > pman,
+                                     svecb fixedtheta
                                      ){
+  Eigen::Matrix<bool, Eigen::Dynamic, 1> fixedtheta_e(fixedtheta.size());
+  for (size_t i=0;i<fixedtheta.size();i++){
+    fixedtheta_e[i] = fixedtheta[i];
+  }
+
   //choose ll function
   a1type (*ll)(const veca1 &, const veca1 &) = nullptr;
   if (llname.compare("dirichlet") == 0){
@@ -123,7 +129,8 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
                 theta_ad,
                 ll,
                 pman->fromM, //transformation from manifold to simplex
-                pman->logdetJfromM); //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+                pman->logdetJfromM, //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+                fixedtheta_e);
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);

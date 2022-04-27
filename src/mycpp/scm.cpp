@@ -11,17 +11,54 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                             veca1 theta, //theta parameter
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
                                veca1 (*fromM)(const veca1 &), //transformation from manifold to simplex
-                               a1type (*logdetJfromM)(const veca1 &) //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+                               a1type (*logdetJfromM)(const veca1 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+                               Eigen::Matrix<bool, Eigen::Dynamic, 1> fixedtheta //TRUE values indicate that the corresponding value of theta is not a variable (dynamic or independent)
                                ){
 
+  //separate fixed and variable theta
+  veca1 thetavar(theta.size() - fixedtheta.sum());
+  veca1 thetafxd(fixedtheta.sum());
+  size_t idx_var(0);
+  size_t idx_fxd(0);
+  for (size_t i=0;i<theta.size();i++){
+    if (fixedtheta[i]){
+      thetafxd[idx_fxd] = theta[i];
+      idx_fxd += 1;
+    } else {
+      thetavar[idx_var] = theta[i];
+      idx_var += 1;
+    }
+  }
+
+  std::cout << "Fixed theta is:";
+  for (size_t i=0;i<thetafxd.size();i++){
+    std::cout << " " << thetafxd[i];
+  }
+  std::cout << std::endl;
+
   //tape relationship between x and log-likelihood
-  CppAD::Independent(z, theta);  //for this tape, beta must be altered using new_dynamic
+  CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
+
+  //combine fixed and variable theta
+  veca1 thetarecom(theta.size());
+  idx_var = 0;
+  for (size_t i=0;i<theta.size();i++){
+    if (fixedtheta[i]){
+      thetarecom[i] = theta[i];
+    } else {
+      thetarecom[i] = thetavar[idx_var];
+      idx_var += 1;
+    }
+  }
+  PrintForVec("\n thetavar is: ", thetavar);
+  PrintForVec("\n thetarecom is: ", thetarecom);
+
   // range space vector
   veca1 y(1); // vector of ranges space variables
   veca1 u(z.size());
   u = fromM(z);
   y.setZero();
-  y[0] += llf(u, theta);
+  y[0] += llf(u, thetarecom);
   y[0] += logdetJfromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
@@ -67,6 +104,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
 
     //START TAPING
     CppAD::Independent(theta, u); //differentiate wrt beta, dynamic parameter is u
+    PrintForVec("\n theta is: ", theta);
 
     // veca1 u(n);
     z = M.toM(u); //transform u to the manifold

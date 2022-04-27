@@ -59,8 +59,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapell
-XPtr< CppAD::ADFun<double> > ptapell(svecd z, svecd theta, std::string llname, XPtr< manifold<a1type> > pman);
-RcppExport SEXP _cdabyppi_ptapell(SEXP zSEXP, SEXP thetaSEXP, SEXP llnameSEXP, SEXP pmanSEXP) {
+XPtr< CppAD::ADFun<double> > ptapell(svecd z, svecd theta, std::string llname, XPtr< manifold<a1type> > pman, svecb fixedtheta);
+RcppExport SEXP _cdabyppi_ptapell(SEXP zSEXP, SEXP thetaSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP fixedthetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -68,7 +68,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
     Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapell(z, theta, llname, pman));
+    Rcpp::traits::input_parameter< svecb >::type fixedtheta(fixedthetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapell(z, theta, llname, pman, fixedtheta));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -130,7 +131,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_rcpp_hello_world", (DL_FUNC) &_cdabyppi_rcpp_hello_world, 0},
     {"_cdabyppi_pmanifold", (DL_FUNC) &_cdabyppi_pmanifold, 1},
     {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 6},
-    {"_cdabyppi_ptapell", (DL_FUNC) &_cdabyppi_ptapell, 4},
+    {"_cdabyppi_ptapell", (DL_FUNC) &_cdabyppi_ptapell, 5},
     {"_cdabyppi_swapDynamic", (DL_FUNC) &_cdabyppi_swapDynamic, 3},
     {"_cdabyppi_pJacobian", (DL_FUNC) &_cdabyppi_pJacobian, 3},
     {"_cdabyppi_pForward0", (DL_FUNC) &_cdabyppi_pForward0, 3},
