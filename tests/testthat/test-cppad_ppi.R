@@ -7,38 +7,45 @@ test_that("ppi and dirichlet smo match when AL and bL is zero and p = 3", {
 
   utabl <- cdabyppi:::rhybrid(10,p,beta,ALs,bL,4)$samp3
 
-  acut = 1
-  smoppi <- ptapesmo(c(utabl[2, ], 1:length(theta)), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
-  smodir <- ptapesmo(c(utabl[2, ], 1:length(theta)), p, llname = "dirichlet", manifoldname = "sphere", "minsq", acut = acut)
+  acut = 0.1
+  psphere = pmanifold("sphere")
+  pdir <- ptapell(c(0.1,0.1,0.1), c(1,2,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE))
+  pppi <- ptapell(c(0.1,0.1,0.1), theta, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, length(theta)))
+  smoppi <- ptapesmo(c(0.1,0.1,0.1), theta, pll = pppi, pman = psphere, "minsq", acut = acut) #tape of the score function
+  smodir <- ptapesmo(c(0.1,0.1,0.1), c(1,2,3), pll = pdir, pman = psphere, "minsq", acut = acut)
 
-  ppival <- psmo(smoppi, utabl[2, ], theta)
-  dirval <- psmo(smodir, utabl[2, ], beta)
+  ppival <- pForward0(smoppi, theta, utabl[2, ])
+  dirval <- pForward0(smodir, theta, utabl[2, ])
   expect_equal(ppival, dirval)
 })
 
-test_that("ppi works when AL and bL is zero and p = 4", {
+test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   beta = c(-0.3, -0.2, -0.1, 3)
   p = length(beta)
   ALs = matrix(0, nrow = p-1, ncol = p-1)
   bL = matrix(0, nrow = p-1, ncol = 1)
   theta = toPPIparamvec(ALs, bL, beta)
 
-  utabl <- cdabyppi:::rhybrid(10,p,beta,ALs,bL,4)$samp3
+  utabl <- cdabyppi:::rhybrid(100,p,beta,ALs,bL,4)$samp3
 
-  acut = 1
-  smoppi <- ptapesmo(c(utabl[2, ], 1:length(theta)), p, llname = "ppi", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
-  smodir <- ptapesmo(c(utabl[2, ], 1:length(theta)), p, llname = "dirichlet", manifoldname = "sphere", "minsq", acut = acut)
+  acut = 0.1
+  psphere = pmanifold("sphere")
+  pdir <- ptapell(rep(0.1, p), 1:p, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, p))
+  pppi <- ptapell(rep(0.1, p), theta, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, length(theta)))
+  smoppi <- ptapesmo(rep(0.1, p), theta, pll = pppi, pman = psphere, "minsq", acut = acut) #tape of the score function
+  smodir <- ptapesmo(rep(0.1, p), 1:p, pll = pdir, pman = psphere, "minsq", acut = acut)
 
-  ppival <- psmo(smoppi, utabl[2, ], theta)
-  dirval <- psmo(smodir, utabl[2, ], beta)
-  expect_equal(ppival, dirval)
-
-
-  out <- optim(par = theta*0,
+  # it looks like the taped function above is not altering bL or beta
+  # potentially the ordering of the theta values is wrong??
+  out <- optim(par = theta * 0 + 1,
                fn = function(theta){smobj(smoppi, theta, utabl)},
                gr = function(theta){smobjgrad(smoppi, theta, utabl)},
                method = "BFGS")
   cppadest <- fromPPIparamvec(out$par, p)
+
+  expect_equal(pForward0(pdir, utabl[2, ], beta), pForward0(pppi, utabl[2, ], theta))
+  expect_equal(pJacobian(pdir, utabl[2, ], beta), pJacobian(pppi, utabl[2, ], theta)) #how/why are they different
+  expect_equal(pForward0(smoppi, theta, utabl[2, ]), pForward0(smodir, beta, utabl[2, ])) # how/why are they different?
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimator1_dir(utabl, acut)
