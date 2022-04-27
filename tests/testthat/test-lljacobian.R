@@ -29,7 +29,8 @@ test_that("ppi likelihood Jacobian matches numerical estimates", {
     return(out)
   }
 
-  lltape <- ptapell(length(u), length(theta), llname = "ppi")
+  psimplex <- pmanifold("simplex") #because above ppill_r is for the simplex
+  lltape <- ptapell(u, theta, llname = "ppi", pman = psimplex)
   expect_equal(ppill_r(u, beta0, ALs, bL), pForward0(lltape, u, theta), ignore_attr = TRUE)
 
   #gradiant
@@ -37,7 +38,7 @@ test_that("ppi likelihood Jacobian matches numerical estimates", {
   expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, theta), ignore_attr = TRUE, tolerance = 1E-3)
 
   #gradient wrt theta
-  lltape_theta <- ptapell_theta(lltape, u, theta)
+  lltape_theta <- swapDynamic(lltape, theta, u)
   numderiv <- numericDeriv(quote(ppill_r(u,  beta0, ALs, bL)), c("ALs", "bL", "beta0"))
   numgrad = attr(numderiv,"gradient")
   inthetaform = c(numgrad[c(1, 5, 9)], #diag of ALs
@@ -56,7 +57,8 @@ test_that("dirichlet ll evaluation and Jacobian matches expected", {
 
   dirichlet_r <- function(u, beta){sum(beta * log(u))}
 
-  lltape <- ptapell(length(beta), length(beta), llname = "dirichlet")
+  psimplex <- pmanifold("simplex")
+  lltape <- ptapell(u, beta, llname = "dirichlet", pman = psimplex)
   #forward0
   expect_equal(dirichlet_r(u, beta), pForward0(lltape, u, beta), ignore_attr = TRUE)
 
@@ -65,7 +67,7 @@ test_that("dirichlet ll evaluation and Jacobian matches expected", {
   expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, beta), ignore_attr = TRUE)
 
   #gradient wrt beta
-  lltape_theta <- ptapell_theta(lltape, u, beta)
+  lltape_theta <- swapDynamic(lltape, beta, u)
   numderiv <- numericDeriv(quote(dirichlet_r(u, beta)), c("beta"))
   expect_equal(attr(numderiv,"gradient"), pJacobian(lltape_theta, beta, u), ignore_attr = TRUE)
 })
