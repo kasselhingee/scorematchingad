@@ -73,6 +73,45 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
   expect_equal(hess, numderiv, ignore_attr = TRUE)
 })
 
+# test Jacobian of ll function using numerical differentiation
+test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estimates", {
+  psimplex <- pmanifold("sphere") #because above ppill_r is for the simplex
+  lltape <- ptapell(u, theta, llname = "ppi", pman = psimplex)
+
+  # wrt u
+  expect_equal(ppill_r_S(u, beta0, ALs, bL), pForward0(lltape, u, theta), ignore_attr = TRUE)
+
+  #gradiant
+  numderiv <- numericDeriv(quote(ppill_r_S(u, beta0, ALs, bL)), c("u"))
+  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, theta), ignore_attr = TRUE, tolerance = 1E-3)
+
+  #Hessian
+  numderiv <- numDeriv::hessian(ppill_r_S, u, beta0 = beta0, ALs = ALs, bL = bL)
+  hess <- pHessian(lltape, u, theta)
+  dim(hess) <- c(p, p)
+  expect_equal(hess, numderiv, ignore_attr = TRUE)
+
+  #wrt u
+  lltape_theta <- swapDynamic(lltape, theta, u)
+  expect_equal(ppill_r_S(u, beta0, ALs, bL), pForward0(lltape_theta, theta, u), ignore_attr = TRUE)
+
+  #gradiant
+  ppill_r_S_swap <- function(theta, z){
+    pars <- fromPPIparamvec(theta, length(z))
+    ppill_r_S(z, pars$beta0, pars$ALs, pars$bL)
+  }
+  numderiv <- numericDeriv(quote(ppill_r_S_swap(theta, u)), c("theta"))
+  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape_theta, theta, u),
+               ignore_attr = TRUE, tolerance = 1E-7)
+
+  #Hessian
+  numderiv <- numDeriv::hessian(ppill_r_S_swap, theta, z = u)
+  hess <- pHessian(lltape_theta, theta, u)
+  dim(hess) <- c(length(theta), length(theta))
+  expect_equal(hess, numderiv, ignore_attr = TRUE)
+})
+
+
 test_that("dirichlet ll evaluation and Jacobian matches expected", {
   beta = c(-0.3, -0.1, 3)
   u <- MCMCpack::rdirichlet(1, beta+1)
