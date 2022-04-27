@@ -30,10 +30,10 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 
   acut = 0.1
   psphere = pmanifold("sphere")
-  pdir <- ptapell(rep(0.1, p), 1:p, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, p))
-  pppi <- ptapell(rep(0.1, p), theta, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, length(theta)))
+  pdir <- ptapell(rep(0.1, p), beta, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, p))
+  pppi <- ptapell(rep(0.1, p), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)))
   smoppi <- ptapesmo(rep(0.1, p), theta, pll = pppi, pman = psphere, "minsq", acut = acut) #tape of the score function
-  smodir <- ptapesmo(rep(0.1, p), 1:p, pll = pdir, pman = psphere, "minsq", acut = acut)
+  smodir <- ptapesmo(rep(0.1, p), beta, pll = pdir, pman = psphere, "minsq", acut = acut)
 
   # it looks like the taped function above is not altering bL or beta
   # potentially the ordering of the theta values is wrong??
@@ -44,12 +44,12 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   cppadest <- fromPPIparamvec(out$par, p)
 
   expect_equal(pForward0(pdir, utabl[2, ], beta), pForward0(pppi, utabl[2, ], theta))
-  expect_equal(pJacobian(pdir, utabl[2, ], beta), pJacobian(pppi, utabl[2, ], theta)) #how/why are they different
-  expect_equal(pForward0(smoppi, theta, utabl[2, ]), pForward0(smodir, beta, utabl[2, ])) # how/why are they different?
+  expect_equal(pJacobian(pdir, utabl[2, ], beta), pJacobian(pppi, utabl[2, ], theta))
+  expect_equal(pForward0(smoppi, theta, utabl[2, ]), pForward0(smodir, beta, utabl[2, ]))
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimator1_dir(utabl, acut)
-  expect_equal(cppadest$beta0, directestimate, tolerance = 1E-3, ignore_attr = TRUE)
+  expect_equal(cppadest$beta0, directestimate, tolerance = 1E-3, ignore_attr = TRUE)  #much closer than ever before!
 })
 
 test_that("ppi with minsq weights match estimator1 for p = 4", {
