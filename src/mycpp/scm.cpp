@@ -21,7 +21,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   veca1 u(z.size());
   u = fromM(z);
   y.setZero();
-  y[0] += llf(theta, u);
+  y[0] += llf(u, theta);
   y[0] += logdetJfromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);

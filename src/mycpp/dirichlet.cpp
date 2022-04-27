@@ -3,8 +3,8 @@
 namespace { // begin the empty namespace
 
     template <class T>
-    T ll_dirichlet(const Eigen::Matrix<T, Eigen::Dynamic, 1> &beta,
-	       const Eigen::Matrix<T, Eigen::Dynamic, 1> &u)
+    T ll_dirichlet(const Eigen::Matrix<T, Eigen::Dynamic, 1> &u,
+	       const Eigen::Matrix<T, Eigen::Dynamic, 1> &beta)
     {   size_t d  = u.size();
         T y(0.);  // initialize summation
         for(size_t i = 0; i < d; i++)
@@ -14,8 +14,8 @@ namespace { // begin the empty namespace
     }
 
     template <class T>
-    T ll_ppi(const Eigen::Matrix<T, Eigen::Dynamic, 1> &theta,
-             const Eigen::Matrix<T, Eigen::Dynamic, 1> & u){
+    T ll_ppi(const Eigen::Matrix<T, Eigen::Dynamic, 1> &u,
+             const Eigen::Matrix<T, Eigen::Dynamic, 1> &theta){
         size_t d  = u.size();
         //assume the parameter vector theta is encoded as:
         //c(diag(ALs), ALs[upper.tri(ALs)], bL, beta)

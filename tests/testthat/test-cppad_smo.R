@@ -52,7 +52,12 @@ test_that("minsq weights match estimator2", {
 
 test_that("minsq weights match estimator2 for d = 4", {
   acut = 0.1
-  smofun <- ptapesmo(c(1,1,1,1,3,3,3,3), 4, llname = "dirichlet", manifoldname = "sphere", "minsq", acut = acut) #tape of the score function
+  psphere <- pmanifold("sphere")
+  pdir <- ptapell(c(1,1,1,1), c(3,3,3,3), llname = "dirichlet", psphere)
+  smofun <- ptapesmo(c(1,1,1,1),
+                     c(3,3,3,3),
+                     pll = pdir,
+                     pman = psphere, "minsq", acut = acut) #tape of the score function
   beta = c(-0.3, -0.1, -0.2, 3)
   n = 10
   set.seed(134)
