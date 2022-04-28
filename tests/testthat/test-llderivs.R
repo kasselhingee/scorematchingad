@@ -1,21 +1,11 @@
-p=4
-#parameters for the PPI model
-muL=matrix(0,p-1,1)
-muL[1:sum(p,-1)]=0.12
-aa=matrix(1/500,p-1,1)
-D=diag(as.vector(aa))
-SigA=D
-SigA[1,1]=SigA[1,1]*2
-cor=0.5
-SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
-SigA[2,1]=SigA[1,2]
-ALs=-0.5*solve(SigA)
-bL=solve(SigA)%*%muL
-beta0=matrix(-0.8,p,1)
-beta0[p]=-0.5
-theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0)
-set.seed(123)
-u <- cdabyppi:::rhybrid(1,p,beta0,ALs,bL,4)$samp3
+set.seed(1234) #chosen so that u is far from boundary - needed for numericDeriv::Hessian
+m = sec2_3model_p4(1, 8)
+p = m$p
+u = m$sample
+ALs = m$ALs
+bL = m$bL
+beta0 = m$beta0
+theta = m$theta
 
 ppill_r <- function(u, beta0, ALs, bL){
   p=length(u)
@@ -38,7 +28,7 @@ ppill_r_S <- function(z, beta0, ALs, bL){
 # test Jacobian of ll function using numerical differentiation
 test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estimates", {
   psimplex <- pmanifold("simplex") #because above ppill_r is for the simplex
-  lltape <- ptapell(u, theta, llname = "ppi", pman = psimplex)
+  lltape <- ptapell(u, theta, llname = "ppi", pman = psimplex, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
 
   # wrt u
   expect_equal(ppill_r(u, beta0, ALs, bL), pForward0(lltape, u, theta), ignore_attr = TRUE)
@@ -70,13 +60,13 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
   numderiv <- numDeriv::hessian(ppill_r_swap, theta, u = u)
   hess <- pHessian(lltape_theta, theta, u)
   dim(hess) <- c(length(theta), length(theta))
-  expect_equal(hess, numderiv, ignore_attr = TRUE)
+  expect_equal(hess, numderiv, ignore_attr = TRUE, tolerance = 1E-5)
 })
 
 # test Jacobian of ll function using numerical differentiation
 test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estimates", {
   psphere <- pmanifold("sphere") #because above ppill_r is for the simplex
-  lltape <- ptapell(u, theta, llname = "ppi", pman = psphere, fixedtheta = rep(FALSE, length(theta)))
+  lltape <- ptapell(u, theta, llname = "ppi", pman = psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
 
   # wrt u
   expect_equal(ppill_r_S(u, beta0, ALs, bL), pForward0(lltape, u, theta), ignore_attr = TRUE)
@@ -108,18 +98,19 @@ test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estima
   numderiv <- numDeriv::hessian(ppill_r_S_swap, theta, z = u)
   hess <- pHessian(lltape_theta, theta, u)
   dim(hess) <- c(length(theta), length(theta))
-  expect_equal(hess, numderiv, ignore_attr = TRUE)
+  expect_equal(hess, numderiv, ignore_attr = TRUE, tolerance = 1E-5)
 })
 
 
 test_that("dirichlet ll evaluation and Jacobian matches expected", {
   beta = c(-0.3, -0.1, 3)
+  set.seed(1234)
   u <- MCMCpack::rdirichlet(1, beta+1)
 
   dirichlet_r <- function(u, beta){sum(beta * log(u))}
 
   psimplex <- pmanifold("simplex")
-  lltape <- ptapell(u, beta, llname = "dirichlet", pman = psimplex)
+  lltape <- ptapell(u, beta, llname = "dirichlet", pman = psimplex, fixedtheta = rep(FALSE, length(beta)), verbose = FALSE)
   #forward0
   expect_equal(dirichlet_r(u, beta), pForward0(lltape, u, beta), ignore_attr = TRUE)
 

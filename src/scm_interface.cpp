@@ -289,10 +289,3 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   return(out);
 }
 
-//' @title Tape properties
-//' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-//' @param u A vector in the simplex.
-//' @param beta a vector of the dynamic parameters
-//' @return The Hessian of pfun
-//' @export
-// [[Rcpp::export]]

@@ -9,7 +9,7 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
 
   acut = 0.1
   psphere = pmanifold("sphere")
-  pdir <- ptapell(c(0.1,0.1,0.1), c(1,2,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE), verbose = TRUE)
+  pdir <- ptapell(c(0.1,0.1,0.1), c(1,2,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE), verbose = FALSE)
   pppi <- ptapell(c(0.1,0.1,0.1), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
   smoppi <- ptapesmo(c(0.1,0.1,0.1), theta, pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   smodir <- ptapesmo(c(0.1,0.1,0.1), c(1,2,3), pll = pdir, pman = psphere, "minsq", acut = acut, verbose = FALSE)

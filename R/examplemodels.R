@@ -40,6 +40,8 @@ sec2_3model <- function(n, maxden = 4){
   ))
 }
 
+#' @describeIn sec2_3model
+#' @export
 sec2_3model_p4 <- function(n, maxden = 8){
   #dimension
   p=4

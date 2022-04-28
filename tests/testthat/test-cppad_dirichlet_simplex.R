@@ -1,5 +1,6 @@
 
 test_that("cppad-based Score2 estimate leads to a match for large number of observations", {
+  psimplex <- pmanifold("simplex")
   smofun <- ptapesmo(c(1,1,1,3,3,3), 3,
                      llname = "dirichlet",
                      manifoldname = "simplex", weightname = "prodsq",
