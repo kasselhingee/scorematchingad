@@ -1,10 +1,8 @@
 
 test_that("cppad-based Score2 estimate leads to a match for large number of observations", {
   psimplex <- pmanifold("simplex")
-  smofun <- ptapesmo(c(1,1,1,3,3,3), 3,
-                     llname = "dirichlet",
-                     manifoldname = "simplex", weightname = "prodsq",
-                     acut = 0.01)
+  pdir <- ptapell(rep(1,3), rep(3, 3), "dirichlet", psimplex, fixedtheta = rep(FALSE, 3), verbose = FALSE)
+  smofun <- ptapesmo(rep(1,3), rep(3, 3), pdir, psimplex, weightname = "prodsq", acut = 0.01, verbose = FALSE)
   beta = c(-0.3, -0.1, 3)
   n = 1000
   set.seed(134)
@@ -19,10 +17,10 @@ test_that("cppad-based Score2 estimate leads to a match for large number of obse
 })
 
 test_that("Simplex calculations are historically consistent", {
-  smofun <- ptapesmo(c(1,1,1,3,3,3), 3,
-                     llname = "dirichlet",
-                     manifoldname = "simplex", weightname = "prodsq",
-                     acut = 1)
+  psimplex <- pmanifold("simplex")
+  pdir <- ptapell(rep(1,3), rep(3, 3), "dirichlet", psimplex, fixedtheta = rep(FALSE, 3), verbose = FALSE)
+  smofun <- ptapesmo(rep(1,3), rep(3, 3), pdir, psimplex, weightname = "prodsq", acut = 1, verbose = FALSE)
+
   beta = c(-0.3, -0.1, 3)
   n = 10
   set.seed(134)
