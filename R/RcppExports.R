@@ -25,8 +25,8 @@ pmanifold <- function(manifoldname) {
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapesmo <- function(u, theta, pll, pman, weightname, acut) {
-    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', u, theta, pll, pman, weightname, acut)
+ptapesmo <- function(u, theta, pll, pman, weightname, acut, verbose) {
+    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', u, theta, pll, pman, weightname, acut, verbose)
 }
 
 #' @title Tape of a log-likelihood calculation
@@ -35,8 +35,8 @@ ptapesmo <- function(u, theta, pll, pman, weightname, acut) {
 #' @param llname name of the likelihood function
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapell <- function(z, theta, llname, pman, fixedtheta) {
-    .Call('_cdabyppi_ptapell', PACKAGE = 'cdabyppi', z, theta, llname, pman, fixedtheta)
+ptapell <- function(z, theta, llname, pman, fixedtheta, verbose) {
+    .Call('_cdabyppi_ptapell', PACKAGE = 'cdabyppi', z, theta, llname, pman, fixedtheta, verbose)
 }
 
 #' @title Switch Dynamic and pure Independent values

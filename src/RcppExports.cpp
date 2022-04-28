@@ -43,8 +43,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapesmo
-XPtr< CppAD::ADFun<double> > ptapesmo(svecd u, svecd theta, XPtr< CppAD::ADFun<double> > pll, XPtr< manifold<a1type> > pman, std::string weightname, const double acut);
-RcppExport SEXP _cdabyppi_ptapesmo(SEXP uSEXP, SEXP thetaSEXP, SEXP pllSEXP, SEXP pmanSEXP, SEXP weightnameSEXP, SEXP acutSEXP) {
+XPtr< CppAD::ADFun<double> > ptapesmo(svecd u, svecd theta, XPtr< CppAD::ADFun<double> > pll, XPtr< manifold<a1type> > pman, std::string weightname, const double acut, bool verbose);
+RcppExport SEXP _cdabyppi_ptapesmo(SEXP uSEXP, SEXP thetaSEXP, SEXP pllSEXP, SEXP pmanSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -54,13 +54,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
     Rcpp::traits::input_parameter< std::string >::type weightname(weightnameSEXP);
     Rcpp::traits::input_parameter< const double >::type acut(acutSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapesmo(u, theta, pll, pman, weightname, acut));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapesmo(u, theta, pll, pman, weightname, acut, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // ptapell
-XPtr< CppAD::ADFun<double> > ptapell(svecd z, svecd theta, std::string llname, XPtr< manifold<a1type> > pman, svecb fixedtheta);
-RcppExport SEXP _cdabyppi_ptapell(SEXP zSEXP, SEXP thetaSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP fixedthetaSEXP) {
+XPtr< CppAD::ADFun<double> > ptapell(svecd z, svecd theta, std::string llname, XPtr< manifold<a1type> > pman, svecb fixedtheta, bool verbose);
+RcppExport SEXP _cdabyppi_ptapell(SEXP zSEXP, SEXP thetaSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -69,7 +70,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
     Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
     Rcpp::traits::input_parameter< svecb >::type fixedtheta(fixedthetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapell(z, theta, llname, pman, fixedtheta));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapell(z, theta, llname, pman, fixedtheta, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -130,8 +132,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_corels", (DL_FUNC) &_cdabyppi_corels, 0},
     {"_cdabyppi_rcpp_hello_world", (DL_FUNC) &_cdabyppi_rcpp_hello_world, 0},
     {"_cdabyppi_pmanifold", (DL_FUNC) &_cdabyppi_pmanifold, 1},
-    {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 6},
-    {"_cdabyppi_ptapell", (DL_FUNC) &_cdabyppi_ptapell, 5},
+    {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 7},
+    {"_cdabyppi_ptapell", (DL_FUNC) &_cdabyppi_ptapell, 6},
     {"_cdabyppi_swapDynamic", (DL_FUNC) &_cdabyppi_swapDynamic, 3},
     {"_cdabyppi_pJacobian", (DL_FUNC) &_cdabyppi_pJacobian, 3},
     {"_cdabyppi_pForward0", (DL_FUNC) &_cdabyppi_pForward0, 3},

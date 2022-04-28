@@ -12,7 +12,8 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
                                veca1 (*fromM)(const veca1 &), //transformation from manifold to simplex
                                a1type (*logdetJfromM)(const veca1 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-                               Eigen::Matrix<bool, Eigen::Dynamic, 1> fixedtheta //TRUE values indicate that the corresponding value of theta is not a variable (dynamic or independent)
+                               Eigen::Matrix<bool, Eigen::Dynamic, 1> fixedtheta, //TRUE values indicate that the corresponding value of theta is not a variable (dynamic or independent)
+                               bool verbose
                                ){
 
   //separate fixed and variable theta
@@ -30,11 +31,13 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
     }
   }
 
-  std::cout << "Fixed theta is:";
-  for (size_t i=0;i<thetafxd.size();i++){
-    std::cout << " " << thetafxd[i];
+  if (verbose){
+    std::cout << "Fixed theta is:";
+    for (size_t i=0;i<thetafxd.size();i++){
+      std::cout << " " << thetafxd[i];
+    }
+    std::cout << std::endl;
   }
-  std::cout << std::endl;
 
   //tape relationship between x and log-likelihood
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
@@ -50,8 +53,10 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
       idx_var += 1;
     }
   }
-  PrintForVec("\n thetavar is: ", thetavar);
-  PrintForVec("\n thetarecom is: ", thetarecom);
+  if (verbose){
+    PrintForVec("\n thetavar is: ", thetavar);
+    PrintForVec("\n thetarecom is: ", thetarecom);
+  }
 
   // range space vector
   veca1 y(1); // vector of ranges space variables
@@ -85,7 +90,8 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
                              CppAD::ADFun<double> & lltape,
                              manifold<a1type> &M,
                              a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
-                             const double & acut //the acut constraint for the weight functions
+                             const double & acut, //the acut constraint for the weight functions
+                             bool verbose
                              ){
     size_t p(u.size());
     //Projection matrix
@@ -104,7 +110,9 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
 
     //START TAPING
     CppAD::Independent(theta, u); //differentiate wrt beta, dynamic parameter is u
-    PrintForVec("\n theta is: ", theta);
+    if (verbose){
+      PrintForVec("\n theta is: ", theta);
+    }
 
     // veca1 u(n);
     z = M.toM(u); //transform u to the manifold
@@ -121,7 +129,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     //grad(ll)
     veca1 jac(p); // Jacobian of ll
     jac  = lltapehigher.Jacobian(z);      // Jacobian for operation sequence
-    PrintForVec("\nThe value of ll jac is: ", jac);
+    if (verbose){PrintForVec("\nThe value of ll jac is: ", jac);}
 
     //hgPg
     veca1 hgPg(1);
@@ -136,7 +144,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     mata1 hess(p * p, 1);
     hess = lltapehigher.Hessian(z, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
     hess.resize(p, p);
-    PrintForMatrix("\nThe value of ll Hessian is: \n", hess);
+    if (verbose){PrintForMatrix("\nThe value of ll Hessian is: \n", hess);}
     lapl[0] += (Pmat*hess).trace();
     lapl[0] *= h2[0]; //weight by h2
 

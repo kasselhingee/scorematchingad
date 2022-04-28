@@ -44,7 +44,8 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
                                       XPtr< CppAD::ADFun<double> > pll,
                                       XPtr< manifold<a1type> > pman,
                                       std::string weightname,
-                                      const double acut){
+                                      const double acut,
+                                      bool verbose){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
 
   //choose weight function
@@ -78,7 +79,8 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
                  *pll,
                  *pman,
                  h2fun,
-                 acut);
+                 acut,
+                 verbose);
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
@@ -95,7 +97,8 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
                                      svecd theta,
                                      std::string llname,
                                      XPtr< manifold<a1type> > pman,
-                                     svecb fixedtheta
+                                     svecb fixedtheta,
+                                     bool verbose
                                      ){
   Eigen::Matrix<bool, Eigen::Dynamic, 1> fixedtheta_e(fixedtheta.size());
   for (size_t i=0;i<fixedtheta.size();i++){
@@ -130,7 +133,8 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
                 ll,
                 pman->fromM, //transformation from manifold to simplex
                 pman->logdetJfromM, //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-                fixedtheta_e);
+                fixedtheta_e,
+                verbose);
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);

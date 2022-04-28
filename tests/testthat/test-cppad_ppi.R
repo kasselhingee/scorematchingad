@@ -9,10 +9,10 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
 
   acut = 0.1
   psphere = pmanifold("sphere")
-  pdir <- ptapell(c(0.1,0.1,0.1), c(1,2,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE))
-  pppi <- ptapell(c(0.1,0.1,0.1), theta, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, length(theta)))
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), theta, pll = pppi, pman = psphere, "minsq", acut = acut) #tape of the score function
-  smodir <- ptapesmo(c(0.1,0.1,0.1), c(1,2,3), pll = pdir, pman = psphere, "minsq", acut = acut)
+  pdir <- ptapell(c(0.1,0.1,0.1), c(1,2,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE), verbose = FALSE)
+  pppi <- ptapell(c(0.1,0.1,0.1), theta, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
+  smoppi <- ptapesmo(c(0.1,0.1,0.1), theta, pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  smodir <- ptapesmo(c(0.1,0.1,0.1), c(1,2,3), pll = pdir, pman = psphere, "minsq", acut = acut, verbose = FALSE)
 
   ppival <- pForward0(smoppi, theta, utabl[2, ])
   dirval <- pForward0(smodir, theta, utabl[2, ])
@@ -30,10 +30,10 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 
   acut = 0.1
   psphere = pmanifold("sphere")
-  pdir <- ptapell(rep(0.1, p), beta, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, p))
-  pppi <- ptapell(rep(0.1, p), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)))
-  smoppi <- ptapesmo(rep(0.1, p), theta, pll = pppi, pman = psphere, "minsq", acut = acut) #tape of the score function
-  smodir <- ptapesmo(rep(0.1, p), beta, pll = pdir, pman = psphere, "minsq", acut = acut)
+  pdir <- ptapell(rep(0.1, p), beta, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, p), verbose = FALSE)
+  pppi <- ptapell(rep(0.1, p), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, p), theta, pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  smodir <- ptapesmo(rep(0.1, p), beta, pll = pdir, pman = psphere, "minsq", acut = acut, verbose = FALSE)
 
   # it looks like the taped function above is not altering bL or beta
   # potentially the ordering of the theta values is wrong??
@@ -56,9 +56,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   expect_true(all(abs(cppadest$beta0 - directestimate) < cppadestSE$beta0)) #proxy for optimisation flatness
 
 
-  expect_true(all(abs(cppadest$beta0 - beta) < 2 * cppadestSE$beta0)) #assuming normally distributed with SE given by SE above
-  expect_true(all(abs(cppadest$ALs - ALs) < 2 * cppadestSE$ALs)) #other components are within 0
-  expect_true(all(abs(cppadest$bL - bL) < 2 * cppadestSE$bL)) #other components are within 0
+  expect_true(all(abs(out$par - theta) < 2 * diag(SE))) #assuming normally distributed with SE given by SE above
 })
 
 test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
@@ -79,8 +77,8 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
   utabl <- cdabyppi:::rhybrid(n,p,beta,ALs,bL,4)$samp3
   u <- utabl[2, ]
   psphere <- pmanifold("sphere")
-  pppi <- ptapell(rep(0.1, p), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)))
-  smoppi <- ptapesmo(rep(0.1, p), theta, pll = pppi, pman = psphere, "minsq", acut = acut) #tape of the score function
+  pppi <- ptapell(rep(0.1, p), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, p), theta, pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
   out <- optim(par = theta,
@@ -97,43 +95,50 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
   expect_true(all(abs(out$par - theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
 })
 
-test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex model", {
-  p=4
-  #parameters for the PPI model
-  muL=matrix(0,p-1,1)
-  muL[1:sum(p,-1)]=0.12
-  aa=matrix(1/500,p-1,1)
-  D=diag(as.vector(aa))
-  SigA=D
-  SigA[1,1]=SigA[1,1]*2
-  cor=0.5
-  SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
-  SigA[2,1]=SigA[1,2]
-  ALs=-0.5*solve(SigA)
-  bL=solve(SigA)%*%muL
-  beta0=matrix(-0.8,p,1)
-  beta0[p]=-0.5
-  theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0)
-
+test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model", {
   set.seed(123)
-  utabl <- cdabyppi:::rhybrid(1000,p,beta0,ALs,bL,4)$samp3
+  model <- sec2_3model(1000, maxden = 4)
 
   acut = 0.1
   psphere <- pmanifold("sphere")
-  pppi <- ptapell(rep(0.1, p), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)))
-  smoppi <- ptapesmo(rep(0.1, p), theta, pll = pppi, pman = psphere, "minsq", acut = acut) #tape of the score function
+  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(model$theta)), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, model$p), 1:length(model$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
-  out <- optim(par = theta * 0,
-               fn = function(theta){smobj(smoppi, theta, utabl)},
-               gr = function(theta){smobjgrad(smoppi, theta, utabl)},
+  out <- optim(par = model$theta * 0,
+               fn = function(theta){smobj(smoppi, theta, model$sample)},
+               gr = function(theta){smobjgrad(smoppi, theta, model$sample)},
                method = "BFGS")
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
-  directestimate <- estimatorall1(utabl, acut)
+  directestimate <- estimatorall1(model$sample, acut)
 
-  SE <- smestSE(smoppi, out$par, utabl) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
+  SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
   expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
 
-  expect_true(all(abs(out$par - theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
+  expect_true(all(abs(out$par - model$theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
+})
+
+test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex model", {
+  set.seed(123)
+  model <- sec2_3model_p4(1000, maxden = 8)
+
+  acut = 0.1
+  psphere <- pmanifold("sphere")
+  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(model$theta)), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, model$p), 1:length(model$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+
+  # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
+  out <- optim(par = model$theta * 0,
+               fn = function(theta){smobj(smoppi, theta, model$sample)},
+               gr = function(theta){smobjgrad(smoppi, theta, model$sample)},
+               method = "BFGS")
+
+  # memoisation could be used to avoid calling the smobj function again for gradient computation
+  directestimate <- estimatorall1(model$sample, acut)
+
+  SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
+  expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
+
+  expect_true(all(abs(out$par - model$theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
 })
