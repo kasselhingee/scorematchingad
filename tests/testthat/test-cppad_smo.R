@@ -2,11 +2,11 @@
 test_that("prodsq weights match estimator2", {
   acut = 0.01
   psphere <- pmanifold("sphere")
-  pdir <- ptapell(c(1,1,1), c(3,3,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE))
+  pdir <- ptapell(c(1,1,1), c(3,3,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE), verbose = FALSE)
   smofun <- ptapesmo(c(1,1,1),
                      c(3,3,3),
                      pll = pdir,
-                     pman = psphere, "prodsq", acut = acut) #tape of the score function
+                     pman = psphere, "prodsq", acut = acut, verbose = FALSE) #tape of the score function
   beta = c(-0.3, -0.1, 3)
   n = 10
   set.seed(134)
@@ -28,11 +28,11 @@ test_that("prodsq weights match estimator2", {
 test_that("minsq weights match estimator2", {
   acut = 0.1
   psphere <- pmanifold("sphere")
-  pdir <- ptapell(c(1,1,1), c(3,3,3), llname = "dirichlet", psphere, fixedtheta = rep(FALSE, 3))
+  pdir <- ptapell(c(1,1,1), c(3,3,3), llname = "dirichlet", psphere, fixedtheta = rep(FALSE, 3), verbose = FALSE)
   smofun <- ptapesmo(c(1,1,1),
                      c(3,3,3),
                      pll = pdir,
-                     pman = psphere, "minsq", acut = acut) #tape of the score function
+                     pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   beta = c(-0.3, -0.1, 3)
   n = 10
   set.seed(134)
@@ -53,11 +53,11 @@ test_that("minsq weights match estimator2", {
 test_that("minsq weights match estimator2 for d = 4", {
   acut = 0.1
   psphere <- pmanifold("sphere")
-  pdir <- ptapell(c(1,1,1,1), c(3,3,3,3), llname = "dirichlet", psphere, fixedtheta = rep(FALSE, 4))
+  pdir <- ptapell(c(1,1,1,1), c(3,3,3,3), llname = "dirichlet", psphere, fixedtheta = rep(FALSE, 4), verbose = FALSE)
   smofun <- ptapesmo(c(1,1,1,1),
                      c(3,3,3,3),
                      pll = pdir,
-                     pman = psphere, "minsq", acut = acut) #tape of the score function
+                     pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   beta = c(-0.3, -0.1, -0.2, 3)
   n = 10
   set.seed(134)
