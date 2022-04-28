@@ -41,7 +41,8 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   out <- optim(par = theta * 0 + 1,
                fn = function(theta){smobj(smoppi, theta, utabl)},
                gr = function(theta){smobjgrad(smoppi, theta, utabl)},
-               method = "BFGS")
+               method = "BFGS", control =list(maxit = 1000))
+
   cppadest <- fromPPIparamvec(out$par, p)
 
   expect_equal(pForward0(pdir, utabl[2, ], beta), pForward0(pppi, utabl[2, ], theta))
