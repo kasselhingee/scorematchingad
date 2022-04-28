@@ -9,15 +9,15 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
 
   acut = 0.1
   psphere = pmanifold("sphere")
-  pdir <- ptapell(c(0.1,0.1,0.1), c(1,2,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE), verbose = FALSE)
-  pppi <- ptapell(c(0.1,0.1,0.1), theta, llname = "dirichlet", psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
+  pdir <- ptapell(c(0.1,0.1,0.1), c(1,2,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE), verbose = TRUE)
+  pppi <- ptapell(c(0.1,0.1,0.1), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
   smoppi <- ptapesmo(c(0.1,0.1,0.1), theta, pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   smodir <- ptapesmo(c(0.1,0.1,0.1), c(1,2,3), pll = pdir, pman = psphere, "minsq", acut = acut, verbose = FALSE)
 
   ppival <- pForward0(smoppi, theta, utabl[2, ])
-  dirval <- pForward0(smodir, theta, utabl[2, ])
+  dirval <- pForward0(smodir, beta, utabl[2, ])
   expect_equal(ppival, dirval)
-})
+}) #passing
 
 test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   beta = c(-0.3, -0.2, -0.1, 3)
@@ -26,6 +26,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   bL = matrix(0, nrow = p-1, ncol = 1)
   theta = toPPIparamvec(ALs, bL, beta)
 
+  set.seed(123)
   utabl <- cdabyppi:::rhybrid(1000,p,beta,ALs,bL,4)$samp3
 
   acut = 0.1
@@ -49,15 +50,13 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimator1_dir(utabl, acut)
-  directestimate2 <- estimatorall1(utabl, acut)
 
   SE <- smestSE(smoppi, out$par, utabl) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
   cppadestSE <- fromPPIparamvec(diag(SE), p)
-  expect_true(all(abs(cppadest$beta0 - directestimate) < cppadestSE$beta0)) #proxy for optimisation flatness
+  expect_true(all(abs(cppadest$beta0 - directestimate) / cppadestSE$beta0 < 1)) #proxy for optimisation flatness
 
-
-  expect_true(all(abs(out$par - theta) < 2 * diag(SE))) #assuming normally distributed with SE given by SE above
-})
+  expect_true(all(abs(out$par - theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
+}) #failing
 
 test_that("ppi with minsq weights match estimator1 with fixed beta for more complex model", {
   set.seed(123)
@@ -66,7 +65,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for more comp
   acut = 0.1
   psphere <- pmanifold("sphere")
   pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere,
-                  fixedtheta = c(rep(FALSE, length(model$theta) - model$p), rep(TRUE, model$p)), verbose = TRUE)
+                  fixedtheta = c(rep(FALSE, length(model$theta) - model$p), rep(TRUE, model$p)), verbose = FALSE)
   smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - model$p), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
@@ -82,7 +81,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for more comp
   expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
 
   expect_true(all(abs(out$par - model$theta[1:(length(model$theta) - model$p)]) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
-})
+}) #passing
 
 test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
   acut = 0.1
@@ -118,7 +117,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
   expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
 
   expect_true(all(abs(out$par - theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
-})
+}) #passing
 
 test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model", {
   set.seed(123)
@@ -142,7 +141,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
   expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
 
   expect_true(all(abs(out$par - model$theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
-})
+}) #failing
 
 test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model, fixed final beta", {
   set.seed(123)
@@ -166,7 +165,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
   expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
 
   expect_true(all(abs(out$par - model$theta[-length(model$theta)]) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
-})
+}) #failing
 
 test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex model", {
   set.seed(123)
@@ -190,4 +189,4 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex mo
   expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
 
   expect_true(all(abs(out$par - model$theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
-})
+}) #failing
