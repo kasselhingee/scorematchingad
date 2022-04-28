@@ -15,6 +15,9 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                                Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
                                bool verbose
                                ){
+  if (theta.size() != fixedtheta.size()){
+    stop("theta and fixedtheta must have the same length");
+  }
 
   //separate fixed and variable theta
   veca1 thetavar(theta.size() - fixedtheta.sum());
@@ -81,6 +84,11 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   y[0] += logdetJfromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
+  if (verbose){
+    std::cout << "tape has " << tape.size_dyn_ind() << " independent dynamic parameters" << std::endl;
+    std::cout << "tape requires vectors of length " << tape.Domain() << std::endl;
+    std::cout << "tape returns vectors of length " << tape.Range() << std::endl;
+  }
   return(tape);
 }
 
@@ -117,6 +125,10 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     z = M.toM(u); //transform u to the manifold
     CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
+
+    //check inputs and ll tape match
+    if (lltape.Domain() != z.size()){stop("Dimension of input measurement (z or u) does not match domain size of log likelihood function.");}
+    if (lltape.size_dyn_ind() != theta.size()){stop("Size of parameter vector theta does not match parameter size of log likelihood function.");}
 
     // make ll tape higher order (i.e. as if it was taped using a2type instead of a1type)
     CppAD::ADFun<a1type, double> lltapehigher;

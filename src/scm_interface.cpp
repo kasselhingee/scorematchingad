@@ -160,6 +160,12 @@ XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svec
     dynparam[i] = newdynparam[i];
   }
 
+  //check inputs and tape match
+  if (pfun->Domain() != dynparam.size()){stop("Size of newdynparam must match domain size of taped function.");}
+  if (pfun->size_dyn_ind() != value.size()){stop("Size of newvalue must match the parameter size of the taped function.");}
+
+
+
   //convert taped object to higher order
   CppAD::ADFun<a1type, double> pfunhigher;
   pfunhigher = pfun->base2ad();
@@ -202,6 +208,9 @@ svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
     theta_e[i] = theta[i];
   }
 
+  //check inputs and tape match
+  if (pfun->Domain() != value_e.size()){stop("Size of input vector does not match domain size of taped function.");}
+  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector does not match parameter size of the taped function.");}
 
   vecd grad(value_e.size());
   svecd out(value_e.size());
@@ -234,6 +243,9 @@ double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
     theta_e[i] = theta[i];
   }
 
+  //check inputs and tape match
+  if (pfun->Domain() != value_e.size()){stop("Size of input vector does not match domain size of taped function.");}
+  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector does not match parameter size of the taped function.");}
 
   vecd out_e(1);
   pfun->new_dynamic(theta_e);
@@ -242,7 +254,6 @@ double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   return(out_e[0]);
 }
 
-//for testing
 //' @title The Hessian of recorded function
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 //' @param u A vector in the simplex.
@@ -261,6 +272,10 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
     theta_e[i] = theta[i];
   }
 
+  //check inputs and tape match
+  if (pfun->Domain() != value_e.size()){stop("Size of input vector does not match domain size of taped function.");}
+  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector does not match parameter size of the taped function.");}
+
 
   vecd hess(value_e.size() * value_e.size(), 1);
   svecd out(hess.size());
@@ -273,3 +288,11 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   }
   return(out);
 }
+
+//' @title Tape properties
+//' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+//' @param u A vector in the simplex.
+//' @param beta a vector of the dynamic parameters
+//' @return The Hessian of pfun
+//' @export
+// [[Rcpp::export]]
