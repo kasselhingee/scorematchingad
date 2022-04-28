@@ -1,4 +1,4 @@
-test_that("ppi and dirichlet smo match when AL and bL is zero and p = 3", {
+test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", {
   beta = c(-0.3, -0.1, 3)
   p = length(beta)
   ALs = matrix(0, nrow = p-1, ncol = p-1)
@@ -51,13 +51,17 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   directestimate <- estimator1_dir(utabl, acut)
   directestimate2 <- estimatorall1(utabl, acut)
 
-  expect_equal(cppadest$beta0, directestimate, tolerance = 0.1, ignore_attr = TRUE)  #much closer than ever before!
-  # better test would be to use hessian to see size
-  # notice however that the other components of cppadest are non-zero
-  expect_equal(cppadest, fromPPIparamvec(directestimate2$estimator1, p), tolerance = 0.1)  #looks similar to me (though *should* be identical)
+  SE <- smestSE(smoppi, out$par, utabl) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
+  cppadestSE <- fromPPIparamvec(diag(SE), p)
+  expect_true(all(abs(cppadest$beta0 - directestimate) < cppadestSE$beta0)) #proxy for optimisation flatness
+
+
+  expect_true(all(abs(cppadest$beta0 - beta) < 2 * cppadestSE$beta0)) #assuming normally distributed with SE given by SE above
+  expect_true(all(abs(cppadest$ALs - ALs) < 2 * cppadestSE$ALs)) #other components are within 0
+  expect_true(all(abs(cppadest$bL - bL) < 2 * cppadestSE$bL)) #other components are within 0
 })
 
-test_that("ppi with minsq weights match estimator1 for p = 4", {
+test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
   acut = 0.1
   #sample size
   n=10000
@@ -89,4 +93,26 @@ test_that("ppi with minsq weights match estimator1 for p = 4", {
 
   expect_equal(fromPPIparamvec(out$par, p), fromPPIparamvec(directestimate$estimator1, p), tolerance = 0.1)
   expect_equal(fromPPIparamvec(out$par, p), fromPPIparamvec(theta, p), tolerance = 0.1)
+})
+
+test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex model", {
+  p=4
+  #parameters for the PPI model
+  muL=matrix(0,p-1,1)
+  muL[1:sum(p,-1)]=0.12
+  aa=matrix(1/500,p-1,1)
+  D=diag(as.vector(aa))
+  SigA=D
+  SigA[1,1]=SigA[1,1]*2
+  cor=0.5
+  SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
+  SigA[2,1]=SigA[1,2]
+  ALs=-0.5*solve(SigA)
+  bL=solve(SigA)%*%muL
+  beta0=matrix(-0.8,p,1)
+  beta0[p]=-0.5
+  theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0)
+  set.seed(123)
+  u <- cdabyppi:::rhybrid(1,p,beta0,ALs,bL,4)$samp3
+
 })
