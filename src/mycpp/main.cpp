@@ -10,20 +10,22 @@ int main(int argc, char** argv)
        }
        veca1 theta_ad(8);
        for(int i=0; i < theta_ad.size(); i++){
-           theta_ad[i] = 1.;
+           theta_ad[i] = 1. + i/2.;
        }
 
        Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta_e(theta_ad.size());
-       for(int i=0; i < fixedtheta_e.size(); i++){
+       for(int i=0; i < fixedtheta_e.size() - 2; i++){
            fixedtheta_e[i] = 0;
        }
+       fixedtheta_e[fixedtheta_e.size() - 1] = 1;
+       fixedtheta_e[fixedtheta_e.size() - 2] = 1;
 
        manifold<a1type> sphere = {
            Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
            Spos::fromS, Spos::logdetJ_fromS,
        };
 
-
+   std::cout << "Preparing to tape" << std::endl;
    CppAD::ADFun<double> out; //returning a pointer
    out = tapell(z_ad,
                  theta_ad,
