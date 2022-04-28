@@ -76,8 +76,9 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
   theta <- toPPIparamvec(ALs, bL, beta)
 
   set.seed(134)
-  utabl <- cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)$samp3
+  utabl <- cdabyppi:::rhybrid(n,p,beta,ALs,bL,4)$samp3
   u <- utabl[2, ]
+  psphere <- pmanifold("sphere")
   pppi <- ptapell(rep(0.1, p), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)))
   smoppi <- ptapesmo(rep(0.1, p), theta, pll = pppi, pman = psphere, "minsq", acut = acut) #tape of the score function
 
@@ -90,9 +91,10 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimatorall1(utabl, acut)
 
+  SE <- smestSE(smoppi, out$par, utabl) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
+  expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
 
-  expect_equal(fromPPIparamvec(out$par, p), fromPPIparamvec(directestimate$estimator1, p), tolerance = 0.1)
-  expect_equal(fromPPIparamvec(out$par, p), fromPPIparamvec(theta, p), tolerance = 0.1)
+  expect_true(all(abs(out$par - theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
 })
 
 test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex model", {
@@ -112,7 +114,26 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex mo
   beta0=matrix(-0.8,p,1)
   beta0[p]=-0.5
   theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0)
-  set.seed(123)
-  u <- cdabyppi:::rhybrid(1,p,beta0,ALs,bL,4)$samp3
 
+  set.seed(123)
+  utabl <- cdabyppi:::rhybrid(1000,p,beta0,ALs,bL,4)$samp3
+
+  acut = 0.1
+  psphere <- pmanifold("sphere")
+  pppi <- ptapell(rep(0.1, p), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)))
+  smoppi <- ptapesmo(rep(0.1, p), theta, pll = pppi, pman = psphere, "minsq", acut = acut) #tape of the score function
+
+  # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
+  out <- optim(par = theta * 0,
+               fn = function(theta){smobj(smoppi, theta, utabl)},
+               gr = function(theta){smobjgrad(smoppi, theta, utabl)},
+               method = "BFGS")
+
+  # memoisation could be used to avoid calling the smobj function again for gradient computation
+  directestimate <- estimatorall1(utabl, acut)
+
+  SE <- smestSE(smoppi, out$par, utabl) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
+  expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
+
+  expect_true(all(abs(out$par - theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
 })
