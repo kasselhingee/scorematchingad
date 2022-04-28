@@ -66,22 +66,22 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for more comp
   acut = 0.1
   psphere <- pmanifold("sphere")
   pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere,
-                  fixedtheta = c(rep(FALSE, length(model$theta) - model$p), rep(FALSE, 1), c(TRUE, TRUE)), verbose = TRUE)
-  smoppi <- ptapesmo(rep(0.1, model$p), 1:length(model$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+                  fixedtheta = c(rep(FALSE, length(model$theta) - model$p), rep(TRUE, model$p)), verbose = TRUE)
+  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - model$p), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
-  out <- optim(par = model$theta * 0,
+  out <- optim(par = model$theta[1:(length(model$theta) - model$p)] * 0,
                fn = function(theta){smobj(smoppi, theta, model$sample)},
                gr = function(theta){smobjgrad(smoppi, theta, model$sample)},
                method = "BFGS")
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
-  directestimate <- estimatorall1(model$sample, acut)
+  directestimate <- estimator1(model$sample, acut, incb = TRUE, beta0 = model$beta0)
 
   SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
   expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
 
-  expect_true(all(abs(out$par - model$theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
+  expect_true(all(abs(out$par - model$theta[1:(length(model$theta) - model$p)]) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
 })
 
 test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
