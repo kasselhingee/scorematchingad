@@ -1,6 +1,6 @@
 
 test_that("prodsq weights match estimator2", {
-  acut = 0.01
+  acut = 0.1
   psphere <- pmanifold("sphere")
   pdir <- ptapell(c(1,1,1), c(3,3,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE), verbose = FALSE)
   smofun <- ptapesmo(c(1,1,1),
