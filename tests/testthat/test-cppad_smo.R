@@ -82,11 +82,11 @@ test_that("fixed beta[p] with minsq weights match true value", {
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
   psphere <- pmanifold("sphere")
-  pdir <- ptapell(c(0.1,0.1,0.1), c(1,2,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, TRUE))
+  pdir <- ptapell(c(0.1,0.1,0.1), c(1,2,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, TRUE), verbose = FALSE)
   smofun <- ptapesmo(c(0.1,0.1,0.1),
                      c(1, 2),
                      pll = pdir,
-                     pman = psphere, "minsq", acut = acut) #tape of the score function
+                     pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2017/11/why-optim-is-out-of-date/)
   out <- optim(par = beta[-3] * 0,

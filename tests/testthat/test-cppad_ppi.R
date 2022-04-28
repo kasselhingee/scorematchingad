@@ -119,6 +119,30 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
   expect_true(all(abs(out$par - model$theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
 })
 
+test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model, fixed final beta", {
+  set.seed(123)
+  model <- sec2_3model(1000, maxden = 4)
+
+  acut = 0.1
+  psphere <- pmanifold("sphere")
+  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+
+  # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
+  out <- optim(par = model$theta[-length(model$theta)] * 0,
+               fn = function(theta){smobj(smoppi, theta, model$sample)},
+               gr = function(theta){smobjgrad(smoppi, theta, model$sample)},
+               method = "BFGS")
+
+  # memoisation could be used to avoid calling the smobj function again for gradient computation
+  directestimate <- estimatorall1(model$sample, acut, betap = model$beta0[model$p])
+
+  SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
+  expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
+
+  expect_true(all(abs(out$par - model$theta[-length(model$theta)]) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
+})
+
 test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex model", {
   set.seed(123)
   model <- sec2_3model_p4(1000, maxden = 8)
