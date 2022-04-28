@@ -12,7 +12,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
                                veca1 (*fromM)(const veca1 &), //transformation from manifold to simplex
                                a1type (*logdetJfromM)(const veca1 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-                               Eigen::Matrix<bool, Eigen::Dynamic, 1> fixedtheta, //TRUE values indicate that the corresponding value of theta is not a variable (dynamic or independent)
+                               Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
                                bool verbose
                                ){
 
@@ -32,15 +32,29 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   }
 
   if (verbose){
-    std::cout << "Fixed theta is:";
-    for (size_t i=0;i<thetafxd.size();i++){
-      std::cout << " " << thetafxd[i];
+    std::cout << "Fixing according to pattern: " << std::endl;
+    for (size_t i=0;i<fixedtheta.size();i++){
+      std::cout << " " << fixedtheta[i];
     }
     std::cout << std::endl;
+
+    std::cout << "Fixed theta is:";
+    if (thetafxd.size() == 0){
+      std::cout << " none" << std::endl;
+    } else {
+      for (size_t i=0;i<thetafxd.size();i++){
+        std::cout << " " << thetafxd[i];
+      }
+      std::cout << std::endl;
+    }
   }
 
   //tape relationship between x and log-likelihood
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
+  if (verbose){
+    std::cout << "thetavar is: " << thetavar.transpose() << std::endl;
+    PrintForVec("\n thetavar is: ", thetavar);
+  }
 
   //combine fixed and variable theta
   veca1 thetarecom(theta.size());
@@ -54,7 +68,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
     }
   }
   if (verbose){
-    PrintForVec("\n thetavar is: ", thetavar);
+    std::cout << "thetarecom is: " << thetarecom.transpose() << std::endl;
     PrintForVec("\n thetarecom is: ", thetarecom);
   }
 

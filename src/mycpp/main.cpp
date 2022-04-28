@@ -4,47 +4,34 @@ int main(int argc, char** argv)
  {   using CppAD::AD;   // use AD as abbreviation for CppAD::AD
        //read inputs
        size_t n = 3;
-       vecd xin(n);
-       vecd betain(n);
+       veca1 z_ad(n);
        for(int i=0; i < n; i++){
-            xin[i] = 3.;
-            betain[i] = 1.;
-         }
-
-     CppAD::ADFun<double> smotape;
-     svecd xbetain(2 * n);
-     for(int i=0; i < n; i++){
-             xbetain[i] = xin[i];
-             xbetain[i + n] = betain[i];
-     }
-     smotape = tapesmo(xbetain, n, ll_dirichlet,
-                       Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
-                       Spos::fromS, Spos::logdetJ_fromS,
-                       minsq, gradminsq, 0.1);
-
-    //accept command line arguments for evaluation
-       if (argc > 1){
-            for(int i=0; i < n; i++){
-                xin[i] = strtod(argv[i + 1], NULL);
-                betain[i] = strtod(argv[i + n + 1], NULL);
-              }
-         }
-
-     //update xbetain
-       for(int i=0; i < n; i++){
-               xbetain[i] = xin[i];
-               xbetain[i + n] = betain[i];
+           z_ad[i] = 0.1;
        }
-       std::cout << "x in is " << xin << std::endl;
-       std::cout << "beta in is " << betain << std::endl;
-       // std::cout << "h2 is " << minsq(xin, 1.) << std::endl;
-       // std::cout << "grad(h2) is " << gradminsq(xin, 1.) << std::endl;
+       veca1 theta_ad(8);
+       for(int i=0; i < theta_ad.size(); i++){
+           theta_ad[i] = 1.;
+       }
 
-       std::cout << ll_ppi(betain, xin) << std::endl;
+       Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta_e(theta_ad.size());
+       for(int i=0; i < fixedtheta_e.size(); i++){
+           fixedtheta_e[i] = 0;
+       }
 
-        svecd smo_val(1);
-        smo_val = smotape.Forward(0, xbetain);
-        std::cout << "smo is: " << smo_val[0] << std::endl;
+       manifold<a1type> sphere = {
+           Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
+           Spos::fromS, Spos::logdetJ_fromS,
+       };
 
-         return 0;
+
+   CppAD::ADFun<double> out; //returning a pointer
+   out = tapell(z_ad,
+                 theta_ad,
+                 ll_ppi,
+                 sphere.fromM, //transformation from manifold to simplex
+                 sphere.logdetJfromM, //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+                 fixedtheta_e,
+                 true);
+
+    return 0;
  }

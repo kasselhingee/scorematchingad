@@ -97,10 +97,10 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
                                      svecd theta,
                                      std::string llname,
                                      XPtr< manifold<a1type> > pman,
-                                     svecb fixedtheta,
+                                     std::vector<int> fixedtheta,
                                      bool verbose
                                      ){
-  Eigen::Matrix<bool, Eigen::Dynamic, 1> fixedtheta_e(fixedtheta.size());
+  Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta_e(fixedtheta.size());
   for (size_t i=0;i<fixedtheta.size();i++){
     fixedtheta_e[i] = fixedtheta[i];
   }

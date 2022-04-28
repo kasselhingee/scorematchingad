@@ -60,7 +60,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapell
-XPtr< CppAD::ADFun<double> > ptapell(svecd z, svecd theta, std::string llname, XPtr< manifold<a1type> > pman, svecb fixedtheta, bool verbose);
+XPtr< CppAD::ADFun<double> > ptapell(svecd z, svecd theta, std::string llname, XPtr< manifold<a1type> > pman, std::vector<int> fixedtheta, bool verbose);
 RcppExport SEXP _cdabyppi_ptapell(SEXP zSEXP, SEXP thetaSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -69,7 +69,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
     Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
-    Rcpp::traits::input_parameter< svecb >::type fixedtheta(fixedthetaSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type fixedtheta(fixedthetaSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     rcpp_result_gen = Rcpp::wrap(ptapell(z, theta, llname, pman, fixedtheta, verbose));
     return rcpp_result_gen;
