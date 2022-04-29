@@ -168,16 +168,21 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
   out <- optim(par = model$theta[-length(model$theta)] * 0,
                fn = function(theta){smobj(smoppi, theta, model$sample)},
                gr = function(theta){smobjgrad(smoppi, theta, model$sample)},
-               method = "BFGS")
+               method = "BFGS",
+               control = list(maxit = 1000))
+  stopifnot(out$convergence == 0)
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimatorall1(model$sample, acut, betap = model$beta0[model$p])
+
+  expect_lte(smobj(smoppi, out$par, model$sample),
+             smobj(smoppi, directestimate$estimator1, model$sample))
 
   SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
   expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
 
   expect_true(all(abs(out$par - model$theta[-length(model$theta)]) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
-}) #failing
+}) #passing
 
 test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex model", {
   set.seed(123)
@@ -192,10 +197,15 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex mo
   out <- optim(par = model$theta * 0,
                fn = function(theta){smobj(smoppi, theta, model$sample)},
                gr = function(theta){smobjgrad(smoppi, theta, model$sample)},
-               method = "BFGS")
+               method = "BFGS",
+               control = list(maxit = 10000))
+  stopifnot(out$convergence == 0)
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimatorall1(model$sample, acut)
+
+  expect_lte(smobj(smoppi, out$par, model$sample),
+             smobj(smoppi, directestimate$estimator1, model$sample))
 
   SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
   expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
