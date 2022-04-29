@@ -28,8 +28,6 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 
   set.seed(123)
   utabl <- cdabyppi:::rhybrid(1000,p,beta,ALs,bL,4)$samp3
-  # removing points less than 1E-4
-  utabl <- utabl[(apply(utabl, MARGIN = 1, min) < 1E-4), ]
 
   acut = 0.1
   psphere = pmanifold("sphere")
@@ -65,13 +63,11 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   expect_true(all(abs(cppadest$beta0 - directestimate) / cppadestSE$beta0 < 0.1)) #proxy for optimisation flatness
 
   expect_true(all(abs(out$par - theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
-}) #passing
+}) #failing
 
 test_that("ppi with minsq weights match estimator1 with fixed beta for more complex model", {
   set.seed(123)
   model <- sec2_3model(1000, maxden = 4)
-  # removing points less than 1E-4
-  model$sample <- model$sample[(apply(model$sample, MARGIN = 1, min) < 1E-4), ]
 
   acut = 0.1
   psphere <- pmanifold("sphere")
@@ -143,10 +139,15 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
   out <- optim(par = model$theta * 0,
                fn = function(theta){smobj(smoppi, theta, model$sample)},
                gr = function(theta){smobjgrad(smoppi, theta, model$sample)},
-               method = "BFGS")
+               method = "BFGS",
+               control = list(maxit = 10000))
+  stopifnot(out$convergence == 0)
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimatorall1(model$sample, acut)
+
+  expect_lte(smobj(smoppi, out$par, model$sample),
+             smobj(smoppi, directestimate$estimator1, model$sample))
 
   SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
   expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
