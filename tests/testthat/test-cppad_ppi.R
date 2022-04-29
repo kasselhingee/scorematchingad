@@ -128,7 +128,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
 
 test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model", {
   set.seed(123)
-  model <- sec2_3model(100, maxden = 4, betaadd = 0)
+  model <- sec2_3model(100, maxden = 4)
 
   acut = 0.1
 
@@ -147,8 +147,11 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimatorall1(model$sample, acut)
 
-  expect_lte(smobj(smoppi, out$par, model$sample),
+  expect_equal(smobj(smoppi, out$par, model$sample),
              smobj(smoppi, directestimate$estimator1, model$sample))
+  smobjgrad(smoppi, out$par, model$sample)
+  smobjgrad(smoppi, directestimate$estimator1, model$sample)
+
 
   SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
   as.vector(abs(out$par - directestimate$estimator1) / diag(SE))
@@ -156,6 +159,43 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
 
   expect_equal(abs(out$par - model$theta) / diag(SE) < 2, rep(TRUE, length(out$par))) #assuming normally distributed with SE given by SE above
 }) #passing
+
+test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model, minimise by gradsize", {
+  set.seed(123)
+  model <- sec2_3model(100, maxden = 4)
+
+  acut = 0.1
+
+  psphere <- pmanifold("sphere")
+  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(model$theta)), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, model$p), 1:length(model$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+
+  # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
+  out <- optim(par = model$theta * 0,
+               fn = function(theta){sum(smobjgrad(smoppi, theta, model$sample)^2)},
+               # gr = function(theta){smobjgrad(smoppi, theta, model$sample)},
+               method = "BFGS",
+               control = list(maxit = 10000,
+                              reltol = 1E-10,
+                              abstol = 1E-10))
+  stopifnot(out$convergence == 0)
+
+  # memoisation could be used to avoid calling the smobj function again for gradient computation
+  directestimate <- estimatorall1(model$sample, acut)
+
+  expect_equal(smobj(smoppi, out$par, model$sample),
+               smobj(smoppi, directestimate$estimator1, model$sample))
+  sum(smobjgrad(smoppi, out$par, model$sample)^2)
+  sum(smobjgrad(smoppi, directestimate$estimator1, model$sample)^2)
+
+
+  SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
+  as.vector(abs(out$par - directestimate$estimator1) / diag(SE))
+  expect_equal(abs(out$par - directestimate$estimator1) / diag(SE) < 0.1, rep(TRUE, length(out$par)), ignore_attr = TRUE) #proxy for optimisation flatness
+
+  expect_equal(abs(out$par - model$theta) / diag(SE) < 2, rep(TRUE, length(out$par))) #assuming normally distributed with SE given by SE above
+}) #passing
+
 
 test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model, fixed final beta", {
   set.seed(123)
