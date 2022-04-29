@@ -138,6 +138,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     CppAD::Independent(theta, u); //differentiate wrt beta, dynamic parameter is u
     if (verbose){
       PrintForVec("\n\n(START) theta is: ", theta);
+      PrintForVec("\n\n(START) u is: ", u);
     }
 
     // veca1 u(n);
