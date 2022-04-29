@@ -42,9 +42,9 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
                fn = function(theta){smobj(smoppi, theta, utabl)},
                gr = function(theta){smobjgrad(smoppi, theta, utabl)},
                method = "BFGS", control =list(maxit = 1000))
+  stopifnot(out$convergence == 0)
 
   # smoperpt <- apply(utabl, MARGIN = 1, FUN = function(u){pForward0(smoppi, out$par, u)})
-
 
   cppadest <- fromPPIparamvec(out$par, p)
 
@@ -60,9 +60,9 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 
   SE <- smestSE(smoppi, out$par, utabl) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
   cppadestSE <- fromPPIparamvec(diag(SE), p)
-  expect_true(all(abs(cppadest$beta0 - directestimate) / cppadestSE$beta0 < 0.1)) #proxy for optimisation flatness
+  expect_equal(abs(cppadest$beta0 - directestimate) / cppadestSE$beta0 < 0.1, rep(TRUE, length(directestimate))) #proxy for optimisation flatness
 
-  expect_true(all(abs(out$par - theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
+  expect_equal(abs(out$par - theta) / diag(SE) < 2, rep(TRUE, length(out$par))) #assuming normally distributed with SE given by SE above
 }) #failing
 
 test_that("ppi with minsq weights match estimator1 with fixed beta for more complex model", {
@@ -150,10 +150,10 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
              smobj(smoppi, directestimate$estimator1, model$sample))
 
   SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
-  expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
+  expect_equal(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5, rep(TRUE, length(out$par)), ignore_attr = TRUE) #proxy for optimisation flatness
 
-  expect_true(all(abs(out$par - model$theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
-}) #failing
+  expect_equal(abs(out$par - model$theta) / diag(SE) < 2, rep(TRUE, length(out$par))) #assuming normally distributed with SE given by SE above
+}) #passing
 
 test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model, fixed final beta", {
   set.seed(123)
@@ -208,7 +208,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex mo
              smobj(smoppi, directestimate$estimator1, model$sample))
 
   SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
-  expect_true(all(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5)) #proxy for optimisation flatness
+  expect_equal(abs(out$par - directestimate$estimator1) / diag(SE) < 0.5, rep(TRUE, length(out$par)), ignore_attr = TRUE) #proxy for optimisation flatness
 
-  expect_true(all(abs(out$par - model$theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
+  expect_equal(abs(out$par - model$theta) / diag(SE) < 2, rep(TRUE, length(out$par))) #assuming normally distributed with SE given by SE above
 }) #failing
