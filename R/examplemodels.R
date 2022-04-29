@@ -1,11 +1,13 @@
 #' Make example models
 #' @param n Number of samples to generate
+#' @param maxden the log(C) maximum in simulating a PPI model
+#' @param betaadd A number to add to the beta0 parameters - to changing the skewness of the marginal distributions
 #' @return A list of the samples and model parameter information
 #' @examples
 #' sec2_3model(10, 4)
 #' sec2_3model_p4(1000, 8)
 #' @export
-sec2_3model <- function(n, maxden = 4){
+sec2_3model <- function(n, maxden = 4, betaadd = 0){
   #dimension
   p=3
 
@@ -23,6 +25,7 @@ sec2_3model <- function(n, maxden = 4){
   bL=solve(SigA)%*%muL
   beta0=matrix(-0.8,p,1)
   beta0[p]=-0.5
+  beta0 = beta0 + betaadd
 
   #simulate sample from PPI model
   samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL, maxden)

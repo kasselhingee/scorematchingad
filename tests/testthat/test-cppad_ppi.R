@@ -128,11 +128,9 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
 
 test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model", {
   set.seed(123)
-  model <- sec2_3model(800, maxden = 4)
+  model <- sec2_3model(100, maxden = 4, betaadd = 0)
 
   acut = 0.1
-  model$sample <- model$sample[apply(model$sample, MARGIN = 1, min) > acut + 0.01, ]
-  nrow(model$sample)
 
   psphere <- pmanifold("sphere")
   pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(model$theta)), verbose = FALSE)
@@ -153,6 +151,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
              smobj(smoppi, directestimate$estimator1, model$sample))
 
   SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
+  as.vector(abs(out$par - directestimate$estimator1) / diag(SE))
   expect_equal(abs(out$par - directestimate$estimator1) / diag(SE) < 0.1, rep(TRUE, length(out$par)), ignore_attr = TRUE) #proxy for optimisation flatness
 
   expect_equal(abs(out$par - model$theta) / diag(SE) < 2, rep(TRUE, length(out$par))) #assuming normally distributed with SE given by SE above
