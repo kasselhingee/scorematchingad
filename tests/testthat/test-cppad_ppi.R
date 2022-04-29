@@ -28,6 +28,8 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 
   set.seed(123)
   utabl <- cdabyppi:::rhybrid(1000,p,beta,ALs,bL,4)$samp3
+  # removing points less than 1E-4
+  utabl <- utabl[(apply(utabl, MARGIN = 1, min) < 1E-4), ]
 
   acut = 0.1
   psphere = pmanifold("sphere")
@@ -43,25 +45,33 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
                gr = function(theta){smobjgrad(smoppi, theta, utabl)},
                method = "BFGS", control =list(maxit = 1000))
 
+  # smoperpt <- apply(utabl, MARGIN = 1, FUN = function(u){pForward0(smoppi, out$par, u)})
+
+
   cppadest <- fromPPIparamvec(out$par, p)
 
   expect_equal(pForward0(pdir, utabl[2, ], beta), pForward0(pppi, utabl[2, ], theta))
   expect_equal(pJacobian(pdir, utabl[2, ], beta), pJacobian(pppi, utabl[2, ], theta))
   expect_equal(pForward0(smoppi, theta, utabl[2, ]), pForward0(smodir, beta, utabl[2, ]))
 
-  # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimator1_dir(utabl, acut)
+
+  # there is a difference in direct estimates because the direct estimate smobj value is poorer:
+  expect_lte(smobj(smoppi, out$par, utabl),
+             smobj(smoppi, c(rep(0, length(theta) - p), directestimate), utabl))
 
   SE <- smestSE(smoppi, out$par, utabl) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
   cppadestSE <- fromPPIparamvec(diag(SE), p)
-  expect_true(all(abs(cppadest$beta0 - directestimate) / cppadestSE$beta0 < 1)) #proxy for optimisation flatness
+  expect_true(all(abs(cppadest$beta0 - directestimate) / cppadestSE$beta0 < 0.1)) #proxy for optimisation flatness
 
   expect_true(all(abs(out$par - theta) / diag(SE) < 2)) #assuming normally distributed with SE given by SE above
-}) #failing
+}) #passing
 
 test_that("ppi with minsq weights match estimator1 with fixed beta for more complex model", {
   set.seed(123)
   model <- sec2_3model(1000, maxden = 4)
+  # removing points less than 1E-4
+  model$sample <- model$sample[(apply(model$sample, MARGIN = 1, min) < 1E-4), ]
 
   acut = 0.1
   psphere <- pmanifold("sphere")
