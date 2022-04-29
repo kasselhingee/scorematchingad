@@ -137,7 +137,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     //START TAPING
     CppAD::Independent(theta, u); //differentiate wrt beta, dynamic parameter is u
     if (verbose){
-      PrintForVec("\n theta is: ", theta);
+      PrintForVec("\n\n(START) theta is: ", theta);
     }
 
     // veca1 u(n);
@@ -180,7 +180,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     if (verbose){PrintForMatrix("\nThe value of ll Hessian is: \n", hess);}
     lapl[0] += (Pmat*hess).trace();
     lapl[0] *= h2[0]; //weight by h2
-    if (verbose){PrintForVec("\n(2)The value of lapl is:", lapl);}
+    if (verbose){PrintForVec("\n(2)The value of hlapl is:", lapl);}
 
 
     //ghPg
@@ -191,6 +191,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     //combine components
     veca1 smo(1);
     smo = lapl + hgPg + ghPg;
+    if (verbose){PrintForVec("\n(END)The value of smo is:", smo);}
 
     //finish taping
     CppAD::ADFun<double> smofun;
