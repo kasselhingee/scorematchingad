@@ -20,7 +20,7 @@
     xsq = x.array().square();
     Type minval(acut * acut);
     for(size_t i=0;i<x.size();i++){
-      minval = CppAD::CondExpLt(xsq[i], minval, xsq[i], minval);
+      minval = CppAD::CondExpLe(xsq[i], minval, xsq[i], minval);
     }
     return(minval);
   }
@@ -33,7 +33,7 @@
     prd = x.array().prod();
     //constraint
     Type acutb(acut);
-    Type out = CppAD::CondExpLt(prd, acutb, prd, acutb);
+    Type out = CppAD::CondExpLe(prd, acutb, prd, acutb);
     return(out);
   }
 
