@@ -128,7 +128,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4 simple", {
 
 test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model", {
   set.seed(123)
-  model <- sec2_3model(1000, maxden = 4)
+  model <- sec2_3model(100, maxden = 4)
 
   acut = 0.1
   psphere <- pmanifold("sphere")
@@ -157,7 +157,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
 
 test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex model, fixed final beta", {
   set.seed(123)
-  model <- sec2_3model(1000, maxden = 4)
+  model <- sec2_3model(100, maxden = 4)
 
   acut = 0.1
   psphere <- pmanifold("sphere")
@@ -186,7 +186,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 3, more complex mo
 
 test_that("ppi with minsq weights match estimatorall1 for p = 4, more complex model", {
   set.seed(123)
-  model <- sec2_3model_p4(1000, maxden = 8)
+  model <- sec2_3model_p4(100, maxden = 8)
 
   acut = 0.1
   psphere <- pmanifold("sphere")
