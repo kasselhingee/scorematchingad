@@ -170,39 +170,6 @@ test_that("ppi with minsq weights match estimatorall1 for sec2_3model", {
   cdabyppi:::expect_lt_v(abs(out$par - model$theta) / out$SE, 3)
 })
 
-test_that("ppi with minsq weights match estimatorall1 for sec2_3model, minimise by gradsize", {
-  stop("Minimising by gradsize does not work nearly as well as Rcgmin")
-  set.seed(111)
-  model <- sec2_3model(100, maxden = 4)
-
-  acut = 0.1
-
-  psphere <- pmanifold("sphere")
-  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(model$theta)), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, model$p), 1:length(model$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
-
-  # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
-  out <-Rcgmin::Rcgmin(par = model$theta * 0,
-               fn = function(theta){sum(smobjgrad(smoppi, theta, model$sample)^2)},
-               control = list(tol = 1E-15)
-               )
-  stopifnot(out$convergence == 0)
-
-  # memoisation could be used to avoid calling the smobj function again for gradient computation
-  directestimate <- estimatorall1(model$sample, acut)
-
-  expect_equal(out$value,
-               smobj(smoppi, directestimate$estimator1, model$sample))
-  expect_equal(sum(smobjgrad(smoppi, out$par, model$sample)^2),
-               sum(smobjgrad(smoppi, directestimate$estimator1, model$sample)^2))
-
-
-  SE <- smestSE(smoppi, out$par, model$sample) #SE is error to true parameters, here using it also as a proxy to optimisation accuracy
-  cdabyppi::expect_lt_v(abs(out$par - directestimate$estimator1) / SE, 0.1) #proxy for optimisation flatness
-
-  cdabyppi:::expect_lt_v(abs(out$par - model$theta) / SE, 3)
-}) #FAILING
-
 test_that("ppi with minsq weights match estimatorall1 for sec2_3model, fixed final beta", {
   set.seed(123)
   model <- sec2_3model(100, maxden = 4)
