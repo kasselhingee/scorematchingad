@@ -1,5 +1,6 @@
 #' @title Draft standard error estimates for a CppAD-based estimator
 #' @description The standard errors of an estimator via the Godambe information matrix (or sandwich information matrix).
+#' WARNING: Theory for this method in this situation has not been confirmed by KLH. Ideas from the Section 2.2 and Section 2.3 of Varin et al (2011) 'An overview of composite likelihood methods.
 #' @param smofun A tape of the score matching objective calculation
 #' @param est The parameter set
 #' @param utabl A matrix of observations, each row being an observation.
@@ -13,7 +14,6 @@ smestSE <- function(smofun, est, utabl){
 
 #' @describeIn smestSE Returns the matrix `invG/n`.
 smestSEsq <- function(smofun, est, utabl){
-  warning("Theory for this method is not confirmed. Ideas from the Section 2.2 and Section 2.3 of Varin et al (2011) 'An overview of composite likelihood methods'")
   sens <- -smobjhess(smofun, est, utabl)
   gradsmoperpt <- lapply(1:nrow(utabl), function(i){
     diff <- pJacobian(smofun, est, utabl[i,])
