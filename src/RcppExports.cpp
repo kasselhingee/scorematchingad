@@ -42,6 +42,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// testmanifold
+int testmanifold(XPtr< manifold<a1type> > pman, svecd u);
+RcppExport SEXP _cdabyppi_testmanifold(SEXP pmanSEXP, SEXP uSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
+    Rcpp::traits::input_parameter< svecd >::type u(uSEXP);
+    rcpp_result_gen = Rcpp::wrap(testmanifold(pman, u));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ptapesmo
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd u, svecd theta, XPtr< CppAD::ADFun<double> > pll, XPtr< manifold<a1type> > pman, std::string weightname, const double acut, bool verbose);
 RcppExport SEXP _cdabyppi_ptapesmo(SEXP uSEXP, SEXP thetaSEXP, SEXP pllSEXP, SEXP pmanSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
@@ -132,6 +144,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_corels", (DL_FUNC) &_cdabyppi_corels, 0},
     {"_cdabyppi_rcpp_hello_world", (DL_FUNC) &_cdabyppi_rcpp_hello_world, 0},
     {"_cdabyppi_pmanifold", (DL_FUNC) &_cdabyppi_pmanifold, 1},
+    {"_cdabyppi_testmanifold", (DL_FUNC) &_cdabyppi_testmanifold, 2},
     {"_cdabyppi_ptapesmo", (DL_FUNC) &_cdabyppi_ptapesmo, 7},
     {"_cdabyppi_ptapell", (DL_FUNC) &_cdabyppi_ptapell, 6},
     {"_cdabyppi_swapDynamic", (DL_FUNC) &_cdabyppi_swapDynamic, 3},

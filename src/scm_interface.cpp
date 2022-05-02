@@ -17,16 +17,54 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
       Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
       Spos::fromS, Spos::logdetJ_fromS,
     };
-  }
-  if (manifoldname.compare("simplex") == 0){
+  } else if (manifoldname.compare("simplex") == 0){
     *out = {
       simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
       simplex::fromM, simplex::logdetJ_fromM
     };
+  } else if (manifoldname.compare("Rpos") == 0){
+    *out = {
+      Rpos::toM, Rpos::Pmat_M, Rpos::dPmat_M,
+      Rpos::fromM, Rpos::logdetJ_fromM
+    };
+  } else {
+    stop("Manifold not found");
   }
 
   XPtr< manifold<a1type> > pout(out, true);
   return(pout);
+}
+
+//' @title Test a manifold object
+//' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+//' @param u A vector in the simplex.
+//' @param beta a vector of the dynamic parameters
+//' @return The Hessian of pfun
+//' @export
+// [[Rcpp::export]]
+int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
+  veca1 u_ad(u.size());
+  for (size_t i=0; i<u.size(); i++){
+    u_ad[i] = u[i];
+  }
+
+  // toM then fromM get back to u
+  std::cout << "               Input u was: " << u_ad.transpose() << std::endl;
+  veca1 z_ad(u.size());
+  z_ad = pman->toM(u_ad);
+  std::cout << "                 After toM: " << z_ad.transpose() << std::endl;
+  veca1 u2_ad(u.size());
+  u2_ad = pman->fromM(z_ad);
+  std::cout << "       After toM and fromM: " << u2_ad.transpose() << std::endl;
+  if ((u2_ad - u_ad).array().abs().maxCoeff() < 1E-8){std::cout << "toM then fromM passed." << std::endl;}
+
+  // Run the other elements
+  std::cout << " logdetJ_fromM at toM(u): " << pman->logdetJfromM(z_ad) << std::endl;
+  std::cout << " Pmat at toM(u): " << std::endl << pman->Pmatfun(z_ad) << std::endl;
+  for (size_t d=0; d<u.size(); d++){
+    std::cout << " dPmat at toM(u) in dimension " << d <<":" << std::endl << pman->dPmatfun(z_ad, d) << std::endl;
+  }
+  return(0);
 }
 
 //in R store a pointer to the ADFun object

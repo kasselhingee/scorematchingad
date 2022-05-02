@@ -17,6 +17,16 @@ pmanifold <- function(manifoldname) {
     .Call('_cdabyppi_pmanifold', PACKAGE = 'cdabyppi', manifoldname)
 }
 
+#' @title Test a manifold object
+#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+#' @param u A vector in the simplex.
+#' @param beta a vector of the dynamic parameters
+#' @return The Hessian of pfun
+#' @export
+testmanifold <- function(pman, u) {
+    .Call('_cdabyppi_testmanifold', PACKAGE = 'cdabyppi', pman, u)
+}
+
 #' @title The score matching objective calculator.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
 #' @param n The dimension of x.

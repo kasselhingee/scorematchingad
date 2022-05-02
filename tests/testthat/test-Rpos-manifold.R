@@ -1,0 +1,4 @@
+
+Rpos <- pmanifold("Rpos")
+u <- c(0.1, 0.2, 1 - 0.3)
+testmanifold(Rpos, u)

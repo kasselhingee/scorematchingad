@@ -4,7 +4,7 @@
 #' expected = 3
 #' expect_lt_v(c(1,3,5), 3)
 expect_lt_v <- function(object, expected){
-  act <- quasi_label(rlang::enquo(object), arg = "object")
+  act <- testthat::quasi_label(rlang::enquo(object), arg = "object")
 
   # check
   if (length(expected) != length(object)){
@@ -23,5 +23,5 @@ expect_lt_v <- function(object, expected){
   failid <- which(!comparison)
   faildesc <- paste0(sprintf("%s was larger than expected at index c(%s).", act$lab, paste(failid, collapse = ", ")))
   faildetail <- paste(failid, ": ", object[failid], "!<",expected[failid])
-  fail(paste(c(faildesc, faildetail), collapse = "\n"))
+  testthat::fail(paste(c(faildesc, faildetail), collapse = "\n"))
 }
