@@ -18,10 +18,11 @@ pmanifold <- function(manifoldname) {
 }
 
 #' @title Test a manifold object
-#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-#' @param u A vector in the simplex.
-#' @param beta a vector of the dynamic parameters
-#' @return The Hessian of pfun
+#' @description A lightweight test of a manifold object.
+#' Its main benefit is to force compilation of templated functions for the manifold,
+#' and to print results to standard output.
+#' @param pman An XPtr to a manifold object. Created by `pmanifold()`
+#' @return An integer. 0 if the testable parts pass.
 #' @export
 testmanifold <- function(pman, u) {
     .Call('_cdabyppi_testmanifold', PACKAGE = 'cdabyppi', pman, u)

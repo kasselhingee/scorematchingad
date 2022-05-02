@@ -12,21 +12,27 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   manifold<a1type> * out = new manifold<a1type>; //returning a pointer
+  // manifold2<a1type> * out2 = new manifold2<a1type>;
+  // *out2 = manifold2<a1type>(
+  //   Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
+  //   Spos::fromS, Spos::logdetJ_fromS
+  // );
+
   if (manifoldname.compare("sphere") == 0){
-    *out = {
+    *out = manifold<a1type>(
       Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
-      Spos::fromS, Spos::logdetJ_fromS,
-    };
+      Spos::fromS, Spos::logdetJ_fromS
+    );
   } else if (manifoldname.compare("simplex") == 0){
-    *out = {
+    *out = manifold<a1type>(
       simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
       simplex::fromM, simplex::logdetJ_fromM
-    };
+    );
   } else if (manifoldname.compare("Rpos") == 0){
-    *out = {
+    *out = manifold<a1type>(
       Rpos::toM, Rpos::Pmat_M, Rpos::dPmat_M,
       Rpos::fromM, Rpos::logdetJ_fromM
-    };
+    );
   } else {
     stop("Manifold not found");
   }
@@ -172,8 +178,7 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
   *out = tapell(z_ad,
                 theta_ad,
                 ll,
-                pman->fromM, //transformation from manifold to simplex
-                pman->logdetJfromM, //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+                *pman,
                 fixedtheta_e,
                 verbose);
 

@@ -11,8 +11,7 @@
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                             veca1 theta, //theta parameter
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
-                               veca1 (*fromM)(const veca1 &), //transformation from manifold to simplex
-                               a1type (*logdetJfromM)(const veca1 &), //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+                               manifold<a1type> man,
                                Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
                                bool verbose
                                ){
@@ -79,10 +78,10 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   // range space vector
   veca1 y(1); // vector of ranges space variables
   veca1 u(z.size());
-  u = fromM(z);
+  u = man.fromM(z);
   y.setZero();
   y[0] += llf(u, thetarecom);
-  y[0] += logdetJfromM(z);
+  y[0] += man.logdetJfromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
   if (verbose){
