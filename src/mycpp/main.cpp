@@ -1,7 +1,8 @@
-# include "scm.cpp"
+#include "../scm_interface.cpp"
 
 int main(int argc, char** argv)
  {   using CppAD::AD;   // use AD as abbreviation for CppAD::AD
+       std::cout << "Reading inputs" << std::endl;
        //read inputs
        size_t n = 3;
        veca1 z_ad(n);
@@ -20,6 +21,7 @@ int main(int argc, char** argv)
        fixedtheta_e[fixedtheta_e.size() - 1] = 1;
        fixedtheta_e[fixedtheta_e.size() - 2] = 1;
 
+       std::cout << "Creating manifold object" << std::endl;
        manifold<a1type> sphere(
            Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
            Spos::fromS, Spos::logdetJ_fromS
