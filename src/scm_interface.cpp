@@ -36,10 +36,11 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
 }
 
 //' @title Test a manifold object
-//' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-//' @param u A vector in the simplex.
-//' @param beta a vector of the dynamic parameters
-//' @return The Hessian of pfun
+//' @description A lightweight test of a manifold object.
+//' Its main benefit is to force compilation of templated functions for the manifold,
+//' and to print results to standard output.
+//' @param pman An XPtr to a manifold object. Created by `pmanifold()`
+//' @return An integer. 0 if the testable parts pass.
 //' @export
 // [[Rcpp::export]]
 int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
@@ -55,8 +56,10 @@ int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
   std::cout << "                 After toM: " << z_ad.transpose() << std::endl;
   veca1 u2_ad(u.size());
   u2_ad = pman->fromM(z_ad);
-  std::cout << "       After toM and fromM: " << u2_ad.transpose() << std::endl;
-  if ((u2_ad - u_ad).array().abs().maxCoeff() < 1E-8){std::cout << "toM then fromM passed." << std::endl;}
+  if ((u2_ad - u_ad).array().abs().maxCoeff() > 1E-8){
+    std::cout << "toM then fromM not passed." << std::endl;
+    return(1);
+  }
 
   // Run the other elements
   std::cout << " logdetJ_fromM at toM(u): " << pman->logdetJfromM(z_ad) << std::endl;
