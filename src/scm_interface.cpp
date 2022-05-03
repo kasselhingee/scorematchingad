@@ -98,6 +98,9 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
   if (weightname.compare("minsq") == 0){
     h2fun = minsq;
   }
+  if (weightname.compare("ones") == 0){
+    h2fun = oneweights;
+  }
   if (weightname.compare("prod1") == 0){
     h2fun = hprod;
   }

@@ -128,8 +128,8 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
 
     //check inputs and ll tape match
-    if (lltape.Domain() != z.size()){stop("Dimension of input measurement (z or u) does not match domain size of log likelihood function.");}
-    if (lltape.size_dyn_ind() != theta.size()){stop("Size of parameter vector theta does not match parameter size of log likelihood function.");}
+    if (lltape.Domain() != z.size()){stop("Dimension of input measurement (z or u) is %i, which does not match domain size of log likelihood function of %i.", z.size(), lltape.Domain());}
+    if (lltape.size_dyn_ind() != theta.size()){stop("Size of parameter vector theta (=%i) does not match parameter size of log likelihood function (=%i).", theta.size(), lltape.size_dyn_ind());}
 
     // make ll tape higher order (i.e. as if it was taped using a2type instead of a1type)
     CppAD::ADFun<a1type, double> lltapehigher;

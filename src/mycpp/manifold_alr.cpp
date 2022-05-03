@@ -21,9 +21,11 @@ namespace Ralr { // begin the empty namespace
 
   template <class Type>
   Type logdetJ_fromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z){
-     Type out;
-     out = 0.;
-     return(out);
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> u(z.size() + 1);
+    u = fromM(z);
+    Type out;
+    out = u.prod();
+    return(out);
   }
 
 
@@ -32,10 +34,7 @@ namespace Ralr { // begin the empty namespace
   Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat_M(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
     int n = x.size();
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n);
-    Eigen::Matrix<Type, Eigen::Dynamic, 1> ones(n);
-    ones.setOnes();
-    double nd = n;
-    Pmat = Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>::Identity(n,n) - (ones*ones.transpose()/nd);
+    Pmat = Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>::Identity(n,n);
     return(Pmat);
   }
 
