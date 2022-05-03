@@ -24,29 +24,53 @@ typedef Eigen::Matrix<a2type, Eigen::Dynamic, 1> veca2;
 // };
 
 template <typename T>
-class manifold {
-  public:
-  Eigen::Matrix<T, Eigen::Dynamic, 1> (*toM)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &); //map from simplex to manifold
-  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> (*Pmatfun)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &); //projection matrix for manifold
-  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> (*dPmatfun)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &, const int &); //elementwise derivative of projection matrix for manifold
-  Eigen::Matrix<T, Eigen::Dynamic, 1> (*fromM)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &); //transformation from manifold to simplex
-  T (*logdetJfromM)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &); //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-    manifold(){}
+struct manifold { //exactly like a class, but with default public members https://stackoverflow.com/questions/24196885/can-c-struct-have-member-functions
+  //make these members 'pure virtual' means this is an 'abstract class'
+  virtual Eigen::Matrix<T, Eigen::Dynamic, 1> toM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &) = 0; //map from simplex to manifold
+  virtual Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &) = 0; //projection matrix for manifold
+  virtual Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> dPmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &, const int &) = 0; //elementwise derivative of projection matrix for manifold
+  virtual Eigen::Matrix<T, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &) = 0; //transformation from manifold to simplex
+  virtual T logdetJfromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &) = 0; //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
+  //for taping will need to pass copies - so that the coefficients of the tape are not updated by other calls part way through
+};
 
-    manifold(
-       Eigen::Matrix<T, Eigen::Dynamic, 1> (*toM)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &), //map from simplex to manifold
-       Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> (*Pmatfun)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &), //projection matrix for manifold
-       Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> (*dPmatfun)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &, const int &), //elementwise derivative of projection matrix for manifold
-       Eigen::Matrix<T, Eigen::Dynamic, 1> (*fromM)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &), //transformation from manifold to simplex
-       T (*logdetJfromM)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &) //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
-    ){
-      toM = toM;
-      Pmatfun = Pmatfun;
-      dPmatfun = dPmatfun;
-      fromM = fromM;
-      logdetJfromM = logdetJfromM;
-    }
+template <typename T>
+struct simplexman : public manifold<T> {
+  Eigen::Matrix<T, Eigen::Dynamic, 1> toM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x){
+    Eigen::Matrix<T, Eigen::Dynamic, 1> out(x.size());
+    out = x;
+    return(out);
+  }
 
-    //for taping will need to pass copies - so that the coefficients of the tape are not updated by other calls part way through
+  Eigen::Matrix<T, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x){
+    Eigen::Matrix<T, Eigen::Dynamic, 1> out(x.size());
+    out = x;
+    return(out);
+  }
 
+  T logdetJfromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &z){
+    T out;
+    out = 0.;
+    return(out);
+  }
+
+
+  // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmat_M(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x){
+    int n = x.size();
+    Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n);
+    Eigen::Matrix<T, Eigen::Dynamic, 1> ones(n);
+    ones.setOnes();
+    double nd = n;
+    Pmat = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>::Identity(n,n) - (ones*ones.transpose()/nd);
+    return(Pmat);
+  }
+
+  //partial derivative of the tangent-plane projection matrix
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> dPmat_M(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x, const int &d){
+    int n = x.size();
+    Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> bvx(n, n);
+    bvx.setZero();
+    return(bvx);
+  }
 };
