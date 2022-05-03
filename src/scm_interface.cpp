@@ -22,11 +22,6 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
       simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
       simplex::fromM, simplex::logdetJ_fromM
     };
-  } else if (manifoldname.compare("Rpos") == 0){
-    *out = {
-      Rpos::toM, Rpos::Pmat_M, Rpos::dPmat_M,
-      Rpos::fromM, Rpos::logdetJ_fromM
-    };
   } else {
     stop("Manifold not found");
   }

@@ -2,7 +2,6 @@
 # include "approx.cpp"
 # include "sm_possphere.cpp"
 # include "manifold_simplex.cpp"
-# include "manifold_Rpos.cpp"
 # include "hfuns.cpp"
 # include "dirichlet.cpp"
 # include "PrintFor.cpp"
