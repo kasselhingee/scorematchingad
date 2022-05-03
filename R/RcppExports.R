@@ -9,31 +9,84 @@ rcpp_hello_world <- function() {
     .Call('_cdabyppi_rcpp_hello_world', PACKAGE = 'cdabyppi')
 }
 
+#' @title Generate manifold object
+#' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
+#' @return An RCpp::XPtr object pointing to the C++ manifold object
+#' @export
+pmanifold <- function(manifoldname) {
+    .Call('_cdabyppi_pmanifold', PACKAGE = 'cdabyppi', manifoldname)
+}
+
+#' @title Test a manifold object
+#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+#' @param u A vector in the simplex.
+#' @param beta a vector of the dynamic parameters
+#' @return The Hessian of pfun
+#' @export
+testmanifold <- function(pman, u) {
+    .Call('_cdabyppi_testmanifold', PACKAGE = 'cdabyppi', pman, u)
+}
+
 #' @title The score matching objective calculator.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
 #' @param n The dimension of x.
+#' @param manifoldname The name of the manifold to transform to
+#' @param weightname The name of the weight function to use
+#' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
 #' @export
-ptapesmo <- function(xbetain, n) {
-    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', xbetain, n)
+ptapesmo <- function(u, theta, pll, pman, weightname, acut, verbose) {
+    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', u, theta, pll, pman, weightname, acut, verbose)
 }
 
-#' @title The score matching objective calculator.
+#' @title Tape of a log-likelihood calculation
+#' @param p dimension of measurements
+#' @param bd dimension of the parameter vector
+#' @param llname name of the likelihood function
+#' @return An RCpp::XPtr object pointing to the ADFun
+#' @export
+ptapell <- function(z, theta, llname, pman, fixedtheta, verbose) {
+    .Call('_cdabyppi_ptapell', PACKAGE = 'cdabyppi', z, theta, llname, pman, fixedtheta, verbose)
+}
+
+#' @title Switch Dynamic and pure Independent values
+#' @description Convert an ADFun so that the independent values become dynamic parameters
+#' and the dynamic parameters become independent values
+#' @param newvalue The value (in the sense after the switch has occured) at which to tape the ADFun
+#' @param newdynparam The value of the now dynamic parameters at which to tape the ADFun
+#' @return A pointer to an ADFun
+#' @export
+swapDynamic <- function(pfun, newvalue, newdynparam) {
+    .Call('_cdabyppi_swapDynamic', PACKAGE = 'cdabyppi', pfun, newvalue, newdynparam)
+}
+
+#' @title The Jacobian of recorded function
+#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 #' @param u A vector in the simplex.
-#' @param betain
-#' @return The score matching objective value
+#' @param beta a vector of the dynamic parameters
+#' @return The Jacobian of pfun
 #' @export
-psmo <- function(pfun, u, betain) {
-    .Call('_cdabyppi_psmo', PACKAGE = 'cdabyppi', pfun, u, betain)
+pJacobian <- function(pfun, value, theta) {
+    .Call('_cdabyppi_pJacobian', PACKAGE = 'cdabyppi', pfun, value, theta)
 }
 
-#' @title The value of the score matching objective.
-#'
-#' @param xin the composition after sqrt transform
-#' @param betain the beta values
-#' @return the score matching objective for `xin`
+#' @title The value of a recorded function
+#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+#' @param u A vector in the simplex.
+#' @param beta a vector of the dynamic parameters
+#' @return The value of pfun
 #' @export
-smo_n_grad <- function(xin, betain) {
-    .Call('_cdabyppi_smo_n_grad', PACKAGE = 'cdabyppi', xin, betain)
+pForward0 <- function(pfun, value, theta) {
+    .Call('_cdabyppi_pForward0', PACKAGE = 'cdabyppi', pfun, value, theta)
+}
+
+#' @title The Hessian of recorded function
+#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+#' @param u A vector in the simplex.
+#' @param beta a vector of the dynamic parameters
+#' @return The Hessian of pfun
+#' @export
+pHessian <- function(pfun, value, theta) {
+    .Call('_cdabyppi_pHessian', PACKAGE = 'cdabyppi', pfun, value, theta)
 }
 

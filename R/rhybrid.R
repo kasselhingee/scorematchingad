@@ -39,6 +39,7 @@
 #'
 #' @export
 rhybrid <- function(n,p,beta0,ALs,bL,maxden){
+  maxdenin <- maxden
   # first simulate starting with a block of Dirichlet samples of size n.
   firstaccepted <- rhybrid_block(n,p,beta0,ALs,bL,maxden)
   maxden <- firstaccepted$maxden
@@ -51,6 +52,11 @@ rhybrid <- function(n,p,beta0,ALs,bL,maxden){
     samples <- rbind(samples, newsamples$accepted)
     # continue until n or more samples accepted
   }
+
+  #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
+  #a few times to check that it is an appropriate upper bound.
+  if (maxden > maxdenin){stop(sprintf("Input maxden (i.e. the log(C) maximum) was %0.2f, but sampler suggests higher than %0.2f is required.", maxdenin, maxden))}
+
 
   samples <- samples[1:n, ] # remove extra samples
 

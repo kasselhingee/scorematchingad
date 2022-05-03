@@ -1,4 +1,16 @@
 .Rproj.user
+*.Rproj
+anRpackage
 .Rhistory
 .RData
 .Ruserdata
+*.o
+*.so
+tests/testthat/Rplots.pdf
+
+src/CppAD/build
+src/CppAD/external/eigen.git/build
+src/CppAD/external/
+src/CppAD/.coin-or/
+
+
