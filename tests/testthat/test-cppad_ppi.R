@@ -1,3 +1,23 @@
+test_that("ppi tape values do not effect ll values", {
+  model1 <- sec2_3model(1)
+  u1 <-  c(0.001, 0.011, 1 - 0.01 - 0.011)
+  model0 <- lapply(model1, function(x) x * 0)
+  u0 <- rep(0, 3)
+  fixedtheta = rep(FALSE, length(model1$theta))
+
+  ueval <- matrix(c(0.4, 0.011, 1 - 0.4 - 0.011), nrow = 1)
+  thetaeval <- model1$theta + 1
+
+  psphere <- pmanifold("sphere")
+  pppi1 <- ptapell(u1, model1$theta, "ppi", psphere, fixedtheta = fixedtheta, verbose = FALSE)
+  pppi2 <- ptapell(u0, model0$theta, "ppi", psphere, fixedtheta = fixedtheta, verbose = FALSE)
+
+  expect_equal(pForward0(pppi1, ueval, thetaeval), pForward0(pppi2, ueval, thetaeval))
+  expect_equal(pJacobian(pppi1, ueval, thetaeval), pJacobian(pppi2, ueval, thetaeval))
+  expect_equal(pHessian(pppi1, ueval, thetaeval), pHessian(pppi2, ueval, thetaeval))
+})
+
+
 test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", {
   beta = c(-0.3, -0.1, 3)
   p = length(beta)
@@ -193,14 +213,14 @@ test_that("ppi with minsq weights match estimatorall1 for sec2_3model, fixed fin
   cdabyppi:::expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
 })
 
-test_that("ppi with minsq weights performs well on Rpos, fixed final beta", {
+test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   set.seed(1234)
   model <- sec2_3model(1000, maxden = 4)
 
   acut = 0.1
-  pRpos <- pmanifold("Rpos")
-  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", pRpos, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = pRpos, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  psimplex <- pmanifold("simplex")
+  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psimplex, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psimplex, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
   out <- smest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
                control = list(tol = 1E-15))
