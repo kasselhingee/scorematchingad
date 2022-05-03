@@ -22,6 +22,11 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
       simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
       simplex::fromM, simplex::logdetJ_fromM
     };
+  } else if (manifoldname.compare("Ralr") == 0){
+    *out = {
+      Ralr::toM, Ralr::Pmat_M, Ralr::dPmat_M,
+      Ralr::fromM, Ralr::logdetJ_fromM
+    };
   } else {
     stop("Manifold not found");
   }
@@ -51,6 +56,7 @@ int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
   std::cout << "                 After toM: " << z_ad.transpose() << std::endl;
   veca1 u2_ad(u.size());
   u2_ad = pman->fromM(z_ad);
+  std::cout << "      After toM then fromM: " << u2_ad.transpose() << std::endl;
   if ((u2_ad - u_ad).array().abs().maxCoeff() > 1E-8){
     std::cout << "toM then fromM not passed." << std::endl;
     return(1);
