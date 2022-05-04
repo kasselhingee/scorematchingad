@@ -2,7 +2,6 @@
 # include <vector>          // standard vector
 # include <cppad/example/cppad_eigen.hpp>  //load eigen
 # include <cppad/cppad.hpp> // the CppAD package
-# include <Eigen/LU> //for matrix determinant
 # include <Rcpp.h>
 using namespace Rcpp;
 
