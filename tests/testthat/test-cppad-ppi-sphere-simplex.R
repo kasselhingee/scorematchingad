@@ -213,6 +213,29 @@ test_that("ppi with minsq weights match estimatorall1 for sec2_3model, fixed fin
   cdabyppi:::expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
 })
 
+test_that("ppi with minsq weights match estimatorall1 for sec2_3model, fixed final beta, large n", {
+  set.seed(123)
+  model <- sec2_3model(100000, maxden = 4)
+
+  acut = 0.1
+  psphere <- pmanifold("sphere")
+  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+
+  out <- smest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
+               control = list(tol = 1E-10, trace = 0)) #very slow at 10000
+
+  # memoisation could be used to avoid calling the smobj function again for gradient computation
+  directestimate <- estimatorall1(model$sample, acut, betap = model$beta0[model$p])
+
+  expect_lte(out$value,
+             smobj(smoppi, directestimate$estimator1, model$sample) + 1E-3 * abs(out$value))
+
+  cdabyppi:::expect_lt_v(abs(out$par - directestimate$estimator1) / out$SE, 0.01) #proxy for optimisation flatness
+
+  cdabyppi:::expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
+})
+
 test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   set.seed(1234)
   model <- sec2_3model(1000, maxden = 4)
