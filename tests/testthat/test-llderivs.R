@@ -21,7 +21,7 @@ ppill_r_S <- function(z, beta0, ALs, bL){
   A = matrix(0, nrow = p, ncol = p)
   A[1:p-1, 1:p-1] = ALs
   b = matrix(c(bL, 0), nrow = p, ncol =1)
-  out = sum((1 + 2 *beta0) * log(z)) + t(z^2) %*% A %*% (z^2) + t(b) %*% (z^2)
+  out = sum((1 + 2 *beta0) * log(z)) + t(z^2) %*% A %*% (z^2) + t(b) %*% (z^2) + log(2) * p
   return(out)
 }
 
@@ -65,7 +65,7 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
 
 # test Jacobian of ll function using numerical differentiation
 test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estimates", {
-  psphere <- pmanifold("sphere") #because above ppill_r is for the simplex
+  psphere <- pmanifold("sphere")
   lltape <- ptapell(u, theta, llname = "ppi", pman = psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
 
   # wrt u
