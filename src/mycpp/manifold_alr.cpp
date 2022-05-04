@@ -24,7 +24,7 @@ namespace Ralr { // begin the empty namespace
     Eigen::Matrix<Type, Eigen::Dynamic, 1> u(z.size() + 1);
     u = fromM(z);
     Type out;
-    out = u.prod();
+    out = u.array().log().sum();
     return(out);
   }
 
