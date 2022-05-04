@@ -73,7 +73,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   # there is a difference in direct estimates because the direct estimate smobj value is poorer:
   expect_lt(out$value,
              smobj(smoppi, c(rep(0, length(theta) - p), directestimate), utabl) + 1E-3 * abs(out$value)) #larger tolerance some apriori information used
-  expect_lt(out$gradsize,
+  expect_lt(out$sqgradsize,
                sum(smobjgrad(smoppi, c(rep(0, length(theta) - p), directestimate), utabl)^2))
 
   cppadestSE <- fromPPIparamvec(out$SE, p)
@@ -99,7 +99,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for sec2_3mod
 
   expect_equal(out$value,
                smobj(smoppi, directestimate$estimator1, model$sample))
-  expect_equal(out$gradsize,
+  expect_equal(out$sqgradsize,
                sum(smobjgrad(smoppi, directestimate$estimator1, model$sample)^2))
 
   cdabyppi:::expect_lt_v(abs(out$par - directestimate$estimator1) / out$SE,  0.01) #proxy for optimisation flatness
@@ -123,7 +123,7 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for sec2_3mo
 
   expect_equal(out$value,
                smobj(smoppi, directestimate$estimator2, model$sample))
-  expect_equal(out$gradsize,
+  expect_equal(out$sqgradsize,
                sum(smobjgrad(smoppi, directestimate$estimator2, model$sample)^2))
 
   cdabyppi:::expect_lt_v(abs(out$par - directestimate$estimator2) / out$SE,  0.01) #proxy for optimisation flatness
@@ -159,7 +159,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
   expect_equal(out$value,
                smobj(smoppi, directestimate$estimator1, utabl),
                tolerance = 1E-2)
-  expect_equal(out$gradsize,
+  expect_equal(out$sqgradsize,
                sum(smobjgrad(smoppi, directestimate$estimator1, utabl)^2))
 
   cdabyppi:::expect_lt_v(abs(out$par - directestimate$estimator1) / out$SE, 1) #proxy for optimisation flatness
