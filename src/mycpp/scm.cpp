@@ -7,19 +7,6 @@
 # include "dirichlet.cpp"
 # include "PrintFor.cpp"
 
-CppAD::ADFun<double> tapefromM(veca1 z,
-                               veca1 (*fromM)(const veca1 &),
-                               size_t p){//so we know what size to make the output vector
-  //tape relationship between z and h2
-  CppAD::Independent(z);
-  // range space vector
-  veca1 y(p); // vector of ranges space variables
-  y = fromM(z);
-  CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
-  tape.Dependent(z, y);
-  return(tape);
-}
-
 // define a function that tapes a log likelihood
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                             veca1 theta, //theta parameter
@@ -66,12 +53,6 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
     }
   }
 
-  //prepare logdetJfromM
-  CppAD::ADFun<a1type, double> fromMtape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
-  h2tape = tapefromM(z, p).base2ad(); //convert to a function of a1type rather than double
-  stop("p needs to be defined here")
-
-
   //tape relationship between x and log-likelihood
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
@@ -98,7 +79,6 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   // range space vector
   veca1 y(1); // vector of ranges space variables
   veca1 u(z.size());
-  stop("u is not the same size as z");
   u = fromM(z);
   y.setZero();
   y[0] += llf(u, thetarecom);
@@ -143,7 +123,6 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     //get h2 tape
     CppAD::ADFun<double> dh2tape;
     veca1 z(p);
-    stop("z is size p, but for Ralr should be p -1")
     z = M.toM(u); //transform u to the manifold
     CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
