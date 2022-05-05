@@ -12,8 +12,10 @@ test_that("Inputs to ppi_cppad are processed into the correct theta", {
                c(-166, -333, 117, rep(NA, p-1 + p)))
 
   # A check
-  expect_error(ppi_cppad_thetaprocessor(p, A = 0))
-  expect_warning(expect_error(ppi_cppad_thetaprocessor(p, AL = 0, A = 0)))
+  Qin <- orthogmatwith111vec()
+  Astar <- Qin %*% diag(c(-100, -200, 0)) %*% t(Qin)
+  expect_equal(ppi_cppad_thetaprocessor(p, Astar = Astar)[(thetalength - p + 1):thetalength], rep(NA_real_, p))
+  expect_warning(expect_error(ppi_cppad_thetaprocessor(p, AL = 0, Astar = 0)))
 
   # bL check
   expect_equal(ppi_cppad_thetaprocessor(p, bL = NA),

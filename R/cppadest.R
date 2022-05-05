@@ -16,12 +16,10 @@
 #' If NULL, then bL will be estimated.
 #' If a number, then bL will be fixed at the supplied value.
 #' If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
-#' @param Astar  NULL, a p x p matrix, a number, or "diag".
-#' NOT YET IMPLEMENTED
+#' @param Astar  NULL or a p x p matrix.
 #' If non-null, then overrides AL and bL.
-#' If a matrix, then the NA elements will be estimated and the others will be fixed at the supplied value (i.e. not estimated).
-#' If a single number, then AL will be fixed as a matrix of the given value.
-#' If "diag" then the non-diagonal elements of AL will be fixed to 0.
+#' If a matrix, all elements must be provided and Astar will be fixed in the estimation
+#' (This is because transforming to AL and bL from an incomplete Astar appears impossible).
 #' @param betaL NULL, a number, or a vector of length (p-1).
 #' If NULL then the 1...(p-1) beta elements will be estimated.
 #' If a number then the 1...(p-1) beta elements fixed at the given number.
@@ -98,7 +96,9 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
   # AL, bL and A
   if (!is.null(Astar)){
     if (!(is.null(AL) & is.null(bL))){warning("AL, bL and Astar supplied. Astar argument will override AL and bL.")}
-    stop("Convering A matrix into AL and bL not implemented yet.")
+    translated <- fromAstar(Astar)
+    ALprep <- translated$AL
+    bLprep <- translated$bL
   } else {
     # AL
     if (is.null(AL)){

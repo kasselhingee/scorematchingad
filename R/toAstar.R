@@ -10,10 +10,12 @@
 #'
 #' AL = matrix(c(-166, 117, 117, -333), nrow = 2, ncol = 2)
 #' bL = rep(1, 2)
-#' toAstar(AL, bL)
+#' Astar <- toAstar(AL, bL)
+#' fromAstar(Astar)
 #'
 #' @export
 toAstar <- function(AL, bL){
+  stop("toAstar() is faulty - it has the same result for measurements on the simplex, but not the appropriate eigenvectors.")
   p <- ncol(AL) + 1
   eigenspace <- eigen(AL)
   vL <- eigenspace$vectors
@@ -26,7 +28,8 @@ toAstar <- function(AL, bL){
   Q[p,-p] <- diag(1/(2 * eigenvalues[-p])) %*% t(vL) %*% bL
 
   Q[-p, -p] <- vL + matrix(Q[p, -p], ncol = p-1, nrow = p - 1, byrow = TRUE)
-  Q[, p] <- 1/p
+  Q[, p] <- 1/sqrt(p)
+  stopifnot(isTRUE(all.equal(sqrt(colSums(Q^2)), rep(1, p))))
   Astar <- Q %*% diag(eigenvalues) %*% t(Q)
 
 
@@ -40,10 +43,12 @@ toAstar <- function(AL, bL){
   stopifnot(isSymmetric(Astar))
   vecs <- eigen(Astar)$vectors
   stopifnot(isTRUE(all.equal(vecs %*% t(vecs), diag(1, nrow = p))))
-
+  vecs[, which.min(abs(eigen(Astar)$value))]
   return(Astar)
 }
 
+#' @describeIn toAstar The reverse of toAstar()
+#' @export
 fromAstar <- function(Astar){
   p = ncol(Astar)
   stopifnot(isSymmetric.matrix(Astar))
