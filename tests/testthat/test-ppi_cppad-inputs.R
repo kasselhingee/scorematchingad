@@ -47,10 +47,44 @@ test_that("Inputs to ppi_cppad are processed into the correct theta", {
                            betaL = c(2, 3),
                            betap = 10),
     c(-166, -333, 117, rep(2, p-1), 2,3, 10))
+
+  #p = 4
+  p = 4
+  expect_equal(ppi_cppad_thetaprocessor(p, AL = "diag", bL = 0, betap = -0.5),
+               c(rep(NA, p-1), rep(0, (p-2) * (p-1)/2), rep(0, p-1), rep(NA, p-1), -0.5))
 })
 
 test_that("ppi_cppad works easily on sec2_3model", {
   set.seed(1245)
-  model <- sec2_3model(100)
+  model <- sec2_3model(1000)
   out <- ppi_cppad(model$sample, man = "sphere", hsqfun = "minsq", acut = 0.1)
+  cdabyppi::expect_lt_v(abs(out$est$theta - model$theta) / out$SE$theta, 3)
+
+  # try fixing betap
+  out <- ppi_cppad(model$sample, betap = -0.5, man = "sphere", hsqfun = "minsq", acut = 0.1)
+  cdabyppi::expect_lt_v(abs(out$est$theta - model$theta), 3 * out$SE$theta)
+  expect_equal(out$est$beta0[model$p], -0.5)
+  expect_equal(out$SE$beta0[model$p], 0)
+
+  # try fixing AL to diagonal
+  AL = diag(c(-100, -50))
+  beta = c(-0.8, -0.8, -0.5)
+  bL = rep(0, 2)
+  prop <- rhybrid(100, 3, beta, AL, bL, 4)[[1]]
+  theta <- toPPIparamvec(AL, bL, beta)
+  out <- ppi_cppad(prop, AL = "diag", betap = -0.5, man = "sphere", hsqfun = "minsq", acut = 0.1)
+  cdabyppi::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
+  expect_equal(out$est$beta[model$p], -0.5)
+  expect_equal(out$est$ALs[1, 2], 0)
+
+  # try fixing AL to diagonal, bL to 0, betap = -0.5, on Ralr
+  AL = diag(c(-100, -50))
+  beta = c(-0.8, -0.8, -0.5)
+  bL = rep(0, 2)
+  prop <- rhybrid(100, 3, beta, AL, bL, 4)[[1]]
+  theta <- toPPIparamvec(AL, bL, beta)
+  out <- ppi_cppad(prop, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", hsqfun = "ones", acut = 0.1)
+  cdabyppi::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
+  expect_equal(out$est$beta[model$p], -0.5)
+  expect_equal(out$est$ALs[1, 2], 0)
 })

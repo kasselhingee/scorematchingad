@@ -33,8 +33,13 @@
 ppi_cppad <- function(prop, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap = NULL,
                       pow = 1, man, hsqfun, acut, control = list(tol = 1E-20)){
   # process inputs
+  stopifnot("matrix" %in% class(prop))
   p = ncol(prop)
-  theta <- ppi_cppad_thetaprocessor(p)
+  if ((man %in% c("Ralr", "Rclr", "Rmlr")) && (hsqfun != "ones")){
+    warning("Manifold supplied has no boundary. Using hsqfun = 'ones' is strong recommended.")
+  }
+
+  theta <- ppi_cppad_thetaprocessor(p, AL, bL, A, betaL, betap)
   fixedtheta <- !is.na(theta)
 
   # prepare tapes
@@ -65,9 +70,9 @@ ppi_cppad <- function(prop, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap 
 
   # make output
   list(
-    est = c(list(fulltheta = thetaest),
+    est = c(list(theta = thetaest),
             fromPPIparamvec(thetaest, p)),
-    SE = c(list(fulltheta = SE),
+    SE = c(list(theta = SE),
            fromPPIparamvec(SE, p)),
     smval = opt$value,
     sqgradsize = opt$sqgradsize,

@@ -3,7 +3,16 @@
 #' object = c(1, 3, 5)
 #' expected = 3
 #' expect_lt_v(c(1,3,5), 3)
+
 expect_lt_v <- function(object, expected){
+  expect_op_v(object, expected, operation = function(x, y) x < y, comparelang = "NOT less than")
+}
+
+expect_lte_v <- function(object, expected){
+  expect_op_v(object, expected, operation = function(x, y) x <= y, comparelang = "larger than")
+}
+
+expect_op_v <- function(object, expected, operation = function(x, y) x < y, comparelang = "larger than"){
   act <- testthat::quasi_label(rlang::enquo(object), arg = "object")
 
   # check
@@ -14,14 +23,14 @@ expect_lt_v <- function(object, expected){
       testthat::fail("Length mismatch: %s has length %i but expected has length %i", act$lab, length(object), length(expected))
     }
   }
-  comparison <- (object < expected)
+  comparison <- operation(object, expected)
   ok = all(comparison)
   if (ok){
     succeed()
     return(invisible(act$val))
   }
   failid <- which(!comparison)
-  faildesc <- paste0(sprintf("%s was larger than expected at index c(%s).", act$lab, paste(failid, collapse = ", ")))
+  faildesc <- paste0(sprintf("%s was %s expected at index c(%s).", act$lab, comparelang, paste(failid, collapse = ", ")))
   faildetail <- paste(failid, ": ", object[failid], "!<",expected[failid])
   testthat::fail(paste(c(faildesc, faildetail), collapse = "\n"))
 }
