@@ -29,8 +29,9 @@
 #' @param betap NULL or a number.
 #' If NULL then the pth element of beta will be estimated.
 #' If a number, then the pth element of beta will be fixed at the given value.
+#' @param control Control parameters to `Rcgmin`, of primary use is the tolerance parameter of the squared gradient size
 ppi_cppad <- function(prop, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap = NULL,
-                      pow = 1, man, hsqfun, acut){
+                      pow = 1, man, hsqfun, acut, control = list(tol = 1E-20)){
   # process inputs
   p = ncol(prop)
   theta <- ppi_cppad_thetaprocessor(p)
@@ -54,8 +55,26 @@ ppi_cppad <- function(prop, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap 
                      pll = pppi, pman = pman,
                      hsqfun, acut = acut,
                      verbose = FALSE) #tape of the score function
+  opt <- smest(smoppi, rep(0.2, sum(!fixedtheta)), prop, control = control)
 
+  #process the theta and SE
+  thetaest <- theta
+  thetaest[!fixedtheta] <- opt$par
+  SE <- fixedtheta * 0
+  SE[!fixedtheta] <- opt$SE
 
+  # make output
+  list(
+    est = c(list(fulltheta = thetaest),
+            fromPPIparamvec(thetaest, p)),
+    SE = c(list(fulltheta = SE),
+           fromPPIparamvec(SE, p)),
+    smval = opt$value,
+    sqgradsize = opt$sqgradsize,
+    counts = opt$counts,
+    convergence = opt$convergence,
+    message = opt$convergence
+    )
 }
 
 ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap = NULL){
