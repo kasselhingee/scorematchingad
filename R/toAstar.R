@@ -7,16 +7,40 @@
 #' Qin <- orthogmatwith111vec()
 #' Astar <- Qin %*% diag(c(3, -2, 0)) %*% t(Qin)
 #' fromAstar(Astar)
+#'
 #' AL = matrix(c(-166, 117, 117, -333), nrow = 2, ncol = 2)
 #' bL = rep(1, 2)
 #' toAstar(AL, bL)
 #'
 #' @export
-toAstar <- function(ALs, bL){
-  p <- nrow(ALs) + 1
-  A = matrix(0, p, p) #A as definined in eqn 3
-  A[1:(p-1), 1:(p-1)] <- ALs
-  Astar <- A + matrix(c(bL, 0), byrow = TRUE, nrow = p, ncol = p) # each row of A element wise addition to b, gives Astar, as defined in eqn 2
+toAstar <- function(AL, bL){
+  p <- ncol(AL) + 1
+  eigenspace <- eigen(AL)
+  vL <- eigenspace$vectors
+  eigenvalues <- rep(0, p)
+  eigenvalues[-p] <- eigenspace$values
+
+  Q <- matrix(NA, p, p)
+
+  #from bL get Q[p, -p]
+  Q[p,-p] <- diag(1/(2 * eigenvalues[-p])) %*% t(vL) %*% bL
+
+  Q[-p, -p] <- vL + matrix(Q[p, -p], ncol = p-1, nrow = p - 1, byrow = TRUE)
+  Q[, p] <- 1/p
+  Astar <- Q %*% diag(eigenvalues) %*% t(Q)
+
+
+  #check
+  const <- sum(eigenvalues[-p] * Q[p, -p]^2)
+  u <- runif(p)
+  u <- u / sum(u)
+  uL <- u[-p]
+  stopifnot(abs((u %*% Astar %*% u) - (uL %*% AL %*% uL + t(bL) %*% uL + const)) < 1E-10)
+
+  stopifnot(isSymmetric(Astar))
+  vecs <- eigen(Astar)$vectors
+  stopifnot(isTRUE(all.equal(vecs %*% t(vecs), diag(1, nrow = p))))
+
   return(Astar)
 }
 
