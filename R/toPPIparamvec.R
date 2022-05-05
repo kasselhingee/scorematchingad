@@ -1,6 +1,7 @@
 #' @title To or From vector form of parameters for PPI
 #' @export
 toPPIparamvec <- function(ALs, bL, beta0){
+  stopifnot(isSymmetric.matrix(ALs))
   theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0)
   return(theta)
 }
@@ -19,4 +20,12 @@ fromPPIparamvec <- function(theta, p){
     bL = bL,
     beta0 = beta0
   ))
+}
+
+# returns the length of the theta vector for given dimension p
+ppithetalength <- function(p){
+  p + #the beta
+  (p-1) + #the diagonal of AL
+  (p-2) * (p-1)/2 + #the upper triangle of AL
+  (p-1) #the bL
 }
