@@ -3,7 +3,7 @@
 #' Measurements can be automatically transformed to a number of different manifolds (using different transformations).
 #' Different weight functions are also available.
 #' @param man Manifold name (includes tranformation)
-#' @param pow The power of `u` in the PPI density - by default `pow` is `1`.
+#' @param pow The power of `u` in the PPI density - by default `pow` is `1`. NOT YET IMPLEMENTED
 #' @param prop A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
 #' @param hsqfun The h-squared function for down weighting as measurements approach the manifold boundary.
 #' @param acut The threshold in `hsqfun` to avoid over-weighting measurements interior to the simplex
@@ -16,7 +16,7 @@
 #' If NULL, then bL will be estimated.
 #' If a number, then bL will be fixed at the supplied value.
 #' If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
-#' @param A  NULL, a p x p matrix, a number, or "diag".
+#' @param Astar  NULL, a p x p matrix, a number, or "diag".
 #' NOT YET IMPLEMENTED
 #' If non-null, then overrides AL and bL.
 #' If a matrix, then the NA elements will be estimated and the others will be fixed at the supplied value (i.e. not estimated).
@@ -30,16 +30,22 @@
 #' If NULL then the pth element of beta will be estimated.
 #' If a number, then the pth element of beta will be fixed at the given value.
 #' @param control Control parameters to `Rcgmin`, of primary use is the tolerance parameter of the squared gradient size
-ppi_cppad <- function(prop, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap = NULL,
-                      pow = 1, man, hsqfun, acut, control = list(tol = 1E-20)){
+#' @examples
+#' model <- sec2_3model(1000)
+#' estinfo <- ppi_cppad(model$sample, betap = -0.5, man = "Ralr", hsqfun = "ones")
+#' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", hsqfun = "ones")
+#' @export
+ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, betap = NULL,
+                      pow = 1, man, hsqfun, acut = NULL, control = list(tol = 1E-20)){
   # process inputs
   stopifnot("matrix" %in% class(prop))
   p = ncol(prop)
   if ((man %in% c("Ralr", "Rclr", "Rmlr")) && (hsqfun != "ones")){
     warning("Manifold supplied has no boundary. Using hsqfun = 'ones' is strong recommended.")
   }
+  stopifnot(pow == 1)
 
-  theta <- ppi_cppad_thetaprocessor(p, AL, bL, A, betaL, betap)
+  theta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, betaL, betap)
   fixedtheta <- !is.na(theta)
 
   # prepare tapes
@@ -52,6 +58,7 @@ ppi_cppad <- function(prop, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap 
   thetatape <- theta  #must pass the fixed values as the taped value
   thetatape[!fixedtheta] <- 0.73 # any number will do!
 
+  if (hsqfun == "ones"){acut = 1} #acut is igonred when hsqfun = ones
   pppi <- ptapell(tapez, thetatape,
                   llname = "ppi", pman,
                   fixedtheta = fixedtheta,
@@ -70,6 +77,7 @@ ppi_cppad <- function(prop, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap 
 
   # make output
   list(
+    prop = prop,
     est = c(list(theta = thetaest),
             fromPPIparamvec(thetaest, p)),
     SE = c(list(theta = SE),
@@ -82,14 +90,14 @@ ppi_cppad <- function(prop, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap 
     )
 }
 
-ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap = NULL){
+ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, betap = NULL){
   # initialise parameter objects
   bLprep = rep(NA, p-1)
   betaLprep = rep(NA, p-1)
   betapprep = NA
   # AL, bL and A
-  if (!is.null(A)){
-    if (!(is.null(AL) & is.null(bL))){warning("AL, bL and A supplied. A argument will override AL and bL.")}
+  if (!is.null(Astar)){
+    if (!(is.null(AL) & is.null(bL))){warning("AL, bL and Astar supplied. Astar argument will override AL and bL.")}
     stop("Convering A matrix into AL and bL not implemented yet.")
   } else {
     # AL
