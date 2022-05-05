@@ -34,6 +34,27 @@ ppi_cppad <- function(prop, AL = NULL, bL = NULL, A = NULL, betaL = NULL, betap 
   # process inputs
   p = ncol(prop)
   theta <- ppi_cppad_thetaprocessor(p)
+  fixedtheta <- !is.na(theta)
+
+  # prepare tapes
+  pman <- pmanifold(man)
+  if (man %in% c("Ralr", "Rclr", "Rmlr")){
+    tapez <- rep(0.1, p - 1)
+  } else {
+    tapez <- rep(0.1, p)
+  }
+  thetatape <- theta  #must pass the fixed values as the taped value
+  thetatape[!fixedtheta] <- 0.73 # any number will do!
+
+  pppi <- ptapell(tapez, thetatape,
+                  llname = "ppi", pman,
+                  fixedtheta = fixedtheta,
+                  verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, p), rep(0.2, sum(!fixedtheta)),
+                     pll = pppi, pman = pman,
+                     hsqfun, acut = acut,
+                     verbose = FALSE) #tape of the score function
+
 
 }
 

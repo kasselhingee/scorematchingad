@@ -49,4 +49,8 @@ test_that("Inputs to ppi_cppad are processed into the correct theta", {
     c(-166, -333, 117, rep(2, p-1), 2,3, 10))
 })
 
-
+test_that("ppi_cppad works easily on sec2_3model", {
+  set.seed(1245)
+  model <- sec2_3model(100)
+  out <- ppi_cppad(model$sample, man = "sphere", hsqfun = "minsq", acut = 0.1)
+})
