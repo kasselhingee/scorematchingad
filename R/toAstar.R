@@ -5,7 +5,7 @@
 #' @param bL The first p-1th elements of b (the final element of b must be zero by definition)
 #' @examples
 #' Qin <- orthogmatwith111vec()
-#' Astar <- Qin %*% diag(c(3, 2, 0)) %*% t(Qin)
+#' Astar <- Qin %*% diag(c(3, -2, 0)) %*% t(Qin)
 #' fromAstar(Astar)
 #' AL = matrix(c(-166, 117, 117, -333), nrow = 2, ncol = 2)
 #' bL = rep(1, 2)
@@ -29,13 +29,14 @@ fromAstar <- function(Astar){
   eigenvalues <- eigenspace$values[neworder]
   stopifnot( abs(eigenvalues[p]) < 1E-10 )
   Q <- eigenspace$vectors[, neworder] #Q is such that Q %*% diag(eigenvalues) %*% t(Q) = Astar
+  stopifnot(isTRUE(all.equal(Q %*% diag(eigenvalues) %*% t(Q), Astar)))
   if(!all(abs(Q[1:(p-1),p] - Q[p, p]) < 1E-10)){stop("Final eigenvector of Astar is not proportional to the vector 1,1,...,1")}
 
   vL <- Q[-p, -p] - matrix(Q[p, -p], ncol = p-1, nrow = p - 1, byrow = TRUE) #first (p-1) eigen vectors minus their pth element
-  bL <- rowSums(2 * vL %*% diag(eigenspace$values[-p] * Q[p,-p]))
+  bL <- rowSums(2 * vL %*% diag(eigenvalues[-p] * Q[p,-p]))
     # 2 * (eigenspace$values[1] * Q[p,1] * v1n + eigenspace$values[2] * Q[p,2] * v2n)  %*% u[1:2]
-  AL <- vL %*% diag(eigenspace$values[-p]) %*% t(vL)
-  const <- sum(eigenspace$values[-p] * Q[p, -p]^2)
+  AL <- vL %*% diag(eigenvalues[-p]) %*% t(vL)
+  const <- sum(eigenvalues[-p] * Q[p, -p]^2)
 
   # check
   u <- runif(p)
