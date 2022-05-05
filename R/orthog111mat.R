@@ -1,4 +1,6 @@
 
+
+
 orthogmatwith111vec <- function(){
   Q <- mclust::randomOrthogonalMatrix(3, 3)
   rotmat <- to111mat(Q[,3])
