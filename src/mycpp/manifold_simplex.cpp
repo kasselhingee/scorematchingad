@@ -1,18 +1,21 @@
 template <typename T>
-struct simplexman : public manifold<T> {
-  Eigen::Matrix<T, Eigen::Dynamic, 1> toM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x){
+struct simplex : public manifold<T> {
+  ~simplex(){};
+  simplex(){};
+
+  Eigen::Matrix<T, Eigen::Dynamic, 1> toM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x) override {
     Eigen::Matrix<T, Eigen::Dynamic, 1> out(x.size());
     out = x;
     return(out);
   }
 
-  Eigen::Matrix<T, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x){
+  Eigen::Matrix<T, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x) override {
     Eigen::Matrix<T, Eigen::Dynamic, 1> out(x.size());
     out = x;
     return(out);
   }
 
-  T logdetJfromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &z){
+  T logdetJfromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &z) override {
     T out;
     out = 0.;
     return(out);
@@ -20,7 +23,7 @@ struct simplexman : public manifold<T> {
 
 
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
-  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x){
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x) override {
     int n = x.size();
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n);
     Eigen::Matrix<T, Eigen::Dynamic, 1> ones(n);
@@ -31,15 +34,12 @@ struct simplexman : public manifold<T> {
   }
 
   //partial derivative of the tangent-plane projection matrix
-  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> dPmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x, const int &d){
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> dPmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x, const int &d) override {
     int n = x.size();
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> bvx(n, n);
     bvx.setZero();
     return(bvx);
   }
-
-  ~simplexman(){};
-  simplexman(){};
 
 ////////////////////APPROX HELPERS/////////////////////
   //automatically choose approximation centre

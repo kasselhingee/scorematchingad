@@ -1,16 +1,17 @@
 // code for various tools for the additive log ratio transform
-namespace Ralr { // begin the empty namespace
+template <typename Type>
+struct Ralr : public manifold<Type> {
+  ~Ralr(){};
+  Ralr(){};
 
-  template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size() - 1);
      out = x.block(0,0,x.size() - 1, 1) / x[x.size() - 1];
      out = out.array().log();
      return(out);
   }
 
-  template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size() + 1);
      Type one_on_u_p;
      one_on_u_p = x.array().exp().sum() + 1.;
@@ -19,8 +20,7 @@ namespace Ralr { // begin the empty namespace
      return(out);
   }
 
-  template <class Type>
-  Type logdetJ_fromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z){
+  Type logdetJfromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z) override {
     Eigen::Matrix<Type, Eigen::Dynamic, 1> u(z.size() + 1);
     u = fromM(z);
     Type out;
@@ -30,8 +30,7 @@ namespace Ralr { // begin the empty namespace
 
 
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
-  template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat_M(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+  Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmatfun(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
     int n = x.size();
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n);
     Pmat = Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>::Identity(n,n);
@@ -39,8 +38,7 @@ namespace Ralr { // begin the empty namespace
   }
 
   //partial derivative of the tangent-plane projection matrix
-  template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> dPmat_M(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const int &d){
+  Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> dPmatfun(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const int &d) override {
     int n = x.size();
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> bvx(n, n);
     bvx.setZero();
@@ -50,7 +48,6 @@ namespace Ralr { // begin the empty namespace
 
 ////////////////////APPROX HELPERS/////////////////////
   //automatically choose approximation centre
-  template <class Type>
   Eigen::Matrix<Type, Eigen::Dynamic, 1> taylorapprox_bdry(
 		  CppAD::ADFun<Type> &f,
 		  const size_t order,
@@ -72,4 +69,4 @@ namespace Ralr { // begin the empty namespace
      return(out);
   }
 
-}
+};

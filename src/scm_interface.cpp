@@ -13,17 +13,11 @@ using namespace Rcpp;
 XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   manifold<a1type> * out;  //returning a pointer
   if (manifoldname.compare("sphere") == 0){
-    // out = new manifold<a1type>(
-    //   Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
-    //   Spos::fromS, Spos::logdetJ_fromS,
-    // );
+    out = new Spos<a1type>();
   } else if (manifoldname.compare("simplex") == 0){
-    out = new simplexman<a1type>();
+    out = new simplex<a1type>();
   } else if (manifoldname.compare("Ralr") == 0){
-    // *out = {
-    //   Ralr::toM, Ralr::Pmat_M, Ralr::dPmat_M,
-    //   Ralr::fromM, Ralr::logdetJ_fromM
-    // };
+    out = new Ralr<a1type>();
   } else {
     stop("Manifold not found");
   }
