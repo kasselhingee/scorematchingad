@@ -1,3 +1,23 @@
+test_that("ppi tape values do not effect ll values", {
+  model1 <- sec2_3model(1)
+  u1 <-  c(0.001, 0.011, 1 - 0.01 - 0.011)
+  model0 <- lapply(model1, function(x) x * 0)
+  u0 <- rep(0, 3)
+  fixedtheta = rep(FALSE, length(model1$theta))
+
+  ueval <- matrix(c(0.4, 0.011, 1 - 0.4 - 0.011), nrow = 1)
+  thetaeval <- model1$theta + 1
+
+  psphere <- pmanifold("sphere")
+  pppi1 <- ptapell(u1, model1$theta, "ppi", psphere, fixedtheta = fixedtheta, verbose = FALSE)
+  pppi2 <- ptapell(u0, model0$theta, "ppi", psphere, fixedtheta = fixedtheta, verbose = FALSE)
+
+  expect_equal(pForward0(pppi1, ueval, thetaeval), pForward0(pppi2, ueval, thetaeval))
+  expect_equal(pJacobian(pppi1, ueval, thetaeval), pJacobian(pppi2, ueval, thetaeval))
+  expect_equal(pHessian(pppi1, ueval, thetaeval), pHessian(pppi2, ueval, thetaeval))
+})
+
+
 test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", {
   beta = c(-0.3, -0.1, 3)
   p = length(beta)
@@ -53,7 +73,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   # there is a difference in direct estimates because the direct estimate smobj value is poorer:
   expect_lt(out$value,
              smobj(smoppi, c(rep(0, length(theta) - p), directestimate), utabl) + 1E-3 * abs(out$value)) #larger tolerance some apriori information used
-  expect_lt(out$gradsize,
+  expect_lt(out$sqgradsize,
                sum(smobjgrad(smoppi, c(rep(0, length(theta) - p), directestimate), utabl)^2))
 
   cppadestSE <- fromPPIparamvec(out$SE, p)
@@ -79,7 +99,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for sec2_3mod
 
   expect_equal(out$value,
                smobj(smoppi, directestimate$estimator1, model$sample))
-  expect_equal(out$gradsize,
+  expect_equal(out$sqgradsize,
                sum(smobjgrad(smoppi, directestimate$estimator1, model$sample)^2))
 
   cdabyppi:::expect_lt_v(abs(out$par - directestimate$estimator1) / out$SE,  0.01) #proxy for optimisation flatness
@@ -103,7 +123,7 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for sec2_3mo
 
   expect_equal(out$value,
                smobj(smoppi, directestimate$estimator2, model$sample))
-  expect_equal(out$gradsize,
+  expect_equal(out$sqgradsize,
                sum(smobjgrad(smoppi, directestimate$estimator2, model$sample)^2))
 
   cdabyppi:::expect_lt_v(abs(out$par - directestimate$estimator2) / out$SE,  0.01) #proxy for optimisation flatness
@@ -139,7 +159,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
   expect_equal(out$value,
                smobj(smoppi, directestimate$estimator1, utabl),
                tolerance = 1E-2)
-  expect_equal(out$gradsize,
+  expect_equal(out$sqgradsize,
                sum(smobjgrad(smoppi, directestimate$estimator1, utabl)^2))
 
   cdabyppi:::expect_lt_v(abs(out$par - directestimate$estimator1) / out$SE, 1) #proxy for optimisation flatness
@@ -193,14 +213,37 @@ test_that("ppi with minsq weights match estimatorall1 for sec2_3model, fixed fin
   cdabyppi:::expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
 })
 
-test_that("ppi with minsq weights performs well on Rpos, fixed final beta", {
+test_that("ppi with minsq weights match estimatorall1 for sec2_3model, fixed final beta, large n", {
+  set.seed(123)
+  model <- sec2_3model(100000, maxden = 4)
+
+  acut = 0.1
+  psphere <- pmanifold("sphere")
+  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+
+  out <- smest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
+               control = list(tol = 1E-10, trace = 0)) #very slow at 10000
+
+  # memoisation could be used to avoid calling the smobj function again for gradient computation
+  directestimate <- estimatorall1(model$sample, acut, betap = model$beta0[model$p])
+
+  expect_lte(out$value,
+             smobj(smoppi, directestimate$estimator1, model$sample) + 1E-3 * abs(out$value))
+
+  cdabyppi:::expect_lt_v(abs(out$par - directestimate$estimator1) / out$SE, 0.01) #proxy for optimisation flatness
+
+  cdabyppi:::expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
+})
+
+test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   set.seed(1234)
   model <- sec2_3model(1000, maxden = 4)
 
   acut = 0.1
-  pRpos <- pmanifold("Rpos")
-  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", pRpos, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = pRpos, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  psimplex <- pmanifold("simplex")
+  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psimplex, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psimplex, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
   out <- smest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
                control = list(tol = 1E-15))

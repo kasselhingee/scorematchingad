@@ -25,8 +25,16 @@
     return(minval);
   }
 
+  //no weights
+  template <class Type>
+  Type oneweights(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
+    Type out;
+    out = 1.;
+    return(out);
+  }
 
-  //hprod
+
+  //hprod  - doesn't work mathematically - could be removed
   template <class Type>
   Type hprod(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
     Type prd;

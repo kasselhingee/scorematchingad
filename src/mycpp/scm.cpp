@@ -7,6 +7,18 @@
 # include "dirichlet.cpp"
 # include "PrintFor.cpp"
 
+CppAD::ADFun<double> tapefromM(veca1 z,
+                               veca1 (*fromM)(const veca1 &)){
+  //tape relationship between z and h2
+  CppAD::Independent(z);
+  // range space vector
+  veca1 y(0); // vector of ranges space variables - length to be set by from(z);
+  y = fromM(z);
+  CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
+  tape.Dependent(z, y);
+  return(tape);
+}
+
 // define a function that tapes a log likelihood
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                             veca1 theta, //theta parameter
@@ -52,6 +64,11 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
     }
   }
 
+  //prepare fromM tape for logdetJfromM later
+  CppAD::ADFun<a1type, double> fromMtape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
+  fromMtape = tapefromM(z, man.fromM).base2ad(); //convert to a function of a1type rather than double
+  if(fromMtape.Domain() != z.size()){stop("fromMtape domain size does not match input z size: %i != %i", fromMtape.Domain(), z.size());}
+
   //tape relationship between x and log-likelihood
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
@@ -77,11 +94,24 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
 
   // range space vector
   veca1 y(1); // vector of ranges space variables
-  veca1 u(z.size());
-  u = man.fromM(z);
+  veca1 u(0); //0 here because size dictated by fromM
+  u = fromMtape.Forward(0, z);
   y.setZero();
   y[0] += llf(u, thetarecom);
-  y[0] += man.logdetJfromM(z);
+
+  //get log determinant of fromM
+  mata1 jacmat(z.size() * u.size(), 1);
+  jacmat = fromMtape.Jacobian(z);
+  jacmat.resize(z.size(), u.size()); //first row is: du1/dz1, du2/dz1, du3/dz1. Second row is du1/dz2, du2/dz2, du3/dz2
+  veca1 logdet(1);
+  logdet[0] = CppAD::log(jacmat.determinant());
+  y[0] += logdet[0];
+  if (verbose){
+    PrintForVec("\n z is: ", z);
+    PrintForVec("\n fromM(z) is: ", u.transpose());
+    PrintForMatrix("\n jacmat is: ", jacmat);
+    PrintForVec("\n jacmat logdeterminant is: ", logdet);
+  }
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
   if (verbose){
@@ -115,20 +145,21 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
                              const double & acut, //the acut constraint for the weight functions
                              bool verbose
                              ){
-    size_t p(u.size());
+    size_t d(lltape.Domain()); //manifold is embedded in Euclidean space of dimension d (may be different to simplex)
+
     //Projection matrix
-    mata1 Pmat(p, p);
+    mata1 Pmat(d, d);
 
     //get h2 tape
     CppAD::ADFun<double> dh2tape;
-    veca1 z(p);
+    veca1 z(d); //size of z changed by toM result below
     z = M.toM(u); //transform u to the manifold
     CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
 
     //check inputs and ll tape match
-    if (lltape.Domain() != z.size()){stop("Dimension of input measurement (z or u) does not match domain size of log likelihood function.");}
-    if (lltape.size_dyn_ind() != theta.size()){stop("Size of parameter vector theta does not match parameter size of log likelihood function.");}
+    if (lltape.Domain() != z.size()){stop("Dimension of z (the input measurement on the manifold) is %i, which does not match domain size of log likelihood function of %i.", z.size(), lltape.Domain());}
+    if (lltape.size_dyn_ind() != theta.size()){stop("Size of parameter vector theta (=%i) does not match parameter size of log likelihood function (=%i).", theta.size(), lltape.size_dyn_ind());}
 
     // make ll tape higher order (i.e. as if it was taped using a2type instead of a1type)
     CppAD::ADFun<a1type, double> lltapehigher;
@@ -147,7 +178,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     Pmat = M.Pmatfun(z);
     if (verbose){PrintForMatrix("\nThe value of Pmat is: \n", Pmat);}
     veca1 h2(1);
-    veca1 gradh2(p);
+    veca1 gradh2(d); //will be set by h2tape.Jacobian below anyway
     h2 = h2tape.Forward(0, z);
     gradh2 = h2tape.Jacobian(z);
     if (verbose){
@@ -159,7 +190,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     lltapehigher.new_dynamic(theta);
 
     //grad(ll)
-    veca1 jac(p); // Jacobian of ll
+    veca1 jac(d); // Jacobian of ll
     jac  = lltapehigher.Jacobian(z);      // Jacobian for operation sequence
     if (verbose){PrintForVec("\nThe value of ll gradient is: ", jac);}
 
@@ -171,13 +202,13 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     //hlap
     veca1 lapl(1);
     lapl[0] = 0.;
-    for(size_t i=0; i < p; i++){
+    for(size_t i=0; i < d; i++){
        lapl[0] += Pmat.row(i) * M.dPmatfun(z, i) * jac;
        if (verbose){PrintForMatrix("\nThe value of dPmat is: \n", M.dPmatfun(z, i));}
     }
-    mata1 hess(p * p, 1);
+    mata1 hess(d * d, 1);
     hess = lltapehigher.Hessian(z, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
-    hess.resize(p, p);
+    hess.resize(d, d);
     if (verbose){PrintForMatrix("\nThe value of ll Hessian is: \n", hess);}
     lapl[0] += (Pmat*hess).trace();
     lapl[0] *= h2[0]; //weight by h2

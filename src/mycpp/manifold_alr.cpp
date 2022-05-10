@@ -1,50 +1,49 @@
-// code for various tools for the positive quadrant of the sphere
-namespace Spos { // begin the empty namespace
+// code for various tools for the additive log ratio transform
+namespace Ralr { // begin the empty namespace
 
   template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> toS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
-     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
-     // for (int i=0; i<x.size(); i++){
-     //   out[i] = CppAD::sqrt(x[i]);
-     // }
-     out = x.cwiseSqrt();
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size() - 1);
+     out = x.block(0,0,x.size() - 1, 1) / x[x.size() - 1];
+     out = out.array().log();
      return(out);
   }
 
   template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> fromS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
-     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
-     out = x.cwiseProduct(x);
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size() + 1);
+     Type one_on_u_p;
+     one_on_u_p = x.array().exp().sum() + 1.;
+     out << x.array().exp(), 1.;
+     out /= one_on_u_p;
      return(out);
   }
 
   template <class Type>
-  Type logdetJ_fromS(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z){
-     Type out;
-     out = z.array().log().sum() + 0.6931472 * z.size(); //final number here is log(2)
-     return(out);
+  Type logdetJ_fromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z){
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> u(z.size() + 1);
+    u = fromM(z);
+    Type out;
+    out = u.array().log().sum();
+    return(out);
   }
 
 
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
   template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat_S(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
+  Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat_M(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x){
     int n = x.size();
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n);
-    Pmat = Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>::Identity(n,n) - x*x.transpose();
+    Pmat = Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>::Identity(n,n);
     return(Pmat);
   }
 
   //partial derivative of the tangent-plane projection matrix
   template <class Type>
-  Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> dPmat_S(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const int &d){
+  Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> dPmat_M(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const int &d){
     int n = x.size();
-    Eigen::Matrix<Type, Eigen::Dynamic, 1> basisvec(n);
-    basisvec.setZero();
-    basisvec(d) = 1;
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> bvx(n, n);
-    bvx = -basisvec * x.transpose();
-    bvx += bvx.transpose().eval(); //eval() means the tranposition happens in a temporary location
+    bvx.setZero();
     return(bvx);
   }
 
@@ -62,7 +61,7 @@ namespace Spos { // begin the empty namespace
      Eigen::Matrix<Type, Eigen::Dynamic, 1> shiftdir(x.size());
      shiftdir.setOnes();
      shiftdir *= -1 * shiftsize;
-     shiftdir = Pmat_S(x) * shiftdir;
+     shiftdir = Pmat_M(x) * shiftdir;
 
      Eigen::Matrix<Type, Eigen::Dynamic, 1> centre(xbeta.size());
      centre = xbeta;

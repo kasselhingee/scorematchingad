@@ -16,6 +16,6 @@ smest <- function(smofun, theta, utabl, control = list(tol = 1E-20)){
                         control = control)
   if (out$convergence != 0){warning("Optimisation did not converge.")}
   out$SE <- smestSE(smofun, out$par, utabl)
-  out$gradsize <- sum(smobjgrad(smofun, out$par, utabl)^2)
+  out$sqgradsize <- sum(smobjgrad(smofun, out$par, utabl)^2)
   return(out)
 }

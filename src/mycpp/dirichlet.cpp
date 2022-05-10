@@ -12,7 +12,7 @@ namespace { // begin the empty namespace
         }
         return y;
     }
-
+   
     template <class T>
     T ll_ppi(const Eigen::Matrix<T, Eigen::Dynamic, 1> &u,
              const Eigen::Matrix<T, Eigen::Dynamic, 1> &theta){
@@ -33,7 +33,7 @@ namespace { // begin the empty namespace
             Amat(row, col) = upptriblock[vecidx]; //bug fix - column index is 0!!
             Amat(col, row) = upptriblock[vecidx];
             vecidx +=1;
-          }
+      }
         }
         //populate the diagonal
         vecidx = 0;
@@ -43,7 +43,7 @@ namespace { // begin the empty namespace
         }
         // ALmat.diagonal() << theta.block(0,0,d-1,1);
         // Amat.block(0,0,d-1,d-1) = ALmat;
-
+    
         Eigen::Matrix<T, Eigen::Dynamic, 1> bvec(d);
         bvec.setZero();
         bvec.block(0,0,d-1,1) = theta.block(d-1 + upptriblock.size(), 0, d-1, 1);
@@ -59,8 +59,8 @@ namespace { // begin the empty namespace
         {   y   += beta[i] * log(u[i]);
         }
         return y;
-    }
-
+  }
+    
 
 }
 

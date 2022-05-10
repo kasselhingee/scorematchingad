@@ -12,24 +12,21 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   manifold<a1type> * out = new manifold<a1type>; //returning a pointer
-  // manifold2<a1type> * out2 = new manifold2<a1type>;
-  // *out2 = manifold2<a1type>(
-  //   Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
-  //   Spos::fromS, Spos::logdetJ_fromS
-  // );
-
   if (manifoldname.compare("sphere") == 0){
-    // *out = manifold<a1type>(
-    //   Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
-    //   Spos::fromS, Spos::logdetJ_fromS
-    // );
+    *out = {
+      Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
+      Spos::fromS, Spos::logdetJ_fromS,
+    };
   } else if (manifoldname.compare("simplex") == 0){
-    *out = simplexman<a1type>();
-  } else if (manifoldname.compare("Rpos") == 0){
-    // *out = manifold<a1type>(
-      // Rpos::toM, Rpos::Pmat_M, Rpos::dPmat_M,
-    //   Rpos::fromM, Rpos::logdetJ_fromM
-    // );
+    *out = {
+      simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
+      simplex::fromM, simplex::logdetJ_fromM
+    };
+  } else if (manifoldname.compare("Ralr") == 0){
+    *out = {
+      Ralr::toM, Ralr::Pmat_M, Ralr::dPmat_M,
+      Ralr::fromM, Ralr::logdetJ_fromM
+    };
   } else {
     stop("Manifold not found");
   }
@@ -59,20 +56,21 @@ int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
   // toM then fromM get back to u
   std::cout << "               Input u was: " << u_ad.transpose() << std::endl;
   veca1 z_ad(u.size());
-  z_ad = simplex::toM(u_ad);
+  z_ad = pman->toM(u_ad);
   std::cout << "                 After toM: " << z_ad.transpose() << std::endl;
   veca1 u2_ad(u.size());
-  u2_ad = simplex::fromM(z_ad);
+  u2_ad = pman->fromM(z_ad);
+  std::cout << "      After toM then fromM: " << u2_ad.transpose() << std::endl;
   if ((u2_ad - u_ad).array().abs().maxCoeff() > 1E-8){
     std::cout << "toM then fromM not passed." << std::endl;
     return(1);
   }
 
   // Run the other elements
-  std::cout << " logdetJ_fromM at toM(u): " << simplex::logdetJ_fromM(z_ad) << std::endl;
-  // std::cout << " Pmat at toM(u): " << std::endl << simplex::Pmatfun(z_ad) << std::endl;
+  std::cout << " logdetJ_fromM at toM(u): " << pman->logdetJfromM(z_ad) << std::endl;
+  std::cout << " Pmat at toM(u): " << std::endl << pman->Pmatfun(z_ad) << std::endl;
   for (size_t d=0; d<u.size(); d++){
-    // std::cout << " dPmat at toM(u) in dimension " << d <<":" << std::endl << simplex::dPmatfun(z_ad, d) << std::endl;
+    std::cout << " dPmat at toM(u) in dimension " << d <<":" << std::endl << pman->dPmatfun(z_ad, d) << std::endl;
   }
   return(0);
 }
@@ -103,6 +101,9 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
   }
   if (weightname.compare("minsq") == 0){
     h2fun = minsq;
+  }
+  if (weightname.compare("ones") == 0){
+    h2fun = oneweights;
   }
   if (weightname.compare("prod1") == 0){
     h2fun = hprod;

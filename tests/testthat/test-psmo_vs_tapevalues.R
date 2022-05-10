@@ -1,47 +1,72 @@
-test_that("On sphere with prodsq, objective values independent of tape", {
-  u = matrix(c(0.001, 0.011, 1 - 0.01 - 0.011), nrow = 1)
+test_that("Dirichlet with smo values and derivatives independent of tape", {
+  u1 = matrix(c(0.001, 0.011, 1 - 0.01 - 0.011), nrow = 1)
+  u2 = matrix(c(1,1,1), nrow = 1)
+  theta1 = rep(-0.5, 3)
+  theta2 = rep(0, 3)
+  fixedtheta = rep(FALSE, 3)
+  acut = 0.1
 
-  tapeval1 = c(u,3,3,3)
-  smofun1 <- ptapesmo(tapeval1, 3,
-                     manifoldname = "sphere", "prodsq",
-                     acut = 0.1)
+  psphere <- pmanifold("sphere")
 
-  tapeval2 = c(0.2, 0.2, 0.6,3,3,3)
-  smofun2 <- ptapesmo(tapeval2, 3,
-                      manifoldname = "sphere", "prodsq",
-                      acut = 0.1)
+  #Sphere
+  pdir1 <- ptapell(u1, theta1, "dirichlet", psphere, fixedtheta = fixedtheta, verbose = FALSE)
+  pdir2 <- ptapell(u2, theta2, "dirichlet", psphere, fixedtheta = fixedtheta, verbose = FALSE)
+  pdir1smo <- ptapesmo(u1, theta1, pdir1, psphere, "minsq", acut = acut, verbose = FALSE)
+  pdir2smo <- ptapesmo(u2, theta2, pdir2, psphere, "minsq", acut = acut, verbose = FALSE)
 
-  tapeval3 = c(u[c(2, 1, 3)],3,3,3)
-  smofun3 <- ptapesmo(tapeval3, 3,
-                      manifoldname = "sphere", "prodsq",
-                      acut = 0.1)
+  ueval <- matrix(c(0.4, 0.011, 1 - 0.4 - 0.011), nrow = 1)
+  thetaeval <- c(-0.1, -0.5, 2)
+  expect_equal(pForward0(pdir1, ueval, thetaeval), pForward0(pdir2, ueval, thetaeval))
+  expect_equal(pJacobian(pdir1, ueval, thetaeval), pJacobian(pdir2, ueval, thetaeval))
+  expect_equal(pHessian(pdir1, ueval, thetaeval), pHessian(pdir2, ueval, thetaeval))
 
-  expect_equal(smobj(smofun1, c(1, 1, 1), u), smobj(smofun2, c(1, 1, 1), u))
-  expect_equal(smobj(smofun1, c(1, 1, 1), u), smobj(smofun3, c(1, 1, 1), u))
-  expect_equal(smobjgrad(smofun1, c(1, 1, 1), u), smobjgrad(smofun2, c(1, 1, 1), u))
-  expect_equal(smobjgrad(smofun1, c(1, 1, 1), u), smobjgrad(smofun3, c(1, 1, 1), u))
+  expect_equal(pForward0(pdir1smo, thetaeval, ueval), pForward0(pdir2smo, thetaeval, ueval))
+  expect_equal(pJacobian(pdir1smo, thetaeval, ueval), pJacobian(pdir2smo, thetaeval, ueval))
+  expect_equal(pHessian(pdir1smo, thetaeval, ueval), pHessian(pdir2smo, thetaeval, ueval))
+
+  #Sphere, prodsq
+  pdir1 <- ptapell(u1, theta1, "dirichlet", psphere, fixedtheta = fixedtheta, verbose = FALSE)
+  pdir2 <- ptapell(u2, theta2, "dirichlet", psphere, fixedtheta = fixedtheta, verbose = FALSE)
+  pdir1smo <- ptapesmo(u1, theta1, pdir1, psphere, "prodsq", acut = acut, verbose = FALSE)
+  pdir2smo <- ptapesmo(u2, theta2, pdir2, psphere, "prodsq", acut = acut, verbose = FALSE)
+
+  ueval <- matrix(c(0.4, 0.011, 1 - 0.4 - 0.011), nrow = 1)
+  thetaeval <- c(-0.1, -0.5, 2)
+  expect_equal(pForward0(pdir1, ueval, thetaeval), pForward0(pdir2, ueval, thetaeval))
+  expect_equal(pJacobian(pdir1, ueval, thetaeval), pJacobian(pdir2, ueval, thetaeval))
+  expect_equal(pHessian(pdir1, ueval, thetaeval), pHessian(pdir2, ueval, thetaeval))
+
+  expect_equal(pForward0(pdir1smo, thetaeval, ueval), pForward0(pdir2smo, thetaeval, ueval))
+  expect_equal(pJacobian(pdir1smo, thetaeval, ueval), pJacobian(pdir2smo, thetaeval, ueval))
+  expect_equal(pHessian(pdir1smo, thetaeval, ueval), pHessian(pdir2smo, thetaeval, ueval))
+
+  #Simplex
+  psimplex <- pmanifold("simplex")
+  pdir1 <- ptapell(u1, theta1, "dirichlet", psimplex, fixedtheta = fixedtheta, verbose = FALSE)
+  pdir2 <- ptapell(u2, theta2, "dirichlet", psimplex, fixedtheta = fixedtheta, verbose = FALSE)
+  pdir1smo <- ptapesmo(u1, theta1, pdir1, psimplex, "minsq", acut = acut, verbose = FALSE)
+  pdir2smo <- ptapesmo(u2, theta2, pdir2, psimplex, "minsq", acut = acut, verbose = FALSE)
+
+  expect_equal(pForward0(pdir1, ueval, thetaeval), pForward0(pdir2, ueval, thetaeval))
+  expect_equal(pJacobian(pdir1, ueval, thetaeval), pJacobian(pdir2, ueval, thetaeval))
+  expect_equal(pHessian(pdir1, ueval, thetaeval), pHessian(pdir2, ueval, thetaeval))
+
+  expect_equal(pForward0(pdir1smo, thetaeval, ueval), pForward0(pdir2smo, thetaeval, ueval))
+  expect_equal(pJacobian(pdir1smo, thetaeval, ueval), pJacobian(pdir2smo, thetaeval, ueval))
+  expect_equal(pHessian(pdir1smo, thetaeval, ueval), pHessian(pdir2smo, thetaeval, ueval))
+
+  #Simplex, prodsq
+  pdir1 <- ptapell(u1, theta1, "dirichlet", psimplex, fixedtheta = fixedtheta, verbose = FALSE)
+  pdir2 <- ptapell(u2, theta2, "dirichlet", psimplex, fixedtheta = fixedtheta, verbose = FALSE)
+  pdir1smo <- ptapesmo(u1, theta1, pdir1, psimplex, "prodsq", acut = acut, verbose = FALSE)
+  pdir2smo <- ptapesmo(u2, theta2, pdir2, psimplex, "prodsq", acut = acut, verbose = FALSE)
+
+  expect_equal(pForward0(pdir1, ueval, thetaeval), pForward0(pdir2, ueval, thetaeval))
+  expect_equal(pJacobian(pdir1, ueval, thetaeval), pJacobian(pdir2, ueval, thetaeval))
+  expect_equal(pHessian(pdir1, ueval, thetaeval), pHessian(pdir2, ueval, thetaeval))
+
+  expect_equal(pForward0(pdir1smo, thetaeval, ueval), pForward0(pdir2smo, thetaeval, ueval))
+  expect_equal(pJacobian(pdir1smo, thetaeval, ueval), pJacobian(pdir2smo, thetaeval, ueval))
+  expect_equal(pHessian(pdir1smo, thetaeval, ueval), pHessian(pdir2smo, thetaeval, ueval))
 })
 
-test_that("On sphere with minsq, objective values independent of tape", {
-  u = matrix(c(0.001, 0.011, 1 - 0.01 - 0.011), nrow = 1)
-
-  tapeval1 = c(u,3,3,3)
-  smofun1 <- ptapesmo(tapeval1, 3,
-                      manifoldname = "sphere", "minsq",
-                      acut = 0.1)
-
-  tapeval2 = c(0.2, 0.2, 0.6,3,3,3)
-  smofun2 <- ptapesmo(tapeval2, 3,
-                      manifoldname = "sphere", "minsq",
-                      acut = 0.1)
-
-  tapeval3 = c(u[c(2, 1, 3)],3,3,3)
-  smofun3 <- ptapesmo(tapeval3, 3,
-                      manifoldname = "sphere", "minsq",
-                      acut = 0.1)
-
-  expect_equal(smobj(smofun1, c(1, 1, 1), u), smobj(smofun2, c(1, 1, 1), u))
-  expect_equal(smobj(smofun1, c(1, 1, 1), u), smobj(smofun3, c(1, 1, 1), u))
-  expect_equal(smobjgrad(smofun1, c(1, 1, 1), u), smobjgrad(smofun2, c(1, 1, 1), u))
-  expect_equal(smobjgrad(smofun1, c(1, 1, 1), u), smobjgrad(smofun3, c(1, 1, 1), u))
-})
