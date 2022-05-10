@@ -64,9 +64,9 @@ test_that("ppi_cppad works easily on sec2_3model", {
 
   # try fixing betap
   out <- ppi_cppad(model$sample, betap = -0.5, man = "sphere", hsqfun = "minsq", acut = 0.1)
-  cdabyppi::expect_lt_v(abs(out$est$theta - model$theta), 3 * out$SE$theta)
-  expect_equal(out$est$beta0[model$p], -0.5)
-  expect_equal(out$SE$beta0[model$p], 0)
+  cdabyppi::expect_lte_v(abs(out$est$theta - model$theta), 3 * out$SE$theta)
+  expect_equal(out$est$beta[model$p], -0.5)
+  expect_equal(out$SE$beta[model$p], 0)
 
   # try fixing AL to diagonal
   AL = diag(c(-100, -50))

@@ -78,7 +78,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 
   cppadestSE <- fromPPIparamvec(out$SE, p)
   cdabyppi:::expect_lt_v(abs(cppadest$beta0 - directestimate)[1:3] / cppadestSE$beta0[1:3], 1)
-  expect_lt(abs(cppadest$beta0 - directestimate)[4] / cppadestSE$beta0[4], 3) #largest beta is hard to estimate well
+  expect_lt(abs(cppadest$beta - directestimate)[4] / cppadestSE$beta[4], 3) #largest beta is hard to estimate well
 
   cdabyppi:::expect_lt_v(abs(out$par - theta) / out$SE, 3)#assuming normally distributed with SE given by SE above
 })
