@@ -11,22 +11,19 @@ using namespace Rcpp;
 //' @export
 // [[Rcpp::export]]
 XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
-  manifold<a1type> * out = new manifold<a1type>; //returning a pointer
+  manifold<a1type> * out;  //returning a pointer
   if (manifoldname.compare("sphere") == 0){
-    *out = {
-      Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
-      Spos::fromS, Spos::logdetJ_fromS,
-    };
+    // out = new manifold<a1type>(
+    //   Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
+    //   Spos::fromS, Spos::logdetJ_fromS,
+    // );
   } else if (manifoldname.compare("simplex") == 0){
-    *out = {
-      simplex::toM, simplex::Pmat_M, simplex::dPmat_M,
-      simplex::fromM, simplex::logdetJ_fromM
-    };
+    out = new simplexman<a1type>();
   } else if (manifoldname.compare("Ralr") == 0){
-    *out = {
-      Ralr::toM, Ralr::Pmat_M, Ralr::dPmat_M,
-      Ralr::fromM, Ralr::logdetJ_fromM
-    };
+    // *out = {
+    //   Ralr::toM, Ralr::Pmat_M, Ralr::dPmat_M,
+    //   Ralr::fromM, Ralr::logdetJ_fromM
+    // };
   } else {
     stop("Manifold not found");
   }
@@ -49,9 +46,6 @@ int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
   for (size_t i=0; i<u.size(); i++){
     u_ad[i] = u[i];
   }
-
-  manifold<a1type> man;
-  man = *pman;
 
   // toM then fromM get back to u
   std::cout << "               Input u was: " << u_ad.transpose() << std::endl;
@@ -180,7 +174,7 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
   *out = tapell(z_ad,
                 theta_ad,
                 ll,
-                *pman,
+                pman.checked_get(),
                 fixedtheta_e,
                 verbose);
 

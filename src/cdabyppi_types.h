@@ -33,6 +33,8 @@ struct manifold { //exactly like a class, but with default public members https:
   virtual Eigen::Matrix<T, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &) = 0; //transformation from manifold to simplex
   virtual T logdetJfromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &) = 0; //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
   //for taping will need to pass copies - so that the coefficients of the tape are not updated by other calls part way through
+  virtual ~manifold(){}; //destructor
+  manifold(){};
 };
 
 template <typename T>
@@ -57,7 +59,7 @@ struct simplexman : public manifold<T> {
 
 
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
-  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmat_M(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x){
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x){
     int n = x.size();
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmat(n, n);
     Eigen::Matrix<T, Eigen::Dynamic, 1> ones(n);
@@ -68,10 +70,13 @@ struct simplexman : public manifold<T> {
   }
 
   //partial derivative of the tangent-plane projection matrix
-  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> dPmat_M(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x, const int &d){
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> dPmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x, const int &d){
     int n = x.size();
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> bvx(n, n);
     bvx.setZero();
     return(bvx);
   }
+
+  ~simplexman(){};
+  simplexman(){};
 };

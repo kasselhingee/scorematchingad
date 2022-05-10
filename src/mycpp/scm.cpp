@@ -2,18 +2,18 @@
 # include "approx.cpp"
 # include "sm_possphere.cpp"
 # include "manifold_simplex.cpp"
-# include "manifold_Rpos.cpp"
+# include "manifold_alr.cpp"
 # include "hfuns.cpp"
 # include "dirichlet.cpp"
 # include "PrintFor.cpp"
 
 CppAD::ADFun<double> tapefromM(veca1 z,
-                               veca1 (*fromM)(const veca1 &)){
+                               manifold<a1type> *pman){
   //tape relationship between z and h2
   CppAD::Independent(z);
   // range space vector
   veca1 y(0); // vector of ranges space variables - length to be set by from(z);
-  y = fromM(z);
+  y = pman->fromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
   return(tape);
@@ -23,7 +23,7 @@ CppAD::ADFun<double> tapefromM(veca1 z,
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                             veca1 theta, //theta parameter
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
-                               manifold<a1type> man,
+                               manifold<a1type> *pman, //it seems points must be passed for abstract classes (note error when compiling without the *, and Stefan's demo)
                                Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
                                bool verbose
                                ){
@@ -66,7 +66,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
 
   //prepare fromM tape for logdetJfromM later
   CppAD::ADFun<a1type, double> fromMtape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
-  fromMtape = tapefromM(z, man.fromM).base2ad(); //convert to a function of a1type rather than double
+  fromMtape = tapefromM(z, pman).base2ad(); //convert to a function of a1type rather than double
   if(fromMtape.Domain() != z.size()){stop("fromMtape domain size does not match input z size: %i != %i", fromMtape.Domain(), z.size());}
 
   //tape relationship between x and log-likelihood
