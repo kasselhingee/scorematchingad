@@ -64,6 +64,7 @@ struct Spos : public manifold<Type> {
   //automatically choose approximation centre
   Eigen::Matrix<Type, Eigen::Dynamic, 1> taylorapprox_bdry(
 		  CppAD::ADFun<Type> &f,
+		  //above is the smo function - whos arguments are the model parameters, but need to differente wrt the values of a measurement
 		  const size_t order,
 		  const Eigen::Matrix<Type, Eigen::Dynamic, 1> xbeta,
 		  double shiftsize=1E-5) {
