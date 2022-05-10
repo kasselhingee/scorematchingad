@@ -48,12 +48,25 @@ struct Spos : public manifold<Type> {
 
 
 ////////////////////APPROX HELPERS/////////////////////
+  // function that returns whether point is close to boundary or not, for this particular manifold
+  bool close2bdry(const Eigen::Matrix<double, Eigen::Dynamic, 1> x, double threshold){
+    double minval;
+    minval = x.array().abs().minCoeff(); //this is not quite the distance on the manifold, but close enough
+    bool out;
+    if (minval < threshold){
+      out = true;
+    } else {
+      out = false;
+    }
+    return(out);
+  }
+
   //automatically choose approximation centre
   Eigen::Matrix<Type, Eigen::Dynamic, 1> taylorapprox_bdry(
 		  CppAD::ADFun<Type> &f,
 		  const size_t order,
 		  const Eigen::Matrix<Type, Eigen::Dynamic, 1> xbeta,
-		  double shiftsize=1E-5){
+		  double shiftsize=1E-5) {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> x(xbeta.size() / 2);
      x << xbeta.block(0,0,x.size(), 1);
      Eigen::Matrix<Type, Eigen::Dynamic, 1> shiftdir(x.size());
