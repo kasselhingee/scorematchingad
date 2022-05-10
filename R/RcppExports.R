@@ -65,8 +65,8 @@ pJacobian <- function(pfun, value, theta) {
 
 #' @title The value of a recorded function
 #' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-#' @param u A vector in the simplex.
-#' @param beta a vector of the dynamic parameters
+#' @param value A vector in the domain of the taped function.
+#' @param theta a vector of the dynamic parameters
 #' @return The value of pfun
 #' @export
 pForward0 <- function(pfun, value, theta) {
