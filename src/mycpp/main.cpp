@@ -1,3 +1,12 @@
+// turn into an executable by running the following in the ./src/ directory
+// R CMD LINK g++ -I/usr/share/R/include -I/usr/local/include -I./CppAD/external/eigen.git -I./CppAD/include/ -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include -Wl,--export-dynamic -fopenmp -Wl,-Bsymbolic-functions -Wl,-z,relro -L/usr/lib/R/lib -lR -lpcre2-8 -llzma -lbz2 -lz -lrt -ldl -lm -licuuc -licui18n  mycpp/main.cpp -o klhexec
+//
+// flags aquired by:
+// R CMD config --cppflags to get pre-processor flags for compiling
+// Rscript -e "Rcpp:::CxxFlags()" to get Rcpp compiler flags
+// R CMD config --ldflags to get flags for R
+// Rscript -e "Rcpp:::LdFlags()"  to get Rcpp Ld flags
+
 #include "../scm_interface.cpp"
 
 int main(int argc, char** argv)
@@ -22,19 +31,18 @@ int main(int argc, char** argv)
        fixedtheta_e[fixedtheta_e.size() - 2] = 1;
 
        std::cout << "Creating manifold object" << std::endl;
-       manifold<a1type> sphere(
-           Spos::toS, Spos::Pmat_S, Spos::dPmat_S,
-           Spos::fromS, Spos::logdetJ_fromS
-       );
+       manifold<a1type> * man;
+       man = new Spos<a1type>();
 
    std::cout << "Preparing to tape" << std::endl;
    CppAD::ADFun<double> out; //returning a pointer
    out = tapell(z_ad,
                  theta_ad,
                  ll_ppi,
-                 sphere,
+                 man,
                  fixedtheta_e,
                  true);
+   delete man;
 
-    return 0;
+   return 0;
  }
