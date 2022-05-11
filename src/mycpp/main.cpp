@@ -1,5 +1,5 @@
 // turn into an executable by running the following in the ./src/ directory
-// R CMD LINK g++ -I/usr/share/R/include -I/usr/local/include -I./CppAD/external/eigen.git -I./CppAD/include/ -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include -L./CppAD/build/ -lcppad_lib -Wl,--export-dynamic -fopenmp -Wl,-Bsymbolic-functions -Wl,-z,relro -L/usr/lib/R/lib -lR -lpcre2-8 -llzma -lbz2 -lz -lrt -ldl -lm -licuuc -licui18n  mycpp/main.cpp -o klhexec
+// R CMD LINK g++ -I/usr/share/R/include -I/usr/local/include -I./CppAD/external/eigen.git -I./CppAD/include/ -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include -L./CppAD/build/cppad_lib/ -lcppad_lib -Wl,--export-dynamic -fopenmp -Wl,-Bsymbolic-functions -Wl,-z,relro -L/usr/lib/R/lib -lR -lpcre2-8 -llzma -lbz2 -lz -lrt -ldl -lm -licuuc -licui18n  mycpp/main.cpp -o klhexec
 //
 // flags aquired by:
 // R CMD config --cppflags to get pre-processor flags for compiling
