@@ -2,7 +2,7 @@ CXX_STD = CXX11
 
 PKG_CXXFLAGS = -I/usr/local/include -I./CppAD/external/eigen.git -I./CppAD/include/ -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include
 
-PKG_LIBS = -L/usr/local/lib
+PKG_LIBS = -L/usr/local/lib -L./CppAD/build/ -lcppad_lib
 
 
 
