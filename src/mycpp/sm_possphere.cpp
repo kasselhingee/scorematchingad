@@ -61,6 +61,20 @@ struct Spos : public manifold<Type> {
     return(out);
   }
 
+  //function that produces a new location given a location too close to boundary
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> approxcentre(const Eigen::Matrix<Type, Eigen::Dynamic, 1> x,
+                                                      const double shiftsize=1E-5) {
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> shiftdir(x.size());
+    shiftdir.setOnes();
+    shiftdir *= -1 * shiftsize;
+    shiftdir = Pmat_S(x) * shiftdir; //shift in tangent to manifold at x
+
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> centre(x.size());
+    centre = x + shiftdir;
+    centre = centre / (centre.array().square().sum().sqrt()); //project onto the manifold by normalising
+    return(centre);
+  }
+
   //automatically choose approximation centre
   Eigen::Matrix<Type, Eigen::Dynamic, 1> taylorapprox_bdry(
 		  CppAD::ADFun<Type> &f,
