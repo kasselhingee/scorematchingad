@@ -92,7 +92,7 @@ pHessian <- function(pfun, value, theta) {
 #' @description Wrapper for the `taylorapprox` C++ function.
 #' @return The approximate value of pfun
 #' @export
-ptaylorapprox <- function(pfun, value, centre, theta, order) {
-    .Call('_cdabyppi_ptaylorapprox', PACKAGE = 'cdabyppi', pfun, value, centre, theta, order)
+pTaylorApprox <- function(pfun, value, centre, theta, order) {
+    .Call('_cdabyppi_pTaylorApprox', PACKAGE = 'cdabyppi', pfun, value, centre, theta, order)
 }
 

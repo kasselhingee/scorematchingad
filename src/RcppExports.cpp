@@ -119,9 +119,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ptaylorapprox
-double ptaylorapprox(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd centre, svecd theta, size_t order);
-RcppExport SEXP _cdabyppi_ptaylorapprox(SEXP pfunSEXP, SEXP valueSEXP, SEXP centreSEXP, SEXP thetaSEXP, SEXP orderSEXP) {
+// pTaylorApprox
+double pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd centre, svecd theta, size_t order);
+RcppExport SEXP _cdabyppi_pTaylorApprox(SEXP pfunSEXP, SEXP valueSEXP, SEXP centreSEXP, SEXP thetaSEXP, SEXP orderSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -130,7 +130,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< svecd >::type centre(centreSEXP);
     Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< size_t >::type order(orderSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptaylorapprox(pfun, value, centre, theta, order));
+    rcpp_result_gen = Rcpp::wrap(pTaylorApprox(pfun, value, centre, theta, order));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -144,7 +144,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_pJacobian", (DL_FUNC) &_cdabyppi_pJacobian, 3},
     {"_cdabyppi_pForward0", (DL_FUNC) &_cdabyppi_pForward0, 3},
     {"_cdabyppi_pHessian", (DL_FUNC) &_cdabyppi_pHessian, 3},
-    {"_cdabyppi_ptaylorapprox", (DL_FUNC) &_cdabyppi_ptaylorapprox, 5},
+    {"_cdabyppi_pTaylorApprox", (DL_FUNC) &_cdabyppi_pTaylorApprox, 5},
     {NULL, NULL, 0}
 };
 
