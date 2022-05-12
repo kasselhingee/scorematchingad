@@ -333,7 +333,7 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
 //' @return The approximate value of pfun
 //' @export
 // [[Rcpp::export]]
-double ptaylorapprox(XPtr< CppAD::ADFun<double> > pfun,
+double pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
                      svecd value, svecd centre,
                      svecd theta, size_t order){
   // //convert to eigen
