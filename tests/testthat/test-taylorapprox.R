@@ -12,11 +12,11 @@ test_that("Raw taylor approximation works on single sample points", {
   smoppi_u <- swapDynamic(smoppi, m$sample, m$theta)
   expect_equal(pForward0(smoppi, m$theta, m$sample), pForward0(smoppi_u, m$sample, m$theta)) #sanity check swap of dynamic param and independent params
   expect_equal(pForward0(smoppi_u, m$sample, m$theta),
-               pTaylorApprox(smoppi_u, m$sample, m$sample + 1E-1, m$theta, 100))
+               pTaylorApprox(smoppi_u, m$sample, approxcentre, m$theta, 100))
 
   # test a lower order approximation
   expect_equal(pForward0(smoppi_u, m$sample, m$theta),
-               pTaylorApprox(smoppi_u, m$sample, m$sample + 1E-1, m$theta, 10),
+               pTaylorApprox(smoppi_u, m$sample, approxcentre, m$theta, 10),
                tolerance = 1E-4)
   # it is much faster, but not as accurate
 })
