@@ -83,3 +83,16 @@ pHessian <- function(pfun, value, theta) {
     .Call('_cdabyppi_pHessian', PACKAGE = 'cdabyppi', pfun, value, theta)
 }
 
+#' @title The value of a recorded function approximated by Taylor Expansion
+#' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
+#' @param value A vector in the domain of the taped function.
+#' @param centre A vector in the domain of the taped function to approximate the value from.
+#' @param theta a vector of the dynamic parameters
+#' @param order The order of Taylor expansion to use.
+#' @description Wrapper for the `taylorapprox` C++ function.
+#' @return The approximate value of pfun
+#' @export
+ptaylorapprox <- function(pfun, value, centre, theta, order) {
+    .Call('_cdabyppi_ptaylorapprox', PACKAGE = 'cdabyppi', pfun, value, centre, theta, order)
+}
+

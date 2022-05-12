@@ -270,9 +270,7 @@ svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
 double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
   vecd value_e(value.size());
-  for (size_t i=0; i<value.size(); i++){
-    value_e[i] = value[i];
-  }
+  for (size_t i=0; i<value.size(); i++){ value_e[i] = value[i]; }
   vecd theta_e(theta.size());
   for (size_t i=0; i<theta.size(); i++){
     theta_e[i] = theta[i];
@@ -322,5 +320,37 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
     out[i] = hess[i];
   }
   return(out);
+}
+
+
+//' @title The value of a recorded function approximated by Taylor Expansion
+//' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
+//' @param value A vector in the domain of the taped function.
+//' @param centre A vector in the domain of the taped function to approximate the value from.
+//' @param theta a vector of the dynamic parameters
+//' @param order The order of Taylor expansion to use.
+//' @description Wrapper for the `taylorapprox` C++ function.
+//' @return The approximate value of pfun
+//' @export
+// [[Rcpp::export]]
+double ptaylorapprox(XPtr< CppAD::ADFun<double> > pfun,
+                     svecd value, svecd centre,
+                     svecd theta, size_t order){
+  // //convert to eigen
+  vecd value_e(value.size());
+  for (size_t i=0; i<value.size(); i++){ value_e[i] = value[i]; }
+  vecd centre_e(centre.size());
+  for (size_t i=0; i<centre.size(); i++){ centre_e[i] = centre[i]; }
+  vecd theta_e(theta.size());
+  for (size_t i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
+
+  Eigen::Matrix<double, Eigen::Dynamic, 1> out(1);
+  pfun->new_dynamic(theta_e);
+  out = taylorapprox(*pfun,
+                     centre_e,
+                     order,
+                     value_e);
+
+  return(out[0]);
 }
 

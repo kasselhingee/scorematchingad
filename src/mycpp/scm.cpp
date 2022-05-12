@@ -36,7 +36,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   veca1 thetafxd(fixedtheta.sum());
   size_t idx_var(0);
   size_t idx_fxd(0);
-  for (size_t i=0;i<theta.size();i++){
+  for (long int i=0;i<theta.size();i++){
     if (fixedtheta[i]){
       thetafxd[idx_fxd] = theta[i];
       idx_fxd += 1;

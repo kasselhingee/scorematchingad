@@ -1,6 +1,6 @@
   template <class Type>
   Eigen::Matrix<Type, Eigen::Dynamic, 1> taylorapprox(
-		  CppAD::ADFun<Type> &f,
+		  CppAD::ADFun<Type> &f,  //a tape with independent values that are points on the manifold (not the parameters)
 		  const Eigen::Matrix<Type, Eigen::Dynamic, 1> centre,
 		  const size_t order,
 		  const Eigen::Matrix<Type, Eigen::Dynamic, 1> x){
@@ -18,7 +18,7 @@
     }
     if (order >= 2){
       for (size_t i=2; i<=order; i++){
-	diff.setZero();
+	      diff.setZero();
         out += f.Forward(i, diff); //now out[0] is evaluation of a quadratic approximation of f
       }
     }
