@@ -7,18 +7,6 @@
 # include "dirichlet.cpp"
 # include "PrintFor.cpp"
 
-CppAD::ADFun<double> tapefromM(veca1 z,
-                               manifold<a1type> *pman){
-  //tape relationship between z and h2
-  CppAD::Independent(z);
-  // range space vector
-  veca1 y(0); // vector of ranges space variables - length to be set by from(z);
-  y = pman->fromM(z);
-  CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
-  tape.Dependent(z, y);
-  return(tape);
-}
-
 // define a function that tapes a log likelihood
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                             veca1 theta, //theta parameter
@@ -64,11 +52,6 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
     }
   }
 
-  //prepare fromM tape for logdetJfromM later
-  CppAD::ADFun<a1type, double> fromMtape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
-  fromMtape = tapefromM(z, pman).base2ad(); //convert to a function of a1type rather than double
-  if(fromMtape.Domain() != z.size()){stop("fromMtape domain size does not match input z size: %i != %i", fromMtape.Domain(), z.size());}
-
   //tape relationship between x and log-likelihood
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
@@ -95,23 +78,12 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   // range space vector
   veca1 y(1); // vector of ranges space variables
   veca1 u(0); //0 here because size dictated by fromM
-  u = fromMtape.Forward(0, z);
+  u = pman->fromM(z);
   y.setZero();
   y[0] += llf(u, thetarecom);
 
   //get log determinant of fromM
-  mata1 jacmat(z.size() * u.size(), 1);
-  jacmat = fromMtape.Jacobian(z);
-  jacmat.resize(z.size(), u.size()); //first row is: du1/dz1, du2/dz1, du3/dz1. Second row is du1/dz2, du2/dz2, du3/dz2
-  veca1 logdet(1);
-  logdet[0] = CppAD::log(jacmat.determinant());
-  y[0] += logdet[0];
-  if (verbose){
-    PrintForVec("\n z is: ", z);
-    PrintForVec("\n fromM(z) is: ", u.transpose());
-    PrintForMatrix("\n jacmat is: ", jacmat);
-    PrintForVec("\n jacmat logdeterminant is: ", logdet);
-  }
+  y[0] += pman->logdetJfromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
   if (verbose){
