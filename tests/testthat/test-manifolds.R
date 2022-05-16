@@ -20,3 +20,11 @@ test_that("Ralr manifold passes lightweight standard tests",{
   expect_equal(out, 0)
 })
 
+test_that("Snative manifold object passes lightweight standard tests", {
+  pman <- pmanifold("Snative")
+  u <- c(0.1, 0.2)
+  u <- u / sqrt(sum(u^2))
+  out <- testmanifold(pman, u)
+  expect_equal(out, 0)
+})
+

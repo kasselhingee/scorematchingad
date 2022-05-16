@@ -18,6 +18,8 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
     out = new simplex<a1type>();
   } else if (manifoldname.compare("Ralr") == 0){
     out = new Ralr<a1type>();
+  } else if (manifoldname.compare("Snative") == 0){
+    out = new Snative<a1type>();
   } else {
     stop("Manifold not found");
   }
@@ -149,6 +151,9 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
   }
   if (llname.compare("ppi") == 0){
     ll = ll_ppi;
+  }
+  if (llname.compare("vMF") == 0){
+    ll = ll_vMF;
   }
   //check ll function
   if (ll == nullptr){

@@ -3,8 +3,10 @@
 # include "sm_possphere.cpp"
 # include "manifold_simplex.cpp"
 # include "manifold_alr.cpp"
+# include "manifold_Snative.cpp"
 # include "hfuns.cpp"
 # include "dirichlet.cpp"
+# include "vMF.cpp"
 # include "PrintFor.cpp"
 
 CppAD::ADFun<double> tapefromM(veca1 z,
