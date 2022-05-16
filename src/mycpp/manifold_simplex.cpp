@@ -41,7 +41,19 @@ struct simplex : public manifold<T> {
     return(bvx);
   }
 
-////////////////////APPROX HELPERS/////////////////////
+  ////////////////////APPROX HELPERS/////////////////////
+  bool close2bdry(const Eigen::Matrix<double, Eigen::Dynamic, 1> x, double threshold) {
+    stop("Not implemented yet");
+    return(true);
+  };
+
+  Eigen::Matrix<T, Eigen::Dynamic, 1> approxcentre(const Eigen::Matrix<T, Eigen::Dynamic, 1> x, const double shiftsize=1E-5) {//do nothing by default
+    stop("Not approxcentre() not yet implemented for this manifold.");
+    Eigen::Matrix<T, Eigen::Dynamic, 1> out(x.size());
+    out = x;
+    return(out);
+  };
+
   //automatically choose approximation centre
   Eigen::Matrix<T, Eigen::Dynamic, 1> taylorapprox_bdry(
 		  CppAD::ADFun<T> &f,

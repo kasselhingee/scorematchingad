@@ -46,7 +46,19 @@ struct Ralr : public manifold<Type> {
   }
 
 
-////////////////////APPROX HELPERS/////////////////////
+  ////////////////////APPROX HELPERS/////////////////////
+  bool close2bdry(const Eigen::Matrix<double, Eigen::Dynamic, 1> x, double threshold) {
+    stop("Not implemented yet");
+    return(true);
+  };
+
+  Eigen::Matrix<Type, Eigen::Dynamic, 1> approxcentre(const Eigen::Matrix<Type, Eigen::Dynamic, 1> x, const double shiftsize=1E-5) {//do nothing by default
+    stop("Not approxcentre() not yet implemented for this manifold.");
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
+    out = x;
+    return(out);
+  };
+
   //automatically choose approximation centre
   Eigen::Matrix<Type, Eigen::Dynamic, 1> taylorapprox_bdry(
 		  CppAD::ADFun<Type> &f,
