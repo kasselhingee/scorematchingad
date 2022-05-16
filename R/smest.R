@@ -19,3 +19,5 @@ smest <- function(smofun, theta, utabl, control = list(tol = 1E-20)){
   out$sqgradsize <- sum(smobjgrad(smofun, out$par, utabl)^2)
   return(out)
 }
+
+
