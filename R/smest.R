@@ -20,4 +20,30 @@ smest <- function(smofun, theta, utabl, control = list(tol = 1E-20)){
   return(out)
 }
 
+smest_simplex <- function(smofun, theta, utabl, control = list(tol = 1E-20), shiftsize){
+  splittbl <- splitutable_nearbdry(utabl, boundary = "simplex", bdrythreshold = shiftsize, shiftsize = shiftsize)
+  smofun_u <- swapDynamic(smofun, rep(1/ncol(utabl), ncol(utabl)), theta * 0 - 0.1) #don't use a boundary point here!
+  out <- Rcgmin::Rcgmin(par = theta,
+                        fn = function(theta){smobj2(smofun, smofun_u, theta,
+                                                    splittbl$interior, splittbl$bdry, splittbl$acentres, approxorder = 100)},
+                        # gr = function(theta){smobjgrad(smofun, theta, utabl)},
+                        control = control)
+  if (out$convergence != 0){warning("Optimisation did not converge.")}
+  return(out)
+}
+
+
+splitutable_nearbdry <- function(utabl, boundary = "simplex", bdrythreshold = 1E-15, shiftsize = bdrythreshold){
+  onbdry <- rep(FALSE, nrow(utabl))
+  if (!is.null(boundary)){
+    if (boundary == "simplex"){
+      onbdry <- apply(utabl, MARGIN = 1, min) < bdrythreshold
+      acentres <- approxcentre(utabl[onbdry, ], shiftsize = shiftsize)
+    }
+  }
+  return(list(
+    interior = utabl[!onbdry, ],
+    bdry = utabl[onbdry, ],
+    acentres = acentres))
+}
 
