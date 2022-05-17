@@ -10,4 +10,7 @@ test_that("Rotation matrix generation on high dimensions", {
 
   u3 <- c(2, 0, 0, 0, 0, 0)
   expect_equal(sqrt(sum((Rmat %*% u3)^2)), 2)
+
+  u4 <- c(6, 5, 4, 3, 2, 1)
+  expect_equal(sqrt(sum((Rmat %*% u4)^2)), sqrt(sum(u4^2)))
 })
