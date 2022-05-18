@@ -93,13 +93,29 @@ test_that("Gradient of smo approxcentre for ppi wrt theta is correct", {
   expect_equal(pJacobian(smoppi, testtheta, acentres[1, ]), do.call(toPPIparamvec, gradt_components),
                tolerance = 1E-5, ignore_attr = TRUE)
 
+  # check that Hessian is close too (and hopefully close to zero)
+  hesst_direct <- numDeriv::hessian(function(ctheta) {estimatorall1_smo(ctheta, u, acut)},
+                                    testcanntheta)
+  expect_equal(pHessian(smoppi, testtheta, acentres[1, ]), hesst_direct,
+               ignore_attr = TRUE, tolerance = 1E-1)
+
+  # Hessian matches at acentre:
+  hesst_direct_acentre <- numDeriv::hessian(function(ctheta) {estimatorall1_smo(ctheta, acentres[1, , drop = FALSE], acut)},
+                                    testcanntheta)
+  # convert to usual beta
+  betaindx <- (length(m$theta) - m$p + 1):length(m$theta)
+  hesst_direct_acentre[betaindx, ] <- hesst_direct_acentre[betaindx, ] * 2
+  hesst_direct_acentre[, betaindx] <- hesst_direct_acentre[, betaindx] * 2
+
+  expect_equal(pHessian(smoppi, testtheta, acentres[1, ]), hesst_direct_acentre,
+               ignore_attr = TRUE, tolerance = 1E-5)
 })
 
 test_that("Gradient of smo approxcentre for ppi wrt u is close", {
   set.seed(123)
   m <- sec2_3model(2)
   m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
-  acentres <- approxcentre(m$sample, shiftsize = 1E-5)
+  acentres <- approxcentre(m$sample, shiftsize = 1E-3)
   acut <- 0.1
 
   psphere <- pmanifold("sphere") #because above ppill_r is for the simplex
@@ -124,9 +140,16 @@ test_that("Gradient of smo approxcentre for ppi wrt u is close", {
   expect_equal(pJacobian(smoppi_u, acentres[1, ], testtheta), attr(gradu_direct, "gradient"),
                tolerance = 1E-1, ignore_attr = TRUE)
 
+
   # check that gradient matches at approximation centre
   u <- acentres[1, , drop = FALSE]
   gradu_direct_acentre <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("u"))
+  expect_equal(pJacobian(smoppi_u, acentres[1, ], testtheta), attr(gradu_direct_acentre, "gradient"),
+               tolerance = 1E-3, ignore_attr = TRUE)
+
+  # check that Hessian matches at approximation centre
+  hessu_direct_acentre <- numDeriv::hessian(function(u) estimatorall1_smo(testcanntheta, u, acut),
+                                            acentres[1, , drop = FALSE])
   expect_equal(pJacobian(smoppi_u, acentres[1, ], testtheta), attr(gradu_direct_acentre, "gradient"),
                tolerance = 1E-3, ignore_attr = TRUE)
 })
