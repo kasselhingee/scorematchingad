@@ -6,6 +6,13 @@ toPPIparamvec <- function(ALs, bL, beta){
   return(theta)
 }
 
+toPPIcannparam <- function(ALs, bL, beta, manifold = "sphere"){
+  if (manifold == "sphere"){out <- toPPIparamvec(ALs, bL, 1 + 2 * beta)}
+  else if (manifold == "simplex"){out <- toPPIparamvec(ALs, bL, beta)}
+  else {stop("manifold not supported")}
+  return(out)
+}
+
 #' @describeIn toPPIparamvec Reverse of `toPPIparamvec()`.
 #' @export
 fromPPIparamvec <- function(theta, p){
