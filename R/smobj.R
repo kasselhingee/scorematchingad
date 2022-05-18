@@ -33,7 +33,7 @@ smobjgrad2 <- function(smofun, Jsmofun_u, theta, interior, bdry, acentres, appro
   if (nrow(bdry) > 0){
     scmo2 <- smobjgrad_approx(Jsmofun_u, theta, bdry, acentres, approxorder = approxorder)
   }
-  scmo <- weighted.mean(c(scmo1, scmo2), w = c(nrow(interior), nrow(bdry)))
+  scmo <- apply(rbind(scmo1, scmo2), 2, weighted.mean, w = c(nrow(interior), nrow(bdry)))
   return(scmo)
 }
 
@@ -76,6 +76,6 @@ smobjgrad_approx <- function(Jsmofun_u, theta, utabl, acentres, approxorder = 10
     scobj <- pTaylorApprox(Jsmofun_u, utabl[i,], acentres[i, ], theta, order = approxorder)
     return(scobj)
   })
-  scmo <- colMeans(unlist(sc_perpt))
+  scmo <- colMeans(do.call(rbind, sc_perpt))
   return(scmo)
 }

@@ -282,8 +282,8 @@ svecd pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   }
 
   //check inputs and tape match
-  if (pfun->Domain() != value_e.size()){stop("Size of input vector does not match domain size of taped function.");}
-  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector does not match parameter size of the taped function.");}
+  if (pfun->Domain() != value_e.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value_e.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta_e.size(), pfun->size_dyn_ind());}
 
   vecd out_e(1);
   pfun->new_dynamic(theta_e);
