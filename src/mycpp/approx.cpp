@@ -8,7 +8,7 @@
     //X(t) = centre + t*(x - centre). So X(0) = centre, X(1) = x.
     //First derivative of X at 0, is x - centre
     //Higher order derivative are all 0.
-    Eigen::Matrix<Type, Eigen::Dynamic, 1> out(1);
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> out(f.Range());
     Eigen::Matrix<Type, Eigen::Dynamic, 1> diff(x.size());
     out.setZero();
     out += f.Forward(0, centre); //zeroth order - constant component of taylor expansion

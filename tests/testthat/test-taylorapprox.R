@@ -54,7 +54,6 @@ test_that("approxcentre_simplex gives results equal to shiftsize", {
   expect_equal(sqrt(rowSums((centres - m$sample)^2)), rep(1E-5, nrow(m$sample)))
 })
 
-
 test_that("Approx taylor with u on boundary generates correct values (excluding gradient) for sphere for ppi", {
   set.seed(123)
   m <- sec2_3model(2)
@@ -72,4 +71,52 @@ test_that("Approx taylor with u on boundary generates correct values (excluding 
   approxsmoval <- pTaylorApprox(smoppi_u, m$sample[1, ], acentres[1,], m$theta, 100)
   pi <- toPPIparamvec(m$ALs, m$bL, beta = 1 + 2 * m$beta0)
   expect_equal(approxsmoval, estimatorall1_smo(pi, m$sample[1,, drop = FALSE], 0.1))
+})
+
+test_that("Taylor Approx of Grad SMO gets correct value on interior of simplex", {
+  set.seed(123)
+  m <- sec2_3model(2)
+  # m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
+  acentres <- approxcentre(m$sample, shiftsize = 1E-15)
+
+  psphere <- pmanifold("sphere") #because above ppill_r is for the simplex
+  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", pman = psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
+  expect_true(!is.nan(pTaylorApprox(lltape, m$sample[1,], acentres[1,], m$theta, 100)))
+
+  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, pman = psphere, "minsq", acut = 0.1, verbose = FALSE) #tape of the score function
+  smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
+
+  Jsmoppi_u <- pTapeJacobianSwap(smoppi, m$theta, c(0.1,0.1,0.1))
+  expect_equal(pForward0(Jsmoppi_u, c(0.1,0.1,0.1), m$theta), pJacobian(smoppi, m$theta, c(0.1,0.1,0.1)))
+
+
+  approxgrad <- pTaylorApprox(Jsmoppi_u, m$sample[1, ], acentres[1, ], m$theta, 10)
+  cppadgrad <- pJacobian(smoppi, m$theta, m$sample[1, ])
+  expect_equal(approxgrad, cppadgrad)
+})
+
+test_that("Taylor Approx of Grad SMO gets correct value on boundary of simplex", {
+  set.seed(123)
+  m <- sec2_3model(2)
+  m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
+  acentres <- approxcentre(m$sample, shiftsize = 1E-15)
+  acut = 0.1
+
+  psphere <- pmanifold("sphere") #because above ppill_r is for the simplex
+  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", pman = psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
+  expect_true(!is.nan(pTaylorApprox(lltape, m$sample[1,], acentres[1,], m$theta, 100)))
+
+  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  Jsmoppi_u <- pTapeJacobianSwap(smoppi, m$theta, c(0.1,0.1,0.1))
+
+  # actual testing
+  testcanntheta <- toPPIcannparam(m$ALs + 1, m$bL + 1, m$beta0 + 1)
+  testtheta <- toPPIparamvec(m$ALs + 1, m$bL + 1, m$beta0 + 1)
+  approxgrad <- pTaylorApprox(Jsmoppi_u, m$sample[1, ], acentres[1, ], testtheta, 10)
+  u <- m$sample[1, , drop = FALSE]
+  gradt_direct <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("testcanntheta"))
+  gradt_components <- fromPPIparamvec(attr(gradt_direct, "gradient"), m$p)
+  gradt_components$beta <- gradt_components$beta * 2 #to account for cannonical exponential form
+  expect_equal(approxgrad, do.call(toPPIparamvec, gradt_components),
+               tolerance = 1E-5, ignore_attr = TRUE)
 })
