@@ -37,6 +37,18 @@ smobjgrad2 <- function(smofun, Jsmofun_u, theta, interior, bdry, acentres, appro
   return(scmo)
 }
 
+smobjhess2 <- function(smofun, Hsmofun_u, theta, interior, bdry, acentres, approxorder = 100){
+  scmo1 <- 0
+  if (nrow(interior) > 0){scmo1 <- smobjhess(smofun, theta, interior)}
+
+  scmo2 <- 0
+  if (nrow(bdry) > 0){
+    scmo2 <- smobjhess_approx(Hsmofun_u, theta, bdry, acentres, approxorder = approxorder)
+  }
+  scmo <- apply(rbind(scmo1, scmo2), 2, weighted.mean, w = c(nrow(interior), nrow(bdry)))
+  return(scmo)
+}
+
 
 #' @describeIn smobj The gradient of the score matching objective function at given beta
 #' @export
@@ -74,6 +86,16 @@ smobjgrad_approx <- function(Jsmofun_u, theta, utabl, acentres, approxorder = 10
   stopifnot(nrow(utabl) == nrow(acentres))
   sc_perpt <- lapply(1:nrow(utabl), function(i){
     scobj <- pTaylorApprox(Jsmofun_u, utabl[i,], acentres[i, ], theta, order = approxorder)
+    return(scobj)
+  })
+  scmo <- colMeans(do.call(rbind, sc_perpt))
+  return(scmo)
+}
+
+smobjhess_approx <- function(Hsmofun_u, theta, utabl, acentres, approxorder = 100){
+  stopifnot(nrow(utabl) == nrow(acentres))
+  sc_perpt <- lapply(1:nrow(utabl), function(i){
+    scobj <- pTaylorApprox(Hsmofun_u, utabl[i,], acentres[i, ], theta, order = approxorder)
     return(scobj)
   })
   scmo <- colMeans(do.call(rbind, sc_perpt))

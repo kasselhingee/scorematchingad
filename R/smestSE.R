@@ -25,3 +25,28 @@ smestSEsq <- function(smofun, est, utabl){
   return(Ginfinv / nrow(utabl)) #results now in same units as estimates
 }
 
+smestSE_simplex <- function(smofun, est, utabl, shiftsize){
+  splittbl <- splitutable_nearbdry(utabl, boundary = "simplex", bdrythreshold = shiftsize, shiftsize = shiftsize)
+  Jsmofun_u <- pTapeJacobianSwap(smofun, est * 0 - 0.1, rep(1/ncol(utabl), ncol(utabl)))
+  Hsmofun_u <- pTapeHessianSwap(smofun, est * 0 - 0.1, rep(1/ncol(utabl), ncol(utabl)))
+  stop("unfinished")
+
+
+  gradsmoperpt <-  smobjgrad2(smofun, Jsmofun_u, theta,
+             splittbl$interior, splittbl$bdry, splittbl$acentres, approxorder = 100)
+
+
+
+  sens <- -smobjhess(smofun, est, utabl)
+  gradsmoperpt <- lapply(1:nrow(utabl), function(i){
+    diff <- pJacobian(smofun, est, utabl[i,])
+    return(diff)
+  })
+  vargradsmo <- cov(do.call(rbind, gradsmoperpt)) #SAMPLE estimate of population VARIANCE of gradsmo
+  sensinv <- solve(sens)
+  Ginfinv <- sensinv %*% vargradsmo %*% sensinv #inverse of the Godambe information matrix, also called the sandwich information matrix
+  return(Ginfinv / nrow(utabl)) #results now in same units as estimates
+
+  sqrt(diag(smestSEsq(smofun, est, utabl)))
+}
+

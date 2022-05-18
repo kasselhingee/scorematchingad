@@ -153,5 +153,6 @@ test_that("Test smest_simplex against direct", {
 
   est_cppad <- smest_simplex(smoppi, thetatape[is.na(theta)] * 0 - 0.1, newsample,
                              control = list(tol = 1E-10), 1E-5) #takes a long time partially because no gradient supplied
+  smestSE_simplex(smoppi, est_cppad$par, newsample, shiftsize = 1E-5)
   cdabyppi:::expect_lt_v(abs(est_cppad$par - direct$estimator1), 0.1*abs(direct$estimator1))
 })
