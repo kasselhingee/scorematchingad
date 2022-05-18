@@ -23,10 +23,12 @@ smest <- function(smofun, theta, utabl, control = list(tol = 1E-20)){
 smest_simplex <- function(smofun, theta, utabl, control = list(tol = 1E-20), shiftsize){
   splittbl <- splitutable_nearbdry(utabl, boundary = "simplex", bdrythreshold = shiftsize, shiftsize = shiftsize)
   smofun_u <- swapDynamic(smofun, rep(1/ncol(utabl), ncol(utabl)), theta * 0 - 0.1) #don't use a boundary point here!
+  Jsmofun_u <- pTapeJacobianSwap(smoppi, theta * 0 - 0.1, rep(1/ncol(utabl)))
   out <- Rcgmin::Rcgmin(par = theta,
                         fn = function(theta){smobj2(smofun, smofun_u, theta,
                                                     splittbl$interior, splittbl$bdry, splittbl$acentres, approxorder = 100)},
-                        # gr = function(theta){smobjgrad(smofun, theta, utabl)},
+                        gr = function(theta){smobjgrad2(smofun, Jsmofun_u, theta,
+                                                        splittbl$interior, splittbl$bdry, splittbl$acentres, approxorder = 100)},
                         control = control)
   if (out$convergence != 0){warning("Optimisation did not converge.")}
   return(out)

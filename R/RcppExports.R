@@ -110,3 +110,17 @@ pTapeJacobianSwap <- function(pfun, value, theta) {
     .Call('_cdabyppi_pTapeJacobianSwap', PACKAGE = 'cdabyppi', pfun, value, theta)
 }
 
+#' @title The approximate value of the gradient (wrt space 1) of recorded function
+#' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
+#' @param value A vector in the domain of the taped function.
+#' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
+#' this vector forms the centre of the Taylor approximation
+#' @param theta a vector of the dynamic parameters
+#' @param order The order of Taylor expansion to use.
+#' @description Taylor expansion in the `theta` dimensions, to approximate the gradient wrt the `value` dimensions.
+#' @return The approximate value of the gradient, with respect to theta, of pfun
+#' @export
+pTapeHessianSwap <- function(pfun, value, theta) {
+    .Call('_cdabyppi_pTapeHessianSwap', PACKAGE = 'cdabyppi', pfun, value, theta)
+}
+

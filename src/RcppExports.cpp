@@ -147,6 +147,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pTapeHessianSwap
+XPtr< CppAD::ADFun<double> > pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta);
+RcppExport SEXP _cdabyppi_pTapeHessianSwap(SEXP pfunSEXP, SEXP valueSEXP, SEXP thetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< svecd >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(pTapeHessianSwap(pfun, value, theta));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_pmanifold", (DL_FUNC) &_cdabyppi_pmanifold, 1},
@@ -159,6 +172,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cdabyppi_pHessian", (DL_FUNC) &_cdabyppi_pHessian, 3},
     {"_cdabyppi_pTaylorApprox", (DL_FUNC) &_cdabyppi_pTaylorApprox, 5},
     {"_cdabyppi_pTapeJacobianSwap", (DL_FUNC) &_cdabyppi_pTapeJacobianSwap, 3},
+    {"_cdabyppi_pTapeHessianSwap", (DL_FUNC) &_cdabyppi_pTapeHessianSwap, 3},
     {NULL, NULL, 0}
 };
 

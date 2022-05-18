@@ -404,3 +404,43 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfu
   return(pout);
 }
 
+//' @title The approximate value of the gradient (wrt space 1) of recorded function
+//' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
+//' @param value A vector in the domain of the taped function.
+//' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
+//' this vector forms the centre of the Taylor approximation
+//' @param theta a vector of the dynamic parameters
+//' @param order The order of Taylor expansion to use.
+//' @description Taylor expansion in the `theta` dimensions, to approximate the gradient wrt the `value` dimensions.
+//' @return The approximate value of the gradient, with respect to theta, of pfun
+//' @export
+// [[Rcpp::export]]
+XPtr< CppAD::ADFun<double> >  pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun,
+                                                svecd value, svecd theta){
+  // //convert to eigen
+  veca1 value_e(value.size());
+  for (size_t i=0; i<value.size(); i++){ value_e[i] = value[i]; }
+  veca1 theta_e(theta.size());
+  for (size_t i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
+
+  //convert taped object to higher order
+  CppAD::ADFun<a1type, double> pfunhigher;
+  pfunhigher = pfun->base2ad();
+
+  //first tape the Jacobian of pfun but with the theta_e becoming the independent variables
+  CppAD::Independent(theta_e, value_e);  //for this tape, theta must be altered using new_dynamic
+  pfunhigher.new_dynamic(theta_e);
+  veca1 hess(value_e.size() * value_e.size());
+  hess = pfunhigher.Hessian(value_e, 0);
+
+  //end taping
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  out->Dependent(theta_e, hess);
+  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  out->check_for_nan(false);
+
+  XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}
+
+
