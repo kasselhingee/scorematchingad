@@ -17,7 +17,38 @@
 #' @return A vector of the estimates for individual entries of \eqn{A_L}, \eqn{b_L}, and \eqn{\beta}{beta}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A_L}, then the upper triangle of \eqn{A_L}, then the elements of \eqn{b_L}, and then finally the estimates of \eqn{\beta}{beta}.
 
 #' @export
-estimatorall1 <- function(prop,acut,betap = NULL)
+estimatorall1 <- function(prop, acut, betap = NULL){
+  Wnd <- estimatorall1_Wnd(prop,acut,betap)
+
+  #scoring estimator
+  # establish some constants
+  p <- ncol(prop)
+  sp <- p - 1
+  qind <- indexcombinations(sp)$qind
+  if (is.null(betap)) {
+    #estimate beta[p] in the model
+    num1=sp+qind+sp+p
+  } else {
+    #fix beta[p] in model
+    num1=sp+qind+sp+sp
+  }
+  quartic_sphere=solve(Wnd$W[1:num1,1:num1])%*%t(t(Wnd$d[1:num1]))
+
+  tot=sp+qind+sp
+
+  # from estimates of 1 + 2beta, to estimates of beta
+  quartic_sphere[sum(tot,1):num1]=(quartic_sphere[sum(tot,1):num1]-1)/2
+
+  return(list(estimator1=quartic_sphere,W_est=Wnd$W))
+}
+
+estimatorall1_smo <- function(pi, prop,acut,betap = NULL){
+  Wnd <- estimatorall1_Wnd(prop,acut,betap)
+  val <- 0.5 * t(pi) %*% Wnd$W %*% pi - t(Wnd$d) %*% pi
+  return(drop(val))
+}
+
+estimatorall1_Wnd <- function(prop,acut,betap = NULL)
 {
   n = nrow(prop)
   p = ncol(prop)
@@ -131,18 +162,10 @@ estimatorall1 <- function(prop,acut,betap = NULL)
 		d <- d + d6
 	}
 
-	#save W
-	W_est=W
+	return(list(
+	  W = W,
+	  d = d))
 
-	#scoring estimator
-	quartic_sphere=solve(W[1:num1,1:num1])%*%t(t(d[1:num1]))
-
-	tot=sp+qind+sp
-
-	# from estimates of 1 + 2beta, to estimates of beta
-	quartic_sphere[sum(tot,1):num1]=(quartic_sphere[sum(tot,1):num1]-1)/2
-
-	return(list(estimator1=quartic_sphere,W_est=W_est))
 }
 
 

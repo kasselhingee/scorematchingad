@@ -18,6 +18,8 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
     out = new simplex<a1type>();
   } else if (manifoldname.compare("Ralr") == 0){
     out = new Ralr<a1type>();
+  } else if (manifoldname.compare("Snative") == 0){
+    out = new Snative<a1type>();
   } else {
     stop("Manifold not found");
   }
@@ -150,6 +152,9 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
   if (llname.compare("ppi") == 0){
     ll = ll_ppi;
   }
+  if (llname.compare("vMF") == 0){
+    ll = ll_vMF;
+  }
   //check ll function
   if (ll == nullptr){
     throw std::invalid_argument("Matching ll function not found");
@@ -267,7 +272,7 @@ svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
 //' @return The value of pfun
 //' @export
 // [[Rcpp::export]]
-double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
+svecd pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
   vecd value_e(value.size());
   for (size_t i=0; i<value.size(); i++){ value_e[i] = value[i]; }
@@ -284,7 +289,10 @@ double pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   pfun->new_dynamic(theta_e);
   out_e = pfun->Forward(0, value_e);  //treat the XPtr as a regular pointer
 
-  return(out_e[0]);
+  svecd out(out_e.size());
+  for (size_t i=0; i<out_e.size(); i++){out[i] = out_e[i];}
+
+  return(out);
 }
 
 //' @title The Hessian of recorded function
@@ -333,7 +341,7 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
 //' @return The approximate value of pfun
 //' @export
 // [[Rcpp::export]]
-double pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
+svecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
                      svecd value, svecd centre,
                      svecd theta, size_t order){
   // //convert to eigen
@@ -344,13 +352,55 @@ double pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
   vecd theta_e(theta.size());
   for (size_t i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
 
-  Eigen::Matrix<double, Eigen::Dynamic, 1> out(1);
+  Eigen::Matrix<double, Eigen::Dynamic, 1> out(pfun->Range());
   pfun->new_dynamic(theta_e);
   out = taylorapprox(*pfun,
                      centre_e,
                      order,
                      value_e);
 
-  return(out[0]);
+  svecd outstd(out.size());
+  for (size_t i=0; i<out.size(); i++){ outstd[i] = out[i]; }
+
+  return(outstd);
+}
+
+//' @title The approximate value of the gradient (wrt space 1) of recorded function
+//' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
+//' @param value A vector in the domain of the taped function.
+//' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
+//' this vector forms the centre of the Taylor approximation
+//' @param theta a vector of the dynamic parameters
+//' @param order The order of Taylor expansion to use.
+//' @description Taylor expansion in the `theta` dimensions, to approximate the gradient wrt the `value` dimensions.
+//' @return The approximate value of the gradient, with respect to theta, of pfun
+//' @export
+// [[Rcpp::export]]
+XPtr< CppAD::ADFun<double> >  pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfun,
+                    svecd value, svecd theta){
+  // //convert to eigen
+  veca1 value_e(value.size());
+  for (size_t i=0; i<value.size(); i++){ value_e[i] = value[i]; }
+  veca1 theta_e(theta.size());
+  for (size_t i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
+
+  //convert taped object to higher order
+  CppAD::ADFun<a1type, double> pfunhigher;
+  pfunhigher = pfun->base2ad();
+
+  //first tape the Jacobian of pfun but with the theta_e becoming the independent variables
+  CppAD::Independent(theta_e, value_e);  //for this tape, theta must be altered using new_dynamic
+  pfunhigher.new_dynamic(theta_e);
+  veca1 grad(value_e.size());
+  grad = pfunhigher.Jacobian(value_e);
+
+  //end taping
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  out->Dependent(theta_e, grad);
+  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  out->check_for_nan(false);
+
+  XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
 }
 
