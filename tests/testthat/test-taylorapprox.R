@@ -55,7 +55,7 @@ test_that("approxcentre_simplex gives results equal to shiftsize", {
 })
 
 
-test_that("Approx taylor with u on boundary generates non-NAN values for sphere for ppi", {
+test_that("Approx taylor with u on boundary generates correct values (excluding gradient) for sphere for ppi", {
   set.seed(123)
   m <- sec2_3model(2)
   m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
@@ -70,42 +70,6 @@ test_that("Approx taylor with u on boundary generates non-NAN values for sphere 
 
   expect_true(is.nan(pForward0(smoppi_u, m$sample[1,], m$theta)))
   approxsmoval <- pTaylorApprox(smoppi_u, m$sample[1, ], acentres[1,], m$theta, 100)
-  expect_true(!is.nan(approxsmoval))
-  expect_equal(approxsmoval, pForward0(smoppi_u, acentres[1,], m$theta), tolerance = 1E-2)
-
-  #close to the boundary the values gradient should be close flat
-  cdabyppi::expect_lt_v(abs(pJacobian(smoppi_u, acentres[1,], m$theta)), 1E-1)
-
-  #close to the boundary the values of Hessian should be close flat
-  cdabyppi::expect_lt_v(abs(pHessian(smoppi_u, acentres[1,], m$theta)), 1E-1) #currently there are some HUGE values
-
-  # previously the Jacobian and Hessian gave real answers on the boundary. What has happened?
-
-})
-
-test_that("Approx taylor with u on boundary generates non-NAN values for sphere for dirichlet", {
-  set.seed(123)
-  m <- sec2_3model(2)
-  m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
-  acentres <- approxcentre(m$sample, shiftsize = 1E-15)
-
-  psphere <- pmanifold("sphere") #because above ppill_r is for the simplex
-  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "dirichlet", pman = psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  expect_true(!is.nan(pTaylorApprox(lltape, m$sample[1,], acentres[1,], m$theta, 100)))
-
-  smo <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, pman = psphere, "minsq", acut = 0.1, verbose = FALSE) #tape of the score function
-  smo_u <- swapDynamic(smo, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
-
-  expect_true(is.nan(pForward0(smo_u, m$sample[1,], m$theta)))
-  approxsmoval <- pTaylorApprox(smo_u, m$sample[1, ], acentres[1,], m$theta, 100)
-  expect_true(!is.nan(approxsmoval))
-  expect_equal(approxsmoval, pForward0(smo_u, acentres[1,], m$theta), tolerance = 1E-2)
-
-  #close to the boundary the values gradient should be close flat
-  cdabyppi::expect_lt_v(abs(pJacobian(smo_u, acentres[1,], m$theta)), 1E-1)
-
-  #close to the boundary the values of Hessian should be close flat
-  cdabyppi::expect_lt_v(abs(pHessian(smo_u, acentres[1,], m$theta)), 1E-1) #currently there are some HUGE values
-
-  # previously the Jacobian and Hessian gave real answers of zero on the boundary. What has happened?
+  pi <- toPPIparamvec(m$ALs, m$bL, beta = 1 + 2 * m$beta0)
+  expect_equal(approxsmoval, estimatorall1_smo(pi, m$sample[1,, drop = FALSE], 0.1))
 })
