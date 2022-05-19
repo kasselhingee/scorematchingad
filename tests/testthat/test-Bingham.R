@@ -44,3 +44,31 @@ test_that("Bingham_full() optimiser works", {
   cdabyppi::expect_lt_v(abs(est$sminfo$par - theta), 3 * est$sminfo$SE)
   expect_lt(est$sminfo$sqgradsize, 1E-10)
 })
+
+test_that("Bingham_Mardia() optimiser works", {
+  p <- 5
+  set.seed(345)
+  theta <- runif(p-1 + (p - 1) * p/2)
+  A <- Bingham_theta2Amat(theta)
+
+  set.seed(123)
+  sample <- rBingham(100, A)
+  est <- Bingham_Mardia(sample)
+  A_es <- eigen(A)
+  cdabyppi::expect_lt_v(abs(est$Lambda - A_es$values)[-p], 3 * est$Lambda_SE[-p])
+  expect_lt(est$sminfo$sqgradsize, 1E-10)
+})
+
+test_that("Bingham() works", {
+  p <- 4
+  set.seed(345)
+  theta <- runif(p-1 + (p - 1) * p/2)
+  A <- Bingham_theta2Amat(theta)
+
+  set.seed(123)
+  sample <- rBingham(100, A)
+
+  expect_equal(Bingham_full(sample), Bingham(sample, method = "smfull"))
+  expect_equal(Bingham_Mardia(sample), Bingham(sample, method = "Mardia"))
+  expect_equal(Bingham_Mardia(sample), Bingham(sample, method = "hybrid"))
+})
