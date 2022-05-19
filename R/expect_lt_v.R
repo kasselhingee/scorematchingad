@@ -20,7 +20,7 @@ expect_op_v <- function(object, expected, operation = function(x, y) x < y, comp
     if (length(object) %% length(expected) == 0){
       expected <- rep(expected, length(object) / length(expected))
     } else {
-      testthat::fail("Length mismatch: %s has length %i but expected has length %i", act$lab, length(object), length(expected))
+      testthat::fail(sprintf("Length mismatch: %s has length %i but 'expected' has length %i", act$lab, length(object), length(expected)))
     }
   }
   comparison <- operation(object, expected)
