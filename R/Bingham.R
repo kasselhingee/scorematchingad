@@ -12,10 +12,10 @@
 #' A[upper.tri(A)] <- runif(sum(upper.tri(A)))
 #' A[lower.tri(A)] <- t(A)[lower.tri(A)]
 #' diag(A) <- c(runif(p-1), NA)
-#' A[p,p] <- -sum(diag(A)[1:(p-1)]) #trace is 0 constraint
+#' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
 #' sample <- rBingham(100, A)
 #'
-#'
+#' Bingham(sample, method = "Mardia")
 #' @export
 Bingham <- function(sample, method = "smfull", control = list(tol = 1E-20)){
   if (method == "smfull"){out = Bingham_full(sample, control = control)}
