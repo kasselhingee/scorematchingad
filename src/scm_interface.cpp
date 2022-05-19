@@ -155,6 +155,9 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
   if (llname.compare("vMF") == 0){
     ll = ll_vMF;
   }
+  if (llname.compare("Bingham") == 0){
+    ll = ll_Bingham;
+  }
   //check ll function
   if (ll == nullptr){
     throw std::invalid_argument("Matching ll function not found");
@@ -250,8 +253,8 @@ svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   }
 
   //check inputs and tape match
-  if (pfun->Domain() != value_e.size()){stop("Size of input vector does not match domain size of taped function.");}
-  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector does not match parameter size of the taped function.");}
+  if (pfun->Domain() != value_e.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value_e.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta_e.size(), pfun->size_dyn_ind());}
 
   vecd grad(value_e.size());
   svecd out(value_e.size());
@@ -314,9 +317,8 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   }
 
   //check inputs and tape match
-  if (pfun->Domain() != value_e.size()){stop("Size of input vector does not match domain size of taped function.");}
-  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector does not match parameter size of the taped function.");}
-
+  if (pfun->Domain() != value_e.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value_e.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta_e.size(), pfun->size_dyn_ind());}
 
   vecd hess(value_e.size() * value_e.size(), 1);
   svecd out(hess.size());
