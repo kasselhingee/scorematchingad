@@ -18,7 +18,7 @@ vMF <- function(sample, method = "smfull", control = list(tol = 1E-20)){
 vMF_Mardia <- function(sample, control = list(tol = 1E-20)){
   mu <- colMeans(sample)
   mu <- mu/sqrt(sum(mu^2))
-  R <- vec2northpole(mu)
+  R <- Directional::rotation(mu, c(1, rep(0, length(mu) - 1)))
   samplestd <- t(R %*% t(sample))
   # check: mustd <- colMeans(samplestd); mustd <- mustd / sqrt(sum(mustd^2))
   # do estimate, where all but the first component of theta are fixed at zero
