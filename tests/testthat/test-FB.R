@@ -18,7 +18,9 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
 
 
   set.seed(123)
-  sample <- Directional::rfb(2, k, m, -A) #actual params here don't matter, just using to get a vector on the sphere
+  sample <- matrix(runif(2 * p, -10, 10), nrow = 2)
+  sample <- sample / sqrt(rowSums(sample^2))
+  stopifnot(all(abs(sqrt(rowSums(sample^2)) - 1) < 1E-5))
 
   pman <- pmanifold("Snative")
   lltape <- ptapell(sample[1,], seq.int(1, length.out = length(theta)), llname = "FB", pman,
