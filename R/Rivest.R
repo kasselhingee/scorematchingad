@@ -20,7 +20,9 @@ qdRivest <- function(u, k, A, evidx){
   A_es <- eigen(A)
   evalorder <- order(abs(A_es$values), decreasing = FALSE)
   m <- A_es$vectors[, evalorder[evidx]]
+  print(paste0("Location of evec: ", 4 - evalorder[evidx])) #the minus accounts for R's eigen() returns evals in DECREASING order while Cpp's eigen returns them in increasing
   if (m[1] > 0){m <- -m} #I think the Cpp eigen package always has the first element as negative, but I couldn't find any documentation
+  print(paste0("first m value: ", m[1]))
   qd <- exp(k * m %*% u + t(u) %*% A %*% u)
   return(qd)
 }
@@ -30,6 +32,7 @@ lldRivest_du <- function(u, k, A, evidx){
   A_es <- eigen(A)
   evalorder <- order(abs(A_es$values), decreasing = FALSE)
   m <- A_es$vectors[, evalorder[evidx], drop = FALSE]
+  if (m[1] > 0){m <- -m} #I think the Cpp eigen package always has the first element as negative, but I couldn't find any documentation
   du <- k * m + 2 * A %*% u
   return(du)
 }

@@ -4,11 +4,8 @@ test_that("Rivest likelihood runs and matches R code", {
   A <- rsymmetricmatrix(p, -10, 10)
   A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
   A_es <- eigen(A)
-  idx <- 1
-  evalorder <- order(abs(A_es$values), decreasing = TRUE)
-  m <- A_es$vectors[, evalorder[idx]]
+  idx <- p
   k <- 2
-  sample <- rFB(1000, k, m, A)
 
   theta <- c(cdabyppi:::Bingham_Amat2theta(A), k, idx)
 
@@ -39,10 +36,14 @@ test_that("Rivest likelihood runs and matches R code", {
   }
 
   # test changing A gives different eigenvector - works as of 26 May, 2022, purely using PrintFor statement so can't test on it
-  # thetatest <- theta
-  # thetatest[c(1,3,4)] <- thetatest[c(1,3,4)] / 100
-  # pForward0(lltape, u, thetatest)
-  # llRivest(thetatest)
+  thetatest <- theta
+  thetatest[c(1,3,4)] <- thetatest[c(1,3,4)] / 100
+  #the above means the largest eigenvalue is first in decreasing order too
+  #previously the largest sized eigenvalues was the last in decreasing order
+  pForward0(lltape, u, theta) #the location of the evec is 1
+  llRivest(theta)
+  pForward0(lltape, u, thetatest) #the location of the evec is now 3, but pForward0 is giving the wrong vector
+  llRivest(thetatest)
 
 
 

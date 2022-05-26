@@ -111,8 +111,9 @@ namespace { // begin the empty namespace
               << eigensolver.eigenvectors() << std::endl;
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> evals;
-    evals = eigensolver.eigenvalues().cwiseAbs();
+    evals = eigensolver.eigenvalues().cwiseAbs();//eigenvalues() presents the results in increasing order (negative -> 0 -> positive)
     std::cout << "The eigenvalues sizes of Amat are:\n" << evals.transpose() << std::endl;
+    //use conditional statements to find the index of the largest eigenvalue
     std::vector<T> sevals(evals.size());
     for (size_t i=0; i<evals.size(); i++){
       sevals[i] = evals[i];
@@ -124,7 +125,7 @@ namespace { // begin the empty namespace
     std::cout << "eval order: " << ind[2] << std::endl;
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> m;
-    m = eigensolver.eigenvectors().block(0, ind[0], d, 1);
+    m = eigensolver.eigenvectors().block(0, ind[d-1], d, 1); //largest sized eigenvalue
     CppAD::PrintFor("m[0] is: ", m(0,0));
     std::cout << "m is: " << m << std::endl;
     //extra: put a condition that the first element of m is negative (or positive) so that don't get directional uncertainty
