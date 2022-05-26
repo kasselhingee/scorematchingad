@@ -15,10 +15,10 @@
 #' sample <- rFB(1000, 2, m, A)
 #' qdRivest(sample[1, ], 2, A, 3)
 
-#evidx specifies the eigenvector of A that is m. Vectors are sorted decreasing size
+#evidx specifies the eigenvector of A that is m. Vectors are sorted increasing size
 qdRivest <- function(u, k, A, evidx){
   A_es <- eigen(A)
-  evalorder <- order(abs(A_es$values), decreasing = TRUE)
+  evalorder <- order(abs(A_es$values), decreasing = FALSE)
   m <- A_es$vectors[, evalorder[evidx]]
   qd <- exp(k * m %*% u + t(u) %*% A %*% u)
   return(qd)
