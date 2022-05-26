@@ -20,6 +20,7 @@ qdRivest <- function(u, k, A, evidx){
   A_es <- eigen(A)
   evalorder <- order(abs(A_es$values), decreasing = FALSE)
   m <- A_es$vectors[, evalorder[evidx]]
+  if (m[1] > 0){m <- -m} #I think the Cpp eigen package always has the first element as negative, but I couldn't find any documentation
   qd <- exp(k * m %*% u + t(u) %*% A %*% u)
   return(qd)
 }

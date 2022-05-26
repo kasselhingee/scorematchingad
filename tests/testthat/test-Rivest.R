@@ -29,7 +29,7 @@ test_that("Rivest likelihood runs and matches R code", {
   expect_equal(pJacobian(lltape, u, theta), cdabyppi:::lldRivest_du(u, k, A, idx),
                ignore_attr = TRUE)
 
-  # test deriv wrt theta
+
   llRivest <- function(theta){
     A <- cdabyppi:::Bingham_theta2Amat(theta[seq.int(1, length.out = p - 1 + (p-1)*p/2)])
     k <- theta[1 + p - 1 + (p-1)*p/2]
@@ -37,8 +37,16 @@ test_that("Rivest likelihood runs and matches R code", {
     out <- log(cdabyppi:::qdRivest(u, k, A, idx))
     return(out)
   }
-  thetatest <- theta
-  thetatest[c(1,3,4)] <- thetatest[c(1,3,4)] / 100
+
+  # test changing A gives different eigenvector - works as of 26 May, 2022, purely using PrintFor statement so can't test on it
+  # thetatest <- theta
+  # thetatest[c(1,3,4)] <- thetatest[c(1,3,4)] / 100
+  # pForward0(lltape, u, thetatest)
+  # llRivest(thetatest)
+
+
+
+  # test deriv wrt theta
   Rgradt <- numericDeriv(quote(llRivest(thetatest)), c("thetatest"))
   lltape_t <- swapDynamic(lltape, theta+1, sample[1, ])
   expect_equal(pJacobian(lltape_t, thetatest, u), attr(Rgradt, "gradient"),

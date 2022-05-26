@@ -125,6 +125,7 @@ namespace { // begin the empty namespace
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> m;
     m = eigensolver.eigenvectors().block(0, ind[0], d, 1);
+    CppAD::PrintFor("m[0] is: ", m(0,0));
     std::cout << "m is: " << m << std::endl;
     //extra: put a condition that the first element of m is negative (or positive) so that don't get directional uncertainty
     //but I suspect this is already fixed by eigen
