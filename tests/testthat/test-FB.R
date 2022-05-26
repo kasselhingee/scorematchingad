@@ -142,3 +142,19 @@ test_that("rfb() simulation for general symmetric matrices fitting", {
             sum(smobjgrad(smotape, theta, sample)^2))
   #smobjgrad(smotape, theta, sample) is strangely large for so many samples
 })
+
+
+test_that("FB() fits for p = 3", {
+  p <- 3
+  set.seed(111)
+  theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
+  thetamats <- FB_theta2mats(theta)
+
+  #simulate
+  set.seed(12345)
+  sample <- rFB(10000, thetamats$k, thetamats$m, thetamats$A)
+
+  #Fit
+  est <- FB(sample, control = list(tol = 1E-10))
+  cdabyppi:::expect_lt_v(abs(est$sminfo$par - theta), 3 * est$sminfo$SE)
+})

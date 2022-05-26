@@ -8,6 +8,23 @@
 #' diag(A) <- c(runif(p-1), NA)
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
 #' sample <- Directional::rfb(100, 1, runif(p), A)
+#' @param sample An array of samples, each row an individual sample.
+#' @export
+FB <- function(sample, control = list(tol = 1E-20)){
+  p <- ncol(sample)
+  ltheta <- p-1 + (p - 1) * p/2 + p
+  thetatape <- seq.int(1, length.out = ltheta)
+  pman <- pmanifold("Snative")
+
+  lltape <- ptapell(sample[1,], thetatape, llname = "FB", pman,
+                    fixedtheta = rep(FALSE, ltheta), verbose = FALSE)
+  smotape <- ptapesmo(sample[1,], thetatape,
+                      lltape, pman, "ones", 1, verbose = FALSE)
+  sminfo <- smest(smotape, thetatape, sample,
+               control = control)
+  thetamat <- FB_theta2mats(sminfo$par)
+  return(c(thetamat, list(sminfo = sminfo)))
+}
 
 # non-normalised density function
 qdFB <- function(u, k, m, A){
