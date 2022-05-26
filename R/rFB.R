@@ -7,10 +7,11 @@
 #' @param A See `Directional::rfb()`
 #' @details
 #' Simulates from the Fisher-Bingham distribution with density proportional to
-#' $$exp(k <m, x> + x^T A x)$$
+#' $$exp(k <m, x> + x^T A x).$$
+#' Only the sphere embedded in 3D space is implemented.
 #' @export
 rFB <- function(n, k, m, A){
   B <- Directional::rotation(c(0, 1, 0), m)
-  sample <- Directional::rfb(n, k, m, -solve(B) %*% thetamats$A %*% B)
+  sample <- Directional::rfb(n, k, m, -solve(B) %*% A %*% B)
   return(sample)
 }
