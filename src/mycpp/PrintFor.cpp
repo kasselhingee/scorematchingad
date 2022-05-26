@@ -1,3 +1,6 @@
+#ifndef PrintForIncluded_cpp
+#define PrintForIncluded_cpp
+
 template <class T> //T must be something CppAD::PrintFor can print
 void PrintForVec(const char* before, const T & printvec){
   CppAD::PrintFor(before, printvec[0]);
@@ -22,3 +25,4 @@ void PrintForMatrix(const char* before, const Eigen::Matrix<T, Eigen::Dynamic, E
   }
 }
 
+#endif
