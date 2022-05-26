@@ -2,12 +2,12 @@
 #'
 #' @examples
 #' p <- 3
-#' A <- matrix(NA, ncol = p, nrow = p)
-#' A[upper.tri(A)] <- runif(sum(upper.tri(A)))
-#' A[lower.tri(A)] <- t(A)[lower.tri(A)]
-#' diag(A) <- c(runif(p-1), NA)
+#' A <- rsymmetricmatrix(p, -10, 10)
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
-#' sample <- Directional::rfb(100, 1, runif(p), A)
+#' m <- runif(p, -10, 10)
+#' m <- m / sqrt(sum(m^2))
+#' sample <- rFB(1000, 2, m, A)
+#' FB(sample)
 #' @param sample An array of samples, each row an individual sample.
 #' @export
 FB <- function(sample, control = list(tol = 1E-20)){
