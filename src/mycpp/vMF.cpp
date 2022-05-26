@@ -81,6 +81,37 @@ namespace { // begin the empty namespace
     return(out);
   }
 
+  //given a vector x, return a vector of indices that give
+  //x in increasing order
+  //with the whole thing taped
+  template <class T>
+  Eigen::Matrix<T, Eigen::Dynamic, 1> incorder(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x){
+    size_t xsize(x.size());
+    //A matrix for storing the results of the lt comparison
+    Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> ltmat(xsize, xsize);
+    ltmat.setZero();
+    T zero(0), one(1);
+    for (size_t col=0; col<xsize; col++){
+      for (size_t row=col+1; row<xsize; row++){
+        ltmat(row, col) = CondExpLt(x[col], x[row], one, zero); //if the x[col] item is strictly less than x[row] then ltmat(row,col) is 1
+        ltmat(col, row) = 1 - ltmat(row, col); //because the opposite is false
+      }
+    }
+    //index order stored in below object
+    Eigen::Matrix<T, Eigen::Dynamic, 1> order(xsize);
+    order = ltmat.colwise().sum();
+    std::cout << "Each x is less than this many others:\n" << order.transpose() << std::endl;
+    //a high value in this vector means the corresponding x value is LOWER than many of the other x values
+    //order[i] == xsize-1 means x[i] is the LOWEST
+    //order[i] == 0 means x[i] is the HIGHEST
+
+    Eigen::Matrix<T, Eigen::Dynamic, 1> order2(xsize);
+    order2 = order.array() * (-1) + xsize - 1;
+    //xsize-1-order[i] == xsize-1 means x[i] is the highest
+    //xsize-1-order[i] == 0 means x[i] is the lowest
+    return(order2);
+  }
+
   template <class T>
   T ll_Rivest(const Eigen::Matrix<T, Eigen::Dynamic, 1> &u,
           const Eigen::Matrix<T, Eigen::Dynamic, 1> &theta){
@@ -113,6 +144,12 @@ namespace { // begin the empty namespace
     Eigen::Matrix<T, Eigen::Dynamic, 1> evals;
     evals = eigensolver.eigenvalues().cwiseAbs();//eigenvalues() presents the results in increasing order (negative -> 0 -> positive)
     std::cout << "The eigenvalues sizes of Amat are:\n" << evals.transpose() << std::endl;
+
+    //ordering
+    Eigen::Matrix<T, Eigen::Dynamic, 1> evalorder;
+    evalorder = incorder(evals);
+    std::cout << "The order of eigenvalues in increasing size:\n" << evalorder.transpose() << std::endl;
+
     //use conditional statements to find the index of the largest eigenvalue
     std::vector<T> sevals(evals.size());
     for (size_t i=0; i<evals.size(); i++){
@@ -120,6 +157,7 @@ namespace { // begin the empty namespace
     }
     std::vector<size_t> ind(evals.size());
     CppAD::index_sort(sevals, ind);
+    //VecAD has indexing dependence included
     std::cout << "eval order: " << ind[0] << std::endl;
     std::cout << "eval order: " << ind[1] << std::endl;
     std::cout << "eval order: " << ind[2] << std::endl;
