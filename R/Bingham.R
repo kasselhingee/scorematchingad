@@ -8,10 +8,7 @@
 #'  Book Mardia and Jupp 2000 would likely be a better reference.
 #' @examples
 #' p <- 4
-#' A <- matrix(NA, ncol = p, nrow = p)
-#' A[upper.tri(A)] <- runif(sum(upper.tri(A)))
-#' A[lower.tri(A)] <- t(A)[lower.tri(A)]
-#' diag(A) <- c(runif(p-1), NA)
+#' A <- rsymmetricmatrix(p)
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
 #' sample <- rBingham(100, A)
 #'
