@@ -161,6 +161,9 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
   if (llname.compare("FB") == 0){
     ll = ll_FB;
   }
+  if (llname.compare("Rivest") == 0){
+    ll = ll_Rivest;
+  }
   //check ll function
   if (ll == nullptr){
     throw std::invalid_argument("Matching ll function not found");

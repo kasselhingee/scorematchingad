@@ -14,14 +14,12 @@ namespace { // begin the empty namespace
   }
 
   template <class T>
-  T ll_Bingham(const Eigen::Matrix<T, Eigen::Dynamic, 1> &u,
-           const Eigen::Matrix<T, Eigen::Dynamic, 1> &theta)
-    //lklhood is log(u*A*u) - from Mardia et al 2016
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>
+  BinghamMatrix(const Eigen::Matrix<T, Eigen::Dynamic, 1> &theta){
     // A is symmetric, and the sum of the diagonals is zero
-  {
     //assume the parameter vector theta is encoded as:
     //c(diag(A)[1:(p-1)], A[upper.tri(ALs)]
-    size_t d  = u.size();
+    size_t d = (-3 + std::sqrt(17 + 8 * theta.size()))/2;
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Amat(d, d);
     Amat.setZero();
     //populate the diagonal
@@ -45,6 +43,18 @@ namespace { // begin the empty namespace
         vecidx +=1;
       }
     }
+    return(Amat);
+  }
+
+  template <class T>
+  T ll_Bingham(const Eigen::Matrix<T, Eigen::Dynamic, 1> &u,
+           const Eigen::Matrix<T, Eigen::Dynamic, 1> &theta)
+    //lklhood is log(u*A*u) - from Mardia et al 2016
+    // A is symmetric, and the sum of the diagonals is zero
+  {
+    size_t d  = u.size();
+    Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Amat(d, d);
+    Amat = BinghamMatrix(theta);
 
     Eigen::Matrix<T, 1, 1> out_e;
     out_e = u.transpose() * Amat * u;
@@ -71,5 +81,30 @@ namespace { // begin the empty namespace
     return(out);
   }
 
+  template <class T>
+  T ll_Rivest(const Eigen::Matrix<T, Eigen::Dynamic, 1> &u,
+          const Eigen::Matrix<T, Eigen::Dynamic, 1> &theta){
+    //assume the first part of theta defines the matrix A
+    // then the next element is concentration parameter, and
+    // the final element is the eigenvector/value to use
+    size_t d  = u.size();
+    Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Amat(d, d);
+    Eigen::Matrix<T, Eigen::Dynamic, 1> Btheta;
+    Btheta = theta.block(0,0, d - 1 + (d-1)*d/2, 1);
+    Amat = BinghamMatrix(Btheta);
+    T out;
+    out = u.transpose() * Amat * u;
+
+    std::cout << "Amat is:" << std::endl << Amat << std::endl;
+
+    // Eigen::SelfAdjointEigenSolver<Eigen::Matrix2f> eigensolver(Amat);
+    // if (eigensolver.info() != Eigen::Success) return(out);
+    // std::cout << "The eigenvalues of A are:\n" << eigensolver.eigenvalues() << std::endl;
+    // std::cout << "Here's a matrix whose columns are eigenvectors of A \n"
+    //           << "corresponding to these eigenvalues:\n"
+    //           << eigensolver.eigenvectors() << std::endl;
+
+   return(out);
+  }
 
 }

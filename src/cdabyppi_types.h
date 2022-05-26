@@ -3,6 +3,7 @@
 # include <cppad/example/cppad_eigen.hpp>  //load eigen
 # include <cppad/cppad.hpp> // the CppAD package
 # include <Eigen/LU> //for matrix determinant
+# include <Eigen/Eigenvalues> //for matrix eigenvalues
 # include <Rcpp.h>
 using namespace Rcpp;
 
