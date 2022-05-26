@@ -24,3 +24,11 @@ qdRivest <- function(u, k, A, evidx){
   return(qd)
 }
 
+#derivative wrt u
+lldRivest_du <- function(u, k, A, evidx){
+  A_es <- eigen(A)
+  evalorder <- order(abs(A_es$values), decreasing = FALSE)
+  m <- A_es$vectors[, evalorder[evidx], drop = FALSE]
+  du <- k * m + 2 * A %*% u
+  return(du)
+}

@@ -124,8 +124,6 @@ namespace { // begin the empty namespace
     std::cout << "eval order: " << ind[2] << std::endl;
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> m;
-    // CppAD::AD<int> eidx;
-    // eidx = theta[Btheta.size() + 1] + 0.5;
     m = eigensolver.eigenvectors().block(0, ind[0], d, 1);
     std::cout << "m is: " << m << std::endl;
     //extra: put a condition that the first element of m is negative (or positive) so that don't get directional uncertainty

@@ -24,4 +24,23 @@ test_that("Rivest likelihood runs and matches R code", {
   u <- sample[2, ]
   expect_equal(pForward0(lltape, u, theta), log(cdabyppi:::qdRivest(u, k, A, idx)),
                ignore_attr = TRUE)
+
+  #derive wrt u
+  expect_equal(pJacobian(lltape, u, theta), cdabyppi:::lldRivest_du(u, k, A, idx),
+               ignore_attr = TRUE)
+
+  # test deriv wrt theta
+  llRivest <- function(theta){
+    A <- cdabyppi:::Bingham_theta2Amat(theta[seq.int(1, length.out = p - 1 + (p-1)*p/2)])
+    k <- theta[1 + p - 1 + (p-1)*p/2]
+    idx <- theta[2 + p - 1 + (p-1)*p/2]
+    out <- log(cdabyppi:::qdRivest(u, k, A, idx))
+    return(out)
+  }
+  thetatest <- theta
+  thetatest[c(1,3,4)] <- thetatest[c(1,3,4)] / 100
+  Rgradt <- numericDeriv(quote(llRivest(thetatest)), c("thetatest"))
+  lltape_t <- swapDynamic(lltape, theta+1, sample[1, ])
+  expect_equal(pJacobian(lltape_t, thetatest, u), attr(Rgradt, "gradient"),
+               tolerance = 1E-5, ignore_attr = TRUE)
 })
