@@ -1,5 +1,5 @@
 #' @title Estimate Fisher-Bingham distribution
-#'
+#' @param control A list of control parameters passed to `Rcgmin::Rcgmin()`.
 #' @examples
 #' p <- 3
 #' A <- rsymmetricmatrix(p, -10, 10)
@@ -64,24 +64,4 @@ FB_theta2mats <- function(theta){
     m = m,
     A = A
   ))
-}
-
-# it seems like Directional::rfb transforms the A matrix (and Directional::rbingham doesn't)
-FB_toDirectionalA <- function(A){
-  stopifnot(ncol(A) == 3)
-  ut <- A[upper.tri(A)]
-  ut[1:2] <- -ut[1:2]
-  ut <- ut[c(1, 3, 2)]
-  A[upper.tri(A)] <- ut
-  A[lower.tri(A)] <- t(A)[lower.tri(A)]
-  return(A)
-}
-FB_fromDirectionalA <- function(A){
-  stopifnot(ncol(A) == 3)
-  ut <- A[upper.tri(A)]
-  ut <- ut[c(1, 3, 2)]
-  ut[1:2] <- -ut[1:2]
-  A[upper.tri(A)] <- ut
-  A[lower.tri(A)] <- t(A)[lower.tri(A)]
-  return(A)
 }
