@@ -113,28 +113,37 @@ test_that("Rivest() fits correctly with evidx given correctly", {
 
   ltheta <- p-1 + (p - 1) * p/2 + 2
   expect_equal(ltheta, length(theta))
-  thetafortape <- c(seq.int(1, length.out = ltheta-1), 2)
+  # fix both k and evidx correctly
+  thetafortape <- c(seq.int(1, length.out = ltheta-1), theta[ltheta])
+  # thetafortape[ltheta - 1] <- theta[ltheta - 1]
+  fixedtheta <- c(rep(FALSE, ltheta-2), FALSE, TRUE)
+
   pman <- pmanifold("Snative")
-  lltape <- ptapell(sample[1,], c(thetafortape[-ltheta], evidx), llname = "Rivest", pman,
-                    fixedtheta = c(rep(FALSE, ltheta-1), TRUE), verbose = FALSE)
+  lltape <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
+                    fixedtheta = fixedtheta, verbose = FALSE)
   # for this set of theta, the eigen value has a positive first element!
-  expect_equal(pForward0(lltape, sample[2, ], theta[-ltheta]), log(qdRivest(sample[2, ], k, A, evidx)),
+  expect_equal(pForward0(lltape, sample[2, ], theta[!fixedtheta]), log(qdRivest(sample[2, ], k, A, evidx)),
                ignore_attr = TRUE)
 
 
-  smotape <- ptapesmo(sample[1,], thetafortape[-ltheta],
+  smotape <- ptapesmo(sample[1,], thetafortape[!fixedtheta],
                         lltape, pman, "ones", 1, verbose = FALSE)
 
   # first there is something strange that the gradient of smotape is very high at the correct value of the theta
-  smobj(smotape, theta[-ltheta], sample)
-  smobjgrad(smotape, theta[-ltheta], sample)
-  smobjhess(smotape, theta[-ltheta], sample)
-  smestSE(smotape, theta[-ltheta], sample)
+  smobj(smotape, theta[!fixedtheta], sample)
+  smobjgrad(smotape, theta[!fixedtheta], sample)
+  pJacobian(smotape, theta[!fixedtheta], sample[1, ])
+
+  smobjhess(smotape, theta[!fixedtheta], sample)
+  smestSE(smotape, theta[!fixedtheta], sample)
 
   # minimise without using smobjgrad
-  out <- Rcgmin::Rcgmin(par = thetafortape[-ltheta],
+  out <- Rcgmin::Rcgmin(par = thetafortape[!fixedtheta],
                         fn = function(theta){smobj(smotape, theta, sample)},
                         control = control)
+  outSE <- smestSE(smotape, out$par, sample)
+  expect_lt_v(abs(out$par - theta[!fixedtheta]), 3 * outSE)
+})
 
 
 
