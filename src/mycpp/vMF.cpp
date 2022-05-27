@@ -155,22 +155,13 @@ namespace { // begin the empty namespace
     PrintForVec("\n The order of eigenvalues in increasing size is: ", evalorder);
 
     /////////////////choose the largest vector////////////
-    T evidx;
-    evidx = evalorder[d-1];
-    CppAD::PrintFor("\nEigenvector selected is: ", evidx);
-    //A hack using ones and zeros
-    CppAD::VecAD<double> adselector(d);
+    //A hack using ones and zeros, could maybe use VecAD in the future
     T zero(0), one(1);
-    T iad;
-    for (iad=zero; iad<d; iad += one){
-      adselector[iad + 0.1] = zero;
-    }
-    adselector[evidx + 0.1] = one;
-
     Eigen::Matrix<T, Eigen::Dynamic, 1> eselector(d); //selector vector in eigen type
+    T sizethwanted(d-1);
     for (size_t i=0; i<d; i++){
-      iad = zero + i + 0.1;
-      eselector[i] = adselector[iad];
+      eselector[i] = CondExpLt(evalorder[i], sizethwanted + 0.1, one, zero); //if less than 0.1 + idx wanted then one
+      eselector[i] = eselector[i] * CondExpLt(evalorder[i] + 1, sizethwanted + 0.1, zero, one); //if 1+ is also less than index wanted then multiple by zero
     }
     PrintForVec("\n eselector is: ", eselector);
 
