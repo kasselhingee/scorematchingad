@@ -80,31 +80,65 @@ test_that("ll_Rivest modifies m to have the correct sign", {
   # for this set of theta, the eigen value has a positive first element!
   expect_equal( pForward0(lltape, sample[2, ], theta), log(qdRivest(sample[2, ], mats$k, mats$A, mats$evidx)),
                ignore_attr = TRUE)
+
+  #derive wrt u
+  expect_equal(pJacobian(lltape, sample[2, ], theta), cdabyppi:::lldRivest_du(sample[2, ], mats$k, mats$A, mats$evidx),
+               ignore_attr = TRUE)
+
+  #deriv wrt theta
+  llRivest <- function(theta){
+    A <- cdabyppi:::Bingham_theta2Amat(theta[seq.int(1, length.out = p - 1 + (p-1)*p/2)])
+    k <- theta[1 + p - 1 + (p-1)*p/2]
+    idx <- theta[2 + p - 1 + (p-1)*p/2]
+    out <- log(cdabyppi:::qdRivest(sample[2, ], k, A, idx))
+    return(out)
+  }
+
+  Rgradt <- numericDeriv(quote(llRivest(theta)), c("theta"))
+  lltape_t <- swapDynamic(lltape, theta, sample[1, ])
+  expect_equal(pJacobian(lltape_t, theta, sample[2, ]), attr(Rgradt, "gradient"),
+               tolerance = 1E-5, ignore_attr = TRUE)
 })
 
-test_that("Rivest() fits correctly", {
+test_that("Rivest() fits correctly with evidx given correctly", {
   p <- 3
+  set.seed(1245)
   A <- rsymmetricmatrix(p, -10, 10)
   A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint for Bingham
   k <- -3.2
   evidx <- 2
-  sample <- rRivest(100, k, A, evidx)
+  sample <- rRivest(1000, k, A, evidx)
   theta <- Rivest_mats2theta(k, A, evidx)
   control <- list(tol = 1E-10)
 
   ltheta <- p-1 + (p - 1) * p/2 + 2
+  expect_equal(ltheta, length(theta))
   thetafortape <- c(seq.int(1, length.out = ltheta-1), 2)
   pman <- pmanifold("Snative")
-  lltape <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
-                    fixedtheta = rep(FALSE, ltheta), verbose = FALSE)
+  lltape <- ptapell(sample[1,], c(thetafortape[-ltheta], evidx), llname = "Rivest", pman,
+                    fixedtheta = c(rep(FALSE, ltheta-1), TRUE), verbose = FALSE)
   # for this set of theta, the eigen value has a positive first element!
-  pForward0(lltape, sample[2, ], theta)
-  log(qdRivest(-sample[2, ], k, A, evidx))
+  expect_equal(pForward0(lltape, sample[2, ], theta[-ltheta]), log(qdRivest(sample[2, ], k, A, evidx)),
+               ignore_attr = TRUE)
 
 
-  smotape <- ptapesmo(sample[1,], thetafortape[-length(thetafortape)],
+  smotape <- ptapesmo(sample[1,], thetafortape[-ltheta],
                         lltape, pman, "ones", 1, verbose = FALSE)
-  sminfo <- smest(smotape, thetafortape[-length(thetafortape)], sample,
+
+  # first there is something strange that the gradient of smotape is very high at the correct value of the theta
+  smobj(smotape, theta[-ltheta], sample)
+  smobjgrad(smotape, theta[-ltheta], sample)
+  smobjhess(smotape, theta[-ltheta], sample)
+  smestSE(smotape, theta[-ltheta], sample)
+
+  # minimise without using smobjgrad
+  out <- Rcgmin::Rcgmin(par = thetafortape[-ltheta],
+                        fn = function(theta){smobj(smotape, theta, sample)},
+                        control = control)
+
+
+
+  sminfo <- smest(smotape, thetafortape[-ltheta], sample,
                   control = control)
   thetamat <- FB_theta2mats(sminfo$par)
   smestSE(smotape, sminfo$par, sample)
