@@ -102,7 +102,6 @@ namespace { // begin the empty namespace
     //index order stored in below object
     Eigen::Matrix<T, Eigen::Dynamic, 1> order(xsize);
     order = ltmat.colwise().sum();
-    std::cout << "Each x is less than this many others:\n" << order.transpose() << std::endl;
     //a high value in this vector means the corresponding x value is LOWER than many of the other x values
     //order[i] == xsize-1 means x[i] is the LOWEST
     //order[i] == 0 means x[i] is the HIGHEST
@@ -120,12 +119,10 @@ namespace { // begin the empty namespace
     //assume the first part of theta defines the matrix A
     // then the next element is concentration parameter, and
     // the final element is the eigenvector/value to use
-    std::cout << "Theta is: " << theta.transpose() << std::endl;
     size_t d  = u.size();
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Amat(d, d);
     Eigen::Matrix<T, Eigen::Dynamic, 1> Btheta;
     Btheta = theta.block(0,0, d - 1 + (d-1)*d/2, 1);
-    std::cout << "Btheta is: " << Btheta.transpose() << std::endl;
     Amat = BinghamMatrix(Btheta);
     Eigen::Matrix<T, 1, 1> out_e;
     out_e = u.transpose() * Amat * u;
@@ -136,12 +133,10 @@ namespace { // begin the empty namespace
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> evals;
     evals = eigensolver.eigenvalues().cwiseAbs();//eigenvalues() presents the results in increasing order (negative -> 0 -> positive)
-    PrintForVec("\n The eigenvalues sizes of Amat are: ", evals);
 
     //ordering
     Eigen::Matrix<T, Eigen::Dynamic, 1> evalorder;
     evalorder = incorder(evals);
-    PrintForVec("\n The order of eigenvalues in increasing size is: ", evalorder);
 
     /////////////////choose the largest vector////////////
     //A hack using ones and zeros, could maybe use VecAD in the future
@@ -149,16 +144,13 @@ namespace { // begin the empty namespace
     Eigen::Matrix<T, Eigen::Dynamic, 1> eselector(d); //selector vector in eigen type
     T sizethwanted;
     sizethwanted = theta[Btheta.size() + 1] - 1;
-    PrintFor("\n Wanting the sizeth order: ", sizethwanted);
     for (size_t i=0; i<d; i++){
       eselector[i] = CondExpLt(evalorder[i], sizethwanted + 0.1, one, zero); //if less than 0.1 + idx wanted then one
       eselector[i] = eselector[i] * CondExpLt(evalorder[i] + 1, sizethwanted + 0.1, zero, one); //if 1+ is also less than index wanted then multiple by zero
     }
-    PrintForVec("\n eselector is: ", eselector);
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> m;
     m = eigensolver.eigenvectors() * eselector;
-    PrintForVec("\n m is: ", m);
     ////////////finished getting the eigenvector////////////
 
 
