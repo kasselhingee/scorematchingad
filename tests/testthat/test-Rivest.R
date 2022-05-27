@@ -4,7 +4,7 @@ test_that("Rivest likelihood runs and matches R code", {
   A <- rsymmetricmatrix(p, -10, 10)
   A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
   A_es <- eigen(A)
-  idx <- p
+  idx <- 1 #smallest
   k <- 2
 
   theta <- c(cdabyppi:::Bingham_Amat2theta(A), k, idx)
@@ -21,12 +21,17 @@ test_that("Rivest likelihood runs and matches R code", {
   u <- sample[2, ]
   expect_equal(pForward0(lltape, u, theta), log(cdabyppi:::qdRivest(u, k, A, idx)),
                ignore_attr = TRUE)
+  # different eigenvectors
+  expect_equal(pForward0(lltape, u, c(theta[-length(theta)], 2)), log(cdabyppi:::qdRivest(u, k, A, 2)),
+               ignore_attr = TRUE)
+  expect_equal(pForward0(lltape, u, c(theta[-length(theta)], 3)), log(cdabyppi:::qdRivest(u, k, A, 3)),
+               ignore_attr = TRUE)
 
   #derive wrt u
   expect_equal(pJacobian(lltape, u, theta), cdabyppi:::lldRivest_du(u, k, A, idx),
                ignore_attr = TRUE)
 
-
+  #deriv wrt theta
   llRivest <- function(theta){
     A <- cdabyppi:::Bingham_theta2Amat(theta[seq.int(1, length.out = p - 1 + (p-1)*p/2)])
     k <- theta[1 + p - 1 + (p-1)*p/2]
@@ -38,18 +43,13 @@ test_that("Rivest likelihood runs and matches R code", {
   # test changing A gives different eigenvector - works as of 26 May, 2022, purely using PrintFor statement so can't test on it
   thetatest <- theta
   thetatest[c(1,3,4)] <- thetatest[c(1,3,4)] / 100
-  #the above means the largest eigenvalue is first in decreasing order too
-  #previously the largest sized eigenvalues was the last in decreasing order
-  pForward0(lltape, u, theta) #the location of the evec is 1
-  llRivest(theta)
-  pForward0(lltape, u, thetatest) #the location of the evec is now 3, but pForward0 is giving the wrong vector
-  llRivest(thetatest)
-
-
+  theta[length(theta)] <- 3 #choose the largest rather than the smallest
+  expect_equal(pForward0(lltape, u, thetatest), llRivest(thetatest),
+               ignore_attr = TRUE)
 
   # test deriv wrt theta
   Rgradt <- numericDeriv(quote(llRivest(thetatest)), c("thetatest"))
-  lltape_t <- swapDynamic(lltape, theta+1, sample[1, ])
+  lltape_t <- swapDynamic(lltape, theta, sample[1, ])
   expect_equal(pJacobian(lltape_t, thetatest, u), attr(Rgradt, "gradient"),
                tolerance = 1E-5, ignore_attr = TRUE)
 })
