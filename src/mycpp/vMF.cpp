@@ -1,3 +1,5 @@
+# include "PrintFor.cpp"
+
 namespace { // begin the empty namespace
 
   template <class T>
@@ -144,11 +146,13 @@ namespace { // begin the empty namespace
     Eigen::Matrix<T, Eigen::Dynamic, 1> evals;
     evals = eigensolver.eigenvalues().cwiseAbs();//eigenvalues() presents the results in increasing order (negative -> 0 -> positive)
     std::cout << "The eigenvalues sizes of Amat are:\n" << evals.transpose() << std::endl;
+    PrintForVec("\n The eigenvalues sizes of Amat are: ", evals);
 
     //ordering
     Eigen::Matrix<T, Eigen::Dynamic, 1> evalorder;
     evalorder = incorder(evals);
     std::cout << "The order of eigenvalues in increasing size:\n" << evalorder.transpose() << std::endl;
+    PrintForVec("\n The order of eigenvalues in increasing size is: ", evalorder);
 
     //use conditional statements to find the index of the largest eigenvalue
     std::vector<T> sevals(evals.size());
