@@ -130,35 +130,26 @@ namespace { // begin the empty namespace
     Eigen::Matrix<T, 1, 1> out_e;
     out_e = u.transpose() * Amat * u;
     T out(out_e[0]);
-    std::cout << "Out: " << out_e << std::endl;
-
-
-    std::cout << "Amat is:" << std::endl << Amat << std::endl;
-    std::cout << "k is:" << theta.block(Btheta.size(), 0, 1, 1) << std::endl;
-    std::cout << "idx is:" << theta.block(Btheta.size() + 1, 0, 1, 1) << std::endl;
 
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>> eigensolver(Amat);
-    if (eigensolver.info() != Eigen::Success) return(out);
-    std::cout << "Here's a matrix whose columns are eigenvectors of A \n"
-              << "corresponding to these eigenvalues:\n"
-              << eigensolver.eigenvectors() << std::endl;
+    if (eigensolver.info() != Eigen::Success) return(20 * abs(out));
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> evals;
     evals = eigensolver.eigenvalues().cwiseAbs();//eigenvalues() presents the results in increasing order (negative -> 0 -> positive)
-    std::cout << "The eigenvalues sizes of Amat are:\n" << evals.transpose() << std::endl;
     PrintForVec("\n The eigenvalues sizes of Amat are: ", evals);
 
     //ordering
     Eigen::Matrix<T, Eigen::Dynamic, 1> evalorder;
     evalorder = incorder(evals);
-    std::cout << "The order of eigenvalues in increasing size:\n" << evalorder.transpose() << std::endl;
     PrintForVec("\n The order of eigenvalues in increasing size is: ", evalorder);
 
     /////////////////choose the largest vector////////////
     //A hack using ones and zeros, could maybe use VecAD in the future
     T zero(0), one(1);
     Eigen::Matrix<T, Eigen::Dynamic, 1> eselector(d); //selector vector in eigen type
-    T sizethwanted(d-1);
+    T sizethwanted;
+    sizethwanted = theta[Btheta.size() + 1] - 1;
+    PrintFor("\n Wanting the sizeth order: ", sizethwanted);
     for (size_t i=0; i<d; i++){
       eselector[i] = CondExpLt(evalorder[i], sizethwanted + 0.1, one, zero); //if less than 0.1 + idx wanted then one
       eselector[i] = eselector[i] * CondExpLt(evalorder[i] + 1, sizethwanted + 0.1, zero, one); //if 1+ is also less than index wanted then multiple by zero
@@ -175,7 +166,6 @@ namespace { // begin the empty namespace
     //but I suspect this is already fixed by eigen
 
     out_e += theta[Btheta.size()] * m.transpose() * u;
-    std::cout << "Out: " << out_e << std::endl;
 
     out = out_e[0];
     return(out);
