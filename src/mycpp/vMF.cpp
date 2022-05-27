@@ -130,9 +130,16 @@ namespace { // begin the empty namespace
 
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>> eigensolver(Amat);
     if (eigensolver.info() != Eigen::Success) return(20 * abs(out));
+    //According to https://eigen.tuxfamily.org/dox/classEigen_1_1SelfAdjointEigenSolver.html,
+    //as the size isn't known at compile time:
+    //This SelfAdjointEigenSolver uses a symmetric QR algorithm. The matrix is first reduced
+    //to tridiagonal form using the Tridiagonalization class. The tridiagonal matrix is then
+    //brought to diagonal form with implicit symmetric QR steps with Wilkinson shift. Details
+    //can be found in Section 8.3 of Golub & Van Loan, Matrix Computations.
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> evals;
     evals = eigensolver.eigenvalues().cwiseAbs();//eigenvalues() presents the results in increasing order (negative -> 0 -> positive)
+    PrintForVec("\n The eigenvalues sizes of Amat are: ", evals);
 
     //ordering
     Eigen::Matrix<T, Eigen::Dynamic, 1> evalorder;
@@ -148,14 +155,19 @@ namespace { // begin the empty namespace
       eselector[i] = CondExpLt(evalorder[i], sizethwanted + 0.1, one, zero); //if less than 0.1 + idx wanted then one
       eselector[i] = eselector[i] * CondExpLt(evalorder[i] + 1, sizethwanted + 0.1, zero, one); //if 1+ is also less than index wanted then multiple by zero
     }
+    PrintForVec("\n eselector is: ", eselector);
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> m;
     m = eigensolver.eigenvectors() * eselector;
+    PrintForVec("\nThe original m is: ", m);
+    //force first element of m to be positive, not sure how well this works for differentiation later
+    T multiplier(1.);
+    multiplier = CondExpLt(m[0], zero, -one, one);
+    m = multiplier * m;
+
+    PrintForVec("\n m is: ", m);
     ////////////finished getting the eigenvector////////////
 
-
-    //extra: put a condition that the first element of m is negative (or positive) so that don't get directional uncertainty
-    //but I suspect this is already fixed by eigen
 
     out_e += theta[Btheta.size()] * m.transpose() * u;
 

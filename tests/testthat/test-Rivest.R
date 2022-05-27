@@ -54,6 +54,34 @@ test_that("Rivest likelihood runs and matches R code", {
                tolerance = 1E-5, ignore_attr = TRUE)
 })
 
+test_that("ll_Rivest modifies m to have the correct sign", {
+  # the eigenvector with the second highest eigenvalue comes out of eigendecomposition with positive first element
+  # the first element has been negative in the past
+  p <- 3
+  k <- -3.2
+  evidx <- 2
+  theta <- c(9.136667, -0.9333169, 7.8483809, 1.0287003, 0.8677053, k, evidx)
+  mats <- Rivest_theta2mats(theta)
+  # [,1]       [,2]       [,3]
+  # [1,] 9.136667  7.8483809  1.0287003
+  # [2,] 7.848381 -0.9333169 -0.8677053
+  # [3,] 1.028700 -0.8677053 -8.2033500
+
+  set.seed(123)
+  sample <- matrix(runif(2 * p, -10, 10), nrow = 2)
+  sample <- sample / sqrt(rowSums(sample^2))
+  stopifnot(all(abs(sqrt(rowSums(sample^2)) - 1) < 1E-5))
+
+  ltheta <- length(theta)
+  thetafortape <- c(seq.int(1, length.out = ltheta-1), evidx)
+  pman <- pmanifold("Snative")
+  lltape <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
+                    fixedtheta = rep(FALSE, ltheta), verbose = FALSE)
+  # for this set of theta, the eigen value has a positive first element!
+  expect_equal( pForward0(lltape, sample[2, ], theta), log(qdRivest(sample[2, ], mats$k, mats$A, mats$evidx)),
+               ignore_attr = TRUE)
+})
+
 test_that("Rivest() fits correctly", {
   p <- 3
   A <- rsymmetricmatrix(p, -10, 10)
@@ -69,8 +97,9 @@ test_that("Rivest() fits correctly", {
   pman <- pmanifold("Snative")
   lltape <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
                     fixedtheta = rep(FALSE, ltheta), verbose = FALSE)
+  # for this set of theta, the eigen value has a positive first element!
   pForward0(lltape, sample[2, ], theta)
-  log(qdRivest(sample[2, ], k, A, evidx))
+  log(qdRivest(-sample[2, ], k, A, evidx))
 
 
   smotape <- ptapesmo(sample[1,], thetafortape[-length(thetafortape)],

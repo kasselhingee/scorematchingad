@@ -3,6 +3,11 @@
 #' extended the Kent model to so that the vector `m` could have a non-zero eigenvalue in the `A` matrix.
 #' @details
 #' This distribution is also mentioned by Mardia and Jupp (p177, 2000).
+#' There may be some instability when the first element of the `m` vector is close to zero due to the
+#' method used to account for the sign-invariance of eigenvectors.
+#' This method fits the matrix `A` and finds the best eigenvector for `m`.
+#' To select the correct *sign* of the eigenvector `m`, the method assumes that the first element of `m` is positive,
+#' and that `k` can be negative.
 #' @references
 #' Rivest, L.-P. (1984). On the Information Matrix for Symmetric Distributions on the Hypersphere. The Annals of Statistics, 12(3), 1085-1089. http://www.jstor.org/stable/2240982
 #' Mardia, K. V., & Jupp, P. E. (2000). Directional Statistics. Wiley.
@@ -36,7 +41,7 @@ qdRivest <- function(u, k, A, evidx){
   A_es <- eigen(A)
   evalorder <- order(abs(A_es$values), decreasing = FALSE)
   m <- A_es$vectors[, evalorder[evidx]]
-  if (m[1] > 0){m <- -m} #I think the Cpp eigen package always has the first element as negative, but I couldn't find any documentation
+  if (m[1] < 0){m <- -m}
   # cat("m value: ", m)
   qd <- exp(k * m %*% u + t(u) %*% A %*% u)
   return(qd)
@@ -48,7 +53,7 @@ lldRivest_du <- function(u, k, A, evidx){
   A_es <- eigen(A)
   evalorder <- order(abs(A_es$values), decreasing = FALSE)
   m <- A_es$vectors[, evalorder[evidx], drop = FALSE]
-  if (m[1] > 0){m <- -m} #I think the Cpp eigen package always has the first element as negative, but I couldn't find any documentation
+  if (m[1] < 0){m <- -m}
   du <- k * m + 2 * A %*% u
   return(du)
 }
