@@ -43,7 +43,7 @@ test_that("Rivest likelihood runs and matches R code", {
   # test changing A gives different eigenvector - works as of 26 May, 2022, purely using PrintFor statement so can't test on it
   thetatest <- theta
   thetatest[c(1,3,4)] <- thetatest[c(1,3,4)] / 100
-  theta[length(theta)] <- 3 #choose the largest rather than the smallest
+  thetatest[length(thetatest)] <- 3 #choose the largest rather than the smallest
   expect_equal(pForward0(lltape, u, thetatest), llRivest(thetatest),
                ignore_attr = TRUE)
 
