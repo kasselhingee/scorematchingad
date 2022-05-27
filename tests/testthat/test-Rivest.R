@@ -4,7 +4,7 @@ test_that("Rivest likelihood runs and matches R code", {
   A <- rsymmetricmatrix(p, -10, 10)
   A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
   A_es <- eigen(A)
-  idx <- 1 #smallest
+  idx <- 1 #smallest in abs size
   k <- 2
 
   theta <- c(cdabyppi:::Bingham_Amat2theta(A), k, idx)
