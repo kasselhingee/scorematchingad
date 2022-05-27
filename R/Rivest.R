@@ -15,11 +15,26 @@
 #' sample <- rFB(1000, 2, m, A)
 #' qdRivest(sample[1, ], 2, A, 3)
 
+Rivest_mats2theta <- function(k, A, evidx){
+  theta <- c(Bingham_Amat2theta(A), k, evidx)
+  return(theta)
+}
+Rivest_theta2mats <- function(theta){
+  A <- Bingham_theta2Amat(theta[seq.int(1, length.out = length(theta) - 2)])
+  k <- theta[length(theta) - 1]
+  evidx <- theta[length(theta)]
+  return(list(
+    A = A,
+    k = k,
+    evidx = evidx
+  ))
+}
+
 #evidx specifies the eigenvector of A that is m. Vectors are sorted increasing size
 qdRivest <- function(u, k, A, evidx){
   A_es <- eigen(A)
-  evalorder <- order(abs(A_es$values), decreasing = FALSE)
-  m <- A_es$vectors[, evalorder[evidx]]
+  sizeorder <- order(abs(A_es$values))
+  m <- A_es$vectors[, sizeorder == i]
   if (m[1] > 0){m <- -m} #I think the Cpp eigen package always has the first element as negative, but I couldn't find any documentation
   qd <- exp(k * m %*% u + t(u) %*% A %*% u)
   return(qd)
@@ -28,8 +43,8 @@ qdRivest <- function(u, k, A, evidx){
 #derivative wrt u
 lldRivest_du <- function(u, k, A, evidx){
   A_es <- eigen(A)
-  evalorder <- order(abs(A_es$values), decreasing = FALSE)
-  m <- A_es$vectors[, evalorder[evidx], drop = FALSE]
+  sizeorder <- order(abs(A_es$values))
+  m <- A_es$vectors[, sizeorder == i, drop = FALSE]
   if (m[1] > 0){m <- -m} #I think the Cpp eigen package always has the first element as negative, but I couldn't find any documentation
   du <- k * m + 2 * A %*% u
   return(du)

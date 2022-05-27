@@ -53,3 +53,31 @@ test_that("Rivest likelihood runs and matches R code", {
   expect_equal(pJacobian(lltape_t, thetatest, u), attr(Rgradt, "gradient"),
                tolerance = 1E-5, ignore_attr = TRUE)
 })
+
+test_that("Rivest() fits correctly", {
+  p <- 3
+  A <- rsymmetricmatrix(p, -10, 10)
+  A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint for Bingham
+  k <- -3.2
+  evidx <- 2
+  sample <- rRivest(100, k, A, evidx)
+  theta <- Rivest_mats2theta(k, A, evidx)
+  control <- list(tol = 1E-10)
+
+  ltheta <- p-1 + (p - 1) * p/2 + 2
+  thetafortape <- c(seq.int(1, length.out = ltheta-1), 2)
+  pman <- pmanifold("Snative")
+  lltape <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
+                    fixedtheta = rep(FALSE, ltheta), verbose = FALSE)
+  pForward0(lltape, sample[2, ], theta)
+  log(qdRivest(sample[2, ], k, A, evidx))
+
+
+  smotape <- ptapesmo(sample[1,], thetafortape[-length(thetafortape)],
+                        lltape, pman, "ones", 1, verbose = FALSE)
+  sminfo <- smest(smotape, thetafortape[-length(thetafortape)], sample,
+                  control = control)
+  thetamat <- FB_theta2mats(sminfo$par)
+  smestSE(smotape, sminfo$par, sample)
+
+})
