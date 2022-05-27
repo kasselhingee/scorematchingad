@@ -154,22 +154,32 @@ namespace { // begin the empty namespace
     std::cout << "The order of eigenvalues in increasing size:\n" << evalorder.transpose() << std::endl;
     PrintForVec("\n The order of eigenvalues in increasing size is: ", evalorder);
 
-    //use conditional statements to find the index of the largest eigenvalue
-    std::vector<T> sevals(evals.size());
-    for (size_t i=0; i<evals.size(); i++){
-      sevals[i] = evals[i];
+    /////////////////choose the largest vector////////////
+    T evidx;
+    evidx = evalorder[d-1];
+    CppAD::PrintFor("\nEigenvector selected is: ", evidx);
+    //A hack using ones and zeros
+    CppAD::VecAD<double> adselector(d);
+    T zero(0), one(1);
+    T iad;
+    for (iad=zero; iad<d; iad += one){
+      adselector[iad + 0.1] = zero;
     }
-    std::vector<size_t> ind(evals.size());
-    CppAD::index_sort(sevals, ind);
-    //VecAD has indexing dependence included
-    std::cout << "eval order: " << ind[0] << std::endl;
-    std::cout << "eval order: " << ind[1] << std::endl;
-    std::cout << "eval order: " << ind[2] << std::endl;
+    adselector[evidx + 0.1] = one;
+
+    Eigen::Matrix<T, Eigen::Dynamic, 1> eselector(d); //selector vector in eigen type
+    for (size_t i=0; i<d; i++){
+      iad = zero + i + 0.1;
+      eselector[i] = adselector[iad];
+    }
+    PrintForVec("\n eselector is: ", eselector);
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> m;
-    m = eigensolver.eigenvectors().block(0, ind[d-1], d, 1); //largest sized eigenvalue
-    CppAD::PrintFor("m[0] is: ", m(0,0));
-    std::cout << "m is: " << m << std::endl;
+    m = eigensolver.eigenvectors() * eselector;
+    PrintForVec("\n m is: ", m);
+    ////////////finished getting the eigenvector////////////
+
+
     //extra: put a condition that the first element of m is negative (or positive) so that don't get directional uncertainty
     //but I suspect this is already fixed by eigen
 
