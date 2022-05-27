@@ -105,7 +105,7 @@ test_that("Rivest() fits correctly with evidx given correctly", {
   set.seed(1245)
   A <- rsymmetricmatrix(p, -10, 10)
   A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint for Bingham
-  k <- -3.2
+  k <- 1E-5
   evidx <- 2
   sample <- rRivest(1000, k, A, evidx)
   theta <- Rivest_mats2theta(k, A, evidx)
@@ -115,7 +115,7 @@ test_that("Rivest() fits correctly with evidx given correctly", {
   expect_equal(ltheta, length(theta))
   # fix both k and evidx correctly
   thetafortape <- c(seq.int(1, length.out = ltheta-1), theta[ltheta])
-  # thetafortape[ltheta - 1] <- theta[ltheta - 1]
+  thetafortape[ltheta - 1] <- theta[ltheta - 1]
   fixedtheta <- c(rep(FALSE, ltheta-2), FALSE, TRUE)
 
   pman <- pmanifold("Snative")
