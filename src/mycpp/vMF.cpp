@@ -136,6 +136,9 @@ namespace { // begin the empty namespace
     //to tridiagonal form using the Tridiagonalization class. The tridiagonal matrix is then
     //brought to diagonal form with implicit symmetric QR steps with Wilkinson shift. Details
     //can be found in Section 8.3 of Golub & Van Loan, Matrix Computations.
+    PrintForMatrix("\n Amat is: ", Amat);
+    PrintForMatrix("\n The eigenvectors of Amat are: ", eigensolver.eigenvectors());
+    PrintForVec("\n The eigenvalues of Amat are: ", eigensolver.eigenvalues());
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> evals;
     evals = eigensolver.eigenvalues().cwiseAbs();//eigenvalues() presents the results in increasing order (negative -> 0 -> positive)

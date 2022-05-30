@@ -100,6 +100,46 @@ test_that("ll_Rivest modifies m to have the correct sign", {
                tolerance = 1E-5, ignore_attr = TRUE)
 })
 
+test_that("taped ll_Rivest is the same for differrent tape values", {
+  set.seed(321)
+  p <- 3
+  A <- rsymmetricmatrix(p, -10, 10)
+  A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
+  A_es <- eigen(A)
+  evidx <- 1 #smallest in abs size
+  k <- 2
+
+  theta <- c(cdabyppi:::Bingham_Amat2theta(A), k, evidx)
+
+  set.seed(123)
+  sample <- matrix(runif(2 * p, -10, 10), nrow = 2)
+  sample <- sample / sqrt(rowSums(sample^2))
+  stopifnot(all(abs(sqrt(rowSums(sample^2)) - 1) < 1E-5))
+
+  ltheta <- length(theta)
+  # fix both k and evidx correctly
+  thetafortape <- c(seq.int(1, length.out = ltheta-1), theta[ltheta])
+  thetafortape[ltheta - 1] <- theta[ltheta - 1]
+  fixedtheta <- rep(FALSE, ltheta)
+
+  pman <- pmanifold("Snative")
+  lltape_A <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
+                    fixedtheta = fixedtheta, verbose = FALSE)
+  expect_equal(pForward0(lltape_A, sample[2, ], theta), log(qdRivest(sample[2, ], k, A, evidx)),
+               ignore_attr = TRUE) #FAILS
+
+  lltape <- ptapell(sample[1,], theta, llname = "Rivest", pman,
+                    fixedtheta = fixedtheta, verbose = FALSE)
+  expect_equal(pForward0(lltape, sample[2, ], theta), log(qdRivest(sample[2, ], k, A, evidx)),
+               ignore_attr = TRUE)
+  expect_equal(pForward0(lltape, sample[1, ], theta), log(qdRivest(sample[1, ], k, A, evidx)),
+               ignore_attr = TRUE)
+
+  expect_equal(pForward0(lltape, sample[2, ], theta), pForward0(lltape_A, sample[2, ], theta))
+  expect_equal(pForward0(lltape, sample[2, ], thetafortape), pForward0(lltape_A, sample[2, ], thetafortape))
+
+}) #failing
+
 test_that("Taped Rivest smo has derivatives consistent with numerical differentation", {
   set.seed(321)
   p <- 3
@@ -125,9 +165,6 @@ test_that("Taped Rivest smo has derivatives consistent with numerical differenta
   pman <- pmanifold("Snative")
   lltape <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
                     fixedtheta = fixedtheta, verbose = FALSE)
-  expect_equal(pForward0(lltape, sample[2, ], theta[!fixedtheta]), log(qdRivest(sample[2, ], k, A, evidx)),
-               ignore_attr = TRUE)
-
   smotape <- ptapesmo(sample[1,], thetafortape[!fixedtheta],
                       lltape, pman, "ones", 1, verbose = FALSE)
 
