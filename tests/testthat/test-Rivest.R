@@ -100,7 +100,91 @@ test_that("ll_Rivest modifies m to have the correct sign", {
                tolerance = 1E-5, ignore_attr = TRUE)
 })
 
+test_that("Taped Rivest smo has derivatives consistent with numerical differentation", {
+  set.seed(321)
+  p <- 3
+  A <- rsymmetricmatrix(p, -10, 10)
+  A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
+  A_es <- eigen(A)
+  evidx <- 1 #smallest in abs size
+  k <- 2
+
+  theta <- c(cdabyppi:::Bingham_Amat2theta(A), k, evidx)
+
+  set.seed(123)
+  sample <- matrix(runif(2 * p, -10, 10), nrow = 2)
+  sample <- sample / sqrt(rowSums(sample^2))
+  stopifnot(all(abs(sqrt(rowSums(sample^2)) - 1) < 1E-5))
+
+  ltheta <- length(theta)
+  # fix both k and evidx correctly
+  thetafortape <- c(seq.int(1, length.out = ltheta-1), theta[ltheta])
+  thetafortape[ltheta - 1] <- theta[ltheta - 1]
+  fixedtheta <- rep(FALSE, ltheta)
+
+  pman <- pmanifold("Snative")
+  lltape <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
+                    fixedtheta = fixedtheta, verbose = FALSE)
+  expect_equal(pForward0(lltape, sample[2, ], theta[!fixedtheta]), log(qdRivest(sample[2, ], k, A, evidx)),
+               ignore_attr = TRUE)
+
+  smotape <- ptapesmo(sample[1,], thetafortape[!fixedtheta],
+                      lltape, pman, "ones", 1, verbose = FALSE)
+
+  val <- pForward0(smotape, theta, sample[2, ])
+  rgrad <- numericDeriv(quote(pForward0(smotape, theta, sample[2, ])), "theta")
+  stopifnot(abs(rgrad - val) < 1E-5)
+
+  expect_equal(pJacobian(smotape, theta, sample[2, ]), attr(rgrad, "gradient"),
+               ignore_attr = TRUE, tolerance = 1E-5)
+})
+
 test_that("Rivest() fits correctly with evidx given correctly", {
+  p <- 3
+  set.seed(1245)
+  A <- rsymmetricmatrix(p, -10, 10)
+  A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint for Bingham
+  k <- -3.2
+  evidx <- 2
+  sample <- rRivest(1000, k, A, evidx)
+  theta <- Rivest_mats2theta(k, A, evidx)
+  control <- list(tol = 1E-10)
+
+  ltheta <- p-1 + (p - 1) * p/2 + 2
+  expect_equal(ltheta, length(theta))
+  # fix both k and evidx correctly
+  thetafortape <- c(seq.int(1, length.out = ltheta-1), theta[ltheta])
+  thetafortape[ltheta - 1] <- theta[ltheta - 1]
+  fixedtheta <- c(rep(FALSE, ltheta-2), FALSE, TRUE)
+
+  pman <- pmanifold("Snative")
+  lltape <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
+                    fixedtheta = fixedtheta, verbose = FALSE)
+  # for this set of theta, the eigen value has a positive first element!
+  expect_equal(pForward0(lltape, sample[2, ], theta[!fixedtheta]), log(qdRivest(sample[2, ], k, A, evidx)),
+               ignore_attr = TRUE)
+
+
+  smotape <- ptapesmo(sample[1,], thetafortape[!fixedtheta],
+                        lltape, pman, "ones", 1, verbose = FALSE)
+
+  # first there is something strange that the gradient of smotape is very high at the correct value of the theta
+  smobj(smotape, theta[!fixedtheta], sample)
+  smobjgrad(smotape, theta[!fixedtheta], sample)
+  pJacobian(smotape, theta[!fixedtheta], sample[1, ])
+
+  smobjhess(smotape, theta[!fixedtheta], sample)
+  smestSE(smotape, theta[!fixedtheta], sample)
+
+  # minimise without using smobjgrad
+  out <- Rcgmin::Rcgmin(par = thetafortape[!fixedtheta],
+                        fn = function(theta){smobj(smotape, theta, sample)},
+                        control = control)
+  outSE <- smestSE(smotape, out$par, sample)
+  expect_lt_v(abs(out$par - theta[!fixedtheta]), 3 * outSE)
+})
+
+test_that("Rivest() fits correctly when starting values", {
   p <- 3
   set.seed(1245)
   A <- rsymmetricmatrix(p, -10, 10)
@@ -127,7 +211,7 @@ test_that("Rivest() fits correctly with evidx given correctly", {
 
 
   smotape <- ptapesmo(sample[1,], thetafortape[!fixedtheta],
-                        lltape, pman, "ones", 1, verbose = FALSE)
+                      lltape, pman, "ones", 1, verbose = FALSE)
 
   # first there is something strange that the gradient of smotape is very high at the correct value of the theta
   smobj(smotape, theta[!fixedtheta], sample)
