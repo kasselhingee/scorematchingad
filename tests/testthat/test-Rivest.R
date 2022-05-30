@@ -176,101 +176,41 @@ test_that("Taped Rivest smo has derivatives consistent with numerical differenta
                ignore_attr = TRUE, tolerance = 1E-5)
 })
 
-test_that("Rivest() fits correctly with evidx given correctly", {
+test_that("Fitting when each unique theta is newly taped works for fixed evidx", {
   p <- 3
   set.seed(1245)
   A <- rsymmetricmatrix(p, -10, 10)
   A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint for Bingham
   k <- -3.2
   evidx <- 2
-  sample <- rRivest(1000, k, A, evidx)
+  sample <- rRivest(10000, k, A, evidx)
   theta <- Rivest_mats2theta(k, A, evidx)
   control <- list(tol = 1E-10)
 
-  ltheta <- p-1 + (p - 1) * p/2 + 2
-  expect_equal(ltheta, length(theta))
-  # fix both k and evidx correctly
-  thetafortape <- c(seq.int(1, length.out = ltheta-1), theta[ltheta])
-  thetafortape[ltheta - 1] <- theta[ltheta - 1]
-  fixedtheta <- c(rep(FALSE, ltheta-2), FALSE, TRUE)
-
-  pman <- pmanifold("Snative")
-  lltape <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
-                    fixedtheta = fixedtheta, verbose = FALSE)
-  # for this set of theta, the eigen value has a positive first element!
-  expect_equal(pForward0(lltape, sample[2, ], theta[!fixedtheta]), log(qdRivest(sample[2, ], k, A, evidx)),
-               ignore_attr = TRUE)
-
-
-  smotape <- ptapesmo(sample[1,], thetafortape[!fixedtheta],
+  smoRivest_pertheta_peru <- function(theta, ufortaping = sample[1, ]){
+    pman <- pmanifold("Snative")
+    lltape <- ptapell(ufortaping, theta, llname = "Rivest", pman,
+                      fixedtheta = c(rep(TRUE, length(theta) -1), FALSE), verbose = FALSE)
+    smotape <- ptapesmo(ufortaping, theta[length(theta)],
                         lltape, pman, "ones", 1, verbose = FALSE)
+    function(u){pForward0(smotape, theta[length(theta)], u)}
+  }
 
-  # first there is something strange that the gradient of smotape is very high at the correct value of the theta
-  smobj(smotape, theta[!fixedtheta], sample)
-  smobjgrad(smotape, theta[!fixedtheta], sample)
-  pJacobian(smotape, theta[!fixedtheta], sample[1, ])
-
-  smobjhess(smotape, theta[!fixedtheta], sample)
-  smestSE(smotape, theta[!fixedtheta], sample)
+  smoRivest_pertheta <- function(theta, sample, ufortaping = sample[1, ]){
+    ufun <- smoRivest_pertheta_peru(theta, ufortaping = ufortaping)
+    sc_perpt <- lapply(1:nrow(sample), function(i){
+      scobj <- ufun(sample[i,])
+      return(scobj)
+    })
+    scmo <- mean(unlist(sc_perpt))
+    return(scmo)
+  }
 
   # minimise without using smobjgrad
-  out <- Rcgmin::Rcgmin(par = thetafortape[!fixedtheta],
-                        fn = function(theta){smobj(smotape, theta, sample)},
-                        control = control)
-  outSE <- smestSE(smotape, out$par, sample)
-  expect_lt_v(abs(out$par - theta[!fixedtheta]), 3 * outSE)
-})
-
-test_that("Rivest() fits correctly when starting values", {
-  p <- 3
-  set.seed(1245)
-  A <- rsymmetricmatrix(p, -10, 10)
-  A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint for Bingham
-  k <- 1E-5
-  evidx <- 2
-  sample <- rRivest(1000, k, A, evidx)
-  theta <- Rivest_mats2theta(k, A, evidx)
-  control <- list(tol = 1E-10)
-
   ltheta <- p-1 + (p - 1) * p/2 + 2
-  expect_equal(ltheta, length(theta))
-  # fix both k and evidx correctly
-  thetafortape <- c(seq.int(1, length.out = ltheta-1), theta[ltheta])
-  thetafortape[ltheta - 1] <- theta[ltheta - 1]
-  fixedtheta <- c(rep(FALSE, ltheta-2), FALSE, TRUE)
-
-  pman <- pmanifold("Snative")
-  lltape <- ptapell(sample[1,], thetafortape, llname = "Rivest", pman,
-                    fixedtheta = fixedtheta, verbose = FALSE)
-  # for this set of theta, the eigen value has a positive first element!
-  expect_equal(pForward0(lltape, sample[2, ], theta[!fixedtheta]), log(qdRivest(sample[2, ], k, A, evidx)),
-               ignore_attr = TRUE)
-
-
-  smotape <- ptapesmo(sample[1,], thetafortape[!fixedtheta],
-                      lltape, pman, "ones", 1, verbose = FALSE)
-
-  # first there is something strange that the gradient of smotape is very high at the correct value of the theta
-  smobj(smotape, theta[!fixedtheta], sample)
-  smobjgrad(smotape, theta[!fixedtheta], sample)
-  pJacobian(smotape, theta[!fixedtheta], sample[1, ])
-
-  smobjhess(smotape, theta[!fixedtheta], sample)
-  smestSE(smotape, theta[!fixedtheta], sample)
-
-  # minimise without using smobjgrad
-  out <- Rcgmin::Rcgmin(par = thetafortape[!fixedtheta],
-                        fn = function(theta){smobj(smotape, theta, sample)},
+  starttheta <- c(seq.int(1, length.out = ltheta-1), theta[ltheta])
+  out <- Rcgmin::Rcgmin(par = starttheta,
+                        fn = function(theta){smoRivest_pertheta(theta, sample)},
                         control = control)
-  outSE <- smestSE(smotape, out$par, sample)
-  expect_lt_v(abs(out$par - theta[!fixedtheta]), 3 * outSE)
-})
-
-
-
-  sminfo <- smest(smotape, thetafortape[-ltheta], sample,
-                  control = control)
-  thetamat <- FB_theta2mats(sminfo$par)
-  smestSE(smotape, sminfo$par, sample)
-
+  expect_equal(out$par, theta, tolerance = 1E-1, ignore_attr = TRUE)
 })
