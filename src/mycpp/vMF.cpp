@@ -136,13 +136,13 @@ namespace { // begin the empty namespace
     //to tridiagonal form using the Tridiagonalization class. The tridiagonal matrix is then
     //brought to diagonal form with implicit symmetric QR steps with Wilkinson shift. Details
     //can be found in Section 8.3 of Golub & Van Loan, Matrix Computations.
-    PrintForMatrix("\n Amat is: ", Amat);
-    PrintForMatrix("\n The eigenvectors of Amat are: ", eigensolver.eigenvectors());
-    PrintForVec("\n The eigenvalues of Amat are: ", eigensolver.eigenvalues());
+    // PrintForMatrix("\n Amat is: ", Amat);
+    // PrintForMatrix("\n The eigenvectors of Amat are: ", eigensolver.eigenvectors());
+    // PrintForVec("\n The eigenvalues of Amat are: ", eigensolver.eigenvalues());
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> evals;
     evals = eigensolver.eigenvalues().cwiseAbs();//eigenvalues() presents the results in increasing order (negative -> 0 -> positive)
-    PrintForVec("\n The eigenvalues sizes of Amat are: ", evals);
+    // PrintForVec("\n The eigenvalues sizes of Amat are: ", evals);
 
     //ordering
     Eigen::Matrix<T, Eigen::Dynamic, 1> evalorder;
@@ -158,17 +158,17 @@ namespace { // begin the empty namespace
       eselector[i] = CondExpLt(evalorder[i], sizethwanted + 0.1, one, zero); //if less than 0.1 + idx wanted then one
       eselector[i] = eselector[i] * CondExpLt(evalorder[i] + 1, sizethwanted + 0.1, zero, one); //if 1+ is also less than index wanted then multiple by zero
     }
-    PrintForVec("\n eselector is: ", eselector);
+    // PrintForVec("\n eselector is: ", eselector);
 
     Eigen::Matrix<T, Eigen::Dynamic, 1> m;
     m = eigensolver.eigenvectors() * eselector;
-    PrintForVec("\nThe original m is: ", m);
+    // PrintForVec("\nThe original m is: ", m);
     //force first element of m to be positive, not sure how well this works for differentiation later
     T multiplier(1.);
     multiplier = CondExpLt(m[0], zero, -one, one);
     m = multiplier * m;
 
-    PrintForVec("\n m is: ", m);
+    // PrintForVec("\n m is: ", m);
     ////////////finished getting the eigenvector////////////
 
 
