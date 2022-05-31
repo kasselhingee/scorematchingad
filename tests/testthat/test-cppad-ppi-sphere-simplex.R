@@ -88,8 +88,6 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 test_that("ppi with minsq weights match estimator1 with fixed beta for sec2_3model", {
   set.seed(123)
   model <- sec2_3model(1000, maxden = 4)
-  intheta <- model$theta
-  intheta[1:(length(intheta) - model$p)] <- NA
 
   acut = 0.1
   out <- ppi_cppad(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
@@ -115,23 +113,23 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for sec2_3mo
   model <- sec2_3model(1000, maxden = 4)
 
   acut = 0.1
-  psphere <- pmanifold("sphere")
-  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere,
-                  fixedtheta = c(rep(FALSE, length(model$theta) - model$p), rep(TRUE, model$p)), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - model$p), pll = pppi, pman = psphere, "prodsq", acut = acut, verbose = FALSE) #tape of the score function
+  out <- ppi_cppad(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
+                   man = "sphere", weightname = "prodsq", acut = acut)
 
-  out <- smest(smoppi, model$theta[1:(length(model$theta) - model$p)] * 0, model$sample, list(tol = 1E-20))
+  ppitapes <- buildsmotape("sphere", "ppi",
+                           rep(0.1, model$p), ppi_cppad_thetaprocessor(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
+                           weightname = "prodsq", acut = acut)
 
   directestimate <- estimator2(model$sample, acut, incb = TRUE, beta0 = model$beta0)
 
-  expect_equal(out$value,
-               smobj(smoppi, directestimate$estimator2, model$sample))
+  expect_equal(out$smval,
+               smobj(ppitapes$smotape, directestimate$estimator2, model$sample))
   expect_equal(out$sqgradsize,
-               sum(smobjgrad(smoppi, directestimate$estimator2, model$sample)^2))
+               sum(smobjgrad(ppitapes$smotape, directestimate$estimator2, model$sample)^2))
 
-  cdabyppi:::expect_lt_v(abs(out$par - directestimate$estimator2) / out$SE,  0.01) #proxy for optimisation flatness
+  cdabyppi:::expect_lte_v(abs(out$est$theta - c(directestimate$estimator2, model$beta0)), 0.01 * out$SE$theta) #proxy for optimisation flatness
 
-  cdabyppi:::expect_lt_v(abs(out$par - model$theta[1:(length(model$theta) - model$p)]) / out$SE, 3)
+  cdabyppi:::expect_lte_v(abs(out$est$theta - model$theta), 3 * out$SE$theta)
 })
 
 test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero params", {
@@ -151,23 +149,26 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
   set.seed(13418)
   utabl <- cdabyppi:::rhybrid(n,p,beta,ALs,bL,4)$samp3
   u <- utabl[2, ]
-  psphere <- pmanifold("sphere")
-  pppi <- ptapell(rep(0.1, p), theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, p), theta, pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
-  out <- smest(smoppi, theta * 0, utabl, control = list(tol = 1E-10))
+  out <- ppi_cppad(utabl,
+                   man = "sphere", weightname = "minsq", acut = acut,
+                   control = list(tol = 1E-10))
+
+  ppitapes <- buildsmotape("sphere", "ppi",
+                           rep(0.1, p), ppi_cppad_thetaprocessor(p),
+                           weightname = "minsq", acut = acut)
 
   directestimate <- estimatorall1(utabl, acut)
 
-  expect_equal(out$value,
-               smobj(smoppi, directestimate$estimator1, utabl),
+  expect_equal(out$smval,
+               smobj(ppitapes$smotape, directestimate$estimator1, utabl),
                tolerance = 1E-2)
   expect_equal(out$sqgradsize,
-               sum(smobjgrad(smoppi, directestimate$estimator1, utabl)^2))
+               sum(smobjgrad(ppitapes$smotape, directestimate$estimator1, utabl)^2))
 
-  cdabyppi:::expect_lt_v(abs(out$par - directestimate$estimator1) / out$SE, 1) #proxy for optimisation flatness
+  cdabyppi:::expect_lt_v(abs(out$est$theta - directestimate$estimator1), out$SE$theta) #proxy for optimisation flatness
 
-  cdabyppi:::expect_lt_v(abs(out$par - theta) / out$SE, 3)
+  cdabyppi:::expect_lt_v(abs(out$est$theta - theta), 3 * out$SE$theta)
 })
 
 test_that("ppi with minsq weights match estimatorall1 for sec2_3model", {
