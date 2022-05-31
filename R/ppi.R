@@ -49,10 +49,10 @@ ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, be
   if (!(man %in% c("simplex", "sphere"))){
     if (weightname != "ones"){warning("Manifold supplied has no boundary. Setting weightname to 'ones'.")}
   }
-  if ((weightname == "ones") && (!is.null(acut))){
-    warning("The value of 'acut' is ignored for weightname == 'ones'")
+  if (weightname == "ones"){
+    if (!is.null(acut)){warning("The value of 'acut' is ignored for weightname == 'ones'")}
+    acut <- 1 #set just for passing to Cpp
   }
-  acut <- 1 #set just for passing to Cpp
 
   # prepare tapes
   tapes <- buildsmotape(man, "ppi",
