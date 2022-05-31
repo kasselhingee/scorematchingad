@@ -65,6 +65,30 @@ int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
   return(0);
 }
 
+
+//' @title Apply to `toM` function of a manifold object
+//' @description Apply the `toM` function of a manifold object.
+//' @param pman An XPtr to a manifold object. Created by `pmanifold()`.
+//' @param u A vector to be transformed to the manifold via `toM`.
+//' @return A vector on the manifold.
+//' @export
+// [[Rcpp::export]]
+svecd ptoM(XPtr< manifold<a1type> > pman, svecd u){
+  veca1 u_ad(u.size());
+  for (size_t i=0; i<u.size(); i++){
+    u_ad[i] = u[i];
+  }
+  veca1 z_ad(u.size());
+  z_ad = pman->toM(u_ad);
+
+  svecd out(z_ad.size());
+  for (size_t i=0; i<out.size(); i++){
+    out[i] = CppAD::Value(z_ad[i]);
+  }
+  return(out);
+}
+
+
 //in R store a pointer to the ADFun object
 //' @title The score matching objective calculator.
 //' @param xbetain a concatenated vector of sqrt(x) and beta

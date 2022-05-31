@@ -30,44 +30,41 @@
 #' @param control Control parameters to `Rcgmin`, of primary use is the tolerance parameter of the squared gradient size
 #' @examples
 #' model <- sec2_3model(1000)
-#' estinfo <- ppi_cppad(model$sample, betap = -0.5, man = "Ralr", hsqfun = "ones")
-#' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", hsqfun = "ones")
+#' estinfo <- ppi_cppad(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
+#' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
 #' @export
 ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, betap = NULL,
-                      pow = 1, man, hsqfun, acut = NULL, control = list(tol = 1E-20)){
+                      pow = 1, man, weightname = hsqfun, acut = NULL, control = list(tol = 1E-20), hsqfun = NULL){
+  if (!is.null(hsqfun)){
+    weightname <- hsqfun
+    warning("hsqfun parameter will become obsolete soon.")
+  }
   # process inputs
   stopifnot("matrix" %in% class(prop))
   p = ncol(prop)
-  if ((man %in% c("Ralr", "Rclr", "Rmlr")) && (hsqfun != "ones")){
-    warning("Manifold supplied has no boundary. Using hsqfun = 'ones' is strong recommended.")
-  }
   stopifnot(pow == 1)
 
   theta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, betaL, betap)
-  fixedtheta <- !is.na(theta)
+
+  if (!(man %in% c("simplex", "sphere"))){
+    if (weightname != "ones"){warning("Manifold supplied has no boundary. Setting weightname to 'ones'.")}
+  }
+  if ((weightname == "ones") && (!is.null(acut))){
+    warning("The value of 'acut' is ignored for weightname == 'ones'")
+  }
+  acut <- 1 #set just for passing to Cpp
 
   # prepare tapes
-  pman <- pmanifold(man)
-  if (man %in% c("Ralr", "Rclr", "Rmlr")){
-    tapez <- rep(0.1, p - 1)
-  } else {
-    tapez <- rep(0.1, p)
-  }
-  thetatape <- theta  #must pass the fixed values as the taped value
-  thetatape[!fixedtheta] <- 0.73 # any number will do!
+  tapes <- buildsmotape(man, "ppi",
+                rep(1/p, p), theta,
+                weightname = weightname,
+                acut = acut, verbose = FALSE
+                )
 
-  if (hsqfun == "ones"){acut = 1} #acut is igonred when hsqfun = ones
-  pppi <- ptapell(tapez, thetatape,
-                  llname = "ppi", pman,
-                  fixedtheta = fixedtheta,
-                  verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, p), rep(0.2, sum(!fixedtheta)),
-                     pll = pppi, pman = pman,
-                     hsqfun, acut = acut,
-                     verbose = FALSE) #tape of the score function
-  opt <- smest(smoppi, rep(0.2, sum(!fixedtheta)), prop, control = control)
+  opt <- smest(tapes$smotape, rep(0.2, sum(is.na(theta))), prop, control = control)
 
   #process the theta and SE
+  fixedtheta <- !is.na(theta)
   thetaest <- theta
   thetaest[!fixedtheta] <- opt$par
   SE <- fixedtheta * 0

@@ -20,6 +20,16 @@ testmanifold <- function(pman, u) {
     .Call('_cdabyppi_testmanifold', PACKAGE = 'cdabyppi', pman, u)
 }
 
+#' @title Apply to `toM` function of a manifold object
+#' @description Apply the `toM` function of a manifold object.
+#' @param pman An XPtr to a manifold object. Created by `pmanifold()`.
+#' @param u A vector to be transformed to the manifold via `toM`.
+#' @return A vector on the manifold.
+#' @export
+ptoM <- function(pman, u) {
+    .Call('_cdabyppi_ptoM', PACKAGE = 'cdabyppi', pman, u)
+}
+
 #' @title The score matching objective calculator.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
 #' @param n The dimension of x.

@@ -59,7 +59,7 @@ test_that("Inputs to ppi_cppad are processed into the correct theta", {
 test_that("ppi_cppad works easily on sec2_3model", {
   set.seed(1245)
   model <- sec2_3model(1000)
-  out <- ppi_cppad(model$sample, man = "sphere", hsqfun = "minsq", acut = 0.1)
+  out <- ppi_cppad(model$sample, man = "sphere", weightname = "minsq", acut = 0.1)
   cdabyppi::expect_lt_v(abs(out$est$theta - model$theta) / out$SE$theta, 3)
 
   # try fixing betap
@@ -74,7 +74,7 @@ test_that("ppi_cppad works easily on sec2_3model", {
   bL = rep(0, 2)
   prop <- rhybrid(100, 3, beta, AL, bL, 4)[[1]]
   theta <- toPPIparamvec(AL, bL, beta)
-  out <- ppi_cppad(prop, AL = "diag", betap = -0.5, man = "sphere", hsqfun = "minsq", acut = 0.1)
+  out <- ppi_cppad(prop, AL = "diag", betap = -0.5, man = "sphere", weightname = "minsq", acut = 0.1)
   cdabyppi::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
   expect_equal(out$est$beta[model$p], -0.5)
   expect_equal(out$est$ALs[1, 2], 0)
@@ -85,7 +85,7 @@ test_that("ppi_cppad works easily on sec2_3model", {
   bL = rep(0, 2)
   prop <- rhybrid(100, 3, beta, AL, bL, 4)[[1]]
   theta <- toPPIparamvec(AL, bL, beta)
-  out <- ppi_cppad(prop, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", hsqfun = "ones", acut = 0.1)
+  out <- ppi_cppad(prop, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
   cdabyppi::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
   expect_equal(out$est$beta[model$p], -0.5)
   expect_equal(out$est$ALs[1, 2], 0)

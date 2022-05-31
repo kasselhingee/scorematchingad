@@ -17,15 +17,23 @@
 
 buildsmotape <- function(manifoldname, llname,
                          utape, intheta,
-                         weightname, acut,
+                         weightname = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
                          verbose = FALSE){
   fixedtheta <- !is.na(intheta)
   thetatape <- intheta
   thetatape[!fixedtheta] <- thetatape_creator(sum(!fixedtheta))
 
+  if (!(manifoldname %in% c("simplex", "sphere"))){
+    if (weightname != "ones"){warning("Manifold supplied has no boundary. Using weightname = 'ones' is strongly recommended.")}
+  }
+  if ((weightname == "ones") && (abs(acut - 1) > 1E-8)){
+    warning("The value of 'acut' is ignored for weightname == 'ones'")
+  }
+
   pman <- pmanifold(manifoldname)
-  lltape <- ptapell(utape, thetatape,
+  ztape <- ptoM(pman, utape) #the value of utape transformed to the manifold
+  lltape <- ptapell(ztape, thetatape,
                     llname = llname, pman = pman,
                     fixedtheta = fixedtheta, verbose = verbose)
   smotape <- ptapesmo(utape, thetatape[!fixedtheta],
@@ -33,6 +41,14 @@ buildsmotape <- function(manifoldname, llname,
                       weightname, acut, verbose = verbose)
   return(list(
     lltape = lltape,
-    smotape = smotape
+    smotape = smotape,
+    info = list(
+      name = llname,
+      manifold = manifoldname,
+      ulength = length(utape),
+      intheta = intheta,
+      weightname = weightname,
+      acut = acut
+    )
   ))
 }
