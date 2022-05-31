@@ -9,21 +9,38 @@
 #' sample <- rFB(1000, 2, m, A)
 #' FB(sample)
 #' @param sample An array of samples, each row an individual sample.
+#' @param km Optional. A vector of same length as the dimension, representing the elements of the Fisher component (concentraction * vector).
+#' If supplied, the non-NA elements are fixed.
+#' @param A Optional. The Bingham matrix. If supplied the non-NA elements of the Bingham matrix is fixed.
+#' The final diagonal of `A` here must be NA as the software calculates this value to ensure the trace is zero.
 #' @export
-FB <- function(sample, control = list(tol = 1E-20)){
+FB <- function(sample, km = NULL, A = NULL, control = list(tol = 1E-20)){
   p <- ncol(sample)
-  ltheta <- p-1 + (p - 1) * p/2 + p
-  thetatape <- seq.int(1, length.out = ltheta)
-  pman <- pmanifold("Snative")
+  if (is.null(A)){
+    A <- matrix(NA, nrow = p, ncol = p)
+  }
+  stopifnot(all(dim(A) == c(p, p)))
+  if (!is.na(A[p,p])){stop("The final diagonal element of matrix A cannot be fixed in this software. Please consider reordering your dimensions.")}
+  if (is.null(km)){
+    km <- rep(NA, p)
+  }
 
-  lltape <- ptapell(sample[1,], thetatape, llname = "FB", pman,
-                    fixedtheta = rep(FALSE, ltheta), verbose = FALSE)
-  smotape <- ptapesmo(sample[1,], thetatape,
-                      lltape, pman, "ones", 1, verbose = FALSE)
-  sminfo <- smest(smotape, thetatape, sample,
+  intheta <- FB_mats2theta(1, km, A)
+
+  tapes <- buildsmotape("Snative", "FB",
+               rep(1, p)/sqrt(p), intheta,
+               weightname = "ones",
+               verbose = FALSE)
+
+  sminfo <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample,
                control = control)
-  thetamat <- FB_theta2mats(sminfo$par)
-  return(c(thetamat, list(sminfo = sminfo)))
+  theta <- intheta
+  theta[is.na(intheta)] <- sminfo$par
+  thetamat <- FB_theta2mats(theta)
+  SE <- intheta * 0
+  SE[is.na(intheta)] <- sminfo$SE
+  SE <- FB_theta2mats(SE, isSE = TRUE)
+  return(c(thetamat, list(sminfo = sminfo, SE = SE)))
 }
 
 # non-normalised density function
@@ -32,14 +49,12 @@ qdFB <- function(u, k, m, A){
 }
 
 FB_mats2theta <- function(k, m, A){
-  p <- ncol(A)
-  stopifnot(isSymmetric(A))
-  stopifnot(abs(sum(diag(A))) < 1E-8)
-  theta <- c(diag(A)[1:(p-1)], A[upper.tri(A)], k * m)
+  Binghamtheta <- Bingham_Amat2theta(A)
+  theta <- c(Binghamtheta, k * m)
   return(theta)
 }
 
-FB_theta2mats <- function(theta){
+FB_theta2mats <- function(theta, isSE = FALSE){
   #length of theta is:
   # l = p-1 + (p - 1) * p/2 + p
   # = p^2/2 + p * (1 - 1/2 + 1) - 1
@@ -55,13 +70,22 @@ FB_theta2mats <- function(theta){
   diag(A) <- c(theta[1:(p-1)], NA)
   A[upper.tri(A)] <- theta[seq.int(p, length.out = (p - 1) * p/2)]
   A[lower.tri(A)] <- t(A)[lower.tri(A)]
-  A[p,p] <- -sum(diag(A)[1:(p-1)]) #trace is 0 constraint
-  m <- theta[seq.int(p-1 + (p - 1) * p/2 + 1, length.out = p)]
-  k <- sqrt(sum(m^2))
-  m <- m/k
-  return(list(
-    k = k,
-    m = m,
-    A = A
-  ))
+  km <- theta[seq.int(p-1 + (p - 1) * p/2 + 1, length.out = p)]
+  if (!isSE){
+    A[p,p] <- -sum(diag(A)[1:(p-1)]) #trace is 0 constraint
+    k <- sqrt(sum(km^2))
+    m <- km/k
+    return(list(
+      k = k,
+      m = m,
+      km = km,
+      A = A
+    ))
+  } else {
+    A[p,p] <- NA #trace is 0 constraint
+    return(list(
+      km = km,
+      A = A
+    ))
+  }
 }

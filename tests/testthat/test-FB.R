@@ -158,3 +158,35 @@ test_that("FB() fits for p = 3", {
   est <- FB(sample, control = list(tol = 1E-10))
   cdabyppi:::expect_lt_v(abs(est$sminfo$par - theta), 3 * est$sminfo$SE)
 })
+
+test_that("FB() fits with various fixed elements", {
+  p <- 3
+  set.seed(111)
+  theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
+  thetamats <- FB_theta2mats(theta)
+
+  #simulate
+  set.seed(12345)
+  sample <- rFB(1000, thetamats$k, thetamats$m, thetamats$A)
+
+  #a fixed A element
+  inA <- matrix(NA, nrow = p, ncol = p)
+  inA[p, 1] <- inA[1, p] <- thetamats$A[1, p]
+  est <- FB(sample, A = inA, control = list(tol = 1E-15))
+  cdabyppi::expect_lte_v(abs(est$A - thetamats$A)[-(p*p)], 3 * est$SE$A[-(p*p)])
+  expect_equal(est$A[!is.na(inA)], thetamats$A[!is.na(inA)])
+  expect_equal(est$SE$A[!is.na(inA)], 0 * thetamats$A[!is.na(inA)])
+
+  #fixed final diagonal element should error
+  inA <- matrix(NA, nrow = p, ncol = p)
+  inA[p, p] <- thetamats$A[p, p]
+  expect_error(FB(sample, A = inA, control = list(tol = 1E-15)))
+
+  # a fixed Fisher element
+  inkm <- rep(NA, p)
+  inkm[p] <- thetamats$m[p] * thetamats$k
+  est <- FB(sample, km = inkm, control = list(tol = 1E-15))
+  cdabyppi::expect_lte_v(abs(est$km - thetamats$km), 3 * est$SE$km + 1E-10)
+  expect_equal(est$km[!is.na(inkm)], thetamats$km[!is.na(inkm)])
+  expect_equal(est$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
+})
