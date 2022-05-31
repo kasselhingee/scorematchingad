@@ -14,7 +14,7 @@
 #'               )
 #' pForward0(tapes$lltape, u, runif(n = ltheta))
 #' pForward0(tapes$smotape, runif(n = ltheta), u)
-
+#' @export
 buildsmotape <- function(manifoldname, llname,
                          utape, intheta,
                          weightname = "ones", acut = 1,
