@@ -1,22 +1,22 @@
 
 test_that("prodsq weights match estimator2", {
   acut = 0.1
-  psphere <- pmanifold("sphere")
-  pdir <- ptapell(c(1,1,1), c(3,3,3), llname = "dirichlet", psphere, fixedtheta = c(FALSE, FALSE, FALSE), verbose = FALSE)
-  smofun <- ptapesmo(c(1,1,1),
-                     c(3,3,3),
-                     pll = pdir,
-                     pman = psphere, "prodsq", acut = acut, verbose = FALSE) #tape of the score function
+  p = 3
+  tapes <- buildsmotape("sphere", "dirichlet",
+               rep(1, p), rep(NA, p),
+               "prodsq", acut = acut)
+
+  #simulate
   beta = c(-0.3, -0.1, 3)
   n = 10
   set.seed(134)
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2017/11/why-optim-is-out-of-date/)
-  out <- optim(par = beta*0,
-               fn = function(beta){smobj(smofun, beta, utabl)},
-               gr = function(beta){smobjgrad(smofun, beta, utabl)},
-               method = "BFGS")
+
+  out <- Rcgmin::Rcgmin(par = beta*0,
+               fn = function(beta){smobj(tapes$smotape, beta, utabl)},
+               gr = function(beta){smobjgrad(tapes$smotape, beta, utabl)})
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimator2_dir(utabl, acut)
