@@ -94,3 +94,35 @@ test_that("Bingham() works with highly skewed trace", {
   cdabyppi::expect_lt_v(abs(estM$Lambda - A_es$values)[-p], 3 * estM$Lambda_SE[-p])
   expect_lt(est$sminfo$sqgradsize, 1E-10)
 })
+
+test_that("Bingham_full() with various fixed elements works", {
+  p <- 4
+  set.seed(345)
+  A <- rsymmetricmatrix(p, -10, 10)
+  A[p,p] <- -sum(diag(A)[-p])
+  theta <- Bingham_Amat2theta(A)
+  sample <- rBingham(1000, A)
+
+  #a fixed off diagonal element
+  inA <- matrix(NA, nrow = p, ncol = p)
+  inA[p, 1] <- inA[1, p] <- A[1, p]
+  est <- Bingham(sample, A = inA, method = "smfull", control = list(tol = 1E-15))
+  cdabyppi::expect_lte_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
+  expect_equal(est$A[!is.na(inA)], A[!is.na(inA)])
+  expect_equal(est$A_SE[!is.na(inA)], 0 * A[!is.na(inA)])
+  expect_error(Bingham(sample, A = inA, method = "Mardia", control = list(tol = 1E-15)))
+
+  #a fixed diagonal element
+  inA <- matrix(NA, nrow = p, ncol = p)
+  inA[2, 2] <- A[2, 2]
+  est <- Bingham(sample, A = inA, method = "smfull", control = list(tol = 1E-15))
+  cdabyppi::expect_lte_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
+  expect_equal(est$A[!is.na(inA)], A[!is.na(inA)])
+  expect_equal(est$A_SE[!is.na(inA)], 0 * A[!is.na(inA)])
+  expect_error(Bingham(sample, A = inA, method = "Mardia", control = list(tol = 1E-15)))
+
+  #fixed final diagonal element should error
+  inA <- matrix(NA, nrow = p, ncol = p)
+  inA[p, p] <- A[p, p]
+  expect_error(Bingham(sample, A = inA, method = "smfull", control = list(tol = 1E-15)))
+})

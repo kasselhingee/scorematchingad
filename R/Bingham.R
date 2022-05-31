@@ -1,6 +1,7 @@
 #' @title Score matching estimates for the Bingham distribution
 #' @param sample Samples from the Bingham distribution in cartesian Rd coordinates. Each row is a measurement.
 #' @param control Control parameters passed to `Rcgmin::Rcgmin()`
+#' @param A Full score matching only: If supplied, then NA elements of `A` are estimated and the other elements are fixed.
 #' @param method The estimating method, either `smfull` for score matching estimates for all parameters
 #'  or `Mardia` for the Mardia et al hybrid method. `hybrid` will also select the Mardia et al method.
 
@@ -14,10 +15,13 @@
 #'
 #' Bingham(sample, method = "Mardia")
 #' @export
-Bingham <- function(sample, method = "smfull", control = list(tol = 1E-20)){
-  if (method == "smfull"){out = Bingham_full(sample, control = control)}
-  if (method == "Mardia"){out <- Bingham_Mardia(sample, control = control)}
-  if (method == "hybrid"){out <- Bingham_Mardia(sample, control = control)}
+Bingham <- function(sample, A = NULL, method = "smfull", control = list(tol = 1E-20)){
+  if (method == "smfull"){
+    out <- Bingham_full(sample, A = A, control = control)}
+  if (method %in% c("Mardia", "hybrid")){
+    stopifnot(is.null(A))
+    out <- Bingham_Mardia(sample, control = control)
+    }
   return(out)
 }
 
@@ -37,18 +41,27 @@ rBingham <- function(n, A){
   return(sample)
 }
 
-Bingham_full <- function(sample, control = list(tol = 1E-20)){
-  pman <- pmanifold("Snative")
+Bingham_full <- function(sample,  A = NULL, control = list(tol = 1E-20)){
   p <- ncol(sample)
-  thetatape <- rep(0.1, p-1 + (p - 1) * p/2)
-  lltape <- ptapell(rep(1, p) / sqrt(p), thetatape,
-                    llname = "Bingham", pman,
-                    fixedtheta = rep(FALSE, length(thetatape)), verbose = FALSE)
-  smotape<- ptapesmo(rep(1, p) / sqrt(p), thetatape,
-                     pll = lltape, pman = pman, "ones", acut = 1, verbose = FALSE) #tape of the score function
-  out <- smest(smotape, thetatape, sample, control = control)
-  A = Bingham_theta2Amat(out$par)
-  SE = Bingham_theta2Amat(out$SE)
+  if (is.null(A)){
+    A <- matrix(NA, nrow = p, ncol = p)
+  }
+  stopifnot(all(dim(A) == c(p, p)))
+  if (!is.na(A[p,p])){stop("The final diagonal element of matrix A cannot be fixed in this software. Please consider reordering your dimensions.")}
+
+  intheta <- Bingham_Amat2theta(A)
+
+  utape <- rep(1, p) / sqrt(p)
+  tapes <- buildsmotape("Snative", "Bingham",
+                           utape, intheta,
+                           weightname = "ones")
+  out <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample, control = control)
+  theta <- intheta
+  theta[is.na(intheta)] <- out$par
+  tSE <- intheta * 0
+  tSE[is.na(intheta)] <- out$SE
+  A = Bingham_theta2Amat(theta)
+  SE = Bingham_theta2Amat(tSE)
   SE[p, p] <- NA
 
   A_es <- eigen(A)
@@ -61,26 +74,34 @@ Bingham_full <- function(sample, control = list(tol = 1E-20)){
   ))
 }
 
-Bingham_Mardia <- function(sample, control = list(tol = 1E-20)){
+Bingham_Mardia <- function(sample,  control = list(tol = 1E-20)){
   Tmat <- 1/nrow(sample) * t(sample) %*% sample
   Tmat_es <- eigen(Tmat)
   Gammahat <- Tmat_es$vectors
   samplestd <- sample %*% Gammahat
 
-  pman <- pmanifold("Snative")
   p <- ncol(samplestd)
-  thetatape <- c(rep(0.1, p-1), rep(0, (p - 1) * p/2)) # A for standardised data is a diagonal matrix
-  lltape <- ptapell(rep(1, p) / sqrt(p), thetatape,
-                    llname = "Bingham", pman,
-                    fixedtheta = c(rep(FALSE, p-1), rep(TRUE,  (p - 1) * p/2)), verbose = FALSE)
-  smotape<- ptapesmo(rep(1, p) / sqrt(p), thetatape[1:(p-1)],
-                     pll = lltape, pman = pman, "ones", acut = 1, verbose = FALSE) #tape of the score function
+  A <- matrix(0, nrow = p, ncol = p)
+  diag(A) <- NA
+  stopifnot(all(dim(A) == p))
+  intheta <- Bingham_Amat2theta(A)
+  tapes <- buildsmotape("Snative", "Bingham",
+                        rep(1, p) / sqrt(p), intheta,
+                        weightname = "ones")
 
-  sm <- smest(smotape, thetatape[1:(p-1)], samplestd, control = control)
-  Lambda <- c(sm$par, -sum(sm$par))
+  sm <- smest(tapes$smotape, seq(length.out = sum(is.na(intheta))), samplestd, control = control)
+  theta <- intheta
+  theta[is.na(intheta)] <- sm$par
+  Astd <- Bingham_theta2Amat(theta)
+  Lambda <- diag(Astd)
+
+  SE <- intheta * 0
+  SE[is.na(intheta)] <- sm$SE
+  SE <- Bingham_theta2Amat(SE)
+  SE[p, p] <- NA#final NA because final diagonal element is not estimated directly
   return(list(
     Lambda = Lambda,
-    Lambda_SE = c(sm$SE, NA),
+    Lambda_SE = diag(SE),
     Gamma = Gammahat,
     A = Gammahat %*% diag(Lambda) %*% t(Gammahat),
     sminfo = sm
@@ -90,7 +111,7 @@ Bingham_Mardia <- function(sample, control = list(tol = 1E-20)){
 Bingham_Amat2theta <- function(A){
   p <- ncol(A)
   stopifnot(isSymmetric(A))
-  stopifnot(abs(sum(diag(A))) < 1E-8)
+  if(isTRUE(abs(sum(diag(A))) > 1E-8)){warning("Trace of A is not zero, final diagonal element of A will be altered.")}
   theta <- c(diag(A)[1:(p-1)], A[upper.tri(A)])
   return(theta)
 }
