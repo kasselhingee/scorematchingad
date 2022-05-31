@@ -45,7 +45,7 @@ smobjhess2 <- function(smofun, Hsmofun_u, theta, interior, bdry, acentres, appro
   if (nrow(bdry) > 0){
     scmo2 <- smobjhess_approx(Hsmofun_u, theta, bdry, acentres, approxorder = approxorder)
   }
-  scmo <- apply(rbind(scmo1, scmo2), 2, weighted.mean, w = c(nrow(interior), nrow(bdry)))
+  scmo <- (nrow(interior) * scmo1 + nrow(bdry) * scmo2)/(nrow(interior) + nrow(bdry))
   return(scmo)
 }
 
@@ -99,5 +99,6 @@ smobjhess_approx <- function(Hsmofun_u, theta, utabl, acentres, approxorder = 10
     return(scobj)
   })
   scmo <- colMeans(do.call(rbind, sc_perpt))
+  dim(scmo) <- rep(length(theta), 2)
   return(scmo)
 }

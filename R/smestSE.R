@@ -25,28 +25,33 @@ smestSEsq <- function(smofun, est, utabl){
   return(Ginfinv / nrow(utabl)) #results now in same units as estimates
 }
 
-smestSE_simplex <- function(smofun, est, utabl, shiftsize){
+smestSE_simplex <- function(smofun, est, utabl, shiftsize, approxorder = 100){
+  sqrt(diag(smestSEsq_simplex(smofun, est, utabl, shiftsize, approxorder = approxorder)))
+}
+
+smestSEsq_simplex <- function(smofun, est, utabl, shiftsize, approxorder = 100){
   splittbl <- splitutable_nearbdry(utabl, boundary = "simplex", bdrythreshold = shiftsize, shiftsize = shiftsize)
   Jsmofun_u <- pTapeJacobianSwap(smofun, est * 0 - 0.1, rep(1/ncol(utabl), ncol(utabl)))
   Hsmofun_u <- pTapeHessianSwap(smofun, est * 0 - 0.1, rep(1/ncol(utabl), ncol(utabl)))
-  stop("unfinished")
+  sens <- -smobjhess2(smofun, Hsmofun_u, est,  splittbl$interior, splittbl$bdry, splittbl$acentres, approxorder = approxorder)
 
+  if (nrow(splittbl$interior) > 0){
+    gradsmoperpt_interior <- lapply(1:nrow(splittbl$interior), function(i){
+      scobj <- pJacobian(smofun, est, splittbl$interior[i,])
+      return(scobj)
+    })
+  } else {gradsmoperpt_interior <- NULL}
 
-  gradsmoperpt <-  smobjgrad2(smofun, Jsmofun_u, theta,
-             splittbl$interior, splittbl$bdry, splittbl$acentres, approxorder = 100)
-
-
-
-  sens <- -smobjhess(smofun, est, utabl)
-  gradsmoperpt <- lapply(1:nrow(utabl), function(i){
-    diff <- pJacobian(smofun, est, utabl[i,])
-    return(diff)
-  })
+  if (nrow(splittbl$bdry) > 0){
+    gradsmoperpt_bdry <- lapply(1:nrow(splittbl$bdry), function(i){
+      scobj <- pTaylorApprox(Jsmofun_u, splittbl$bdry[i,], splittbl$acentres[i, ], est, order = approxorder)
+      return(scobj)
+    })
+  } else {gradsmoperpt_bdry <- NULL}
+  gradsmoperpt <- c(gradsmoperpt_interior, gradsmoperpt_bdry)
   vargradsmo <- cov(do.call(rbind, gradsmoperpt)) #SAMPLE estimate of population VARIANCE of gradsmo
   sensinv <- solve(sens)
   Ginfinv <- sensinv %*% vargradsmo %*% sensinv #inverse of the Godambe information matrix, also called the sandwich information matrix
   return(Ginfinv / nrow(utabl)) #results now in same units as estimates
-
-  sqrt(diag(smestSEsq(smofun, est, utabl)))
 }
 
