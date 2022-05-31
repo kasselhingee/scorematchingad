@@ -14,6 +14,7 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
   expect_equal(FB_theta2mats(theta),
     list(k = k,
          m = m,
+         km = k*m,
          A = A))
 
 
