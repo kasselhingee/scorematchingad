@@ -37,7 +37,7 @@
 #' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
 #' @export
 ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, betap = NULL,
-                      bdrythreshold = 1E-5, shiftsize = bdrythreshold, approxorder = 10,
+                      bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10,
                       pow = 1, man, weightname = hsqfun, acut = NULL, control = list(tol = 1E-20), hsqfun = NULL){
   if (!is.null(hsqfun)){
     weightname <- hsqfun

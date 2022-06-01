@@ -91,6 +91,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for sec2_3mod
 
   acut = 0.1
   out <- ppi_cppad(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
+                   bdrythreshold = 1E-10,
             man = "sphere", weightname = "minsq", acut = acut)
 
   directestimate <- estimator1(model$sample, acut, incb = TRUE, beta0 = model$beta0)
