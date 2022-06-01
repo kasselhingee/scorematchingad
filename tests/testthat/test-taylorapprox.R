@@ -219,25 +219,27 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
   direct <- estimator1(newsample, acut = acut, incb = 1, beta0 = m$beta0)
   directSE <- estimator1SE(newsample, acut, direct$estimator1, direct$W_est, incb = 1, m$beta0)
 
-  buildsmotape("sphere", "ppi",
-               rep(0.1, m$p))
+  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(3, betaL = m$beta0[1:2], betap = m$beta0[3])
 
+  # prepare tapes
+  tapes <- buildsmotape("sphere", "ppi",
+                        rep(0.1, m$p), intheta,
+                        weightname = "minsq",
+                        acut = acut)
 
-  est <- ppi_cppad(newsample, betaL = m$beta0[1:2], betap = m$beta0[3], man = "sphere", weightname = "minsq", acut = acut,
-                   control = list(tol = 1E-10))
+  #prepare data
+  datasplit <- simplex_boundarysplit(newsample, bdrythreshold = 1E-15, shiftsize = 1E-15)
 
+  #extra tapes
+  Jsmofun_u <- pTapeJacobianSwap(tapes$smotape, m$theta, datasplit$interior[1, ])
+  Hsmofun_u <- pTapeHessianSwap(tapes$smotape, m$theta, datasplit$interior[1, ])
 
-  lltape <- ptapell(rep(0.1, m$p), thetatape, llname = "ppi", pman = pman, fixedtheta = fixedtheta, verbose = FALSE)
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), thetatape[is.na(theta)], pll = lltape, pman = pman, "minsq", acut = 0.1, verbose = FALSE) #tape of the score function
-
-  # some comparisons isolated from the Rcgmin optimiser
-  expect_equal(smestSE_simplex(smoppi, direct$estimator1, newsample, shiftsize = 1E-5),
-               directSE, tolerance = 1E-2)
-
-  est_cppad <- smest_simplex(smoppi, thetatape[is.na(theta)] * 0 - 0.1, newsample,
-                             control = list(tol = 1E-20), 1E-5)
-  SE <- smestSE_simplex(smoppi, est_cppad$par, newsample, shiftsize = 1E-5)
-  expect_equal(est_cppad$par, direct$estimator1, tolerance = 1E-5,
-               ignore_attr = TRUE)
-  expect_equal(SE, directSE, tolerance = 1E-1)
+  #comparisons isolated from the Rcgmin optimiser
+  SE <- smestSE(
+    tapes$smotape, theta = direct$estimator1, datasplit$interior,
+    Jsmofun_u = Jsmofun_u,
+    Hsmofun_u = Hsmofun_u,
+    uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
+    approxorder = 100)
+  expect_equal(SE, directSE, tolerance = 1E-2)
 })
