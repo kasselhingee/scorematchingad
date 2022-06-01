@@ -23,9 +23,11 @@ smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary =
     stopifnot(ncol(uboundary) == ncol(utabl))
     smofun_u <- swapDynamic(smofun, utabl[1, ], theta) #don't use a boundary point here!
     Jsmofun_u <- pTapeJacobianSwap(smofun, theta, utabl[1, ])
+    Hsmofun_u <- pTapeHessianSwap(smofun, theta, utabl[1, ])
   } else {
     smofun_u <- NULL
     Jsmofun_u <- NULL
+    Hsmofun_u <- NULL
   }
 
   out <- Rcgmin::Rcgmin(par = theta,
@@ -43,24 +45,20 @@ smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary =
                         control = control)
   if (out$convergence == 2){stop(paste(out$message, "Perhaps smobj() generates a NaN?"))}
   if (out$convergence != 0){warning("Optimisation did not converge.")}
-  out$SE <- try({smestSE(smofun, out$par, utabl)})
-  out$sqgradsize <- sum(smobjgrad(smofun, out$par, utabl)^2)
+  out$SE <- try({
+    smestSE(
+      smofun, theta = out$par, utabl,
+      Jsmofun_u = Jsmofun_u, Hsmofun_u = Hsmofun_u,
+      uboundary = uboundary, boundaryapprox = boundaryapprox,
+      approxorder = approxorder)})
+  gradatest <- smobjgrad(smofun, out$par, utabl,
+                         Jsmofun_u = Jsmofun_u,
+                         uboundary = uboundary, boundaryapprox = boundaryapprox,
+                         approxorder = approxorder)
+  out$sqgradsize <- sum(gradatest)^2
   return(out)
 }
 
-smest_simplex <- function(smofun, theta, utabl, control = list(tol = 1E-20), shiftsize){
-  splittbl <- splitutable_nearbdry(utabl, boundary = "simplex", bdrythreshold = shiftsize, shiftsize = shiftsize)
-  smofun_u <- swapDynamic(smofun, rep(1/ncol(utabl), ncol(utabl)), theta * 0 - 0.1) #don't use a boundary point here!
-  Jsmofun_u <- pTapeJacobianSwap(smofun, theta * 0 - 0.1, rep(1/ncol(utabl), ncol(utabl)))
-  out <- Rcgmin::Rcgmin(par = theta,
-                        fn = function(theta){smobj2(smofun, smofun_u, theta,
-                                                    splittbl$interior, splittbl$bdry, splittbl$acentres, approxorder = 100)},
-                        gr = function(theta){smobjgrad2(smofun, Jsmofun_u, theta,
-                                                        splittbl$interior, splittbl$bdry, splittbl$acentres, approxorder = 100)},
-                        control = control)
-  if (out$convergence != 0){warning("Optimisation did not converge.")}
-  return(out)
-}
 
 
 

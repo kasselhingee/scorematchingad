@@ -48,6 +48,15 @@ smobj_b <- function(theta, ...){
 smobjgrad <- function(smofun, theta, utabl,
                       Jsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
                       stopifnan = FALSE){
+  grad_perpt <- smobjgrad_perpt(smofun, theta, utabl,
+                  Jsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL)
+  grad <- colMeans(do.call(rbind, grad_perpt))
+  if (stopifnan && any(is.nan(grad))){stop("smobjgrad() generates a NaN")}
+  return(grad)
+}
+
+smobjgrad_perpt <- function(smofun, theta, utabl,
+                      Jsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL){
   grad_perpt_interior <- list()
   if (nrow(utabl) > 0){
     grad_perpt_interior <- lapply(1:nrow(utabl), function(i){
@@ -66,10 +75,7 @@ smobjgrad <- function(smofun, theta, utabl,
     })
   }
   grad_perpt <- c(grad_perpt_interior, grad_perpt_boundary)
-
-  grad <- colMeans(do.call(rbind, grad_perpt))
-  if (stopifnan && any(is.nan(grad))){stop("smobjgrad() generates a NaN")}
-  return(grad)
+  return(grad_perpt)
 }
 
 smobjgrad_b <- function(theta, ...){
