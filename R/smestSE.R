@@ -28,5 +28,5 @@ smestSEsq <- function(smofun, theta, utabl,
   vargradsmo <- cov(do.call(rbind, gradsmoperpt)) #SAMPLE estimate of population VARIANCE of gradsmo
   sensinv <- solve(sens)
   Ginfinv <- sensinv %*% vargradsmo %*% sensinv #inverse of the Godambe information matrix, also called the sandwich information matrix
-  return(Ginfinv / nrow(utabl)) #results now in same units as estimates
+  return(Ginfinv / length(gradsmoperpt)) #results now in same units as estimates
 }
