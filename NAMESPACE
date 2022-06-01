@@ -3,6 +3,7 @@
 export(Bingham)
 export(FB)
 export(approxcentre)
+export(buildsmotape)
 export(dirichmom)
 export(estimator1)
 export(estimator1SE)
