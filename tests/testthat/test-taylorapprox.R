@@ -48,7 +48,6 @@ test_that("Auto approx centre with taylor approximation works on single sample p
   # it is much faster, but not as accurate
 })
 
-
 test_that("Approx taylor with u on boundary generates correct values (excluding gradient) for sphere for ppi", {
   set.seed(123)
   m <- sec2_3model(2)
@@ -117,7 +116,7 @@ test_that("Taylor Approx of Grad SMO gets correct value on boundary of simplex",
 })
 
 
-test_that("Test smest with taylor approx matches against direct", {
+test_that("Test ppi() against direct when there are boundary points", {
   set.seed(123)
   m <- sec2_3model(100)
   #add some zeroes
@@ -134,28 +133,11 @@ test_that("Test smest with taylor approx matches against direct", {
   acut = 0.1
   direct <- estimatorall1(newsample, acut = acut, betap = m$beta0[3])
 
-  #copied from ppi_cppad()
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(3, betap = m$beta0[3])
-
-  # prepare tapes
-  tapes <- buildsmotape("sphere", "ppi",
-                        rep(0.1, m$p), intheta,
-                        weightname = "minsq",
-                        acut = acut)
-
-  #prepare data
-  datasplit <- simplex_boundarysplit(newsample, bdrythreshold = 1E-15, shiftsize = 1E-10)
-
-  est_cppad <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), datasplit$interior,
-                             control = list(tol = 1E-10),
-                     uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
-                     approxorder = 10)
-  cdabyppi:::expect_lt_v(abs(est_cppad$par - direct$estimator1), 1E-3*abs(direct$estimator1))
-  cdabyppi:::expect_lte_v(abs(est_cppad$par - m$theta[is.na(intheta)]), 3 * est_cppad$SE)
-
-  #without bdry correction
-  expect_error(smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), newsample,
-                     control = list(tol = 1E-10)))
+  est <- ppi_cppad(newsample, betap = m$beta0[3], man = "sphere", weightname = "minsq", acut = acut,
+                   control = list(tol = 1E-10))
+  cdabyppi:::expect_lte_v(abs(est$est$theta - c(direct$estimator1, m$beta0[3])),
+                          0.1*abs(c(direct$estimator1, 0)))
+  cdabyppi:::expect_absdiff_lte_v(est$est$theta, c(direct$estimator1, m$beta0[3]), 0.1*abs(c(direct$estimator1, 0)))
 })
 
 test_that("Taylor approx of smestSE gives suitable SE for estimates", {
@@ -173,55 +155,50 @@ test_that("Taylor approx of smestSE gives suitable SE for estimates", {
   mean(apply(newsample, 1, min) == 0) #28% have a zero
 
   acut = 0.1
-  direct <- estimatorall1(newsample, acut = acut, betap = m$beta0[3])
-
-  #copied from ppi_cppad()
-  theta <- cdabyppi:::ppi_cppad_thetaprocessor(3, betap = m$beta0[3])
-  fixedtheta <- !is.na(theta)
-
-  # prepare tapes
-  pman <- pmanifold("sphere")
-  thetatape <- theta  #must pass the fixed values as the taped value
-  thetatape[!fixedtheta] <- 0.73 # any number will do!
-
-  lltape <- ptapell(rep(0.1, m$p), thetatape, llname = "ppi", pman = pman, fixedtheta = fixedtheta, verbose = FALSE)
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), thetatape[is.na(theta)], pll = lltape, pman = pman, "minsq", acut = 0.1, verbose = FALSE) #tape of the score function
-
-  est_cppad <- smest_simplex(smoppi, thetatape[is.na(theta)] * 0 - 0.1, newsample,
-                             control = list(tol = 1E-10), 1E-5)
-  SE <- smestSE_simplex(smoppi, est_cppad$par, newsample, shiftsize = 1E-5)
-  cdabyppi::expect_lt_v(abs(est_cppad$par - m$theta[!fixedtheta]), 3 * SE)
+  est <- ppi_cppad(newsample, betap = m$beta0[3], man = "sphere", weightname = "minsq", acut = acut,
+                   control = list(tol = 1E-10))
+  cdabyppi:::expect_absdiff_lte_v(est$est$theta, m$theta, 3 * est$SE$theta)
   # note that the SE is a bit hard to test on here because the data has been truncated
 })
 
-test_that("Taylor approx of smestSE matches on the interior", {
+test_that("Taylor approx of ppi() SE matches on the interior", {
   set.seed(123)
   m <- sec2_3model(100)
-  mean(apply(m$sample, 1, min) == 0) #28% have a zero
 
   acut = 0.1
   direct <- estimatorall1(m$sample, acut = acut, betap = m$beta0[3])
 
-  #copied from ppi_cppad()
-  theta <- cdabyppi:::ppi_cppad_thetaprocessor(3, betap = m$beta0[3])
-  fixedtheta <- !is.na(theta)
+  est_default <- ppi_cppad(m$sample, betap = m$beta0[3], man = "sphere", weightname = "minsq", acut = acut,
+                   control = list(tol = 1E-10))
 
-  # prepare tapes
-  pman <- pmanifold("sphere")
-  thetatape <- theta  #must pass the fixed values as the taped value
-  thetatape[!fixedtheta] <- 0.73 # any number will do!
+  est_interior <- ppi_cppad(m$sample, betap = m$beta0[3], man = "sphere", weightname = "minsq", acut = acut,
+                            bdrythreshold = -1,
+                            control = list(tol = 1E-10))
 
-  lltape <- ptapell(rep(0.1, m$p), thetatape, llname = "ppi", pman = pman, fixedtheta = fixedtheta, verbose = FALSE)
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), thetatape[is.na(theta)], pll = lltape, pman = pman, "minsq", acut = 0.1, verbose = FALSE) #tape of the score function
+  expect_equal(est_default$est$theta, est_interior$est$theta, tolerance = 1E-3)
+  expect_equal(est_default$SE$theta, est_interior$SE$theta, tolerance = 1E-3)
+})
 
-  est_cppad <- smest_simplex(smoppi, thetatape[is.na(theta)] * 0 - 0.1, m$sample,
-                             control = list(tol = 1E-10), 1E-5)
-  SE <- smestSE_simplex(smoppi, est_cppad$par, m$sample, shiftsize = 1E-20)
+test_that("ppi() operates when minimal points in the interior", {
+  set.seed(123)
+  m <- sec2_3model(100)
+  #add some zeroes
+  pushtozero <- function(x){
+    if (min(x) > 10){return(x)}
+    whichmin <- which.min(x)
+    x[whichmin] <- 0
+    x <- x / sum(x) #normalise
+    return(x)
+  }
+  newsample <- t(apply(m$sample, MARGIN = 1, pushtozero))
+  newsample <- rbind(newsample, m$sample[1:3, , drop = FALSE])
 
-  est <- smest(smoppi, thetatape[is.na(theta)] * 0 - 0.1, m$sample,
-               control = list(tol = 1E-10))
-  expect_equal(est_cppad$par, est$par, tolerance = 1E-3)
-  expect_equal(SE, est$SE, tolerance = 1E-3)
+  acut = 0.1
+  direct <- estimator1(newsample, acut = acut, incb = 1, beta0 = m$beta0)
+
+  est <- ppi_cppad(newsample, betaL = m$beta0[1:2], betap = m$beta0[3], man = "sphere", weightname = "minsq", acut = acut,
+                            control = list(tol = 1E-10))
+  expect_absdiff_lte_v(est$est$theta, c(direct$estimator1, m$beta0), 1E-1 * abs(c(direct$estimator1, m$beta0)))
 })
 
 test_that("Taylor approx of matches estimator1SE with data on the boundary", {
@@ -242,27 +219,25 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
   direct <- estimator1(newsample, acut = acut, incb = 1, beta0 = m$beta0)
   directSE <- estimator1SE(newsample, acut, direct$estimator1, direct$W_est, incb = 1, m$beta0)
 
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(3, betaL = m$beta0[1:2], betap = m$beta0[3])
+  buildsmotape("sphere", "ppi",
+               rep(0.1, m$p))
 
-  # prepare tapes
-  tapes <- buildsmotape("sphere", "ppi",
-                        rep(0.1, m$p), intheta,
-                        weightname = "minsq",
-                        acut = acut)
 
-  #prepare data
-  datasplit <- simplex_boundarysplit(newsample, bdrythreshold = 1E-15, shiftsize = 1E-15)
+  est <- ppi_cppad(newsample, betaL = m$beta0[1:2], betap = m$beta0[3], man = "sphere", weightname = "minsq", acut = acut,
+                   control = list(tol = 1E-10))
 
-  #extra tapes
-  Jsmofun_u <- pTapeJacobianSwap(tapes$smotape, m$theta, datasplit$interior[1, ])
-  Hsmofun_u <- pTapeHessianSwap(tapes$smotape, m$theta, datasplit$interior[1, ])
 
-  #comparisons isolated from the Rcgmin optimiser
-  SE <- smestSE(
-    tapes$smotape, theta = direct$estimator1, datasplit$interior,
-    Jsmofun_u = Jsmofun_u,
-    Hsmofun_u = Hsmofun_u,
-    uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
-    approxorder = 100)
-  expect_equal(SE, directSE, tolerance = 1E-2)
+  lltape <- ptapell(rep(0.1, m$p), thetatape, llname = "ppi", pman = pman, fixedtheta = fixedtheta, verbose = FALSE)
+  smoppi <- ptapesmo(c(0.1,0.1,0.1), thetatape[is.na(theta)], pll = lltape, pman = pman, "minsq", acut = 0.1, verbose = FALSE) #tape of the score function
+
+  # some comparisons isolated from the Rcgmin optimiser
+  expect_equal(smestSE_simplex(smoppi, direct$estimator1, newsample, shiftsize = 1E-5),
+               directSE, tolerance = 1E-2)
+
+  est_cppad <- smest_simplex(smoppi, thetatape[is.na(theta)] * 0 - 0.1, newsample,
+                             control = list(tol = 1E-20), 1E-5)
+  SE <- smestSE_simplex(smoppi, est_cppad$par, newsample, shiftsize = 1E-5)
+  expect_equal(est_cppad$par, direct$estimator1, tolerance = 1E-5,
+               ignore_attr = TRUE)
+  expect_equal(SE, directSE, tolerance = 1E-1)
 })

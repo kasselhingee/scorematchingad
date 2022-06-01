@@ -12,6 +12,10 @@ expect_lte_v <- function(object, expected){
   expect_op_v(object, expected, operation = function(x, y) x <= y, comparelang = "larger than")
 }
 
+expect_absdiff_lte_v <- function(object1, object2, expected){
+  expect_lte_v(abs(object1 - object2), expected)
+}
+
 expect_op_v <- function(object, expected, operation = function(x, y) x < y, comparelang = "larger than"){
   act <- testthat::quasi_label(rlang::enquo(object), arg = "object")
 

@@ -36,6 +36,7 @@ buildsmotape <- function(manifoldname, llname,
   lltape <- ptapell(ztape, thetatape,
                     llname = llname, pman = pman,
                     fixedtheta = fixedtheta, verbose = verbose)
+  stopifnot(is.numeric(acut))
   smotape <- ptapesmo(utape, thetatape[!fixedtheta],
                       lltape, pman,
                       weightname, acut, verbose = verbose)

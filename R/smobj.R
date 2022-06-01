@@ -23,8 +23,8 @@ smobj <- function(smofun, theta, utabl,
   }
 
   sc_perpt_boundary <- c()
-  if (!all(is.null(smofun_u), is.null(uboundary), is.null(boundaryapprox), is.null(approxorder))){
-    stopifnot(all(!is.null(smofun_u), !is.null(uboundary), !is.null(boundaryapprox), !is.null(approxorder)))
+  if (any(isTRUE(nrow(uboundary) > 0), isTRUE(nrow(boundaryapprox) > 0))){
+    stopifnot(all(!is.null(smofun_u), isTRUE(nrow(uboundary) > 0), isTRUE(nrow(boundaryapprox) > 0), !is.null(approxorder)))
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))
     sc_perpt_boundary <- lapply(1:nrow(uboundary), function(i){
       scobj <- pTaylorApprox(smofun_u, uboundary[i,], boundaryapprox[i, ], theta, order = approxorder)
@@ -67,8 +67,8 @@ smobjgrad_perpt <- function(smofun, theta, utabl,
   }
 
   grad_perpt_boundary <- list()
-  if (!all(is.null(Jsmofun_u), is.null(uboundary), is.null(boundaryapprox), is.null(approxorder))){
-    stopifnot(all(!is.null(Jsmofun_u), !is.null(uboundary), !is.null(boundaryapprox), !is.null(approxorder)))
+  if (any(isTRUE(nrow(uboundary) > 0), isTRUE(nrow(boundaryapprox) > 0))){
+    stopifnot(all(!is.null(Jsmofun_u), isTRUE(nrow(uboundary) > 0), isTRUE(nrow(boundaryapprox) > 0), !is.null(approxorder)))
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))
     grad_perpt_boundary <- lapply(1:nrow(uboundary), function(i){
       grad <- pTaylorApprox(Jsmofun_u, uboundary[i,], boundaryapprox[i, ], theta, order = approxorder)
@@ -99,8 +99,8 @@ smobjhess <- function(smofun, theta, utabl,
   }
 
   hess_perpt_boundary <- list()
-  if (!all(is.null(Hsmofun_u), is.null(uboundary), is.null(boundaryapprox), is.null(approxorder))){
-    stopifnot(all(!is.null(Hsmofun_u), !is.null(uboundary), !is.null(boundaryapprox), !is.null(approxorder)))
+  if (any(isTRUE(nrow(uboundary) > 0), isTRUE(nrow(boundaryapprox) > 0))){
+    stopifnot(all(!is.null(Hsmofun_u), isTRUE(nrow(uboundary) > 0), isTRUE(nrow(boundaryapprox) > 0), !is.null(approxorder)))
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))
     hess_perpt_boundary <- lapply(1:nrow(uboundary), function(i){
       hess <- pTaylorApprox(Hsmofun_u, uboundary[i,], boundaryapprox[i, ], theta, order = approxorder)

@@ -28,12 +28,16 @@
 #' If NULL then the pth element of beta will be estimated.
 #' If a number, then the pth element of beta will be fixed at the given value.
 #' @param control Control parameters to `Rcgmin`, of primary use is the tolerance parameter of the squared gradient size
+#' @param bdrythreshold For measurements close to the boundary of the simplex Taylor approximation is applied.
+#' @param shiftsize Measurements close to the boundary are shifted by this distance for Taylor approximation.
+#' @param approxorder Order of the Taylor approximation
 #' @examples
 #' model <- sec2_3model(1000)
 #' estinfo <- ppi_cppad(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
 #' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
 #' @export
 ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, betap = NULL,
+                      bdrythreshold = 1E-5, shiftsize = bdrythreshold, approxorder = 10,
                       pow = 1, man, weightname = hsqfun, acut = NULL, control = list(tol = 1E-20), hsqfun = NULL){
   if (!is.null(hsqfun)){
     weightname <- hsqfun
@@ -61,7 +65,13 @@ ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, be
                 acut = acut, verbose = FALSE
                 )
 
-  opt <- smest(tapes$smotape, rep(0.2, sum(is.na(theta))), prop, control = control)
+  # split data into boundary and interior
+  datasplit <- simplex_boundarysplit(prop, bdrythreshold = bdrythreshold, shiftsize = shiftsize)
+
+  opt <- smest(tapes$smotape, rep(0.2, sum(is.na(theta))), datasplit$interior,
+               uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
+               approxorder = approxorder,
+               control = control)
 
   #process the theta and SE
   fixedtheta <- !is.na(theta)

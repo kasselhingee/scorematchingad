@@ -21,9 +21,16 @@ smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary =
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))
     stopifnot(ncol(uboundary) == ncol(boundaryapprox))
     stopifnot(ncol(uboundary) == ncol(utabl))
-    smofun_u <- swapDynamic(smofun, utabl[1, ], theta) #don't use a boundary point here!
-    Jsmofun_u <- pTapeJacobianSwap(smofun, theta, utabl[1, ])
-    Hsmofun_u <- pTapeHessianSwap(smofun, theta, utabl[1, ])
+    if(!isTRUE(nrow(utabl) > 0)){
+      warning("Guessing an interior point for taping")
+      p <- ncol(utabl)
+      eginteriorpt <- rep(1/p, p)
+    } else {
+      eginteriorpt <- utabl[1, ]
+    }
+    smofun_u <- swapDynamic(smofun, eginteriorpt, theta) #don't use a boundary point here!
+    Jsmofun_u <- pTapeJacobianSwap(smofun, theta, eginteriorpt)
+    Hsmofun_u <- pTapeHessianSwap(smofun, theta, eginteriorpt)
   } else {
     smofun_u <- NULL
     Jsmofun_u <- NULL
