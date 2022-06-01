@@ -49,7 +49,8 @@ smobjgrad <- function(smofun, theta, utabl,
                       Jsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
                       stopifnan = FALSE){
   grad_perpt <- smobjgrad_perpt(smofun, theta, utabl,
-                  Jsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL)
+                  Jsmofun_u = Jsmofun_u, uboundary = uboundary, boundaryapprox = boundaryapprox,
+                  approxorder = approxorder)
   grad <- colMeans(do.call(rbind, grad_perpt))
   if (stopifnan && any(is.nan(grad))){stop("smobjgrad() generates a NaN")}
   return(grad)
