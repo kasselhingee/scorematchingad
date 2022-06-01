@@ -4,12 +4,22 @@
 #' @param smofun A tape of the score matching objective calculation
 #' @param theta The starting parameter set
 #' @param utabl A matrix of observations, each row being an observation.
+#' @param uboundary Optional. A matrix of observations close to or on the boundary.
+#' The contribution of the score matching objective (and corresponding derivatives) of these measurements
+#' will be approximated using Taylor approximation from the corresponding `boundaryapprox` matrix.
+#' @param boundaryapprox Optional. A matrix of locations in the manifold associated with each measurement in `boundary`.
+#' For best results these locations should be further from the manifold boundary and close to their corresponding measurements.
+#' Taylor approximation around the rows of `boundaryapprox` will be used to approximate the score matching objective for these measurements.
 #' @param control Optional argument passed to `Rcgmin::Rcgmin()`.
 #' The default `list(tol = 1E-20)` means the optimisation won't end until the squared size of the gradiant
 #'  at the estimate is less than 1E-20.
+#' @param approxcentres Optional. A function that takes the measurments that are `TRUE` according to `isboundary`
 #' @return The output from `Rcgmin::Rcgmin()`, the squared size of the gradient at the estimate, and the standard error estimates by `smestSE()`.
 #' @export
-smest <- function(smofun, theta, utabl, control = list(tol = 1E-20)){
+smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary = NULL, boundaryapprox = NULL){
+  if (!(is.null(uboundary) && is.null(boundaryapprox))){
+    stopifnot((!is.null(uboundary)) && (!is.null(boundaryapprox))) #both need to be supplied
+  }
   out <- Rcgmin::Rcgmin(par = theta,
                         fn = function(theta){smobj(smofun, theta, utabl)},
                         gr = function(theta){smobjgrad(smofun, theta, utabl)},
@@ -35,17 +45,4 @@ smest_simplex <- function(smofun, theta, utabl, control = list(tol = 1E-20), shi
 }
 
 
-splitutable_nearbdry <- function(utabl, boundary = "simplex", bdrythreshold = 1E-15, shiftsize = bdrythreshold){
-  onbdry <- rep(FALSE, nrow(utabl))
-  if (!is.null(boundary)){
-    if (boundary == "simplex"){
-      onbdry <- apply(utabl, MARGIN = 1, min) < bdrythreshold
-      acentres <- approxcentre(utabl[onbdry, ], shiftsize = shiftsize)
-    }
-  }
-  return(list(
-    interior = utabl[!onbdry, ],
-    bdry = utabl[onbdry, ],
-    acentres = acentres))
-}
 

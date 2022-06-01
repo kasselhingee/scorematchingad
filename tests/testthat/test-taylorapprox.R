@@ -48,11 +48,6 @@ test_that("Auto approx centre with taylor approximation works on single sample p
   # it is much faster, but not as accurate
 })
 
-test_that("approxcentre_simplex gives results equal to shiftsize", {
-  m <- sec2_3model(10)
-  centres <- approxcentre(m$sample, shiftsize = 1E-5)
-  expect_equal(sqrt(rowSums((centres - m$sample)^2)), rep(1E-5, nrow(m$sample)))
-})
 
 test_that("Approx taylor with u on boundary generates correct values (excluding gradient) for sphere for ppi", {
   set.seed(123)
