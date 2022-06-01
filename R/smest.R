@@ -13,17 +13,35 @@
 #' @param control Optional argument passed to `Rcgmin::Rcgmin()`.
 #' The default `list(tol = 1E-20)` means the optimisation won't end until the squared size of the gradiant
 #'  at the estimate is less than 1E-20.
-#' @param approxcentres Optional. A function that takes the measurments that are `TRUE` according to `isboundary`
 #' @return The output from `Rcgmin::Rcgmin()`, the squared size of the gradient at the estimate, and the standard error estimates by `smestSE()`.
 #' @export
-smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary = NULL, boundaryapprox = NULL){
+smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL){
   if (!(is.null(uboundary) && is.null(boundaryapprox))){
     stopifnot((!is.null(uboundary)) && (!is.null(boundaryapprox))) #both need to be supplied
+    stopifnot(nrow(uboundary) == nrow(boundaryapprox))
+    stopifnot(ncol(uboundary) == ncol(boundaryapprox))
+    stopifnot(ncol(uboundary) == ncol(utabl))
+    smofun_u <- swapDynamic(smofun, utabl[1, ], theta) #don't use a boundary point here!
+    Jsmofun_u <- pTapeJacobianSwap(smofun, theta, utabl[1, ])
+  } else {
+    smofun_u <- NULL
+    Jsmofun_u <- NULL
   }
+
   out <- Rcgmin::Rcgmin(par = theta,
-                        fn = function(theta){smobj(smofun, theta, utabl)},
-                        gr = function(theta){smobjgrad(smofun, theta, utabl)},
+                        fn = smobj_b,
+                        gr = smobjgrad_b,
+                        # function(theta, ...){smobj(smofun, theta, utabl, smofun_u, ...)},
+                        # gr = function(theta, ...){smobjgrad(smofun, theta, utabl, Jsmofun_u, ...)},
+                        smofun = smofun,
+                        utabl = utabl,
+                        smofun_u = smofun_u,
+                        Jsmofun_u = Jsmofun_u,
+                        uboundary = uboundary, boundaryapprox = boundaryapprox,
+                        approxorder = approxorder,
+                        stopifnan = TRUE,
                         control = control)
+  if (out$convergence == 2){stop(paste(out$message, "Perhaps smobj() generates a NaN?"))}
   if (out$convergence != 0){warning("Optimisation did not converge.")}
   out$SE <- try({smestSE(smofun, out$par, utabl)})
   out$sqgradsize <- sum(smobjgrad(smofun, out$par, utabl)^2)

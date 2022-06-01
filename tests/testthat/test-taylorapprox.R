@@ -53,7 +53,7 @@ test_that("Approx taylor with u on boundary generates correct values (excluding 
   set.seed(123)
   m <- sec2_3model(2)
   m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
-  acentres <- approxcentre(m$sample, shiftsize = 1E-15)
+  acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-15)
 
   psphere <- pmanifold("sphere") #because above ppill_r is for the simplex
   lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", pman = psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
@@ -72,7 +72,7 @@ test_that("Taylor Approx of Grad SMO gets correct value on interior of simplex",
   set.seed(123)
   m <- sec2_3model(2)
   # m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
-  acentres <- approxcentre(m$sample, shiftsize = 1E-15)
+  acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-15)
 
   psphere <- pmanifold("sphere") #because above ppill_r is for the simplex
   lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", pman = psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
@@ -94,7 +94,7 @@ test_that("Taylor Approx of Grad SMO gets correct value on boundary of simplex",
   set.seed(123)
   m <- sec2_3model(2)
   m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
-  acentres <- approxcentre(m$sample, shiftsize = 1E-15)
+  acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-15)
   acut = 0.1
 
   psphere <- pmanifold("sphere") #because above ppill_r is for the simplex
@@ -117,7 +117,7 @@ test_that("Taylor Approx of Grad SMO gets correct value on boundary of simplex",
 })
 
 
-test_that("Test smest_simplex against direct", {
+test_that("Test smest with taylor approx matches against direct", {
   set.seed(123)
   m <- sec2_3model(100)
   #add some zeroes
@@ -135,23 +135,26 @@ test_that("Test smest_simplex against direct", {
   direct <- estimatorall1(newsample, acut = acut, betap = m$beta0[3])
 
   #copied from ppi_cppad()
-  theta <- cdabyppi:::ppi_cppad_thetaprocessor(3, betap = m$beta0[3])
-  fixedtheta <- !is.na(theta)
+  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(3, betap = m$beta0[3])
 
   # prepare tapes
-  pman <- pmanifold("sphere")
-  thetatape <- theta  #must pass the fixed values as the taped value
-  thetatape[!fixedtheta] <- 0.73 # any number will do!
+  tapes <- buildsmotape("sphere", "ppi",
+                        rep(0.1, m$p), intheta,
+                        weightname = "minsq",
+                        acut = acut)
 
-  lltape <- ptapell(rep(0.1, m$p), thetatape, llname = "ppi", pman = pman, fixedtheta = fixedtheta, verbose = FALSE)
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), thetatape[is.na(theta)], pll = lltape, pman = pman, "minsq", acut = 0.1, verbose = FALSE) #tape of the score function
+  #prepare data
+  datasplit <- simplex_boundarysplit(newsample, bdrythreshold = 1E-15, shiftsize = 1E-10)
 
-  est_cppad <- smest_simplex(smoppi, thetatape[is.na(theta)] * 0 - 0.1, newsample,
-                             control = list(tol = 1E-10), 1E-5)
-  cdabyppi:::expect_lt_v(abs(est_cppad$par - direct$estimator1), 0.1*abs(direct$estimator1))
+  est_cppad <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), datasplit$interior,
+                             control = list(tol = 1E-10),
+                     uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
+                     approxorder = 10)
+  cdabyppi:::expect_lt_v(abs(est_cppad$par - direct$estimator1), 1E-3*abs(direct$estimator1))
 
-
-
+  #without bdry correction
+  expect_error(smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), newsample,
+                     control = list(tol = 1E-10)))
 })
 
 test_that("Taylor approx of smestSE gives suitable SE for estimates", {
