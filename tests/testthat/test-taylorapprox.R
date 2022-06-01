@@ -151,6 +151,7 @@ test_that("Test smest with taylor approx matches against direct", {
                      uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
                      approxorder = 10)
   cdabyppi:::expect_lt_v(abs(est_cppad$par - direct$estimator1), 1E-3*abs(direct$estimator1))
+  cdabyppi:::expect_lte_v(abs(est_cppad$par - m$theta[is.na(intheta)]), 3 * est_cppad$SE)
 
   #without bdry correction
   expect_error(smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), newsample,
@@ -241,26 +242,27 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
   direct <- estimator1(newsample, acut = acut, incb = 1, beta0 = m$beta0)
   directSE <- estimator1SE(newsample, acut, direct$estimator1, direct$W_est, incb = 1, m$beta0)
 
-  #copied from ppi_cppad()
-  theta <- cdabyppi:::ppi_cppad_thetaprocessor(3, betaL = m$beta0[1:2], betap = m$beta0[3])
-  fixedtheta <- !is.na(theta)
+  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(3, betaL = m$beta0[1:2], betap = m$beta0[3])
 
   # prepare tapes
-  pman <- pmanifold("sphere")
-  thetatape <- theta  #must pass the fixed values as the taped value
-  thetatape[!fixedtheta] <- 0.73 # any number will do!
+  tapes <- buildsmotape("sphere", "ppi",
+                        rep(0.1, m$p), intheta,
+                        weightname = "minsq",
+                        acut = acut)
 
-  lltape <- ptapell(rep(0.1, m$p), thetatape, llname = "ppi", pman = pman, fixedtheta = fixedtheta, verbose = FALSE)
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), thetatape[is.na(theta)], pll = lltape, pman = pman, "minsq", acut = 0.1, verbose = FALSE) #tape of the score function
+  #prepare data
+  datasplit <- simplex_boundarysplit(newsample, bdrythreshold = 1E-15, shiftsize = 1E-15)
 
-  # some comparisons isolated from the Rcgmin optimiser
-  expect_equal(smestSE_simplex(smoppi, direct$estimator1, newsample, shiftsize = 1E-5),
-               directSE, tolerance = 1E-2)
+  #extra tapes
+  Jsmofun_u <- pTapeJacobianSwap(tapes$smotape, m$theta, datasplit$interior[1, ])
+  Hsmofun_u <- pTapeHessianSwap(tapes$smotape, m$theta, datasplit$interior[1, ])
 
-  est_cppad <- smest_simplex(smoppi, thetatape[is.na(theta)] * 0 - 0.1, newsample,
-                             control = list(tol = 1E-20), 1E-5)
-  SE <- smestSE_simplex(smoppi, est_cppad$par, newsample, shiftsize = 1E-5)
-  expect_equal(est_cppad$par, direct$estimator1, tolerance = 1E-5,
-               ignore_attr = TRUE)
-  expect_equal(SE, directSE, tolerance = 1E-1)
+  #comparisons isolated from the Rcgmin optimiser
+  SE <- smestSE(
+    tapes$smotape, theta = direct$estimator1, datasplit$interior,
+    Jsmofun_u = Jsmofun_u,
+    Hsmofun_u = Hsmofun_u,
+    uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
+    approxorder = 100)
+  expect_equal(SE, directSE, tolerance = 1E-2)
 })
