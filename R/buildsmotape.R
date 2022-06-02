@@ -48,6 +48,7 @@ buildsmotape <- function(manifoldname, llname,
       manifold = manifoldname,
       ulength = length(utape),
       intheta = intheta,
+      tapedtheta = thetatape,
       weightname = weightname,
       acut = acut
     )
