@@ -35,6 +35,17 @@ Rivest_theta2mats <- function(theta){
   ))
 }
 
+Rivest_theta2FBtheta <- function(theta){
+  mats <- Rivest_theta2mats(theta)
+  A_es <- eigen(mats$A)
+  evalorder <- order(abs(A_es$values), decreasing = FALSE)
+  m <- A_es$vectors[, evalorder[mats$evidx]]
+  if (m[1] < 0){m <- -m}
+  m <- sign(k) * m
+  k <- abs(k)
+  FB_mats2theta(k, m, mats$A)
+}
+
 #evidx specifies the eigenvector of A that is m. Vectors are sorted increasing size
 qdRivest <- function(u, k, A, evidx){
   evidx <- floor(evidx + 0.1)
@@ -55,5 +66,10 @@ lldRivest_du <- function(u, k, A, evidx){
   m <- A_es$vectors[, evalorder[evidx], drop = FALSE]
   if (m[1] < 0){m <- -m}
   du <- k * m + 2 * A %*% u
+  return(du)
+}
+#double derivative wrt u
+lldRivest_dudu <- function(u, k, A, evidx){
+  du <- 2 * A
   return(du)
 }
