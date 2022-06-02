@@ -20,11 +20,15 @@
 #' If non-null, then overrides AL and bL.
 #' If a matrix, all elements must be provided and Astar will be fixed in the estimation
 #' (This is because transforming to AL and bL from an incomplete Astar appears impossible).
-#' @param betaL NULL, a number, or a vector of length (p-1).
+#' @param beta NULL, a number, or a vector of length p. If non-null then overrides `betaL` and `betap` arguments.
+#' If NULL then the elements of the beta vector will be estimated.
+#' If a number then the beta elements will be fixed at the given number.
+#' If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
+#' @param betaL NULL, a number, or a vector of length (p-1). If non-null then overrides `beta` argument.
 #' If NULL then the 1...(p-1) beta elements will be estimated.
 #' If a number then the 1...(p-1) beta elements fixed at the given number.
 #' If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
-#' @param betap NULL or a number.
+#' @param betap NULL or a number. If non-null then overrides `beta` argument.
 #' If NULL then the pth element of beta will be estimated.
 #' If a number, then the pth element of beta will be fixed at the given value.
 #' @param control Control parameters to `Rcgmin`, of primary use is the tolerance parameter of the squared gradient size
@@ -36,7 +40,7 @@
 #' estinfo <- ppi_cppad(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
 #' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
 #' @export
-ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, betap = NULL,
+ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL, betap = NULL,
                       bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10,
                       pow = 1, man, weightname = hsqfun, acut = NULL, control = list(tol = 1E-20), hsqfun = NULL){
   if (!is.null(hsqfun)){
@@ -48,7 +52,7 @@ ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, be
   p = ncol(prop)
   stopifnot(pow == 1)
 
-  theta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, betaL, betap)
+  theta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, beta, betaL, betap)
 
   if (!(man %in% c("simplex", "sphere"))){
     if (weightname != "ones"){warning("Manifold supplied has no boundary. Setting weightname to 'ones'.")}
@@ -95,7 +99,7 @@ ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, be
     )
 }
 
-ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, betaL = NULL, betap = NULL){
+ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL, betap = NULL){
   # initialise parameter objects
   bLprep = rep(NA, p-1)
   betaLprep = rep(NA, p-1)
@@ -141,6 +145,7 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
   # beta
   if (!is.null(betaL)){
     stopifnot(is.vector(betaL, "numeric") | is.vector(betaL, "logical"))
+    stopifnot(is.null(beta))
     if (length(betaL) == 1){
       #' If a number then the 1...(p-1) beta elements fixed at the given number.
       betaLprep = rep(betaL, p-1)
@@ -154,7 +159,23 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
   if (!is.null(betap)){
     stopifnot(length(betap) == 1)
     stopifnot(is.numeric(betap) | is.logical(betap))
+    stopifnot(is.null(beta))
     betapprep = betap
+  }
+  if (!is.null(beta)){
+    stopifnot(is.null(betaL))
+    stopifnot(is.null(betap))
+    stopifnot(is.vector(beta, "numeric") | is.vector(beta, "logical"))
+    if (length(beta) == 1){
+      betaLprep = rep(beta, p-1)
+      betapprep = beta
+    } else if (length(beta) == p){
+      #' If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
+      betaLprep = beta[1:(p-1)]
+      betapprep = beta[p]
+    } else {
+      stop("beta must have length p")
+    }
   }
 
   # combine above preparation into a vector, NA values to be estimated

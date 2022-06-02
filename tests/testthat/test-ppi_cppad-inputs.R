@@ -42,6 +42,15 @@ test_that("Inputs to ppi_cppad are processed into the correct theta", {
                c(rep(NA, thetalength - 1), 1))
   expect_error(ppi_cppad_thetaprocessor(p, betap = c(1, 2)))
 
+  #beta by itself check
+  expect_equal(ppi_cppad_thetaprocessor(p, beta = NA),
+               rep(NA, thetalength))
+  expect_equal(ppi_cppad_thetaprocessor(p, beta = c(1.0, 2, NA)),
+               c(rep(NA, thetalength - p), c(1.0,2,NA)))
+  expect_error(ppi_cppad_thetaprocessor(p, beta = c(1, 2)))
+  expect_error(ppi_cppad_thetaprocessor(p, beta = NA, betap = 1))
+  expect_error(ppi_cppad_thetaprocessor(p, beta = NA, betaL = c(1, 2)))
+
   #check supplying all together
   expect_equal(ppi_cppad_thetaprocessor(p,
                            AL =  matrix(c(-166, 117, 117, -333), ncol = 2, nrow = 2),
