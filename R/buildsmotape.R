@@ -21,6 +21,7 @@ buildsmotape <- function(manifoldname, llname,
                          thetatape_creator = function(n){seq(length.out = n)},
                          verbose = FALSE){
   fixedtheta <- !is.na(intheta)
+  stopifnot(any(is.na(intheta)))
   thetatape <- intheta
   thetatape[!fixedtheta] <- thetatape_creator(sum(!fixedtheta))
 
