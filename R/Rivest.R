@@ -38,9 +38,12 @@ Rivest_theta2mats <- function(theta){
 Rivest_theta2FBtheta <- function(theta){
   mats <- Rivest_theta2mats(theta)
   A_es <- eigen(mats$A)
+  # print(A_es)
   evalorder <- order(abs(A_es$values), decreasing = FALSE)
   m <- A_es$vectors[, evalorder[mats$evidx]]
-  if (m[1] < 0){m <- -m}
+  # print(m)
+  if (is.na(m[1])){browser()}
+  if (isTRUE(m[1] < 0)){m <- -m}
   m <- sign(k) * m
   k <- abs(k)
   FB_mats2theta(k, m, mats$A)
