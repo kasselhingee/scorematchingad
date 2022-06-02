@@ -13,6 +13,11 @@
 #' If supplied, the non-NA elements are fixed.
 #' @param A Optional. The Bingham matrix. If supplied the non-NA elements of the Bingham matrix is fixed.
 #' The final diagonal of `A` here must be NA as the software calculates this value to ensure the trace is zero.
+#' @details
+#' Warning: the score matching estimate appears to converge very slowly for the Fisher-Bingham distribution.
+#' Even with a million simulated measurements,
+#'  the gradient of the score matching objective at the true theta is
+#'  is of size 0.001, which is substantially non-zero.
 #' @export
 FB <- function(sample, km = NULL, A = NULL, control = list(tol = 1E-20)){
   p <- ncol(sample)

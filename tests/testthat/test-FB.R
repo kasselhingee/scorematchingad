@@ -191,3 +191,23 @@ test_that("FB() fits with various fixed elements", {
   expect_equal(est$km[!is.na(inkm)], thetamats$km[!is.na(inkm)])
   expect_equal(est$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
 })
+
+test_that("FB() with many fixed elements leads so smaller smobjgrad - no", {
+  skip()
+  p <- 3
+  set.seed(111)
+  theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
+  thetamats <- FB_theta2mats(theta)
+
+  #simulate
+  set.seed(12345)
+  sample <- rFB(1E7, thetamats$k, thetamats$m, thetamats$A)
+
+  #many fixed elements
+  intheta <- theta
+  intheta[8] <- NA
+  tapes <- buildsmotape("Snative", "FB",
+                        sample[1, ], intheta)
+  smograd <- smobjgrad(tapes$smotape, theta[is.na(intheta)], sample)
+  sum(smograd^2)
+})
