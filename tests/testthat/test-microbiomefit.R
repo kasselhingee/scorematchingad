@@ -1,5 +1,6 @@
 #### Preparing microbiome data #############################################
 data("microdata", package = "cdabyppi")
+microdata <- microdata[!microdata$IndividualID %in% c(2079, 2280), ] #remove two outlying measurements
 countdata=as.matrix(microdata[,12:31])
 
 #sample size
