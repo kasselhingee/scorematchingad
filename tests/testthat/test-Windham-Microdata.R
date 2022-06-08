@@ -1,0 +1,114 @@
+test_that("windham_diff estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
+
+data("microdata", package = "cdabyppi")
+countdata=as.matrix(microdata[,12:31])
+
+#sample size
+n=94
+
+#dimension
+p=20
+
+#calculate totals
+tot=matrix(0,n,1)
+for (j in 1:p)
+{
+ tot=tot+countdata[,j]
+}
+tot=as.vector(tot)
+
+#proportion data
+prop=countdata
+for (j in 1:n)
+{
+	prop[j,]=countdata[j,]/tot[j]
+}
+
+
+
+##########################################################
+##Reduce dimensions to p=5
+##########################################################
+
+
+#calculate 5D dataset
+comb=matrix(0,n,5)
+comb[,1]=prop[,"TM7"]
+comb[,2]=prop[,"Cyanobacteria/Chloroplast"]
+comb[,3]=prop[,"Actinobacteria"]
+comb[,4]=prop[,"Proteobacteria"]
+comb[,5]=abs(1-comb[,1]-comb[,2]-comb[,4]-comb[,3])
+propreal=comb
+
+
+#dimension
+p=5
+
+#save data
+proprealA=propreal
+
+
+
+#proportion of zeros in each category
+pzero=matrix(0,1,p)
+for (j in 1:p)
+{
+	for (k in 1:n)
+	{
+		if (propreal[k,j]==0){pzero[1,j]=pzero[1,j]+1}
+	}
+}
+pzero=pzero/n
+pzero*100
+
+
+##############################
+##Estimation
+####################################
+
+
+#initial values for robust estimators
+ALs=matrix(0,p-1,p-1)
+bL=matrix(0,p-1,1)
+ALs[1,1]= -127480.0929
+ALs[1,2]= 14068.39057
+ALs[1,3]= 1782.261826 
+ALs[1,4]=  -240.076568 
+ALs[2,1]= 14068.3906 
+ALs[2,2]= -8191.17253 
+ALs[2,3]=  -8.002680
+ALs[2,4]= 374.693979
+ALs[3,1]=1782.2618 
+ALs[3,2]= -8.00268
+ALs[3,3]= -46.638659 
+ALs[3,4]= 9.027633
+ALs[4,1]= -240.0766 
+ALs[4,2]=  374.69398  
+ALs[4,3]=  9.027633
+ALs[4,4]= -39.208915
+beta0=matrix(0,p,1)
+beta0[1]=-0.80
+beta0[2]=-0.85
+beta0[3]=0
+beta0[4]=-0.2
+beta0[5]=0
+bL_est=bL
+ALs_est=ALs
+beta0_est=beta0
+sp=p-1
+
+
+#non-robust components (k^*=2 here)
+ind_weightA=matrix(0,p,1)
+ind_weightA[3]=1
+ind_weightA[4]=1
+ind_weightA[5]=1
+
+#calculate robust estimates 
+cW=0.7
+est1=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est)
+#estimate of A_L:
+expect_snapshot_value(signif(est1$ALs_est,6), style = "json2")
+#estimate of beta:
+expect_snapshot_value(signif(est1$beta0_est,6), style = "json2")
+})

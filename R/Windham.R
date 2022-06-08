@@ -9,7 +9,7 @@
 #' @export
 windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est)
 {
-
+        p <- ncol(prop)
 	sp=p-1
 	x=c(1:sp)
 	ind=combn(x, 2, FUN = NULL, simplify = TRUE)
