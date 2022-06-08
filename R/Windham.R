@@ -1,14 +1,12 @@
-#####################################################
-##windham_diff calculates the robust score matching estimates
-##using an iterative re-weighting algorithm. 
-##prop: compositional data (n by p matrix)
-##cW: the robustness tuning constant c
-##ALs_est: initial values of A_L parameter matrix
-##bL_est: value of b_L (this should be set to zero since not estimated)
-##beta0_est: initial values of beta (beta[p]=0 and not estimated)
-#####################################################
-
-
+#' @title Robust score matching estimates for the generalised-gamma form of the PPI model
+#' @description Uses Windham weights after alr transform to estimate parameters for the PPI model with b_L=0.
+#' The final (pth) component of beta0 is not estimated.
+#' @param prop compositional data (n by p matrix)
+#' @param cW the robustness tuning constant c
+#' @param ALs_est initial values of A_L parameter matrix
+#' @param bL_est value of b_L (this should be set to zero since not estimated)
+#' @param beta0_est initial values of beta (beta[p]=0 and not estimated)
+#' @export
 windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est)
 {
 
