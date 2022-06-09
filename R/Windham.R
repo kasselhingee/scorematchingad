@@ -8,7 +8,7 @@
 #' @param beta0_est initial values of beta (beta[p]=0 and not estimated)
 #' @param ind_weightA Roughly: the dimensions which have negative beta elements
 #' @export
-windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est)
+windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 {
         stopifnot(all(bL_est == 0))
         p <- ncol(prop)
@@ -20,79 +20,35 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est)
 	stop1=0
 	while(stop1==0)
 	{
-		#removing beta from weights
-		d=-cW*beta0_est[1:sp]
-                # the weights will be calculated directly from the ppi model density,
-                # below modifies the A_L matrix to have zeros for the components that are not concentrated near zero
-                ##### create the A_KK matrix from ALs_est. Elements of A_KK will be zero if dA is non-zero #####
-		#removing A from weights
-		dA=-cW*ALs_est
-		for (j in 1:sp)
-		{
-			#putting some A's back in weights
-			for (k in 1:sp)
-			{
-				if (ind_weightA[j]==0 && ind_weightA[k]==0){dA[j,k]=0} 
-			}
-		}
-	
-		weight_vec=matrix(0,n,1)
-		
-		ALs_estW=ALs_est
-		for (j in 1:sp)
-		{
-			for (k in 1:sp)
-			{
-				if (dA[j,k]!=0){ALs_estW[j,k]=0}
-			}
-		}
-                ###### A_KK creation finished #####
-                # create the vector of weights from cW and ALs_estW (which is A_KK in Notes5.pdf)
-                wwpar <- ppiparforww(beta0, ALs_est, bL_est, 1-ind_weightA)
+                # create the vector of weights
+                wwpar <- ppiparforww(beta0_est, ALs_est, bL_est, !ind_weightA)
                 logden <- qldppi(prop, wwpar$beta0, wwpar$ALs, wwpar$bL)
                 weight_mult=1
                 weight_vec <- weight_mult * exp(cW*logden)
 		weight_vec=n*(weight_vec/sum(weight_vec))
 
+                # generate the tuning constants
+		dbeta <- -cW*beta0_est[-p]
+                # the weights will be calculated directly from the ppi model density,
+                # below modifies the A_L matrix to have zeros for the components that are not concentrated near zero
+                ##### create the A_KK matrix from ALs_est. Elements of A_KK will be zero if dA is non-zero #####
+		dA=-cW*ALs_est
+                dA[!ind_weightA, !ind_weightA] <- 0  #the 'KK' component of the AL matrix is doesn't need correction
+
 		#calculate scoring estimate:
-		estimator=estimatorlog_weight(prop,0,weight_vec)$ppi
+		estimator=estimatorlog_weight(prop,beta0_est[p],weight_vec)$ppi
 		estimate5=estimator
 
 		previous1=ALs_est
 		previous2=beta0_est
 
-		#vectorise dA
-		dA_vec=matrix(0,sum(sp,qind),1)
-		for (j in 1:sp)
-		{
-			dA_vec[j]=dA[j,j]
-		}
-		for (j in 1:qind)
-		{
-			dA_vec[sum(j,sp)]=dA[ind[1,j],ind[2,j]]
-			dA_vec[sum(j,sp)]=dA[ind[2,j],ind[1,j]]
-		}
-		as.vector(dA_vec)
+                ### correct estimates (Step 4 in Notes5.pdf)
+                estmats <- fromPPIparamvec(estimate5, p)
+                beta0_est <- estmats$beta
+                beta0_est[-p] <- (beta0_est[-p] - dbeta)/(cW+1)
+                ALs_est <- (estmats$ALs - dA)/(cW+1)
 
-		#update parameters
-		estimate5[1:sum(sp,qind)]=(estimate5[1:sum(sp,qind)]-dA_vec)/(cW+1)
-		estimate5[sum(sp,qind,1):sum(sp,qind,sp)]=(estimate5[sum(sp,qind,1):sum(sp,qind,sp)]-d)/(cW+1)
-		x=c(1:sp)
-		ind=combn(x, 2, FUN = NULL, simplify = TRUE)
-		qind=length(ind[1,])
-		ALs_est=matrix(0,sp,sp)
-		for (j in 1:sp)
-		{
-			ALs_est[j,j]=estimate5[j]
-		}
-		for (j in 1:qind)
-		{
-			ALs_est[ind[1,j],ind[2,j]]=estimate5[sum(j,sp)]
-			ALs_est[ind[2,j],ind[1,j]]=estimate5[sum(j,sp)]
-		}
-	
-		beta0_est[1:sp]=estimate5[sum(sp,qind,1):sum(sp,qind,sp)]
-	
+                #check if beta0_est has converged
 		if ( (abs(beta0_est[1]-previous2[1])) < 0.000001 ) {stop1=1}
 
 

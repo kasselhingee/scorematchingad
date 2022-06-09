@@ -72,18 +72,18 @@ ALs=matrix(0,p-1,p-1)
 bL=matrix(0,p-1,1)
 ALs[1,1]= -127480.0929
 ALs[1,2]= 14068.39057
-ALs[1,3]= 1782.261826 
-ALs[1,4]=  -240.076568 
-ALs[2,1]= 14068.3906 
-ALs[2,2]= -8191.17253 
+ALs[1,3]= 1782.261826
+ALs[1,4]=  -240.076568
+ALs[2,1]= 14068.3906
+ALs[2,2]= -8191.17253
 ALs[2,3]=  -8.002680
 ALs[2,4]= 374.693979
-ALs[3,1]=1782.2618 
+ALs[3,1]=1782.2618
 ALs[3,2]= -8.00268
-ALs[3,3]= -46.638659 
+ALs[3,3]= -46.638659
 ALs[3,4]= 9.027633
-ALs[4,1]= -240.0766 
-ALs[4,2]=  374.69398  
+ALs[4,1]= -240.0766
+ALs[4,2]=  374.69398
 ALs[4,3]=  9.027633
 ALs[4,4]= -39.208915
 beta0=matrix(0,p,1)
@@ -99,14 +99,13 @@ sp=p-1
 
 
 #non-robust components (k^*=2 here)
-ind_weightA=matrix(0,p,1)
+ind_weightA=matrix(0,sp,1)
 ind_weightA[3]=1
 ind_weightA[4]=1
-ind_weightA[5]=1
 
-#calculate robust estimates 
+#calculate robust estimates
 cW=0.7
-est1=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est)
+est1=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 #estimate of A_L:
 expect_snapshot_value(signif(est1$ALs_est,6), style = "json2")
 #estimate of beta:
