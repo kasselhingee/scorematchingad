@@ -37,6 +37,7 @@
 #' segments(0, 1, 1, 0)
 #' segments(1, 0, 0, 0)
 #'
+#' qldppi(samp$samp3, beta0, ALs, bL)
 #' @export
 rhybrid <- function(n,p,beta0,ALs,bL,maxden){
   maxdenin <- maxden
@@ -72,7 +73,6 @@ rhybrid_singly <- function(n,p,beta0,ALs,bL,maxden)
 	coun=0
 	samp1=matrix(0,1,p)
 	count2=0
-	tbL <- t(bL)
 	while (coun < n)
 	{
 
@@ -81,7 +81,7 @@ rhybrid_singly <- function(n,p,beta0,ALs,bL,maxden)
 		u=stats::runif(1,0,1)
 		Uni_nop <- Uni[1:(p-1)]
 		tUni_nop <- t(Uni[1:(p-1)])
-		num=tUni_nop%*%ALs%*%Uni_nop + tbL%*%Uni_nop - maxden
+    num <- ppi_uAstaru(matrix(Uni_nop, nrow = 1), ALs, bL) - maxden #uT * ALs * u + t(bL) * u - maxden
 		if (num > 0){maxden=num+maxden}
 		#print(maxden)
 		if (u < exp(num)){samp1=rbind(samp1,Uni);coun=coun+1}
@@ -98,8 +98,7 @@ rhybrid_singly <- function(n,p,beta0,ALs,bL,maxden)
 rhybrid_block <- function(n,p,beta0,ALs,bL,maxden){
   Uni <- MCMCpack::rdirichlet(n, beta0+1)
   Uni_nop <- Uni[, -p]
-  nums <- .rowSums((Uni_nop %*% ALs) * Uni_nop, n, p-1) + #uT * ALs * u
-    as.vector(Uni_nop %*% bL)  - maxden#t(bL) * u
+  nums <- ppi_uAstaru(Uni_nop, ALs, bL) - maxden #uT * ALs * u + t(bL) * u - maxden
 
   # update maxdens
   max_num <- max(nums)
@@ -110,4 +109,31 @@ rhybrid_block <- function(n,p,beta0,ALs,bL,maxden){
   accepted <- Uni[unif < exp(nums), , drop = FALSE]
 
   return(list(accepted = accepted, maxden = maxden))
+}
+
+#' @describeIn rhybrid Compute the logarithm of the improper density for the PPI model for the given matrix of measurements `prop`.
+#' @param `prop` A matrix of measurements.
+#' @export
+qldppi <- function(prop,beta0,ALs,bL){
+  p <- ncol(prop)
+  sp <- p - 1
+  stopifnot(isTRUE(ncol(bL) == 1))
+  uAstaru <- ppi_uAstaru(prop[,-p], ALs, bL)
+  if (all(beta0 == 0)){return(t(uAstaru))} #skip the computation below when beta0 is zero
+  logprop <- log(prop)
+  # define u^0 as 1 when u goes to -Inf
+  logprop[, beta0 == 0] <- 0
+  logdirichlet <- logprop %*% beta0
+  return(as.vector(uAstaru + logdirichlet))
+}
+
+# below is function for uT * ALs * u + t(bL) * u
+# prop_nop is the measurements WITHOUT the last column
+ppi_uAstaru <- function(prop_nop, ALs, bL){
+  stopifnot(ncol(prop_nop) == ncol(ALs))
+  stopifnot(ncol(ALs) == nrow(bL))
+  stopifnot(ncol(ALs) == nrow(ALs))
+  nums <- rowSums((prop_nop %*% ALs) * prop_nop) + #uT * ALs * u
+    as.vector(prop_nop %*% bL) #+ u * bL
+  return(nums)
 }
