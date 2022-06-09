@@ -6,9 +6,11 @@
 #' @param ALs_est initial values of A_L parameter matrix
 #' @param bL_est value of b_L (this should be set to zero since not estimated)
 #' @param beta0_est initial values of beta (beta[p]=0 and not estimated)
+#' @param ind_weightA Roughly: the dimensions which have negative beta elements
 #' @export
 windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est)
 {
+        stopifnot(all(bL_est == 0))
         p <- ncol(prop)
 	sp=p-1
 	x=c(1:sp)
@@ -20,6 +22,9 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est)
 	{
 		#removing beta from weights
 		d=-cW*beta0_est[1:sp]
+                # the weights will be calculated directly from the ppi model density,
+                # below modifies the A_L matrix to have zeros for the components that are not concentrated near zero
+                ##### create the A_KK matrix from ALs_est. Elements of A_KK will be zero if dA is non-zero #####
 		#removing A from weights
 		dA=-cW*ALs_est
 		for (j in 1:sp)
@@ -41,12 +46,12 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est)
 				if (dA[j,k]!=0){ALs_estW[j,k]=0}
 			}
 		}
-		for (i in 1:n)
-		{
-			weight_mult=1
-			weightA=weight_mult*exp(cW*(t(prop[i,1:sp])%*%ALs_estW%*%t(t(prop[i,1:sp])))+cW*(t(bL_est)%*%t(t(prop[i,1:sp]))))
-			weight_vec[i]=weightA
-		}
+                ###### A_KK creation finished #####
+                # create the vector of weights from cW and ALs_estW (which is A_KK in Notes5.pdf)
+                wwpar <- ppiparforww(beta0, ALs_est, bL_est, 1-ind_weightA)
+                logden <- qldppi(prop, wwpar$beta0, wwpar$ALs, wwpar$bL)
+                weight_mult=1
+                weight_vec <- weight_mult * exp(cW*logden)
 		weight_vec=n*(weight_vec/sum(weight_vec))
 
 		#calculate scoring estimate:
@@ -100,4 +105,10 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est)
 	return(list(ALs_est=ALs_est,beta0_est=beta0_est,weight_vec=weight_vec,estimate5=estimate5))
 
 
+}
+		
+ppiparforww <- function(beta0, ALs, bL, incinAL){
+ALs_ww <- matrix(0, nrow(ALs), ncol(ALs))
+ALs_ww[incinAL, incinAL] <- ALs[incinAL, incinAL]
+return(list(beta0 = 0 * beta0, ALs = ALs_ww, bL = 0 * bL))
 }
