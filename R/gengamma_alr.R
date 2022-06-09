@@ -7,8 +7,9 @@
 #' @export
 estimatorlog_weight <- function(prop,betap,weightW)
 {
-
+        p=ncol(prop)
 	sp=p-1
+        n=nrow(prop)
 
 	x=c(1:sp)
 	ind=combn(x, 2, FUN = NULL, simplify = TRUE)
@@ -134,7 +135,12 @@ estimatorlog_weight <- function(prop,betap,weightW)
 	ppi[sum(sp,qind,1):tot]=ppi[sum(sp,qind,1):tot]-1
 
 	#ppi is the score matching estimate
-	return(list(ppi=ppi,W=W,d=d))
+        #for consistence add bL and betap
+        ppiAll <- c(ppi[seq(1, p-1 + (p-2)*(p-1)/2)], #ALs
+                    rep(0,sp), #bL
+                    ppi[p-1 + (p-2)*(p-1)/2 + seq(1, sp)], #betaL
+                    betap)
+	return(list(ppi=ppiAll,W=W,d=d))
 
 
 }
