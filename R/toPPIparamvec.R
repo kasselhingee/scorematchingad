@@ -36,3 +36,26 @@ ppithetalength <- function(p){
   (p-2) * (p-1)/2 + #the upper triangle of AL
   (p-1) #the bL
 }
+ppiltheta2p <- function(ltheta){#ltheta is length of theta
+  #ltheta = p + (p-1) + (p-2) * (p-1)/2 + (p-1)
+  # = 3p - 2 + (p^2 - 3p + 2)/2
+  # 0 = p^2/2 + 1.5p -1-ltheta
+  # 0 = p^2 + 3p - (2+2ltheta)
+  #p = (-3 pm sqrt(9 + 4(2+2ltheta)) / 2
+  #p = (-3 + sqrt(9 + 8 + 8ltheta)) /2
+  p <- (-3 + sqrt(9 + 8 + 8 * ltheta))/2
+  return(p)
+}
+
+combparam2uppertriparam <- function(theta){
+  p <- ppiltheta2p(length(theta))
+  # get a vector of the order
+  matswindx <- fromPPIparamvec(1:length(theta), p)
+  inthetaorder <- c(diag(matswindx$ALs),
+                    matswindx$ALs[t(indexcombinations(p - 1)$ind)], #each column is the own dimension, each row single element to extract
+                    seq.int(p-1 + (p-1) * (p-2) / 2 + 1, length.out = p - 1 + p))
+  stopifnot(length(inthetaorder) == length(theta)) #check that length produced is correct
+  stopifnot(all(inthetaorder[inthetaorder] == seq(1, length.out = length(theta)))) #check that ordering index is correct
+
+  return(theta[inthetaorder])
+}
