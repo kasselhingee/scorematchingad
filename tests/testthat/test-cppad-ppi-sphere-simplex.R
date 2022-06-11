@@ -256,3 +256,19 @@ test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   cdabyppi:::expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
 })
 
+test_that("ppi via cppad matches Score1 for p=5, particularly the order of the off diagonals in ALs", {
+  set.seed(1273)
+  p = 5
+  ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
+  bL <- rep(0, p-1)
+  beta <- c(-0.7, -0.8, -0.3, 0, 0)
+  prop <- rhybrid(1000, p, beta, ALs, bL, 35)$samp3
+
+  acut = 0.1
+  est_direct <- estimator1(prop, acut, incb = 0, beta0 = beta)
+
+  est_cppad <- ppi_cppad(prop, bL = bL, beta = beta,
+                         man = "sphere", acut = acut, weightname = "minsq")
+  expect_equal(est_cppad$est$theta, est_direct$estimator1, tolerance = 1E-3,
+               ignore_attr = TRUE)
+})
