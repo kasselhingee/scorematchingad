@@ -39,6 +39,7 @@ estimatorall1 <- function(prop, acut, betap = NULL){
   # from estimates of 1 + 2beta, to estimates of beta
   quartic_sphere[sum(tot,1):num1]=(quartic_sphere[sum(tot,1):num1]-1)/2
 
+  warning("comb() based ordering of parameter elements")
   return(list(estimator1=quartic_sphere,W_est=Wnd$W))
 }
 
