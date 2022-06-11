@@ -1,4 +1,4 @@
-#' @title Score matching estimate of the generalised gamma form of the PPI model(b_L = 0) using an alr transformation 
+#' @title Score matching estimate of the generalised gamma form of the PPI model(b_L = 0) using an alr transformation
 #' @description Estimates \eqn{A_L} and \eqn{\beta_0}{beta0} of the PPI model using score matching in Euclidean space. Data is transformed to the Euclidean space using the additive log-ration transformation.
 #' The final element of \eqn{\beta_0}{beta0} is fixed at a chosen value.
 #' @param prop compositional data (each row is a sample, each column corresponds to a component)
@@ -25,7 +25,7 @@ estimatorlog_weight <- function(prop,betap,weightW)
 
 		V1A=matrix(0,sp,sp)
 		for (j in 1:sp)
-		{	
+		{
 			for (i in 1:sp)
 			{
 				V1A[i,j]=-2*(prop[b,i]^2)*prop[b,j]+6*(prop[b,i]^2)*(prop[b,j]^2)
@@ -62,7 +62,7 @@ estimatorlog_weight <- function(prop,betap,weightW)
 		V2A=matrix(0,sp,sp)
 		for (j in 1:sp)
 		{
-	
+
 			for (i in 1:sp)
 			{
 				V2A[i,j]=-2*(prop[b,i]^2)*prop[b,j]
@@ -90,7 +90,7 @@ estimatorlog_weight <- function(prop,betap,weightW)
 		V2C=matrix(0,sp,sp)
 		for (j in 1:sp)
 		{
-	
+
 			for (i in 1:sp)
 			{
 				V2C[i,j]=-1*prop[b,j]
@@ -108,7 +108,7 @@ estimatorlog_weight <- function(prop,betap,weightW)
 		V3S=matrix(0,sum(sp,sp,qind),sum(sp,sp,qind))
 
 		for (j in 1:sp)
-		{	
+		{
 			V1S=V1S+V1[,j]
 			V2S=V2S+V2[,j]*prop[b,j]
 			V3S=V3S+t(t(V2[,j]))%*%t(V2[,j])
@@ -136,10 +136,17 @@ estimatorlog_weight <- function(prop,betap,weightW)
 
 	#ppi is the score matching estimate
         #for consistence add bL and betap
-        ppiAll <- c(ppi[seq(1, p-1 + (p-2)*(p-1)/2)], #ALs
-                    rep(0,sp), #bL
-                    ppi[p-1 + (p-2)*(p-1)/2 + seq(1, sp)], #betaL
-                    betap)
+  ppiAll <- c(ppi[seq(1, p-1 + (p-2)*(p-1)/2)], #ALs
+              rep(0,sp), #bL
+              ppi[p-1 + (p-2)*(p-1)/2 + seq(1, sp)], #betaL
+              betap)
+  #convert to upper.tri order
+  utorder <- combparam2uppertriorder(length(ppiAll))
+  ppiAll <- ppiAll[utorder]
+  Worder <- order(c(utorder[seq(1, p-1 + (p-2)*(p-1)/2)], utorder[seq( p-1 + (p-2)*(p-1)/2 + p-1 + 1, length.out = p-1)]))
+  Wreordermat <- diag(1, nrow = nrow(W))[Worder, ] #reorders rows, but assuming that the vector has new order, must undo the new order
+  W <- Wreordermat %*% W %*% t(Wreordermat) #Wreordernat is made of orthogonal unit vectors to inverse is transpose
+  d <- d[Worder]
 	return(list(ppi=ppiAll,W=W,d=d))
 
 
