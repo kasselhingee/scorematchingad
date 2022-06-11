@@ -10,21 +10,20 @@
 #' @export
 windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 {
-        stopifnot(all(bL_est == 0))
-        p <- ncol(prop)
+  p <- ncol(prop)
+  n <- nrow(prop)
 	sp=p-1
-	x=c(1:sp)
-	ind=combn(x, 2, FUN = NULL, simplify = TRUE)
-	qind=length(ind[1,])
+	stopifnot(length(ind_weightA) == sp)
+	stopifnot(all(bL_est == 0))
 
 	stop1=0
 	while(stop1==0)
 	{
-                # create the vector of weights
-                wwpar <- ppiparforww(beta0_est, ALs_est, bL_est, !ind_weightA)
-                logden <- qldppi(prop, wwpar$beta0, wwpar$ALs, wwpar$bL)
-                weight_mult=1
-                weight_vec <- weight_mult * exp(cW*logden)
+    # create the vector of weights
+    wwpar <- ppiparforww(beta0_est, ALs_est, bL_est, !ind_weightA)
+    logden <- qldppi(prop, wwpar$beta0, wwpar$ALs, wwpar$bL)
+    weight_mult=1
+    weight_vec <- weight_mult * exp(cW*logden)
 		weight_vec=n*(weight_vec/sum(weight_vec))
 
                 # generate the tuning constants
@@ -33,7 +32,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
                 # below modifies the A_L matrix to have zeros for the components that are not concentrated near zero
                 ##### create the A_KK matrix from ALs_est. Elements of A_KK will be zero if dA is non-zero #####
 		dA=-cW*ALs_est
-                dA[!ind_weightA, !ind_weightA] <- 0  #the 'KK' component of the AL matrix is doesn't need correction
+    dA[!ind_weightA, !ind_weightA] <- 0  #the 'KK' component of the AL matrix is doesn't need correction
 
 		#calculate scoring estimate:
 		estimator=estimatorlog_weight(prop,beta0_est[p],weight_vec)$ppi
@@ -42,13 +41,16 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 		previous1=ALs_est
 		previous2=beta0_est
 
-                ### correct estimates (Step 4 in Notes5.pdf)
-                estmats <- fromPPIparamvec(estimate5, p)
-                beta0_est <- estmats$beta
-                beta0_est[-p] <- (beta0_est[-p] - dbeta)/(cW+1)
-                ALs_est <- (estmats$ALs - dA)/(cW+1)
+    ### correct estimates (Step 4 in Notes5.pdf)
+    estmats <- fromPPIparamvec(estimate5, p)
+    beta0_est <- estmats$beta
+    beta0_est[-p] <- (beta0_est[-p] - dbeta)/(cW+1)
+    ALs_est <- (estmats$ALs - dA)/(cW+1)
 
                 #check if beta0_est has converged
+    if ( is.nan((abs(beta0_est[1]-previous2[1])) < 0.000001 )) {browser()}
+    if ( is.null((abs(beta0_est[1]-previous2[1])) < 0.000001 )) {browser()}
+    if ( is.na((abs(beta0_est[1]-previous2[1])) > 0.000001 )) {browser(); stop("beta0_est[1] has become NA")}
 		if ( (abs(beta0_est[1]-previous2[1])) < 0.000001 ) {stop1=1}
 
 
@@ -56,13 +58,11 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 
 
 
-
-
 	return(list(ALs_est=ALs_est,beta0_est=beta0_est,weight_vec=weight_vec,estimate5=estimate5))
 
 
 }
-		
+
 ppiparforww <- function(beta0, ALs, bL, incinAL){
 ALs_ww <- matrix(0, nrow(ALs), ncol(ALs))
 ALs_ww[incinAL, incinAL] <- ALs[incinAL, incinAL]
