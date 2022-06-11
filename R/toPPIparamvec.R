@@ -47,15 +47,19 @@ ppiltheta2p <- function(ltheta){#ltheta is length of theta
   return(p)
 }
 
-combparam2uppertriparam <- function(theta){
-  p <- ppiltheta2p(length(theta))
+combparam2uppertriorder <- function(ltheta){
+  p <- ppiltheta2p(ltheta)
   # get a vector of the order
-  matswindx <- fromPPIparamvec(1:length(theta), p)
+  matswindx <- fromPPIparamvec(1:ltheta, p)
   inthetaorder <- c(diag(matswindx$ALs),
                     matswindx$ALs[t(indexcombinations(p - 1)$ind)], #each column is the own dimension, each row single element to extract
                     seq.int(p-1 + (p-1) * (p-2) / 2 + 1, length.out = p - 1 + p))
-  stopifnot(length(inthetaorder) == length(theta)) #check that length produced is correct
-  stopifnot(all(inthetaorder[inthetaorder] == seq(1, length.out = length(theta)))) #check that ordering index is correct
+  stopifnot(length(inthetaorder) == ltheta) #check that length produced is correct
+  stopifnot(all(inthetaorder[inthetaorder] == seq(1, length.out = ltheta))) #check that ordering index is correct
+  return(inthetaorder)
+}
 
+combparam2uppertriparam <- function(theta){
+  inthetaorder <- combparam2uppertriorder(length(theta))
   return(theta[inthetaorder])
 }
