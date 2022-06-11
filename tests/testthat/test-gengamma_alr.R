@@ -18,6 +18,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
   prop <- rhybrid(1000, p, beta, ALs, bL, 35)$samp3
 
   est_cppad <- ppi_cppad(prop, bL = bL, betap = beta[p], man = "Ralr", weightname = "ones",
+                         bdrythreshold = 1E-20,
                          control = list(tol = 1E-20))
   expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)
 
@@ -32,11 +33,11 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
   expect_absdiff_lte_v(est_direct$ppi[is.na(thetain)], toPPIparamvec(ALs, bL, beta)[is.na(thetain)],
                        3 * est_direct_SE)
 
-  smobjgrad(tapes$smotape, est_direct$ppi[is.na(thetain)], prop)
-  smobjgrad(tapes$smotape, est_cppad$est$theta$ppi[is.na(thetain)], prop)
+  expect_lt(sum(smobjgrad(tapes$smotape, est_direct$ppi[is.na(thetain)], prop)^2), 1E-20)
+  expect_lt(smobj(tapes$smotape, est_direct$ppi[is.na(thetain)], prop), est_cppad$smval)
 
-
-  expect_equal(est_direct$ppi, est_cppad$est$theta, tolerance = 1E-5)
+  expect_absdiff_lte_v(est_direct$ppi[is.na(thetain)], est_cppad$est$theta[is.na(thetain)],
+                       1.2 * est_direct_SE) #the smovals are quite flat in the ALs dimensions for this region!
 })
 
 
