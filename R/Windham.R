@@ -29,8 +29,12 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 	ALs_ww[!ind_weightA, !ind_weightA] <- 1
 	inWW <- ppi_cppad_thetaprocessor(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
 
-	tauc <- WindhamCorrection(cW, inWW)
-	taucinv <- solve(tauc)
+	correctionmethod1 = FALSE
+
+	if (!correctionmethod1){
+  	tauc <- WindhamCorrection(cW, inWW)
+  	taucinv <- solve(tauc)
+	}
 
 	stop1=0
 	while(stop1==0)
@@ -39,14 +43,15 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 	  weight_vec <- WindhamWeights(ldenfun = ppildenfun, sample = prop,
 	                 theta = toPPIparamvec(ALs_est, bL_est, beta0_est), cW, inWW)
 
-
-                # generate the tuning constants
-		dbeta <- -cW*beta0_est[-p]
-                # the weights will be calculated directly from the ppi model density,
-                # below modifies the A_L matrix to have zeros for the components that are not concentrated near zero
-                ##### create the A_KK matrix from ALs_est. Elements of A_KK will be zero if dA is non-zero #####
-		dA=-cW*ALs_est
-    dA[!ind_weightA, !ind_weightA] <- 0  #the 'KK' component of the AL matrix is doesn't need correction
+    if (correctionmethod1){
+      # generate the tuning constants
+      dbeta <- -cW*beta0_est[-p]
+      # the weights will be calculated directly from the ppi model density,
+      # below modifies the A_L matrix to have zeros for the components that are not concentrated near zero
+      ##### create the A_KK matrix from ALs_est. Elements of A_KK will be zero if dA is non-zero #####
+      dA=-cW*ALs_est
+      dA[!ind_weightA, !ind_weightA] <- 0  #the 'KK' component of the AL matrix is doesn't need correction
+    }
 
 		#calculate scoring estimate:
 		estimator=estimatorlog_weight(prop,beta0_est[p],weight_vec)$ppi
@@ -56,15 +61,19 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 		previous2=beta0_est
 
     ### correct estimates (Step 4 in Notes5.pdf)
-    estmats <- fromPPIparamvec(taucinv %*% estimate5, p)
-    beta0_est <- estmats$beta
-    ALs_est <- estmats$ALs
-    # beta0_est[-p] <- (beta0_est[-p] - dbeta)/(cW+1)
-    # ALs_est <- (estmats$ALs - dA)/(cW+1)
 
 
+    if (correctionmethod1){
+      estmats <- fromPPIparamvec(estimate5, p)
+      beta0_est[-p] <- (beta0_est[-p] - dbeta)/(cW+1)
+      ALs_est <- (estmats$ALs - dA)/(cW+1)
+    } else {
+      estmats <- fromPPIparamvec(taucinv %*% estimate5, p)
+      beta0_est <- estmats$beta
+      ALs_est <- estmats$ALs
+    }
 
-                #check if beta0_est has converged
+    #check if beta0_est has converged
     if ( is.nan((abs(beta0_est[1]-previous2[1])) < 0.000001 )) {browser()}
     if ( is.null((abs(beta0_est[1]-previous2[1])) < 0.000001 )) {browser()}
     if ( is.na((abs(beta0_est[1]-previous2[1])) > 0.000001 )) {browser(); stop("beta0_est[1] has become NA")}
