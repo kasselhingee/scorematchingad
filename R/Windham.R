@@ -29,6 +29,8 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 	ALs_ww[!ind_weightA, !ind_weightA] <- 1
 	inWW <- ppi_cppad_thetaprocessor(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
 
+	tauc <- WindhamCorrection(cW, inWW)
+	taucinv <- solve(tauc)
 
 	stop1=0
 	while(stop1==0)
@@ -54,10 +56,13 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 		previous2=beta0_est
 
     ### correct estimates (Step 4 in Notes5.pdf)
-    estmats <- fromPPIparamvec(estimate5, p)
+    estmats <- fromPPIparamvec(taucinv %*% estimate5, p)
     beta0_est <- estmats$beta
-    beta0_est[-p] <- (beta0_est[-p] - dbeta)/(cW+1)
-    ALs_est <- (estmats$ALs - dA)/(cW+1)
+    ALs_est <- estmats$ALs
+    # beta0_est[-p] <- (beta0_est[-p] - dbeta)/(cW+1)
+    # ALs_est <- (estmats$ALs - dA)/(cW+1)
+
+
 
                 #check if beta0_est has converged
     if ( is.nan((abs(beta0_est[1]-previous2[1])) < 0.000001 )) {browser()}

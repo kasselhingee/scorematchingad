@@ -11,7 +11,8 @@
 #' FALSE if the parameter is set to zero in the Windham weights.
 WindhamCorrection <- function(cW, inWW){
   weightthetamat <- diag(inWW) #matrix that converts theta to the new theta based on inclusion/exclusion
-  tauc <- cW * weightthetamat + 1
+  tauc <- cW * weightthetamat + diag(1,nrow = length(inWW))
+  # tauc <- (2*cW + 1) * diag(1,nrow = length(inWW))  - cW * weightthetamat
   return(tauc)
 }
 
