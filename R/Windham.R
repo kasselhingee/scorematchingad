@@ -6,25 +6,37 @@
 #' @param ALs_est initial values of A_L parameter matrix
 #' @param bL_est value of b_L (this should be set to zero since not estimated)
 #' @param beta0_est initial values of beta (beta[p]=0 and not estimated)
-#' @param ind_weightA Roughly: the dimensions which have negative beta elements
+#' @param ind_weightA Roughly: FALSE for the dimensions which have negative beta elements, TRUE for the dimensions with positive beta elements.
+#' The pth element is not included because it is assumed that beta[p] is positive.
 #' @export
 windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 {
+  stopifnot(isSymmetric(ALs_est))
   p <- ncol(prop)
   n <- nrow(prop)
 	sp=p-1
 	stopifnot(length(ind_weightA) == sp)
 	stopifnot(all(bL_est == 0))
 
+	ppildenfun <- function(sample, theta){
+	  ppiparmats <- fromPPIparamvec(theta)
+	  logden <- qldppi(sample, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
+	  return(logden)
+	}
+
+	#indicator for each parameter of the full ppi model
+	ALs_ww <- matrix(0, p-1, p-1)
+	ALs_ww[!ind_weightA, !ind_weightA] <- 1
+	inWW <- ppi_cppad_thetaprocessor(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
+
+
 	stop1=0
 	while(stop1==0)
 	{
     # create the vector of weights
-    wwpar <- ppiparforww(beta0_est, ALs_est, bL_est, !ind_weightA)
-    logden <- qldppi(prop, wwpar$beta0, wwpar$ALs, wwpar$bL)
-    weight_mult=1
-    weight_vec <- weight_mult * exp(cW*logden)
-		weight_vec=n*(weight_vec/sum(weight_vec))
+	  weight_vec <- WindhamWeights(ldenfun = ppildenfun, sample = prop,
+	                 theta = toPPIparamvec(ALs_est, bL_est, beta0_est), cW, inWW)
+
 
                 # generate the tuning constants
 		dbeta <- -cW*beta0_est[-p]

@@ -15,7 +15,10 @@ toPPIcannparam <- function(ALs, bL, beta, manifold = "sphere"){
 
 #' @describeIn toPPIparamvec Reverse of `toPPIparamvec()`.
 #' @export
-fromPPIparamvec <- function(theta, p){
+fromPPIparamvec <- function(theta, p = NULL){
+  calcp <- ppiltheta2p(length(theta))
+  if(!is.null(p)){stopifnot(p == calcp)}
+  p <- calcp
   ALs <- matrix(NA, nrow = p - 1, ncol = p - 1)
   diag(ALs) <- theta[1:(p - 1)]
   ALs[upper.tri(ALs)] <- theta[p -1 + 1:((p-2) * (p-1)/2)]

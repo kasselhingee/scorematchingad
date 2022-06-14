@@ -117,9 +117,11 @@ rhybrid_block <- function(n,p,beta0,ALs,bL,maxden){
 qldppi <- function(prop,beta0,ALs,bL){
   p <- ncol(prop)
   sp <- p - 1
+  if (!("matrix" %in% class(bL))){bL <- as.matrix(bL, ncol = 1)}
   stopifnot(isTRUE(ncol(bL) == 1))
   uAstaru <- ppi_uAstaru(prop[,-p], ALs, bL)
   if (all(beta0 == 0)){return(t(uAstaru))} #skip the computation below when beta0 is zero
+  if (!("matrix" %in% class(beta0))){beta0 <- as.matrix(beta0, ncol = 1)}
   logprop <- log(prop)
   # define u^0 as 1 when u goes to -Inf
   logprop[, beta0 == 0] <- 0
