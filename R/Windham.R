@@ -65,6 +65,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 
     if (correctionmethod1){
       estmats <- fromPPIparamvec(estimate5, p)
+      beta0_est <- estmats$beta
       beta0_est[-p] <- (beta0_est[-p] - dbeta)/(cW+1)
       ALs_est <- (estmats$ALs - dA)/(cW+1)
     } else {
