@@ -191,5 +191,10 @@ test_that("windham_diff estimator matches historical results on dataset with Spi
   expect_snapshot_value(signif(est1$ALs_est,6), style = "json2")
   #estimate of beta:
   expect_snapshot_value(signif(est1$beta0_est,6), style = "json2")
+
+  #Use Kassel's correction method
+  est2=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = FALSE)
+  expect_equal(est1$ALs_est, est2$ALs_est, tolerance = 1E-4)
+  expect_equal(est1$beta0_est, est2$beta0_est, tolerance = 1E-5)
 })
 
