@@ -8,8 +8,11 @@
 #' @param beta0_est initial values of beta (beta[p]=0 and not estimated)
 #' @param ind_weightA Roughly: FALSE for the dimensions which have negative beta elements, TRUE for the dimensions with positive beta elements.
 #' The pth element is not included because it is assumed that beta[p] is positive.
+#' @param originalcorrectionmethod A development argument.
+#' TRUE uses Janice's bias correction, FALSE uses Kassel's calculation of \eqn{tau_c} in `WindhamCorrection()`.
+#' The two methods are probably equivalent, but Kassel hasn't been able to see how they are equivalent yet.
 #' @export
-windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
+windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = TRUE)
 {
   stopifnot(isSymmetric(ALs_est))
   p <- ncol(prop)
@@ -29,9 +32,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 	ALs_ww[!ind_weightA, !ind_weightA] <- 1
 	inWW <- ppi_cppad_thetaprocessor(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
 
-	correctionmethod1 = FALSE
-
-	if (!correctionmethod1){
+	if (!originalcorrectionmethod){
   	tauc <- WindhamCorrection(cW, inWW)
   	taucinv <- solve(tauc)
 	}
@@ -43,7 +44,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
 	  weight_vec <- WindhamWeights(ldenfun = ppildenfun, sample = prop,
 	                 theta = toPPIparamvec(ALs_est, bL_est, beta0_est), cW, inWW)
 
-    if (correctionmethod1){
+    if (originalcorrectionmethod){
       # generate the tuning constants
       dbeta <- -cW*beta0_est[-p]
       # the weights will be calculated directly from the ppi model density,
@@ -63,7 +64,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA)
     ### correct estimates (Step 4 in Notes5.pdf)
 
 
-    if (correctionmethod1){
+    if (originalcorrectionmethod){
       estmats <- fromPPIparamvec(estimate5, p)
       beta0_est <- estmats$beta
       beta0_est[-p] <- (beta0_est[-p] - dbeta)/(cW+1)

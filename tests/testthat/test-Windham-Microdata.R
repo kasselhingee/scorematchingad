@@ -1,3 +1,5 @@
+
+
 test_that("windham_diff estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
 
 data("microdata", package = "cdabyppi")
@@ -100,9 +102,14 @@ ind_weightA[4]=1
 
 #calculate robust estimates
 cW=0.7
-est1=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA)
+est1=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = TRUE)
 #estimate of A_L:
 expect_snapshot_value(signif(est1$ALs_est,6), style = "json2")
 #estimate of beta:
 expect_snapshot_value(signif(est1$beta0_est,6), style = "json2")
+
+#Use Kassel's correction method
+est2=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = FALSE)
+expect_equal(est1$ALs_est, est2$ALs_est, tolerance = 1E-5)
+expect_equal(est1$beta0_est, est2$beta0_est, tolerance = 1E-5)
 })
