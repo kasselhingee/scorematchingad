@@ -1,6 +1,6 @@
 
 
-test_that("windham_diff estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
+test_that("windham_diff estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
 
 data("microdata", package = "cdabyppi")
 countdata=as.matrix(microdata[,12:31])
@@ -113,3 +113,6 @@ est2=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
 expect_equal(est1$ALs_est, est2$ALs_est, tolerance = 1E-5)
 expect_equal(est1$beta0_est, est2$beta0_est, tolerance = 1E-5)
 })
+
+
+
