@@ -116,3 +116,80 @@ expect_equal(est1$beta0_est, est2$beta0_est, tolerance = 1E-5)
 
 
 
+test_that("windham_diff estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
+  data("microdata", package = "cdabyppi")
+  countdata=as.matrix(microdata[,12:31])
+
+  #sample size
+  n=94
+
+  #dimension
+  p=20
+
+  #calculate totals
+  tot=matrix(0,n,1)
+  for (j in 1:p)
+  {
+    tot=tot+countdata[,j]
+  }
+  tot=as.vector(tot)
+
+  #proportion data
+  prop=countdata
+  for (j in 1:n)
+  {
+    prop[j,]=countdata[j,]/tot[j]
+  }
+
+  ##########################################################
+  ##Reduce dimensions to p=5
+  ##########################################################
+
+
+  #dimension
+  p=5
+
+  #calculate 5D dataset
+  comb=matrix(0,n,p)
+  comb[,1]=prop[,14]
+  comb[,2]=prop[,18]
+  comb[,3]=prop[,5]
+  comb[,4]=prop[,16]
+  for (j in 1:sum(p,-1))
+  {
+    comb[,p]=comb[,p]+comb[,j]
+  }
+  comb[,p]=1-comb[,p]
+
+  #save data
+  propreal=comb
+  proprealA=propreal
+
+  ##############################
+  ##Estimation
+  ####################################
+
+  #initial values for robust estimators
+  ALs=matrix(-10000,p-1,p-1)
+  bL=matrix(0,p-1,1)
+  beta0=matrix(0,p,1)
+  beta0[1]=-0.80
+  beta0[2]=-0.80
+  beta0[3]=-0.80
+  beta0[4]=-0.80
+  bL_est=bL
+  ALs_est=ALs
+  beta0_est=beta0
+
+  #non-robust components (k^*=4 here)
+  ind_weightA=matrix(0,p-1,1)
+
+  #calculate robust estimates
+  cW=1.25
+  est1=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA = ind_weightA, originalcorrectionmethod = TRUE)
+  #estimate of A_L:
+  expect_snapshot_value(signif(est1$ALs_est,6), style = "json2")
+  #estimate of beta:
+  expect_snapshot_value(signif(est1$beta0_est,6), style = "json2")
+})
+
