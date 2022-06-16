@@ -94,11 +94,17 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta,
     return(unfixedtheta)
   }
 
+  rlang::warn("Using the FixedPoint package - should investigate alternatives",
+              .frequency = "once",
+              .frequency_id = "FixedPoint_package")
   est <- FixedPoint::FixedPoint(distfun, starttheta[!fixedtheta],
-                    Method = "Simple")
+                    Method = "VEA",
+                    ConvergenceMetricThreshold = 1E-6)
+  nevals <- ncol(est$Inputs)
+  print(abs(est$Inputs[11, nevals] -
+        est$Inputs[11, nevals - 1]))
   theta <- starttheta
   theta[!fixedtheta] <- est$FixedPoint
-
 
   return(theta)
 }
