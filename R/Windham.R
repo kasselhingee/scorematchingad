@@ -17,6 +17,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
   stopifnot(isSymmetric(ALs_est))
   p <- ncol(prop)
   n <- nrow(prop)
+  theta <- toPPIparamvec(ALs_est, bL_est, beta0_est)
 	sp=p-1
 	stopifnot(length(ind_weightA) == sp)
 	stopifnot(all(bL_est == 0))
@@ -42,46 +43,36 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
 	{
     # create the vector of weights
 	  weight_vec <- WindhamWeights(ldenfun = ppildenfun, sample = prop,
-	                 theta = toPPIparamvec(ALs_est, bL_est, beta0_est), cW, inWW)
+	                 theta = theta, cW, inWW)
 
     if (originalcorrectionmethod){
-      # generate the tuning constants
-      theta <- toPPIparamvec(ALs_est, bL_est, beta0_est)
+      # generate the tuning constants dbeta, dA
       dtheta <- -cW * theta * (!inWW)
     }
 
-		#calculate scoring estimate:
-		estimator=estimatorlog_weight(prop,beta0_est[p],weight_vec)$ppi
-		estimate5=estimator
-
-		previous1=ALs_est
-		previous2=beta0_est
+    previous <- theta
+    #calculate scoring estimate:
+    estimator=estimatorlog_weight(prop,beta0_est[p],weight_vec)$ppi
+    theta=estimator
 
     ### correct estimates (Step 4 in Notes5.pdf)
-
-
     if (originalcorrectionmethod){
-      estmats <- fromPPIparamvec((estimate5 - dtheta)/(cW+1))
-      beta0_est <- estmats$beta
-      ALs_est <- estmats$ALs
+      theta <- (theta - dtheta)/(cW+1)
     } else {
-      estmats <- fromPPIparamvec(taucinv %*% estimate5, p)
-      beta0_est <- estmats$beta
-      ALs_est <- estmats$ALs
+      theta <- taucinv %*% theta
     }
 
-    #check if beta0_est has converged
-    if ( is.nan((abs(beta0_est[1]-previous2[1])) < 0.000001 )) {browser()}
-    if ( is.null((abs(beta0_est[1]-previous2[1])) < 0.000001 )) {browser()}
-    if ( is.na((abs(beta0_est[1]-previous2[1])) > 0.000001 )) {browser(); stop("beta0_est[1] has become NA")}
-		if ( (abs(beta0_est[1]-previous2[1])) < 0.000001 ) {stop1=1}
+    #check if beta0_est has converged using the first element of the beta
+    betaind <- ppithetalength(p) - p + 1
+    if ( is.na(theta[betaind])) {stop("First element of beta has become NA - cannot continue")}
+    if ( (abs(theta[betaind]-previous[betaind])) < 0.000001 ) {stop1=1}
 
 
 	}
 
+    estmats <- fromPPIparamvec(theta)
 
-
-	return(list(ALs_est=ALs_est,beta0_est=beta0_est,weight_vec=weight_vec,estimate5=estimate5))
+	return(list(ALs_est=estmats$ALs,beta0_est=estmats$beta,weight_vec=weight_vec,estimate5=theta))
 
 
 }
