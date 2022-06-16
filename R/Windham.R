@@ -77,8 +77,3 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
 
 }
 
-ppiparforww <- function(beta0, ALs, bL, incinAL){
-ALs_ww <- matrix(0, nrow(ALs), ncol(ALs))
-ALs_ww[incinAL, incinAL] <- ALs[incinAL, incinAL]
-return(list(beta0 = 0 * beta0, ALs = ALs_ww, bL = 0 * bL))
-}
