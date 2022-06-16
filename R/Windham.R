@@ -46,12 +46,8 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
 
     if (originalcorrectionmethod){
       # generate the tuning constants
-      dbeta <- -cW*beta0_est[-p]
-      # the weights will be calculated directly from the ppi model density,
-      # below modifies the A_L matrix to have zeros for the components that are not concentrated near zero
-      ##### create the A_KK matrix from ALs_est. Elements of A_KK will be zero if dA is non-zero #####
-      dA=-cW*ALs_est
-      dA[!ind_weightA, !ind_weightA] <- 0  #the 'KK' component of the AL matrix is doesn't need correction
+      theta <- toPPIparamvec(ALs_est, bL_est, beta0_est)
+      dtheta <- -cW * theta * (!inWW)
     }
 
 		#calculate scoring estimate:
@@ -65,10 +61,9 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
 
 
     if (originalcorrectionmethod){
-      estmats <- fromPPIparamvec(estimate5, p)
+      estmats <- fromPPIparamvec((estimate5 - dtheta)/(cW+1))
       beta0_est <- estmats$beta
-      beta0_est[-p] <- (beta0_est[-p] - dbeta)/(cW+1)
-      ALs_est <- (estmats$ALs - dA)/(cW+1)
+      ALs_est <- estmats$ALs
     } else {
       estmats <- fromPPIparamvec(taucinv %*% estimate5, p)
       beta0_est <- estmats$beta
