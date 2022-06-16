@@ -124,8 +124,8 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
       stopifnot((AL == "diag") | (AL == "d") | (AL == "diagonal"))
       ALprep <- matrix(0, nrow = p-1, ncol = p-1)
       diag(ALprep) <- NA
-    } else if (is.na(AL)){
-      ALprep = matrix(NA, nrow = p-1, ncol = p-1) #could also do nothing
+    } else if (is.logical(AL)){
+      ALprep = matrix(AL, nrow = p-1, ncol = p-1) #covers NA, TRUE, and FALSE
     } else {
       stop("AL is not of required type.")
     }
