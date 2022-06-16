@@ -34,20 +34,6 @@ WindhamWeights <- function(ldenfun, sample, theta, cW, inWW){
   return(weights)
 }
 
-#' @title Windham weights and corrections for a given parameter vector
-#' @description Generates the weights for each measurement and the correction transform \eqn{\tau_c^{-1}}
-#' This function assumes that the model has density proportional to
-#' \eqn{\exp(a(\theta) t(u))}
-#' with \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u}.
-#' and \eqn{a} is *linear* function.
-#' The linear assumption means that \eqn{\tau_c^{-1}} is a simple matrix operation.
-#' @param cW A robustness tuning constant.
-#' @param density A density function taking two arguments, `sample` and `theta`.
-#' @param theta Parameters for the model
-#' @param inWW Boolean vector.
-#' TRUE if the parameter is used in the Windham weights.
-#' FALSE if the parameter is set to zero in the Windham weights.
-#' @param sample A matrix of measurements. Each row a measurement.
 
 
 
@@ -68,10 +54,53 @@ WindhamWeights <- function(ldenfun, sample, theta, cW, inWW){
 #' a vector of weights
 #' a vector of theta values (where NA are estimated, non-NA are fixed - as in buildsmotape)
 #' a vector of starting values for the estimator.
+#' @param ... Arguments passed to `estimator`.
 #' @export
-windham_raw=function(prop,cW, estimator)
+windham_raw=function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta, inWW, originalcorrectionmethod = TRUE, ...)
 {
+  #all(inWW * fixedtheta == 0) #every fixed (not fitted) parameter should not be in the Windham Weight
 
-  stop("Function empty")
 
+  if (!originalcorrectionmethod){
+    tauc <- WindhamCorrection(cW, inWW)
+    taucinv <- solve(tauc)
+  }
+
+  stop1=0
+  while(stop1==0) {
+    previous <- theta
+    theta <- Windham_raw_newtheta(prop = prop, cW = cW, 
+          ldenfun = ldenfun, 
+          estimatorfun = estimatorfun, 
+          theta = theta, 
+          fixedtheta = fixedtheta,
+          inWW = inWW, 
+          tauc = tauc)
+    
+    #check if beta0_est has converged using the first element of the beta
+    betaind <- ppithetalength(p) - p + 1
+    if ( is.na(theta[betaind])) {stop("First element of beta has become NA - cannot continue")}
+    if ( (abs(theta[betaind]-previous[betaind])) < 0.000001 ) {stop1=1}
+  }
+  return(theta)
+}
+
+
+#new theta using Kassel's correction
+Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, fixedtheta, inWW, tauc, ...){
+   # create the vector of weights
+   weight_vec <- WindhamWeights(ldenfun = ldenfun, sample = prop,
+                 theta = theta, cW, inWW)
+
+   #calculate estimate:
+# a sample,
+# a vector of weights
+# a vector of theta values (where NA are estimated, non-NA are fixed - as in buildsmotape)
+# a vector of starting values for the estimator.
+   theta <- estimatorfun(sample = sample, weights = weight_vec,
+                theta = theta, fixedtheta = fixedtheta, ...)
+
+   ### correct estimates (Step 4 in Notes5.pdf)
+   theta <- taucinv %*% theta
+   return(theta)
 }
