@@ -69,32 +69,37 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta,
     taucinv <- solve(tauc)
   }
 
-  theta <- starttheta
-  stop1=0
-  while(stop1==0) {
-    previous <- theta
+  distfun <- function(unfixedtheta){
+    stopifnot(length(unfixedtheta) == sum(!fixedtheta))
+    previous <- unfixedtheta
+    fulltheta <- starttheta
+    fulltheta[!fixedtheta] <- unfixedtheta
     if (originalcorrectionmethod){
       theta <- Windham_raw_newtheta_original(prop = prop, cW = cW,
           ldenfun = ldenfun,
           estimatorfun = estimatorfun,
-          theta = theta,
+          theta = fulltheta,
           fixedtheta = fixedtheta,
           inWW = inWW)
     } else {
       theta <- Windham_raw_newtheta(prop = prop, cW = cW,
           ldenfun = ldenfun,
           estimatorfun = estimatorfun,
-          theta = theta,
+          theta = fulltheta,
           fixedtheta = fixedtheta,
           inWW = inWW,
           taucinv = taucinv)
     }
-
-    # check convergence based on theta difference
-    if (sum(sqrt((theta-previous)^2)) < 1E-2){stop1=1}
-    # print(sum(sqrt((theta-previous)^2)))
-    # print(max(abs(theta-previous)))
+    unfixedtheta <- theta[!fixedtheta]
+    return(unfixedtheta)
   }
+
+  est <- FixedPoint::FixedPoint(distfun, starttheta[!fixedtheta],
+                    Method = "Simple")
+  theta <- starttheta
+  theta[!fixedtheta] <- est$FixedPoint
+
+
   return(theta)
 }
 
