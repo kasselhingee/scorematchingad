@@ -99,7 +99,7 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta,
               .frequency_id = "FixedPoint_package")
   est <- FixedPoint::FixedPoint(distfun, starttheta[!fixedtheta],
                     Method = "VEA",
-                    ConvergenceMetricThreshold = 1E-6)
+                    ConvergenceMetricThreshold = 1E-10)
   nevals <- ncol(est$Inputs)
   print(abs(est$Inputs[11, nevals] -
         est$Inputs[11, nevals - 1]))
