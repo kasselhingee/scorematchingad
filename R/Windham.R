@@ -14,66 +14,40 @@
 #' @export
 windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = TRUE)
 {
-  stopifnot(isSymmetric(ALs_est))
+  # preperation - tranforming the inputs
   p <- ncol(prop)
-  n <- nrow(prop)
   theta <- toPPIparamvec(ALs_est, bL_est, beta0_est)
 	sp=p-1
 	stopifnot(length(ind_weightA) == sp)
 	stopifnot(all(bL_est == 0))
 
-	ppildenfun <- function(sample, theta){
-	  ppiparmats <- fromPPIparamvec(theta)
-	  logden <- qldppi(sample, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
-	  return(logden)
-	}
+  #indicator for each parameter of the full ppi model
+  ALs_ww <- matrix(0, p-1, p-1)
+  ALs_ww[!ind_weightA, !ind_weightA] <- 1
+  inWW <- ppi_cppad_thetaprocessor(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
 
-	#indicator for each parameter of the full ppi model
-	ALs_ww <- matrix(0, p-1, p-1)
-	ALs_ww[!ind_weightA, !ind_weightA] <- 1
-	inWW <- ppi_cppad_thetaprocessor(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
+  #preparing ppi specific info
+  ppildenfun <- function(sample, theta){
+    ppiparmats <- fromPPIparamvec(theta)
+    logden <- qldppi(sample, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
+    return(logden)
+  }
 
-	if (!originalcorrectionmethod){
-  	tauc <- WindhamCorrection(cW, inWW)
-  	taucinv <- solve(tauc)
-	}
+  ppiestimator <- function(Y, weights, starttheta, fixedtheta){
+          estimatorlog_weight(prop = prop, betap = starttheta[length(starttheta)], weightW = weights)$ppi}
 
-	stop1=0
-	while(stop1==0)
-	{
-    # create the vector of weights
-	  weight_vec <- WindhamWeights(ldenfun = ppildenfun, sample = prop,
-	                 theta = theta, cW, inWW)
+  endtheta <- windham_raw(prop = prop,
+               cW = cW,
+               ldenfun = ppildenfun,
+               estimatorfun = ppiestimator,
+               starttheta = theta,
+               fixedtheta = c(rep(FALSE, length(theta) - 1), TRUE), #final betap is fixed
+               inWW = inWW,
+               originalcorrectionmethod = originalcorrectionmethod)
 
-    if (originalcorrectionmethod){
-      # generate the tuning constants dbeta, dA
-      dtheta <- -cW * theta * (!inWW)
-    }
+    estmats <- fromPPIparamvec(endtheta)
 
-    previous <- theta
-    #calculate scoring estimate:
-    estimator=estimatorlog_weight(prop,beta0_est[p],weight_vec)$ppi
-    theta=estimator
-
-    ### correct estimates (Step 4 in Notes5.pdf)
-    if (originalcorrectionmethod){
-      theta <- (theta - dtheta)/(cW+1)
-    } else {
-      theta <- taucinv %*% theta
-    }
-
-    #check if beta0_est has converged using the first element of the beta
-    betaind <- ppithetalength(p) - p + 1
-    if ( is.na(theta[betaind])) {stop("First element of beta has become NA - cannot continue")}
-    if ( (abs(theta[betaind]-previous[betaind])) < 0.000001 ) {stop1=1}
-
-
-	}
-
-    estmats <- fromPPIparamvec(theta)
-
-	return(list(ALs_est=estmats$ALs,beta0_est=estmats$beta,weight_vec=weight_vec,estimate5=theta))
-
+	return(list(ALs_est=estmats$ALs,beta0_est=estmats$beta,estimate5=endtheta))
 
 }
 
