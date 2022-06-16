@@ -90,10 +90,10 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta,
           taucinv = taucinv)
     }
 
-    #check if beta0_est has converged using the first element of the beta
-    betaind <- length(theta) - ppiltheta2p(length(theta)) + 1
-    if ( is.na(theta[betaind])) {stop("First element of beta has become NA - cannot continue")}
-    if ( (abs(theta[betaind]-previous[betaind])) < 0.000001 ) {stop1=1}
+    # check convergence based on theta difference
+    if (sum(sqrt((theta-previous)^2)) < 1E-2){stop1=1}
+    # print(sum(sqrt((theta-previous)^2)))
+    # print(max(abs(theta-previous)))
   }
   return(theta)
 }
