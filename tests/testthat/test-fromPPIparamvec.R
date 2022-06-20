@@ -23,7 +23,7 @@ test_that("ppiltheta2p() matches other operations", {
 })
 
 test_that("indexcombinations() for vectorising matrices matches toPPI, fromPPI, and upper.tri()", {
-  skip("indexcombinations() not yet trying match to/fromPPIparamvec and upper.tri() - see reordering test below")
+  #skip("indexcombinations() not yet trying match to/fromPPIparamvec and upper.tri() - see reordering test below")
   p = 5
   Amat <- matrix(NA, nrow = p-1, ncol = p-1)
   diag(Amat) <- seq(1, p-1)
