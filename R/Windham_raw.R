@@ -101,8 +101,8 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta,
                     Method = "VEA",
                     ConvergenceMetricThreshold = 1E-10)
   nevals <- ncol(est$Inputs)
-  print(abs(est$Inputs[11, nevals] -
-        est$Inputs[11, nevals - 1]))
+  #print(abs(est$Inputs[11, nevals] -
+  #      est$Inputs[11, nevals - 1]))
   theta <- starttheta
   theta[!fixedtheta] <- est$FixedPoint
 
