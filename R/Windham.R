@@ -37,7 +37,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
           estimatorlog_weight(prop = prop, betap = starttheta[length(starttheta)], weightW = weights)$ppi}
 
   fixedtheta <- ppi_cppad_thetaprocessor(p, AL=FALSE, bL = TRUE, betaL = FALSE, betap = TRUE)
-  endtheta <- windham_raw(prop = prop,
+  est <- windham_raw(prop = prop,
                cW = cW,
                ldenfun = ppildenfun,
                estimatorfun = ppiestimator,
@@ -46,9 +46,11 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
                inWW = inWW,
                originalcorrectionmethod = originalcorrectionmethod)
 
-    estmats <- fromPPIparamvec(endtheta)
+  estmats <- fromPPIparamvec(est$theta)
 
-	return(list(ALs_est=estmats$ALs,beta0_est=estmats$beta,estimate5=endtheta))
-
+  out <- list(est = c(list(theta = est$theta), estmats),
+       optim = est$optim)
+                  
+  return(out)
 }
 

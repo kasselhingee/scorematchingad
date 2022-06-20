@@ -106,7 +106,10 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta,
   theta <- starttheta
   theta[!fixedtheta] <- est$FixedPoint
 
-  return(theta)
+  return(list(theta = theta, 
+           optim = list(FixedPoint = est$FixedPoint,
+                        fpevals = est$fpevals,
+                        Finish = est$Finish)))
 }
 
 

@@ -104,14 +104,14 @@ ind_weightA[4]=1
 cW=0.7
 est1=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = TRUE)
 #estimate of A_L:
-expect_snapshot_value(signif(est1$ALs_est,6), style = "json2")
+expect_snapshot_value(signif(est1$est$ALs,6), style = "json2")
 #estimate of beta:
-expect_snapshot_value(signif(est1$beta0_est,6), style = "json2")
+expect_snapshot_value(signif(est1$est$beta,6), style = "json2")
 
 #Use Kassel's correction method
 est2=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = FALSE)
-expect_equal(est1$ALs_est, est2$ALs_est, tolerance = 1E-5)
-expect_equal(est1$beta0_est, est2$beta0_est, tolerance = 1E-5)
+expect_equal(est1$est$ALs, est2$est$ALs, tolerance = 1E-5)
+expect_equal(est1$est$beta, est2$est$beta, tolerance = 1E-5)
 })
 
 
@@ -188,13 +188,13 @@ test_that("windham_diff estimator matches historical results on dataset with Spi
   cW=1.25
   est1=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA = ind_weightA, originalcorrectionmethod = TRUE)
   #estimate of A_L:
-  expect_snapshot_value(signif(est1$ALs_est,6), style = "json2")
+  expect_snapshot_value(signif(est1$est$ALs,6), style = "json2")
   #estimate of beta:
-  expect_snapshot_value(signif(est1$beta0_est,6), style = "json2")
+  expect_snapshot_value(signif(est1$est$beta,6), style = "json2")
 
   #Use Kassel's correction method
   est2=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = FALSE)
-  expect_equal(est1$ALs_est, est2$ALs_est, tolerance = 1E-4)
-  expect_equal(est1$beta0_est, est2$beta0_est, tolerance = 1E-5)
+  expect_equal(est1$est$ALs, est2$est$ALs, tolerance = 1E-4)
+  expect_equal(est1$est$beta, est2$est$beta, tolerance = 1E-5)
 })
 
