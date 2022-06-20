@@ -69,7 +69,7 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta,
     taucinv <- solve(tauc)
   }
 
-  distfun <- function(unfixedtheta){
+  myfun <- function(unfixedtheta){
     stopifnot(length(unfixedtheta) == sum(!fixedtheta))
     previous <- unfixedtheta
     fulltheta <- starttheta
@@ -97,7 +97,7 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta,
   rlang::warn("Using the FixedPoint package - should investigate alternatives",
               .frequency = "once",
               .frequency_id = "FixedPoint_package")
-  est <- FixedPoint::FixedPoint(distfun, starttheta[!fixedtheta],
+  est <- FixedPoint::FixedPoint(myfun, starttheta[!fixedtheta],
                     Method = "VEA",
                     ConvergenceMetricThreshold = 1E-10)
   nevals <- ncol(est$Inputs)
