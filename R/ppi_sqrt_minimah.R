@@ -92,6 +92,7 @@ estimator1 <- function(prop,acut,incb, beta0)
 
 	#scoring estimator
 	quartic_sphere=solve(W[1:num1,1:num1])%*%t(t(d[1:num1]))
+        browser()
         warning("comb() based ordering of parameter elements")
 	return(list(estimator1=quartic_sphere,W_est=W_est))
 }

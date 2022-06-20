@@ -10,6 +10,7 @@
 #' @export
 estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 {
+        warning("comb() based ordering of parameter elements")
   n<-nrow(prop)
   p<-ncol(prop)
 

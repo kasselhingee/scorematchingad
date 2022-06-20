@@ -151,10 +151,3 @@ calcW11 <- function(p, z, h, ind, qind){
 	return(W)
 }
 
-indexcombinations <- function(sp){
-  browser()
-  AL <- matrix(NA, sp, sp)
-  ind <- t(which(upper.tri(AL), arr.ind=TRUE))
-  qind=length(ind[1,])
-  return(list(ind = ind, qind = qind))
-}
