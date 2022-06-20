@@ -2,6 +2,9 @@
 #' @description Calculates Scealy and Wood's (2021) ScoreMult estimator and assumes \eqn{\beta=\beta_0}{beta=beta0} is the same for each category (component).
 #' @details
 #' Note: Currently only \eqn{A_L} is estimated. \eqn{\beta=\beta_0}{beta=beta0} is fixed and not estimated. \eqn{b_L} is fixed at zero.
+#' See A.8 of (Scealy and Wood, 2021).
+#' Score matching with the unthresholded product weight function
+#' $$\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2)$$
 #' @param x Count data (n by 3 matrix)
 #' @param ni The total for each sample (sum across rows)
 #' @param beta0 \eqn{\beta=\beta_0}{beta=beta0} is the same for each category.
