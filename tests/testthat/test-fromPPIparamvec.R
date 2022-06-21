@@ -51,9 +51,8 @@ test_that("reordering of comb matrix vector to match toPPIparamvec", {
   Amat[upper.tri(Amat)] <- (1:sum(upper.tri(Amat))) + p -1
   Amat[lower.tri(Amat)] <- t(Amat)[lower.tri(Amat)]
 
-  indinfo <- indexcombinations(p - 1)
   indexcombparam <- c(diag(Amat),
-                      Amat[t(indinfo$ind)], #each column is the own dimension, each row single element to extract
+                      Amat[t(utils::combn(1:(p-1), 2))], #each column is the own dimension, each row single element to extract
                       rep(0, p + p -1))
 
   expect_equal(combparam2uppertriparam(indexcombparam), toPPIparamvec(Amat, rep(0, p-1), rep(0, p)))

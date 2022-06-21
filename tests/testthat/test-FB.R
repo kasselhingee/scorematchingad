@@ -192,8 +192,8 @@ test_that("FB() fits with various fixed elements", {
   expect_equal(est$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
 })
 
-test_that("FB() with many fixed elements leads so smaller smobjgrad - no", {
-  skip()
+test_that("FB() with many fixed elements leads so smaller smobjgrad", {
+  skip("Fixing many of the elements doesn't improve smobjgrad")
   p <- 3
   set.seed(111)
   theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)

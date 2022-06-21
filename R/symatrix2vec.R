@@ -49,7 +49,7 @@ combparam2uppertriorder_matrix <- function(ltheta){
 
   #comb ordering
   inthetaorder <- c(diag(AL),
-                    AL[t(combn(1:(p-1), 2))]) #each column is the own dimension, each row single element to extract
+                    AL[t(utils::combn(1:(p-1), 2))]) #each column is the own dimension, each row single element to extract
 
   stopifnot(length(inthetaorder) == ltheta) #check that length produced is correct
   stopifnot(all(inthetaorder[inthetaorder] == seq(1, length.out = ltheta))) #check that ordering index is correct

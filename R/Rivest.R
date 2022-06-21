@@ -44,8 +44,8 @@ Rivest_theta2FBtheta <- function(theta){
   # print(m)
   if (is.na(m[1])){browser()}
   if (isTRUE(m[1] < 0)){m <- -m}
-  m <- sign(k) * m
-  k <- abs(k)
+  m <- sign(mats$k) * m
+  k <- abs(mats$k)
   FB_mats2theta(k, m, mats$A)
 }
 
