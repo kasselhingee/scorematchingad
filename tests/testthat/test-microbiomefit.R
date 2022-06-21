@@ -112,7 +112,9 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   expect_snapshot_value(signif(which.max(W_est), 8), style = "json")
 
   #standard errors
-  std1=cdabyppi:::estimator1SE(propreal,acut,estimate1,W_est,1, beta0)
+  std1=cdabyppi:::estimator1SE(propreal,acut,estimator$estimator1,estimator$W_est,1, beta0)
+  #rearrange back to combn ordering
+  std1 <- std1[ordindx]
   expect_snapshot_value(signif(std1, 8), style = "json2")
 
   #estimated parameters
@@ -146,7 +148,8 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
   expect_snapshot_value(signif(which.max(W_est), 8), style = "json")
 
   #standard errors
-  std1=estimator1SE(propreal,acut,estimate1,W_est,0, beta0)
+  std1=estimator1SE(propreal,acut,estimator$estimator1,estimator$W_est,0, beta0)
+  std1 <- std1[ordindx] #rearrange to combn ordering for historical comparison
 
   #estimated parameters
   thetamats <- fromPPIparamvec(c(estimator$estimator1, rep(NA, p-1), rep(NA, p)))
