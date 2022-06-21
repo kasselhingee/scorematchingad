@@ -268,7 +268,19 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   est_direct <- estimator1(prop, acut, incb = 0, beta0 = beta)
 
   est_cppad <- ppi_cppad(prop, bL = bL, beta = beta,
-                         man = "sphere", acut = acut, weightname = "minsq")
-  expect_equal(est_cppad$est$theta, est_direct$estimator1, tolerance = 1E-3,
+                         man = "sphere", acut = acut, weightname = "minsq",
+                         control = list(tol = 1E-13))
+  expect_equal(est_cppad$est$theta[1:length(est_direct$estimator1)], est_direct$estimator1, tolerance = 1E-1,
                ignore_attr = TRUE)
+
+  #also it makes sense that the smo and gradient are v low at the direct estimate
+  ppitapes <- buildsmotape("sphere", "ppi",
+                           rep(0.1, p), ppi_cppad_thetaprocessor(p, bL = bL, beta = beta),
+                           weightname = "minsq", acut = acut)
+  expect_lt(sum(smobjgrad(ppitapes$smotape, est_direct$estimator1, prop)^2), 1E-20)
+  expect_equal(smobj(ppitapes$smotape, est_direct$estimator1, prop), est_cppad$smval, tolerance = 1E-1)
+
+  # check that rearrangement has large gradient
+  expect_gt(sum(smobjgrad(ppitapes$smotape, est_direct$estimator1[c(1:6, 8, 7, 9, 10)], prop)^2), 1E-2)
+
 })

@@ -30,9 +30,9 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb, beta0)
 	}
 
 	sp=p-1
-	x=c(1:sp)
-	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
-	qind=length(ind[1,])
+        indqind <- indexcombinations(sp)
+	ind=indqind$ind
+	qind=indqind$qind
 
 	if (incb==1)
 	{

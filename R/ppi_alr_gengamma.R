@@ -11,9 +11,9 @@ estimatorlog_weight <- function(prop,betap,weightW)
 	sp=p-1
         n=nrow(prop)
 
-	x=c(1:sp)
-	ind=combn(x, 2, FUN = NULL, simplify = TRUE)
-	qind=length(ind[1,])
+        indqind <- indexcombinations(sp)
+        ind <- indqind$ind
+        qind <- indqind$qind
 
 	V1S_sum=matrix(0,sum(sp,sp,qind),1)
 	V2S_sum=matrix(0,sum(sp,sp,qind),1)
@@ -140,13 +140,6 @@ estimatorlog_weight <- function(prop,betap,weightW)
               rep(0,sp), #bL
               ppi[p-1 + (p-2)*(p-1)/2 + seq(1, sp)], #betaL
               betap)
-  #convert to upper.tri order
-  utorder <- combparam2uppertriorder(length(ppiAll))
-  ppiAll <- ppiAll[utorder]
-  Worder <- order(c(utorder[seq(1, p-1 + (p-2)*(p-1)/2)], utorder[seq( p-1 + (p-2)*(p-1)/2 + p-1 + 1, length.out = p-1)]))
-  Wreordermat <- diag(1, nrow = nrow(W))[Worder, ] #reorders rows, but assuming that the vector has new order, must undo the new order
-  W <- Wreordermat %*% W %*% t(Wreordermat) #Wreordernat is made of orthogonal unit vectors to inverse is transpose
-  d <- d[Worder]
 	return(list(ppi=ppiAll,W=W,d=d))
 
 

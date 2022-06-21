@@ -10,7 +10,6 @@
 #' @export
 estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 {
-        warning("comb() based ordering of parameter elements")
   n<-nrow(prop)
   p<-ncol(prop)
 
@@ -47,9 +46,9 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 
 
 	sp=p-1
-	x=c(1:sp)
-	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
-	qind=length(ind[1,])
+        indqind <- indexcombinations(sp)
+	ind=indqind$ind
+	qind=indqind$qind
 
 	if (incb==1)
 	{

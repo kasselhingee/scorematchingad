@@ -25,9 +25,9 @@ score2_mats_dir <- function(dirfit,acut)
 
 	sp=p-1
 
-	x=c(1:sp)
-	ind=utils::combn(x, 2, FUN = NULL, simplify = TRUE)
-	qind=length(ind[1,])
+        indqind <- indexcombinations(sp)
+	ind=indqind$ind
+	qind=indqind$qind
 
 	h4m <- h2onz2_mean(p, n, z, h, indh, hstyle = "product")
   W <- calcW22(p, h, h4m)

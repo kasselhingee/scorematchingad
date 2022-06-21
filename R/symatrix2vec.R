@@ -36,7 +36,7 @@ combparam2uppertriorder_matrix <- function(ltheta){
   # 2l = 2p-2 + p^2 - 3p + 2
   # 0 = p^2  - p - 2l
   # p = (1 pm sqrt(1 - 4*(-2l)))/2
-  #   = (1 pm sqrt(8l + 1)) /2 
+  #   = (1 pm sqrt(8l + 1)) /2
   #   = (1+sqrt(8l + 1) / 2
   p <- (1+sqrt(8 * ltheta + 1)) / 2
   sp <- p-1
@@ -49,7 +49,7 @@ combparam2uppertriorder_matrix <- function(ltheta){
 
   #comb ordering
   inthetaorder <- c(diag(AL),
-                    AL[t(indexcombinations(p - 1)$ind)]) #each column is the own dimension, each row single element to extract
+                    AL[t(combn(1:(p-1), 2))]) #each column is the own dimension, each row single element to extract
 
   stopifnot(length(inthetaorder) == ltheta) #check that length produced is correct
   stopifnot(all(inthetaorder[inthetaorder] == seq(1, length.out = ltheta))) #check that ordering index is correct

@@ -97,6 +97,12 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   #calculate scoring estimate:
   estimator= cdabyppi:::estimator1(propreal,acut,1, beta0)
   estimate1=estimator$estimator1
+  #rearrange to historical ordering
+  ordindx <- order(combparam2uppertriorder(length(estimate1) + p)) #the plus p is for the beta that isn't estimated
+  ordindx <- ordindx[1:length(estimate1)]
+  estimate1 <- estimate1[ordindx]
+  dim(estimate1) <- c(length(estimate1), 1)
+  #check historically
   expect_snapshot_value(signif(estimate1, 8), style = "json2") #8 is the default number of digits for jsonlite::serializeJSON
 
   #estimate of W matrix
