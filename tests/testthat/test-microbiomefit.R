@@ -116,31 +116,10 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   expect_snapshot_value(signif(std1, 8), style = "json2")
 
   #estimated parameters
-  ALs=matrix(0,p-1,p-1)
-  bL=matrix(0,p-1,1)
-  sp=p-1
-  xx=c(1:sp)
-  ind=combn(xx, 2, FUN = NULL, simplify = TRUE)
-  qind=length(ind[1,])
-  for (j in 1:sp)
-  {
-  	ALs[j,j]=estimate1[j]
-  }
-  true2=estimate1[p:sum(qind,sp)]
-  for (j in 1:qind)
-  {
-  	ALs[ind[1,j],ind[2,j]]=true2[j]
-  	ALs[ind[2,j],ind[1,j]]=true2[j]
-  }
-  bnum=sum(qind,sp,1)
-  btot=sum(qind,sp,sp)
-  k=1
-  for (j in bnum:btot)
-  {
-  	bL[k]=estimate1[j]
-  	k=k+1
-  }
-
+  thetamats <- fromPPIparamvec(c(estimator$estimator1, rep(NA, p)))
+  ALs <- thetamats$ALs
+  bL <- thetamats$bL
+  dim(bL) <- c(length(bL), 1)
   #values in Table 4 in the article:
   expect_snapshot_value(signif(ALs[upper.tri(ALs, diag = TRUE)], 8), style = "json2")
   expect_snapshot_value(signif(bL, 8), style = "json2")
@@ -154,6 +133,10 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
   #calculate scoring estimate:
   estimator=cdabyppi:::estimator1(propreal,acut,0, beta0)
   estimate1=estimator$estimator1
+  #rearrange to historical ordering
+  ordindx <- order(combparam2uppertriorder_matrix(length(estimate1)))
+  estimate1 <- estimate1[ordindx]
+  dim(estimate1) <- c(length(estimate1), 1)
   expect_snapshot_value(signif(estimate1, 8), style = "json2")
 
   #estimate of W matrix
@@ -166,23 +149,8 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
   std1=estimator1SE(propreal,acut,estimate1,W_est,0, beta0)
 
   #estimated parameters
-  ALs=matrix(0,p-1,p-1)
-  bL=matrix(0,p-1,1)
-  sp=p-1
-  xx=c(1:sp)
-  ind=combn(xx, 2, FUN = NULL, simplify = TRUE)
-  qind=length(ind[1,])
-  for (j in 1:sp)
-  {
-  	ALs[j,j]=estimate1[j]
-  }
-  true2=estimate1[p:sum(qind,sp)]
-  for (j in 1:qind)
-  {
-  	ALs[ind[1,j],ind[2,j]]=true2[j]
-  	ALs[ind[2,j],ind[1,j]]=true2[j]
-  }
-
+  thetamats <- fromPPIparamvec(c(estimator$estimator1, rep(NA, p-1), rep(NA, p)))
+  ALs <- thetamats$ALs
 
   #values in Table 3 in the article:
   expect_snapshot_value(signif(ALs[upper.tri(ALs, diag = TRUE)], 8), style = "json2")
