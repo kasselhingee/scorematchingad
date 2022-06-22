@@ -7,6 +7,8 @@ output: html_document
 
 The effect of the matrix $A_L$ on marginal distributions can be large, and override the Dirichlet component of the density. A large `maxden` required for `rhybrid()` would be symptomatic of peaks near zero occurring at odds to the Dirichlet component of the density.
 
+To the credit of the sandwich method for standard errors - the estimates have thus far mostly been within 3 standard errors of the true values (the standard errors have been huge).
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 library(cdabyppi)
