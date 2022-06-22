@@ -1,0 +1,62 @@
+---
+title: "Effect of PPI's AL on Marginal Distributions"
+author: "Kassel Hingee"
+date: "22/06/2022"
+output: html_document
+---
+
+The effect of the matrix $A_L$ on marginal distributions can be large, and override the Dirichlet component of the density. A large `maxden` required for `rhybrid()` would be symptomatic of peaks near zero occurring at odds to the Dirichlet component of the density.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(cdabyppi)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+
+## An example for p=3
+```{r pis3_A, echo = FALSE}
+  set.seed(1273)
+  p = 3
+  ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
+  bL <- rep(0, p-1)
+  beta <- c(-0.7, -0.3, 0)
+  # set.seed(1345) #this seed leads to samples with that give reasonable estimates
+  set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
+  prop <- rhybrid(1000, p, beta, ALs, bL, 4)$samp
+  print(ALs)
+  
+  prop %>% as_tibble() %>% tidyr::pivot_longer(everything()) %>% ggplot() + facet_wrap(vars(name)) + geom_freqpoly(aes(x=value))
+```
+
+A different $A_L$:
+```{r pis3_B, echo = FALSE}
+  set.seed(12735)
+  p = 3
+  ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
+  bL <- rep(0, p-1)
+  beta <- c(-0.7, -0.3, 0)
+  # set.seed(1345) #this seed leads to samples with that give reasonable estimates
+  set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
+  prop <- rhybrid(1000, p, beta, ALs, bL, 20)$samp
+  print(ALs)
+  
+  prop %>% as_tibble() %>% tidyr::pivot_longer(everything()) %>% ggplot() + facet_wrap(vars(name)) + geom_freqpoly(aes(x=value))
+```
+
+Another set of $A_L$, where elements all have magnitude less than 1:
+
+```{r pis3_C, echo = FALSE}
+  set.seed(12735)
+  p = 3
+  ALs <- rsymmetricmatrix(p-1, -1, 1)
+  bL <- rep(0, p-1)
+  beta <- c(-0.7, -0.3, 0)
+  # set.seed(1345) #this seed leads to samples with that give reasonable estimates
+  set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
+  prop <- rhybrid(1000, p, beta, ALs, bL, 5)$samp
+  print(ALs)
+  
+  prop %>% as_tibble() %>% tidyr::pivot_longer(everything()) %>% ggplot() + facet_wrap(vars(name)) + geom_freqpoly(aes(x=value))
+```
