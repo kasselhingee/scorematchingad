@@ -40,6 +40,13 @@
 #' qldppi(samp$samp3, beta0, ALs, bL)
 #' @export
 rhybrid <- function(n,p,beta0,ALs,bL,maxden){
+  # a warning if maxden is high
+  if (maxden > 10){warning(paste(sprintf("'maxden' of %0.2f is high.", maxden),
+                                 "If this value is required for rhybrid() to run successfully",
+                                 "then it could mean that the Dirichlet component of the density",
+                                 "does not indicate the components that have concentrations near zero.",
+                                 "This behaviour could be due to the value of ALs (and maybe caused by bL too)."))}
+
   maxdenin <- maxden
   # first simulate starting with a block of Dirichlet samples of size n.
   firstaccepted <- rhybrid_block(n,p,beta0,ALs,bL,maxden)
