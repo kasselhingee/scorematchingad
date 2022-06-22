@@ -1,6 +1,7 @@
 #' @title Score matching estimate of the generalised gamma form of the PPI model(b_L = 0) using an alr transformation
 #' @description Estimates \eqn{A_L} and \eqn{\beta_0}{beta0} of the PPI model using score matching in Euclidean space. Data is transformed to the Euclidean space using the additive log-ration transformation.
 #' The final element of \eqn{\beta_0}{beta0} is fixed at a chosen value.
+#' For estimating the elements of \eqn{A_L} more precisely, we recommend the score-matching estimators that transform the simplex on the sphere.
 #' @param prop compositional data (each row is a sample, each column corresponds to a component)
 #' @param betap The (fixed) final element of beta0 for the model.
 #' @param weightW A vector of weights to apply to the measurements in `prop`. The length of `weightW` must equal the number of rows of `prop`.
