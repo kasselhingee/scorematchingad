@@ -1,6 +1,6 @@
 test_that("estimatorlog_weight matches CppAD method for constant weight, p = 3", {
   set.seed(1234)
-  m <- sec2_3model(1000, maxden = 4)
+  m <- sec2_3model(10000, maxden = 4)
 
   est_cppad <- ppi_cppad(m$sample, bL = rep(0, 3-1), betap = m$beta0[3], man = "Ralr", weightname = "ones",
                          control = list(tol = 1E-10))
@@ -12,18 +12,20 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 3",
 test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5", {
   set.seed(1273)
   p = 5
-  ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
+  ALs <- rsymmetricmatrix(p-1, -4, 4)
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
   # set.seed(1345) #this seed leads to samples with that give reasonable estimates
   set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
-  prop <- rhybrid(1000, p, beta, ALs, bL, 35)$samp3
+  prop <- rhybrid(1000, p, beta, ALs, bL, 5)$samp3 #rhybrid_singly took 1005 seconds, rhybrid() took 13seconds
 
   est_cppad <- ppi_cppad(prop, bL = bL, betap = beta[p], man = "Ralr", weightname = "ones",
                          bdrythreshold = 1E-20,
-                         control = list(tol = 1E-20))
+                         control = list(tol = 1E-10))
   expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)
   expect_absdiff_lte_v(est_cppad$est$beta, beta, 3 * est_cppad$SE$beta)
+  #expect that the SE are small relative to size of the coefficients
+  expect_lt(median(abs(est_cppad$SE$theta/est_cppad$est$theta), na.rm = TRUE), 0.3)
 
   est_direct <- estimatorlog_weight(prop, betap = beta[p], weightW = rep(1, nrow(prop)))
 
@@ -45,12 +47,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
   expect_absdiff_lte_v(est_direct$ppi[is.na(thetain)], est_cppad$est$theta[is.na(thetain)],
                        1.2 * est_direct_SE) #the smovals are quite flat in the ALs dimensions for this region!
   # and that the beta estimates are really close to each other
-  expect_equal(fromPPIparamvec(est_direct$ppi)$beta, est_cppad$est$beta, tolerance = 1E-2)
-  expect_equal(fromPPIparamvec(est_direct$ppi)$beta < -1, est_cppad$est$beta < -1)
-
-  # sanity check with estimator using sqrt transform
-  est_sqrt <- ppi_cppad(prop, bL = 0, betap = beta[p], man = "sphere", weightname = "minsq", acut = 0.1)
-  est_sqrt$est$beta
+  expect_equal(fromPPIparamvec(est_direct$ppi)$beta, est_cppad$est$beta, tolerance = 1E-3)
 })
 
 
