@@ -15,14 +15,18 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
   ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
+  # set.seed(1345) #this seed leads to samples with that give reasonable estimates
+  set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
   prop <- rhybrid(1000, p, beta, ALs, bL, 35)$samp3
 
   est_cppad <- ppi_cppad(prop, bL = bL, betap = beta[p], man = "Ralr", weightname = "ones",
                          bdrythreshold = 1E-20,
                          control = list(tol = 1E-20))
   expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)
+  expect_absdiff_lte_v(est_cppad$est$beta, beta, 3 * est_cppad$SE$beta)
 
   est_direct <- estimatorlog_weight(prop, betap = beta[p], weightW = rep(1, nrow(prop)))
+
   # Get SE of this estimate using CppAD
   thetain <- ppi_cppad_thetaprocessor(p, bL = bL, betap = beta[p])
   tapes <- buildsmotape("Ralr", "ppi",
@@ -33,11 +37,20 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
   expect_absdiff_lte_v(est_direct$ppi[is.na(thetain)], toPPIparamvec(ALs, bL, beta)[is.na(thetain)],
                        3 * est_direct_SE)
 
+  # check that direct estimates are good according to smval and smvalgrad
   expect_lt(sum(smobjgrad(tapes$smotape, est_direct$ppi[is.na(thetain)], prop)^2), 1E-20)
   expect_lt(smobj(tapes$smotape, est_direct$ppi[is.na(thetain)], prop), est_cppad$smval)
 
+  # check that estimates via cppad are close to direct
   expect_absdiff_lte_v(est_direct$ppi[is.na(thetain)], est_cppad$est$theta[is.na(thetain)],
                        1.2 * est_direct_SE) #the smovals are quite flat in the ALs dimensions for this region!
+  # and that the beta estimates are really close to each other
+  expect_equal(fromPPIparamvec(est_direct$ppi)$beta, est_cppad$est$beta, tolerance = 1E-2)
+  expect_equal(fromPPIparamvec(est_direct$ppi)$beta < -1, est_cppad$est$beta < -1)
+
+  # sanity check with estimator using sqrt transform
+  est_sqrt <- ppi_cppad(prop, bL = 0, betap = beta[p], man = "sphere", weightname = "minsq", acut = 0.1)
+  est_sqrt$est$beta
 })
 
 
