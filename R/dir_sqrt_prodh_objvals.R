@@ -5,7 +5,7 @@
 #' @return A list of matrices
 #' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2).}
 #' @export
-score2_mats_dir <- function(dirfit,acut)
+score2_mats_dir <- function(dirfit,acut, w = rep(1, nrow(dirfit)))
 {
   n=nrow(dirfit)
   p=ncol(dirfit)
@@ -29,10 +29,10 @@ score2_mats_dir <- function(dirfit,acut)
 	ind=indqind$ind
 	qind=indqind$qind
 
-	h4m <- h2onz2_mean(p, n, z, h, indh, hstyle = "product")
-  W <- calcW22(p, h, h4m)
+	h4m <- h2onz2_mean(p, n, z, h, indh, hstyle = "product", w = w)
+  W <- calcW22(p, h, h4m, w)
 
-	d1=t(((p-2)*mean(h^2)+h4m))
+	d1=t(((p-2)*weighted.mean(h^2, w = w)+h4m))
 
 	#ind2 indicates whether the acut constraint was hit
 	ind2=matrix(1,n,1)
@@ -66,12 +66,12 @@ score2_mats_dir <- function(dirfit,acut)
 			else {h4s[i,j]=ind2[i]*homit[i,j]^2}
 
 		}
-		h4m[j]=mean(h4s[,j])
+		h4m[j]=weighted.mean(h4s[,j], w = w)
 	}
 
 
 
-	d2=t(2*h4m-2*p*mean(ind2*h^2))
+	d2=t(2*h4m-2*p*weighted.mean(ind2*h^2, w = w))
 
 	d=d1-d2
 
@@ -87,8 +87,8 @@ score2_mats_dir <- function(dirfit,acut)
 
 #' @describeIn score2_mats_dir The score matching estimator using the product-based Hyvarinen weight
 #' @export
-score2_dir <- function(dirfit, acut, beta){
-  mats <- score2_mats_dir(dirfit, acut)
+score2_dir <- function(dirfit, acut, beta, w = rep(1, nrow(dirfit))){
+  mats <- score2_mats_dir(dirfit, acut, w = w)
   pi <- matrix(1 + 2*beta, ncol = 1)
   out <- c(
     hgradpgrad = 0.5 * t(pi) %*% mats$W %*% pi,

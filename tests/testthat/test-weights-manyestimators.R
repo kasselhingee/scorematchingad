@@ -10,40 +10,33 @@ virtualweights <- function(Y, sizefactor = 1.5){
   ))
 }
 
+set.seed(1234)
+m <- sec2_3model(1000, maxden = 4)
+#simulate weights
+set.seed(134)
+vw <- virtualweights(m$sample)
 
 test_that("estimatorlog_weight matches for simulated weights", {
-  set.seed(1234)
-  m <- sec2_3model(1000, maxden = 4)
-  #simulate weights
-  set.seed(134)
-  vw <- virtualweights(m$sample)
-
   est_sim <- estimatorlog_weight(vw$newY, betap = m$beta0[3], weightW = rep(1, nrow(vw$newY)))
   est_direct <- estimatorlog_weight(m$sample, betap = m$beta0[3], weightW = vw$w)
   expect_equal(est_direct$ppi, est_sim$ppi)
 })
 
 test_that("dirichmom matches for simulated weights", {
-  set.seed(1234)
-  m <- sec2_3model(1000, maxden = 4)
-  #simulate weights
-  set.seed(134)
-  vw <- virtualweights(m$sample)
-
   est_sim <- dirichmom(vw$newY)
   est_direct <- dirichmom(m$sample, w = vw$w)
   expect_equal(est_direct, est_sim)
 })
 
 test_that("estimator1_dir matches for simulated weights", {
-  set.seed(1234)
-  m <- sec2_3model(1000, maxden = 4)
-  #simulate weights
-  set.seed(134)
-  vw <- virtualweights(m$sample)
-
   acut = 0.1
   est_sim <- estimator1_dir(vw$newY, acut = acut)
   est_direct <- estimator1_dir(m$sample, acut = acut, w = vw$w)
   expect_equal(est_direct, est_sim)
 })
+
+test_that("score2_dir matches for simulated weights"){
+  est_sim <- score2_dir(vw$newY, acut = acut, beta = m$beta0)
+  est_direct <- score2_dir(m$sample, acut = acut, beta = m$beta0, w = vw$w)
+  expect_equal(est_direct, est_sim)
+}
