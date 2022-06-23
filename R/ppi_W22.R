@@ -1,5 +1,5 @@
 
-calcW22 <- function(p, h, h4m){
+calcW22 <- function(p, h, h4m, w = rep(1, length(h))){
 
 	DD=matrix(0,p,p)
 	for (i in 1:p)
@@ -10,7 +10,7 @@ calcW22 <- function(p, h, h4m){
 		}
 	}
 
-	DD2=matrix(mean(h^2),p,p)
+	DD2=matrix(weighted.mean(h^2, w = w),p,p)
 
 
 	W=DD-DD2
@@ -23,7 +23,7 @@ calcW22 <- function(p, h, h4m){
 # The below calculates this for all j, for each measurement and averages.
 # When h(z)^2 = 0, then the limit of h(z)^2/z_j^2 as z_j goes to zero is used,
 # For the minima h(z) form, this limit is 1 when z_j is the minimum
-h2onz2_mean <- function(p, n, z, h, indh, hstyle = "minima"){
+h2onz2_mean <- function(p, n, z, h, indh, hstyle = "minima", w = rep(1, nrow(z))){
   if (hstyle=="minima"){
     limit <- matrix(0, n, p)
     for (i in 1:n){
@@ -55,7 +55,7 @@ h2onz2_mean <- function(p, n, z, h, indh, hstyle = "minima"){
 		  # for Score1 estimators the indh gives the component that is smallest (or 0 if acut constraint hit)
       # so h4s[i,j] above is set to 1 whenever h is zero for that row and j is the first component that is zero.
 		}
-		h4m[j]=mean(h4s[,j])
+		h4m[j]=weighted.mean(h4s[,j], w = w)
 	}
 	return(h4m)
 }

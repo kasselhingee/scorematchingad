@@ -1,7 +1,7 @@
 #' @describeIn estimator_dir The score matching estimator using the minima-based Hyvarinen weight function
 #' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2).}
 #' @export
-estimator1_dir <- function(dirfit,acut)
+estimator1_dir <- function(dirfit,acut, w=rep(1, nrow(dirfit)))
 {
   n=nrow(dirfit)
   p=ncol(dirfit)
@@ -40,10 +40,10 @@ estimator1_dir <- function(dirfit,acut)
 	ind=indqind$ind
 	qind=indqind$qind
 
-  h4m <- h2onz2_mean(p, n, z, h, indh)
-  W <- calcW22(p, h, h4m)
+  h4m <- h2onz2_mean(p, n, z, h, indh, w = w)
+  W <- calcW22(p, h, h4m, w=w)
 
-	d1=t(((p-2)*mean(h^2)+h4m))
+	d1=t(((p-2)*weighted.mean(h^2, w)+h4m))
 
 
 	d2=matrix(0,n,p)
@@ -62,7 +62,7 @@ estimator1_dir <- function(dirfit,acut)
 	d3=matrix(0,1,p)
 	for (j in 1:p)
 	{
-		d3[j]=mean(d2[,j])
+		d3[j]=weighted.mean(d2[,j], w = w)
 	}
 
 

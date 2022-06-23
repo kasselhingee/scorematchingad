@@ -34,3 +34,16 @@ test_that("dirichmom matches for simulated weights", {
   est_direct <- dirichmom(m$sample, w = vw$w)
   expect_equal(est_direct, est_sim)
 })
+
+test_that("estimator1_dir matches for simulated weights", {
+  set.seed(1234)
+  m <- sec2_3model(1000, maxden = 4)
+  #simulate weights
+  set.seed(134)
+  vw <- virtualweights(m$sample)
+
+  acut = 0.1
+  est_sim <- estimator1_dir(vw$newY, acut = acut)
+  est_direct <- estimator1_dir(m$sample, acut = acut, w = vw$w)
+  expect_equal(est_direct, est_sim)
+})
