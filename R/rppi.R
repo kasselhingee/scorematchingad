@@ -41,11 +41,15 @@
 #' @export
 rhybrid <- function(n,p,beta0,ALs,bL,maxden){
   # a warning if maxden is high
-  if (maxden > 10){warning(paste(sprintf("'maxden' of %0.2f is high.", maxden),
-                                 "If this value is required for rhybrid() to run successfully",
-                                 "then it could mean that the Dirichlet component of the density",
-                                 "does not indicate the components that have concentrations near zero.",
-                                 "This behaviour could be due to the value of ALs (and maybe caused by bL too)."))}
+  if (maxden > 10){
+    rlang::warn(message = paste(sprintf("'maxden' of %0.2f is higher than 10.", maxden),
+                                "When rhybrid() requires a high 'maxden' it could mean that",
+                                "PPI density is hugely different from the Dirichlet component of the density.",
+                                "This could mean that the concentrations on the boundary from the Dirichlet component",
+                                "will be too narrow to be represented in simulatad samples."),
+                .frequency = "once",
+                .frequency_id = "highmaxden")
+  }
 
   maxdenin <- maxden
   # first simulate starting with a block of Dirichlet samples of size n.
