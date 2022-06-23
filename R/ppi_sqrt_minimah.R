@@ -18,7 +18,7 @@
 
 
 #' @export
-estimator1 <- function(prop,acut,incb, beta0)
+estimator1 <- function(prop,acut,incb, beta0, w=rep(1, nrow(prop)))
 {
   n <- nrow(prop) #number of samples
   p <- ncol(prop) #number of dimensions, although what happens when the beta need to be estimated?
@@ -61,16 +61,16 @@ estimator1 <- function(prop,acut,incb, beta0)
 	ind_qind <- indexcombinations(sp)
 	ind <- ind_qind$ind
 	qind <- ind_qind$qind
-	W <- calcW11(p, z, h, ind, qind)
+	W <- calcW11(p, z, h, ind, qind, w=w)
 
 	################### ##calculate d(6) ##################
-	ev <- calcd6_fixedbeta(p, sp, z, h, ind, qind, beta0)
+	ev <- calcd6_fixedbeta(p, sp, z, h, ind, qind, beta0, w=w)
 
 	################### ##calculate d(1) ##################
-	d <- calcd1A(p, sp, z, h, ind, qind)
+	d <- calcd1A(p, sp, z, h, ind, qind, w=w)
 
 	################### ##calculate d(2) ##################
-	dv <- calcd2A_minimah(sp, n, z, ind, qind, indh)
+	dv <- calcd2A_minimah(sp, n, z, ind, qind, indh, w=w)
 
 	################### ##calculate d total and scoring estimate ##################
 

@@ -8,7 +8,7 @@
 #' @param beta0 The fixed \eqn{beta_0}{beta0}.
 #' @return A vector of standard errors corresponding to each entry of the estimate by [estimator1()].
 #' @export
-estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
+estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0, w = rep(1, nrow(prop)))
 {
   n<-nrow(prop)
   p<-ncol(prop)
@@ -86,13 +86,12 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 		{
 			for (j in 1:p)
 			{
-				if (j==ind[1,i]){BD[i,j]=mean(4*h[k]^2*z[k,ind[2,i]]^2)}
-				else if (j==ind[2,i]){BD[i,j]=mean(4*h[k]^2*z[k,ind[1,i]]^2)}
+				if (j==ind[1,i]){BD[i,j]=4*h[k]^2*z[k,ind[2,i]]^2}
+				else if (j==ind[2,i]){BD[i,j]=4*h[k]^2*z[k,ind[1,i]]^2}
 			}
 		}
 		BD_big[1:qind,1:p,k]=BD
 	}
-
 
 	CD_big=array(0, dim=c(sp, p, n))
 	for (k in 1:n)
@@ -100,7 +99,7 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 		D2=matrix(0,1,sp)
 		for (j in 1:sp)
 		{
-			D2[j]=mean(2*(h[k]^2))
+			D2[j]=2*(h[k]^2)
 		}
 		CD0=diag(as.vector(D2))
 		CD=matrix(0,sp,p)
@@ -117,7 +116,7 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 		{
 			for (j in 1:p)
 			{
-				AD2[i,j]=4*mean((h[k]^2)*z[k,i]^4)
+				AD2[i,j]=4*((h[k]^2)*z[k,i]^4)
 			}
 		}
 		AD2_big[1:sp,1:p,k]=AD2
@@ -133,7 +132,7 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 		{
 			for (j in 1:p)
 			{
-				BD2[i,j]=8*mean((h[k]^2)*(z[k,ind[1,i]]^2*z[k,ind[2,i]]^2))
+				BD2[i,j]=8*(h[k]^2)*(z[k,ind[1,i]]^2*z[k,ind[2,i]]^2)
 			}
 		}
 		BD2_big[1:qind,1:p,k]=BD2
@@ -148,7 +147,7 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 		{
 			for (j in 1:p)
 			{
-				CD2[i,j]=2*mean((h[k]^2)*z[k,i]^2)
+				CD2[i,j]=2*(h[k]^2)*z[k,i]^2
 			}
 		}
 		CD2_big[1:sp,1:p,k]=CD2
@@ -474,9 +473,9 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0)
 		diff[1:num1,k]=t(t(dm[1:num1,k]))-W[1:num1,1:num1]%*%estimate1
 	}
 
-	Sig0=(diff[1:num1,]%*%t(diff[1:num1,]))/n
+	Sig0=(diff[1:num1,]%*%t(diff[1:num1,]))/sum(w)
 	Gam0=W_est[1:num1,1:num1]
-	var0=solve(Gam0)%*%Sig0%*%solve(Gam0)/n
+	var0=solve(Gam0)%*%Sig0%*%solve(Gam0)/sum(w)
 
 
 	std=sqrt(diag(var0))
