@@ -136,7 +136,7 @@ format(volumes/totalvol, digits = 3)
 sprintf("All y~0 volume is %0.3f", (volumes[["other y~0"]] + volumes[["z~1"]]) / totalvol)
 ```
 
-The mass with y<=`r distfromo` is so small. There is about the same mass in a similar-sized area in the centre of the simplex. For 1000 points, on average only 10 will be in the boundary region, and this will appear to have a similar amount to same-sized regions interior to the simplex.
+The mass with y<=`r distfromo` is about the same as a similar-sized area in the centre of the simplex. For 1000 points, on average only 10 will be in the boundary region, and this will appear to have a similar amount to same-sized regions interior to the simplex.
 
 ```{r integrateregions_tinydistfromo}
 distfromo <- 1E-3
@@ -156,7 +156,7 @@ format(volumes/totalvol, digits = 3)
 sprintf("All y~0 volume is %0.4f", (volumes[["other y~0"]] + volumes[["z~1"]]) / totalvol)
 ```
 
-The mass with y<=`r distfromo` is so small. Furthermore, there is about the same mass in a similar-sized area in the centre of the simplex. For 1000 points, on average only 1 will be in the boundary region, and this will appear to have a similar amount to same-sized regions interior to the simplex. 
+The mass with y<=`r distfromo` is about the same as a similar-sized area in the centre of the simplex. For 1000 points, on average only 1 will be in the boundary region, and this will appear to have a similar amount to same-sized regions interior to the simplex. 
 
 
 ```{r integrateregions_tiniertinydistfromo}
@@ -177,10 +177,10 @@ format(volumes/totalvol, digits = 3)
 sprintf("All y~0 volume is %0.4g", (volumes[["other y~0"]] + volumes[["z~1"]]) / totalvol)
 ```
 
-The mass with y<=`r distfromo` is 30% larger than the mass of a similar sized rectangle in the interior of the simplex. If one simulated enough, one would expect to see more points in the boundary rectangle than the interior (or nearly boundary) rectangle. However the mass of 2E-5 is so small that on average a sample of 50000 points will have only 1 point in the boundary region.
+The mass with y<=`r distfromo` is 30% larger than the mass of a similar sized rectangle in the interior of the simplex. If one simulated enough, one would expect to see more points in the boundary rectangle than the interior (or nearly boundary) rectangle. However, the mass of 2E-5 is so small that on average a sample of 50000 points will have only 1 point in the boundary region.
 
 ## Conclusion
-The second $A_L$ is such that the concentration of mass at $y=0$ is so narrow that well over 50000 points would be needed to detect it.
+The second $A_L$ is such that the concentration of mass at $y=0$ is so narrow (and containting little probability mass) that well over 50000 points would be needed to detect it.
 
 Is there a way I can reliably anticipate when this will happen from the value of $A_L$, without simulation?
 
