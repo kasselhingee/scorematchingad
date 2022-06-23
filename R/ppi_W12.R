@@ -1,17 +1,17 @@
 
-calcd6_fixedbeta <- function(p, sp, z, h, ind, qind, beta0){
-  Wnew <- calcW12(p, sp, z, h, ind, qind)
+calcd6_fixedbeta <- function(p, sp, z, h, ind, qind, beta0, w = rep(1, nrow(z))){
+  Wnew <- calcW12(p, sp, z, h, ind, qind, w=w)
 	pi2=1+2*beta0
 
 	ev=-1*Wnew%*%pi2
 	return(ev)
 }
 
-calcW12 <- function(p, sp, z, h, ind, qind){
+calcW12 <- function(p, sp, z, h, ind, qind, w = rep(1, nrow(z))){
 	D1=matrix(0,1,sp)
 	for (j in 1:sp)
 	{
-		D1[j]=mean(4*(h^2)*z[,j]^2)
+		D1[j]=weighted.mean(4*(h^2)*z[,j]^2, w=w)
 	}
 	AD1=diag(as.vector(D1))
 	AD=matrix(0,sp,p)
@@ -24,8 +24,8 @@ calcW12 <- function(p, sp, z, h, ind, qind){
 	{
 		for (j in 1:p)
 		{
-			if (j==ind[1,i]){BD[i,j]=mean(4*h^2*z[,ind[2,i]]^2)}
-			else if (j==ind[2,i]){BD[i,j]=mean(4*h^2*z[,ind[1,i]]^2)}
+			if (j==ind[1,i]){BD[i,j]=weighted.mean(4*h^2*z[,ind[2,i]]^2, w=w)}
+			else if (j==ind[2,i]){BD[i,j]=weighted.mean(4*h^2*z[,ind[1,i]]^2, w=w)}
 		}
 	}
 
@@ -33,7 +33,7 @@ calcW12 <- function(p, sp, z, h, ind, qind){
 	D2=matrix(0,1,sp)
 	for (j in 1:sp)
 	{
-		D2[j]=mean(2*(h^2))
+		D2[j]=weighted.mean(2*(h^2), w = w)
 	}
 	CD0=diag(as.vector(D2))
 	CD=matrix(0,sp,p)
@@ -45,7 +45,7 @@ calcW12 <- function(p, sp, z, h, ind, qind){
 	{
 		for (j in 1:p)
 		{
-			AD2[i,j]=4*mean((h^2)*z[,i]^4)
+			AD2[i,j]=4*weighted.mean((h^2)*z[,i]^4, w = w)
 		}
 	}
 
@@ -54,7 +54,7 @@ calcW12 <- function(p, sp, z, h, ind, qind){
 	{
 		for (j in 1:p)
 		{
-			BD2[i,j]=8*mean((h^2)*(z[,ind[1,i]]^2*z[,ind[2,i]]^2))
+			BD2[i,j]=8*weighted.mean((h^2)*(z[,ind[1,i]]^2*z[,ind[2,i]]^2), w=w)
 		}
 	}
 
@@ -63,7 +63,7 @@ calcW12 <- function(p, sp, z, h, ind, qind){
 	{
 		for (j in 1:p)
 		{
-			CD2[i,j]=2*mean((h^2)*z[,i]^2)
+			CD2[i,j]=2*weighted.mean((h^2)*z[,i]^2, w=w)
 		}
 	}
 

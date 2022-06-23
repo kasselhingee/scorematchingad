@@ -1,5 +1,5 @@
 #' @description Calculated d(2)A for when the weight function h is a minimum version
-calcd2A_minimah <- function(sp, n, z, ind, qind, indh){
+calcd2A_minimah <- function(sp, n, z, ind, qind, indh, w = rep(1, nrow(z))){
 	dv_A=matrix(0,n,sp)
 	for (i in 1:n)
 	{
@@ -13,7 +13,7 @@ calcd2A_minimah <- function(sp, n, z, ind, qind, indh){
 	dv_A_mean=matrix(0,1,sp)
 	for (j in 1:sp)
 	{
-		dv_A_mean[j]=mean(dv_A[,j])
+		dv_A_mean[j]=weighted.mean(dv_A[,j], w = w)
 	}
 
 
@@ -31,7 +31,7 @@ calcd2A_minimah <- function(sp, n, z, ind, qind, indh){
 	dv_B_mean=matrix(0,1,qind)
 	for (j in 1:qind)
 	{
-		dv_B_mean[j]=mean(dv_B[,j])
+		dv_B_mean[j]=weighted.mean(dv_B[,j], w=w)
 	}
 
 	dv_C=matrix(0,n,sp)
@@ -47,7 +47,7 @@ calcd2A_minimah <- function(sp, n, z, ind, qind, indh){
 	dv_C_mean=matrix(0,1,sp)
 	for (j in 1:sp)
 	{
-		dv_C_mean[j]=mean(dv_C[,j])
+		dv_C_mean[j]=weighted.mean(dv_C[,j], w = w)
 	}
 
 	dv=-t(cbind(dv_A_mean,dv_B_mean,dv_C_mean))

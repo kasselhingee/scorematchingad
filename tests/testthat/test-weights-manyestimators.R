@@ -17,6 +17,13 @@ set.seed(134)
 vw <- virtualweights(m$sample)
 acut = 0.1
 
+
+test_that("estimatorall1 matches for simulated weights", {
+  est_sim <- estimatorall1(vw$newY, acut = acut, w = rep(1, nrow(vw$newY)))
+  est_direct <- estimatorall1(m$sample, acut = acut, w = vw$w)
+  expect_equal(est_direct, est_sim)
+})
+
 test_that("estimator2_dir matches for simulated weights", {
   est_sim <- estimator2_dir(vw$newY, acut = acut, w = rep(1, nrow(vw$newY)))
   est_direct <- estimator2_dir(m$sample, acut = acut, w = vw$w)

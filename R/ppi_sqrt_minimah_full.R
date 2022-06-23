@@ -17,8 +17,8 @@
 #' @return A vector of the estimates for individual entries of \eqn{A_L}, \eqn{b_L}, and \eqn{\beta}{beta}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A_L}, then the upper triangle of \eqn{A_L}, then the elements of \eqn{b_L}, and then finally the estimates of \eqn{\beta}{beta}.
 
 #' @export
-estimatorall1 <- function(prop, acut, betap = NULL){
-  Wnd <- estimatorall1_Wnd(prop,acut,betap)
+estimatorall1 <- function(prop, acut, betap = NULL, w = rep(1, nrow(prop))){
+  Wnd <- estimatorall1_Wnd(prop,acut,betap, w = w)
 
   #scoring estimator
   # establish some constants
@@ -42,13 +42,13 @@ estimatorall1 <- function(prop, acut, betap = NULL){
   return(list(estimator1=quartic_sphere,W_est=Wnd$W))
 }
 
-estimatorall1_smo <- function(pi, prop,acut,betap = NULL){
-  Wnd <- estimatorall1_Wnd(prop,acut,betap)
+estimatorall1_smo <- function(pi, prop,acut,betap = NULL, w = rep(1, nrow(prop))){
+  Wnd <- estimatorall1_Wnd(prop,acut,betap, w = w)
   val <- 0.5 * t(pi) %*% Wnd$W %*% pi - t(Wnd$d) %*% pi
   return(drop(val))
 }
 
-estimatorall1_Wnd <- function(prop,acut,betap = NULL)
+estimatorall1_Wnd <- function(prop,acut,betap = NULL, w = rep(1, nrow(prop)))
 {
   n = nrow(prop)
   p = ncol(prop)
@@ -89,24 +89,24 @@ estimatorall1_Wnd <- function(prop,acut,betap = NULL)
 	ind_qind <- indexcombinations(sp)
 	ind <- ind_qind$ind
 	qind <- ind_qind$qind
-	W11 <- calcW11(p, z, h, ind, qind)
+	W11 <- calcW11(p, z, h, ind, qind, w = w)
 
 	################### ##calculate W12 ##################
-	W12 <- calcW12(p, sp, z, h, ind, qind) #the final column corresponds to the pth element of beta
+	W12 <- calcW12(p, sp, z, h, ind, qind, w = w) #the final column corresponds to the pth element of beta
 
 	################### ##calculate d(1) A ##################
-	d1A <- calcd1A(p, sp, z, h, ind, qind)
+	d1A <- calcd1A(p, sp, z, h, ind, qind, w = w)
 
 
 	################### ##calculate d(2) A ##################
-	d2A <- calcd2A_minimah(sp, n, z, ind, qind, indh)
+	d2A <- calcd2A_minimah(sp, n, z, ind, qind, indh, w = w)
 
 	############################################## ##dirichlet part ###############################################
-	h4m <- h2onz2_mean(p, n, z, h, indh)
-	Wdir <- calcW22(p, h, h4m)
+	h4m <- h2onz2_mean(p, n, z, h, indh, w = w)
+	Wdir <- calcW22(p, h, h4m, w = w)
 
 	##### Calculate d(1) B #####
-	d1=t(((p-2)*mean(h^2)+h4m))  #this is d(1)_B as defined in Section A.5
+	d1=t(((p-2)*weighted.mean(h^2, w = w)+h4m))  #this is d(1)_B as defined in Section A.5
 
   ##### Calculate d(2) B #####
 	# is sensitive to choise of weight function
@@ -126,7 +126,7 @@ estimatorall1_Wnd <- function(prop,acut,betap = NULL)
 	d3=matrix(0,1,p)
 	for (j in 1:p)
 	{
-		d3[j]=mean(d2[,j])
+		d3[j]=weighted.mean(d2[,j], w=w)
 	}
 
 	d=d1-t(d3)
