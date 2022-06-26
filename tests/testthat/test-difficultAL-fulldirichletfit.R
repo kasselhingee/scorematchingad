@@ -27,6 +27,7 @@ test_that("full ppi estimates are within 3 SE of beta for difficult AL with larg
   beta <- c(-0.7, -0.3, 0)
   set.seed(11112) #this seed leads to some ginormous elements for the second diagonal element of ALs
   suppressMessages(prop <- rhybrid(20000, p, beta, ALs, bL, 20)$samp3)
+  expect_equal(colMeans(prop), c(0.1, 0.99, 0.1), tolerance = 0.5)
 
   est_cppad <- ppi_cppad(prop, bL = bL, man = "sphere", weightname = "minsq",
                          acut = 0.01,
