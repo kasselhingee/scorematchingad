@@ -472,9 +472,9 @@ estimator1SE <- function(prop,acut,estimate1,W_est,incb, beta0, w = rep(1, nrow(
 
 		diff[1:num1,k]=t(t(dm[1:num1,k]))-W[1:num1,1:num1]%*%estimate1
 	}
-
-	Sig0=(diff[1:num1,]%*%t(diff[1:num1,]))/sum(w)
-	Gam0=W_est[1:num1,1:num1]
+        browser()
+	Sig0=(diff[1:num1,]%*%(t(diff[1:num1,]) * w))/sum(w) #this is variability matrix
+	Gam0=W_est[1:num1,1:num1] #W is the double derivative of the score matching objective, and thus the gradient of the 'score', and so W_est is the sensitivity matrix.
 	var0=solve(Gam0)%*%Sig0%*%solve(Gam0)/sum(w)
 
 
