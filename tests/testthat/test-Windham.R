@@ -1,4 +1,44 @@
-test_that("windam_diff gives correct params on simulated, no outlier, data. p=3", {
+test_that("windam_diff gives correct params on simulated data, with two outliers. p=3", {
+  set.seed(1273)
+  m <- sec2_3model(1000, maxden = 4)
+  outlier1 <- c(0.9, 0.9, 0.01)
+  outlier1 <- outlier1/sum(outlier1)
+  outlier2 <- c(0.9, 0.1, 0.01)
+  outlier2 <- outlier2/sum(outlier2)
+  m$sample <- rbind(m$sample, outlier1, outlier2)
+
+  #check non-robust estimates, excluding the outliers
+  est_simple <- estimatorall1(m$sample[1:1000, ], acut=0.1)
+  #get non-robust estimates with the outliers
+  est_simple_outlier <- estimatorall1(m$sample, acut=0.1)
+
+  #calculate robust estimates
+  inWW <- ppi_cppad_thetaprocessor(p, AL = TRUE, bL = FALSE, beta = FALSE) #all dimensions have negative beta.
+  ppildenfun <- function(sample, theta){
+    ppiparmats <- fromPPIparamvec(theta)
+    logden <- qldppi(sample, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
+    return(logden)
+  }
+  ppiestimator <- function(Y, weights, starttheta, fixedtheta){
+    estimatorall1(Y, acut = 0.1, w = weights)$estimator1
+  }
+
+  fixedtheta <- ppi_cppad_thetaprocessor(p, AL=FALSE, bL = FALSE, betaL = FALSE, betap = FALSE)
+  est <- windham_raw(prop = m$sample,
+                     cW = 0.1,
+                     ldenfun = ppildenfun,
+                     estimatorfun = ppiestimator,
+                     starttheta = m$theta * 0,
+                     fixedtheta = fixedtheta,
+                     inWW = inWW,
+                     originalcorrectionmethod = TRUE)
+
+  expect_equal(est$theta, est_simple$estimator1, tolerance = 0.1, ignore_attr = TRUE)
+  #below checks that the non-robust estimate with outliers is much different to the robust estimate
+  expect_error(expect_equal(est$theta, est_simple_outlier$estimator1, tolerance = 0.1, ignore_attr = TRUE))
+})
+
+test_that("windam_raw with estimatorall1 gives correct params on simulated, no outlier, data. p=3", {
   set.seed(1273)
   p = 3
   ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
