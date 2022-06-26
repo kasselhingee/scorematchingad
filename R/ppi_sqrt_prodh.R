@@ -17,7 +17,7 @@
 #' @return A vector of the estimates for individual entries in the matrices \eqn{A} and \eqn{b}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A} (except the last entry that is always zero for identifiability in the PPI model), then the upper triangle of \eqn{A} without the last column (again for identifiability) and finally the elements of \eqn{b} (except the last element, which is always 0 due to identifiability also) if `incb=1`.
 
 #' @export
-estimator2 <- function(prop,acut,incb, beta0)
+estimator2 <- function(prop,acut,incb, beta0, w = rep(1, nrow(prop)))
 {
   n=nrow(prop)
   p=ncol(prop)
@@ -41,11 +41,11 @@ estimator2 <- function(prop,acut,incb, beta0)
 	ind_qind <- indexcombinations(sp)
 	ind <- ind_qind$ind
 	qind <- ind_qind$qind
-  W <- calcW11(p, z, h, ind, qind)
+  W <- calcW11(p, z, h, ind, qind, w = w)
 	################### ##calculate d(6) ##################
-  ev <- calcd6_fixedbeta(p, sp, z, h, ind, qind, beta0)
+  ev <- calcd6_fixedbeta(p, sp, z, h, ind, qind, beta0, w=w)
 	################### ##calculate d(1) ##################
-  d <- calcd1A(p, sp, z, h, ind, qind)
+  d <- calcd1A(p, sp, z, h, ind, qind, w=w)
 	################### ##calculate d(2) ##################
 
 	ind2=matrix(1,n,1)
@@ -57,19 +57,19 @@ estimator2 <- function(prop,acut,incb, beta0)
 	dv_A=matrix(0,sp,1)
 	for (j in 1:sp)
 	{
-		dv_A[j]=mean(-2*4*ind2*(h^2)*(z[,j]^2*(1-p*z[,j]^2)))
+		dv_A[j]=weighted.mean(-2*4*ind2*(h^2)*(z[,j]^2*(1-p*z[,j]^2)), w=w)
 	}
 
 	dv_B=matrix(0,qind,1)
 	for (j in 1:qind)
 	{
-		dv_B[j]=2*mean((h^2)*ind2*(8*p*z[,ind[1,j]]^2*z[,ind[2,j]]^2-4*z[,ind[1,j]]^2-4*z[,ind[2,j]]^2))
+		dv_B[j]=2*weighted.mean((h^2)*ind2*(8*p*z[,ind[1,j]]^2*z[,ind[2,j]]^2-4*z[,ind[1,j]]^2-4*z[,ind[2,j]]^2), w=w)
 	}
 
 	dv_C=matrix(0,sp,1)
 	for (j in 1:sp)
 	{
-		dv_C[j]=mean(4*ind2*(h^2)*(p*z[,j]^2-1))
+		dv_C[j]=weighted.mean(4*ind2*(h^2)*(p*z[,j]^2-1), w=w)
 	}
 
 	dv=rbind(dv_A,dv_B,dv_C)

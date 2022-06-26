@@ -8,7 +8,7 @@
 #' @param beta0 The fixed \eqn{beta_0}{beta0}.
 #' @return A vector of standard errors corresponding to each entry of the estimate by [estimator2()].
 #' @export
-estimator2SE <- function(prop,acut,estimate2,W_est,incb, beta0)
+estimator2SE <- function(prop,acut,estimate2,W_est,incb, beta0, w=rep(1, nrow(prop)))
 {
 
 
@@ -443,9 +443,9 @@ estimator2SE <- function(prop,acut,estimate2,W_est,incb, beta0)
 
 	}
 
-	Sig0=(diff[1:num1,]%*%t(diff[1:num1,]))/n
+	Sig0=(diff[1:num1,]%*%(t(diff[1:num1,]) * w))/sum(w)
 	Gam0=W_est[1:num1,1:num1]
-	var0=solve(Gam0)%*%Sig0%*%solve(Gam0)/n
+	var0=solve(Gam0)%*%Sig0%*%solve(Gam0)/sum(w)
 
 
 	std=sqrt(diag(var0))

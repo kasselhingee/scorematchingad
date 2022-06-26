@@ -17,6 +17,16 @@ set.seed(134)
 vw <- virtualweights(m$sample)
 acut = 0.1
 
+test_that("estimator2 and SE matches for simulated weights", {
+  est_sim <- estimator2(vw$newY, acut = acut, incb = 1, beta0 = m$beta0)
+  est_direct <- estimator2(m$sample, acut = acut, incb = 1, beta0 = m$beta0, w = vw$w)
+  expect_equal(est_direct, est_sim)
+
+  estSE_sim <- estimator2SE(vw$newY,acut,est_sim$estimator2, est_sim$W_est, incb = 1, beta0 = m$beta0)
+  estSE_direct <- estimator2SE(m$sample, acut = acut, est_sim$estimator2, est_sim$W_est, incb = 1, beta0 = m$beta0, w = vw$w)
+  expect_equal(estSE_direct, estSE_sim)
+})
+
 test_that("multestimator matches for simulated weights", {
   #simulate sample from the multinomial PPI model:
   x=matrix(0,nrow(m$sample),m$p)
