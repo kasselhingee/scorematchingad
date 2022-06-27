@@ -5,7 +5,7 @@ test_that("full ppi estimates are with 3 SE for difficult AL with large maxden, 
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
   set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
-  expect_warning(prop <- rhybrid(1000, p, beta, ALs, bL, 35)$samp3) #rhybrid_singly took 1005 seconds, rhybrid() took 13seconds
+  suppressMessages(prop <- rhybrid(1000, p, beta, ALs, bL, 35)$samp3) #rhybrid_singly took 1005 seconds, rhybrid() took 13seconds
   #prop %>% as_tibble() %>% tidyr::pivot_longer(everything()) %>% ggplot() + facet_wrap(vars(name)) + geom_freqpoly(aes(x=value))
 
   est_cppad <- ppi_cppad(prop, bL = bL, man = "sphere", weightname = "minsq",
