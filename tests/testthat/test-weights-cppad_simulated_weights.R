@@ -1,15 +1,3 @@
-#helper function: given a sample, simulate integer weights, then return weights and a version where each measurement is replicated by the weight size
-virtualweights <- function(Y, sizefactor = 1.5){
-  ind <- sample(1:nrow(Y), ceiling(sizefactor*nrow(Y)), replace = TRUE)
-  weights <- rep(0, nrow(Y))
-  weights[as.numeric(names(table(ind)))] <- table(ind)
-  newsample <- Y[ind, ]
-  return(list(
-    newY = newsample,
-    w = weights
-  ))
-}
-
 set.seed(1234)
 m <- sec2_3model(1000, maxden = 4)
 #simulate weights
@@ -57,3 +45,4 @@ test_that("smest() for ppi with minsq match itself and estimatorall1", {
   cdabyppi:::expect_lt_v(abs(out_dir$par - directestimate$estimator1) / out_dir$SE, 1) #proxy for optimisation flatness
   cdabyppi:::expect_lt_v(abs(out_dir$par - m$theta) / out_dir$SE, 3)
 })
+
