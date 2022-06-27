@@ -34,5 +34,9 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights", {
   smohess_sim <- smobjhess(tapes$smotape, m$theta, vw$newY)
   smohess_direct <- smobjhess(tapes$smotape, m$theta, m$sample, w=vw$w)
   expect_equal(smohess_sim, smohess_direct)
+
+  smoSE_sim <- smestSE(tapes$smotape, m$theta, vw$newY)
+  smoSE_direct <- smestSE(tapes$smotape, m$theta, m$sample, w=vw$w)
+  expect_equal(smoSE_sim, smoSE_direct)
 })
 

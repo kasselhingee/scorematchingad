@@ -15,18 +15,21 @@ smestSE <- function(smofun, theta, utabl, ...){
 #' @describeIn smestSE Returns the matrix `invG/n`.
 smestSEsq <- function(smofun, theta, utabl,
                       Jsmofun_u = NULL, Hsmofun_u = NULL,
-                      uboundary = NULL, boundaryapprox = NULL, approxorder = NULL){
+                      uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
   sens <- -smobjhess(smofun, theta, utabl,
                      Hsmofun_u = Hsmofun_u,
                      uboundary = uboundary, boundaryapprox = boundaryapprox,
-                     approxorder = approxorder)
+                     approxorder = approxorder, w = w)
   gradsmoperpt <- smobjgrad_perpt(smofun, theta, utabl,
                   Jsmofun_u = Jsmofun_u,
                   uboundary = uboundary, boundaryapprox = boundaryapprox,
                   approxorder = approxorder)
 
-  vargradsmo <- cov(do.call(rbind, gradsmoperpt)) #SAMPLE estimate of population VARIANCE of gradsmo
+  if (is.null(w)){vargradsmo <- cov(do.call(rbind, gradsmoperpt))} #SAMPLE estimate of population VARIANCE of gradsmo
+  else {vargradsmo <- cov.wt(do.call(rbind, gradsmoperpt), wt = w)$cov}
   sensinv <- solve(sens)
   Ginfinv <- sensinv %*% vargradsmo %*% sensinv #inverse of the Godambe information matrix, also called the sandwich information matrix
-  return(Ginfinv / length(gradsmoperpt)) #results now in same units as estimates
+  if (is.null(w)){out <- Ginfinv/length(gradsmoperpt)}
+  else {out <- Ginfinv/sum(w)}
+  return(out) #results now in same units as estimates
 }
