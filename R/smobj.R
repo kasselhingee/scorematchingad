@@ -13,7 +13,7 @@
 #' @export
 smobj <- function(smofun, theta, utabl,
                   smofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
-                  stopifnan = FALSE){
+                  stopifnan = FALSE, w = NULL){
   sc_perpt_interior <- c()
   if (nrow(utabl) > 0){
     sc_perpt_interior <- lapply(1:nrow(utabl), function(i){
@@ -32,7 +32,8 @@ smobj <- function(smofun, theta, utabl,
     })
   }
   sc_perpt <- c(sc_perpt_interior, sc_perpt_boundary)
-  scmo <- mean(unlist(sc_perpt))
+  if (is.null(w)){scmo <- mean(unlist(sc_perpt))}
+  else {scmo <- weighted.mean(unlist(sc_perpt), w=w)}
   if (stopifnan && is.nan(scmo)){stop("smobj() generates a NaN")}
   return(scmo)
 }
@@ -47,11 +48,12 @@ smobj_b <- function(theta, ...){
 #' @export
 smobjgrad <- function(smofun, theta, utabl,
                       Jsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
-                      stopifnan = FALSE){
+                      stopifnan = FALSE, w = NULL){
   grad_perpt <- smobjgrad_perpt(smofun, theta, utabl,
                   Jsmofun_u = Jsmofun_u, uboundary = uboundary, boundaryapprox = boundaryapprox,
                   approxorder = approxorder)
-  grad <- colMeans(do.call(rbind, grad_perpt))
+  if (is.null(w)){grad <- colMeans(do.call(rbind, grad_perpt))}
+  else {grad <- apply(do.call(rbind, grad_perpt), MARGIN = 2, weighted.mean, w=w)}
   if (stopifnan && any(is.nan(grad))){stop("smobjgrad() generates a NaN")}
   return(grad)
 }
@@ -89,7 +91,7 @@ smobjgrad_b <- function(theta, ...){
 #' @export
 smobjhess <- function(smofun, theta, utabl,
                       Hsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
-                      stopifnan = FALSE){
+                      stopifnan = FALSE, w = NULL){
   hess_perpt_interior <- list()
   if (nrow(utabl) > 0){
     hess_perpt_interior <- lapply(1:nrow(utabl), function(i){
@@ -110,7 +112,8 @@ smobjhess <- function(smofun, theta, utabl,
 
   hess_perpt <- c(hess_perpt_interior, hess_perpt_boundary)
 
-  hess <- colMeans(do.call(rbind, hess_perpt))
+  if (is.null(w)){hess <- colMeans(do.call(rbind, hess_perpt))}
+  else {hess <- apply(do.call(rbind, hess_perpt), MARGIN = 2, weighted.mean, w=w)}
   dim(hess) <- rep(length(theta), 2)
   if (stopifnan && any(is.nan(hess))){stop("smobjhess() generates a NaN")}
   return(hess)
