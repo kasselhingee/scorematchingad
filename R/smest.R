@@ -15,7 +15,7 @@
 #'  at the estimate is less than 1E-20.
 #' @return The output from `Rcgmin::Rcgmin()`, the squared size of the gradient at the estimate, and the standard error estimates by `smestSE()`.
 #' @export
-smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL){
+smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
   if (!(is.null(uboundary) && is.null(boundaryapprox))){
     stopifnot((!is.null(uboundary)) && (!is.null(boundaryapprox))) #both need to be supplied
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))
@@ -48,6 +48,7 @@ smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary =
                         Jsmofun_u = Jsmofun_u,
                         uboundary = uboundary, boundaryapprox = boundaryapprox,
                         approxorder = approxorder,
+                        w = w,
                         stopifnan = TRUE,
                         control = control)
   if (out$convergence == 2){stop(paste(out$message, "Perhaps smobj() generates a NaN?"))}
@@ -57,11 +58,13 @@ smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary =
       smofun, theta = out$par, utabl,
       Jsmofun_u = Jsmofun_u, Hsmofun_u = Hsmofun_u,
       uboundary = uboundary, boundaryapprox = boundaryapprox,
-      approxorder = approxorder)})
+      approxorder = approxorder,
+      w = w)})
   gradatest <- smobjgrad(smofun, out$par, utabl,
                          Jsmofun_u = Jsmofun_u,
                          uboundary = uboundary, boundaryapprox = boundaryapprox,
-                         approxorder = approxorder)
+                         approxorder = approxorder,
+                         w = w)
   out$sqgradsize <- sum(gradatest)^2
   return(out)
 }

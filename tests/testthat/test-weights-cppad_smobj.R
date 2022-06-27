@@ -40,3 +40,20 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights", {
   expect_equal(smoSE_sim, smoSE_direct, tolerance = 1E-3)
 })
 
+test_that("smest() for ppi with minsq match itself and estimatorall1", {
+  psphere <- pmanifold("sphere")
+  pppi <- ptapell(rep(0.1, m$p), m$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, m$p), 1:length(m$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+
+  out_sim <- smest(smoppi, m$theta * 0 + 1, vw$newY, control = list(tol = 1E-15))
+  out_dir <- smest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-15), w = vw$w)
+  expect_equal(out_sim[names(out_sim) != "counts"], out_dir[names(out_sim) != "counts"], tolerance = 1E-3)
+
+  directestimate <- estimatorall1(m$sample, acut, w = vw$w)
+
+  expect_lt(out_dir$value,
+            smobj(smoppi, directestimate$estimator1, m$sample, w = vw$w) + 1E-5 * abs(out_dir$value))
+
+  cdabyppi:::expect_lt_v(abs(out_dir$par - directestimate$estimator1) / out_dir$SE, 1) #proxy for optimisation flatness
+  cdabyppi:::expect_lt_v(abs(out_dir$par - m$theta) / out_dir$SE, 3)
+})
