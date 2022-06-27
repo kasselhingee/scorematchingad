@@ -9,18 +9,19 @@
 #' vMF(sample, "smfull")
 #' vMF(sample, "Mardia")
 #' @export
-vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20)){
+vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20), w = rep(1, nrow(sample))){
   out <- NULL
-  if (method == "smfull"){out <- vMF_full(sample, km = km, control = control)}
+  if (method == "smfull"){out <- vMF_full(sample, km = km, control = control, w=w)}
   if (method == "Mardia"){
     stopifnot(is.null(km))
-    out <- vMF_Mardia(sample, control = control)
+    out <- vMF_Mardia(sample, control = control, w=w)
   }
+  if (is.null(out)){stop(sprintf("Method '%s' is not valid", method))}
   return(out)
 }
 
-vMF_Mardia <- function(sample, control = list(tol = 1E-20)){
-  mu <- colMeans(sample)
+vMF_Mardia <- function(sample, control = list(tol = 1E-20), w = rep(1, nrow(sample))){
+  mu <- apply(sample, MARGIN = 2, weighted.mean, w)
   mu <- mu/sqrt(sum(mu^2))
   Rtrans <- Directional::rotation(mu, c(1, rep(0, length(mu) - 1)))
   samplestd <- sample %*% t(Rtrans)
@@ -34,7 +35,7 @@ vMF_Mardia <- function(sample, control = list(tol = 1E-20)){
                         rep(1, p)/sqrt(p), intheta,
                         weightname = "ones",
                         verbose = FALSE)
-  out <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), samplestd, control = control)
+  out <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), samplestd, control = control, w = w)
   return(list(
     k = out$par,
     m = mu,
@@ -44,7 +45,7 @@ vMF_Mardia <- function(sample, control = list(tol = 1E-20)){
   ))
 }
 
-vMF_full <- function(sample, km = NULL, control = list(tol = 1E-20)){
+vMF_full <- function(sample, km = NULL, control = list(tol = 1E-20), w = w){
   p <- ncol(sample)
   if (is.null(km)){
     km <- rep(NA, p)
@@ -56,7 +57,7 @@ vMF_full <- function(sample, km = NULL, control = list(tol = 1E-20)){
                         rep(1, p)/sqrt(p), intheta,
                         weightname = "ones",
                         verbose = FALSE)
-  out <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample, control = control)
+  out <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample, control = control, w=w)
   theta <- intheta
   theta[is.na(intheta)] <- out$par
 
