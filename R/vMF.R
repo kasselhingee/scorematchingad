@@ -28,22 +28,22 @@ vMF_robust <- function(sample, km = NULL, method = "smfull", control = list(tol 
     return(drop(Directional::dvmf(sample, k, m, logden = TRUE)))
   }
   if (method == "smfull"){
-    if (!is.null(km)){fixedtheta <- !is.na(km)}
-    else {fixedtheta <- rep(FALSE, ncol(sample))}
+    if (!is.null(km)){isfixed <- !is.na(km)}
+    else {isfixed <- rep(FALSE, ncol(sample))}
     starttheta <- vMF_full(sample, km = km, control = control)$km
-    estimator <- function(Y, weights, starttheta, fixedtheta){
+    estimator <- function(Y, starttheta, isfixed, w){
       km <- rep(NA, ncol(Y))
-      km[fixedtheta] <- starttheta[fixedtheta]
+      km[isfixed] <- starttheta[isfixed]
       out <- vMF_full(sample, km = km,
-                      control = control, w=weights, starttheta = starttheta)
+                      control = control, w=w, starttheta = starttheta)
       return(out$km)
     }
   } else if (method == "Mardia"){
     stopifnot(is.null(km))
-    fixedtheta <- rep(FALSE, ncol(sample))
+    isfixed <- rep(FALSE, ncol(sample))
     starttheta <- vMF_Mardia(sample, control = control)$km
-    estimator <- function(Y, weights, starttheta, fixedtheta){
-      out <- vMF_Mardia(sample, control = control, w=weights)
+    estimator <- function(Y, starttheta, isfixed, w){
+      out <- vMF_Mardia(sample, control = control, w=w)
       return(out$km)
     }
   }
@@ -53,7 +53,7 @@ vMF_robust <- function(sample, km = NULL, method = "smfull", control = list(tol 
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
                      starttheta = starttheta,
-                     fixedtheta = fixedtheta,
+                     isfixed = isfixed,
                      inWW = inWW,
                      originalcorrectionmethod = TRUE)
   return(est)
