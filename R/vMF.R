@@ -30,28 +30,29 @@ vMF_robust <- function(sample, km = NULL, method = "smfull", control = list(tol 
   if (method == "smfull"){
     if (!is.null(km)){fixedtheta <- !is.na(km)}
     else {fixedtheta <- rep(FALSE, ncol(sample))}
-    browser()
     starttheta <- vMF_full(sample, km = km, control = control)$km
     estimator <- function(Y, weights, starttheta, fixedtheta){
-      out <- vMF_full(sample, km = starttheta * fixedtheta,
-                      control = control, w=w, starttheta)
+      km <- rep(NA, ncol(Y))
+      km[fixedtheta] <- starttheta[fixedtheta]
+      out <- vMF_full(sample, km = km,
+                      control = control, w=weights, starttheta = starttheta)
       return(out$km)
     }
   } else if (method == "Mardia"){
     stopifnot(is.null(km))
     fixedtheta <- rep(FALSE, ncol(sample))
-    starttheta <- vMF_Mardia(sample, control = control)
+    starttheta <- vMF_Mardia(sample, control = control)$km
     estimator <- function(Y, weights, starttheta, fixedtheta){
-      out <- vMF_Mardia(sample, control = control, w=w)
+      out <- vMF_Mardia(sample, control = control, w=weights)
       return(out$km)
     }
   }
 
-  est <- windham_raw(prop = m$sample,
+  est <- windham_raw(prop = sample,
                      cW = cW,
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
-                     starttheta = km,
+                     starttheta = starttheta,
                      fixedtheta = fixedtheta,
                      inWW = inWW,
                      originalcorrectionmethod = TRUE)

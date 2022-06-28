@@ -104,23 +104,45 @@ test_that("vMF() robust fitting works on dimension 5", {
   set.seed(123)
   p <- 5
   k <- 3
-  m <- runif(p, min = -10, 10)
+  m <- rep(1, p) #uniform direction poorness due to outliers is evenly distributed in each element
   m <- m / sqrt(sum(m^2))
   km <-  k * m
+  set.seed(121)
   sample <- Directional::rvmf(1000, m, k)
-  #full method
-  out <- vMF(sample, method = "smfull", control = list(tol = 1E-10))
-  cdabyppi:::expect_lt_v(abs(out$km - km), 3 * out$SE$km)
-  #full with a fixed components
+  # add outliers
+  set.seed(2151)
+  outliers <- Directional::rvmf(100, -m, k)
+  sample_o <- rbind(sample, outliers)
+  #full method, not robust
+  out1 <- vMF(sample_o, method = "smfull", control = list(tol = 1E-10))
+  #full method, robust, expect to be closer to true value (due to the outliers)
+  out2 <- vMF_robust(sample_o, method = "smfull", control = list(tol = 1E-10), cW = 0.1)
+  expect_true(all(abs(out2$theta - km) < abs(out1$km - km)))
+
+  #check that fixed components remain fixed for full method
   inkm <- km
   inkm[2] <- NA
   inkm[p] <- NA
-  out <- vMF(sample, km = inkm, method = "smfull")
-  cdabyppi:::expect_lte_v(abs(out$km - km), 3 * out$SE$km)
-  expect_equal(out$SE$km[!is.na(inkm)], rep(0, sum(!is.na(inkm))))
+  out <- vMF_robust(sample_o, km = inkm, method = "smfull")
+  expect_equal(out$theta[!is.na(inkm)], km[!is.na(inkm)])
 
   #Mardia method
-  out <- vMF(sample, method = "Mardia")
-  expect_equal(out$m , m, tolerance = 1E-1) #moment estimate part
-  cdabyppi:::expect_lt_v(abs(out$k - k), 3 * out$SE$k)
+  out1 <- vMF(sample_o, method = "Mardia")
+  #full method, robust, expect to be closer to true value (due to the outliers)
+  out2 <- vMF_robust(sample_o, method = "Mardia", cW = 0.1)
+  expect_true(all(abs(out2$theta - km) < abs(out1$km - km)))
+})
+
+
+test_that("dmovMF() and dmvf() are NOT equal", {
+  set.seed(123)
+  p <- 5
+  k <- 3
+  m <- runif(p, min = -10, 10)
+  m <- m / sqrt(sum(m^2))
+  km <-  k * m
+  sample <- Directional::rvmf(5, m, k)
+
+  expect_error(expect_equal(movMF::dmovMF(sample, km, log = TRUE),
+               Directional::dvmf(sample, k, m, logden = TRUE)))
 })
