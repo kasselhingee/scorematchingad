@@ -52,10 +52,7 @@ vMF_robust <- function(sample, km = NULL, method = "smfull", control = list(tol 
                      fixedtheta = fixedtheta,
                      inWW = inWW,
                      originalcorrectionmethod = TRUE)
-
-
-
-  return(out)
+  return(est)
 }
 
 vMF_Mardia <- function(sample, control = list(tol = 1E-20), w = rep(1, nrow(sample))){
