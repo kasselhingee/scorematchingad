@@ -5,9 +5,9 @@
 #' @param control Control parameters passed to `Rcgmin::Rcgmin()`
 #' @param method Either `Mardia` for the hybrid score matching estimate from Mardia et al 2016 or `smfull` for a full score matching estimate.
 #' @examples
-#' sample <- movMF::rmovMF(100, 3 * c(1, -1) / sqrt(2))
-#' vMF(sample, "smfull")
-#' vMF(sample, "Mardia")
+#' sample <- Directional::rvmf(100, c(1, -1) / sqrt(2), 3)
+#' vMF(sample, method = "smfull")
+#' vMF(sample, method = "Mardia")
 #' @export
 vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20), w = rep(1, nrow(sample))){
   out <- NULL
@@ -23,12 +23,15 @@ vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20
 vMF_robust <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20), cW = 0.1){
   inWW <- rep(TRUE, ncol(sample))
   ldenfun <- function(sample, theta){ #here theta is km
-    return(dmovMF(sample, theta, log = TRUE))
+    k <- sqrt(sum(theta^2))
+    m <- theta/k
+    return(drop(Directional::dvmf(sample, k, m, logden = TRUE)))
   }
   if (method == "smfull"){
-    if (is.null(km)){fixedtheta <- !is.na(km)}
+    if (!is.null(km)){fixedtheta <- !is.na(km)}
     else {fixedtheta <- rep(FALSE, ncol(sample))}
-    starttheta <- vMF_full(sample, km = km, control = control)
+    browser()
+    starttheta <- vMF_full(sample, km = km, control = control)$km
     estimator <- function(Y, weights, starttheta, fixedtheta){
       out <- vMF_full(sample, km = starttheta * fixedtheta,
                       control = control, w=w, starttheta)
@@ -80,7 +83,7 @@ vMF_Mardia <- function(sample, control = list(tol = 1E-20), w = rep(1, nrow(samp
   ))
 }
 
-vMF_full <- function(sample, km = NULL, control = list(tol = 1E-20), w = w, starttheta = NULL){
+vMF_full <- function(sample, km = NULL, control = list(tol = 1E-20), w = NULL, starttheta = NULL){
   p <- ncol(sample)
   if (is.null(km)){
     km <- rep(NA, p)
