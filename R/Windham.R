@@ -33,16 +33,16 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
     return(logden)
   }
 
-  ppiestimator <- function(Y, weights, starttheta, fixedtheta){
-          estimatorlog_weight(prop = prop, betap = starttheta[length(starttheta)], weightW = weights)$ppi}
+  ppiestimator <- function(Y, starttheta, isfixed, w){
+          estimatorlog_weight(prop = prop, betap = starttheta[length(starttheta)], weightW = w)$ppi}
 
-  fixedtheta <- ppi_cppad_thetaprocessor(p, AL=FALSE, bL = TRUE, betaL = FALSE, betap = TRUE)
+  isfixed <- ppi_cppad_thetaprocessor(p, AL=FALSE, bL = TRUE, betaL = FALSE, betap = TRUE)
   est <- windham_raw(prop = prop,
                cW = cW,
                ldenfun = ppildenfun,
                estimatorfun = ppiestimator,
                starttheta = theta,
-               fixedtheta = fixedtheta,
+               isfixed = isfixed,
                inWW = inWW,
                originalcorrectionmethod = originalcorrectionmethod)
 

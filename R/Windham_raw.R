@@ -43,68 +43,68 @@ WindhamWeights <- function(ldenfun, sample, theta, cW, inWW){
 #' @param prop compositional data (n by p matrix)
 #' @param cW the robustness tuning constant c
 #' @param starttheta
-#' @param fixedtheta Boolean vector.
+#' @param isfixed Boolean vector.
 #' TRUE if parameter is fixed at the starting value.
 #' FALSE if the parameter is to be estimated.
 #' @param inWW Boolean vector.
 #' TRUE if the parameter is used in the Windham weights.
 #' FALSE if the parameter is set to zero in the Windham weights.
-#' @param estimator A function f(Y, weights, theta, fixedtheta) that generates parameter estimates given
-#' a sample Y,
-#' a vector of weights
-#' a vector of theta values
-#' a boolean vector. FALSE means that element of theta is estimated.
+#' @param estimator A function f(Y, weights, theta, isfixed) that generates parameter estimates given
+#' Y = a sample,
+#' starthteta = a vector of theta values to start the iteration
+#' isfixed = a vecotr of booleans. FALSE means that element of theta is estimated,
+#' w = a vector of weights
 #' TRUE means that element of theta is fixed at the value in `theta`.
 #' @param ... Arguments passed to `estimator`.
 #' @export
-windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta, inWW, originalcorrectionmethod = TRUE, ...)
+windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, inWW, originalcorrectionmethod = TRUE, ...)
 {
-  if(!all(names(formals(estimatorfun)[1:4]) == c("Y", "weights", "starttheta", "fixedtheta"))){
-    stop("First four arguments of estimatorfun must be called: Y, weights, starttheta and fixedtheta.")
+  if(!all(names(formals(estimatorfun)[1:4]) == c("Y",  "starttheta", "isfixed", "w"))){
+    stop("First four arguments of estimatorfun must be called: Y, starttheta, isfixed, and w.")
   }
-  #all(inWW * fixedtheta == 0) #every fixed (not fitted) parameter should not be in the Windham Weight
+  #all(inWW * isfixed == 0) #every fixed (not fitted) parameter should not be in the Windham Weight
 
   if (!originalcorrectionmethod){
     tauc <- WindhamCorrection(cW, inWW)
     taucinv <- solve(tauc)
   }
 
-  myfun <- function(unfixedtheta){
-    stopifnot(length(unfixedtheta) == sum(!fixedtheta))
-    previous <- unfixedtheta
+  myfun <- function(unisfixed){
+    stopifnot(length(unisfixed) == sum(!isfixed))
+    previous <- unisfixed
     fulltheta <- starttheta
-    fulltheta[!fixedtheta] <- unfixedtheta
+    fulltheta[!isfixed] <- unisfixed
     if (originalcorrectionmethod){
       theta <- Windham_raw_newtheta_original(prop = prop, cW = cW,
           ldenfun = ldenfun,
           estimatorfun = estimatorfun,
           theta = fulltheta,
-          fixedtheta = fixedtheta,
+          isfixed = isfixed,
           inWW = inWW)
     } else {
       theta <- Windham_raw_newtheta(prop = prop, cW = cW,
           ldenfun = ldenfun,
           estimatorfun = estimatorfun,
           theta = fulltheta,
-          fixedtheta = fixedtheta,
+          isfixed = isfixed,
           inWW = inWW,
           taucinv = taucinv)
     }
-    unfixedtheta <- theta[!fixedtheta]
-    return(unfixedtheta)
+    unisfixed <- theta[!isfixed]
+    return(unisfixed)
   }
 
   rlang::warn("Using the FixedPoint package - should investigate alternatives",
               .frequency = "once",
               .frequency_id = "FixedPoint_package")
-  est <- FixedPoint::FixedPoint(myfun, starttheta[!fixedtheta],
+  est <- FixedPoint::FixedPoint(myfun, starttheta[!isfixed],
                     Method = "VEA",
                     ConvergenceMetricThreshold = 1E-10)
   nevals <- ncol(est$Inputs)
   #print(abs(est$Inputs[11, nevals] -
   #      est$Inputs[11, nevals - 1]))
   theta <- starttheta
-  theta[!fixedtheta] <- est$FixedPoint
+  theta[!isfixed] <- est$FixedPoint
 
   return(list(theta = theta, 
            optim = list(FixedPoint = est$FixedPoint,
@@ -114,7 +114,7 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, fixedtheta,
 
 
 #new theta using Kassel's correction
-Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, fixedtheta, inWW, taucinv, ...){
+Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, isfixed, inWW, taucinv, ...){
    # create the vector of weights
    weight_vec <- WindhamWeights(ldenfun = ldenfun, sample = prop,
                  theta = theta, cW, inWW)
@@ -124,8 +124,8 @@ Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, fixedth
 # a vector of weights
 # a vector of theta values (where NA are estimated, non-NA are fixed - as in buildsmotape)
 # a vector of starting values for the estimator.
-   theta <- estimatorfun(Y = prop, weights = weight_vec,
-                starttheta = theta, fixedtheta = fixedtheta, ...)
+   theta <- estimatorfun(Y = prop, starttheta = theta, isfixed = isfixed, 
+                         w = weight_vec, ...)
 
    ### correct estimates (Step 4 in Notes5.pdf)
    theta <- taucinv %*% theta
@@ -133,7 +133,7 @@ Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, fixedth
 }
 
 #new theta using original correction
-Windham_raw_newtheta_original <- function(prop, cW, ldenfun, estimatorfun, theta, fixedtheta, inWW, ...){
+Windham_raw_newtheta_original <- function(prop, cW, ldenfun, estimatorfun, theta, isfixed, inWW, ...){
    # create the vector of weights
    weight_vec <- WindhamWeights(ldenfun = ldenfun, sample = prop,
                  theta = theta, cW, inWW)
@@ -141,8 +141,8 @@ Windham_raw_newtheta_original <- function(prop, cW, ldenfun, estimatorfun, theta
    # generate the tuning constants dbeta, dA
    dtheta <- -cW * theta * (!inWW)
    #calculate estimate:
-   theta <- estimatorfun(Y = prop, weights = weight_vec,
-                starttheta = theta, fixedtheta = fixedtheta, ...)
+   theta <- estimatorfun(Y = prop, starttheta = theta, isfixed = isfixed, 
+                         w = weight_vec, ...)
 
    ### correct estimates (Step 4 in Notes5.pdf)
    theta <- (theta - dtheta)/(cW+1)
