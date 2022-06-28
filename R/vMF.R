@@ -20,6 +20,44 @@ vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20
   return(out)
 }
 
+vMF_robust <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20), cW = 0.1){
+  inWW <- rep(TRUE, ncol(sample))
+  ldenfun <- function(sample, theta){ #here theta is km
+    return(dmovMF(sample, theta, log = TRUE))
+  }
+  if (method == "smfull"){
+    if (is.null(km)){fixedtheta <- !is.na(km)}
+    else {fixedtheta <- rep(FALSE, ncol(sample))}
+    starttheta <- vMF_full(sample, km = km, control = control)
+    estimator <- function(Y, weights, starttheta, fixedtheta){
+      out <- vMF_full(sample, km = starttheta * fixedtheta,
+                      control = control, w=w, starttheta)
+      return(out$km)
+    }
+  } else if (method == "Mardia"){
+    stopifnot(is.null(km))
+    fixedtheta <- rep(FALSE, ncol(sample))
+    starttheta <- vMF_Mardia(sample, control = control)
+    estimator <- function(Y, weights, starttheta, fixedtheta){
+      out <- vMF_Mardia(sample, control = control, w=w)
+      return(out$km)
+    }
+  }
+
+  est <- windham_raw(prop = m$sample,
+                     cW = cW,
+                     ldenfun = ldenfun,
+                     estimatorfun = estimator,
+                     starttheta = km,
+                     fixedtheta = fixedtheta,
+                     inWW = inWW,
+                     originalcorrectionmethod = TRUE)
+
+
+
+  return(out)
+}
+
 vMF_Mardia <- function(sample, control = list(tol = 1E-20), w = rep(1, nrow(sample))){
   mu <- apply(sample, MARGIN = 2, weighted.mean, w)
   mu <- mu/sqrt(sum(mu^2))
@@ -45,7 +83,7 @@ vMF_Mardia <- function(sample, control = list(tol = 1E-20), w = rep(1, nrow(samp
   ))
 }
 
-vMF_full <- function(sample, km = NULL, control = list(tol = 1E-20), w = w){
+vMF_full <- function(sample, km = NULL, control = list(tol = 1E-20), w = w, starttheta = NULL){
   p <- ncol(sample)
   if (is.null(km)){
     km <- rep(NA, p)
@@ -57,7 +95,9 @@ vMF_full <- function(sample, km = NULL, control = list(tol = 1E-20), w = w){
                         rep(1, p)/sqrt(p), intheta,
                         weightname = "ones",
                         verbose = FALSE)
-  out <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample, control = control, w=w)
+  if (!is.null(starttheta)){starttheta <- rep(0.1, sum(is.na(intheta)))}
+  else {starttheta <- starttheta[is.na(intheta)]}
+  out <- smest(tapes$smotape, starttheta, sample, control = control, w=w)
   theta <- intheta
   theta[is.na(intheta)] <- out$par
 

@@ -130,7 +130,7 @@ qldppi <- function(prop,beta0,ALs,bL){
   sp <- p - 1
   if (!("matrix" %in% class(bL))){bL <- as.matrix(bL, ncol = 1)}
   stopifnot(isTRUE(ncol(bL) == 1))
-  uAstaru <- ppi_uAstaru(prop[,-p], ALs, bL) #result is a vector
+  uAstaru <- ppi_uAstaru(prop[,-p, drop = FALSE], ALs, bL) #result is a vector
   if (all(beta0 == 0)){return(as.vector(uAstaru))} #skip the computation below when beta0 is zero
   if (!("matrix" %in% class(beta0))){beta0 <- as.matrix(beta0, ncol = 1)}
   logprop <- log(prop)

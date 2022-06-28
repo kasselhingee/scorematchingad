@@ -1,11 +1,15 @@
 ---
 title: "Effect of PPI's AL on Marginal Distributions"
-author: "Kassel Hingee"
+author: "Kassel Hingee with advice from Janice Scealy"
 date: "22/06/2022"
 output: html_document
 ---
 
-The effect of the matrix $A_L$ on marginal distributions can be large, and override the Dirichlet component of the density. A large `maxden` required for `rhybrid()` would be symptomatic of peaks near zero occurring at odds to the Dirichlet component of the density.
+The effect of the matrix $A_L$ on marginal distributions can be large, and override the Dirichlet component of the density. This is because the PPI density behaves a bit like a multivariate Gaussian with inverse covariance matrix $A$ (given by $A_L$) with mean $b$. If the mean is far away from the simplex then the PPI distribution does strange things, much like a truncated normal does. (If the mean is in the centre of the simplex then the Dirichlet compenent of the PPI model doesn't matter much - the Dirichlet parameters are not constrained; in fact the full PPI model makes most sense when the mean from $A_L$ is close to the boundary of the simplex).
+
+
+
+A large `maxden` required for `rhybrid()` would be symptomatic of peaks near zero occurring at odds to the Dirichlet component of the density.
 
 To the credit of the sandwich method for standard errors - the estimates have thus far mostly been within 3 standard errors of the true values (the standard errors have been huge).
 
@@ -58,7 +62,7 @@ xval <- seq(0,1, by = 0.001)
 crds <- expand.grid(x = xval, y = xval)
 crds$z <- 1 - rowSums(crds)
 crds <- crds[crds$z>=0, ]
-crds$uAu <- t(qldppi(as.matrix(crds), beta0 = rep(0, p), ALs = ALs, bL = bL))
+crds$uAu <- qldppi(as.matrix(crds), beta0 = rep(0, p), ALs = ALs, bL = bL)
 crds$qldval <- qldppi(as.matrix(crds[, 1:3]), beta0 = beta, ALs = ALs, bL = bL)
 crds$betalogu <- qldppi(as.matrix(crds[, 1:3]), beta0 = beta, ALs = matrix(0, p-1,p-1), bL = bL)
 
@@ -76,7 +80,7 @@ xval <- seq(0, 1E-14, by = 1E-15)
 crds <- expand.grid(x = 1-xval - 0.01, y = xval)
 crds$z <- 1 - rowSums(crds)
 crds <- crds[crds$z>=0, ]
-crds$uAu <- t(qldppi(as.matrix(crds), beta0 = rep(0, p), ALs = ALs, bL = bL))
+crds$uAu <- qldppi(as.matrix(crds), beta0 = rep(0, p), ALs = ALs, bL = bL)
 crds$qldval <- qldppi(as.matrix(crds[, 1:3]), beta0 = beta, ALs = ALs, bL = bL)
 crds$betalogu <- qldppi(as.matrix(crds[, 1:3]), beta0 = beta, ALs = matrix(0, p-1,p-1), bL = bL)
 
