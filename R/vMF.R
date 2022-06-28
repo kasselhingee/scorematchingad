@@ -92,7 +92,7 @@ vMF_full <- function(sample, km = NULL, control = list(tol = 1E-20), w = w, star
                         rep(1, p)/sqrt(p), intheta,
                         weightname = "ones",
                         verbose = FALSE)
-  if (!is.null(starttheta)){starttheta <- rep(0.1, sum(is.na(intheta)))}
+  if (is.null(starttheta)){starttheta <- rep(0.1, sum(is.na(intheta)))}
   else {starttheta <- starttheta[is.na(intheta)]}
   out <- smest(tapes$smotape, starttheta, sample, control = control, w=w)
   theta <- intheta
