@@ -21,7 +21,7 @@ vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20
   }
   if (method == "Mardia"){
     stopifnot(is.null(km))
-    out <- vMF_Mardia(sample, control = control, w=w)
+    out <- vMF_Mardia(sample, startk = 0.1, control = control, w=w)
   }
   if (is.null(out)){stop(sprintf("Method '%s' is not valid", method))}
   return(out)
@@ -50,10 +50,11 @@ vMF_robust <- function(sample, km = NULL, method = "smfull", control = list(tol 
     }
   } else if (method == "Mardia"){
     stopifnot(is.null(km))
-    isfixed <- rep(FALSE, ncol(sample))
-    starttheta <- vMF_Mardia(sample, control = control)$km
+    starttheta <- vMF_Mardia(sample, startk = 0.1, control = control)$km
+    isfixed <- rep(FALSE, ncol(sample)) #for Windham robust estimation, not cppad
     estimator <- function(Y, starttheta, isfixed, w){
-      out <- vMF_Mardia(sample, control = control, w=w)
+      startk <- sqrt(sum(starttheta^2))
+      out <- vMF_Mardia(sample, startk, control = control, w=w)
       return(out$km)
     }
   }
@@ -69,7 +70,11 @@ vMF_robust <- function(sample, km = NULL, method = "smfull", control = list(tol 
   return(est)
 }
 
-vMF_Mardia <- function(sample, control = list(tol = 1E-20), w = rep(1, nrow(sample))){
+#for vMF_Mardia startk must be the value of the k parameter
+vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = list(tol = 1E-20), w = rep(1, nrow(sample))){
+  stopifnot(length(startk) == 1)
+  stopifnot(length(isfixed) == 1)
+
   mu <- apply(sample, MARGIN = 2, weighted.mean, w)
   mu <- mu/sqrt(sum(mu^2))
   Rtrans <- Directional::rotation(mu, c(1, rep(0, length(mu) - 1)))
@@ -78,19 +83,26 @@ vMF_Mardia <- function(sample, control = list(tol = 1E-20), w = rep(1, nrow(samp
 
   # do estimate, where all but the first component of theta are fixed at zero
   # because kappa * e1 = (kappa, 0, 0, 0, ...)
-  p <- ncol(sample)
-  intheta <- c(NA, rep(0, p - 1))
-  tapes <- buildsmotape("Snative", "vMF",
-                        rep(1, p)/sqrt(p), intheta,
+  if (!isfixed){ #as if k isn't supplied
+    p <- ncol(sample)
+    tapes <- buildsmotape_internal("Snative", "vMF",
+                        rep(1, p)/sqrt(p), startk, isfixed,
                         weightname = "ones",
                         verbose = FALSE)
-  out <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), samplestd, control = control, w = w)
+    sminfo <- smest(tapes$smotape, t_si2f(startk, isfixed), samplestd, control = control, w = w)
+    k <- sminfo$par
+    SE <- list(k = sminfo$SE)
+  } else {
+    sminfo <- NULL
+    k <- startk
+    SE <- list(k = 0)
+  }
   return(list(
-    k = out$par,
+    k = k,
     m = mu,
-    km = out$par * mu,
-    SE = list(k = out$SE),
-    sminfo = out
+    km = k * mu,
+    SE = SE,
+    sminfo = sminfo
   ))
 }
 
