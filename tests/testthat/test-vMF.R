@@ -133,6 +133,37 @@ test_that("vMF() robust fitting works on dimension 5", {
   expect_true(all(abs(out2$theta - km) < abs(out1$km - km)))
 })
 
+test_that("controls of FixedPoint() and Rcgmin() are correctly passed", {
+  set.seed(123)
+  p <- 3
+  k <- 3
+  m <- runif(p, min = -10, 10)
+  m <- m / sqrt(sum(m^2))
+  km <-  k * m
+  set.seed(123)
+  Y <- Directional::rvmf(1000, m, k)
+
+  out_default <- vMF(Y, method = "Mardia", cW = 0.1) #use this packages defaults this is pretty fussy!
+
+  suppressWarnings(out1 <- vMF(Y, method = "Mardia", cW = 0.1,
+             control = list(MaxIter = 2, #Fixed point iterations of only 2
+                            maxit = 1)))  #Rcgmin iterations of only 1 - warnings of non-convergence
+  expect_equal(out1$optim$fpevals, 2)
+  expect_error(expect_equal(out_default, out1))
+
+  # expect a different result when Rcgmin package defaults used
+  out2 <- vMF(Y, method = "Mardia", cW = 0.1,
+           control = list(MaxIter = 2))
+  expect_error(expect_equal(out1$theta, out2$theta))
+  expect_error(expect_equal(out_default$theta, out2$theta))
+
+  # expect a different result when FixedPoint() package defaults used
+  suppressWarnings(out3 <- vMF(Y, method = "Mardia", cW = 0.1,
+              control = list(maxit = 1)))
+  expect_error(expect_equal(out1, out3))
+  expect_error(expect_equal(out_default, out3))
+})
+
 
 test_that("dmovMF() and dmvf() are NOT equal", {
   set.seed(123)

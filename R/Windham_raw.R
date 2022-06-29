@@ -55,9 +55,13 @@ WindhamWeights <- function(ldenfun, sample, theta, cW, inWW){
 #' isfixed = a vecotr of booleans. FALSE means that element of theta is estimated,
 #' w = a vector of weights
 #' TRUE means that element of theta is fixed at the value in `theta`.
+#' @param fpcontrol A named list of control arguments to pass to `FixedPoint::FixedPoint()` for finding the robust estimate.
 #' @param ... Arguments passed to `estimator`.
 #' @export
-windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, inWW, originalcorrectionmethod = TRUE, ...)
+windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, inWW, originalcorrectionmethod = TRUE,
+   fpcontrol = list(Method = "VEA", ConvergenceMetricThreshold = 1E-10),
+    ...)
+
 {
   if(!all(names(formals(estimatorfun)[1:4]) == c("Y",  "starttheta", "isfixed", "w"))){
     stop("First four arguments of estimatorfun must be called: Y, starttheta, isfixed, and w.")
@@ -98,9 +102,7 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, in
               .frequency = "once",
               .frequency_id = "FixedPoint_package")
   est <- fp(Function = myfun, Inputs = starttheta[!isfixed],
-                    control = list(
-                    Method = "VEA",
-                    ConvergenceMetricThreshold = 1E-10))
+                    control = fpcontrol)
   nevals <- ncol(est$Inputs)
   #print(abs(est$Inputs[11, nevals] -
   #      est$Inputs[11, nevals - 1]))
@@ -111,13 +113,6 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, in
            optim = list(FixedPoint = est$FixedPoint,
                         fpevals = est$fpevals,
                         Finish = est$Finish)))
-}
-
-fp <- function(...){
-  args = list(...)
-  args <- c(args, args$control) #put control arguments into the highest level of the list
-  args2 <- args[names(args) %in% formalArgs(FixedPoint::FixedPoint)]
-  do.call(FixedPoint::FixedPoint, args2)
 }
 
 #new theta using Kassel's correction

@@ -13,48 +13,49 @@
 #' @export
 vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20), w = rep(1, nrow(sample)), cW = NULL){
   out <- NULL
+  controls <- splitcontrol(control)
   if (method == "smfull"){
     if (is.null(km)){
       km <- rep(NA, ncol(sample))
     }
     starttheta <- t_u2s_const(km, 0.1)
     isfixed <- t_u2i(km)
-    firstfit <- vMF_full(sample, starttheta, isfixed, control = control, w=w)
+    firstfit <- vMF_full(sample, starttheta, isfixed, control = controls$Rcgmin, w=w)
   }
   if (method == "Mardia"){
     stopifnot(is.null(km))
-    firstfit <- vMF_Mardia(sample, startk = 0.1, control = control, w=w)
+    firstfit <- vMF_Mardia(sample, startk = 0.1, control = controls$Rcgmin, w=w)
     isfixed <- rep(FALSE, ncol(sample)) #for Windham robust estimation, if it is used
   }
   if (is.null(firstfit)){stop(sprintf("Method '%s' is not valid", method))}
-  
+
   if(is.null(cW)){return(firstfit)}
- 
-  ###### Extra stuff for robust fit with Windham weights 
+
+  ###### Extra stuff for robust fit with Windham weights
   inWW <- rep(TRUE, ncol(sample))
   ldenfun <- function(sample, theta){ #here theta is km
     k <- sqrt(sum(theta^2))
     m <- theta/k
     return(drop(Directional::dvmf(sample, k, m, logden = TRUE)))
   }
-  
+
   if (method == "smfull"){
     estimator <- function(Y, starttheta, isfixed, w){
       km <- rep(NA, ncol(Y))
       km[isfixed] <- starttheta[isfixed]
-      out <- vMF_full(sample, starttheta, isfixed, 
-                      control = control, w=w)
+      out <- vMF_full(sample, starttheta, isfixed,
+                      control = controls$Rcgmin, w=w)
       return(out$km)
     }
   } else if (method == "Mardia"){
     estimator <- function(Y, starttheta, isfixed, w){
       startk <- sqrt(sum(starttheta^2))
-      out <- vMF_Mardia(sample, startk, control = control, w=w)
+      out <- vMF_Mardia(sample, startk, control = controls$Rcgmin, w=w)
       return(out$km)
     }
   }
   if (is.null(estimator)){stop(sprintf("Method '%s' is not valid", method))}
-  
+
   est <- windham_raw(prop = sample,
                      cW = cW,
                      ldenfun = ldenfun,
@@ -62,7 +63,8 @@ vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20
                      starttheta = firstfit$km,
                      isfixed = isfixed,
                      inWW = inWW,
-                     originalcorrectionmethod = TRUE)
+                     originalcorrectionmethod = TRUE,
+                     fpcontrol = controls$fp)
   return(est)
 }
 
@@ -71,7 +73,6 @@ vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20
 vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = list(tol = 1E-20), w = rep(1, nrow(sample))){
   stopifnot(length(startk) == 1)
   stopifnot(length(isfixed) == 1)
-
   mu <- apply(sample, MARGIN = 2, weighted.mean, w)
   mu <- mu/sqrt(sum(mu^2))
   Rtrans <- Directional::rotation(mu, c(1, rep(0, length(mu) - 1)))
