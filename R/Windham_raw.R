@@ -97,9 +97,10 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, in
   rlang::warn("Using the FixedPoint package - should investigate alternatives",
               .frequency = "once",
               .frequency_id = "FixedPoint_package")
-  est <- FixedPoint::FixedPoint(myfun, starttheta[!isfixed],
+  est <- fp(Function = myfun, Inputs = starttheta[!isfixed],
+                    control = list(
                     Method = "VEA",
-                    ConvergenceMetricThreshold = 1E-10)
+                    ConvergenceMetricThreshold = 1E-10))
   nevals <- ncol(est$Inputs)
   #print(abs(est$Inputs[11, nevals] -
   #      est$Inputs[11, nevals - 1]))
@@ -112,6 +113,12 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, in
                         Finish = est$Finish)))
 }
 
+fp <- function(...){
+  args = list(...)
+  args <- c(args, args$control) #put control arguments into the highest level of the list
+  args2 <- args[names(args) %in% formalArgs(FixedPoint::FixedPoint)]
+  do.call(FixedPoint::FixedPoint, args2)
+}
 
 #new theta using Kassel's correction
 Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, isfixed, inWW, taucinv, ...){
