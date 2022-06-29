@@ -50,7 +50,7 @@ buildsmotape_internal <- function(manifoldname, llname,
   ztape <- ptoM(pman, utape) #the value of utape transformed to the manifold
   lltape <- ptapell(ztape, starttheta,
                     llname = llname, pman = pman,
-                    fixedtheta = fixedtheta, verbose = verbose)
+                    fixedtheta = isfixed, verbose = verbose)
   stopifnot(is.numeric(acut))
   smotape <- ptapesmo(utape, t_si2f(starttheta, isfixed),
                       lltape, pman,
