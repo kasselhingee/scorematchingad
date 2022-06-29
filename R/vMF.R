@@ -11,7 +11,14 @@
 #' @export
 vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20), w = rep(1, nrow(sample))){
   out <- NULL
-  if (method == "smfull"){out <- vMF_full(sample, km = km, control = control, w=w)}
+  if (method == "smfull"){
+    if (is.null(km)){
+      km <- rep(NA, ncol(sample))
+    }
+    starttheta <- t_u2s_const(km, 0.1)
+    isfixed <- t_u2i(km)
+    out <- vMF_full(sample, starttheta, isfixed, control = control, w=w)
+  }
   if (method == "Mardia"){
     stopifnot(is.null(km))
     out <- vMF_Mardia(sample, control = control, w=w)
@@ -84,26 +91,19 @@ vMF_Mardia <- function(sample, control = list(tol = 1E-20), w = rep(1, nrow(samp
   ))
 }
 
-vMF_full <- function(sample, km = NULL, control = list(tol = 1E-20), w = NULL, starttheta = NULL){
+vMF_full <- function(sample, starttheta, isfixed, control = list(tol = 1E-20), w = NULL){
   p <- ncol(sample)
-  if (is.null(km)){
-    km <- rep(NA, p)
-  }
-  stopifnot(length(km) == p)
+  stopifnot(length(starttheta) == p)
+  stopifnot(length(starttheta) == length(isfixed))
 
-  intheta <- km
-  tapes <- buildsmotape("Snative", "vMF",
-                        rep(1, p)/sqrt(p), intheta,
+  tapes <- buildsmotape_internal("Snative", "vMF",
+                        rep(1, p)/sqrt(p), starttheta, isfixed,
                         weightname = "ones",
                         verbose = FALSE)
-  if (is.null(starttheta)){starttheta <- rep(0.1, sum(is.na(intheta)))}
-  else {starttheta <- starttheta[is.na(intheta)]}
-  out <- smest(tapes$smotape, starttheta, sample, control = control, w=w)
-  theta <- intheta
-  theta[is.na(intheta)] <- out$par
+  out <- smest(tapes$smotape, t_si2f(starttheta, isfixed), sample, control = control, w=w)
+  theta <- t_sfi2u(out$par, starttheta, isfixed)
 
-  SE <- intheta * 0
-  SE[is.na(intheta)] <- out$SE
+  SE <- t_sfi2u(out$SE, rep(0, length(starttheta)), isfixed)
   return(list(
     km = theta,
     k = sqrt(sum(theta^2)),
