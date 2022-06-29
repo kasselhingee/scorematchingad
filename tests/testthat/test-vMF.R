@@ -116,20 +116,20 @@ test_that("vMF() robust fitting works on dimension 5", {
   #full method, not robust
   out1 <- vMF(sample_o, method = "smfull", control = list(tol = 1E-10))
   #full method, robust, expect to be closer to true value (due to the outliers)
-  out2 <- vMF_robust(sample_o, method = "smfull", control = list(tol = 1E-10), cW = 0.1)
+  out2 <- vMF(sample_o, method = "smfull", control = list(tol = 1E-10), cW = 0.1)
   expect_true(all(abs(out2$theta - km) < abs(out1$km - km)))
 
   #check that fixed components remain fixed for full method
   inkm <- km
   inkm[2] <- NA
   inkm[p] <- NA
-  out <- vMF_robust(sample_o, km = inkm, method = "smfull")
+  out <- vMF(sample_o, km = inkm, method = "smfull", cW = 0.1)
   expect_equal(out$theta[!is.na(inkm)], km[!is.na(inkm)])
 
   #Mardia method
   out1 <- vMF(sample_o, method = "Mardia")
   #full method, robust, expect to be closer to true value (due to the outliers)
-  out2 <- vMF_robust(sample_o, method = "Mardia", cW = 0.1)
+  out2 <- vMF(sample_o, method = "Mardia", cW = 0.1)
   expect_true(all(abs(out2$theta - km) < abs(out1$km - km)))
 })
 
