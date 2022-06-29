@@ -16,14 +16,28 @@
 #' pForward0(tapes$smotape, runif(n = ltheta), u)
 #' @export
 buildsmotape <- function(manifoldname, llname,
-                         utape, intheta,
+                         utape, usertheta,
                          weightname = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
                          verbose = FALSE){
-  fixedtheta <- !is.na(intheta)
-  stopifnot(any(is.na(intheta)))
-  thetatape <- intheta
-  thetatape[!fixedtheta] <- thetatape_creator(sum(!fixedtheta))
+  starttheta <- t_u2s(usertheta, filler = thetatape_creator)
+  isfixed <- t_u2i(usertheta)
+
+  out <- buildsmotape_internal(manifoldname, llname,
+                         utape, starttheta, isfixed,
+                         weightname = weightname, acut = acut,
+                         filler = thetatape_creator,
+                         verbose = verbose)
+  return(out)
+}
+
+buildsmotape_internal <- function(manifoldname, llname,
+                         utape, starttheta, isfixed,
+                         weightname = "ones", acut = 1,
+                         filler = function(n){seq(length.out = n)},
+                         verbose = FALSE){
+  if(all(isfixed)){stop("All elements of theta are fixed")}
+  thetatape <- starttheta
 
   if (!(manifoldname %in% c("simplex", "sphere"))){
     if (weightname != "ones"){warning("Manifold supplied has no boundary. Using weightname = 'ones' is strongly recommended.")}
@@ -34,11 +48,11 @@ buildsmotape <- function(manifoldname, llname,
 
   pman <- pmanifold(manifoldname)
   ztape <- ptoM(pman, utape) #the value of utape transformed to the manifold
-  lltape <- ptapell(ztape, thetatape,
+  lltape <- ptapell(ztape, starttheta,
                     llname = llname, pman = pman,
                     fixedtheta = fixedtheta, verbose = verbose)
   stopifnot(is.numeric(acut))
-  smotape <- ptapesmo(utape, thetatape[!fixedtheta],
+  smotape <- ptapesmo(utape, t_si2f(starttheta, isfixed),
                       lltape, pman,
                       weightname, acut, verbose = verbose)
   return(list(
@@ -48,8 +62,8 @@ buildsmotape <- function(manifoldname, llname,
       name = llname,
       manifold = manifoldname,
       ulength = length(utape),
-      intheta = intheta,
-      tapedtheta = thetatape,
+      starttheta = starttheta,
+      isfixed = isfixed,
       weightname = weightname,
       acut = acut
     )
