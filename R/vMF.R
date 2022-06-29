@@ -4,6 +4,8 @@
 #' If supplied, the non-NA elements are fixed.
 #' @param control Control parameters passed to `Rcgmin::Rcgmin()` and eventually `FixedPoint::FixedPoint()`
 #' @param method Either `Mardia` for the hybrid score matching estimate from Mardia et al 2016 or `smfull` for a full score matching estimate.
+#' @param w An optional vector of weights for each measurement in `sample`
+#' @param cW Optional. If supplied then robust estimation using the Windham weights method is applied, and the value of `cW` is the robustness tuning constant.
 #' @examples
 #' sample <- Directional::rvmf(100, c(1, -1) / sqrt(2), 3)
 #' vMF(sample, method = "smfull")
