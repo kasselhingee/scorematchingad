@@ -94,9 +94,10 @@ ks <- seq(0.5, 10, by = 0.5)
 
 ## The n=100 case
 ```{r n100, warning=FALSE}
-n100 <- pbapply::pblapply(ks, function(k){runexperiment(1000, 100, m, k)})
+n100 <- pbapply::pblapply(ks, function(k){runexperiment(1000000, 100, m, k)})
 names(n100) <- ks
 save(n100, file = "n100.rds")
+load("./n100.rds")
 mse_k <- t(simplify2array(lapply(n100, "[[", "mse_k")))
 mse_m <- t(simplify2array(lapply(n100, "[[", "mse_m")))
 print("relative MSE for k")
@@ -111,17 +112,29 @@ library(dplyr)
 as_tibble(1/(mse_k[,-1]/mse_k[, "ml"]), rownames = "k") %>%
   dplyr::mutate(k = as.numeric(k)) %>%
   tidyr::pivot_longer(-k, names_to = "Estimator", values_to = "relMSE") %>%
+  dplyr::mutate(Method = gsub("_.*", "", Estimator)) %>%
+  dplyr::mutate(Robust = case_when(
+    grepl("_robsm", Estimator) ~ "k only",
+    grepl("_rob$", Estimator) ~ "all",
+    TRUE ~ "none"
+  )) %>%
   ggplot() +
-  geom_line(aes(x = k, y = relMSE, col = Estimator, lty = Estimator)) +
-  geom_point(aes(x = k, y = relMSE, col = Estimator)) +
+  geom_line(aes(x = k, y = relMSE, col = Method, lty = Robust)) +
+  geom_point(aes(x = k, y = relMSE, col = Method)) +
   ggtitle("Relative MSE for Kappa")
 
 as_tibble(1/(mse_m[,-1]/mse_m[, "ml"]), rownames = "k") %>%
   dplyr::mutate(k = as.numeric(k)) %>%
   tidyr::pivot_longer(-k, names_to = "Estimator", values_to = "relMSE") %>%
+  dplyr::mutate(Method = gsub("_.*", "", Estimator)) %>%
+  dplyr::mutate(Robust = case_when(
+    grepl("_robsm", Estimator) ~ "k only",
+    grepl("_rob$", Estimator) ~ "all",
+    TRUE ~ "none"
+  )) %>%
   ggplot() +
-  geom_line(aes(x = k, y = relMSE, col = Estimator, lty = Estimator)) +
-  geom_point(aes(x = k, y = relMSE, col = Estimator)) +
+  geom_line(aes(x = k, y = relMSE, col = Method, lty = Robust)) +
+  geom_point(aes(x = k, y = relMSE, col = Method)) +
   ggtitle("Relative MSE for mu")
 ```
 
