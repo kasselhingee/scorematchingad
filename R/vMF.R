@@ -43,16 +43,17 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
     estimator <- function(Y, starttheta, isfixed, w){
       km <- rep(NA, ncol(Y))
       km[isfixed] <- starttheta[isfixed]
-      out <- vMF_full(sample, starttheta, isfixed,
+      out <- vMF_full(Y, starttheta, isfixed,
                       control = controls$Rcgmin, w=w)
       return(out$km)
     }
   } else if (method == "Mardia"){
+    sample <- vMF_stdY(sample, firstfit$m) #standardise sample
     estimator <- function(Y, starttheta, isfixed, w){
       startk <- sqrt(sum(starttheta^2))
-      browser()
-      out <- vMF_Mardia(sample, startk, control = controls$Rcgmin, w=w)
-      return(out$km)
+      m <- starttheta/startk
+      out <- vMF_kappa(Y, startk, control = controls$Rcgmin, w=w)
+      return(m * out$k)
     }
   }
   if (is.null(estimator)){stop(sprintf("Method '%s' is not valid", method))}
@@ -73,6 +74,15 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
   return(est)
 }
 
+vMF_stdY <- function(Y, m = NULL){
+  if(is.null(m)){
+    m <- apply(Y, MARGIN = 2, weighted.mean, w)
+    m <- mu/sqrt(sum(m^2))
+  }
+  Rtrans <- Directional::rotation(m, c(1, rep(0, length(m) - 1)))
+  out <- Y %*% t(Rtrans)
+  return(out)
+}
 
 #for vMF_Mardia startk must be the value of the k parameter
 vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin(), w = rep(1, nrow(sample))){
@@ -80,8 +90,7 @@ vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin
   stopifnot(length(isfixed) == 1)
   mu <- apply(sample, MARGIN = 2, weighted.mean, w)
   mu <- mu/sqrt(sum(mu^2))
-  Rtrans <- Directional::rotation(mu, c(1, rep(0, length(mu) - 1)))
-  samplestd <- sample %*% t(Rtrans)
+  samplestd <- vMF_stdY(sample, mu)
   # check: mustd <- colMeans(samplestd); mustd <- mustd / sqrt(sum(mustd^2))
   kappainfo <- vMF_kappa(samplestd, startk, isfixed = FALSE, control = default_Rcgmin(), w = w)
   return(list(
