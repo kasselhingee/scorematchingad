@@ -40,6 +40,22 @@
 #' estinfo <- ppi_cppad(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
 #' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
 #' @export
+ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL, betap = NULL,
+                pow = 1, man,
+                hsqfun = "ones", acut = NULL, #specific to some methods
+                bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin()#specific to cppad methods
+                ){
+  # process inputs
+  stopifnot("matrix" %in% class(prop))
+  p = ncol(prop)
+  stopifnot(pow == 1)
+
+  usertheta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, beta, betaL, betap)
+
+
+}
+
+
 ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL, betap = NULL,
                       bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10,
                       pow = 1, man, weightname = hsqfun, acut = NULL, control = default_Rcgmin(), hsqfun = NULL){

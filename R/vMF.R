@@ -12,7 +12,7 @@
 #' vMF(sample, method = "Mardia")
 #' @export
 vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin(), default_FixedPoint()), w = rep(1, nrow(sample)), cW = NULL){
-  out <- NULL
+  firstfit <- NULL
   controls <- splitcontrol(control)
   if (method == "smfull"){
     if (is.null(km)){
@@ -50,6 +50,7 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
   } else if (method == "Mardia"){
     estimator <- function(Y, starttheta, isfixed, w){
       startk <- sqrt(sum(starttheta^2))
+      browser()
       out <- vMF_Mardia(sample, startk, control = controls$Rcgmin, w=w)
       return(out$km)
     }
@@ -68,7 +69,7 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
   est$km <- est$theta
   est$theta <- NULL
   est$k <- sqrt(sum(est$km^2))
-  est$m <- est$km/k
+  est$m <- est$km/est$k
   return(est)
 }
 
@@ -82,27 +83,36 @@ vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin
   Rtrans <- Directional::rotation(mu, c(1, rep(0, length(mu) - 1)))
   samplestd <- sample %*% t(Rtrans)
   # check: mustd <- colMeans(samplestd); mustd <- mustd / sqrt(sum(mustd^2))
+  kappainfo <- vMF_kappa(samplestd, startk, isfixed = FALSE, control = default_Rcgmin(), w = w)
+  return(list(
+    k = kappainfo$k,
+    m = mu,
+    km =  kappainfo$k * mu,
+    SE = list(k = kappainfo$SE),
+    sminfo = kappainfo
+  ))
+}
 
+# this function assumes a standardised data set with mean direction equal to the northpole
+vMF_kappa <- function(Y, startk, isfixed = FALSE, control = default_Rcgmin(), w = rep(1, nrow(Y))){
   # do estimate, where all but the first component of theta are fixed at zero
   # because kappa * e1 = (kappa, 0, 0, 0, ...)
   if (!isfixed){ #as if k isn't supplied
-    p <- ncol(sample)
+    p <- ncol(Y)
     tapes <- buildsmotape_internal("Snative", "vMF",
-                        rep(1, p)/sqrt(p), startk, isfixed,
-                        weightname = "ones",
-                        verbose = FALSE)
-    sminfo <- smest(tapes$smotape, t_si2f(startk, isfixed), samplestd, control = control, w = w)
+                                   rep(1, p)/sqrt(p), startk, isfixed,
+                                   weightname = "ones",
+                                   verbose = FALSE)
+    sminfo <- smest(tapes$smotape, t_si2f(startk, isfixed), Y, control = control, w = w)
     k <- sminfo$par
-    SE <- list(k = sminfo$SE)
+    SE <- sminfo$SE
   } else {
     sminfo <- NULL
     k <- startk
-    SE <- list(k = 0)
+    SE <- 0
   }
   return(list(
     k = k,
-    m = mu,
-    km = k * mu,
     SE = SE,
     sminfo = sminfo
   ))

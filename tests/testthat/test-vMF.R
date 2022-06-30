@@ -124,13 +124,13 @@ test_that("vMF() robust fitting works on dimension 5", {
   inkm[2] <- NA
   inkm[p] <- NA
   out <- vMF(sample_o, km = inkm, method = "smfull", cW = 0.1)
-  expect_equal(out$theta[!is.na(inkm)], km[!is.na(inkm)])
+  expect_equal(out$km[!is.na(inkm)], km[!is.na(inkm)])
 
   #Mardia method
   out1 <- vMF(sample_o, method = "Mardia")
   #full method, robust, expect to be closer to true value (due to the outliers)
   out2 <- vMF(sample_o, method = "Mardia", cW = 0.1)
-  expect_true(all(abs(out2$theta - km) < abs(out1$km - km)))
+  expect_true(all(abs(out2$km - km) < abs(out1$km - km)))
 })
 
 test_that("controls of FixedPoint() and Rcgmin() are correctly passed", {
@@ -154,14 +154,21 @@ test_that("controls of FixedPoint() and Rcgmin() are correctly passed", {
   # expect a different result when Rcgmin package defaults used
   out2 <- vMF(Y, method = "Mardia", cW = 0.1,
            control = list(MaxIter = 2))
-  expect_error(expect_equal(out1$theta, out2$theta))
-  expect_error(expect_equal(out_default$theta, out2$theta))
+  expect_error(expect_equal(out1$km, out2$km))
+  expect_error(expect_equal(out_default$km, out2$km))
 
   # expect a different result when FixedPoint() package defaults used
   suppressWarnings(out3 <- vMF(Y, method = "Mardia", cW = 0.1,
-              control = list(maxit = 1)))
+              control = list(maxit = 1))) #not many iterations of Rcgmin required for Mardia method as only a single parameter k
   expect_error(expect_equal(out1, out3))
-  expect_error(expect_equal(out_default, out3))
+  expect_equal(out_default, out3)
+
+
+  # check that maxit passed for smfull
+  out_default <- vMF(Y, method = "smfull", cW = 0.1)
+  suppressWarnings(out4 <- vMF(Y, method = "smfull", cW = 0.1,
+                               control = list(maxit = 1))) #not many iterations of Rcgmin required for Mardia method as only a single parameter k
+  expect_error(expect_equal(out_default, out4))
 })
 
 
