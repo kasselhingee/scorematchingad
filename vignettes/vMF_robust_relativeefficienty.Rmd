@@ -57,19 +57,27 @@ simnest <- function(n, m, k){
   est$ml <- mle(Y)
   est$hyb <- vMF(Y, method = "Mardia")[c("m", "k")]
   est$hyb_rob <- vMF(Y, method = "Mardia", cW = 0.1)[c("m", "k")]
-  est$smf <- vMF(Y, method = "smfull")[c("m", "k")]
-  est$smf_rob <- vMF(Y, method = "smfull", cW = 0.1)[c("m", "k")]
+  est$fsm <- vMF(Y, method = "smfull")[c("m", "k")]
+  est$fsm_rob <- vMF(Y, method = "smfull", cW = 0.1)[c("m", "k")]
   return(est)
 }
 err_k <- function(out, truek){(vapply(out, "[[", "k", FUN.VALUE = 0.1) - truek)}
 # out <- replicate(reps, simnest(1000, m, k), simplify = TRUE)
 # mse <- rowMeans(apply(out, MARGIN = 2, err_k, truek = k)^2)
+out2mse_k <- function(out, k){rowMeans(apply(out, MARGIN = 2, err_k, truek = k)^2)}
+out2mse_m <- function(out, m){
+  se_m <- apply(out, MARGIN = c(1,2), FUN = function(est){sum((est[[1]][["m"]] - m)^2)})
+  mse_m <- rowMeans(se_m)
+  return(mse_m)
+}
 runexperiment <- function(reps, n, m, k){
   stopifnot(reps > 1) #cos simplify below will be all strange when reps = 1
   out <- replicate(reps, simnest(n, m, k), simplify = TRUE)
-  mse <- rowMeans(apply(out, MARGIN = 2, err_k, truek = k)^2)
+  mse_k <- out2mse_k(out, k)
+  mse_m <- out2mse_m(out, m)
   return(list(
-    mse = mse,
+    mse_k = mse_k,
+    mse_m = mse_m,
     ests = out
   ))
 }
@@ -86,5 +94,28 @@ ks <- c(0.5, 1, 2, 10)
 n100 <- pbapply::pblapply(ks, function(k){runexperiment(1000, 100, m, k)})
 names(n100) <- ks
 results <- t(simplify2array(lapply(n100, "[[", "mse")))
-results[,-1]/results[, "ml"]
+1/(results[,-1]/results[, "ml"])
 ```
+
+```{r n100plot}
+library(ggplot2)
+library(dplyr)
+as_tibble(1/(results[,-1]/results[, "ml"]), rownames = "k") %>%
+  dplyr::mutate(k = as.numeric(k)) %>%
+  tidyr::pivot_longer(-k, names_to = "Estimator", values_to = "relMSE") %>%
+  ggplot() +
+  geom_line(aes(x = k, y = relMSE, col = Estimator, lty = Estimator)) +
+  geom_point(aes(x = k, y = relMSE, col = Estimator)) +
+  ggtitle("Relative MSE for Kappa")
+
+mse_m <- t(simplify2array(lapply(n100, function(a){out2mse_m(a$ests, m)})))
+as_tibble(1/(mse_m[,-1]/mse_m[, "ml"]), rownames = "k") %>%
+  dplyr::mutate(k = as.numeric(k)) %>%
+  tidyr::pivot_longer(-k, names_to = "Estimator", values_to = "relMSE") %>%
+  ggplot() +
+  geom_line(aes(x = k, y = relMSE, col = Estimator, lty = Estimator)) +
+  geom_point(aes(x = k, y = relMSE, col = Estimator)) +
+  ggtitle("Relative MSE for mu")
+```
+
+It looks like the robust versions have much lower efficiency than the non-robust versions, and I suspect it is because of the estimation of the mean direction.
