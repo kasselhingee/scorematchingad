@@ -65,6 +65,10 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
                      inWW = inWW,
                      originalcorrectionmethod = TRUE,
                      fpcontrol = controls$fp)
+  est$km <- est$theta
+  est$theta <- NULL
+  est$k <- sqrt(sum(est$km^2))
+  est$m <- est$km/k
   return(est)
 }
 
