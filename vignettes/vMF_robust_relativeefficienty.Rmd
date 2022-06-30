@@ -1,0 +1,90 @@
+---
+title: "vMF Relative Efficiency for Robust"
+author: "Kassel Hingee"
+date: "30/06/2022"
+output: html_document
+---
+
+Mardia et al 2016, Table 3, presents relative efficiency to the maximum likelihood estimator as a ratio of mean squared error.
+This document is designed to generate a similar table for the robust (via Windham's method) hybrid estimator.
+
+We'll also redo the relative efficiency estimates for the non-robust hybrid estimator to check results.
+
+The estimate for the mean direction is the same in the hybrid and maximum likelihood. But the robust version will have *different* mean direction estimates due to the weights.
+
+## Preparation
+The package `CircStats` was used by Mardia et al. for simulation. 
+This package appears to be only for circular (`p=2`) models, with data provided in radians.
+
+```{r setup, include=FALSE}
+p = 2
+library(CircStats)
+m <- c(1,1)/sqrt(2)
+k <- 3
+Y <- Directional::rvmf(10000, m, k) #just for development
+```
+
+### Maximum-Likelihood Estimator
+The maximum-likelihood estimator is the mean direction, and the kappa
+```{r mlefun}
+mle_circ <- function(Y){
+  stopifnot(ncol(Y) == 2)
+  Y_rad <- atan(Y[,2]/Y[,1]) #CircStats::rvm(10000, atan(1), 3)
+  m_rad <- circ.mean(Y_rad)
+  m <- c(cos(m_rad), sin(m_rad))
+  k <- est.kappa(Y_rad)
+  return(list(m = m, k = k))
+}
+if(!isTRUE(all.equal(mle_circ(Y), list(m=m, k=k), tolerance = 1E-1))){rm("mle_circ")} #mle_circ doesn't work
+
+mle_Dir <- function(Y){
+  fit <- Directional::vmf.mle(Y, fast = TRUE)
+  return(list(
+    m = fit$mu,
+    k = fit$kappa
+  ))
+}
+if(!isTRUE(all.equal(mle_Dir(Y), list(m=m, k=k), tolerance = 1E-1))){rm("mle_Dir")}
+
+mle <- mle_Dir
+```
+
+### Function: Simulate then Estimate
+```{r sim_estimate}
+simnest <- function(n, m, k){
+  Y <- Directional::rvmf(n, m, k)
+  est <- list()
+  est$ml <- mle(Y)
+  est$hyb <- vMF(Y, method = "Mardia")[c("m", "k")]
+  est$hyb_rob <- vMF(Y, method = "Mardia", cW = 0.1)[c("m", "k")]
+  est$smf <- vMF(Y, method = "smfull")[c("m", "k")]
+  est$smf_rob <- vMF(Y, method = "smfull", cW = 0.1)[c("m", "k")]
+  return(est)
+}
+err_k <- function(out, truek){(vapply(out, "[[", "k", FUN.VALUE = 0.1) - truek)}
+# out <- replicate(reps, simnest(1000, m, k), simplify = TRUE)
+# mse <- rowMeans(apply(out, MARGIN = 2, err_k, truek = k)^2)
+runexperiment <- function(reps, n, m, k){
+  stopifnot(reps > 1) #cos simplify below will be all strange when reps = 1
+  out <- replicate(reps, simnest(n, m, k), simplify = TRUE)
+  mse <- rowMeans(apply(out, MARGIN = 2, err_k, truek = k)^2)
+  return(list(
+    mse = mse,
+    ests = out
+  ))
+}
+```
+
+### Model Parameters for Simulation
+```{r truepars}
+m <- c(1,1)/sqrt(2)
+ks <- c(0.5, 1, 2, 10)
+```
+
+## The n=100 case
+```{r n100}
+n100 <- pbapply::pblapply(ks, function(k){runexperiment(1000, 100, m, k)})
+names(n100) <- ks
+results <- t(simplify2array(lapply(n100, "[[", "mse")))
+results[,-1]/results[, "ml"]
+```
