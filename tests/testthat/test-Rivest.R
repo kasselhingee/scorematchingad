@@ -313,6 +313,7 @@ test_that("Rivest matches Fisher-Bingham on smoval, but not smograd", {
 })
 
 test_that("Rivest is fitting via smo val and FB evaluation works for all by k and evidx", {
+  rm(list = ls())
   p <- 3
   set.seed(1245)
   A <- rsymmetricmatrix(p, -10, 10)
@@ -336,6 +337,7 @@ test_that("Rivest is fitting via smo val and FB evaluation works for all by k an
     FBtheta <- Rivest_theta2FBtheta(c(theta, evidx))
     smobj(FBtape, FBtheta, sample)
   }
+  # set.seed(12453) #results can be sensitive to initial guess
   out <- Rcgmin::Rcgmin(par = runif(length(Rtheta) - 1), #don't use 11111111 or similar
                         fn = Rivestsmobj,
                         FBtape = FBtapes$smotape,
@@ -351,6 +353,9 @@ test_that("Rivest is fitting via smo val and FB evaluation works for all by k an
                           thetatape_creator = function(n){out$par[1:n]})
   SE <- smestSE(Rtapes$smotape, out$par, sample)
   # everything except k seems to fit nicely
+  print(Rtheta)
+  print(out$par)
+  print(SE[length(out)])
   expect_absdiff_lte_v(out$par[-length(out$par)], Rtheta[-c(length(out$par), length(Rtheta))], 3 * SE[-length(out$par)])
   # the estimate for k is poor. Sign of k is wrong and SE too small
   expect_absdiff_lte_v(abs(out$par[length(out$par)]),
