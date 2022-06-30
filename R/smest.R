@@ -11,11 +11,9 @@
 #' For best results these locations should be further from the manifold boundary and close to their corresponding measurements.
 #' Taylor approximation around the rows of `boundaryapprox` will be used to approximate the score matching objective for these measurements.
 #' @param control Optional argument passed to `Rcgmin::Rcgmin()`.
-#' The default `list(tol = 1E-20)` means the optimisation won't end until the squared size of the gradiant
-#'  at the estimate is less than 1E-20.
 #' @return The output from `Rcgmin::Rcgmin()`, the squared size of the gradient at the estimate, and the standard error estimates by `smestSE()`.
 #' @export
-smest <- function(smofun, theta, utabl, control = list(tol = 1E-20), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
+smest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
   if (!(is.null(uboundary) && is.null(boundaryapprox))){
     stopifnot((!is.null(uboundary)) && (!is.null(boundaryapprox))) #both need to be supplied
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))

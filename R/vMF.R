@@ -11,7 +11,7 @@
 #' vMF(sample, method = "smfull")
 #' vMF(sample, method = "Mardia")
 #' @export
-vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20), w = rep(1, nrow(sample)), cW = NULL){
+vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin(), default_FixedPoint()), w = rep(1, nrow(sample)), cW = NULL){
   out <- NULL
   controls <- splitcontrol(control)
   if (method == "smfull"){
@@ -70,7 +70,7 @@ vMF <- function(sample, km = NULL, method = "smfull", control = list(tol = 1E-20
 
 
 #for vMF_Mardia startk must be the value of the k parameter
-vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = list(tol = 1E-20), w = rep(1, nrow(sample))){
+vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin(), w = rep(1, nrow(sample))){
   stopifnot(length(startk) == 1)
   stopifnot(length(isfixed) == 1)
   mu <- apply(sample, MARGIN = 2, weighted.mean, w)
@@ -104,7 +104,7 @@ vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = list(tol = 1E-
   ))
 }
 
-vMF_full <- function(sample, starttheta, isfixed, control = list(tol = 1E-20), w = NULL){
+vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w = NULL){
   p <- ncol(sample)
   stopifnot(length(starttheta) == p)
   stopifnot(length(starttheta) == length(isfixed))

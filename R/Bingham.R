@@ -15,7 +15,7 @@
 #'
 #' Bingham(sample, method = "Mardia")
 #' @export
-Bingham <- function(sample, A = NULL, method = "smfull", control = list(tol = 1E-20)){
+Bingham <- function(sample, A = NULL, method = "smfull", control = default_Rcgmin()){
   if (method == "smfull"){
     out <- Bingham_full(sample, A = A, control = control)}
   if (method %in% c("Mardia", "hybrid")){
@@ -41,7 +41,7 @@ rBingham <- function(n, A){
   return(sample)
 }
 
-Bingham_full <- function(sample,  A = NULL, control = list(tol = 1E-20)){
+Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){
   p <- ncol(sample)
   if (is.null(A)){
     A <- matrix(NA, nrow = p, ncol = p)
@@ -74,7 +74,7 @@ Bingham_full <- function(sample,  A = NULL, control = list(tol = 1E-20)){
   ))
 }
 
-Bingham_Mardia <- function(sample,  control = list(tol = 1E-20)){
+Bingham_Mardia <- function(sample,  control = default_Rcgmin()){
   Tmat <- 1/nrow(sample) * t(sample) %*% sample
   Tmat_es <- eigen(Tmat)
   Gammahat <- Tmat_es$vectors

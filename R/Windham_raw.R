@@ -59,7 +59,7 @@ WindhamWeights <- function(ldenfun, sample, theta, cW, inWW){
 #' @param ... Arguments passed to `estimator`.
 #' @export
 windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, inWW, originalcorrectionmethod = TRUE,
-   fpcontrol = list(Method = "VEA", ConvergenceMetricThreshold = 1E-10),
+   fpcontrol = NULL,
     ...)
 
 {

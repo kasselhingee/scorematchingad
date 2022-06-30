@@ -19,7 +19,7 @@
 #'  the gradient of the score matching objective at the true theta is
 #'  is of size 0.001, which is substantially non-zero.
 #' @export
-FB <- function(sample, km = NULL, A = NULL, control = list(tol = 1E-20)){
+FB <- function(sample, km = NULL, A = NULL, control = default_Rcgmin()){
   p <- ncol(sample)
   if (is.null(A)){
     A <- matrix(NA, nrow = p, ncol = p)
