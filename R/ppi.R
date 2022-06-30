@@ -35,40 +35,39 @@
 #' @param bdrythreshold For measurements close to the boundary of the simplex Taylor approximation is applied.
 #' @param shiftsize Measurements close to the boundary are shifted by this distance for Taylor approximation.
 #' @param approxorder Order of the Taylor approximation
+#' @param method `direct` for estimates calculated directly where possible (*list them*) or `cppad` to find the score matching estimates using automatic differentiation and the `Rcgmin()` iterative solver.
 #' @examples
 #' model <- sec2_3model(1000)
 #' estinfo <- ppi_cppad(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
 #' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
 #' @export
 ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL, betap = NULL,
-                pow = 1, man,
-                hsqfun = "ones", acut = NULL, #specific to some methods
+                pow = 1, man, method = "direct", w = NULL,
+                bdryweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin()#specific to cppad methods
                 ){
   # process inputs
-  stopifnot("matrix" %in% class(prop))
-  p = ncol(prop)
+  stopifnot("matrix" %in% class(Y))
+  p = ncol(Y)
   stopifnot(pow == 1)
 
   usertheta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, beta, betaL, betap)
+  if (method == "cppad"){
+    out <- ppi_cppad(Y, usertheta, bdrythreshold, shiftsize, approxorder, pow, man, bdryweight, acut, control)
+  }
 
-
+  return(out)
 }
 
 
-ppi_cppad <- function(prop, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL, betap = NULL,
+ppi_cppad <- function(prop, usertheta,
                       bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10,
                       pow = 1, man, weightname = hsqfun, acut = NULL, control = default_Rcgmin(), hsqfun = NULL){
-  if (!is.null(hsqfun)){
-    weightname <- hsqfun
-    warning("hsqfun parameter will become obsolete soon.")
-  }
   # process inputs
   stopifnot("matrix" %in% class(prop))
   p = ncol(prop)
-  stopifnot(pow == 1)
 
-  theta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, beta, betaL, betap)
+  theta <- usertheta
 
   if (!(man %in% c("simplex", "sphere"))){
     if (weightname != "ones"){warning("Manifold supplied has no boundary. Setting weightname to 'ones'.")}
