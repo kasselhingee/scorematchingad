@@ -131,7 +131,37 @@ test_that("vMF() robust fitting works on dimension 5", {
   #full method, robust, expect to be closer to true value (due to the outliers)
   out2 <- vMF(sample_o, method = "Mardia", cW = 0.1)
   expect_true(all(abs(out2$km - km) < abs(out1$km - km)))
+  #expect partially robust Mardia method to not be partially closer
+  out3 <- vMF(sample_o, method = "Mardia_robustsm", cW = 0.1)
+  expect_equal(out3$m, out1$m) #because m is estimated the same way
+  expect_true(all(abs(out3$km - km) > abs(out1$km - km)))
 })
+
+test_that("vMF() partially robust fitting works on dimension 5", {
+  set.seed(123)
+  p <- 5
+  k <- 3
+  m <- rep(1, p) #uniform direction poorness due to outliers is evenly distributed in each element
+  m <- m / sqrt(sum(m^2))
+  km <-  k * m
+  set.seed(121)
+  sample <- Directional::rvmf(1000, m, k)
+  # add outliers in concentration only
+  set.seed(2151)
+  outliers <- Directional::rvmf(100, m, 10 * k)
+  sample_o <- rbind(sample, outliers)
+
+  #Mardia method
+  out1 <- vMF(sample_o, method = "Mardia")
+  #full method, robust, expect to be closer to true value
+  out2 <- vMF(sample_o, method = "Mardia", cW = 0.1)
+  expect_true(all(abs(out2$km - km) < abs(out1$km - km)))
+  #expect partially robust Mardia method to be better at k
+  out3 <- vMF(sample_o, method = "Mardia_robustsm", cW = 0.1)
+  expect_equal(out3$m, out1$m) #because m is estimated the same way
+  expect_lt(abs(out3$k - k), abs(out1$k - k))
+})
+
 
 test_that("controls of FixedPoint() and Rcgmin() are correctly passed", {
   set.seed(123)
@@ -159,16 +189,9 @@ test_that("controls of FixedPoint() and Rcgmin() are correctly passed", {
 
   # expect a different result when FixedPoint() package defaults used
   suppressWarnings(out3 <- vMF(Y, method = "Mardia", cW = 0.1,
-              control = list(maxit = 1))) #not many iterations of Rcgmin required for Mardia method as only a single parameter k
+              control = list(maxit = 1)))
   expect_error(expect_equal(out1, out3))
-  expect_equal(out_default, out3)
-
-
-  # check that maxit passed for smfull
-  out_default <- vMF(Y, method = "smfull", cW = 0.1)
-  suppressWarnings(out4 <- vMF(Y, method = "smfull", cW = 0.1,
-                               control = list(maxit = 1))) #not many iterations of Rcgmin required for Mardia method as only a single parameter k
-  expect_error(expect_equal(out_default, out4))
+  expect_error(expect_equal(out_default, out3))
 })
 
 
@@ -184,3 +207,4 @@ test_that("dmovMF() and dmvf() are NOT equal", {
   expect_error(expect_equal(movMF::dmovMF(sample, km, log = TRUE),
                Directional::dvmf(sample, k, m, logden = TRUE)))
 })
+

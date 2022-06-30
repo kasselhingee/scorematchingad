@@ -17,6 +17,8 @@ The package `CircStats` was used by Mardia et al. for simulation.
 This package appears to be only for circular (`p=2`) models, with data provided in radians.
 
 ```{r setup, include=FALSE}
+library(cdabyppi)
+
 p = 2
 library(CircStats)
 m <- c(1,1)/sqrt(2)
@@ -57,6 +59,7 @@ simnest <- function(n, m, k){
   est$ml <- mle(Y)
   est$hyb <- vMF(Y, method = "Mardia")[c("m", "k")]
   est$hyb_rob <- vMF(Y, method = "Mardia", cW = 0.1)[c("m", "k")]
+  est$hyb_robsm <- vMF(Y, method = "Mardia_robustsm", cW = 0.1)[c("m", "k")]
   est$fsm <- vMF(Y, method = "smfull")[c("m", "k")]
   est$fsm_rob <- vMF(Y, method = "smfull", cW = 0.1)[c("m", "k")]
   return(est)
@@ -86,21 +89,26 @@ runexperiment <- function(reps, n, m, k){
 ### Model Parameters for Simulation
 ```{r truepars}
 m <- c(1,1)/sqrt(2)
-ks <- c(0.5, 1, 2, 10)
+ks <- seq(0.5, 10, by = 0.5)
 ```
 
 ## The n=100 case
-```{r n100}
+```{r n100, warning=FALSE}
 n100 <- pbapply::pblapply(ks, function(k){runexperiment(1000, 100, m, k)})
 names(n100) <- ks
-results <- t(simplify2array(lapply(n100, "[[", "mse")))
-1/(results[,-1]/results[, "ml"])
+save(n100, file = "n100.rds")
+mse_k <- t(simplify2array(lapply(n100, "[[", "mse_k")))
+mse_m <- t(simplify2array(lapply(n100, "[[", "mse_m")))
+print("relative MSE for k")
+1/(mse_k[,-1]/mse_k[, "ml"])
+print("relative MSE for m")
+1/(mse_m[,-1]/mse_m[, "ml"])
 ```
 
 ```{r n100plot}
 library(ggplot2)
 library(dplyr)
-as_tibble(1/(results[,-1]/results[, "ml"]), rownames = "k") %>%
+as_tibble(1/(mse_k[,-1]/mse_k[, "ml"]), rownames = "k") %>%
   dplyr::mutate(k = as.numeric(k)) %>%
   tidyr::pivot_longer(-k, names_to = "Estimator", values_to = "relMSE") %>%
   ggplot() +
@@ -108,7 +116,6 @@ as_tibble(1/(results[,-1]/results[, "ml"]), rownames = "k") %>%
   geom_point(aes(x = k, y = relMSE, col = Estimator)) +
   ggtitle("Relative MSE for Kappa")
 
-mse_m <- t(simplify2array(lapply(n100, function(a){out2mse_m(a$ests, m)})))
 as_tibble(1/(mse_m[,-1]/mse_m[, "ml"]), rownames = "k") %>%
   dplyr::mutate(k = as.numeric(k)) %>%
   tidyr::pivot_longer(-k, names_to = "Estimator", values_to = "relMSE") %>%
@@ -119,3 +126,4 @@ as_tibble(1/(mse_m[,-1]/mse_m[, "ml"]), rownames = "k") %>%
 ```
 
 It looks like the robust versions have much lower efficiency than the non-robust versions, and I suspect it is because of the estimation of the mean direction.
+Robust fitting of *just* kappa is more efficient, but only a little bit.

@@ -3,7 +3,9 @@
 #' @param km Optional for the `smfull` method. A vector of same length as the dimension, representing the elements of the concentraction * Fisher direction vector.
 #' If supplied, the non-NA elements are fixed.
 #' @param control Control parameters passed to `Rcgmin::Rcgmin()` and eventually `FixedPoint::FixedPoint()`
-#' @param method Either `Mardia` for the hybrid score matching estimate from Mardia et al 2016 or `smfull` for a full score matching estimate.
+#' @param method Either `Mardia` for the hybrid score matching estimate from Mardia et al 2016
+#'  or `smfull` for a full score matching estimate.
+#'  `Mardia_robustsm` will apply robust score matching to only the `kappa` component of the Mardia estimator.
 #' @param w An optional vector of weights for each measurement in `sample`
 #' @param cW Optional. If supplied then robust estimation using the Windham weights method is applied, and the value of `cW` is the robustness tuning constant.
 #' @examples
@@ -22,7 +24,8 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
     isfixed <- t_u2i(km)
     firstfit <- vMF_full(sample, starttheta, isfixed, control = controls$Rcgmin, w=w)
   }
-  if (method == "Mardia"){
+  if (method %in% c("Mardia", "Mardia_robustsm")){
+    if (method == "Mardia_robustsm"){stopifnot(!is.null(cW))} #for robust score matching, need to use  cW
     stopifnot(is.null(km))
     firstfit <- vMF_Mardia(sample, startk = 0.1, control = controls$Rcgmin, w=w)
     isfixed <- rep(FALSE, ncol(sample)) #for Windham robust estimation, if it is used
@@ -48,6 +51,12 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
       return(out$km)
     }
   } else if (method == "Mardia"){
+    estimator <- function(Y, starttheta, isfixed, w){
+      startk <- sqrt(sum(starttheta^2))
+      out <- vMF_Mardia(Y, startk, control = controls$Rcgmin, w=w)
+      return(out$km)
+    }
+  } else if (method == "Mardia_robustsm"){
     sample <- vMF_stdY(sample, firstfit$m) #standardise sample
     estimator <- function(Y, starttheta, isfixed, w){
       startk <- sqrt(sum(starttheta^2))
@@ -92,7 +101,7 @@ vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin
   mu <- mu/sqrt(sum(mu^2))
   samplestd <- vMF_stdY(sample, mu)
   # check: mustd <- colMeans(samplestd); mustd <- mustd / sqrt(sum(mustd^2))
-  kappainfo <- vMF_kappa(samplestd, startk, isfixed = FALSE, control = default_Rcgmin(), w = w)
+  kappainfo <- vMF_kappa(samplestd, startk, isfixed = isfixed, control = control, w = w)
   return(list(
     k = kappainfo$k,
     m = mu,
