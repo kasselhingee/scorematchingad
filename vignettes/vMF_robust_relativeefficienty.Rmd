@@ -2,7 +2,13 @@
 title: "vMF Relative Efficiency for Robust"
 author: "Kassel Hingee"
 date: "30/06/2022"
-output: html_document
+output: 
+  html_document: 
+    toc: yes
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    number_sections: true
 ---
 
 Mardia et al 2016, Table 3, presents relative efficiency to the maximum likelihood estimator as a ratio of mean squared error.
@@ -12,7 +18,7 @@ We'll also redo the relative efficiency estimates for the non-robust hybrid esti
 
 The estimate for the mean direction is the same in the hybrid and maximum likelihood. But the robust version will have *different* mean direction estimates due to the weights.
 
-## Preparation
+# Preparation
 The package `CircStats` was used by Mardia et al. for simulation. 
 This package appears to be only for circular (`p=2`) models, with data provided in radians.
 
@@ -26,7 +32,7 @@ k <- 3
 Y <- Directional::rvmf(10000, m, k) #just for development
 ```
 
-### Maximum-Likelihood Estimator
+## Maximum-Likelihood Estimator
 The maximum-likelihood estimator is the mean direction, and the kappa
 ```{r mlefun}
 mle_circ <- function(Y){
@@ -51,17 +57,26 @@ if(!isTRUE(all.equal(mle_Dir(Y), list(m=m, k=k), tolerance = 1E-1))){rm("mle_Dir
 mle <- mle_Dir
 ```
 
-### Function: Simulate then Estimate
+## Function: Simulate then Estimate
 ```{r sim_estimate}
-simnest <- function(n, m, k){
+simnest <- function(n, m, k, cWs){
   Y <- Directional::rvmf(n, m, k)
   est <- list()
   est$ml <- mle(Y)
   est$hyb <- vMF(Y, method = "Mardia")[c("m", "k")]
-  est$hyb_rob <- vMF(Y, method = "Mardia", cW = 0.1)[c("m", "k")]
-  est$hyb_robsm <- vMF(Y, method = "Mardia_robustsm", cW = 0.1)[c("m", "k")]
   est$fsm <- vMF(Y, method = "smfull")[c("m", "k")]
-  est$fsm_rob <- vMF(Y, method = "smfull", cW = 0.1)[c("m", "k")]
+  names(cWs) <- cWs
+  
+  hyb_rob <- lapply(cWs, function(cW){vMF(Y, method = "Mardia", cW = cW)[c("m", "k")]})
+  names(hyb_rob) <- paste0("hyb_rob_", names(hyb_rob))
+  
+  hyb_robk <- lapply(cWs, function(cW){vMF(Y, method = "Mardia_robustsm", cW = cW)[c("m", "k")]})
+  names(hyb_robk) <- paste0("hyb_robk_", names(hyb_robk))
+  
+  fsm_rob <- lapply(cWs, function(cW){vMF(Y, method = "smfull", cW = cW)[c("m", "k")]})
+  names(fsm_rob) <- paste0("fsm_rob_", names(fsm_rob))
+  
+  est <- c(est, hyb_rob, hyb_robk, fsm_rob)
   return(est)
 }
 err_k <- function(out, truek){(vapply(out, "[[", "k", FUN.VALUE = 0.1) - truek)}
@@ -73,9 +88,9 @@ out2mse_m <- function(out, m){
   mse_m <- rowMeans(se_m)
   return(mse_m)
 }
-runexperiment <- function(reps, n, m, k){
+runexperiment <- function(reps, n, m, k, cWs){
   stopifnot(reps > 1) #cos simplify below will be all strange when reps = 1
-  out <- replicate(reps, simnest(n, m, k), simplify = TRUE)
+  out <- replicate(reps, simnest(n, m, k, cWs), simplify = TRUE)
   mse_k <- out2mse_k(out, k)
   mse_m <- out2mse_m(out, m)
   return(list(
@@ -86,57 +101,93 @@ runexperiment <- function(reps, n, m, k){
 }
 ```
 
-### Model Parameters for Simulation
+## Model Parameters for Simulation
 ```{r truepars}
 m <- c(1,1)/sqrt(2)
 ks <- seq(0.5, 10, by = 0.5)
 ```
 
-## The n=100 case
+# The n=100 case
 ```{r n100, warning=FALSE}
-n100 <- pbapply::pblapply(ks, function(k){runexperiment(1000000, 100, m, k)})
-names(n100) <- ks
-save(n100, file = "n100.rds")
+# n100 <- pbapply::pblapply(ks, function(k){runexperiment(1000, 100, m, k, cWs = c(0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5))})
+# names(n100) <- ks
+# save(n100, file = "n100.rds")
 load("./n100.rds")
 mse_k <- t(simplify2array(lapply(n100, "[[", "mse_k")))
 mse_m <- t(simplify2array(lapply(n100, "[[", "mse_m")))
 print("relative MSE for k")
-1/(mse_k[,-1]/mse_k[, "ml"])
+relMSE_k <- 1/(mse_k[,-1]/mse_k[, "ml"])
+colnames(relMSE_k)[duplicated(colnames(relMSE_k))] <- gsub("rob_", "robk_", colnames(relMSE_k)[duplicated(colnames(relMSE_k))]) #column name correction
+relMSE_k
+
 print("relative MSE for m")
-1/(mse_m[,-1]/mse_m[, "ml"])
+relMSE_m <- 1/(mse_m[,-1]/mse_m[, "ml"])
+colnames(relMSE_m)[duplicated(colnames(relMSE_m))] <- gsub("rob_", "robk_", colnames(relMSE_m)[duplicated(colnames(relMSE_m))]) #column name correction
+relMSE_m
+```
+```{r tidyrelMSE_table}
+tidyrelMSE <- function(relMSEtab){
+  as_tibble(relMSEtab, rownames = "k") %>%
+  dplyr::mutate(k = as.numeric(k)) %>%
+  tidyr::pivot_longer(-k, names_to = "Estimator", values_to = "relMSE") %>%
+  tidyr::separate(Estimator, into = c("Method", "Robust", "cW"), sep = "_",
+                  fill = "right", extra = "merge") %>%
+  dplyr::mutate(Method = case_when(
+    Method == "fsm" ~ "fsm",
+    (Method == "hyb") & (Robust == "robk") ~ "hyb robust k only",
+    Method == "hyb" ~ "hyb",
+    TRUE ~ paste("arr", Method)
+  )) %>%
+  dplyr::mutate(cW = case_when(
+    is.na(cW) ~ 0.0,
+    TRUE ~ as.numeric(cW)
+  ))
+}
+
+relMSE_plot <- function(tidieddf){
+  cWcolors <- c("#ff0000", viridisLite::viridis(n_distinct(tidieddf$cW) - 1))
+  
+  tidieddf %>%
+  ggplot() +
+  geom_line(aes(x = k, y = relMSE, lty = Method, col = factor(cW), group = paste(Method, Robust, cW))) +
+  # geom_point(aes(x = k, y = relMSE, col = cW, shape = paste(Method, Robust))) +
+  scale_color_manual(values = cWcolors, name = "cW") +
+  facet_wrap(vars(substr(Method, 1, 3))) +
+  geom_hline(yintercept = 1, col = "blue", lty = "dashed") +
+  scale_linetype_manual(values = c("solid", "solid", "dotted")) 
+}
 ```
 
-```{r n100plot}
+```{r n100plot_k}
 library(ggplot2)
 library(dplyr)
-as_tibble(1/(mse_k[,-1]/mse_k[, "ml"]), rownames = "k") %>%
-  dplyr::mutate(k = as.numeric(k)) %>%
-  tidyr::pivot_longer(-k, names_to = "Estimator", values_to = "relMSE") %>%
-  dplyr::mutate(Method = gsub("_.*", "", Estimator)) %>%
-  dplyr::mutate(Robust = case_when(
-    grepl("_robsm", Estimator) ~ "k only",
-    grepl("_rob$", Estimator) ~ "all",
-    TRUE ~ "none"
-  )) %>%
-  ggplot() +
-  geom_line(aes(x = k, y = relMSE, col = Method, lty = Robust)) +
-  geom_point(aes(x = k, y = relMSE, col = Method)) +
+tidyrelMSE(relMSE_k) %>%
+  # dplyr::filter(Method != "fsm") %>%
+  relMSE_plot() + 
   ggtitle("Relative MSE for Kappa")
+```
 
-as_tibble(1/(mse_m[,-1]/mse_m[, "ml"]), rownames = "k") %>%
-  dplyr::mutate(k = as.numeric(k)) %>%
-  tidyr::pivot_longer(-k, names_to = "Estimator", values_to = "relMSE") %>%
-  dplyr::mutate(Method = gsub("_.*", "", Estimator)) %>%
-  dplyr::mutate(Robust = case_when(
-    grepl("_robsm", Estimator) ~ "k only",
-    grepl("_rob$", Estimator) ~ "all",
-    TRUE ~ "none"
-  )) %>%
-  ggplot() +
-  geom_line(aes(x = k, y = relMSE, col = Method, lty = Robust)) +
-  geom_point(aes(x = k, y = relMSE, col = Method)) +
+It looks like best efficiency was achieved by cW=0.1 for the robust score matching of `k` only. High values of cW led to *lower* efficiency than the non-robust hybrid estimator.
+
+The full score matching and hybrid with full robustness achieved very similar efficiency, with efficiency lower than the non-robust versions.
+
+```{r n100plot_m}
+tidyrelMSE(relMSE_m) %>%
+  # dplyr::filter(Method != "fsm") %>%
+  relMSE_plot() + 
   ggtitle("Relative MSE for mu")
 ```
 
-It looks like the robust versions have much lower efficiency than the non-robust versions, and I suspect it is because of the estimation of the mean direction.
-Robust fitting of *just* kappa is more efficient, but only a little bit.
+# Low cW and the n=100 case (not finished)
+```{r n100_smallcW, eval = FALSE}
+n100_lowc <- pbapply::pblapply(ks, function(k){runexperiment(1000, 100, m, k, cWs = c(0.01, 0.1))})
+names(n100_lowc) <- ks
+save(n100_lowc, file = "n100_lowc.rds")
+mse_k <- t(simplify2array(lapply(n100_lowc, "[[", "mse_k")))
+mse_m <- t(simplify2array(lapply(n100_lowc, "[[", "mse_m")))
+relMSE_k <- 1/(mse_k[,-1]/mse_k[, "ml"])
+tidyrelMSE(relMSE_k) %>%
+  # dplyr::filter(Method != "fsm") %>%
+  relMSE_plot() + 
+  ggtitle("Relative MSE for Kappa")
+```
