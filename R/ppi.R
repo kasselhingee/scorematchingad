@@ -42,7 +42,7 @@
 #' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
 #' @export
 ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL, betap = NULL,
-                pow = 1, man, method = "direct", w = NULL,
+                pow = 1, man, method = "direct", w = rep(1, nrow(Y)),
                 bdryweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin()#specific to cppad methods
                 ){
@@ -52,11 +52,73 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
   stopifnot(pow == 1)
 
   usertheta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, beta, betaL, betap)
+  out <- list()
+  fitfun <- NA
+
+  if (method == "direct"){
+    if (man == "Ralr"){
+        if (usertheta_estimatorlog_weight_compatible(usertheta)){
+        out <- estimatorlog_weight(Y, betap = usertheta[length(usertheta)], weightW = w) #any theta is fine
+        fitfun <- "estimatorlog_weight"
+        }
+    }
+    if (man == "sphere"){ # a number of methods implemented
+      if (bdryweight == "minsq"){
+        if (ppi_usertheta_for_estimator1_dir(usertheta)){
+          out$est <- estimator1_dir(Y, acut = acut, w = w)
+          fitfun <- "estimator1_dir"
+        } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
+          out <- estimator1(Y,acut = acut,incb = 0,
+                            beta0 = fromPPIparamvec(usertheta)$beta,
+                            w= w)
+          fitfun <- "estimator1_zerob"
+        } else if (ppi_usertheta_estimator1_compatible_incb(usertheta)){
+          out <- estimator1(Y,acut = acut,incb = 1,
+                            beta0 = fromPPIparamvec(usertheta)$beta,
+                            w= w)
+          fitfun <- "estimator1_incb"
+        } else if (utheta_estimatorall1_betap_compatible(usertheta)){
+          out <- estimatorall1(Y, acut = acut,
+                            betap = tail(fromPPIparamvec(usertheta)$beta, 1),
+                            w= w)
+          fitfun <- "estimatorall1_betap"
+        } else if (utheta_estimatorall1_full_compatible(usertheta)){
+          out <- estimatorall1(Y, acut = acut,
+                               betap = NULL,
+                               w= w)
+          fitfun <- "estimatorall1_full"
+        }
+      }
+
+      if (bdryweight == "prodsq"){
+        if (ppi_usertheta_for_estimator1_dir(usertheta)){
+          out$est <- estimator2_dir(Y, acut = acut, w = w)
+          fitfun <- "estimator2_dir"
+        } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
+          out <- estimator2(Y,acut = acut,incb = 0,
+                            beta0 = fromPPIparamvec(usertheta)$beta,
+                            w= w)
+          fitfun <- "estimator2_zerob"
+        } else if (ppi_usertheta_estimator1_compatible_incb(usertheta)){
+          out <- estimator2(Y,acut = acut,incb = 1,
+                            beta0 = fromPPIparamvec(usertheta)$beta,
+                            w= w)
+          fitfun <- "estimator2_incb"
+        }
+      }
+    }
+    if (is.na(fitfun)){
+      warning("No direct estimator exists for parameter set. Using cppad.")
+      method <- "cppad"
+    }
+  }
   if (method == "cppad"){
     out <- ppi_cppad(Y, usertheta, bdrythreshold, shiftsize, approxorder, pow, man, bdryweight, acut, control)
+    fitfun <- "cppad"
   }
 
-  return(out)
+  return(c(fitfun = fitfun,
+           out))
 }
 
 
@@ -180,6 +242,7 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
   if (!is.null(beta)){
     stopifnot(is.null(betaL))
     stopifnot(is.null(betap))
+    if (is.matrix(beta)){beta <- drop(beta)}
     stopifnot(is.vector(beta, "numeric") | is.vector(beta, "logical"))
     if (length(beta) == 1){
       betaLprep = rep(beta, p-1)

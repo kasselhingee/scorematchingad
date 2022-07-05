@@ -16,6 +16,24 @@
 #' For more on the Hyvarinen weight (see equation 7 and Section 3.2 of (Scealy and Wood, 2021)).
 #' @return A vector of the estimates for individual entries in the matrices \eqn{A} and \eqn{b}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A} (except the last entry that is always zero for identifiability in the PPI model), then the upper triangle of \eqn{A} without the last column (again for identifiability) and finally the elements of \eqn{b} (except the last element, which is always 0 due to identifiability also) if `incb=1`.
 
+ppi_usertheta_estimator1_compatible_incb <- function(usertheta){
+  p <- ppiltheta2p(length(usertheta))
+  d_isfixed <- ppi_cppad_thetaprocessor(p, AL = FALSE, bL = FALSE, beta = TRUE)
+  isfixed <- t_u2i(usertheta)
+  if (all(d_isfixed == isfixed)){return(TRUE)}
+  else {return(FALSE)}
+}
+
+ppi_usertheta_estimator1_compatible_zerob <- function(usertheta){
+  p <- ppiltheta2p(length(usertheta))
+  d_isfixed <- ppi_cppad_thetaprocessor(p, AL = FALSE, bL = TRUE, beta = TRUE)
+  isfixed <- t_u2i(usertheta)
+  if (!all(d_isfixed == isfixed)){return(FALSE)}
+
+  mats <- fromPPIparamvec(usertheta)
+  if (!all(mats$bL == 0)){return(FALSE)}
+  else {return(TRUE)}
+}
 
 #' @export
 estimator1 <- function(prop,acut,incb, beta0, w=rep(1, nrow(prop)))
