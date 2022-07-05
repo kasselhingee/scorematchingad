@@ -179,10 +179,11 @@ tidyrelMSE(relMSE_m) %>%
 ```
 
 # Low cW and the n=100 case (not finished)
-```{r n100_smallcW, eval = FALSE}
-n100_lowc <- pbapply::pblapply(ks, function(k){runexperiment(1000, 100, m, k, cWs = c(0.01, 0.1))})
-names(n100_lowc) <- ks
-save(n100_lowc, file = "n100_lowc.rds")
+```{r n100_smallcW}
+# n100_lowc <- pbapply::pblapply(ks, function(k){runexperiment(1000, 100, m, k, cWs = c(0.01, 0.1))})
+# names(n100_lowc) <- ks
+# save(n100_lowc, file = "n100_lowc.rds")
+load("n100_lowc.rds")
 mse_k <- t(simplify2array(lapply(n100_lowc, "[[", "mse_k")))
 mse_m <- t(simplify2array(lapply(n100_lowc, "[[", "mse_m")))
 relMSE_k <- 1/(mse_k[,-1]/mse_k[, "ml"])
