@@ -20,7 +20,8 @@ Imports:
     MCMCpack,
     Rcpp (>= 1.0.7),
     Rcgmin,
-    MASS
+    MASS,
+    FixedPoint
 LinkingTo: Rcpp
 Config/testthat/edition: 3
 
