@@ -21,7 +21,9 @@ Imports:
     Rcpp (>= 1.0.7),
     Rcgmin,
     MASS,
-    FixedPoint
+    FixedPoint,
+    Directional,
+    mclust
 LinkingTo: Rcpp
 Config/testthat/edition: 3
 
