@@ -174,7 +174,7 @@ test_that("FB() fits with various fixed elements", {
   inA <- matrix(NA, nrow = p, ncol = p)
   inA[p, 1] <- inA[1, p] <- thetamats$A[1, p]
   est <- FB(sample, A = inA, control = list(tol = 1E-15))
-  cdabyppi::expect_lte_v(abs(est$A - thetamats$A)[-(p*p)], 3 * est$SE$A[-(p*p)])
+  cdabyppi:::expect_lte_v(abs(est$A - thetamats$A)[-(p*p)], 3 * est$SE$A[-(p*p)])
   expect_equal(est$A[!is.na(inA)], thetamats$A[!is.na(inA)])
   expect_equal(est$SE$A[!is.na(inA)], 0 * thetamats$A[!is.na(inA)])
 
@@ -187,7 +187,7 @@ test_that("FB() fits with various fixed elements", {
   inkm <- rep(NA, p)
   inkm[p] <- thetamats$m[p] * thetamats$k
   est <- FB(sample, km = inkm, control = list(tol = 1E-15))
-  cdabyppi::expect_lte_v(abs(est$km - thetamats$km), 3 * est$SE$km + 1E-10)
+  cdabyppi:::expect_lte_v(abs(est$km - thetamats$km), 3 * est$SE$km + 1E-10)
   expect_equal(est$km[!is.na(inkm)], thetamats$km[!is.na(inkm)])
   expect_equal(est$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
 })

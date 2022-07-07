@@ -107,7 +107,7 @@ test_that("Bingham_full() with various fixed elements works", {
   inA <- matrix(NA, nrow = p, ncol = p)
   inA[p, 1] <- inA[1, p] <- A[1, p]
   est <- Bingham(sample, A = inA, method = "smfull", control = list(tol = 1E-15))
-  cdabyppi::expect_lte_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
+  cdabyppi:::expect_lte_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
   expect_equal(est$A[!is.na(inA)], A[!is.na(inA)])
   expect_equal(est$A_SE[!is.na(inA)], 0 * A[!is.na(inA)])
   expect_error(Bingham(sample, A = inA, method = "Mardia", control = list(tol = 1E-15)))
@@ -116,7 +116,7 @@ test_that("Bingham_full() with various fixed elements works", {
   inA <- matrix(NA, nrow = p, ncol = p)
   inA[2, 2] <- A[2, 2]
   est <- Bingham(sample, A = inA, method = "smfull", control = list(tol = 1E-15))
-  cdabyppi::expect_lte_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
+  cdabyppi:::expect_lte_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
   expect_equal(est$A[!is.na(inA)], A[!is.na(inA)])
   expect_equal(est$A_SE[!is.na(inA)], 0 * A[!is.na(inA)])
   expect_error(Bingham(sample, A = inA, method = "Mardia", control = list(tol = 1E-15)))

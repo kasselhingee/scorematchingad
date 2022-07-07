@@ -73,7 +73,7 @@ test_that("ppi with cppad method works easily on sec2_3model", {
 
   # try fixing betap
   out <- ppi(model$sample, betap = -0.5, man = "sphere", bdryweight = "minsq", acut = 0.1, method = "cppad")
-  cdabyppi::expect_lte_v(abs(out$est$theta - model$theta), 3 * out$SE$theta)
+  cdabyppi:::expect_lte_v(abs(out$est$theta - model$theta), 3 * out$SE$theta)
   expect_equal(out$est$beta[model$p], -0.5)
   expect_equal(out$SE$beta[model$p], 0)
 
@@ -84,7 +84,7 @@ test_that("ppi with cppad method works easily on sec2_3model", {
   prop <- rhybrid(100, 3, beta, AL, bL, 4)[[1]]
   theta <- toPPIparamvec(AL, bL, beta)
   out <- ppi(prop, AL = "diag", betap = -0.5, man = "sphere", bdryweight = "minsq", acut = 0.1, method = "cppad")
-  cdabyppi::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
+  cdabyppi:::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
   expect_equal(out$est$beta[model$p], -0.5)
   expect_equal(out$est$ALs[1, 2], 0)
 
@@ -95,7 +95,7 @@ test_that("ppi with cppad method works easily on sec2_3model", {
   prop <- rhybrid(100, 3, beta, AL, bL, 4)[[1]]
   theta <- toPPIparamvec(AL, bL, beta)
   out <- ppi(prop, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", bdryweight = "ones", method = "cppad")
-  cdabyppi::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
+  cdabyppi:::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
   expect_equal(out$est$beta[model$p], -0.5)
   expect_equal(out$est$ALs[1, 2], 0)
 })
