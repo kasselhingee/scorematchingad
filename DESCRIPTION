@@ -13,7 +13,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Suggests: 
     testthat,
-    tibble
+    tibble,
+    ks,
+    movMF
 Depends: 
     R (>= 2.10)
 Imports:
