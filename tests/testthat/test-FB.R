@@ -95,7 +95,7 @@ test_that("rfb() simulation for general symmetric matrices via Bingham() fitting
   #results have the same eigen values
   expect_equal(estA_es$values, A_es$values, tolerance = 0.5)
   #matrix values match
-  cdabyppi::expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
+  cdabyppi:::expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
 
   # note that parameter estimates have suprisingly large margin given that there is 1000 samples
 

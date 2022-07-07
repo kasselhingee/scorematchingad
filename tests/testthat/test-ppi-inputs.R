@@ -69,7 +69,7 @@ test_that("ppi with cppad method works easily on sec2_3model", {
   set.seed(1245)
   model <- sec2_3model(1000)
   out <- ppi(model$sample, man = "sphere", bdryweight = "minsq", acut = 0.1, method = "cppad")
-  cdabyppi::expect_lt_v(abs(out$est$theta - model$theta) / out$SE$theta, 3)
+  cdabyppi:::expect_lt_v(abs(out$est$theta - model$theta) / out$SE$theta, 3)
 
   # try fixing betap
   out <- ppi(model$sample, betap = -0.5, man = "sphere", bdryweight = "minsq", acut = 0.1, method = "cppad")
