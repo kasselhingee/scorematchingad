@@ -20,6 +20,7 @@ test_that("vMF_Mardia() function works on data around north pole", {
   k <- 3
   m <- c(1, 0)
   km <-  k * m
+  warning("switch to simulating vMF using Directional")
   sample <- movMF::rmovMF(1000, km)
   out <- vMF(sample, method = "Mardia")
   expect_equal(out$m , m, tolerance = 1E-1) #moment estimate part
