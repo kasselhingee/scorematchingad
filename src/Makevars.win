@@ -5,26 +5,8 @@ $(info make is $(MAKE))
 CXX_STD = CXX11
 $(info CXX_STD is $(CXX_STD))
 
-PKG_CXXFLAGS = -I/usr/local/include -I./CppAD/external/eigen.git -I./CppAD/include/ -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include
+PKG_CXXFLAGS = -I../inst/include -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include
 
 $(info PKG_CXXFLAGS is $(PKG_CXXFLAGS))
-
-PKG_LIBS = -L/usr/local/lib -L./CppAD/build/cppad_lib -lcppad_lib
-
-$(info PKG_LIBS is $(PKG_LIBS))
-
-CFLAGS = $(CFLAGS) $(CPICFLAGS)
-CXXFLAGS = $(CXXFLAGS) $(CXXPICFLAGS)
-
-$(SHLIB): ./CppAD/build/cppad_lib/libcppad_lib.so eigenmake
-
-./CppAD/build/cppad_lib/libcppad_lib.so: eigenmake
-	$(info ******************Making CppAD*******************)
-	mkdir -p CppAD/build; cd CppAD/build; cmake -D include_eigen=true -D cppad_cxx_flags="-I./CppAD/external/eigen.git" ..
-
-eigenmake:
-	$(info ******************Making Eigen*******************)
-	mkdir -p CppAD/external/eigen.git/build; cd CppAD/external/eigen.git/build; cmake .. -DCMAKE_INSTALL_PREFIX="prefix"; $(MAKE) install;
-	touch CppAD/external/eigen-3.3.7.configured
 
 
