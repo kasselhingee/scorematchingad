@@ -49,7 +49,13 @@ smest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = 
                         w = w,
                         stopifnan = TRUE,
                         control = control)
-  if (out$convergence == 2){stop(paste(out$message, "Perhaps smobj() generates a NaN?"))}
+  if (out$convergence == 2){
+    if (grepl("Initial point", out$message)){
+      stop(paste(out$message, "Initial point was", paste(theta, collapse = " ")))
+    } else {
+      stop(paste(out$message, "Perhaps smobj() generates a NaN?"))
+    }
+  }
   if (out$convergence != 0){warning("Optimisation did not converge.")}
   out$SE <- try({
     smestSE(
