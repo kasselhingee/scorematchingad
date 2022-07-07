@@ -1,5 +1,5 @@
 CXX_STD = CXX11
 
-PKG_CXXFLAGS = -I../inst/include -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include
+PKG_CXXFLAGS = -I../inst/include 
 
 
