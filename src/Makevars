@@ -1,21 +1,5 @@
 CXX_STD = CXX11
 
-PKG_CXXFLAGS = -I/usr/local/include -I./CppAD/external/eigen.git -I./CppAD/include/ -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include
-
-PKG_LIBS = -L/usr/local/lib -L./CppAD/build/cppad_lib -lcppad_lib
-
-
-
-.PHONY: all mylibs
-
-all: $(SHLIB)
-$(SHLIB): cppadmake
-
-cppadmake: eigenmake
-	mkdir -p CppAD/build; cd CppAD/build; cmake -D include_eigen=true -D cppad_cxx_flags="-I./CppAD/external/eigen.git" ..
-
-eigenmake:
-	mkdir -p CppAD/external/eigen.git/build; cd CppAD/external/eigen.git/build; cmake .. -DCMAKE_INSTALL_PREFIX="prefix"; make install;
-	touch CppAD/external/eigen-3.3.7.configured
+PKG_CXXFLAGS = -I/usr/local/include -I../inst/include -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include
 
 

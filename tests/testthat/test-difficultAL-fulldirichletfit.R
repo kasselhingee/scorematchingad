@@ -31,7 +31,7 @@ test_that("full ppi estimates are within 3 SE of beta for difficult AL with larg
   expect_equal(colMeans(prop), c(0.1, 0.99, 0.1), tolerance = 0.5)
 
   est_cppad <- ppi(prop, bL = bL, man = "sphere", bdryname = "minsq",
-                         method = "cppad"
+                         method = "cppad",
                          acut = 0.01,
                          bdrythreshold = 1E-20,
                          control = list(tol = 1E-10))
