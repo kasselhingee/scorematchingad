@@ -1,0 +1,1097 @@
+"","Package","LibPath","Version","Priority","Depends","Imports","LinkingTo","Suggests","Enhances","License","License_is_FOSS","License_restricts_use","OS_type","MD5sum","NeedsCompilation","Built"
+"abind","abind","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4-5",NA,"R (>= 1.5.0)","methods, utils",NA,NA,NA,"LGPL (>= 2)",NA,NA,NA,NA,"no","4.0.0"
+"acepack","acepack","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.1",NA,NA,NA,NA,"testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"ade4","ade4","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.7-18",NA,"R (>= 2.10)","graphics, grDevices, methods, stats, utils, MASS, pixmap, sp",NA,"ade4TkGUI, adegraphics, adephylo, ape, CircStats, deldir,
+lattice, spdep, splancs, waveslim, progress, foreach, parallel,
+doParallel, iterators",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"admisc","admisc","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.23",NA,"R (>= 3.5.0)","methods",NA,"QCA (>= 3.7)",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"adr","adr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.225",NA,"methods","httr, uuid, Matrix",NA,"stringr, testthat, knitr",NA,"AGPL (>= 3.0) + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"AICcmodavg","AICcmodavg","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.3-1",NA,"R (>= 3.2.0)","methods, stats, graphics, lattice, MASS, Matrix, nlme, stats4,
+survival, unmarked, VGAM, xtable",NA,"betareg, coxme, fitdistrplus, glmmTMB, lavaan, lme4, maxlike,
+nnet, ordinal, pscl, R2jags, R2OpenBUGS, R2WinBUGS, jagsUI,
+lmerTest",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"alphahull","alphahull","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.2",NA,NA,"ggplot2, tripack, R.utils, sgeostat, spatstat, splancs",NA,NA,NA,"file LICENSE",NA,"yes",NA,NA,"yes","4.0.2"
+"anytime","anytime","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.9",NA,"R (>= 3.2.0)","Rcpp (>= 0.12.9)","Rcpp (>= 0.12.9), BH","tinytest (>= 1.0.0), gettz",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.2"
+"ape","ape","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","5.5",NA,"R (>= 3.2.0)","nlme, lattice, graphics, methods, stats, tools, utils,
+parallel, Rcpp (>= 0.12.0)","Rcpp","gee, expm, igraph, phangorn",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"arrangements","arrangements","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.9",NA,"R (>= 3.4.0)","gmp, methods, R6",NA,"foreach, knitr, rmarkdown, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.2"
+"askpass","askpass","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1",NA,NA,"sys (>= 2.1)",NA,"testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"assertthat","assertthat","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.1",NA,NA,"tools",NA,"testthat, covr",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.0"
+"backports","backports","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.1",NA,"R (>= 3.0.0)",NA,NA,NA,NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"base64enc","base64enc","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1-3",NA,"R (>= 2.9.0)",NA,NA,NA,"png","GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.0"
+"bayesm","bayesm","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.1-4",NA,"R (>= 3.2.0)","Rcpp (>= 0.12.0), utils, stats, graphics, grDevices","Rcpp, RcppArmadillo","knitr, rmarkdown",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"bayesplot","bayesplot","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.8.1",NA,"R (>= 3.1.0)","dplyr (>= 0.8.0), ggplot2 (>= 3.0.0), ggridges, glue,
+reshape2, rlang (>= 0.3.0), stats, tibble, tidyselect, utils",NA,"ggfortify, gridExtra (>= 2.2.1), hexbin, knitr (>= 1.16), loo
+(>= 2.0.0), RColorBrewer, rmarkdown (>= 1.0.0), rstan (>=
+2.17.1), rstanarm (>= 2.17.4), rstantools (>= 1.5.0), scales,
+shinystan (>= 2.3.0), survival, testthat (>= 2.0.0), vdiffr",NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"beeswarm","beeswarm","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.0",NA,NA,"stats, graphics, grDevices, utils",NA,NA,NA,"Artistic-2.0",NA,NA,NA,NA,"yes","4.0.3"
+"BH","BH","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.75.0-0",NA,NA,NA,NA,NA,NA,"BSL-1.0",NA,NA,NA,NA,"no","4.0.3"
+"bigassertr","bigassertr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.5",NA,NA,NA,NA,"testthat, covr",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"bigparallelr","bigparallelr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.2",NA,"foreach","bigassertr (>= 0.1.1), doParallel, flock, parallel,
+parallelly, RhpcBLASctl",NA,"testthat, covr",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"bigstatsr","bigstatsr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5.6",NA,"R (>= 3.3)","bigassertr (>= 0.1.1), bigparallelr (>= 0.2.3), cowplot,
+foreach, ggplot2 (>= 3.0), graphics, methods, ps (>= 1.4),
+Rcpp, RSpectra, stats, tibble, utils","Rcpp, RcppArmadillo, rmio (>= 0.1.3)","bigmemory (>= 4.5.33), bigreadr (>= 0.2), covr, data.table,
+dplyr, glmnet, hexbin, memuse, ModelMetrics, ppcor,
+RhpcBLASctl, spelling (>= 1.2), testthat",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"bit","bit","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","4.0.4",NA,"R (>= 2.9.2)",NA,NA,"testthat (>= 0.11.0), roxygen2, knitr, rmarkdown,
+microbenchmark, bit64 (>= 4.0.0), ff (>= 4.0.0)",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.2"
+"bit64","bit64","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","4.0.5",NA,"R (>= 3.0.1), bit (>= 4.0.0), utils, methods, stats",NA,NA,NA,NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.2"
+"bitops","bitops","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0-7",NA,NA,NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"blob","blob","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.2",NA,NA,"methods, rlang, vctrs (>= 0.2.1)",NA,"covr, crayon, pillar (>= 1.2.1), testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"bmp","bmp","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3",NA,NA,NA,NA,"pixmap, testthat",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"bookdown","bookdown","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.24",NA,NA,"htmltools (>= 0.3.6), knitr (>= 1.31), rmarkdown (>= 2.9),
+jquerylib, xfun (>= 0.22), tinytex (>= 0.12), yaml (>= 2.1.19)",NA,"bslib (>= 0.2.4), downlit (>= 0.2.1), htmlwidgets, jsonlite,
+rstudioapi, miniUI, rsconnect (>= 0.4.3), servr (>= 0.13),
+shiny, tibble, testit (>= 0.9), tufte, xml2, webshot, testthat
+(>= 3.0.0), withr (>= 2.3.0)",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"boral","boral","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0",NA,"coda","abind, corpcor, fishMod, graphics, grDevices, lifecycle, MASS,
+mvtnorm, R2jags, reshape2, stats",NA,"mvabund (>= 4.0.1), corrplot",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"brew","brew","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0-6",NA,NA,NA,NA,NA,NA,"GPL-2",NA,NA,NA,NA,NA,"4.0.0"
+"bridgesampling","bridgesampling","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1-2",NA,"R (>= 3.0.0)","mvtnorm, Matrix, Brobdingnag, stringr, coda, parallel, scales,
+utils, methods",NA,"testthat, Rcpp, RcppEigen, R2jags, rjags, runjags, knitr,
+rmarkdown, R.rsp, BayesFactor, rstan, rstanarm, nimble,
+MCMCpack",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"brio","brio","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.2",NA,NA,NA,NA,"testthat (>= 2.1.0), covr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"brm","brm","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,NA,"stats",NA,"knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"brms","brms","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.16.1",NA,"R (>= 3.5.0), Rcpp (>= 0.12.0), methods","rstan (>= 2.19.2), ggplot2 (>= 2.0.0), loo (>= 2.3.1),
+posterior (>= 1.0.0), Matrix (>= 1.1.1), mgcv (>= 1.8-13),
+rstantools (>= 2.1.1), bayesplot (>= 1.5.0), shinystan (>=
+2.4.0), projpred (>= 2.0.0), bridgesampling (>= 0.3-0), glue
+(>= 1.3.0), future (>= 1.19.0), matrixStats, nleqslv, nlme,
+coda, abind, stats, utils, parallel, grDevices, backports",NA,"testthat (>= 0.9.1), emmeans (>= 1.4.2), cmdstanr (>= 0.4.0),
+RWiener, rtdists, mice, spdep, mnormt, lme4, MCMCglmm,
+splines2, ape, arm, statmod, digest, diffobj, R.rsp, gtable,
+shiny, knitr, rmarkdown",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"Brobdingnag","Brobdingnag","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2-6",NA,"R (>= 2.13.0), methods",NA,NA,NA,NA,"GPL",NA,NA,NA,NA,"no","4.0.3"
+"broom","broom","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.7.9",NA,"R (>= 3.1)","backports, dplyr (>= 1.0.0), ellipsis, generics (>= 0.0.2),
+glue, methods, purrr, rlang, stringr, tibble (>= 3.0.0), tidyr
+(>= 1.0.0)",NA,"AER, akima, AUC, bbmle, betareg, biglm, binGroup, boot,
+btergm, car, caret, cluster, cmprsk, coda, covr, drc, e1071,
+emmeans, epiR, ergm (>= 3.10.4), fixest (>= 0.9.0), gam (>=
+1.15), gee, geepack, ggplot2, glmnet, glmnetUtils, gmm, Hmisc,
+irlba, joineRML, Kendall, knitr, ks, Lahman, lavaan, leaps,
+lfe, lm.beta, lme4, lmodel2, lmtest (>= 0.9.38), lsmeans, maps,
+maptools, margins, MASS, Matrix, mclust, mediation, metafor,
+mfx, mgcv, mlogit, modeldata, modeltests, muhaz, multcomp,
+network, nnet, orcutt (>= 2.2), ordinal, plm, poLCA, psych,
+quantreg, rgeos, rmarkdown, robust, robustbase, rsample,
+sandwich, sp, spdep (>= 1.1), spatialreg, speedglm, spelling,
+survey, survival, systemfit, testthat (>= 2.1.0), tseries,
+vars, zoo",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"bslib","bslib","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.1",NA,"R (>= 2.10)","grDevices, htmltools (>= 0.5.2), jsonlite, sass (>= 0.4.0),
+jquerylib (>= 0.1.3), rlang",NA,"shiny (>= 1.6.0), rmarkdown (>= 2.7), thematic, knitr,
+testthat, withr, rappdirs, curl, magrittr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"cachem","cachem","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.6",NA,NA,"rlang, fastmap",NA,"testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"callr","callr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.7.0",NA,NA,"processx (>= 3.5.0), R6, utils",NA,"cli, covr, ps, rprojroot, spelling, testthat, withr (>=
+2.3.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"captioner","captioner","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.2.3",NA,NA,NA,NA,"knitr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"car","car","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.0-11",NA,"R (>= 3.5.0), carData (>= 3.0-0)","abind, MASS, mgcv, nnet, pbkrtest (>= 0.4-4), quantreg,
+grDevices, utils, stats, graphics, maptools, rio, lme4 (>=
+1.1-27.1), nlme",NA,"alr4, boot, coxme, effects, knitr, leaps, lmtest, Matrix,
+MatrixModels, rgl (>= 0.93.960), sandwich, SparseM, survival,
+survey",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"carData","carData","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.0-4",NA,"R (>= 3.5.0)",NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.2"
+"caret","caret","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","6.0-90",NA,"ggplot2, lattice (>= 0.20), R (>= 3.2.0)","e1071, foreach, grDevices, methods, ModelMetrics (>= 1.2.2.2),
+nlme, plyr, pROC, recipes (>= 0.1.10), reshape2, stats, stats4,
+utils, withr (>= 2.0.0)",NA,"BradleyTerry2, covr, Cubist, dplyr, earth (>= 2.2-3),
+ellipse, fastICA, gam (>= 1.15), ipred, kernlab, klaR, knitr,
+MASS, Matrix, mda, mgcv, mlbench, MLmetrics, nnet, pamr, party
+(>= 0.9-99992), pls, proxy, randomForest, RANN, rmarkdown,
+rpart, spls, subselect, superpc, testthat (>= 0.9.1), themis
+(>= 0.1.3)",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"cdabyppi","cdabyppi","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.0.0.9000",NA,"R (>= 3.5.0)","MCMCpack, Rcpp (>= 1.0.7), Rcgmin, MASS","Rcpp","testthat, tibble",NA,"`use_mit_license()`, `use_gpl3_license()` or friends to pick a
+license",NA,NA,NA,NA,"yes","4.0.3"
+"CDM","CDM","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","7.5-15",NA,"R (>= 3.1), mvtnorm","graphics, grDevices, methods, polycor, Rcpp, stats, utils","Rcpp, RcppArmadillo","BIFIEsurvey, lattice, MASS, miceadds, ROI, sirt, sfsmisc","dina, GDINA, mirt, rrum, TAM","GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"cellranger","cellranger","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.0",NA,"R (>= 3.0.0)","rematch, tibble",NA,"covr, testthat (>= 1.0.0), knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"checkmate","checkmate","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.0",NA,"R (>= 3.0.0)","backports (>= 1.1.0), utils",NA,"R6, fastmatch, data.table (>= 1.9.8), devtools, ggplot2,
+knitr, magrittr, microbenchmark, rmarkdown, testthat (>=
+0.11.0), tinytest (>= 1.1.0), tibble",NA,"BSD_3_clause + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"CircStats","CircStats","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2-6",NA,"MASS, boot",NA,NA,NA,NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"classInt","classInt","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4-3",NA,"R (>= 2.2)","grDevices, stats, graphics, e1071, class, KernSmooth",NA,"spData (>= 0.2.6.2), units, knitr, rmarkdown",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.0"
+"cli","cli","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.0.1",NA,"R (>= 2.10)","glue, utils",NA,"callr, covr, grDevices, htmlwidgets, knitr, methods, mockery,
+prettycode (>= 1.1.0), processx, ps (>= 1.3.4.9000), rlang,
+rmarkdown, rstudioapi, shiny, testthat, tibble, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"clipr","clipr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.7.1",NA,NA,"utils",NA,"covr, knitr, rmarkdown, rstudioapi (>= 0.5), testthat (>=
+2.0.0)",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"clue","clue","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3-60",NA,"R (>= 3.2.0)","stats, cluster, graphics, methods",NA,"e1071, lpSolve (>= 5.5.7), quadprog (>= 1.4-8), relations","RWeka, ape, cba, cclust, flexclust, flexmix, kernlab, mclust,
+movMF, modeltools","GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"coda","coda","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.19-4",NA,"R (>= 2.14.0)","lattice",NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.2"
+"colorspace","colorspace","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0-2",NA,"R (>= 3.0.0), methods","graphics, grDevices, stats",NA,"datasets, utils, KernSmooth, MASS, kernlab, mvtnorm, vcd,
+tcltk, shiny, shinyjs, ggplot2, dplyr, scales, grid, png, jpeg,
+knitr, rmarkdown, RColorBrewer, rcartocolor, scico, viridis,
+wesanderson",NA,"BSD_3_clause + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"colourpicker","colourpicker","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,"R (>= 3.1.0)","ggplot2, htmltools, htmlwidgets (>= 0.7), jsonlite, miniUI (>=
+0.1.1), shiny (>= 0.11.1), shinyjs (>= 2.0.0), utils",NA,"knitr (>= 1.7), rmarkdown, rstudioapi (>= 0.5),
+shinydisconnect",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"commonmark","commonmark","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.7",NA,NA,NA,NA,"curl, testthat, xml2",NA,"BSD_2_clause + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"compositions","compositions","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0-4",NA,"R (>= 3.6)","methods, utils, grDevices, stats, tensorA, robustbase, bayesm,
+graphics, MASS",NA,"rgl, combinat, energy, knitr, rmarkdown",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"Conigrave","Conigrave","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.4",NA,NA,"ggplot2 (>= 3.1.1), stringdist(>= 0.9.5.1), dplyr(>= 0.8.0.1),
+stringr(>= 1.4.0), ppcor(>= 1.1), mitools(>= 2.4), miceadds(>=
+3.2-48)",NA,NA,NA,"GPL-3",NA,NA,NA,NA,"no","4.0.0"
+"conquer","conquer","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.2",NA,"R (>= 3.5.0)","Rcpp (>= 1.0.3), Matrix, matrixStats, stats","Rcpp, RcppArmadillo (>= 0.9.850.1.0)",NA,NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.2"
+"corpcor","corpcor","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.6.10",NA,"R (>= 3.0.2)","stats",NA,"",NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"corrplot","corrplot","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.90",NA,NA,NA,NA,"seriation, knitr, RColorBrewer, rmarkdown, magrittr,
+prettydoc, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"covr","covr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.5.1",NA,"R (>= 3.1.0), methods","digest, stats, utils, jsonlite, rex, httr, crayon, withr (>=
+1.0.2), yaml",NA,"R6, curl, knitr, rmarkdown, htmltools, DT (>= 0.2), testthat,
+rlang, rstudioapi (>= 0.2), xml2 (>= 1.0.0), parallel, memoise,
+mockery",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.2"
+"cowplot","cowplot","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,"R (>= 3.5.0)","ggplot2 (> 2.2.1), grid, gtable, grDevices, methods, rlang,
+scales",NA,"Cairo, covr, dplyr, forcats, gridGraphics (>= 0.4-0), knitr,
+lattice, magick, maps, PASWR, patchwork, rmarkdown, ragg,
+testthat (>= 1.0.0), tidyr, vdiffr (>= 0.3.0), VennDiagram",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"cpp11","cpp11","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.0",NA,NA,NA,NA,"bench, brio, callr, cli, covr, decor, desc, ggplot2, glue,
+knitr, lobstr, mockery, progress, rmarkdown, scales, Rcpp,
+testthat, tibble, utils, vctrs, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"crayon","crayon","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.1",NA,NA,"grDevices, methods, utils",NA,"mockery, rstudioapi, testthat, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"credentials","credentials","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.1",NA,NA,"openssl (>= 1.3), sys (>= 2.1), curl, jsonlite, askpass",NA,"testthat, knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"crosstalk","crosstalk","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,NA,"htmltools (>= 0.3.6), jsonlite, lazyeval, R6",NA,"shiny, ggplot2, testthat (>= 2.1.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"crul","crul","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.0",NA,NA,"curl (>= 3.3), R6 (>= 2.2.0), urltools (>= 1.6.0), httpcode
+(>= 0.2.0), jsonlite, mime",NA,"testthat, roxygen2 (>= 7.1.1), fauxpas (>= 0.1.0), webmockr
+(>= 0.1.0), knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"cubature","cubature","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.4.2",NA,NA,"Rcpp","Rcpp","testthat, knitr, mvtnorm, benchr, rmarkdown",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"cubelyr","cubelyr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.1",NA,"R (>= 3.3)","dplyr, glue, pillar, purrr, rlang, tibble, tidyselect",NA,"covr, testthat (>= 2.1.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"curl","curl","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","4.3.2",NA,"R (>= 3.0.0)",NA,NA,"spelling, testthat (>= 1.0.0), knitr, jsonlite, rmarkdown,
+magrittr, httpuv (>= 1.4.4), webutils",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"cyclocomp","cyclocomp","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.0",NA,NA,"callr, crayon, desc, remotes, withr",NA,"testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"data.table","data.table","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.14.2",NA,"R (>= 3.1.0)","methods",NA,"bit64 (>= 4.0.0), bit (>= 4.0.4), curl, R.utils, xts,
+nanotime, zoo (>= 1.8-1), yaml, knitr, rmarkdown",NA,"MPL-2.0 | file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"data.tree","data.tree","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.0",NA,"R (>= 3.5)","R6, stringi, methods",NA,"Formula, graphics, testthat, knitr, rmarkdown, ape, yaml,
+networkD3, jsonlite, treemap, party, partykit, doParallel,
+foreach, htmlwidgets, DiagrammeR (>= 1.0.0), mockery, rpart","igraph","GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"DBI","DBI","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,"methods, R (>= 3.0.0)",NA,NA,"blob, covr, dbplyr, dplyr, glue, hms, knitr, magrittr,
+rmarkdown, rprojroot, RMariaDB, RSQLite (>= 1.1-2), testthat,
+xml2",NA,"LGPL (>= 2.1)",NA,NA,NA,NA,"no","4.0.3"
+"dbplyr","dbplyr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1.1",NA,"R (>= 3.1)","assertthat (>= 0.2.0), blob (>= 1.2.0), DBI (>= 1.0.0), dplyr
+(>= 1.0.4), ellipsis, glue (>= 1.2.0), lifecycle (>= 1.0.0),
+magrittr, methods, purrr (>= 0.2.5), R6 (>= 2.2.2), rlang (>=
+0.2.0), tibble (>= 1.4.2), tidyselect (>= 0.2.4), utils, vctrs,
+withr",NA,"bit64, covr, knitr, Lahman, nycflights13, odbc, RMariaDB (>=
+1.0.2), rmarkdown, RPostgres (>= 1.1.3), RPostgreSQL, RSQLite
+(>= 2.1.0), testthat (>= 3.0.2), tidyr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"debugme","debugme","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.0",NA,NA,"crayon, grDevices",NA,"covr, mockery, R6, testthat, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"deldir","deldir","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0-6",NA,"R (>= 3.5.0)","graphics, grDevices",NA,"polyclip",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"DEoptimR","DEoptimR","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0-10",NA,NA,"stats",NA,NA,"robustbase","GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"desc","desc","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.0",NA,"R (>= 3.1.0)","utils, R6, crayon, rprojroot",NA,"covr, testthat, whoami, withr, spelling, gh",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"devtools","devtools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.4.2",NA,"R (>= 3.0.2), usethis (>= 2.0.1)","callr (>= 3.6.0), cli (>= 2.4.0), desc (>= 1.3.0), ellipsis
+(>= 0.3.1), fs (>= 1.5.0), httr (>= 1.4.2), lifecycle (>=
+1.0.0), memoise (>= 2.0.0), pkgbuild (>= 1.2.0), pkgload (>=
+1.2.1), rcmdcheck (>= 1.3.3), remotes (>= 2.3.0), rlang (>=
+0.4.10), roxygen2 (>= 7.1.1), rstudioapi (>= 0.13), rversions
+(>= 2.0.2), sessioninfo (>= 1.1.1), stats, testthat (>= 3.0.2),
+tools, utils, withr (>= 2.4.1)",NA,"BiocManager (>= 1.30.12), covr (>= 3.5.1), curl (>= 4.3),
+digest (>= 0.6.27), DT (>= 0.17), foghorn (>= 1.3.2), gh (>=
+1.2.1), gmailr (>= 1.0.0), knitr (>= 1.31), lintr (>= 2.0.1),
+MASS, mockery (>= 0.4.2), pingr (>= 2.0.1), pkgdown (>= 1.6.1),
+rhub (>= 1.1.1), rmarkdown (>= 2.7), spelling (>= 2.2)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"DHARMa","DHARMa","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.4",NA,"R (>= 3.0.2)","stats, graphics, utils, grDevices, Matrix, parallel, gap,
+lmtest, ape, qgam (>= 1.3.2), lme4",NA,"knitr, testthat, rmarkdown, KernSmooth, sfsmisc, MASS, mgcv,
+spaMM (>= 3.2.0), GLMMadaptive, glmmTMB (>= 1.0.1)","phyr, rstan, rjags, BayesianTools","GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"diagram","diagram","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.6.5",NA,"R (>= 2.01), shape","stats, graphics",NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"diffobj","diffobj","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.5",NA,"R (>= 3.1.0)","crayon (>= 1.3.2), tools, methods, utils, stats",NA,"knitr, rmarkdown",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"digest","digest","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.6.28",NA,"R (>= 3.3.0)","utils",NA,"tinytest, knitr, rmarkdown, minidown",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"Directional","Directional","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","5.4",NA,NA,"bigstatsr, parallel, doParallel, foreach, ggplot2, grDevices,
+magrittr, RANN, Rfast, Rfast2, rgl, rnaturalearth, sf",NA,NA,NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"dirmult","dirmult","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.3-4",NA,"R (>= 2.5.0)",NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"discreteRV","discreteRV","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.2",NA,"R (>= 3.0.2)","plyr, MASS",NA,"testthat, roxygen2, knitr",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.0"
+"dismo","dismo","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3-3",NA,"R (>= 3.2.0), raster (>= 2.5-2), sp (>= 1.2-0)","Rcpp, methods","Rcpp","rJava (>= 0.9-7), terra, rgdal, rgeos, XML, ROCR, deldir,
+gstat, randomForest, kernlab, maptools, jsonlite, gbm (>=
+2.1.1)",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"distr","distr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.8.0",NA,"R(>= 2.14.0), methods, graphics, startupmsg, sfsmisc","stats, grDevices, utils, MASS",NA,"distrEx, svUnit (>= 0.7-11), knitr",NA,"LGPL-3",NA,NA,NA,NA,"yes","4.0.0"
+"distributional","distributional","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.2",NA,NA,"vctrs (>= 0.3.0), rlang (>= 0.4.5), generics, ellipsis, stats,
+numDeriv, ggplot2, scales, farver, digest, utils, lifecycle",NA,"testthat (>= 2.1.0), covr, mvtnorm, actuar, ggdist",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"doParallel","doParallel","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.16",NA,"R (>= 2.14.0), foreach(>= 1.2.0), iterators(>= 1.0.0),
+parallel, utils",NA,NA,"caret, mlbench, rpart, RUnit","compiler","GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"downloader","downloader","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4",NA,NA,"utils, digest",NA,"testthat",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"dplyr","dplyr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.7",NA,"R (>= 3.3.0)","ellipsis, generics, glue (>= 1.3.2), lifecycle (>= 1.0.0),
+magrittr (>= 1.5), methods, R6, rlang (>= 0.4.10), tibble (>=
+2.1.3), tidyselect (>= 1.1.0), utils, vctrs (>= 0.3.5), pillar
+(>= 1.5.1)",NA,"bench, broom, callr, covr, DBI, dbplyr (>= 1.4.3), knitr,
+Lahman, lobstr, microbenchmark, nycflights13, purrr, rmarkdown,
+RMySQL, RPostgreSQL, RSQLite, testthat (>= 3.0.2), tidyr, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"DT","DT","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.19",NA,NA,"htmltools (>= 0.3.6), htmlwidgets (>= 1.3), jsonlite (>=
+0.9.16), magrittr, crosstalk, jquerylib, promises",NA,"knitr (>= 1.8), rmarkdown, shiny (>= 1.6), bslib, testit",NA,"GPL-3 | file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"dtplyr","dtplyr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.0",NA,"R (>= 3.3)","crayon, data.table (>= 1.12.4), dplyr (>= 1.0.3), ellipsis,
+glue, lifecycle, rlang, tibble, tidyselect, vctrs",NA,"bench, covr, knitr, rmarkdown, testthat (>= 3.0.0), tidyr (>=
+1.1.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"dupree","dupree","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.0",NA,NA,"dplyr, purrr, tibble, magrittr, methods, stringdist (>=
+0.9.5.5), lintr (>= 2.0.0), rlang",NA,"testthat (>= 2.1.0), knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"dygraphs","dygraphs","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1.6",NA,"R (>= 3.0)","magrittr, htmlwidgets (>= 0.6), htmltools (>= 0.3.5), zoo (>=
+1.7-10), xts (>= 0.9-7)",NA,"testthat","rmarkdown (>= 0.3.3), shiny (>= 0.10.2.1)","MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"e1071","e1071","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.7-9",NA,NA,"graphics, grDevices, class, stats, methods, utils, proxy",NA,"cluster, mlbench, nnet, randomForest, rpart, SparseM, xtable,
+Matrix, MASS, slam",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"ellipsis","ellipsis","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.2",NA,"R (>= 3.2)","rlang (>= 0.3.0)",NA,"covr, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"evaluate","evaluate","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.14",NA,"R (>= 3.0.2)","methods",NA,"testthat, lattice, ggplot2",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"fable","fable","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.1",NA,"R (>= 3.4.0), fabletools (>= 0.3.0)","Rcpp (>= 0.11.0), rlang (>= 0.4.6), stats, dplyr (>= 1.0.0),
+tsibble (>= 0.9.0), tibble, tidyr, utils, distributional","Rcpp (>= 0.11.0)","covr, feasts, forecast, knitr, nnet, rmarkdown, spelling,
+testthat, tsibbledata (>= 0.2.0)",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"fabletools","fabletools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.1",NA,"R (>= 3.1.3)","tsibble (>= 0.9.0), tibble (>= 1.4.1), ggplot2 (>= 3.0.0),
+tidyselect, rlang (>= 0.4.5), stats, dplyr (>= 1.0.0), tidyr
+(>= 1.1.0), generics, R6, utils, vctrs (>= 0.2.2),
+distributional, progressr, lifecycle",NA,"covr, crayon, fable (>= 0.2.0), future.apply, knitr, pillar
+(>= 1.0.1), feasts (>= 0.1.2), rmarkdown, spelling, testthat,
+tsibbledata (>= 0.2.0), lubridate, Matrix",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"fansi","fansi","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5.0",NA,"R (>= 3.1.0)","grDevices, utils",NA,"unitizer, knitr, rmarkdown",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"farver","farver","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1.0",NA,NA,NA,NA,"testthat (>= 2.1.0), covr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"fastmap","fastmap","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.0",NA,NA,NA,NA,"testthat (>= 2.1.1)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"FD","FD","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0-12",NA,"ade4, ape, geometry, vegan",NA,NA,NA,NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"feasts","feasts","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.2",NA,"R (>= 3.5.0), fabletools (>= 0.3.1)","rlang (>= 0.2.0), tibble (>= 1.4.1), tsibble (>= 0.9.0),
+ggplot2 (>= 3.0.0), dplyr (>= 1.0.0), tidyr (>= 0.8.3), scales
+(>= 1.1.0), vctrs, lubridate, grid, slider, utils, lifecycle",NA,"tsibbledata, pillar (>= 1.0.1), knitr, rmarkdown, testthat,
+covr, seasonal, urca, fracdiff, fable",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"ff","ff","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","4.0.5",NA,"R (>= 2.10.1), bit (>= 4.0.0), utils",NA,NA,"biglm, testthat (>= 0.11.0)",NA,"GPL-2 | GPL-3 | file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"fishMod","fishMod","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.29",NA,NA,NA,NA,NA,NA,"GPL",NA,NA,NA,NA,"yes","4.0.0"
+"FixedPoint","FixedPoint","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.6.2",NA,"MASS",NA,NA,"testthat, schumaker, cubature, knitr, foreach, doParallel,
+SQUAREM, rmarkdown, qpdf",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"flock","flock","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.7",NA,NA,"Rcpp (>= 0.11.3), methods","Rcpp",NA,NA,"Apache License 2.0",NA,NA,NA,NA,"yes","4.0.3"
+"FNN","FNN","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.3",NA,"R (>= 3.0.0)",NA,NA,"chemometrics, mvtnorm",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.2"
+"fontawesome","fontawesome","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.2",NA,"R (>= 3.3.0)","rlang (>= 0.4.10), htmltools (>= 0.5.1.1)",NA,"covr, knitr, testthat, rsvg",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"forcats","forcats","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5.1",NA,"R (>= 3.2)","ellipsis, magrittr, rlang, tibble",NA,"covr, dplyr, ggplot2, knitr, readr, rmarkdown, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"foreach","foreach","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5.1",NA,"R (>= 2.5.0)","codetools, utils, iterators",NA,"randomForest, doMC, doParallel, testthat, knitr, rmarkdown",NA,"Apache License (== 2.0)",NA,NA,NA,NA,"no","4.0.3"
+"Formula","Formula","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2-4",NA,"R (>= 2.0.0), stats",NA,NA,NA,NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"fs","fs","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5.0",NA,"R (>= 3.1)","methods",NA,"testthat, covr, pillar (>= 1.0.0), tibble (>= 1.1.0), crayon,
+rmarkdown, knitr, withr, spelling, vctrs (>= 0.3.0)",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.2"
+"functional","functional","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.6",NA,NA,NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"future","future","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.22.1",NA,NA,"digest, globals (>= 0.14.0), listenv (>= 0.8.0), parallel,
+parallelly (>= 1.26.1), tools, utils",NA,"RhpcBLASctl, R.rsp, markdown",NA,"LGPL (>= 2.1)",NA,NA,NA,NA,"no","4.0.3"
+"future.apply","future.apply","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.8.1",NA,"R (>= 3.2.0), future (>= 1.21.0)","globals (>= 0.14.0), parallel, utils",NA,"datasets, stats, tools, listenv (>= 0.8.0), R.rsp, markdown",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"fuzzyjoin","fuzzyjoin","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.6",NA,"R (>= 2.10)","stringdist, stringr, dplyr (>= 0.8.1), tidyr (>= 0.4.0),
+purrr, geosphere, tibble",NA,"testthat, knitr, ggplot2, qdapDictionaries, readr, rvest,
+rmarkdown, maps, IRanges, covr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"galah","galah","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.1",NA,"R (>= 4.0.0)","assertthat, crul, data.table, data.tree, digest, httr,
+jsonlite (>= 0.9.8), sf, sp, stringr (>= 1.0.0), utils,
+wellknown",NA,"vcr (>= 0.6.0), collapsibleTree, covr, dplyr, ggplot2, knitr,
+magrittr, pkgdown, rmarkdown, taxize, testthat, treemapify,
+viridis",NA,"MPL-2.0",NA,NA,NA,NA,"no","4.0.3"
+"gamm4","gamm4","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2-6",NA,"R (>= 2.9.0), methods, Matrix, lme4 (>= 1.0), mgcv (>= 1.7-23)",NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"gap","gap","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.3-1",NA,"R (>= 2.10)",NA,NA,"BradleyTerry2, MASS, Matrix, MCMCglmm, R2jags, bdsmatrix,
+calibrate, circlize, coda, cowplot, coxme, dplyr, foreign,
+forestplot, gap.datasets, genetics, ggplot2, grid, haplo.stats,
+jsonlite, kinship2, lattice, magic, matrixStats, meta, metafor,
+mets, nlme, pedigree, pedigreemm, plotly, plotrix, reshape,
+rmeta, rms, survival",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"gargle","gargle","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.0",NA,"R (>= 3.3)","cli (>= 3.0.0), fs (>= 1.3.1), glue (>= 1.3.0), httr (>=
+1.4.0), jsonlite, rappdirs, rlang (>= 0.4.9), rstudioapi,
+stats, utils, withr",NA,"aws.ec2metadata, aws.signature, covr, httpuv, knitr, mockr,
+rmarkdown, sodium, spelling, testthat (>= 3.0.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"generics","generics","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.0",NA,"R (>= 3.1)","methods",NA,"covr, pkgload, testthat, tibble",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"genscore","genscore","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.2",NA,NA,"Rdpack, mvtnorm, tmvtnorm, stringr",NA,"Matrix, igraph, zoo, knitr, rmarkdown, cubature",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"geodata","geodata","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3-2",NA,"R (>= 3.5.0), terra",NA,NA,"jsonlite, R.utils",NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"geojson","geojson","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.4",NA,NA,"methods, sp, jsonlite (>= 1.6), protolite (>= 1.8), jqr (>=
+1.1.0), magrittr, lazyeval",NA,"geojsonlint (>= 0.2.0), tibble, testthat, knitr, rmarkdown,
+sf, stringi",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"geojsonio","geojsonio","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9.4",NA,"R (>= 2.10)","methods, sp, sf (>= 0.6), geojsonsf, rgeos, crul, maptools,
+jsonlite (>= 0.9.21), magrittr, readr (>= 0.2.2), V8, geojson
+(>= 0.2.0), jqr",NA,"gistr, testthat, leaflet, maps, DBI, RPostgres","RColorBrewer","MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"geojsonlint","geojsonlint","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.0",NA,"R (>= 2.10)","crul (>= 0.7.0), jsonlite (>= 0.9.19), jsonvalidate (>=
+1.0.0), V8",NA,"testthat, knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"geojsonsf","geojsonsf","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.1",NA,"R (>= 3.3.0)","Rcpp","geometries, jsonify (>= 1.1.1), rapidjsonr (>= 1.2.0), Rcpp,
+sfheaders (>= 0.2.2)","covr, jsonify, knitr, rmarkdown, tinytest",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"geometries","geometries","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.0",NA,NA,"Rcpp","Rcpp","covr, knitr, rmarkdown, tinytest",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"geometry","geometry","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.5",NA,"R (>= 3.0.0)","magic, Rcpp, lpSolve, linprog","Rcpp, RcppProgress","spelling, testthat, rgl, R.matlab, tripack",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"geosphere","geosphere","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5-10",NA,"R (>= 3.0.0)","sp",NA,"methods, raster",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.0"
+"gert","gert","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.1",NA,NA,"askpass, credentials (>= 1.2.1), openssl (>= 1.4.1),
+rstudioapi (>= 0.11), sys, zip (>= 2.1.0)",NA,"spelling, knitr, rmarkdown, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"GGally","GGally","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1.2",NA,"R (>= 3.1), ggplot2 (>= 3.3.4)","dplyr (>= 1.0.0), forcats, grDevices, grid, gtable (>= 0.2.0),
+lifecycle, plyr (>= 1.8.3), progress, RColorBrewer, reshape (>=
+0.8.5), rlang, scales (>= 1.1.0), tidyr, utils",NA,"broom (>= 0.7.0), broom.helpers (>= 1.1.0), chemometrics,
+geosphere (>= 1.5-1), ggforce, Hmisc, igraph (>= 1.0.1),
+intergraph (>= 2.0-2), labelled, maps (>= 3.1.0), mapproj,
+nnet, network (>= 1.17.1), scagnostics, sna (>= 2.3-2),
+survival, rmarkdown, roxygen2, testthat, crosstalk, knitr,
+spelling, emmeans",NA,"GPL (>= 2.0)",NA,NA,NA,NA,"no","4.0.3"
+"gganimate","gganimate","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.7",NA,"ggplot2 (>= 3.0.0)","stringi, tweenr (>= 1.0.1), grid, rlang, glue, progress, plyr,
+scales, grDevices, utils",NA,"magick, svglite, knitr, rmarkdown, testthat, base64enc,
+htmltools, covr, transformr, av, gifski, ragg",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"ggbeeswarm","ggbeeswarm","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.6.0",NA,"R (>= 3.0.0), ggplot2 (>= 2.0)","beeswarm, vipor",NA,"gridExtra",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.2"
+"ggExtra","ggExtra","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9",NA,"R (>= 3.1.0)","colourpicker (>= 1.0), ggplot2 (>= 2.2.0), grDevices, grid (>=
+3.1.3), gtable (>= 0.2.0), miniUI (>= 0.1.1), scales (>=
+0.2.0), shiny (>= 0.13.0), shinyjs (>= 0.5.2), utils, R6",NA,"knitr (>= 1.7), rmarkdown, rstudioapi (>= 0.5), testthat,
+vdiffr, fontquiver, svglite, withr, devtools",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"ggfun","ggfun","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.0.4",NA,NA,"ggplot2, grid, rlang, utils",NA,"ggplotify, knitr, rmarkdown, prettydoc",NA,"Artistic-2.0",NA,NA,NA,NA,"no","4.0.3"
+"ggimage","ggimage","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.0",NA,"R (>= 3.4.0), ggplot2","ggfun, ggplotify, grid, jsonlite, magick, methods, scales,
+tibble, tools, utils",NA,"ape, ggtree, gridGraphics, httr, rsvg",NA,"Artistic-2.0",NA,NA,NA,NA,"no","4.0.3"
+"ggmcmc","ggmcmc","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5.1.1",NA,"R (>= 3.5), dplyr (>= 1.0.0), tidyr (>= 1.1.0), ggplot2","GGally (>= 1.1.0)",NA,"coda, knitr, rmarkdown, ggthemes, gridExtra, Cairo, extrafont",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"ggplot2","ggplot2","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.3.5",NA,"R (>= 3.3)","digest, glue, grDevices, grid, gtable (>= 0.1.1), isoband,
+MASS, mgcv, rlang (>= 0.4.10), scales (>= 0.5.0), stats,
+tibble, withr (>= 2.0.0)",NA,"covr, ragg, dplyr, ggplot2movies, hexbin, Hmisc, interp,
+knitr, lattice, mapproj, maps, maptools, multcomp, munsell,
+nlme, profvis, quantreg, RColorBrewer, rgeos, rmarkdown, rpart,
+sf (>= 0.7-3), svglite (>= 1.2.0.9001), testthat (>= 2.1.0),
+vdiffr (>= 1.0.0), xml2","sp","MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"ggplotify","ggplotify","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.0",NA,"R (>= 3.4.0)","ggplot2, graphics, grDevices, grid, gridGraphics, yulab.utils",NA,"aplot, colorspace, cowplot, ggimage, knitr, rmarkdown,
+lattice, prettydoc, vcd, utils",NA,"Artistic-2.0",NA,NA,NA,NA,"no","4.0.3"
+"ggrepel","ggrepel","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9.1",NA,"R (>= 3.0.0), ggplot2 (>= 2.2.0)","grid, Rcpp, rlang (>= 0.3.0), scales (>= 0.5.0)","Rcpp","knitr, rmarkdown, testthat, gridExtra, devtools, prettydoc,
+ggbeeswarm, dplyr, magrittr, readr, stringr",NA,"GPL-3 | file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"ggridges","ggridges","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5.3",NA,"R (>= 3.2)","ggplot2 (>= 3.0.0), grid (>= 3.0.0), plyr (>= 1.8.0), scales
+(>= 0.4.1), withr (>= 2.1.1)",NA,"covr, dplyr, patchwork, ggplot2movies, forcats, knitr,
+rmarkdown, testthat, vdiffr",NA,"GPL-2 | file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"ggtern","ggtern","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.3.5",NA,"R (>= 4.0), ggplot2 (>= 3.3.5)","compositions (>= 2.0-2), grid, gridExtra (>= 2.3), gtable (>=
+0.1.2), latex2exp (>= 0.5), MASS, plyr (>= 1.8.3), scales (>=
+0.3.0), stats, proto (>= 1.0), utils, lattice, hexbin (>=
+1.28.2)",NA,NA,"sp","GPL-2 | file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"ggtext","ggtext","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.1",NA,"R (>= 3.5)","ggplot2 (>= 3.3.0), grid, gridtext, rlang, scales",NA,"cowplot, dplyr, glue, knitr, rmarkdown, testthat, vdiffr",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"gh","gh","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.0",NA,NA,"cli (>= 2.0.1), gitcreds, httr (>= 1.2), ini, jsonlite",NA,"covr, knitr, mockery, rmarkdown, rprojroot, spelling,
+testthat (>= 2.3.2), withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"gifski","gifski","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.3-1",NA,NA,NA,NA,"ggplot2, gapminder",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"git2r","git2r","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.28.0",NA,"R (>= 3.1)","graphics, utils",NA,"getPass",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"gitcreds","gitcreds","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.1",NA,NA,NA,NA,"codetools, testthat, knitr, mockery, oskeyring, rmarkdown,
+withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"glmmTMB","glmmTMB","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.2.3",NA,"R (>= 3.2.0)","methods, TMB (>= 1.7.14), lme4 (>= 1.1-18.9000), Matrix, nlme,
+numDeriv","TMB, RcppEigen","knitr, rmarkdown, testthat, MASS, lattice, ggplot2 (>=
+2.2.1), mlmRev, bbmle (>= 1.0.19), pscl, coda, reshape2, car
+(>= 3.0.6), emmeans (>= 1.4), estimability, DHARMa, multcomp,
+MuMIn, effects (>= 4.0-1), dotwhisker, broom, broom.mixed,
+plyr, png, boot, texreg, xtable, huxtable, mvabund",NA,"AGPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"globals","globals","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.14.0",NA,"R (>= 3.1.2)","codetools",NA,NA,NA,"LGPL (>= 2.1)",NA,NA,NA,NA,"no","4.0.3"
+"glue","glue","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.2",NA,"R (>= 3.2)","methods",NA,"testthat, covr, magrittr, crayon, knitr, rmarkdown, DBI,
+RSQLite, R.utils, forcats, microbenchmark, rprintf, stringr,
+ggplot2, dplyr, withr, vctrs (>= 0.3.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.2"
+"gmm","gmm","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.6-6",NA,"R (>= 2.10.0), sandwich","stats, methods, grDevices, graphics",NA,"knitr, mvtnorm, car, stabledist, MASS, timeDate, timeSeries",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"gmp","gmp","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.6-2",NA,"R (>= 3.5.0)","methods",NA,"Rmpfr, MASS, round",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"goftest","goftest","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2-3",NA,"R (>= 3.3)","stats",NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"googledrive","googledrive","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.0",NA,"R (>= 3.3)","cli (>= 3.0.0), gargle (>= 1.2.0), glue (>= 1.4.2), httr,
+jsonlite, lifecycle, magrittr, pillar, purrr (>= 0.2.3), rlang
+(>= 0.4.9), tibble (>= 2.0.0), utils, uuid, vctrs (>= 0.3.0),
+withr",NA,"covr, curl, downlit, dplyr (>= 1.0.0), knitr, mockr,
+rmarkdown, roxygen2, sodium, spelling, testthat (>= 3.0.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"googlesheets4","googlesheets4","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.0",NA,"R (>= 3.3)","cellranger, cli (>= 3.0.0), curl, gargle (>= 1.2.0), glue (>=
+1.3.0), googledrive (>= 2.0.0), httr, ids, magrittr, methods,
+purrr, rematch2, rlang (>= 0.4.11), tibble (>= 2.1.1), utils,
+vctrs (>= 0.2.3)",NA,"covr, readr, rmarkdown, sodium, spelling, testthat (>=
+3.0.0), withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"gower","gower","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.2",NA,NA,NA,NA,"tinytest (>= 0.9.3),",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.2"
+"gridExtra","gridExtra","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.3",NA,NA,"gtable, grid, grDevices, graphics, utils",NA,"ggplot2, egg, lattice, knitr, testthat",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.0"
+"gridGraphics","gridGraphics","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5-1",NA,"grid, graphics","grDevices",NA,"magick (>= 1.3), pdftools (>= 1.6)",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"gridtext","gridtext","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.4",NA,"R (>= 3.5)","grid, grDevices, markdown, rlang, Rcpp, RCurl, png, jpeg,
+stringr, xml2","Rcpp","covr, knitr, rmarkdown, testthat, vdiffr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"gstat","gstat","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0-8",NA,"R (>= 2.10)","utils, stats, graphics, methods, lattice, sp (>= 0.9-72), zoo,
+spacetime (>= 1.0-0), FNN",NA,"fields, maps, mapdata, maptools, rgdal (>= 0.5.2), rgeos, sf
+(>= 0.7-2), stars (>= 0.3-0), xts, raster, future, future.apply",NA,"GPL (>= 2.0)",NA,NA,NA,NA,"yes","4.0.3"
+"gtable","gtable","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.0",NA,"R (>= 3.0)","grid",NA,"covr, testthat, knitr, rmarkdown, ggplot2, profvis",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.0"
+"gtools","gtools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.9.2",NA,"methods, stats, utils",NA,NA,"car, gplots, knitr, rstudioapi, SGP, taxize",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"haven","haven","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.4.3",NA,"R (>= 3.2)","forcats (>= 0.2.0), hms, methods, readr (>= 0.1.0), rlang (>=
+0.4.0), tibble, tidyselect, vctrs (>= 0.3.0)","cpp11","cli, covr, crayon, fs, knitr, pillar (>= 1.4.0), rmarkdown,
+testthat (>= 3.0.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"hexbin","hexbin","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.28.2",NA,"R (>= 2.0.1), methods","lattice, grid, graphics, grDevices, stats, utils",NA,"marray, affy, Biobase, limma, knitr",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"highr","highr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9",NA,"R (>= 3.2.3)","xfun (>= 0.18)",NA,"knitr, markdown, testit",NA,"GPL",NA,NA,NA,NA,"no","4.0.3"
+"Hmisc","Hmisc","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","4.6-0",NA,"lattice, survival (>= 3.1-6), Formula, ggplot2 (>= 2.2)","methods, latticeExtra, cluster, rpart, nnet, foreign, gtable,
+grid, gridExtra, data.table, htmlTable (>= 1.11.0), viridis,
+htmltools, base64enc",NA,"acepack, chron, rms, mice, tables, knitr, plotly (>= 4.5.6),
+rlang, plyr, VGAM",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"hms","hms","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,NA,"ellipsis (>= 0.3.2), lifecycle, methods, pkgconfig, rlang,
+vctrs (>= 0.3.8)",NA,"crayon, lubridate, pillar (>= 1.1.0), testthat (>= 3.0.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"htmlTable","htmlTable","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.2.1",NA,NA,"stringr, knitr (>= 1.6), magrittr (>= 1.5), methods,
+checkmate, htmlwidgets, htmltools, rstudioapi (>= 0.6)",NA,"testthat, XML, xml2, Hmisc, reshape, rmarkdown, chron,
+lubridate, tibble, purrr, tidyselect, glue, rlang, tidyr (>=
+0.7.2), dplyr (>= 0.7.4)",NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"htmltools","htmltools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5.2",NA,"R (>= 2.14.1)","utils, digest, grDevices, base64enc, rlang (>= 0.4.10),
+fastmap",NA,"markdown, testthat, withr, Cairo, ragg, shiny","knitr","GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"htmlwidgets","htmlwidgets","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5.4",NA,NA,"grDevices, htmltools (>= 0.3), jsonlite (>= 0.9.16), yaml",NA,"knitr (>= 1.8), rmarkdown, testthat","shiny (>= 1.1)","MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"httpcode","httpcode","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.0",NA,NA,NA,NA,"testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"httpuv","httpuv","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.6.3",NA,"R (>= 2.15.1)","Rcpp (>= 1.0.7), utils, R6, promises, later (>= 0.8.0)","Rcpp, later","testthat, callr, curl, websocket",NA,"GPL (>= 2) | file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"httr","httr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.2",NA,"R (>= 3.2)","curl (>= 3.0.0), jsonlite, mime, openssl (>= 0.8), R6",NA,"covr, httpuv, jpeg, knitr, png, readr, rmarkdown, testthat
+(>= 0.8.0), xml2",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.2"
+"ids","ids","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.1",NA,NA,"openssl, uuid",NA,"knitr, rcorpora, rmarkdown, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"igraph","igraph","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.6",NA,"methods","graphics, grDevices, magrittr, Matrix, pkgconfig (>= 2.0.0),
+stats, utils",NA,"ape, digest, graph, igraphdata, rgl, scales, stats4, tcltk,
+testthat, withr",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"imager","imager","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.42.10",NA,"R (>= 2.10.0),magrittr","Rcpp (>=
+0.11.5),methods,stringr,png,jpeg,readbitmap,grDevices,purrr,downloader,igraph","Rcpp","knitr, rmarkdown,ggplot2,dplyr,scales,
+testthat,OpenMPController,raster,spatstat.geom,magick,Cairo",NA,"LGPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"ini","ini","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.1",NA,NA,NA,NA,"testthat",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.0"
+"inline","inline","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.19",NA,NA,"methods",NA,"Rcpp (>= 0.11.0), tinytest",NA,"LGPL",NA,NA,NA,NA,"no","4.0.3"
+"intervals","intervals","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.15.2",NA,"R (>= 2.9.0)","utils, graphics, methods",NA,NA,NA,"Artistic-2.0",NA,NA,NA,NA,"yes","4.0.2"
+"ipred","ipred","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9-12",NA,"R (>= 2.10)","rpart (>= 3.1-8), MASS, survival, nnet, class, prodlim",NA,"mvtnorm, mlbench, TH.data, randomForest, party",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"isoband","isoband","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.5",NA,NA,"grid, utils",NA,"covr, ggplot2, knitr, magick, microbenchmark, rmarkdown, sf,
+testthat, xml2",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"iterators","iterators","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.13",NA,"R (>= 2.5.0), utils",NA,NA,"RUnit, foreach",NA,"Apache License (== 2.0)",NA,NA,NA,NA,"no","4.0.3"
+"jpeg","jpeg","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1-9",NA,"R (>= 2.9.0)",NA,NA,NA,NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"jqr","jqr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.1",NA,"R (>= 3.1.2)","magrittr, lazyeval",NA,"jsonlite, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"jquerylib","jquerylib","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.4",NA,NA,"htmltools",NA,"testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"jsonify","jsonify","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.1",NA,"R (>= 3.3.0)","Rcpp (>= 0.12.18)","rapidjsonr (>= 1.2.0), Rcpp","covr, testthat, knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"jsonlite","jsonlite","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.7.2",NA,"methods",NA,NA,"httr, curl, plyr, testthat, knitr, rmarkdown, R.rsp, sf",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"jsonvalidate","jsonvalidate","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.0",NA,NA,"V8",NA,"knitr, rmarkdown, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"kableExtra","kableExtra","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.4",NA,"R (>= 3.1.0)","knitr (>= 1.16), magrittr, stringr (>= 1.0), xml2 (>= 1.1.1),
+rvest, rmarkdown (>= 1.6.0), scales, viridisLite, stats,
+grDevices, htmltools, rstudioapi, glue, tools, webshot, digest,
+graphics, svglite",NA,"testthat, magick, formattable, sparkline",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"kernlab","kernlab","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9-29",NA,"R (>= 2.10)","methods, stats, grDevices, graphics",NA,NA,NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"knitr","knitr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.36",NA,"R (>= 3.2.3)","evaluate (>= 0.10), highr, methods, stringr (>= 0.6), yaml (>=
+2.1.19), xfun (>= 0.21), tools",NA,"markdown, formatR, testit, digest, rgl (>= 0.95.1201),
+codetools, rmarkdown, htmlwidgets (>= 0.7), webshot, tikzDevice
+(>= 0.10), tinytex, reticulate (>= 1.4), JuliaCall (>= 0.11.1),
+magick, png, jpeg, gifski, xml2 (>= 1.2.0), httr, DBI (>=
+0.4-1), showtext, tibble, sass, bslib, ragg, styler (>= 1.2.0),
+targets (>= 0.6.0)",NA,"GPL",NA,NA,NA,NA,"no","4.0.3"
+"ks","ks","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.13.4",NA,"R (>= 2.10.0)","FNN (>= 1.1), kernlab, KernSmooth (>= 2.22), Matrix, mclust,
+mgcv, multicool, mvtnorm (>= 1.0-0), plot3D, pracma",NA,"geometry, MASS, misc3d (>= 0.4-0), oz, rgl (>= 0.66)",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"labeling","labeling","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.2",NA,NA,"stats, graphics",NA,NA,NA,"MIT + file LICENSE | Unlimited",NA,NA,NA,NA,"no","4.0.3"
+"lacunaritycovariance","lacunaritycovariance","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1-1",NA,"spatstat (>= 2.0-0), spatstat.geom, spatstat.linnet,
+spatstat.core","RcppRoll",NA,"raster, maptools, rgdal, cubature, testthat",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"later","later","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.0",NA,NA,"Rcpp (>= 0.12.9), rlang","Rcpp","knitr, rmarkdown, testthat (>= 2.1.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"latex2exp","latex2exp","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9.4",NA,NA,"stringr, magrittr",NA,"testthat, knitr, ggplot2, rmarkdown, purrr, tibble,
+reactable, htmltools, RCurl, rlang, dplyr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"latticeExtra","latticeExtra","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.6-29",NA,"R (>= 3.6.0), lattice","grid, stats, utils, grDevices, png, jpeg, RColorBrewer",NA,"maps, mapproj, deldir, tripack, quantreg, zoo, MASS, mgcv",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.0"
+"lava","lava","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.6.10",NA,"R (>= 3.0)","future.apply, progressr, grDevices, graphics, methods,
+numDeriv, stats, survival, SQUAREM, utils",NA,"KernSmooth, Matrix, Rgraphviz, data.table, ellipse, fields,
+geepack, gof (>= 0.9), graph, knitr, bookdown, rmarkdown,
+igraph (>= 0.6), lava.tobit (>= 0.4.7), lavaSearch2, lme4,
+magrittr, mets (>= 1.1), nlme, optimx, polycor, quantreg, rgl,
+R.rsp (>= 0.40), testthat (>= 0.11), visNetwork, zoo",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"lazyeval","lazyeval","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.2",NA,"R (>= 3.1.0)",NA,NA,"knitr, rmarkdown (>= 0.2.65), testthat, covr",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.0"
+"leafem","leafem","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.6",NA,"R (>= 3.1.0)","base64enc, geojsonsf, htmltools (>= 0.3), htmlwidgets, leaflet
+(>= 2.0.1), methods, raster, sf, png",NA,"clipr, gdalUtils, leafgl, mapdeck, plainview, stars",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"leaflet","leaflet","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.4.1",NA,"R (>= 3.1.0)","base64enc, crosstalk, htmlwidgets, htmltools, magrittr,
+markdown, methods, png, RColorBrewer, raster, scales (>=
+1.0.0), sp, stats, viridis (>= 0.5.1), leaflet.providers (>=
+1.8.0)",NA,"knitr, maps, sf (>= 0.9-6), shiny, rgdal, rgeos, R6, RJSONIO,
+purrr, testthat",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"leaflet.opacity","leaflet.opacity","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.0",NA,NA,"htmltools, htmlwidgets",NA,"leaflet, raster, rgdal, magrittr, testthat, knitr, rmarkdown",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.0"
+"leaflet.providers","leaflet.providers","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.9.0",NA,"R (>= 2.10)",NA,NA,"V8, jsonlite, testthat (>= 2.1.0)",NA,"BSD_2_clause + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"leafpop","leafpop","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.0",NA,NA,"base64enc, brew, htmltools, htmlwidgets, sf, svglite, uuid",NA,"lattice, leaflet (>= 2.0.0), sp",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"leaps","leaps","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.1",NA,"",NA,NA,"biglm",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.0"
+"lifecycle","lifecycle","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.1",NA,"R (>= 3.3)","glue, rlang (>= 0.4.10)",NA,"covr, crayon, lintr, tidyverse, knitr, rmarkdown, testthat
+(>= 3.0.1), tools, tibble, vctrs",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"linprog","linprog","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9-2",NA,"R (>= 2.4.0), lpSolve",NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,NA,"4.0.3"
+"lintr","lintr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.1",NA,"R (>= 3.2)","rex, crayon, codetools, cyclocomp, testthat (>= 2.2.1),
+digest, rstudioapi (>= 0.2), httr (>= 1.2.1), jsonlite, knitr,
+stats, utils, xml2 (>= 1.0.0), xmlparsedata (>= 1.0.3)",NA,"rmarkdown, mockery",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"listenv","listenv","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.8.0",NA,"R (>= 3.1.2)",NA,NA,"R.utils, R.rsp, markdown",NA,"LGPL (>= 2.1)",NA,NA,NA,NA,"no","4.0.3"
+"listviewer","listviewer","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.0.0",NA,NA,"htmltools, htmlwidgets, shiny",NA,"jsonlite, miniUI, rstudioapi","reactR","MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"lme4","lme4","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1-27.1",NA,"R (>= 3.2.0), Matrix (>= 1.2-1), methods, stats","graphics, grid, splines, utils, parallel, MASS, lattice, boot,
+nlme (>= 3.1-123), minqa (>= 1.1.15), nloptr (>= 1.0.4)","Rcpp (>= 0.10.5), RcppEigen","knitr, rmarkdown, PKPDmodels, MEMSS, testthat (>= 0.8.1),
+ggplot2, mlmRev, optimx (>= 2013.8.6), gamm4, pbkrtest, HSAUR3,
+numDeriv, car, dfoptim, mgcv, statmod, rr2, semEff",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"lmtest","lmtest","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9-38",NA,"R (>= 3.0.0), stats, zoo","graphics",NA,"car, strucchange, sandwich, dynlm, stats4, survival, AER",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"locfit","locfit","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5-9.4",NA,"R (>= 3.5.0)","lattice",NA,"interp, gam",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"loo","loo","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.4.1",NA,"R (>= 3.1.2)","checkmate, matrixStats (>= 0.52), parallel, stats",NA,"bayesplot (>= 1.7.0), brms (>= 2.10.0), ggplot2, graphics,
+knitr, rmarkdown, rstan, rstanarm (>= 2.19.0), rstantools,
+spdep, testthat (>= 2.1.0)",NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"lpSolve","lpSolve","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","5.6.15",NA,NA,NA,NA,NA,NA,"LGPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"lubridate","lubridate","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.8.0",NA,"methods, R (>= 3.2)","generics","cpp11 (>= 0.2.7)","covr, knitr, testthat (>= 2.1.0), vctrs (>= 0.3.0), rmarkdown","chron, timeDate, tis, zoo","GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"lwgeom","lwgeom","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2-8",NA,"R (>= 3.3.0)","Rcpp, units, sf (>= 0.9-3)","Rcpp, sf (>= 0.6-0)","covr, sp, geosphere, testthat",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"magic","magic","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5-9",NA,"R (>= 2.10), abind",NA,NA,NA,NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"magick","magick","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.7.3",NA,NA,"Rcpp (>= 0.12.12), magrittr, curl","Rcpp","av (>= 0.3), spelling, jsonlite, methods, knitr, rmarkdown,
+rsvg, webp, pdftools, ggplot2, gapminder, IRdisplay, tesseract
+(>= 2.0), gifski",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"magrittr","magrittr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.1",NA,NA,NA,NA,"covr, knitr, rlang, rmarkdown, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"maptools","maptools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1-2",NA,"R (>= 2.10), sp (>= 1.0-11)","foreign (>= 0.8), methods, grid, lattice, stats, utils,
+grDevices",NA,"rgeos (>= 0.1-8), spatstat.geom (>= 1.65-0), PBSmapping,
+maps, RColorBrewer, raster, polyclip, plotrix, spatstat.linnet
+(>= 1.65-3), spatstat.utils (>= 1.19.0), spatstat (>= 2.0-0)","gpclib","GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"mapview","mapview","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.10.0",NA,"methods, R (>= 3.6.0)","base64enc, htmltools, htmlwidgets, lattice, leafem, leaflet
+(>= 2.0.0), leafpop, png, raster, satellite, scales (>= 0.2.5),
+servr, sf, sp, webshot",NA,"covr, knitr, later, leaflet.extras2, leafsync, lwgeom,
+mapdeck, plainview, poorman, rmarkdown, rstudioapi, s2, stars,
+tinytest",NA,"GPL (>= 3) | file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"markdown","markdown","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1",NA,"R (>= 2.11.1)","utils, xfun, mime (>= 0.3)",NA,"knitr, RCurl",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.0"
+"MatrixModels","MatrixModels","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5-0",NA,"R (>= 3.0.1)","stats, methods, Matrix (>= 1.1-5)",NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"matrixStats","matrixStats","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.61.0",NA,"R (>= 2.12.0)",NA,NA,"base64enc, ggplot2, knitr, markdown, microbenchmark,
+R.devices, R.rsp",NA,"Artistic-2.0",NA,NA,NA,NA,"yes","4.0.3"
+"mclust","mclust","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","5.4.7",NA,"R (>= 3.0)","stats, utils, graphics, grDevices",NA,"knitr (>= 1.12), rmarkdown (>= 0.9), mix (>= 1.0), geometry
+(>= 0.3-6), MASS",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"mcmc","mcmc","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9-7",NA,"R (>= 3.0.2)","stats",NA,"xtable, Iso",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"MCMCpack","MCMCpack","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.6-3",NA,"R (>= 3.6), coda (>= 0.11-3), MASS, stats","graphics, grDevices, lattice, methods, utils, mcmc, quantreg",NA,NA,NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"memoise","memoise","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.0",NA,NA,"rlang (>= 0.4.10), cachem",NA,"digest, aws.s3, covr, googleAuthR, googleCloudStorageR, httr,
+testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"mice","mice","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.13.0",NA,"R (>= 2.10.0)","broom, dplyr, generics, graphics, lattice, methods, Rcpp,
+rlang, stats, tidyr, utils","cpp11, Rcpp","broom.mixed, haven, knitr, lme4, MASS, metafor, mitml,
+miceadds, nnet, pan, randomForest, rmarkdown, rpart, survival,
+testthat, lmtest",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"miceadds","miceadds","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.11-6",NA,"R (>= 3.0), mice (>= 3.0.0)","graphics, methods, mitools, Rcpp, stats, utils","Rcpp, RcppArmadillo","BIFIEsurvey, blme, car, CDM, coda, foreign, grouped, imputeR,
+inline, lme4, MASS, MBESS, MCMCglmm, mdmb, numDeriv, readxl,
+sandwich, simputation, sirt, sjlabelled, synthpop, TAM","Amelia, jomo, micemd, mitml, pan","GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"mime","mime","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.12",NA,NA,"tools",NA,NA,NA,"GPL",NA,NA,NA,NA,"yes","4.0.3"
+"miniUI","miniUI","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.1.1",NA,NA,"shiny (>= 0.13), htmltools (>= 0.3), utils",NA,NA,NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"minqa","minqa","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.4",NA,NA,"Rcpp (>= 0.9.10)","Rcpp",NA,NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.2"
+"misc3d","misc3d","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9-1",NA,NA,"grDevices, graphics, stats, tcltk",NA,"rgl, tkrplot, MASS",NA,"GPL",NA,NA,NA,NA,"no","4.0.3"
+"mitools","mitools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.4",NA,NA,"DBI, methods, stats",NA,"RODBC, foreign",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.0"
+"mnormt","mnormt","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.2",NA,"R (>= 2.2.0)","tmvnsim (>= 1.0-2)",NA,NA,NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"ModelMetrics","ModelMetrics","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.2.2",NA,"R (>= 3.2.2)","Rcpp, data.table","Rcpp","testthat",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.0"
+"modelr","modelr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.8",NA,"R (>= 3.2)","broom, magrittr, purrr (>= 0.2.2), rlang (>= 0.2.0), tibble,
+tidyr (>= 0.8.0), tidyselect, vctrs",NA,"compiler, covr, ggplot2, testthat",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"modeltools","modeltools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2-23",NA,"stats, stats4","methods",NA,NA,NA,"GPL-2",NA,NA,NA,NA,"no","4.0.0"
+"moments","moments","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.14",NA,NA,NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"movMF","movMF","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2-7",NA,"R (>= 3.0.0)","skmeans (>= 0.2-10), clue, slam (>= 0.1-43), stats",NA,"lattice, tm (>= 0.7-5), vcd, SnowballC, HSAUR3, colorspace,
+corpus.useR.2008.abstracts, flexmix (>= 2.3-17), methods",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"msod","msod","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.0-2",NA,NA,"dplyr,
+plyr,
+Rfast,
+parallel,
+runjags,
+tensor,
+tidyr,
+pbapply,
+tibble,
+ellipsis,
+stats,
+abind",NA,"testthat,
+arrangements,
+ggplot2,
+plyr,
+loo","car,
+discreteRV,
+FD","GPL (>= 2)",NA,NA,NA,NA,NA,"4.0.3"
+"multicool","multicool","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1-12",NA,"methods, Rcpp (>= 0.11.2)",NA,"Rcpp",NA,NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"MuMIn","MuMIn","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.43.17",NA,"R (>= 3.5.0)","graphics, methods, Matrix, stats, stats4, nlme",NA,"lme4 (>= 1.1.0), mgcv (>= 1.7.5), gamm4, MASS, nnet, survival
+(>= 3.1.0), geepack","aod, aods3, betareg, caper, coxme, cplm, gee, glmmML,
+logistf, MCMCglmm, ordinal, pscl, spdep, spatialreg, splm,
+unmarked (>= 0.12.2), geeM (>= 0.7.5), gamlss","GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"munsell","munsell","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5.0",NA,NA,"colorspace, methods",NA,"ggplot2, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"mvabund","mvabund","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","4.1.12",NA,"R (>= 3.0.0)","Rcpp, MASS, methods, stats, tweedie, statmod, parallel","Rcpp, RcppGSL","testthat",NA,"LGPL (>= 2.1)",NA,NA,NA,NA,"yes","4.0.3"
+"mvtnorm","mvtnorm","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1-3",NA,"R(>= 3.5.0)","stats, methods",NA,NA,NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"ncdf4","ncdf4","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.17",NA,NA,NA,NA,NA,NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.0"
+"ngram","ngram","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.0.4",NA,"R (>= 3.0.0)","methods",NA,NA,NA,"BSD 2-clause License + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"nleqslv","nleqslv","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.3.2",NA,NA,NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"nloptr","nloptr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.2.2",NA,NA,NA,NA,"testthat (>= 0.8.1), knitr, rmarkdown, inline (>= 0.3.14)",NA,"LGPL-3",NA,NA,NA,NA,"yes","4.0.2"
+"NLP","NLP","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2-1",NA,"R (>= 3.2.0)","utils",NA,NA,"udpipe, spacyr, cleanNLP","GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"numDeriv","numDeriv","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2016.8-1.1",NA,"R (>= 2.11.1)",NA,NA,NA,NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"odbc","odbc","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.2",NA,"R (>= 3.2.0)","bit64, blob (>= 1.2.0), DBI (>= 1.0.0), hms, methods, rlang,
+Rcpp (>= 0.12.11)","Rcpp","covr, DBItest, magrittr, RSQLite, testthat, tibble",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"openssl","openssl","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.5",NA,NA,"askpass",NA,"testthat (>= 2.1.0), digest, knitr, rmarkdown, jsonlite,
+jose, sodium",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"openxlsx","openxlsx","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","4.2.4",NA,"R (>= 3.3.0)","grDevices, methods, Rcpp, stats, utils, zip, stringi","Rcpp","knitr, testthat, roxygen2, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"optextras","optextras","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2019-12.4",NA,NA,"numDeriv, utils",NA,NA,NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"optimx","optimx","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2022-4.30",NA,NA,"numDeriv",NA,"knitr, rmarkdown, setRNG, BB, ucminf, minqa, dfoptim,
+lbfgsb3c, lbfgs, subplex",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"packrat","packrat","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.7.0",NA,"R (>= 3.0.0)","tools, utils",NA,"testthat (>= 3.0.0), devtools, httr, knitr, rmarkdown",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"pander","pander","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.6.4",NA,"R (>= 2.15.0)","grDevices, graphics, methods, utils, stats, digest, tools,
+Rcpp","Rcpp","grid, lattice, ggplot2 (>= 0.9.2), sylly, sylly.en, logger,
+survival, microbenchmark, zoo, nlme, descr, MASS, knitr,
+rmarkdown, tables, reshape, memisc, Epi, randomForest, tseries,
+gtable, rms, forecast, data.table",NA,"AGPL-3 | file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"parallelly","parallelly","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.28.1",NA,NA,"parallel, tools, utils",NA,NA,NA,"LGPL (>= 2.1)",NA,NA,NA,NA,"no","4.0.3"
+"parsedate","parsedate","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.1",NA,NA,"rematch2",NA,"covr, testthat, withr",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"patchwork","patchwork","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,NA,"ggplot2 (>= 3.0.0), gtable, grid, stats, grDevices, utils,
+graphics",NA,"knitr, rmarkdown, gridGraphics, gridExtra, ragg, testthat (>=
+2.1.0), vdiffr, covr, png",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"pbapply","pbapply","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5-0",NA,"R (>= 3.2.0)","parallel",NA,"shiny",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"pbkrtest","pbkrtest","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5.1",NA,"R (>= 3.5.0), lme4 (>= 1.1.10)","broom, dplyr, magrittr, MASS, Matrix (>= 1.2.3), methods,
+numDeriv, parallel, knitr",NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"pbv","pbv","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4-22",NA,"R (>= 3.1)","Rcpp","Rcpp, RcppArmadillo","pbivnorm",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"permute","permute","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9-5",NA,"R (>= 2.14.0)","stats",NA,"vegan (>= 2.0-0), testthat (>= 0.5), parallel",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"perpixelbirds","perpixelbirds","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.0-4",NA,NA,"sflddata,
+raster,
+sf,
+sp",NA,"testthat (>= 3.0.0)",NA,"GPL (>= 2)",NA,NA,NA,NA,NA,"4.0.3"
+"pillar","pillar","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.6.3",NA,NA,"cli, crayon (>= 1.3.4), ellipsis (>= 0.3.2), fansi, lifecycle,
+rlang (>= 0.3.0), utf8 (>= 1.1.0), utils, vctrs (>= 0.3.8)",NA,"bit64, debugme, DiagrammeR, dplyr, formattable, ggplot2,
+knitr, lubridate, nycflights13, palmerpenguins, rmarkdown,
+scales, stringi, survival, testthat (>= 3.0.2), tibble, units
+(>= 0.7.2), withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"pingr","pingr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.1",NA,NA,"processx, utils",NA,"covr, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"pixmap","pixmap","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4-12",NA,NA,"methods, graphics, grDevices",NA,NA,NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"pkgbuild","pkgbuild","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.0",NA,"R (>= 3.1)","callr (>= 3.2.0), cli, crayon, desc, prettyunits, R6,
+rprojroot, withr (>= 2.1.2)",NA,"Rcpp, cpp11, testthat, covr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"pkgconfig","pkgconfig","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.3",NA,NA,"utils",NA,"covr, testthat, disposables (>= 1.0.3)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"pkgload","pkgload","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.2",NA,NA,"cli, crayon, desc, methods, rlang, rprojroot, rstudioapi,
+utils, withr",NA,"bitops, covr, pkgbuild, Rcpp, testthat",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"plogr","plogr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.0",NA,NA,NA,NA,"Rcpp",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"plot3D","plot3D","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4",NA,"R (>= 2.15)","misc3d, stats, graphics, grDevices, methods",NA,NA,NA,"GPL (>= 3.0)",NA,NA,NA,NA,"no","4.0.3"
+"plotly","plotly","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","4.10.0",NA,"R (>= 3.2.0), ggplot2 (>= 3.0.0)","tools, scales, httr (>= 1.3.0), jsonlite (>= 1.6), magrittr,
+digest, viridisLite, base64enc, htmltools (>= 0.3.6),
+htmlwidgets (>= 1.5.2.9001), tidyr (>= 1.0.0), RColorBrewer,
+dplyr, vctrs, tibble, lazyeval (>= 0.2.0), rlang (>= 0.4.10),
+crosstalk, purrr, data.table, promises",NA,"MASS, maps, hexbin, ggthemes, GGally, testthat, knitr,
+devtools, shiny (>= 1.1.0), shinytest (>= 1.3.0), curl,
+rmarkdown, Cairo, broom, webshot, listviewer, dendextend,
+maptools, rgeos, sf, png, IRdisplay, processx, plotlyGeoAssets,
+forcats, palmerpenguins, rversions, reticulate",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"plyr","plyr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.8.6",NA,"R (>= 3.1.0)","Rcpp (>= 0.11.0)","Rcpp","abind, covr, doParallel, foreach, iterators, itertools,
+tcltk, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"png","png","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1-7",NA,"R (>= 2.9.0)",NA,NA,NA,NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.0"
+"polyclip","polyclip","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.10-0",NA,"R (>= 3.0.0)",NA,NA,NA,NA,"BSL",NA,NA,NA,NA,"yes","4.0.0"
+"polycor","polycor","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.8-1",NA,"R (>= 3.3.0)","stats, mvtnorm, Matrix, parallel, admisc (>= 0.22)",NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"posterior","posterior","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.0",NA,"R (>= 3.2.0)","abind, checkmate, rlang (>= 0.4.7), stats, tibble (>= 3.0.0),
+vctrs, tensorA, pillar, distributional, parallel, matrixStats",NA,"testthat (>= 2.1.0), caret (>= 6.0.84), gbm (>= 2.1.8),
+randomForest (>= 4.6.14), e1071 (>= 1.7.3), dplyr, tidyr,
+knitr, rmarkdown",NA,"BSD_3_clause + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"ppcor","ppcor","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1",NA,"R (>= 2.6.0), MASS",NA,NA,NA,NA,"GPL-2",NA,NA,NA,NA,"no","4.0.0"
+"pracma","pracma","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.3.8",NA,"R (>= 3.1.0)","graphics, grDevices, stats, utils",NA,"NlcOptim, quadprog",NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"praise","praise","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.0",NA,NA,NA,NA,"testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"prettyunits","prettyunits","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,NA,NA,NA,"codetools, covr, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"pROC","pROC","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.18.0",NA,"R (>= 2.14)","methods, plyr, Rcpp (>= 0.11.1)","Rcpp","microbenchmark, tcltk, MASS, logcondens, doParallel,
+testthat, vdiffr, ggplot2",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"processx","processx","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.5.2",NA,NA,"ps (>= 1.2.0), R6, utils",NA,"callr (>= 3.2.0), cli, codetools, covr, curl, debugme,
+parallel, testthat, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"prodlim","prodlim","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2019.11.13",NA,"R (>= 2.9.0)","Rcpp (>= 0.11.5), stats, grDevices, graphics, survival,
+KernSmooth, lava","Rcpp",NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.0"
+"profvis","profvis","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.7",NA,"R (>= 3.0)","htmlwidgets (>= 0.3.2), stringr",NA,"knitr, ggplot2, rmarkdown, testthat, devtools, shiny,
+htmltools",NA,"GPL-3 | file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"progress","progress","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.2",NA,NA,"hms, prettyunits, R6, crayon",NA,"Rcpp, testthat, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"progressr","progressr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9.0",NA,"R (>= 3.5.0)","digest, utils",NA,"graphics, tcltk, beepr, crayon, pbmcapply, progress, purrr,
+foreach, plyr, doFuture, future, future.apply, furrr,
+rstudioapi, shiny, commonmark, base64enc, tools",NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"projpred","projpred","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.2",NA,"R (>= 3.5.0)","methods, dplyr, loo (>= 2.0.0), rstantools (>= 2.0.0), lme4,
+optimx, ggplot2, Rcpp, utils, rngtools (>= 1.2.4), tidyverse,
+MASS, magrittr, mgcv, gamm4","Rcpp, RcppArmadillo","rstanarm, brms, testthat, knitr, rmarkdown, glmnet, bayesplot
+(>= 1.5.0)",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"promises","promises","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.0.1",NA,NA,"R6, Rcpp, later, rlang, stats, magrittr","later, Rcpp","testthat, future (>= 1.21.0), fastmap (>= 1.1.0), purrr,
+knitr, rmarkdown, vembedr, spelling",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"proto","proto","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.0",NA,NA,NA,NA,"testthat, covr",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"protolite","protolite","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1.1",NA,NA,"Rcpp (>= 0.12.12), jsonlite","Rcpp","spelling, curl, testthat, RProtoBuf, sf",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"proxy","proxy","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4-26",NA,"R (>= 3.4.0)","stats, utils",NA,"cba",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"ps","ps","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.6.0",NA,"R (>= 3.1)","utils",NA,"callr, covr, curl, pingr, processx (>= 3.1.0), R6, rlang,
+testthat, tibble",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"psych","psych","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1.9",NA,NA,"mnormt,parallel,stats,graphics,grDevices,methods,lattice,nlme",NA,"psychTools, GPArotation, lavaan, lme4, Rcsdp, graph, knitr,
+Rgraphviz",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"purrr","purrr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.4",NA,"R (>= 3.2)","magrittr (>= 1.5), rlang (>= 0.3.1)",NA,"covr, crayon, dplyr (>= 0.7.8), knitr, rmarkdown, testthat,
+tibble, tidyselect",NA,"GPL-3 | file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"qgam","qgam","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.3",NA,"R (>= 3.5.0), mgcv (>= 1.8-28)","shiny, plyr, doParallel, parallel, grDevices",NA,"knitr, rmarkdown, MASS, RhpcBLASctl, testthat",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"quantreg","quantreg","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","5.93",NA,"R (>= 3.5), stats, SparseM","methods, graphics, Matrix, MatrixModels, survival, MASS",NA,"tripack, akima, rgl, logspline, nor1mix, Formula, zoo, R.rsp,
+conquer",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"R.methodsS3","R.methodsS3","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.8.1",NA,"R (>= 2.13.0)","utils",NA,"codetools",NA,"LGPL (>= 2.1)",NA,NA,NA,NA,"no","4.0.2"
+"R.oo","R.oo","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.24.0",NA,"R (>= 2.13.0), R.methodsS3 (>= 1.8.0)","methods, utils",NA,"tools",NA,"LGPL (>= 2.1)",NA,NA,NA,NA,"no","4.0.2"
+"R.utils","R.utils","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.11.0",NA,"R (>= 2.14.0), R.oo (>= 1.24.0)","methods, utils, tools, R.methodsS3 (>= 1.8.1)",NA,"digest (>= 0.6.10)",NA,"LGPL (>= 2.1)",NA,NA,NA,NA,"no","4.0.3"
+"R2jags","R2jags","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.7-1",NA,"R (>= 2.14.0), rjags (>= 3-3)","abind, coda (>= 0.13), graphics, grDevices, methods,
+R2WinBUGS, parallel, stats, utils",NA,"testthat (>= 3.0.0)",NA,"GPL (> 2)",NA,NA,NA,NA,"no","4.0.3"
+"R2WinBUGS","R2WinBUGS","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1-21",NA,"R (>= 2.13.0), coda (>= 0.11-0), boot","utils, stats, graphics",NA,"BRugs (>= 0.3-2)",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.0"
+"R6","R6","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.5.1",NA,"R (>= 3.0)",NA,NA,"testthat, pryr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"RandomFields","RandomFields","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.3.14",NA,"R (>= 3.5.0), sp, RandomFieldsUtils (>= 1.1)","graphics, methods, grDevices, stats, utils","RandomFieldsUtils","colorspace, RColorBrewer, mvtnorm, raster, tcltk2, tcltk,
+tkrplot, spam, tools, minqa, soma, optimx, nloptr, pso, GenSA",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"RandomFieldsUtils","RandomFieldsUtils","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.5",NA,"R (>= 3.0)","utils, methods, parallel",NA,"spam, RandomFields",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"RANN","RANN","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.6.1",NA,NA,NA,NA,"testthat",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"rapidjsonr","rapidjsonr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.0",NA,NA,NA,NA,NA,NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"rappdirs","rappdirs","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.3",NA,"R (>= 3.2)",NA,NA,"roxygen2, testthat (>= 3.0.0), covr, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"raster","raster","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.4-13",NA,"sp (>= 1.4.1), R (>= 3.5.0)","Rcpp, methods","Rcpp","rgdal (>= 1.5-8), rgeos (>= 0.3-8), ncdf4, igraph, tcltk,
+parallel, rasterVis, MASS, sf, tinytest, gstat, fields,
+exactextractr",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"rasterVis","rasterVis","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.51.0",NA,"R (>= 3.0.0), methods, lattice (>= 0.20-41)","raster (>= 3.4-13), terra (>= 1.4-9), latticeExtra, stats,
+utils, parallel, grid, grDevices, RColorBrewer, hexbin, sp (>=
+1.0-6), zoo, viridisLite",NA,"rgl, ggplot2, colorspace, dichromat, sf",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"rbibutils","rbibutils","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.2.7",NA,"R (>= 2.10)","utils, tools",NA,"testthat",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"Rcgmin","Rcgmin","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2022-4.30",NA,"optextras",NA,NA,"numDeriv",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"rcmdcheck","rcmdcheck","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.0",NA,NA,"callr (>= 3.1.1.9000), cli (>= 3.0.0), curl, desc (>= 1.2.0),
+digest, pkgbuild, prettyunits, R6, rprojroot, sessioninfo (>=
+1.1.1), utils, withr, xopen",NA,"covr, knitr, mockery, processx, ps, rmarkdown, svglite,
+testthat, webfakes",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"RColorBrewer","RColorBrewer","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1-2",NA,"R (>= 2.0.0)",NA,NA,NA,NA,"Apache License 2.0",NA,NA,NA,NA,"no","4.0.0"
+"Rcpp","Rcpp","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.8.3",NA,NA,"methods, utils",NA,"tinytest, inline, rbenchmark, pkgKitten (>= 0.1.2)",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"RcppArmadillo","RcppArmadillo","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.10.7.0.0",NA,"R (>= 3.3.0)","Rcpp (>= 0.11.0), stats, utils, methods","Rcpp","tinytest, Matrix (>= 1.3.0), pkgKitten, reticulate, slam",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"RcppEigen","RcppEigen","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.3.9.1",NA,NA,"Matrix (>= 1.1-0), Rcpp (>= 0.11.0), stats, utils","Rcpp","inline, tinytest, pkgKitten, microbenchmark",NA,"GPL (>= 2) | file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"RcppEigenAD","RcppEigenAD","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.0",NA,NA,"Rcpp (>= 0.12.12), methods, RcppEigen, functional, memoise,
+readr, Rdpack","Rcpp, RcppEigen, BH",NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"RcppGSL","RcppGSL","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.10",NA,NA,"Rcpp (>= 0.11.0), stats","Rcpp","tinytest",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"RcppParallel","RcppParallel","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","5.1.4",NA,"R (>= 3.0.2)",NA,NA,"Rcpp, RUnit, knitr, rmarkdown",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"RcppProgress","RcppProgress","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.2",NA,NA,NA,NA,"RcppArmadillo, devtools, roxygen2, testthat",NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"RcppRoll","RcppRoll","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.0",NA,"R (>= 2.15.1)","Rcpp","Rcpp","zoo, testthat",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.0"
+"RcppZiggurat","RcppZiggurat","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.6",NA,"R (>= 3.0.0)","Rcpp, parallel, graphics, stats, utils","Rcpp, RcppGSL","rbenchmark, microbenchmark, lattice, knitr, rmarkdown, pinp",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"RCurl","RCurl","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.98-1.5",NA,"R (>= 3.4.0), methods","bitops",NA,"XML",NA,"BSD_3_clause + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"Rdpack","Rdpack","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1.4",NA,"R (>= 2.15.0), methods","tools, utils, rbibutils (>= 1.3)",NA,"grDevices, testthat, rstudioapi, rprojroot, gbRd",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"reactlog","reactlog","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.0",NA,"R (>= 3.0.2)","jsonlite (>= 0.9.16),",NA,"shiny (>= 1.5.0), knitr, rmarkdown, htmltools, testthat",NA,"GPL-3 | file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"readbitmap","readbitmap","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.5",NA,NA,"bmp, jpeg, png, tiff",NA,"pixmap, testthat",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"readr","readr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.2",NA,"R (>= 3.1)","cli, clipr, crayon, hms (>= 0.4.1), methods, rlang, R6,
+tibble, vroom (>= 1.5.4), utils, lifecycle (>= 0.2.0)","cpp11, tzdb (>= 0.1.1)","covr, curl, dplyr, knitr, rmarkdown, spelling, stringi,
+testthat, tzdb (>= 0.1.1), waldo, withr, xml2",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"readxl","readxl","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.1",NA,NA,"cellranger, Rcpp (>= 0.12.18), tibble (>= 1.3.1), utils","progress, Rcpp","covr, knitr, rmarkdown, rprojroot (>= 1.1), testthat",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.0"
+"recipes","recipes","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.17",NA,"dplyr, R (>= 3.1)","ellipsis, generics (>= 0.1.0), glue, gower, ipred (>= 0.9-12),
+lifecycle, lubridate, magrittr, Matrix, purrr (>= 0.2.3), rlang
+(>= 0.4.0), stats, tibble, tidyr (>= 1.0.0), tidyselect (>=
+1.1.0), timeDate, utils, vctrs, withr",NA,"covr, ddalpha, dimRed (>= 0.2.2), fastICA, ggplot2, igraph,
+kernlab, knitr, modeldata, parsnip (>= 0.1.7), RANN, RcppRoll,
+rmarkdown, rpart, rsample, RSpectra, testthat (>= 3.0.0),
+workflows, xml2",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"rematch","rematch","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.1",NA,NA,NA,NA,"covr, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"rematch2","rematch2","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1.2",NA,NA,"tibble",NA,"covr, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"remotes","remotes","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.4.1",NA,"R (>= 3.0.0)","methods, stats, tools, utils",NA,"brew, callr, codetools, curl, covr, git2r (>= 0.23.0), knitr,
+mockery, pkgbuild (>= 1.0.1), pingr, rmarkdown, rprojroot,
+testthat, webfakes, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"reprex","reprex","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.1",NA,"R (>= 3.3)","callr (>= 3.6.0), cli (>= 2.3.1), clipr (>= 0.4.0), fs, glue,
+knitr (>= 1.23), rlang (>= 0.4.0), rmarkdown, rstudioapi,
+utils, withr (>= 2.3.0)",NA,"covr, fortunes, miniUI, mockr, rprojroot, sessioninfo, shiny,
+spelling, styler (>= 1.2.0), testthat (>= 3.0.2)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"reshape","reshape","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.8.8",NA,"R (>= 2.6.1)","plyr",NA,NA,NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"reshape2","reshape2","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.4",NA,"R (>= 3.1)","plyr (>= 1.8.1), Rcpp, stringr","Rcpp","covr, lattice, testthat (>= 0.8.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"revtools","revtools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.1.9999",NA,"R (>= 3.5.0)","ade4, modeltools, ngram, plotly, slam, shiny, shinydashboard,
+SnowballC, stringdist, tm, topicmodels, viridisLite",NA,NA,NA,"GPL-3",NA,NA,NA,NA,"no","4.0.0"
+"rex","rex","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.0",NA,NA,"lazyeval",NA,"testthat, knitr, rmarkdown, dplyr, ggplot2, magrittr, Hmisc,
+stringr, rvest, roxygen2, covr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"Rfast","Rfast","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.3",NA,"R (>= 3.5.0), Rcpp (>= 0.12.3), RcppZiggurat",NA,"Rcpp (>= 0.12.3), RcppArmadillo",NA,NA,"GPL (>= 2.0)",NA,NA,NA,NA,"yes","4.0.3"
+"Rfast2","Rfast2","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.3",NA,"R (>= 3.5.0), Rcpp (>= 0.12.3)","Rfast, RANN","Rcpp (>= 0.12.3), RcppArmadillo",NA,NA,"GPL (>= 2.0)",NA,NA,NA,NA,"yes","4.0.3"
+"rgdal","rgdal","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5-27",NA,"R (>= 3.5.0), methods, sp (>= 1.1-0)","grDevices, graphics, stats, utils","sp","knitr, DBI, RSQLite, maptools, mapview, rmarkdown, curl,
+rgeos",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"rgeos","rgeos","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5-8",NA,"R (>= 3.3.0), methods, sp (>= 1.1-0)","utils, stats, graphics","sp","maptools (>= 0.8-5), testthat, XML, maps, rgdal",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"rgl","rgl","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.108.3.2",NA,"R (>= 3.3.0)","graphics, grDevices, stats, utils, htmlwidgets, htmltools,
+knitr (>= 1.33), jsonlite (>= 0.9.20), magrittr, R6",NA,"MASS, rmarkdown, deldir (>= 1.0-4), orientlib, lattice,
+misc3d, magick, plotrix (>= 3.7-3), tripack, interp,
+alphashape3d, tcltk, js (>= 1.2), akima, webshot2, downlit (>=
+0.4.0), pkgdown, extrafont, shiny, manipulateWidget (>= 0.9.0),
+testthat, markdown, crosstalk","waldo","GPL",NA,NA,NA,NA,"yes","4.0.3"
+"RhpcBLASctl","RhpcBLASctl","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.21-247.1",NA,NA,NA,NA,NA,NA,"AGPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"rhub","rhub","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,NA,"assertthat, callr, cli (>= 1.1.0), crayon, desc, digest, httr,
+jsonlite, parsedate, pillar, prettyunits, processx, R6,
+rappdirs, rcmdcheck (>= 1.2.1), rematch, tibble, utils, uuid,
+whoami, withr",NA,"covr, testthat, knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"rio","rio","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5.27",NA,"R (>= 2.15.0)","tools, stats, utils, foreign, haven (>= 1.1.2), curl (>= 0.6),
+data.table (>= 1.9.8), readxl (>= 0.1.1), openxlsx, tibble",NA,"datasets, bit64, testthat, knitr, magrittr, arrow, clipr,
+feather, fst, hexView, jsonlite, pzfx, readODS (>= 1.6.4),
+readr, rmarkdown, rmatio, xml2 (>= 1.2.0), yaml",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"rjags","rjags","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","4-11",NA,"R (>= 2.14.0), coda (>= 0.13)",NA,NA,"tcltk",NA,"GPL (== 2)",NA,NA,NA,NA,"yes","4.0.3"
+"rJava","rJava","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0-5",NA,"R (>= 3.6.0), methods",NA,NA,NA,NA,"LGPL-2.1",NA,NA,NA,NA,"yes","4.0.3"
+"RJDBC","RJDBC","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2-8",NA,"methods, DBI, rJava (>= 0.4-15), R (>= 2.4.0)",NA,NA,NA,NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"rlang","rlang","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.11",NA,"R (>= 3.3.0)","utils",NA,"cli, covr, crayon, glue, magrittr, methods, pak, pillar,
+rmarkdown, testthat (>= 3.0.0), vctrs (>= 0.2.3), withr","winch","MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"rmapshaper","rmapshaper","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.5",NA,NA,"geojsonio (>= 0.9.4), geojsonlint (>= 0.4.0), jsonlite (>=
+1.7.0), methods, readr (>= 1.4.0), sf (>= 0.9-0), sp (>=
+1.4-0), V8 (>= 3.4.2)",NA,"knitr, magrittr, rgdal, rgeos, rmarkdown, testthat (>=
+2.1.0), covr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"rmarkdown","rmarkdown","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.11",NA,"R (>= 3.0)","tools, utils, knitr (>= 1.22), yaml (>= 2.1.19), htmltools (>=
+0.3.5), evaluate (>= 0.13), jsonlite, tinytex (>= 0.31), xfun
+(>= 0.21), jquerylib, methods, stringr (>= 1.2.0)",NA,"shiny (>= 1.6.0), tufte, testthat (>= 3.0.0), digest,
+dygraphs, vctrs, tibble, fs, rsconnect, withr (>= 2.4.2), bslib
+(>= 0.2.5.1), sass (>= 0.4.0)",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"rmio","rmio","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.0",NA,NA,"bigassertr, ff",NA,"testthat (>= 3.0.0)",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"rnaturalearth","rnaturalearth","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.0",NA,"R (>= 3.1.1)","sp (>= 1.0.15), utils (>= 3.2.3), sf (>= 0.3-4)",NA,"rgdal, knitr (>= 1.12.3), testthat (>= 0.9.1), httr (>=
+1.1.0), devtools (>= 1.10.0), rnaturalearthdata (>= 0.1.0),
+rnaturalearthhires (>= 0.1.0), raster (>= 2.5-2), rgeos",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"rngtools","rngtools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5.2",NA,"R (>= 3.2.0), methods","digest, utils, stats, parallel",NA,"covr, RUnit, testthat",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"robustbase","robustbase","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.93-9",NA,"R (>= 3.5.0)","stats, graphics, utils, methods, DEoptimR",NA,"grid, MASS, lattice, boot, cluster, Matrix, robust,
+fit.models, MPV, xtable, ggplot2, GGally, RColorBrewer,
+reshape2, sfsmisc, catdata, doParallel, foreach, skewt","robustX, rrcov, matrixStats, quantreg, Hmisc","GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"roxygen2","roxygen2","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","7.1.2",NA,"R (>= 3.3)","brew, commonmark, desc (>= 1.2.0), digest, knitr, methods,
+pkgload (>= 1.0.2), purrr (>= 0.3.3), R6 (>= 2.1.2), rlang,
+stringi, stringr (>= 1.0.0), utils, xml2","cpp11","covr, devtools, rmarkdown, testthat (>= 2.1.0), R.methodsS3,
+R.oo",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"rprojroot","rprojroot","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.2",NA,"R (>= 3.0.0)",NA,NA,"covr, knitr, lifecycle, mockr, rmarkdown, testthat (>=
+3.0.0), withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"rsconnect","rsconnect","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.8.24",NA,"R (>= 3.0.0)","curl, digest, jsonlite, openssl, packrat (>= 0.6), rstudioapi
+(>= 0.5), yaml (>= 2.1.5)",NA,"RCurl, callr, httpuv, knitr, plumber (>= 0.3.2), reticulate,
+rmarkdown (>= 1.1), shiny, sourcetools, testthat, xtable",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"RSpectra","RSpectra","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.16-1",NA,"R (>= 3.0.2)","Matrix (>= 1.1-0), Rcpp (>= 0.11.5)","Rcpp, RcppEigen (>= 0.3.3.3.0)","knitr, rmarkdown, prettydoc",NA,"MPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"rstan","rstan","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.21.2",NA,"R (>= 3.4.0), StanHeaders (>= 2.21.0), ggplot2 (>= 3.0.0)","methods, stats4, inline, gridExtra (>= 2.0.0), Rcpp (>=
+0.12.0), RcppParallel (>= 5.0.1), loo (>= 2.3.0), pkgbuild,
+withr, V8","Rcpp (>= 0.12.0), RcppEigen (>= 0.3.3.3.0), BH (>=
+1.72.0-2), StanHeaders (>= 2.21.0), RcppParallel","RUnit, RcppEigen (>= 0.3.3.3.0), BH (>= 1.72.0-2), parallel,
+KernSmooth, shinystan (>= 2.3.0), bayesplot (>= 1.5.0),
+rmarkdown, rstantools, rstudioapi, Matrix, knitr (>= 1.15.1)",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"rstantools","rstantools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1.1",NA,NA,"desc, stats, utils, Rcpp (>= 0.12.16), RcppParallel (>= 5.0.1)",NA,"rstan (>= 2.17.2), usethis (>= 1.5.1), testthat (>= 2.0.0),
+knitr, pkgbuild, pkgload, roxygen2 (>= 6.0.1), rmarkdown,
+rstudioapi",NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"rstudioapi","rstudioapi","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.13",NA,NA,NA,NA,"testthat, knitr, rmarkdown, clipr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"rsvg","rsvg","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1.2",NA,NA,NA,NA,"spelling, svglite, magick, webp, ggplot2, knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"runjags","runjags","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.2.0-2",NA,"R (>= 2.14.0)","parallel, lattice (>= 0.20-10), coda (>= 0.17-1), stats, utils",NA,"rjags (>= 4-7), modeest, testthat (>= 3.0.0), knitr,
+markdown, spelling",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"rversions","rversions","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1.1",NA,NA,"curl, utils, xml2 (>= 1.0.0)",NA,"mockery, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"rvest","rvest","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.1",NA,"R (>= 3.2)","httr (>= 0.5), lifecycle (>= 1.0.0), magrittr, rlang (>=
+0.4.10), selectr, tibble, xml2 (>= 1.3)",NA,"covr, glue, knitr, readr, rmarkdown, repurrrsive, spelling,
+stringi (>= 0.3.1), testthat (>= 3.0.2), webfakes",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"s2","s2","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.7",NA,"R (>= 3.0.0)","Rcpp, wk (>= 0.5.0)","Rcpp, wk","testthat, vctrs",NA,"Apache License (== 2.0)",NA,NA,NA,NA,"yes","4.0.3"
+"sandwich","sandwich","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.0-1",NA,"R (>= 3.0.0)","stats, utils, zoo",NA,"AER, car, geepack, lattice, lmtest, MASS, multiwayvcov,
+parallel, pcse, plm, pscl, scatterplot3d, stats4, strucchange,
+survival",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"sass","sass","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.0",NA,NA,"fs, rlang (>= 0.4.10), htmltools (>= 0.5.1), R6, rappdirs",NA,"testthat, knitr, rmarkdown, withr, shiny, curl",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"satellite","satellite","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.4",NA,"R (>= 2.10), raster, methods, utils, stats, grDevices,
+graphics","plyr, Rcpp (>= 0.10.3), terra, tools, stats4","Rcpp","devtools, knitr, rgdal, testthat, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"scales","scales","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,"R (>= 3.2)","farver (>= 2.0.3), labeling, lifecycle, munsell (>= 0.5), R6,
+RColorBrewer, viridisLite",NA,"bit64, covr, dichromat, ggplot2, hms (>= 0.5.0), testthat (>=
+2.1.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"selectr","selectr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4-2",NA,"R (>= 3.0)","methods, stringr, R6",NA,"testthat, XML, xml2",NA,"BSD_3_clause + file LICENCE",NA,NA,NA,NA,"no","4.0.2"
+"servr","servr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.23",NA,"R (>= 3.0.0)","mime (>= 0.2), httpuv (>= 1.5.2), xfun, jsonlite",NA,"tools, later, rstudioapi, knitr (>= 1.9), rmarkdown",NA,"GPL",NA,NA,NA,NA,"no","4.0.3"
+"sessioninfo","sessioninfo","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,NA,"cli, tools, utils, withr",NA,"callr, covr, mockery, testthat",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.0"
+"sf","sf","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0-3",NA,"methods, R (>= 3.3.0)","classInt (>= 0.4-1), DBI (>= 0.8), graphics, grDevices, grid,
+magrittr, Rcpp (>= 0.12.18), s2 (>= 1.0.7), stats, tools, units
+(>= 0.6-0), utils","Rcpp","blob, covr, dplyr (>= 0.8-3), ggplot2, knitr, lwgeom (>=
+0.2-1), maps, mapview, Matrix, microbenchmark, odbc, pillar,
+pool, raster, rgdal, rgeos, rlang, rmarkdown, RPostgres (>=
+1.1.0), RPostgreSQL, RSQLite, sp (>= 1.2-4), spatstat (>=
+2.0-1), spatstat.geom, spatstat.core, spatstat.linnet,
+spatstat.utils, stars (>= 0.2-0), terra, testthat, tibble (>=
+1.4.1), tidyr (>= 1.0-0), tidyselect (>= 1.0.0), tmap (>= 2.0),
+vctrs, wk",NA,"GPL-2 | MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"sfbiodiversityapp","sfbiodiversityapp","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.11",NA,"shiny,
+rmarkdown,
+ggplot2,
+plotly","msod,
+sf,
+ggbeeswarm,
+shinyWidgets,
+sf,
+httr,
+geojsonsf,
+readr,
+shinyjs,
+waiter",NA,"testthat",NA,"GPL (>= 2)",NA,NA,NA,NA,NA,"4.0.3"
+"sfheaders","sfheaders","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.0",NA,NA,"geometries (>= 0.2.0), Rcpp","geometries, Rcpp","covr, knitr, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"sflddata","sflddata","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.0-2",NA,NA,"maptools,
+raster,
+lubridate,
+readxl,
+testthat,
+dplyr,
+ncdf4",NA,"arrangements,
+Rfast,
+sf,
+parallel,
+runjags,
+ggplot2,
+car,
+odbc,
+sp,
+corrplot",NA,"GPL (>= 2)",NA,NA,NA,NA,NA,"4.0.3"
+"sfsmisc","sfsmisc","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1-12",NA,"R (>= 3.3.0)","grDevices, methods, utils, stats, tools",NA,"datasets, tcltk, cluster, lattice, MASS, Matrix, nlme, lokern","mgcv, rpart, nor1mix, polycor, sm, tikzDevice, e1071, Hmisc,
+gmp, pastecs, polynom, robustbase","GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"sgeostat","sgeostat","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0-27",NA,"stats, grDevices, graphics, R (>= 2.0.0)",NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.2"
+"shape","shape","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.6",NA,"R (>= 2.01)","stats, graphics, grDevices",NA,NA,NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"shiny","shiny","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.7.1",NA,"R (>= 3.0.2), methods","utils, grDevices, httpuv (>= 1.5.2), mime (>= 0.3), jsonlite
+(>= 0.9.16), xtable, fontawesome (>= 0.2.1), htmltools (>=
+0.5.2), R6 (>= 2.0), sourcetools, later (>= 1.0.0), promises
+(>= 1.1.0), tools, crayon, rlang (>= 0.4.10), fastmap (>=
+1.1.0), withr, commonmark (>= 1.7), glue (>= 1.3.2), bslib (>=
+0.3.0), cachem, ellipsis, lifecycle (>= 0.2.0)",NA,"datasets, Cairo (>= 1.5-5), testthat (>= 3.0.0), knitr (>=
+1.6), markdown, rmarkdown, ggplot2, reactlog (>= 1.0.0),
+magrittr, shinytest (>= 1.4.0.9003), yaml, future, dygraphs,
+ragg, showtext, sass",NA,"GPL-3 | file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"shinyBS","shinyBS","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.61",NA,NA,"shiny (>= 0.11), htmltools",NA,NA,NA,"GPL-3",NA,NA,NA,NA,"no","4.0.2"
+"shinydashboard","shinydashboard","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.7.2",NA,"R (>= 3.0)","utils, shiny (>= 1.0.0), htmltools (>= 0.2.6), promises",NA,NA,NA,"GPL (>= 2) | file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"shinyjs","shinyjs","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.0",NA,"R (>= 3.1.0)","digest (>= 0.6.8), htmltools (>= 0.2.9), jsonlite, shiny (>=
+1.0.0)",NA,"knitr (>= 1.7), rmarkdown, shinyAce, shinydisconnect,
+testthat (>= 0.9.1)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"shinystan","shinystan","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.5.0",NA,"R (>= 3.1.0), shiny (>= 1.0.3)","bayesplot (>= 1.5.0), colourpicker, DT (>= 0.2), dygraphs (>=
+1.1.1.2), ggplot2 (>= 2.1.1), gridExtra, gtools, markdown (>=
+0.7.4), methods, reshape2, rsconnect (>= 0.4.2), rstan (>=
+2.17.1), stats, shinyjs (>= 0.6.0), shinythemes (>= 1.0.1),
+threejs (>= 0.2.1), utils, xtable, xts (>= 0.9-7)",NA,"coda, knitr (>= 1.9), rmarkdown (>= 0.8.1), rstanarm (>=
+2.17.4), testthat",NA,"GPL (>= 3)",NA,NA,NA,NA,"no","4.0.3"
+"shinytest","shinytest","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5.1",NA,NA,"assertthat, callr (>= 2.0.3), crayon, debugme, digest,
+htmlwidgets, httpuv, httr, jsonlite, parsedate, pingr, R6,
+rematch, rlang, rstudioapi (>= 0.8.0.9002), shiny (>= 1.3.2),
+testthat (>= 1.0.0), utils, webdriver (>= 1.0.6), withr",NA,"flexdashboard, globals, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"shinythemes","shinythemes","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.0",NA,"R (>= 3.0.0)","shiny (>= 0.11)",NA,NA,NA,"GPL-3 | file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"shinyWidgets","shinyWidgets","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.6.2",NA,"R (>= 3.1.0)","bslib, sass, shiny (>= 0.14), htmltools, jsonlite, grDevices",NA,"shinydashboard, testthat, covr, shinydashboardPlus (>=
+2.0.0), bs4Dash, argonR, argonDash, tablerDash, ggplot2, DT,
+scales",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"showimage","showimage","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.0",NA,NA,"png, tools",NA,"covr, testthat",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"sirt","sirt","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.11-21",NA,"R (>= 3.5.0)","CDM, graphics, methods, Rcpp, stats, TAM, utils","pbv, Rcpp, RcppArmadillo","coda, igraph, lavaan, lavaan.survey, MASS, Matrix, miceadds,
+mirt, mvtnorm, pbivnorm, pbv, psych, sfsmisc, sm, survey","immer","GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"skmeans","skmeans","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2-14",NA,NA,"slam (>= 0.1-31), clue (>= 0.3-39), cluster, stats, utils",NA,NA,"Matrix, kmndirs","GPL-2",NA,NA,NA,NA,"no","4.0.3"
+"slam","slam","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1-48",NA,"R (>= 3.4.0)","stats",NA,NA,"Matrix, SparseM, spam","GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"slga","slga","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.0",NA,"R (>= 2.10)","httr, methods, raster, s2, sf (>= 1.0), utils, xml2",NA,"covr, knitr, pkgdown, rgdal, rmarkdown, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"slider","slider","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.2",NA,"R (>= 3.3.0)","ellipsis (>= 0.3.1), glue, rlang (>= 0.4.5), vctrs (>= 0.3.6),
+warp","vctrs (>= 0.3.6)","covr, dplyr (>= 1.0.0), knitr, lubridate, rmarkdown, testthat
+(>= 3.0.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"SnowballC","SnowballC","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.7.0",NA,NA,NA,NA,NA,NA,"BSD_3_clause + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"sourcetools","sourcetools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.7",NA,"R (>= 3.0.2)",NA,NA,"testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"sp","sp","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4-5",NA,"R (>= 3.0.0), methods","utils, stats, graphics, grDevices, lattice, grid",NA,"RColorBrewer, rgdal (>= 1.2-3), rgeos (>= 0.3-13), gstat,
+maptools, deldir",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"spacetime","spacetime","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2-5",NA,"R (>= 3.0.0)","graphics, utils, stats, methods, lattice, sp (>= 1.1-0), zoo
+(>= 1.7-9), xts (>= 0.8-8), intervals",NA,"adehabitatLT, cshapes (>= 2.0), foreign, gstat (>= 1.0-16),
+maps, mapdata, maptools, plm, raster, RColorBrewer, rgdal,
+rgeos, RPostgreSQL, knitr, googleVis, ISOcodes, markdown, sf",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"SparseM","SparseM","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.81",NA,"R (>= 2.15), methods","graphics, stats, utils",NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"spatstat","spatstat","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.2-0",NA,"R (>= 3.5.0), spatstat.data (>= 2.1-0), spatstat.geom (>=
+2.2-0), spatstat.core (>= 2.2-0), spatstat.linnet (>= 2.2-0),
+utils","spatstat.utils (>= 2.2-0)",NA,"",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"spatstat.core","spatstat.core","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.3-1.006",NA,"R (>= 3.5.0), spatstat.data (>= 2.1-0), spatstat.geom (>=
+2.3-0), stats, graphics, grDevices, utils, methods, nlme, rpart","spatstat.utils (>= 2.2-0), spatstat.sparse (>= 2.0-0), mgcv,
+Matrix, abind, tensor, goftest (>= 1.2-2)",NA,"sm, maptools (>= 0.9-9), gsl, locfit, spatial, RandomFields
+(>= 3.1.24.1), RandomFieldsUtils(>= 0.3.3.1), fftwtools (>=
+0.9-8), nleqslv, spatstat.linnet (>= 2.0-0), spatstat (>=
+2.0-0)",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"spatstat.data","spatstat.data","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.1-1",NA,"R (>= 3.5.0)","spatstat.utils (>= 2.1-0), Matrix",NA,"spatstat.geom, spatstat.core, spatstat.linnet",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"spatstat.geom","spatstat.geom","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.3-0.007",NA,"R (>= 3.5.0), spatstat.data (>= 2.0-0), stats, graphics,
+grDevices, utils, methods","spatstat.utils (>= 2.2-0), deldir (>= 1.0-2), polyclip (>=
+1.10-0)",NA,"spatstat.core, spatstat.linnet, maptools (>= 0.9-9), spatial,
+fftwtools (>= 0.9-8), spatstat (>= 2.0-0)",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"spatstat.linnet","spatstat.linnet","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.3-0",NA,"R (>= 3.5.0), spatstat.data (>= 2.1-0), spatstat.geom (>=
+2.2-2), spatstat.core (>= 2.3-0), stats, graphics, grDevices,
+methods, utils","spatstat.utils (>= 2.2-0), Matrix, spatstat.sparse (>= 2.0)",NA,"goftest, locfit, spatstat (>= 2.0-0)",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"spatstat.random","spatstat.random","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0-0",NA,"R (>= 3.5.0), spatstat.data (>= 2.1-0), spatstat.geom (>=
+2.3-0), stats, utils, methods, grDevices","spatstat.utils (>= 2.2-0), spatstat.sparse (>= 2.0-0)",NA,"spatial, RandomFields (>= 3.1.24.1), RandomFieldsUtils(>=
+0.3.3.1), spatstat.linnet (>= 2.0-0), spatstat.core (>= 2.3-2),
+spatstat (>= 2.0-0)",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"spatstat.sparse","spatstat.sparse","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0-0",NA,"R (>= 3.5.0), stats, utils, methods, Matrix, abind, tensor","spatstat.utils (>= 2.1-0)",NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"spatstat.utils","spatstat.utils","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.2-0.005",NA,"R (>= 3.3.0), stats, graphics, grDevices, utils, methods",NA,NA,"spatstat.core",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"splancs","splancs","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.01-42",NA,"R (>= 2.10.0), sp (>= 0.9)","stats, graphics, grDevices, methods",NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"SQUAREM","SQUAREM","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2021.1",NA,"R (>= 3.0)",NA,NA,"setRNG",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"StanHeaders","StanHeaders","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.21.0-7",NA,"R (>= 3.4.0)","RcppParallel (>= 5.0.1)","RcppEigen, RcppParallel (>= 5.0.1)","Rcpp, BH, knitr (>= 1.15.1), rmarkdown, Matrix, methods,
+rstan",NA,"BSD_3_clause + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"stars","stars","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5-5",NA,"R (>= 3.3.0), abind, sf (>= 1.0.3)","methods, parallel, classInt (>= 0.4-1), lwgeom, rlang, units",NA,"PCICt, RNetCDF (>= 1.8-2), clue, covr, cubelyr, digest, dplyr
+(>= 0.7-0), exactextractr, future.apply, ggforce, ggplot2,
+ggthemes, gstat, httr, jsonlite, knitr, maps, mapdata,
+ncdfgeom, ncmeta (>= 0.0.3), pbapply, plm, randomForest,
+raster, rgdal, rmarkdown, sp, spacetime, spatstat (>= 2.0-1),
+spatstat.geom, starsdata, terra (>= 1.4-22), testthat, tidyr,
+viridis, xts, zoo",NA,"Apache License",NA,NA,NA,NA,"no","4.0.3"
+"startupmsg","startupmsg","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9.6",NA,"R(>= 1.8.0)",NA,NA,NA,NA,"LGPL-3",NA,NA,NA,NA,"no","4.0.0"
+"statmod","statmod","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.36",NA,"R (>= 3.0.0)","stats, graphics",NA,"MASS, tweedie",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"StratigrapheR","StratigrapheR","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.4",NA,"R (>= 4.0.0)","graphics, grDevices, XML, stats, utils, dplyr (>= 1.0.0),
+stringr, shiny, diagram, reshape",NA,"astrochron, RFOC, tidyverse, plyr",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"stringdist","stringdist","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.9.8",NA,"R (>= 2.15.3)","parallel",NA,"tinytest",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"stringi","stringi","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.7.5",NA,"R (>= 3.1)","tools, utils, stats",NA,NA,NA,"file LICENSE","yes",NA,NA,NA,"yes","4.0.3"
+"stringr","stringr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4.0",NA,"R (>= 3.1)","glue (>= 1.2.0), magrittr, stringi (>= 1.1.7)",NA,"covr, htmltools, htmlwidgets, knitr, rmarkdown, testthat",NA,"GPL-2 | file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"sustfarmld","sustfarmld","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.0-1",NA,NA,"maptools,
+raster,
+lubridate,
+readxl,
+testthat,
+dplyr,
+ncdf4",NA,"arrangements,
+Rfast,
+sf,
+parallel,
+runjags,
+ggplot2,
+car,
+odbc,
+sp,
+corrplot",NA,"GPL (>= 2)",NA,NA,NA,NA,NA,"4.0.2"
+"svglite","svglite","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.0",NA,"R (>= 3.0.0)","systemfonts (>= 1.0.0)","cpp11, systemfonts","htmltools, testthat, xml2 (>= 1.0.0), covr, fontquiver (>=
+0.2.0), knitr, rmarkdown",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"sys","sys","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.4",NA,NA,NA,NA,"unix (>= 1.4), spelling, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.2"
+"systemfonts","systemfonts","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.2",NA,"R (>= 3.2.0)",NA,"cpp11 (>= 0.2.1)","testthat (>= 2.1.0), covr, knitr, rmarkdown, tools",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"TAM","TAM","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.7-16",NA,"R (>= 2.15.1), CDM (>= 6.4-19)","graphics, methods, Rcpp, stats, utils","Rcpp, RcppArmadillo","coda, GPArotation, grDevices, lattice, lavaan, MASS,
+miceadds, mvtnorm, plyr, psych, sfsmisc, sirt, splines,
+WrightMap","LSAmitR","GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"tensor","tensor","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5",NA,NA,NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,NA,"4.0.0"
+"tensorA","tensorA","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.36.2",NA,"R (>= 2.2.0), stats",NA,NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"Ternary","Ternary","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.0",NA,"R (>= 3.2.0)","shiny, viridisLite,",NA,"colourpicker, knitr, readxl, rmarkdown, shinyjs, spelling,
+testthat (>= 3.0), vdiffr,",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.3"
+"terra","terra","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4-11",NA,"R (>= 3.5.0)","methods, Rcpp","Rcpp","parallel, tinytest, ncdf4, sf (>= 0.9-8), deldir, raster",NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"testthat","testthat","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.1.0",NA,"R (>= 3.1)","brio, callr (>= 3.5.1), cli (>= 2.2.0), crayon (>= 1.3.4),
+desc, digest, ellipsis (>= 0.2.0), evaluate, jsonlite,
+lifecycle, magrittr, methods, pkgload, praise, processx, ps (>=
+1.3.4), R6 (>= 2.2.0), rlang (>= 0.4.9), utils, waldo (>=
+0.2.4), withr (>= 2.3.0)",NA,"covr, curl (>= 0.9.5), diffviewer (>= 0.1.0), knitr, mockery,
+rmarkdown, rstudioapi, shiny, usethis, vctrs (>= 0.1.0), xml2",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"threejs","threejs","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.3",NA,"R (>= 3.0.0), igraph (>= 1.0.0)","htmlwidgets (>= 0.3.2), base64enc, crosstalk, methods, stats",NA,"maps","knitr, shiny","MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"tibble","tibble","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.1.5",NA,"R (>= 3.1.0)","ellipsis (>= 0.3.2), fansi (>= 0.4.0), lifecycle (>= 1.0.0),
+magrittr, methods, pillar (>= 1.6.2), pkgconfig, rlang (>=
+0.4.3), utils, vctrs (>= 0.3.8)",NA,"bench, bit64, blob, brio, callr, cli, covr, crayon (>=
+1.3.4), DiagrammeR, dplyr, evaluate, formattable, ggplot2, hms,
+htmltools, knitr, lubridate, mockr, nycflights13, pkgbuild,
+pkgload, purrr, rmarkdown, stringi, testthat (>= 3.0.2), tidyr,
+withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"tidyr","tidyr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.4",NA,"R (>= 3.1)","dplyr (>= 0.8.2), ellipsis (>= 0.1.0), glue, lifecycle,
+magrittr, purrr, rlang, tibble (>= 2.1.1), tidyselect (>=
+1.1.0), utils, vctrs (>= 0.3.6)","cpp11 (>= 0.2.6)","covr, data.table, jsonlite, knitr, readr, repurrrsive (>=
+1.0.0), rmarkdown, testthat (>= 3.0.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"tidyselect","tidyselect","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,"R (>= 3.2)","ellipsis, glue (>= 1.3.0), purrr (>= 0.3.2), rlang (>= 0.4.6),
+vctrs (>= 0.3.0)",NA,"covr, crayon, dplyr, knitr, magrittr, rmarkdown, testthat (>=
+2.3.0), tibble (>= 2.1.3), withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"tidyverse","tidyverse","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.1",NA,"R (>= 3.3)","broom (>= 0.7.6), cli (>= 2.4.0), crayon (>= 1.4.1), dbplyr
+(>= 2.1.1), dplyr (>= 1.0.5), dtplyr (>= 1.1.0), forcats (>=
+0.5.1), googledrive (>= 1.0.1), googlesheets4 (>= 0.3.0),
+ggplot2 (>= 3.3.3), haven (>= 2.3.1), hms (>= 1.0.0), httr (>=
+1.4.2), jsonlite (>= 1.7.2), lubridate (>= 1.7.10), magrittr
+(>= 2.0.1), modelr (>= 0.1.8), pillar (>= 1.6.0), purrr (>=
+0.3.4), readr (>= 1.4.0), readxl (>= 1.3.1), reprex (>= 2.0.0),
+rlang (>= 0.4.10), rstudioapi (>= 0.13), rvest (>= 1.0.0),
+stringr (>= 1.4.0), tibble (>= 3.1.0), tidyr (>= 1.1.3), xml2
+(>= 1.3.2)",NA,"covr, feather, glue, knitr, rmarkdown, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"tiff","tiff","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1-8",NA,"R (>= 2.9.0)",NA,NA,NA,NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"timeDate","timeDate","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3043.102",NA,"R (>= 2.15.1), graphics, utils, stats, methods",NA,NA,"date, RUnit",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.0"
+"tinytex","tinytex","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.34",NA,NA,"xfun (>= 0.23)",NA,"testit, rstudioapi",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"tippy","tippy","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.0",NA,"R (>= 3.4.0)","htmlwidgets, htmltools, shiny, jsonlite",NA,NA,NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"tm","tm","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.7-8",NA,"R (>= 3.2.0), NLP (>= 0.2-0)","Rcpp, parallel, slam (>= 0.1-37), stats, tools, utils,
+graphics, xml2","BH, Rcpp","antiword, filehash, methods, pdftools, Rcampdf, Rgraphviz,
+Rpoppler, SnowballC, testthat, tm.lexicon.GeneralInquirer",NA,"GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"TMB","TMB","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.7.22",NA,"R (>= 3.0.0)","graphics, methods, stats, utils, Matrix (>= 1.0-12)","Matrix, RcppEigen","numDeriv, parallel",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"tmvnsim","tmvnsim","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0-2",NA,NA,NA,NA,NA,NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"tmvtnorm","tmvtnorm","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.4-10",NA,"R (>= 1.9.0), mvtnorm, utils, Matrix, stats4, gmm","stats, methods",NA,"lattice",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"topicmodels","topicmodels","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2-12",NA,"R (>= 2.15.0)","stats4, methods, modeltools, slam, tm (>= 0.6)",NA,"lasso2, lattice, lda, OAIHarvester, SnowballC,
+corpus.JSS.papers",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"triebeard","triebeard","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.0",NA,NA,"Rcpp","Rcpp","knitr, rmarkdown, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"tripack","tripack","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3-9.1",NA,NA,NA,NA,NA,NA,"ACM | file LICENSE",NA,"yes",NA,NA,"yes","4.0.2"
+"tsibble","tsibble","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.1",NA,"R (>= 3.2.0)","anytime (>= 0.3.1), dplyr (>= 1.0.0), ellipsis (>= 0.3.0),
+generics, lifecycle, lubridate (>= 1.7.0), methods, rlang (>=
+0.4.6), tibble (>= 3.0.0), tidyselect (>= 1.0.0), vctrs (>=
+0.3.1)",NA,"covr, ggplot2 (>= 3.3.0), hms, knitr, nanotime, nycflights13
+(>= 1.0.0), rmarkdown, scales (>= 1.1.0), spelling, testthat
+(>= 3.0.0), tidyr (>= 1.1.0), timeDate",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.3"
+"tweedie","tweedie","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.3.3",NA,"R (>= 2.8.0)",NA,NA,"stabledist, statmod(>= 1.4.20)",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.3"
+"tweenr","tweenr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.2",NA,"R (>= 3.2.0)","Rcpp (>= 0.12.3), grDevices, farver, magrittr, rlang","Rcpp","testthat, covr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"tzdb","tzdb","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1.2",NA,"R (>= 3.3)",NA,"cpp11 (>= 0.2.7)","covr, testthat (>= 3.0.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"units","units","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.7-2",NA,"R (>= 3.0.2)","Rcpp","Rcpp (>= 0.12.10)","udunits2, NISTunits, measurements, xml2, magrittr, pillar (>=
+1.3.0), dplyr (>= 1.0.0), vctrs (>= 0.3.1), knitr, testthat (>=
+3.0.0), ggforce, rmarkdown",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"unmarked","unmarked","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1.1",NA,"R (>= 2.12.0), methods, lattice","graphics, lme4, MASS, Matrix, parallel, plyr, raster, Rcpp (>=
+0.8.0), stats, TMB (>= 1.7.18), utils","Rcpp, RcppArmadillo, TMB",NA,NA,"GPL (>= 3)",NA,NA,NA,NA,"yes","4.0.3"
+"urltools","urltools","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.7.3",NA,"R (>= 2.10)","Rcpp, methods, triebeard","Rcpp","testthat, knitr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"usethis","usethis","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.0.1",NA,"R (>= 3.2)","cli, clipr (>= 0.3.0), crayon, curl (>= 2.7), desc, fs (>=
+1.3.0), gert (>= 1.0.2), gh (>= 1.2.0), glue (>= 1.3.0),
+jsonlite, lifecycle, purrr, rappdirs, rlang (>= 0.4.10),
+rprojroot (>= 1.2), rstudioapi, stats, utils, whisker, withr
+(>= 2.3.0), yaml",NA,"covr, knitr, magick, mockr, rmarkdown, roxygen2, spelling (>=
+1.2), styler (>= 1.2.0), testthat (>= 3.0.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"utf8","utf8","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.2.2",NA,"R (>= 2.10)",NA,NA,"cli, covr, knitr, rlang, rmarkdown, testthat (>= 3.0.0),
+withr",NA,"Apache License (== 2.0) | file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"uuid","uuid","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.1-4",NA,"R (>= 2.9.0)",NA,NA,NA,NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"V8","V8","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.4.2",NA,NA,"Rcpp (>= 0.12.12), jsonlite (>= 1.0), curl (>= 1.0), utils","Rcpp","testthat, knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"vctrs","vctrs","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.8",NA,"R (>= 3.3)","ellipsis (>= 0.2.0), glue, rlang (>= 0.4.10)",NA,"bit64, covr, crayon, dplyr (>= 0.8.5), generics, knitr,
+pillar (>= 1.4.4), pkgdown, rmarkdown, testthat (>= 2.3.0),
+tibble, withr, xml2, waldo (>= 0.2.0), zeallot",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"vegan","vegan","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.5-7",NA,"permute (>= 0.9-0), lattice, R (>= 3.4.0)","MASS, cluster, mgcv",NA,"parallel, tcltk, knitr, markdown",NA,"GPL-2",NA,NA,NA,NA,"yes","4.0.3"
+"VGAM","VGAM","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.1-5",NA,"R (>= 3.5.0), methods, stats, stats4, splines",NA,NA,"VGAMextra, MASS, mgcv","VGAMdata","GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"vipor","vipor","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.5",NA,"R (>= 3.0.0)","stats, graphics",NA,"testthat, beeswarm, lattice, ggplot2, beanplot, vioplot,
+ggbeeswarm,",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.2"
+"viridis","viridis","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.6.1",NA,"R (>= 2.10), viridisLite (>= 0.4.0)","stats, ggplot2 (>= 1.0.1), gridExtra",NA,"hexbin (>= 1.27.0), scales, MASS, knitr, dichromat,
+colorspace, rasterVis, httr, mapproj, vdiffr, svglite (>=
+1.2.0), testthat, covr, rmarkdown, rgdal",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"viridisLite","viridisLite","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4.0",NA,"R (>= 2.10)",NA,NA,"hexbin (>= 1.27.0), ggplot2 (>= 1.0.1), testthat, covr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"vroom","vroom","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.5.5",NA,"R (>= 3.1)","bit64, crayon, cli, glue, hms, lifecycle, methods, rlang (>=
+0.4.2), stats, tibble (>= 2.0.0), tzdb (>= 0.1.1), vctrs (>=
+0.2.0), tidyselect, withr","progress (>= 1.2.1), cpp11 (>= 0.2.0), tzdb (>= 0.1.1)","archive, bench (>= 1.1.0), covr, curl, dplyr, forcats, fs,
+ggplot2, knitr, patchwork, prettyunits, purrr, rmarkdown,
+rstudioapi, scales, spelling, testthat (>= 2.1.0), tidyr,
+waldo, xml2",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"waiter","waiter","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.4",NA,NA,"R6, shiny, htmltools",NA,"httr, knitr, packer, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"waldo","waldo","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.3.1",NA,NA,"cli, diffobj (>= 0.3.4), fansi, glue, methods, rematch2, rlang
+(>= 0.4.10), tibble",NA,"testthat (>= 3.0.0), covr, R6, withr, xml2",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"warp","warp","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.2.0",NA,"R (>= 3.2)",NA,NA,"covr, testthat (>= 2.1.0), knitr, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"webdriver","webdriver","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.6",NA,NA,"callr (>= 3.4.0), base64enc, curl (>= 2.0), debugme, httr,
+jsonlite, R6, showimage, utils, withr",NA,"covr, pingr, rprojroot, servr, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"webshot","webshot","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5.2",NA,"R (>= 3.0)","magrittr, jsonlite, callr",NA,"httpuv, knitr, rmarkdown, shiny",NA,"GPL-2",NA,NA,NA,NA,"no","4.0.2"
+"wellknown","wellknown","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.7.4",NA,NA,"jsonlite, wk, Rcpp","Rcpp, BH","leaflet (>= 1.0.0), testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"whisker","whisker","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.4",NA,NA,NA,NA,"markdown",NA,"GPL-3",NA,NA,NA,NA,"no","4.0.0"
+"whoami","whoami","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.0",NA,NA,"httr, jsonlite, utils",NA,"covr, mockery, testthat, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"withr","withr","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.4.2",NA,"R (>= 3.2.0)","graphics, grDevices, stats",NA,"covr, DBI, knitr, lattice, methods, rmarkdown, RSQLite,
+testthat (>= 2.1.0)",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"wk","wk","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.5.0",NA,NA,NA,"cpp11","testthat (>= 3.0.0), vctrs (>= 0.3.0), sf, tibble",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"xfun","xfun","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.26",NA,NA,"stats, tools",NA,"testit, parallel, codetools, rstudioapi, tinytex (>= 0.30),
+mime, markdown, knitr, htmltools, remotes, pak, rhub, renv,
+curl, jsonlite, rmarkdown",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"XML","XML","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","3.99-0.9",NA,"R (>= 4.0.0), methods, utils",NA,NA,"bitops, RCurl",NA,"BSD_3_clause + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"xml2","xml2","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.3.2",NA,"R (>= 3.1.0)","methods",NA,"covr, curl, httr, knitr, magrittr, mockery, rmarkdown,
+testthat (>= 2.1.0)",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.0"
+"xmlparsedata","xmlparsedata","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.5",NA,"R (>= 3.0.0)",NA,NA,"covr, testthat, xml2",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.3"
+"xopen","xopen","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.0.0",NA,"R (>= 3.1)","processx",NA,"ps, testthat",NA,"MIT + file LICENSE",NA,NA,NA,NA,"no","4.0.0"
+"xtable","xtable","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.8-4",NA,"R (>= 2.10.0)","stats, utils",NA,"knitr, plm, zoo, survival",NA,"GPL (>= 2)",NA,NA,NA,NA,"no","4.0.0"
+"xts","xts","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.12.1",NA,"zoo (>= 1.7-12)","methods","zoo","timeSeries, timeDate, tseries, chron, fts, tis, RUnit",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.2"
+"yaml","yaml","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.2.1",NA,NA,NA,NA,"RUnit",NA,"BSD_3_clause + file LICENSE",NA,NA,NA,NA,"yes","4.0.0"
+"yulab.utils","yulab.utils","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","0.0.4",NA,NA,"utils",NA,"pkgbuild",NA,"Artistic-2.0",NA,NA,NA,NA,"no","4.0.3"
+"zip","zip","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","2.2.0",NA,NA,NA,NA,"covr, processx, R6, testthat, withr",NA,"MIT + file LICENSE",NA,NA,NA,NA,"yes","4.0.3"
+"zoo","zoo","/home/kassel/R/x86_64-pc-linux-gnu-library/4.0","1.8-9",NA,"R (>= 3.1.0), stats","utils, graphics, grDevices, lattice (>= 0.20-27)",NA,"AER, coda, chron, fts, ggplot2 (>= 3.0.0), mondate, scales,
+stinepack, strucchange, timeDate, timeSeries, tis, tseries, xts",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.3"
+"base","base","/usr/lib/R/library","4.0.3","base",NA,NA,NA,"methods",NA,"Part of R 4.0.3",NA,NA,NA,NA,NA,"4.0.3"
+"boot","boot","/usr/lib/R/library","1.3-25","recommended","R (>= 3.0.0), graphics, stats",NA,NA,"MASS, survival",NA,"Unlimited",NA,NA,NA,NA,"no","4.0.0"
+"class","class","/usr/lib/R/library","7.3-17","recommended","R (>= 3.0.0), stats, utils","MASS",NA,NA,NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.0"
+"cluster","cluster","/usr/lib/R/library","2.1.0","recommended","R (>= 3.3.0)","graphics, grDevices, stats, utils",NA,"MASS, Matrix",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.0"
+"codetools","codetools","/usr/lib/R/library","0.2-16","recommended","R (>= 2.1)",NA,NA,NA,NA,"GPL",NA,NA,NA,NA,"no","4.0.0"
+"compiler","compiler","/usr/lib/R/library","4.0.3","base",NA,NA,NA,NA,NA,"Part of R 4.0.3",NA,NA,NA,NA,NA,"4.0.3"
+"datasets","datasets","/usr/lib/R/library","4.0.3","base",NA,NA,NA,NA,NA,"Part of R 4.0.3",NA,NA,NA,NA,NA,"4.0.3"
+"foreign","foreign","/usr/lib/R/library","0.8-79","recommended","R (>= 4.0.0)","methods, utils, stats",NA,NA,NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.0"
+"graphics","graphics","/usr/lib/R/library","4.0.3","base",NA,"grDevices",NA,NA,NA,"Part of R 4.0.3",NA,NA,NA,NA,"yes","4.0.3"
+"grDevices","grDevices","/usr/lib/R/library","4.0.3","base",NA,NA,NA,"KernSmooth",NA,"Part of R 4.0.3",NA,NA,NA,NA,"yes","4.0.3"
+"grid","grid","/usr/lib/R/library","4.0.3","base",NA,"grDevices, utils",NA,"lattice",NA,"Part of R 4.0.3",NA,NA,NA,NA,"yes","4.0.3"
+"KernSmooth","KernSmooth","/usr/lib/R/library","2.23-17","recommended","R (>= 2.5.0), stats",NA,NA,"MASS",NA,"Unlimited",NA,NA,NA,NA,"yes","4.0.0"
+"lattice","lattice","/usr/lib/R/library","0.20-41","recommended","R (>= 3.0.0)","grid, grDevices, graphics, stats, utils",NA,"KernSmooth, MASS, latticeExtra","chron","GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.0"
+"MASS","MASS","/usr/lib/R/library","7.3-53","recommended","R (>= 3.1.0), grDevices, graphics, stats, utils","methods",NA,"lattice, nlme, nnet, survival",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.2"
+"Matrix","Matrix","/usr/lib/R/library","1.2-18","recommended","R (>= 3.2.0)","methods, graphics, grid, stats, utils, lattice",NA,"expm, MASS","MatrixModels, graph, SparseM, sfsmisc","GPL (>= 2) | file LICENCE",NA,NA,NA,NA,"yes","4.0.0"
+"methods","methods","/usr/lib/R/library","4.0.3","base",NA,"utils, stats",NA,"codetools",NA,"Part of R 4.0.3",NA,NA,NA,NA,"yes","4.0.3"
+"mgcv","mgcv","/usr/lib/R/library","1.8-33","recommended","R (>= 2.14.0), nlme (>= 3.1-64)","methods, stats, graphics, Matrix, splines, utils",NA,"parallel, survival, MASS",NA,"GPL (>= 2)",NA,NA,NA,NA,"yes","4.0.2"
+"nlme","nlme","/usr/lib/R/library","3.1-149","recommended","R (>= 3.4.0)","graphics, stats, utils, lattice",NA,"Hmisc, MASS",NA,"GPL (>= 2) | file LICENCE",NA,NA,NA,NA,"yes","4.0.2"
+"nnet","nnet","/usr/lib/R/library","7.3-14","recommended","R (>= 3.0.0), stats, utils",NA,NA,"MASS",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.0"
+"parallel","parallel","/usr/lib/R/library","4.0.3","base",NA,"tools, compiler",NA,"methods","snow, nws, Rmpi","Part of R 4.0.3",NA,NA,NA,NA,"yes","4.0.3"
+"rpart","rpart","/usr/lib/R/library","4.1-15","recommended","R (>= 2.15.0), graphics, stats, grDevices",NA,NA,"survival",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.0"
+"spatial","spatial","/usr/lib/R/library","7.3-11","recommended","R (>= 3.0.0), graphics, stats, utils",NA,NA,"MASS",NA,"GPL-2 | GPL-3",NA,NA,NA,NA,"yes","4.0.0"
+"splines","splines","/usr/lib/R/library","4.0.3","base",NA,"graphics, stats",NA,"Matrix, methods",NA,"Part of R 4.0.3",NA,NA,NA,NA,"yes","4.0.3"
+"stats","stats","/usr/lib/R/library","4.0.3","base",NA,"utils, grDevices, graphics",NA,"MASS, Matrix, SuppDists, methods, stats4",NA,"Part of R 4.0.3",NA,NA,NA,NA,"yes","4.0.3"
+"stats4","stats4","/usr/lib/R/library","4.0.3","base",NA,"graphics, methods, stats",NA,NA,NA,"Part of R 4.0.3",NA,NA,NA,NA,NA,"4.0.3"
+"survival","survival","/usr/lib/R/library","3.2-7","recommended","R (>= 3.4.0)","graphics, Matrix, methods, splines, stats, utils",NA,NA,NA,"LGPL (>= 2)",NA,NA,NA,NA,"yes","4.0.2"
+"tcltk","tcltk","/usr/lib/R/library","4.0.3","base",NA,"utils",NA,NA,NA,"Part of R 4.0.3",NA,NA,NA,NA,"yes","4.0.3"
+"tools","tools","/usr/lib/R/library","4.0.3","base",NA,NA,NA,"codetools, methods, xml2, curl, commonmark",NA,"Part of R 4.0.3",NA,NA,NA,NA,"yes","4.0.3"
+"utils","utils","/usr/lib/R/library","4.0.3","base",NA,NA,NA,"methods, xml2, commonmark",NA,"Part of R 4.0.3",NA,NA,NA,NA,"yes","4.0.3"
