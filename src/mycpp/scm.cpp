@@ -38,7 +38,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
 
   if (verbose){
     std::cout << "Fixing according to pattern: " << std::endl;
-    for (size_t i=0;i<fixedtheta.size();i++){
+    for (long int i=0;i<fixedtheta.size();i++){
       std::cout << " " << fixedtheta[i];
     }
     std::cout << std::endl;
@@ -47,7 +47,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
     if (thetafxd.size() == 0){
       std::cout << " none" << std::endl;
     } else {
-      for (size_t i=0;i<thetafxd.size();i++){
+      for (long int i=0;i<thetafxd.size();i++){
         std::cout << " " << thetafxd[i];
       }
       std::cout << std::endl;
@@ -64,7 +64,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   //combine fixed and variable theta
   veca1 thetarecom(theta.size());
   idx_var = 0;
-  for (size_t i=0;i<theta.size();i++){
+  for (long int i=0;i<theta.size();i++){
     if (fixedtheta[i]){
       thetarecom[i] = theta[i];
     } else {
@@ -132,7 +132,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
 
     //check inputs and ll tape match
-    if (lltape.Domain() != z.size()){stop("Dimension of z (the input measurement on the manifold) is %i, which does not match domain size of log likelihood function of %i.", z.size(), lltape.Domain());}
+    if (lltape.Domain() != (unsigned)z.size()){stop("Dimension of z (the input measurement on the manifold) is %i, which does not match domain size of log likelihood function of %i.", z.size(), lltape.Domain());}
     if (lltape.size_dyn_ind() != theta.size()){stop("Size of parameter vector theta (=%i) does not match parameter size of log likelihood function (=%i).", theta.size(), lltape.size_dyn_ind());}
 
     // make ll tape higher order (i.e. as if it was taped using a2type instead of a1type)

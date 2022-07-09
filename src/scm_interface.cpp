@@ -39,7 +39,7 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
 int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
   Rcout << "Starting tests" << std::endl;
   veca1 u_ad(u.size());
-  for (size_t i=0; i<u.size(); i++){
+  for (long int i=0; i<u.size(); i++){
     u_ad[i] = u[i];
   }
 
@@ -59,7 +59,7 @@ int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
   // Run the other elements
   std::cout << " logdetJ_fromM at toM(u): " << pman->logdetJfromM(z_ad) << std::endl;
   std::cout << " Pmat at toM(u): " << std::endl << pman->Pmatfun(z_ad) << std::endl;
-  for (size_t d=0; d<u.size(); d++){
+  for (long int d=0; d<u.size(); d++){
     std::cout << " dPmat at toM(u) in dimension " << d <<":" << std::endl << pman->dPmatfun(z_ad, d) << std::endl;
   }
   return(0);
@@ -75,14 +75,14 @@ int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
 // [[Rcpp::export]]
 svecd ptoM(XPtr< manifold<a1type> > pman, svecd u){
   veca1 u_ad(u.size());
-  for (size_t i=0; i<u.size(); i++){
+  for (long int i=0; i<u.size(); i++){
     u_ad[i] = u[i];
   }
   veca1 z_ad(u.size());
   z_ad = pman->toM(u_ad);
 
   svecd out(z_ad.size());
-  for (size_t i=0; i<out.size(); i++){
+  for (long int i=0; i<out.size(); i++){
     out[i] = CppAD::Value(z_ad[i]);
   }
   return(out);
@@ -129,11 +129,11 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
 
   //convert svecd to veca1
   veca1 u_ad(u.size());
-  for (size_t i=0; i<u.size(); i++){
+  for (long int i=0; i<u.size(); i++){
     u_ad[i] = u[i];
   }
   veca1 theta_ad(theta.size());
-  for (size_t i=0; i<theta.size(); i++){
+  for (long int i=0; i<theta.size(); i++){
     theta_ad[i] = theta[i];
   }
 
@@ -164,7 +164,7 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
                                      bool verbose
                                      ){
   Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta_e(fixedtheta.size());
-  for (size_t i=0;i<fixedtheta.size();i++){
+  for (long int i=0;i<fixedtheta.size();i++){
     fixedtheta_e[i] = fixedtheta[i];
   }
 
@@ -194,11 +194,11 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
   }
 
   veca1 z_ad(z.size());
-  for (size_t i=0; i<z.size(); i++){
+  for (long int i=0; i<z.size(); i++){
     z_ad[i] = z[i];
   }
   veca1 theta_ad(theta.size());
-  for (size_t i=0; i<theta.size(); i++){
+  for (long int i=0; i<theta.size(); i++){
     theta_ad[i] = theta[i];
   }
 
@@ -226,11 +226,11 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
 XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svecd newvalue, svecd newdynparam){
   //convert input to an Eigen vectors
   veca1 value(newvalue.size());
-  for (size_t i=0; i<newvalue.size(); i++){
+  for (long int i=0; i<newvalue.size(); i++){
     value[i] = newvalue[i];
   }
   veca1 dynparam(newdynparam.size());
-  for (size_t i=0; i<newdynparam.size(); i++){
+  for (long int i=0; i<newdynparam.size(); i++){
     dynparam[i] = newdynparam[i];
   }
 
@@ -274,11 +274,11 @@ XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svec
 svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
   vecd value_e(value.size());
-  for (size_t i=0; i<value.size(); i++){
+  for (long int i=0; i<value.size(); i++){
     value_e[i] = value[i];
   }
   vecd theta_e(theta.size());
-  for (size_t i=0; i<theta.size(); i++){
+  for (long int i=0; i<theta.size(); i++){
     theta_e[i] = theta[i];
   }
 
@@ -292,7 +292,7 @@ svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   grad = pfun->Jacobian(value_e);  //treat the XPtr as a regular pointer
 
   //convert to std::vector
-  for (size_t i = 0; i<grad.size(); i++){
+  for (long int i = 0; i<grad.size(); i++){
     out[i] = grad[i];
   }
   return(out);
@@ -308,9 +308,9 @@ svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
 svecd pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
   vecd value_e(value.size());
-  for (size_t i=0; i<value.size(); i++){ value_e[i] = value[i]; }
+  for (long int i=0; i<value.size(); i++){ value_e[i] = value[i]; }
   vecd theta_e(theta.size());
-  for (size_t i=0; i<theta.size(); i++){
+  for (long int i=0; i<theta.size(); i++){
     theta_e[i] = theta[i];
   }
 
@@ -323,7 +323,7 @@ svecd pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   out_e = pfun->Forward(0, value_e);  //treat the XPtr as a regular pointer
 
   svecd out(out_e.size());
-  for (size_t i=0; i<out_e.size(); i++){out[i] = out_e[i];}
+  for (long int i=0; i<out_e.size(); i++){out[i] = out_e[i];}
 
   return(out);
 }
@@ -338,11 +338,11 @@ svecd pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
 svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
   vecd value_e(value.size());
-  for (size_t i=0; i<value.size(); i++){
+  for (long int i=0; i<value.size(); i++){
     value_e[i] = value[i];
   }
   vecd theta_e(theta.size());
-  for (size_t i=0; i<theta.size(); i++){
+  for (long int i=0; i<theta.size(); i++){
     theta_e[i] = theta[i];
   }
 
@@ -356,7 +356,7 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   hess = pfun->Hessian(value_e, 0);  //treat the XPtr as a regular pointer
 
   //convert to std::vector
-  for (size_t i = 0; i<hess.size(); i++){
+  for (long int i = 0; i<hess.size(); i++){
     out[i] = hess[i];
   }
   return(out);
@@ -378,11 +378,11 @@ svecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
                      svecd theta, size_t order){
   // //convert to eigen
   vecd value_e(value.size());
-  for (size_t i=0; i<value.size(); i++){ value_e[i] = value[i]; }
+  for (long int i=0; i<value.size(); i++){ value_e[i] = value[i]; }
   vecd centre_e(centre.size());
-  for (size_t i=0; i<centre.size(); i++){ centre_e[i] = centre[i]; }
+  for (long int i=0; i<centre.size(); i++){ centre_e[i] = centre[i]; }
   vecd theta_e(theta.size());
-  for (size_t i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
+  for (long int i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
 
   Eigen::Matrix<double, Eigen::Dynamic, 1> out(pfun->Range());
   pfun->new_dynamic(theta_e);
@@ -392,7 +392,7 @@ svecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
                      value_e);
 
   svecd outstd(out.size());
-  for (size_t i=0; i<out.size(); i++){ outstd[i] = out[i]; }
+  for (long int i=0; i<out.size(); i++){ outstd[i] = out[i]; }
 
   return(outstd);
 }
@@ -412,9 +412,9 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfu
                     svecd value, svecd theta){
   // //convert to eigen
   veca1 value_e(value.size());
-  for (size_t i=0; i<value.size(); i++){ value_e[i] = value[i]; }
+  for (long int i=0; i<value.size(); i++){ value_e[i] = value[i]; }
   veca1 theta_e(theta.size());
-  for (size_t i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
+  for (long int i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
 
   //convert taped object to higher order
   CppAD::ADFun<a1type, double> pfunhigher;
@@ -451,9 +451,9 @@ XPtr< CppAD::ADFun<double> >  pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun
                                                 svecd value, svecd theta){
   // //convert to eigen
   veca1 value_e(value.size());
-  for (size_t i=0; i<value.size(); i++){ value_e[i] = value[i]; }
+  for (long int i=0; i<value.size(); i++){ value_e[i] = value[i]; }
   veca1 theta_e(theta.size());
-  for (size_t i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
+  for (long int i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
 
   //convert taped object to higher order
   CppAD::ADFun<a1type, double> pfunhigher;
