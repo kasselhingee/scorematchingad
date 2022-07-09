@@ -27,7 +27,7 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
   if (method %in% c("Mardia", "Mardia_robustsm")){
     if (method == "Mardia_robustsm"){stopifnot(!is.null(cW))} #for robust score matching, need to use  cW
     stopifnot(is.null(km))
-    firstfit <- vMF_Mardia(sample, startk = 0.1, control = controls$Rcgmin, w=w)
+    firstfit <- vMF_Mardia(sample, startk = 10, control = controls$Rcgmin, w=w)
     isfixed <- rep(FALSE, ncol(sample)) #for Windham robust estimation, if it is used
   }
   if (is.null(firstfit)){stop(sprintf("Method '%s' is not valid", method))}
