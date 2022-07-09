@@ -1,72 +1,4 @@
-// turn into an executable by running the following in the ./src/ directory
-// R CMD LINK g++ -I/usr/share/R/include -I/usr/local/include -I./CppAD/external/eigen.git -I./CppAD/include/ -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include -L./CppAD/build/cppad_lib/ -lcppad_lib -Wl,--export-dynamic -fopenmp -Wl,-Bsymbolic-functions -Wl,-z,relro -L/usr/lib/R/lib -lR -lpcre2-8 -llzma -lbz2 -lz -lrt -ldl -lm -licuuc -licui18n  mycpp/main.cpp -o klhexec
-//
-// flags aquired by:
-// R CMD config --cppflags to get pre-processor flags for compiling
-// Rscript -e "Rcpp:::CxxFlags()" to get Rcpp compiler flags
-// R CMD config --ldflags to get flags for R
-// Rscript -e "Rcpp:::LdFlags()"  to get Rcpp Ld flags
-
-#include "../scm_interface.cpp"
-
-bool print_graph(void)
-{   bool ok = true;
-    using std::string;
-    //
-    // AD graph example
-    // node_1 : p[0]
-    // node_2 : p[1]
-    // node_3 : x[0]
-    // node_4 : p[0] + p[1]
-    // node_5 : x[0] + ( p[0] + p[1] )
-    // y[0]   = x[0] + ( p[0] + p[1] )
-    //
-    // C++ graph object
-    CppAD::cpp_graph graph_obj;
-    //
-    // operator being used
-    CppAD::graph::graph_op_enum op_enum;
-    //
-    // set scalars
-    graph_obj.function_name_set("print_graph example");
-    size_t n_dynamic_ind = 2;
-    graph_obj.n_dynamic_ind_set(n_dynamic_ind);
-    size_t n_variable_ind = 1;
-    graph_obj.n_variable_ind_set(n_variable_ind);
-    //
-    // node_4 : p[0] + p[1]
-    op_enum = CppAD::graph::add_graph_op;
-    graph_obj.operator_vec_push_back(op_enum);
-    graph_obj.operator_arg_push_back(1);
-    graph_obj.operator_arg_push_back(2);
-    //
-    // node_5 : x[0] + ( p[0] + p[1] )
-    graph_obj.operator_vec_push_back(op_enum);
-    graph_obj.operator_arg_push_back(3);
-    graph_obj.operator_arg_push_back(4);
-    //
-    // y[0]   = x[0] + ( p[0] + p[1] )
-    graph_obj.dependent_vec_push_back(5);
-    //
-    // get output of print command
-    std::stringstream os;
-    graph_obj.print(os);
-    //
-    std::string check =
-        "print_graph example\n"
-        "          1      p[0]\n"
-        "          2      p[1]\n"
-        "          3      x[0]\n"
-        "          4       add    1    2\n"
-        "          5       add    3    4\n"
-        "y nodes = 5\n"
-    ;
-    std::string str = os.str();
-    ok &= str == check;
-    //
-    return ok;
-}
-
+# include "scm.cpp"
 
 int main(int argc, char** argv)
  {   using CppAD::AD;   // use AD as abbreviation for CppAD::AD
@@ -101,19 +33,6 @@ int main(int argc, char** argv)
                  man,
                  fixedtheta_e,
                  true);
-
-   CppAD::cpp_graph graph_obj;
-   std::cout <<"Printing..." << std::endl;
-   std::cout <<"Function name is currently: " << graph_obj.function_name_get() << std::endl;
-   print_graph();
-
-   out.to_graph(graph_obj);
-   std::cout << std::endl << " Graph Created " << std::endl;
-
-   std::stringstream os;
-   graph_obj.print(os);
-
-   std::cout << std::endl << " Finished printing graph " << std::endl;
 
    delete man;
 
