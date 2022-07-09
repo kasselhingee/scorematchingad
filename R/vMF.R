@@ -118,10 +118,12 @@ vMF_kappa <- function(Y, startk, isfixed = FALSE, control = default_Rcgmin(), w 
   if (!isfixed){ #as if k isn't supplied
     p <- ncol(Y)
     tapes <- buildsmotape_internal("Snative", "vMF",
-                                   rep(1, p)/sqrt(p), startk, isfixed,
+                                   rep(1, p)/sqrt(p), 
+                                   starttheta = c(startk, rep(0, p-1)), 
+                                   isfixed = c(FALSE, rep(TRUE, p-1)),
                                    weightname = "ones",
                                    verbose = FALSE)
-    sminfo <- smest(tapes$smotape, t_si2f(startk, isfixed), Y, control = control, w = w)
+    sminfo <- smest(tapes$smotape, startk, Y, control = control, w = w)
     k <- sminfo$par
     SE <- sminfo$SE
   } else {
