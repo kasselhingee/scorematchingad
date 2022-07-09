@@ -83,7 +83,7 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
   return(est)
 }
 
-vMF_stdY <- function(Y, m = NULL){
+vMF_stdY <- function(Y, m = NULL, w = NULL){
   if(is.null(m)){
     m <- apply(Y, MARGIN = 2, weighted.mean, w)
     m <- mu/sqrt(sum(m^2))
@@ -99,7 +99,7 @@ vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin
   stopifnot(length(isfixed) == 1)
   mu <- apply(sample, MARGIN = 2, weighted.mean, w)
   mu <- mu/sqrt(sum(mu^2))
-  samplestd <- vMF_stdY(sample, mu)
+  samplestd <- vMF_stdY(sample, m = mu)
   # check: mustd <- colMeans(samplestd); mustd <- mustd / sqrt(sum(mustd^2))
   kappainfo <- vMF_kappa(samplestd, startk, isfixed = isfixed, control = control, w = w)
   return(list(
