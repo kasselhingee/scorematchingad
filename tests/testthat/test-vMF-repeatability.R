@@ -87,11 +87,5 @@ test_that("Estimating vMF for the same data does not give identical results, eve
   kests <- replicate(100, {
     sim1 <- vMF(Y, method = "Mardia")
     sim1$k })
-  expect_gt(sd(kests), 0.001)
-  
-  kests <- replicate(100, {
-    set.seed(313)
-    sim1 <- vMF(Y, method = "Mardia")
-    sim1$k })
-  expect_gt(sd(kests), 0.001)
+  expect_lt(sum(range(kests) * c(1, -1)), 1E-10)
 })

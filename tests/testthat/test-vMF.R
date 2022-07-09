@@ -43,7 +43,7 @@ test_that("vMF_Full() function works", {
   k <- 3
   m <- c(1, -1) / sqrt(2)
   km <-  k * m
-  sample <- movMF::rmovMF(1000, km)
+  sample <- movMF::rmovMF(1000, km) #faithful to seed
   out <- vMF(sample, method = "smfull")
   cdabyppi:::expect_lt_v(abs(out$km - km), 3 * out$SE$km)
 
@@ -61,6 +61,7 @@ test_that("vMF() fitting works on dimension 5", {
   m <- runif(p, min = -10, 10)
   m <- m / sqrt(sum(m^2))
   km <-  k * m
+  set.seed(12412)
   sample <- Directional::rvmf(1000, m, k)
   #full method
   out <- vMF(sample, method = "smfull", control = list(tol = 1E-10))
@@ -79,20 +80,26 @@ test_that("vMF() fitting works on dimension 5", {
   cdabyppi:::expect_lt_v(abs(out$k - k), 3 * out$SE$k)
 })
 
-test_that("vMF matches for simulated weights", {
+test_that("vMF matches for simulated weights (fails frequently)", {
   set.seed(123)
   p <- 3
   k <- 3
   m <- runif(p, min = -10, 10)
   m <- m / sqrt(sum(m^2))
   km <-  k * m
-  Y <- Directional::rvmf(1000, m, k)
+  set.seed(1241)
+  Y <- Directional::rvmf(1000, m, k) #this ignores the seed it seems
   #simulate weights
   set.seed(1342)
   vw <- virtualweights(Y)
 
+  set.seed(321)
   sim1 <- vMF(vw$newY, method = "Mardia")
+  sim1$k
+  sim1$sminfo$sminfo$counts
+  set.seed(321)
   dir1 <-  vMF(Y, method = "Mardia", w = vw$w)
+  dir1$k
   expect_equal(sim1, dir1, tolerance = 1E-3)
 
   sim2 <- vMF(vw$newY, method = "smfull")
