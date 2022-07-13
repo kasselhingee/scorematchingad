@@ -66,7 +66,7 @@ test_that("Bingham() works", {
   A <- Bingham_theta2Amat(theta)
 
   set.seed(123)
-  sample <- rBingham(100, A)
+  sample <- rBingham(10, A)
 
   expect_equal(Bingham_full(sample), Bingham(sample, method = "smfull"))
   expect_equal(Bingham_Mardia(sample), Bingham(sample, method = "Mardia"))
@@ -74,6 +74,7 @@ test_that("Bingham() works", {
 })
 
 test_that("Bingham() works with highly skewed trace", {
+  skip_on_cran() #slow
   p <- 4
   set.seed(111)
   theta <- runif(p-1 + (p - 1) * p/2)
@@ -96,6 +97,7 @@ test_that("Bingham() works with highly skewed trace", {
 })
 
 test_that("Bingham_full() with various fixed elements works", {
+  skip_on_cran() #slow
   p <- 4
   set.seed(345)
   A <- rsymmetricmatrix(p, -10, 10)
