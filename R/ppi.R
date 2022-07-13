@@ -75,9 +75,9 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
     }
     if (man == "sphere"){ # a number of methods implemented
       if (bdryweight == "minsq"){
-        if (ppi_usertheta_for_estimator1_dir(usertheta)){
-          out$est <- estimator1_dir(Y, acut = acut, w = w)
-          fitfun <- "estimator1_dir"
+        if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
+          out$est <- dir_sqrt_minimah(Y, acut = acut, w = w)
+          fitfun <- "dir_sqrt_minimah"
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
           out <- estimator1(Y,acut = acut,incb = 0,
                             beta0 = fromPPIparamvec(usertheta)$beta,
@@ -102,9 +102,9 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
       }
 
       if (bdryweight == "prodsq"){
-        if (ppi_usertheta_for_estimator1_dir(usertheta)){
-          out$est <- estimator2_dir(Y, acut = acut, w = w)
-          fitfun <- "estimator2_dir"
+        if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
+          out$est <- dir_sqrt_prodh(Y, acut = acut, w = w)
+          fitfun <- "dir_sqrt_prodh"
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
           out <- estimator2(Y,acut = acut,incb = 0,
                             beta0 = fromPPIparamvec(usertheta)$beta,

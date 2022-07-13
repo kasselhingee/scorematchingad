@@ -56,9 +56,9 @@ test_that("estimatorall1 matches for simulated weights", {
   expect_equal(est_direct, est_sim)
 })
 
-test_that("estimator2_dir matches for simulated weights", {
-  est_sim <- estimator2_dir(vw$newY, acut = acut, w = rep(1, nrow(vw$newY)))
-  est_direct <- estimator2_dir(m$sample, acut = acut, w = vw$w)
+test_that("dir_sqrt_prodh matches for simulated weights", {
+  est_sim <- dir_sqrt_prodh(vw$newY, acut = acut, w = rep(1, nrow(vw$newY)))
+  est_direct <- dir_sqrt_prodh(m$sample, acut = acut, w = vw$w)
   expect_equal(est_direct, est_sim)
 })
 
@@ -74,9 +74,9 @@ test_that("dir_moment matches for simulated weights", {
   expect_equal(est_direct, est_sim)
 })
 
-test_that("estimator1_dir matches for simulated weights", {
-  est_sim <- estimator1_dir(vw$newY, acut = acut)
-  est_direct <- estimator1_dir(m$sample, acut = acut, w = vw$w)
+test_that("dir_sqrt_minimah matches for simulated weights", {
+  est_sim <- dir_sqrt_minimah(vw$newY, acut = acut)
+  est_direct <- dir_sqrt_minimah(m$sample, acut = acut, w = vw$w)
   expect_equal(est_direct, est_sim)
 })
 

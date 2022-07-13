@@ -4,12 +4,12 @@ test_that("Correctly chooses Dirichlet", {
   out <- ppi(m$sample, AL = 0, bL = 0, trans = "sqrt", method = "direct",
              acut = 0.1,
              bdryweight = "minsq")
-  expect_equal(out$fitfun, "estimator1_dir")
+  expect_equal(out$fitfun, "dir_sqrt_minimah")
 
   out <- ppi(m$sample, AL = 0, bL = 0, trans = "sqrt", method = "direct",
              acut = 0.1,
              bdryweight = "prodsq")
-  expect_equal(out$fitfun, "estimator2_dir")
+  expect_equal(out$fitfun, "dir_sqrt_prodh")
 })
 
 test_that("Correctly chooses estimatorlog_ratio", {

@@ -70,7 +70,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   expect_equal(pJacobian(dirtapes$lltape, utabl[2, ], beta), pJacobian(ppitapes$lltape, utabl[2, ], theta))
   expect_equal(pForward0(dirtapes$smotape, beta, utabl[2, ]), pForward0(ppitapes$smotape, theta, utabl[2, ]))
 
-  directestimate <- estimator1_dir(utabl, acut)
+  directestimate <- dir_sqrt_minimah(utabl, acut)
 
   # there is a difference in direct estimates because the direct estimate smobj value is poorer:
   expect_lt(out$value,
