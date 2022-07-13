@@ -18,7 +18,7 @@ Suggests:
     movMF,
     numDeriv
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)
 Imports:
     MCMCpack,
     Rcpp (>= 0.10.2),
