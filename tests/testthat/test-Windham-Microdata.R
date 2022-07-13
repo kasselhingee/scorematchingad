@@ -1,4 +1,4 @@
-
+skip_on_cran() #too slow
 
 test_that("windham_diff estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
 
