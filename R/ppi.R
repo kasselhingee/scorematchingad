@@ -44,8 +44,8 @@
 #' @param method `direct` for estimates calculated directly where possible (*list them*) or `cppad` to find the score matching estimates using automatic differentiation and the `Rcgmin()` iterative solver.
 #' @examples
 #' model <- sec2_3model(1000)
-#' estinfo <- ppi_cppad(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
-#' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
+#' estinfo <- ppi(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
+#' misspecified <- ppi(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
 #' @export
 ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL, betap = NULL,
                 pow = 1, trans, method = "direct", w = rep(1, nrow(Y)),
