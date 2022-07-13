@@ -36,7 +36,7 @@ stopifnot(maxden <= 0)
 samp3=samp1$samp3
 
 #### Estimate from Simulated Sample ####
-test_that("multestimator gives numerical non-NA values", {
+test_that("ppi_mmmm gives numerical non-NA values", {
   #simulate sample from the multinomial PPI model:
   ni=matrix(2000,n,1)
   ni=as.vector(ni)
@@ -46,7 +46,7 @@ test_that("multestimator gives numerical non-NA values", {
     x[j,]=rmultinom(1,ni[j],prob=samp3[j,])
   }
 
-  mult=cdabyppi:::multestimator(x, ni, beta0)
+  mult=cdabyppi:::ppi_mmmm(x, ni, beta0)
   expect_length(mult, 3)
   expect_true(sum(mult) != 0)
 })
