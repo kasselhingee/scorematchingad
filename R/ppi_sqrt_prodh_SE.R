@@ -1,13 +1,13 @@
-#' @title Standard error estimates for Score2 estimates
-#' @description Estimates the standard errors of Score2 estimates. See (Scealy and Wood, 2021; Sec. 3.2).
-#' @param prop compositional data (n by p matrix)
-#' @param acut \eqn{a_c} for the Hyvarinen weight function \eqn{h}
-#' @param estimate2 the value of [estimator2()] estimates
-#' @param W_est The \eqn{\hat{W}}{W} matrix estimated by [estimator2()]
-#' @param incb if `incb=1` then \eqn{b_L} is estimated otherwise \eqn{b_L} is fixed at zero.
-#' @param beta0 The fixed \eqn{beta_0}{beta0}.
-#' @return A vector of standard errors corresponding to each entry of the estimate by [estimator2()].
-#' @export
+# @title Standard error estimates for Score2 estimates
+# @description Estimates the standard errors of Score2 estimates. See (Scealy and Wood, 2021; Sec. 3.2).
+# @param prop compositional data (n by p matrix)
+# @param acut \eqn{a_c} for the Hyvarinen weight function \eqn{h}
+# @param estimate2 the value of [estimator2()] estimates
+# @param W_est The \eqn{\hat{W}}{W} matrix estimated by [estimator2()]
+# @param incb if `incb=1` then \eqn{b_L} is estimated otherwise \eqn{b_L} is fixed at zero.
+# @param beta0 The fixed \eqn{beta_0}{beta0}.
+# @return A vector of standard errors corresponding to each entry of the estimate by [estimator2()].
+# @export
 estimator2SE <- function(prop,acut,estimate2,W_est,incb, beta0, w=rep(1, nrow(prop)))
 {
 
