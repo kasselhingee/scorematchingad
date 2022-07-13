@@ -1,3 +1,4 @@
+skip_on_cran()
 # Model 4 from Section A.11 of the JASA paper.
 # Simulated, then estimated using 4 estimators Score1, Score2, Score1ac and Score2ac.
 # bL should be estimated in all these tests

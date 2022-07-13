@@ -1,3 +1,4 @@
+skip_on_cran()
 # test of the 'model 1' described in section A.11 of the supplementary material.
 # This is a gGamma model with β = (−0.80, −0.85, 0, −0.2, 0), b = 0, and A_L = Table 3. Beta and b considered fixed.
 

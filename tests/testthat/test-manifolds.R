@@ -1,4 +1,4 @@
-
+skip_on_cran()
 test_that("Sphere manifold passes lightweight standard tests",{
   pman <- pmanifold("sphere")
   u <- c(0.1, 0.2, 1 - 0.3)
