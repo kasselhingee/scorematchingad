@@ -15,7 +15,8 @@ Suggests:
     testthat,
     tibble,
     ks,
-    movMF
+    movMF,
+    numDeriv
 Depends: 
     R (>= 2.10)
 Imports:
