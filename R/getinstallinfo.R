@@ -1,5 +1,5 @@
-#' @title Helper function to get install information about this package
-#' @return A data frame of information
+# @title Helper function to get install information about this package
+# @return A data frame of information
 
 getinstallinfo <- function(){
 cdabyppiinfo <- packageDescription("cdabyppi")

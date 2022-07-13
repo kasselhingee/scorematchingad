@@ -203,7 +203,7 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
     if (is.null(AL)){
       ALprep = matrix(NA, nrow = p-1, ncol = p-1) #could also do nothing
     } else if (is.matrix(AL)){
-    #' If a matrix, then the NA elements will be estimated and the others will be fixed at the supplied value (i.e. not estimated).
+    # If a matrix, then the NA elements will be estimated and the others will be fixed at the supplied value (i.e. not estimated).
       if(!isSymmetric.matrix(AL)){stop("AL must be symmetric.")}
       ALprep = AL
     } else if (is.numeric(AL)){#' If a single number, then AL will be fixed as a matrix of the given value.
@@ -218,7 +218,7 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
       stop("AL is not of required type.")
     }
     #bL
-    #' If a number, then bL will be fixed at the supplied value.
+    # If a number, then bL will be fixed at the supplied value.
     if (!is.null(bL)){
       if (!is.vector(bL, mode = "any")){stop("bL must be a vector or value")}
       if (length(bL) == 1){
@@ -235,10 +235,10 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
     stopifnot(is.vector(betaL, "numeric") | is.vector(betaL, "logical"))
     stopifnot(is.null(beta))
     if (length(betaL) == 1){
-      #' If a number then the 1...(p-1) beta elements fixed at the given number.
+      # If a number then the 1...(p-1) beta elements fixed at the given number.
       betaLprep = rep(betaL, p-1)
     } else if (length(betaL) == p-1){
-      #' If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
+      # If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
       betaLprep = betaL
     } else {
       stop("betaL must have length p-1")
@@ -259,7 +259,7 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
       betaLprep = rep(beta, p-1)
       betapprep = beta
     } else if (length(beta) == p){
-      #' If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
+      # If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
       betaLprep = beta[1:(p-1)]
       betapprep = beta[p]
     } else {
