@@ -68,9 +68,9 @@ test_that("estimatorlog_weight matches for simulated weights", {
   expect_equal(est_direct$ppi, est_sim$ppi)
 })
 
-test_that("dirichmom matches for simulated weights", {
-  est_sim <- dirichmom(vw$newY)
-  est_direct <- dirichmom(m$sample, w = vw$w)
+test_that("dir_moment matches for simulated weights", {
+  est_sim <- dir_moment(vw$newY)
+  est_direct <- dir_moment(m$sample, w = vw$w)
   expect_equal(est_direct, est_sim)
 })
 

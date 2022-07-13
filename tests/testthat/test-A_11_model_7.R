@@ -34,7 +34,7 @@ prop=x/ni
 dirfit=dirprop
 
 test_that("Dirichlet moment estimator runs", {
-  estimate6=cdabyppi:::dirichmom(dirfit)-1
+  estimate6=cdabyppi:::dir_moment(dirfit)-1
   expect_gt(mean(abs(estimate6 - alpha) < abs(alpha)) , 0.6)
 })
 
