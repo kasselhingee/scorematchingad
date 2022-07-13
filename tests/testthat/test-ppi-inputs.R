@@ -67,7 +67,7 @@ test_that("Inputs to ppi() are processed into the correct theta", {
 
 test_that("ppi with cppad method works easily on sec2_3model", {
   set.seed(1245)
-  model <- sec2_3model(1000)
+  model <- sec2_3model(100)
   out <- ppi(model$sample, man = "sphere", bdryweight = "minsq", acut = 0.1, method = "cppad")
   cdabyppi:::expect_lt_v(abs(out$est$theta - model$theta) / out$SE$theta, 3)
 
