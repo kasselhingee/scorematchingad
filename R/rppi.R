@@ -30,7 +30,7 @@
 #' ALs=-0.5*solve(SigA)
 #' bL=solve(SigA)%*%muL
 #'
-#' samp <- rhybrid(n,p,beta0,ALs,bL,4)
+#' samp <- rppi(n,p,beta0,ALs,bL,4)
 #' plot(ks::kde(samp$samp3[,-p]),
 #'  xlim = c(0, 1), ylim = c(0, 1))
 #' segments(0, 0, 0, 1)
@@ -39,11 +39,11 @@
 #'
 #' qldppi(samp$samp3, beta0, ALs, bL)
 #' @export
-rhybrid <- function(n,p,beta0,ALs,bL,maxden){
+rppi <- function(n,p,beta0,ALs,bL,maxden){
   # a warning if maxden is high
   if (maxden > 10){
     rlang::warn(message = paste(sprintf("'maxden' of %0.2f is higher than 10.", maxden),
-                                "When rhybrid() requires a high 'maxden' it could mean that",
+                                "When rppi() requires a high 'maxden' it could mean that",
                                 "PPI density is hugely different from the Dirichlet component of the density.",
                                 "This could mean that the concentrations on the boundary from the Dirichlet component",
                                 "will be too narrow to be represented in simulatad samples."),
@@ -53,13 +53,13 @@ rhybrid <- function(n,p,beta0,ALs,bL,maxden){
 
   maxdenin <- maxden
   # first simulate starting with a block of Dirichlet samples of size n.
-  firstaccepted <- rhybrid_block(n,p,beta0,ALs,bL,maxden)
+  firstaccepted <- rppi_block(n,p,beta0,ALs,bL,maxden)
   maxden <- firstaccepted$maxden
   samples <- firstaccepted$accepted
   propaccepted <- max(nrow(samples) / n, 1E-3)
   # based on the number of samples that came out, simulate the remaining
   while (nrow(samples) < n){
-    newsamples <- rhybrid_block(ceiling((n - nrow(samples)) * 1/propaccepted),p,beta0,ALs,bL,maxden)
+    newsamples <- rppi_block(ceiling((n - nrow(samples)) * 1/propaccepted),p,beta0,ALs,bL,maxden)
     maxden <- newsamples$maxden
     samples <- rbind(samples, newsamples$accepted)
     # continue until n or more samples accepted
@@ -77,7 +77,7 @@ rhybrid <- function(n,p,beta0,ALs,bL,maxden){
 
 
 # simulates samples one at a time
-rhybrid_singly <- function(n,p,beta0,ALs,bL,maxden)
+rppi_singly <- function(n,p,beta0,ALs,bL,maxden)
 {
 
 	alpha=beta0+1
@@ -106,7 +106,7 @@ rhybrid_singly <- function(n,p,beta0,ALs,bL,maxden)
 
 
 # try generating samples without a 'while' loop
-rhybrid_block <- function(n,p,beta0,ALs,bL,maxden){
+rppi_block <- function(n,p,beta0,ALs,bL,maxden){
   Uni <- MCMCpack::rdirichlet(n, beta0+1)
   Uni_nop <- Uni[, -p]
   nums <- ppi_uAstaru(Uni_nop, ALs, bL) - maxden #uT * ALs * u + t(bL) * u - maxden
@@ -122,7 +122,7 @@ rhybrid_block <- function(n,p,beta0,ALs,bL,maxden){
   return(list(accepted = accepted, maxden = maxden))
 }
 
-#' @describeIn rhybrid Compute the logarithm of the improper density for the PPI model for the given matrix of measurements `prop`.
+#' @describeIn rppi Compute the logarithm of the improper density for the PPI model for the given matrix of measurements `prop`.
 #' @param `prop` A matrix of measurements.
 #' @export
 qldppi <- function(prop,beta0,ALs,bL){

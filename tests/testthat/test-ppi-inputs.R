@@ -81,7 +81,7 @@ test_that("ppi with cppad method works easily on sec2_3model", {
   AL = diag(c(-100, -50))
   beta = c(-0.8, -0.8, -0.5)
   bL = rep(0, 2)
-  prop <- rhybrid(100, 3, beta, AL, bL, 4)[[1]]
+  prop <- rppi(100, 3, beta, AL, bL, 4)[[1]]
   theta <- toPPIparamvec(AL, bL, beta)
   out <- ppi(prop, AL = "diag", betap = -0.5, man = "sphere", bdryweight = "minsq", acut = 0.1, method = "cppad")
   cdabyppi:::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
@@ -92,7 +92,7 @@ test_that("ppi with cppad method works easily on sec2_3model", {
   AL = diag(c(-100, -50))
   beta = c(-0.8, -0.8, -0.5)
   bL = rep(0, 2)
-  prop <- rhybrid(100, 3, beta, AL, bL, 4)[[1]]
+  prop <- rppi(100, 3, beta, AL, bL, 4)[[1]]
   theta <- toPPIparamvec(AL, bL, beta)
   out <- ppi(prop, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", bdryweight = "ones", method = "cppad")
   cdabyppi:::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)

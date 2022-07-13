@@ -16,14 +16,14 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
 
   #simulate sample from PPI model
   set.seed(321)
-  samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
+  samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
   samp3=samp1$samp3
   theta <- cdabyppi:::ppi_cppad_thetaprocessor(p,
               AL = ALs, bL = drop(bL), beta = drop(beta0))
 
   #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
   #a few times to check that it is an appropriate upper bound.
-  # 4 seems to be pretty good (I've run the above rhybrid many times).
+  # 4 seems to be pretty good (I've run the above rppi many times).
   # I.e. the simulation result doesn't suggest changing maxden=4
   stopifnot(samp1$maxden <= 4)
   maxden <- 4
@@ -63,7 +63,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
 
   #simulate sample from PPI model
   set.seed(124)
-  samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
+  samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
   samp3=samp1$samp3
 
   stopifnot(samp1$maxden <= 4)
@@ -99,7 +99,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
                                                AL = ALs, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
-  samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
+  samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
   samp3=samp1$samp3
 
   stopifnot(samp1$maxden <= 4)

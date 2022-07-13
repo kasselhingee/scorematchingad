@@ -1,4 +1,4 @@
-# test that rhybrid old matches old rhybrid new
+# test that rppi old matches old rppi new
 
 #sample size
 n=5000
@@ -8,11 +8,11 @@ m <- sec2_3model(2)
 
 test_that("current PPI simulation method gives samples with similar empirical density estimates as the original simulation method", {
   # simulate using old method
-  time_historic <- system.time(samp2 <- cdabyppi:::rhybrid_singly(n,m$p,m$beta0,m$ALs,m$bL,4))
+  time_historic <- system.time(samp2 <- cdabyppi:::rppi_singly(n,m$p,m$beta0,m$ALs,m$bL,4))
   H <- ks::Hpi(samp2$samp3[, -m$p])
   kde_historic <- ks::kde(samp2$samp3[, -m$p], H)
   #simulate sample from PPI model
-  time_current <- system.time(samp1 <- cdabyppi:::rhybrid(n,m$p,m$beta0,m$ALs,m$bL,4))
+  time_current <- system.time(samp1 <- cdabyppi:::rppi(n,m$p,m$beta0,m$ALs,m$bL,4))
   H <- ks::Hpi(samp1$samp3[, -m$p])
   kde_current <- ks::kde(samp1$samp3[, -m$p], H)
 

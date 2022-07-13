@@ -28,7 +28,7 @@ sec2_3model <- function(n, maxden = 4, betaadd = 0){
   beta0 = beta0 + betaadd
 
   #simulate sample from PPI model
-  samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL, maxden)
+  samp1=rppi(n,p,beta0,ALs,bL, maxden)
 
   #simulated sample:
   samp3=samp1$samp3
@@ -66,7 +66,7 @@ sec2_3model_p4 <- function(n, maxden = 8){
   theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0)
 
   #simulate sample from PPI model
-  samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,maxden)
+  samp1=rppi(n,p,beta0,ALs,bL,maxden)
 
   #simulated sample:
   samp3=samp1$samp3

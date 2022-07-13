@@ -17,7 +17,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
   # set.seed(1345) #this seed leads to samples with that give reasonable estimates
   set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
-  prop <- rhybrid(1000, p, beta, ALs, bL, 5)$samp3 #rhybrid_singly took 1005 seconds, rhybrid() took 13seconds
+  prop <- rppi(1000, p, beta, ALs, bL, 5)$samp3 #rppi_singly took 1005 seconds, rppi() took 13seconds
 
   est_cppad <- ppi(prop, bL = bL, betap = beta[p], man = "Ralr", method = "cppad", bdryweight = "ones",
                          bdrythreshold = 1E-20,

@@ -24,7 +24,7 @@ beta0[2]=-0.85
 beta0[3]=0
 
 #simulate sample from the PPI model
-samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,0)
+samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,0)
 
 #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
 #a few times to check that it is an appropriate upper bound.
