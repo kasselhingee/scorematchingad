@@ -1,11 +1,10 @@
 Package: cdabyppi
 Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.0004
+Version: 0.0.0.0005
 Authors@R: 
     c(person(given = "Kassel Liam", family = "Hingee", email = "kassel.hingee@anu.edu.au", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9894-2407")),
     person("Janice", "Scealy", role = c("aut")),
     person("Bradley M.", "Bell", role = c("cph")))
-Maintainer: Kassel Liam Hingee kassel.hingee@anu.edu.au
 Description: What the package does (one paragraph).
 License: GPL (>= 3)
 Encoding: UTF-8

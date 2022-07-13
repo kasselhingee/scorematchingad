@@ -93,7 +93,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for sec2_3mod
   out <- ppi(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
             method = "cppad",
                    bdrythreshold = 1E-10,
-            man = "sphere", bdryweight = "minsq", acut = acut)
+            trans = "sqrt", bdryweight = "minsq", acut = acut)
 
   directestimate <- estimator1(model$sample, acut, incb = TRUE, beta0 = model$beta0)
 
@@ -117,7 +117,7 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for sec2_3mo
   acut = 0.1
   out <- ppi(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
              method = "cppad",
-                   man = "sphere", bdryweight = "prodsq", acut = acut)
+                   trans = "sqrt", bdryweight = "prodsq", acut = acut)
 
   ppitapes <- buildsmotape("sphere", "ppi",
                            rep(0.1, model$p), ppi_cppad_thetaprocessor(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
@@ -155,7 +155,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
 
   out <- ppi(utabl,
              method = "cppad",
-                   man = "sphere", bdryweight = "minsq", acut = acut,
+                   trans = "sqrt", bdryweight = "minsq", acut = acut,
                    control = list(tol = 1E-10))
 
   ppitapes <- buildsmotape("sphere", "ppi",
@@ -272,7 +272,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
 
   est_cppad <- ppi(prop, bL = bL, beta = beta,
                    method = "cppad",
-                         man = "sphere", acut = acut, bdryweight = "minsq",
+                         man = "sqrt", acut = acut, bdryweight = "minsq",
                          control = list(tol = 1E-13))
   expect_equal(est_cppad$est$theta[1:length(est_direct$estimator1)], est_direct$estimator1, tolerance = 1E-1,
                ignore_attr = TRUE)
