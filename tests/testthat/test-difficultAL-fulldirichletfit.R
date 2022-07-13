@@ -1,3 +1,4 @@
+skip_on_cran()
 test_that("full ppi estimates are with 3 SE for difficult AL with large maxden, p = 5", {
   set.seed(1273)
   p = 5

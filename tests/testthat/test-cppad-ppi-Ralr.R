@@ -1,4 +1,5 @@
 test_that("Fitting ppi via alr transform with fixed beta gets close to true values", {
+  skip_on_cran()
   set.seed(1234)
   model <- sec2_3model(1000, maxden = 4)
 

@@ -1,4 +1,4 @@
-m <- sec2_3model(100)
+m <- sec2_3model(10)
 
 test_that("Correctly chooses Dirichlet", {
   out <- ppi(m$sample, AL = 0, bL = 0, man = "sphere", method = "direct",

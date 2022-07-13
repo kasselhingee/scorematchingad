@@ -1,3 +1,4 @@
+skip_on_cran()
 
 test_that("prodsq weights match estimator2", {
   acut = 0.1

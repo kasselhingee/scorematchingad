@@ -7,6 +7,7 @@ n=5000
 m <- sec2_3model(2)
 
 test_that("current PPI simulation method gives samples with similar empirical density estimates as the original simulation method", {
+  skip_on_cran() #accuracy of the method is tested by all the estimators
   # simulate using old method
   time_historic <- system.time(samp2 <- cdabyppi:::rppi_singly(n,m$p,m$beta0,m$ALs,m$bL,4))
   H <- ks::Hpi(samp2$samp3[, -m$p])

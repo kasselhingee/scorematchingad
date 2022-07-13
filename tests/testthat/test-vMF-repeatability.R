@@ -1,3 +1,4 @@
+skip_on_cran() #not relevant anymore - established issue was simulation via Directional::rvmf() simulation
 test_that("vMF objective, grad, hess calculations are repeatable", {
   set.seed(123)
   p <- 3
@@ -8,7 +9,7 @@ test_that("vMF objective, grad, hess calculations are repeatable", {
   set.seed(12432)
   sample <- movMF::rmovMF(1000, theta)
   thetatape <- c(1, -1, 1)
-  
+
   p <- length(theta)
   tapes <- buildsmotape("Snative", "vMF",
                         rep(1, p)/sqrt(p), rep(NA, p),
@@ -21,7 +22,7 @@ test_that("vMF objective, grad, hess calculations are repeatable", {
   cdabyppi:::expect_lt_v(apply(grads, MARGIN = 1, function(x){sum(range(x) * c(1, -1))}), rep(1E-10, nrow(grads)))
   hesss <- replicate(1000, smobjhess(tapes$smotape, theta, sample))
   cdabyppi:::expect_lt_v(apply(hesss, MARGIN = c(1,2), function(x){sum(range(x) * c(1, -1))}), rep(1E-10, p^2))
-  
+
   # for incorrect theta
   obj <- replicate(1000, smobj(tapes$smotape, 2*thetatape, sample))
   expect_lt(sum(range(obj) * c(1, -1)), 1E-10)
@@ -41,7 +42,7 @@ test_that("vMF smest is repeatable for fixed tape", {
   set.seed(12432)
   sample <- movMF::rmovMF(1000, theta)
   thetatape <- c(1, -1, 1)
-  
+
   p <- length(theta)
   tapes <- buildsmotape("Snative", "vMF",
                         rep(1, p)/sqrt(p), rep(NA, p),
@@ -62,7 +63,7 @@ test_that("vMF different tape objects have same estimates", {
   sample <- movMF::rmovMF(1000, theta)
   thetatape <- c(1, -1, 1)
   p <- length(theta)
-  
+
   tapenest <- function(){
     tapes <- buildsmotape("Snative", "vMF",
                           rep(1, p)/sqrt(p), rep(NA, p),
@@ -74,7 +75,7 @@ test_that("vMF different tape objects have same estimates", {
   expect_lt(sum(range(kests) * c(1, -1)), 1E-10)
 })
 
-test_that("Estimating vMF for the same data does not give identical results, even when Rcgmin iterations are low", {
+test_that("Estimating repeated vMF estimation for the same data gives identical results, even when Rcgmin iterations are low", {
   set.seed(123)
   p <- 3
   k <- 3
@@ -82,8 +83,8 @@ test_that("Estimating vMF for the same data does not give identical results, eve
   m <- m / sqrt(sum(m^2))
   km <-  k * m
   set.seed(1241)
-  Y <- Directional::rvmf(1000, m, k) #this ignores the seed it seems
-  
+  Y <- Directional::rvmf(100, m, k) #this ignores the seed it seems
+
   kests <- replicate(100, {
     sim1 <- vMF(Y, method = "Mardia")
     sim1$k })

@@ -10,7 +10,7 @@ theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL)
 #### Tests ####
 test_that("Score1ac estimator estimates beta0[0] and other consistently with cppad version", {
   #sample size
-  n=1000
+  n=100
   beta0=matrix(-0.8,p,1)
   beta0[p]=-0.5
 

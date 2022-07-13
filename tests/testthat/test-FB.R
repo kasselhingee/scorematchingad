@@ -46,6 +46,7 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
 })
 
 test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
+  skip_on_cran() #rfb() tested when fitting tested
   p <- 3
   A <- diag(c(30, 1, -31))
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -A)
@@ -75,6 +76,7 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
 })
 
 test_that("rfb() simulation for general symmetric matrices via Bingham() fitting", {
+  skip_on_cran() #rfb() tested when fitting tested
   p <- 3
   set.seed(345)
   theta <- runif(p-1 + (p - 1) * p/2)
@@ -114,6 +116,7 @@ test_that("rfb() simulation for general symmetric matrices via Bingham() fitting
 
 
 test_that("rfb() simulation for general symmetric matrices fitting", {
+  skip_on_cran() #rfb() tested when fitting tested
   p <- 3
   set.seed(111)
   theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
@@ -146,6 +149,7 @@ test_that("rfb() simulation for general symmetric matrices fitting", {
 
 
 test_that("FB() fits for p = 3", {
+  skip_on_cran() #test with various fixed elements is sufficient
   p <- 3
   set.seed(111)
   theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
@@ -192,7 +196,7 @@ test_that("FB() fits with various fixed elements", {
   expect_equal(est$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
 })
 
-test_that("FB() with many fixed elements leads so smaller smobjgrad", {
+test_that("FB() with many fixed elements leads to smaller smobjgrad", {
   skip("Fixing many of the elements doesn't improve smobjgrad")
   p <- 3
   set.seed(111)

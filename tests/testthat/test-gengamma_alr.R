@@ -1,4 +1,5 @@
 test_that("estimatorlog_weight matches CppAD method for constant weight, p = 3", {
+  skip_on_cran() #v slow
   set.seed(1234)
   m <- sec2_3model(10000, maxden = 4)
 
@@ -10,6 +11,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 3",
 })
 
 test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5", {
+  skip_on_cran() #slow but useful
   set.seed(1273)
   p = 5
   ALs <- rsymmetricmatrix(p-1, -4, 4)
@@ -53,10 +55,10 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
 
 test_that("estimatorlog_weight matches for simulated weights", {
   set.seed(1234)
-  m <- sec2_3model(1000, maxden = 4)
+  m <- sec2_3model(100, maxden = 4)
   #simulate weights
-  ind <- sample(1:1000, 1500, replace = TRUE)
-  weights <- rep(0, 1000)
+  ind <- sample(1:100, 150, replace = TRUE)
+  weights <- rep(0, 100)
   weights[as.numeric(names(table(ind)))] <- table(ind)
   newsample <- m$sample[ind, ]
 
