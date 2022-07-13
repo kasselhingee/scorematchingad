@@ -18,7 +18,8 @@ Suggests:
     tibble,
     ks,
     movMF,
-    numDeriv
+    numDeriv,
+    rlang
 Depends: 
     R (>= 3.5.0)
 Imports:
