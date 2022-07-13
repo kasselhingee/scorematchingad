@@ -1,12 +1,12 @@
 #' @title Score-Matching Estimation of PPI Parameters
 #' @description For certain situations computes the score matching estimate directly (e.g. \insertCite{scealy2022sc}{cdabyppi}), otherwise iteratively minimises the *Hyvarinen divergence* \insertCite{@Equation 2, @hyvarinen2005es}{cdabyppi} using derivatives computed by CppAD and [Rcgmin::Rcgmin()].
 
-#' @details 
+#' @details
 #' Estimation may be performed via transformation onto Euclidean space, the positive quadrant of the sphere, or without any transformation. In the latter two situations there is a boundary and *weighted Hyvarinen divergence* \insertCite{@Equation 7, @scealy2022sc}{cdabyppi} is used.
-#' 
+#'
 #' Direct estimates are available for the following situations
 #' + `trans='alr'` and `betap` supplied (and typically positive)
-#' + `trans='sqrt'` and .... 
+#' + `trans='sqrt'` and ....
 
 #' @param trans The name of the transformation: 'alr' (additive log ratio), 'sqrt' or 'none'.
 #' @param pow The power of `u` in the PPI density - by default `pow` is `1`. NOT YET IMPLEMENTED
@@ -57,10 +57,10 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
   p = ncol(Y)
   stopifnot(pow == 1)
   stopifnot(trans %in% c("alr", "sqrt", "none"))
-  man <- switch(trans, list(
+  man <- switch(trans,
            alr = "Ralr",
            sqrt = "sphere",
-           none = "simplex"))
+           none = "simplex")
 
   usertheta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, beta, betaL, betap)
   out <- list()
