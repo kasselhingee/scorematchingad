@@ -31,7 +31,7 @@ smestSEsq <- function(smofun, theta, utabl,
     }
   }
 
-  vargradsmo <- cov(do.call(rbind, grasmoperpt))
+  vargradsmo <- cov(do.call(rbind, gradsmoperpt))
 
   sensinv <- solve(sens)
   Ginfinv <- sensinv %*% vargradsmo %*% sensinv #inverse of the Godambe information matrix, also called the sandwich information matrix
