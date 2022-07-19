@@ -83,11 +83,8 @@ test_that("vMF matches for simulated weights", {
 
   set.seed(321)
   sim1 <- vMF(vw$newY, method = "Mardia")
-  sim1$k
-  sim1$sminfo$sminfo$counts
   set.seed(321)
   dir1 <-  vMF(Y, method = "Mardia", w = vw$w)
-  dir1$k
   expect_equal(sim1, dir1, tolerance = 1E-3)
 
   sim2 <- vMF(vw$newY, method = "smfull")

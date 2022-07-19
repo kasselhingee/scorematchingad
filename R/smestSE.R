@@ -25,8 +25,14 @@ smestSEsq <- function(smofun, theta, utabl,
                   uboundary = uboundary, boundaryapprox = boundaryapprox,
                   approxorder = approxorder)
 
-  if (is.null(w)){vargradsmo <- cov(do.call(rbind, gradsmoperpt))} #SAMPLE estimate of population VARIANCE of gradsmo
-  else {vargradsmo <- cov.wt(do.call(rbind, gradsmoperpt), wt = w)$cov}
+  if (!is.null(w)){
+     if (!all(w == rep(1, length(w)))){
+       stop("SE for weighted data not available")
+    }
+  }
+
+  vargradsmo <- cov(do.call(rbind, grasmoperpt))
+
   sensinv <- solve(sens)
   Ginfinv <- sensinv %*% vargradsmo %*% sensinv #inverse of the Godambe information matrix, also called the sandwich information matrix
   if (is.null(w)){out <- Ginfinv/length(gradsmoperpt)}
