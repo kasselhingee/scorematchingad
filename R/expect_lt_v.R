@@ -1,8 +1,8 @@
-#' Custom expecations for vector comparisons in testthat
-#' @examples
-#' object = c(1, 3, 5)
-#' expected = 3
-#' expect_lt_v(c(1,3,5), 3)
+# Custom expecations for vector comparisons in testthat
+# @examples
+# object = c(1, 3, 5)
+# expected = 3
+# expect_lt_v(c(1,3,5), 3)
 
 expect_lt_v <- function(object, expected){
   expect_op_v(object, expected, operation = function(x, y) x < y, comparelang = "NOT less than")

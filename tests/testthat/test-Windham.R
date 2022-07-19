@@ -1,4 +1,5 @@
 test_that("windam_raw gives correct params on simulated data, with two outliers. p=3", {
+  skip("tested by all robust estimator tests")
   set.seed(1273)
   m <- sec2_3model(1000, maxden = 4)
   outlier1 <- c(0.9, 0.9, 0.01)
@@ -45,7 +46,7 @@ test_that("windam_diff with estimatorall1 gives correct params on simulated, no 
   bL <- matrix(0, nrow = p-1)
   beta <- c(-0.8, -0.3, 0)
   set.seed(1345) #this seed generates samples that are representative-enough for estimatorlog_ratio() to give close estimates
-  prop <- rhybrid(1000, p, beta, ALs, bL, 4)$samp3
+  prop <- rppi(1000, p, beta, ALs, bL, 4)$samp3
 
   #check non-robust estimates
   est_unload <- estimatorlog_weight(prop, betap = beta[p], weightW = rep(1, nrow(prop)))
@@ -72,7 +73,7 @@ test_that("windam_diff gives correct params on simulated, no outlier, data. p = 
   bL <- matrix(0, nrow = p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
   set.seed(13456) #this seed generates samples that are representative-enough for estimatorlog_ratio() to give close estimates
-  sim <- rhybrid(1000, p, beta, ALs, bL, 4)
+  sim <- rppi(1000, p, beta, ALs, bL, 4)
   prop <- sim$samp3
   # prop %>% as_tibble() %>% tidyr::pivot_longer(everything()) %>% ggplot() + facet_wrap(vars(name)) + geom_freqpoly(aes(x=value))
 

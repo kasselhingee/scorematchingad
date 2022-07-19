@@ -25,7 +25,7 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
   bL = matrix(0, nrow = p-1, ncol = 1)
   theta = toPPIparamvec(ALs, bL, beta)
 
-  utabl <- cdabyppi:::rhybrid(10,p,beta,ALs,bL,4)$samp3
+  utabl <- cdabyppi:::rppi(10,p,beta,ALs,bL,4)$samp3
 
   acut = 0.1
   dirtapes <- buildsmotape("sphere", "dirichlet",
@@ -49,7 +49,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   theta = toPPIparamvec(ALs, bL, beta)
 
   set.seed(1234)
-  utabl <- cdabyppi:::rhybrid(100,p,beta,ALs,bL,4)$samp3
+  utabl <- cdabyppi:::rppi(100,p,beta,ALs,bL,4)$samp3
 
   acut = 0.1
   dirtapes <- buildsmotape("sphere", "dirichlet",
@@ -70,7 +70,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   expect_equal(pJacobian(dirtapes$lltape, utabl[2, ], beta), pJacobian(ppitapes$lltape, utabl[2, ], theta))
   expect_equal(pForward0(dirtapes$smotape, beta, utabl[2, ]), pForward0(ppitapes$smotape, theta, utabl[2, ]))
 
-  directestimate <- estimator1_dir(utabl, acut)
+  directestimate <- dir_sqrt_minimah(utabl, acut)
 
   # there is a difference in direct estimates because the direct estimate smobj value is poorer:
   expect_lt(out$value,
@@ -93,7 +93,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for sec2_3mod
   out <- ppi(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
             method = "cppad",
                    bdrythreshold = 1E-10,
-            man = "sphere", bdryweight = "minsq", acut = acut)
+            trans = "sqrt", bdryweight = "minsq", acut = acut)
 
   directestimate <- estimator1(model$sample, acut, incb = TRUE, beta0 = model$beta0)
 
@@ -117,7 +117,7 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for sec2_3mo
   acut = 0.1
   out <- ppi(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
              method = "cppad",
-                   man = "sphere", bdryweight = "prodsq", acut = acut)
+                   trans = "sqrt", bdryweight = "prodsq", acut = acut)
 
   ppitapes <- buildsmotape("sphere", "ppi",
                            rep(0.1, model$p), ppi_cppad_thetaprocessor(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
@@ -150,12 +150,12 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
   theta <- toPPIparamvec(ALs, bL, beta)
 
   set.seed(13418)
-  utabl <- cdabyppi:::rhybrid(n,p,beta,ALs,bL,4)$samp3
+  utabl <- cdabyppi:::rppi(n,p,beta,ALs,bL,4)$samp3
   u <- utabl[2, ]
 
   out <- ppi(utabl,
              method = "cppad",
-                   man = "sphere", bdryweight = "minsq", acut = acut,
+                   trans = "sqrt", bdryweight = "minsq", acut = acut,
                    control = list(tol = 1E-10))
 
   ppitapes <- buildsmotape("sphere", "ppi",
@@ -265,14 +265,14 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
-  prop <- rhybrid(1000, p, beta, ALs, bL, 35)$samp3
+  prop <- rppi(1000, p, beta, ALs, bL, 35)$samp3
 
   acut = 0.1
   est_direct <- estimator1(prop, acut, incb = 0, beta0 = beta)
 
   est_cppad <- ppi(prop, bL = bL, beta = beta,
                    method = "cppad",
-                         man = "sphere", acut = acut, bdryweight = "minsq",
+                         trans = "sqrt", acut = acut, bdryweight = "minsq",
                          control = list(tol = 1E-13))
   expect_equal(est_cppad$est$theta[1:length(est_direct$estimator1)], est_direct$estimator1, tolerance = 1E-1,
                ignore_attr = TRUE)

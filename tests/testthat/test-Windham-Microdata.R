@@ -1,4 +1,4 @@
-
+skip_on_cran() #too slow
 
 test_that("windham_diff estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
 
@@ -95,7 +95,7 @@ beta0_est=beta0
 sp=p-1
 
 #try simulating to see required maxden
-expect_silent(sim <- rhybrid(1000, p, beta0, ALs, bL, maxden = 0))
+expect_silent(sim <- rppi(1000, p, beta0, ALs, bL, maxden = 0))
 
 #non-robust components (k^*=2 here)
 ind_weightA=matrix(0,sp,1)

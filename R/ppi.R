@@ -1,10 +1,16 @@
-#' @title Estimation of PPI Parameters via CppAD
-#' @description Uses CppAD to compute the score matching objective value and `Rcgmin` to minimise it.
-#' Measurements can be automatically transformed to a number of different manifolds (using different transformations).
-#' Different weight functions are also available.
-#' @param man Manifold name (includes tranformation)
+#' @title Score-Matching Estimation of PPI Parameters
+#' @description For certain situations computes the score matching estimate directly (e.g. \insertCite{scealy2022sc}{cdabyppi}), otherwise iteratively minimises the *Hyvarinen divergence* \insertCite{@Equation 2, @hyvarinen2005es}{cdabyppi} using derivatives computed by CppAD and [Rcgmin::Rcgmin()].
+
+#' @details
+#' Estimation may be performed via transformation onto Euclidean space, the positive quadrant of the sphere, or without any transformation. In the latter two situations there is a boundary and *weighted Hyvarinen divergence* \insertCite{@Equation 7, @scealy2022sc}{cdabyppi} is used.
+#'
+#' Direct estimates are available for the following situations
+#' + `trans='alr'` and `betap` supplied (and typically positive)
+#' + `trans='sqrt'` and ....
+
+#' @param trans The name of the transformation: 'alr' (additive log ratio), 'sqrt' or 'none'.
 #' @param pow The power of `u` in the PPI density - by default `pow` is `1`. NOT YET IMPLEMENTED
-#' @param prop A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
+#' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
 #' @param hsqfun The h-squared function for down weighting as measurements approach the manifold boundary.
 #' @param acut The threshold in `hsqfun` to avoid over-weighting measurements interior to the simplex
 #' @param AL NULL, a p-1 x p-1 symmetric matrix, a number, or "diag".
@@ -38,11 +44,11 @@
 #' @param method `direct` for estimates calculated directly where possible (*list them*) or `cppad` to find the score matching estimates using automatic differentiation and the `Rcgmin()` iterative solver.
 #' @examples
 #' model <- sec2_3model(1000)
-#' estinfo <- ppi_cppad(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
-#' misspecified <- ppi_cppad(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
+#' estinfo <- ppi(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
+#' misspecified <- ppi(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
 #' @export
 ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL, betap = NULL,
-                pow = 1, man, method = "direct", w = rep(1, nrow(Y)),
+                pow = 1, trans, method = "direct", w = rep(1, nrow(Y)),
                 bdryweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin()#specific to cppad methods
                 ){
@@ -50,6 +56,11 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
   stopifnot("matrix" %in% class(Y))
   p = ncol(Y)
   stopifnot(pow == 1)
+  stopifnot(trans %in% c("alr", "sqrt", "none"))
+  man <- switch(trans,
+           alr = "Ralr",
+           sqrt = "sphere",
+           none = "simplex")
 
   usertheta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, beta, betaL, betap)
   out <- list()
@@ -64,9 +75,9 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
     }
     if (man == "sphere"){ # a number of methods implemented
       if (bdryweight == "minsq"){
-        if (ppi_usertheta_for_estimator1_dir(usertheta)){
-          out$est <- estimator1_dir(Y, acut = acut, w = w)
-          fitfun <- "estimator1_dir"
+        if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
+          out$est <- dir_sqrt_minimah(Y, acut = acut, w = w)
+          fitfun <- "dir_sqrt_minimah"
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
           out <- estimator1(Y,acut = acut,incb = 0,
                             beta0 = fromPPIparamvec(usertheta)$beta,
@@ -91,9 +102,9 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
       }
 
       if (bdryweight == "prodsq"){
-        if (ppi_usertheta_for_estimator1_dir(usertheta)){
-          out$est <- estimator2_dir(Y, acut = acut, w = w)
-          fitfun <- "estimator2_dir"
+        if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
+          out$est <- dir_sqrt_prodh(Y, acut = acut, w = w)
+          fitfun <- "dir_sqrt_prodh"
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
           out <- estimator2(Y,acut = acut,incb = 0,
                             beta0 = fromPPIparamvec(usertheta)$beta,
@@ -192,7 +203,7 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
     if (is.null(AL)){
       ALprep = matrix(NA, nrow = p-1, ncol = p-1) #could also do nothing
     } else if (is.matrix(AL)){
-    #' If a matrix, then the NA elements will be estimated and the others will be fixed at the supplied value (i.e. not estimated).
+    # If a matrix, then the NA elements will be estimated and the others will be fixed at the supplied value (i.e. not estimated).
       if(!isSymmetric.matrix(AL)){stop("AL must be symmetric.")}
       ALprep = AL
     } else if (is.numeric(AL)){#' If a single number, then AL will be fixed as a matrix of the given value.
@@ -207,7 +218,7 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
       stop("AL is not of required type.")
     }
     #bL
-    #' If a number, then bL will be fixed at the supplied value.
+    # If a number, then bL will be fixed at the supplied value.
     if (!is.null(bL)){
       if (!is.vector(bL, mode = "any")){stop("bL must be a vector or value")}
       if (length(bL) == 1){
@@ -224,10 +235,10 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
     stopifnot(is.vector(betaL, "numeric") | is.vector(betaL, "logical"))
     stopifnot(is.null(beta))
     if (length(betaL) == 1){
-      #' If a number then the 1...(p-1) beta elements fixed at the given number.
+      # If a number then the 1...(p-1) beta elements fixed at the given number.
       betaLprep = rep(betaL, p-1)
     } else if (length(betaL) == p-1){
-      #' If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
+      # If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
       betaLprep = betaL
     } else {
       stop("betaL must have length p-1")
@@ -248,7 +259,7 @@ ppi_cppad_thetaprocessor <- function(p, AL = NULL, bL = NULL, Astar = NULL, beta
       betaLprep = rep(beta, p-1)
       betapprep = beta
     } else if (length(beta) == p){
-      #' If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
+      # If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
       betaLprep = beta[1:(p-1)]
       betapprep = beta[p]
     } else {

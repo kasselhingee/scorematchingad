@@ -1,4 +1,4 @@
-#' @title Score matching estimators for PPI model include beta
+# @title Score matching estimators for PPI model include beta
 #' @description Score matching estimators for the PPI model that estimate \eqn{A_L}, \eqn{b_L} and \eqn{\beta}{beta}.
 #' @param prop compositional data (n by p matrix)
 #' @param acut \eqn{a_c} for the weighting function \eqn{h}.
@@ -30,7 +30,7 @@ utheta_estimatorall1_full_compatible <- function(usertheta){
 }
 
 
-#' @export
+# @export
 estimatorall1 <- function(prop, acut, betap = NULL, w = rep(1, nrow(prop))){
   Wnd <- estimatorall1_Wnd(prop,acut,betap, w = w)
 

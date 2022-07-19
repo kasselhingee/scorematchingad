@@ -27,7 +27,7 @@ test_that("estimator2 and SE matches for simulated weights", {
   expect_equal(estSE_direct, estSE_sim)
 })
 
-test_that("multestimator matches for simulated weights", {
+test_that("ppi_mmmm matches for simulated weights", {
   #simulate sample from the multinomial PPI model:
   x=matrix(0,nrow(m$sample),m$p)
   for (j in 1:nrow(m$sample))
@@ -35,8 +35,8 @@ test_that("multestimator matches for simulated weights", {
     x[j,]=rmultinom(1,2000,prob=m$sample[j,])
   }
   vw <- virtualweights(x)
-  est_sim <- multestimator(vw$newY, rep(2000, nrow(vw$newY)), beta0 = m$beta0)
-  est_direct <- multestimator(x, rep(2000, nrow(x)), beta0 = m$beta0, w = vw$w)
+  est_sim <- ppi_mmmm(vw$newY, rep(2000, nrow(vw$newY)), beta0 = m$beta0)
+  est_direct <- ppi_mmmm(x, rep(2000, nrow(x)), beta0 = m$beta0, w = vw$w)
   expect_equal(est_direct, est_sim)
 })
 
@@ -56,9 +56,9 @@ test_that("estimatorall1 matches for simulated weights", {
   expect_equal(est_direct, est_sim)
 })
 
-test_that("estimator2_dir matches for simulated weights", {
-  est_sim <- estimator2_dir(vw$newY, acut = acut, w = rep(1, nrow(vw$newY)))
-  est_direct <- estimator2_dir(m$sample, acut = acut, w = vw$w)
+test_that("dir_sqrt_prodh matches for simulated weights", {
+  est_sim <- dir_sqrt_prodh(vw$newY, acut = acut, w = rep(1, nrow(vw$newY)))
+  est_direct <- dir_sqrt_prodh(m$sample, acut = acut, w = vw$w)
   expect_equal(est_direct, est_sim)
 })
 
@@ -68,15 +68,15 @@ test_that("estimatorlog_weight matches for simulated weights", {
   expect_equal(est_direct$ppi, est_sim$ppi)
 })
 
-test_that("dirichmom matches for simulated weights", {
-  est_sim <- dirichmom(vw$newY)
-  est_direct <- dirichmom(m$sample, w = vw$w)
+test_that("dir_moment matches for simulated weights", {
+  est_sim <- dir_moment(vw$newY)
+  est_direct <- dir_moment(m$sample, w = vw$w)
   expect_equal(est_direct, est_sim)
 })
 
-test_that("estimator1_dir matches for simulated weights", {
-  est_sim <- estimator1_dir(vw$newY, acut = acut)
-  est_direct <- estimator1_dir(m$sample, acut = acut, w = vw$w)
+test_that("dir_sqrt_minimah matches for simulated weights", {
+  est_sim <- dir_sqrt_minimah(vw$newY, acut = acut)
+  est_direct <- dir_sqrt_minimah(m$sample, acut = acut, w = vw$w)
   expect_equal(est_direct, est_sim)
 })
 

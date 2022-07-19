@@ -1,22 +1,22 @@
-#' @title Score matching estimate of the PPI model using product-like Hyvarinen weight function
-#' @description Estimates \eqn{A_L} and \eqn{b_L} of the PPI model using score matching and a product-like Hyvarinen weight function. \eqn{\beta_0}{beta0} is fixed.
-#' @param prop compositional data (each row is a sample, each column corresponds to a component)
-#' @param  acut \eqn{a_c} for the weighting function \eqn{h}.
-#' @param incb if `incb=1` then \eqn{b_L} is estimated, otherwise \eqn{b_L} is fixed at zero
-#' @param beta0 The (fixed) beta0 of the model.
-#' @details The PPI model is given in equation 3 of (Scealy and Wood, 2021). The matrices \eqn{A_L} and \eqn{b_L} must be estimated.
-#' This function implements the score matching estimator,
-#' \deqn{\hat{W}^{-1}\hat{d},}{W^{-1}d,}
-#' using a product-like Hyvarinen weight function
-#' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2),}
-#' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
-#' and \eqn{z_j}{zj} is the jth component of z.
-#' For details of the score matching estimator see equations 16 - 19 in (Scealy and Wood, 2021).
-#' If \eqn{a_c} is greater than or equal to 1 then this product-like Hyvarinen weight function corresponds to (Scealy and Wood, 2021; eqn 8), if it is less than 1 then it corresponds to (Scealy and Wood, 2021; eqn 9).
-#' For more on the Hyvarinen weight (see equation 7 and Section 3.2 of (Scealy and Wood, 2021)).
-#' @return A vector of the estimates for individual entries in the matrices \eqn{A} and \eqn{b}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A} (except the last entry that is always zero for identifiability in the PPI model), then the upper triangle of \eqn{A} without the last column (again for identifiability) and finally the elements of \eqn{b} (except the last element, which is always 0 due to identifiability also) if `incb=1`.
+# @title Score matching estimate of the PPI model using product-like Hyvarinen weight function
+# @description Estimates \eqn{A_L} and \eqn{b_L} of the PPI model using score matching and a product-like Hyvarinen weight function. \eqn{\beta_0}{beta0} is fixed.
+# @param prop compositional data (each row is a sample, each column corresponds to a component)
+# @param  acut \eqn{a_c} for the weighting function \eqn{h}.
+# @param incb if `incb=1` then \eqn{b_L} is estimated, otherwise \eqn{b_L} is fixed at zero
+# @param beta0 The (fixed) beta0 of the model.
+# @details The PPI model is given in equation 3 of (Scealy and Wood, 2021). The matrices \eqn{A_L} and \eqn{b_L} must be estimated.
+# This function implements the score matching estimator,
+# \deqn{\hat{W}^{-1}\hat{d},}{W^{-1}d,}
+# using a product-like Hyvarinen weight function
+# \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2),}
+# where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
+# and \eqn{z_j}{zj} is the jth component of z.
+# For details of the score matching estimator see equations 16 - 19 in (Scealy and Wood, 2021).
+# If \eqn{a_c} is greater than or equal to 1 then this product-like Hyvarinen weight function corresponds to (Scealy and Wood, 2021; eqn 8), if it is less than 1 then it corresponds to (Scealy and Wood, 2021; eqn 9).
+# For more on the Hyvarinen weight (see equation 7 and Section 3.2 of (Scealy and Wood, 2021)).
+# @return A vector of the estimates for individual entries in the matrices \eqn{A} and \eqn{b}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A} (except the last entry that is always zero for identifiability in the PPI model), then the upper triangle of \eqn{A} without the last column (again for identifiability) and finally the elements of \eqn{b} (except the last element, which is always 0 due to identifiability also) if `incb=1`.
 
-#' @export
+# @export
 estimator2 <- function(prop,acut,incb, beta0, w = rep(1, nrow(prop)))
 {
   n=nrow(prop)

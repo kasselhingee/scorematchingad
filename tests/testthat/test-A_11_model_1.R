@@ -1,3 +1,6 @@
+## The tests here are skipped on cran - all these functions are tested on the microbiome data set
+skip_on_cran()
+
 # test of the 'model 1' described in section A.11 of the supplementary material.
 # This is a gGamma model with β = (−0.80, −0.85, 0, −0.2, 0), b = 0, and A_L = Table 3. Beta and b considered fixed.
 
@@ -38,7 +41,7 @@ beta0[4]=-0.2
 beta0[5]=0
 
 #simulate sample from the PPI model
-samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,0)
+samp1=rppi(n,p,beta0,ALs,bL,0)
 
 #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
 #a few times to check that it is an appropriate upper bound.

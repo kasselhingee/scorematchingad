@@ -1,8 +1,9 @@
 test_that("estimatorlog_weight matches CppAD method for constant weight, p = 3", {
+  skip_on_cran() #v slow
   set.seed(1234)
   m <- sec2_3model(10000, maxden = 4)
 
-  est_cppad <- ppi(m$sample, bL = rep(0, 3-1), betap = m$beta0[3], man = "Ralr", method = "cppad", bdryweight = "ones",
+  est_cppad <- ppi(m$sample, bL = rep(0, 3-1), betap = m$beta0[3], trans = "alr", method = "cppad", bdryweight = "ones",
                          control = list(tol = 1E-10))
 
   est_direct <- estimatorlog_weight(m$sample, betap = m$beta0[3], weightW = rep(1, nrow(m$sample)))
@@ -10,6 +11,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 3",
 })
 
 test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5", {
+  skip_on_cran() #slow but useful
   set.seed(1273)
   p = 5
   ALs <- rsymmetricmatrix(p-1, -4, 4)
@@ -17,9 +19,9 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
   # set.seed(1345) #this seed leads to samples with that give reasonable estimates
   set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
-  prop <- rhybrid(1000, p, beta, ALs, bL, 5)$samp3 #rhybrid_singly took 1005 seconds, rhybrid() took 13seconds
+  prop <- rppi(1000, p, beta, ALs, bL, 5)$samp3 #rppi_singly took 1005 seconds, rppi() took 13seconds
 
-  est_cppad <- ppi(prop, bL = bL, betap = beta[p], man = "Ralr", method = "cppad", bdryweight = "ones",
+  est_cppad <- ppi(prop, bL = bL, betap = beta[p], trans = "alr", method = "cppad", bdryweight = "ones",
                          bdrythreshold = 1E-20,
                          control = list(tol = 1E-10))
   expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)
@@ -53,10 +55,10 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
 
 test_that("estimatorlog_weight matches for simulated weights", {
   set.seed(1234)
-  m <- sec2_3model(1000, maxden = 4)
+  m <- sec2_3model(100, maxden = 4)
   #simulate weights
-  ind <- sample(1:1000, 1500, replace = TRUE)
-  weights <- rep(0, 1000)
+  ind <- sample(1:100, 150, replace = TRUE)
+  weights <- rep(0, 100)
   weights[as.numeric(names(table(ind)))] <- table(ind)
   newsample <- m$sample[ind, ]
 

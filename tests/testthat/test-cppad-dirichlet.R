@@ -1,3 +1,4 @@
+skip_on_cran()
 
 test_that("prodsq weights match estimator2", {
   acut = 0.1
@@ -19,7 +20,7 @@ test_that("prodsq weights match estimator2", {
                gr = function(beta){smobjgrad(tapes$smotape, beta, utabl)})
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
-  directestimate <- estimator2_dir(utabl, acut)
+  directestimate <- dir_sqrt_prodh(utabl, acut)
   expect_equal(out$par, directestimate, tolerance = 1E-3, ignore_attr = TRUE)
 })
 
@@ -43,7 +44,7 @@ test_that("minsq weights match estimator2", {
                gr = function(beta){smobjgrad(tapes$smotape, beta, utabl)})
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
-  directestimate <- estimator1_dir(utabl, acut)
+  directestimate <- dir_sqrt_minimah(utabl, acut)
   expect_equal(out$par, directestimate, tolerance = 1E-3, ignore_attr = TRUE)
 })
 
@@ -66,7 +67,7 @@ test_that("minsq weights match estimator2 for d = 4", {
                gr = function(beta){smobjgrad(tapes$smotape, beta, utabl)})
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
-  directestimate <- estimator1_dir(utabl, acut)
+  directestimate <- dir_sqrt_minimah(utabl, acut)
   expect_equal(out$par, directestimate, tolerance = 1E-3, ignore_attr = TRUE)
 })
 
@@ -87,7 +88,7 @@ test_that("fixed beta[p] with minsq weights match true value", {
                fn = function(beta){smobj(tapes$smotape, beta, utabl)},
                gr = function(beta){smobjgrad(tapes$smotape, beta, utabl)})
 
-  directestimate <- estimator1_dir(utabl, acut)
+  directestimate <- dir_sqrt_minimah(utabl, acut)
   expect_equal(out$par, directestimate[-3], tolerance = 0.05, ignore_attr = TRUE) #tolerance is usually relative
   expect_equal(out$par, beta[-3], tolerance = 0.1, ignore_attr = TRUE) #tolerance is usually relative
 })
