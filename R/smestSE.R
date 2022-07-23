@@ -6,6 +6,15 @@
 #' @param utabl A matrix of observations, each row being an observation.
 #' @details It seems likely that `sqrt(n) * (est - true)` will have an asympotically normal distribution with zero mean and a covariance of
 #' given by the inverse of the Godambe information matrix, `invG`.
+#' 
+#' The weights `w` are assumed fix so that the minimiser of the score-matching divergence is still an M-estimator.
+#' The sensitivity matrix is estimated as
+#' \deqn{\hat{H(\theta) = \hat{E} -grad(grad(w smo(\theta;Y))),}
+#' the variability matrix is estimated as
+#' \deqn{\hat{J}(\theta) = var(grad(w smo(\theta;Y))),}
+#' and the variance of estimator is estimated as
+#' \deqn{\hat{H}(\theta)^{-1}\hat{J}(\theta)\hat{H}(\theta)^{-1}/n,}
+#' where `n` is the number of observations, regardless of their weight.
 #' @return The square root of the diagonal of the matrix `invG/n`, which is an estimate of estimator SE.
 #' @export
 smestSE <- function(smofun, theta, utabl, ...){
@@ -24,18 +33,14 @@ smestSEsq <- function(smofun, theta, utabl,
                   Jsmofun_u = Jsmofun_u,
                   uboundary = uboundary, boundaryapprox = boundaryapprox,
                   approxorder = approxorder)
-
-  if (!is.null(w)){
-     if (!all(w == rep(1, length(w)))){
-       stop("SE for weighted data not available")
-    }
-  }
-
-  vargradsmo <- cov(do.call(rbind, gradsmoperpt))
+  gradsmoperpt <- do.call(rbind, gradsmoperpt)
+  if (!is.null(w)) {
+     w <- w / sum(w) #normalise so that weights are same in weighted averages etc - easier than thinking through what the covariance will do
+     gradsmoperpt <- w * gradsmoperpt} #each observation's Hyvarinen divergence weighted by w
+  vargradsmo <- cov(gradsmoperpt)
 
   sensinv <- solve(sens)
   Ginfinv <- sensinv %*% vargradsmo %*% sensinv #inverse of the Godambe information matrix, also called the sandwich information matrix
-  if (is.null(w)){out <- Ginfinv/length(gradsmoperpt)}
-  else {out <- Ginfinv/sum(w)}
-  return(out) #results now in same units as estimates
+  out <- Ginfinv/length(gradsmoperpt)
+  return(out) 
 }
