@@ -45,7 +45,7 @@ ppi_egmodel_p4 <- function(n, maxden = 8){
   
   out <- c(list(
     sample = samp3,
-    p = 3,
+    p = 4,
     theta = toPPIparamvec(mats$AL, mats$bL, mats$beta)
     ),
     mats,
