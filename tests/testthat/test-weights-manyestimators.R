@@ -1,5 +1,5 @@
 set.seed(1234)
-m <- sec2_3model(1000, maxden = 4)
+m <- ppi_egmodel(1000, maxden = 4)
 #simulate weights
 set.seed(134)
 vw <- virtualweights(m$sample)

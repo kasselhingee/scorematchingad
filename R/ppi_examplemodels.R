@@ -4,14 +4,13 @@
 #' @param betaadd A number to add to the \eqn{\beta} parameter vector, which may be useful for experimenting with how 'Dirichlet' the model look.
 #' @return A list of the samples and model parameter information
 #' @examples
-#' sec2_3model(10)
-#' sec2_3model_p4(1000)
+#' ppi_egmodel(1000)
 #' @description 
 #' The model is the 3-component model from \insertCite{@Section 2.3, @scealy2022sc}{cdabyppi}.
 #' @references
 #' \insertAllCited{}
 #' @export
-sec2_3model <- function(n, maxden = 4, betaadd = 0){
+ppi_egmodel <- function(n, maxden = 4, betaadd = 0){
   mats <- pars_sec2dot3model(3)
   mats$beta = mats$beta + betaadd
 
@@ -33,9 +32,9 @@ sec2_3model <- function(n, maxden = 4, betaadd = 0){
   return(out)
 }
 
-#' @describeIn sec2_3model
-#' @export
-sec2_3model_p4 <- function(n, maxden = 8){
+# @describeIn ppi_egmodel
+# @export
+ppi_egmodel_p4 <- function(n, maxden = 8){
   mats <- pars_sec2dot3model(4)
 
   #simulate sample from PPI model

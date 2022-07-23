@@ -1,7 +1,7 @@
 test_that("estimatorlog_weight matches CppAD method for constant weight, p = 3", {
   skip_on_cran() #v slow
   set.seed(1234)
-  m <- sec2_3model(10000, maxden = 4)
+  m <- ppi_egmodel(10000, maxden = 4)
 
   est_cppad <- ppi(m$sample, bL = rep(0, 3-1), betap = m$beta0[3], trans = "alr", method = "cppad", bdryweight = "ones",
                          control = list(tol = 1E-10))
@@ -55,7 +55,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
 
 test_that("estimatorlog_weight matches for simulated weights", {
   set.seed(1234)
-  m <- sec2_3model(100, maxden = 4)
+  m <- ppi_egmodel(100, maxden = 4)
   #simulate weights
   ind <- sample(1:100, 150, replace = TRUE)
   weights <- rep(0, 100)

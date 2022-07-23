@@ -4,7 +4,7 @@
 n=5000
 
 #parameters for the PPI model
-m <- sec2_3model(2)
+m <- ppi_egmodel(2)
 
 test_that("current PPI simulation method gives samples with similar empirical density estimates as the original simulation method", {
   skip_on_cran() #accuracy of the method is tested by all the estimators

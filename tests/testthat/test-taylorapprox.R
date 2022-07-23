@@ -1,6 +1,6 @@
 test_that("Raw taylor approximation works on single sample points", {
   set.seed(123)
-  m = sec2_3model(1)
+  m = ppi_egmodel(1)
   middleofsimplex <- rep(1/m$p, m$p)
   shiftdir <- middleofsimplex - m$sample
   shiftdir <- shiftdir / sqrt(sum(shiftdir^2)) #make a unit vector
@@ -27,7 +27,7 @@ test_that("Raw taylor approximation works on single sample points", {
 
 test_that("Auto approx centre with taylor approximation works on single sample points", {
   set.seed(123)
-  m = sec2_3model(1)
+  m = ppi_egmodel(1)
   middleofsimplex <- rep(1/m$p, m$p)
   approxcentre <- ((m$sample * (99/100) + middleofsimplex * (1/100)))
 
@@ -50,7 +50,7 @@ test_that("Auto approx centre with taylor approximation works on single sample p
 
 test_that("Approx taylor with u on boundary generates correct values (excluding gradient) for sphere for ppi", {
   set.seed(123)
-  m <- sec2_3model(2)
+  m <- ppi_egmodel(2)
   m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
   acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-15)
 
@@ -69,7 +69,7 @@ test_that("Approx taylor with u on boundary generates correct values (excluding 
 
 test_that("Taylor Approx of Grad SMO gets correct value on interior of simplex", {
   set.seed(123)
-  m <- sec2_3model(2)
+  m <- ppi_egmodel(2)
   # m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
   acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-15)
 
@@ -91,7 +91,7 @@ test_that("Taylor Approx of Grad SMO gets correct value on interior of simplex",
 
 test_that("Taylor Approx of Grad SMO gets correct value on boundary of simplex", {
   set.seed(123)
-  m <- sec2_3model(2)
+  m <- ppi_egmodel(2)
   m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
   acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-15)
   acut = 0.1
@@ -118,7 +118,7 @@ test_that("Taylor Approx of Grad SMO gets correct value on boundary of simplex",
 
 test_that("Test ppi() against direct when there are boundary points", {
   set.seed(123)
-  m <- sec2_3model(100)
+  m <- ppi_egmodel(100)
   #add some zeroes
   pushtozero <- function(x){
     if (min(x) > 1E-3){return(x)}
@@ -142,7 +142,7 @@ test_that("Test ppi() against direct when there are boundary points", {
 
 test_that("Taylor approx of smestSE gives suitable SE for estimates", {
   set.seed(123)
-  m <- sec2_3model(100)
+  m <- ppi_egmodel(100)
   #add some zeroes
   pushtozero <- function(x){
     if (min(x) > 1E-3){return(x)}
@@ -163,7 +163,7 @@ test_that("Taylor approx of smestSE gives suitable SE for estimates", {
 
 test_that("Taylor approx of ppi() SE matches on the interior", {
   set.seed(123)
-  m <- sec2_3model(100)
+  m <- ppi_egmodel(100)
 
   acut = 0.1
   direct <- estimatorall1(m$sample, acut = acut, betap = m$beta0[3])
@@ -181,7 +181,7 @@ test_that("Taylor approx of ppi() SE matches on the interior", {
 
 test_that("ppi() operates when minimal points in the interior", {
   set.seed(123)
-  m <- sec2_3model(100)
+  m <- ppi_egmodel(100)
   #add some zeroes
   pushtozero <- function(x){
     if (min(x) > 10){return(x)}
@@ -203,7 +203,7 @@ test_that("ppi() operates when minimal points in the interior", {
 
 test_that("Taylor approx of matches estimator1SE with data on the boundary", {
   set.seed(123)
-  m <- sec2_3model(100)
+  m <- ppi_egmodel(100)
   #add some zeroes
   pushtozero <- function(x){
     if (min(x) > 1E-3){return(x)}

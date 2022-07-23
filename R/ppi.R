@@ -43,7 +43,7 @@
 #' @param approxorder Order of the Taylor approximation
 #' @param method `direct` for estimates calculated directly where possible (*list them*) or `cppad` to find the score matching estimates using automatic differentiation and the `Rcgmin()` iterative solver.
 #' @examples
-#' model <- sec2_3model(1000)
+#' model <- ppi_egmodel(1000)
 #' estinfo <- ppi(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
 #' misspecified <- ppi(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
 #' @export

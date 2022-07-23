@@ -1,7 +1,7 @@
 test_that("windam_raw gives correct params on simulated data, with two outliers. p=3", {
   skip("tested by all robust estimator tests")
   set.seed(1273)
-  m <- sec2_3model(1000, maxden = 4)
+  m <- ppi_egmodel(1000, maxden = 4)
   outlier1 <- c(0.9, 0.9, 0.01)
   outlier1 <- outlier1/sum(outlier1)
   outlier2 <- c(0.9, 0.1, 0.01)

@@ -3,7 +3,7 @@
 #' @param shiftsize The distance to away from `u` and the simplex boundary to create the approximation centre.
 #' @return The approximation centres for the measurements
 #' @examples
-#' m <- sec2_3model(10)
+#' m <- ppi_egmodel(10)
 #' simplex_boundaryshift(m$sample, shiftsize = 1E-5)
 #' @export
 simplex_boundaryshift <- function(utabl, shiftsize = 1E-4){

@@ -1,5 +1,5 @@
 set.seed(1234) #chosen so that u is far from boundary - needed for numericDeriv::Hessian
-m = sec2_3model_p4(1, 8)
+m = ppi_egmodel_p4(1, 8)
 p = m$p
 u = m$sample
 ALs = m$ALs

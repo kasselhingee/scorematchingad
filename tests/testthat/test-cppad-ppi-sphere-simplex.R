@@ -1,5 +1,5 @@
 test_that("ppi tape values do not effect ll values", {
-  model1 <- sec2_3model(1)
+  model1 <- ppi_egmodel(1)
   u1 <-  c(0.001, 0.011, 1 - 0.01 - 0.011)
   model0 <- lapply(model1, function(x) x * 0)
   u0 <- rep(0, 3)
@@ -85,9 +85,9 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   cdabyppi:::expect_lt_v(abs(out$par - theta) / out$SE, 3)#assuming normally distributed with SE given by SE above
 })
 
-test_that("ppi with minsq weights match estimator1 with fixed beta for sec2_3model", {
+test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmodel", {
   set.seed(123)
-  model <- sec2_3model(1000, maxden = 4)
+  model <- ppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
   out <- ppi(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
@@ -110,9 +110,9 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for sec2_3mod
   cdabyppi:::expect_lte_v(abs(out$est$theta - model$theta), 2 * out$SE$theta)
 })
 
-test_that("ppi with prodsq weights match estimator1 with fixed beta for sec2_3model", {
+test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmodel", {
   set.seed(123)
-  model <- sec2_3model(1000, maxden = 4)
+  model <- ppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
   out <- ppi(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
@@ -175,9 +175,9 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
   cdabyppi:::expect_lt_v(abs(out$est$theta - theta), 3 * out$SE$theta)
 })
 
-test_that("ppi with minsq weights match estimatorall1 for sec2_3model", {
+test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel", {
   set.seed(111)
-  model <- sec2_3model(100, maxden = 4)
+  model <- ppi_egmodel(100, maxden = 4)
 
   acut = 0.1
 
@@ -198,9 +198,9 @@ test_that("ppi with minsq weights match estimatorall1 for sec2_3model", {
   cdabyppi:::expect_lt_v(abs(out$par - model$theta) / out$SE, 3)
 })
 
-test_that("ppi with minsq weights match estimatorall1 for sec2_3model, fixed final beta", {
+test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed final beta", {
   set.seed(123)
-  model <- sec2_3model(100, maxden = 4)
+  model <- ppi_egmodel(100, maxden = 4)
 
   acut = 0.1
   psphere <- pmanifold("sphere")
@@ -221,9 +221,9 @@ test_that("ppi with minsq weights match estimatorall1 for sec2_3model, fixed fin
   cdabyppi:::expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
 })
 
-test_that("ppi with minsq weights match estimatorall1 for sec2_3model, fixed final beta, large n", {
+test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed final beta, large n", {
   set.seed(123)
-  model <- sec2_3model(100000, maxden = 4)
+  model <- ppi_egmodel(100000, maxden = 4)
 
   acut = 0.1
   psphere <- pmanifold("sphere")
@@ -246,7 +246,7 @@ test_that("ppi with minsq weights match estimatorall1 for sec2_3model, fixed fin
 
 test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   set.seed(1234)
-  model <- sec2_3model(1000, maxden = 4)
+  model <- ppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
   psimplex <- pmanifold("simplex")
