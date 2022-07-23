@@ -272,7 +272,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
 
   est_cppad <- ppi(prop, bL = bL, beta = beta,
                    method = "cppad",
-                         man = "sqrt", acut = acut, bdryweight = "minsq",
+                         trans = "sqrt", acut = acut, bdryweight = "minsq",
                          control = list(tol = 1E-13))
   expect_equal(est_cppad$est$theta[1:length(est_direct$estimator1)], est_direct$estimator1, tolerance = 1E-1,
                ignore_attr = TRUE)

@@ -5,10 +5,10 @@ using namespace Rcpp;
 
 ////////////// Create Pointers to Manifold Objects ///////////////
 //in R store a pointer to the ADFun object
-//' @title Generate manifold object
+// @title Generate manifold object
 //' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
 //' @return An RCpp::XPtr object pointing to the C++ manifold object
-//' @export
+// @export
 // [[Rcpp::export]]
 XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   manifold<a1type> * out;  //returning a pointer
@@ -28,13 +28,13 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   return(pout);
 }
 
-//' @title Test a manifold object
+// @title Test a manifold object
 //' @description A lightweight test of a manifold object.
 //' Its main benefit is to force compilation of templated functions for the manifold,
 //' and to print results to standard output.
 //' @param pman An XPtr to a manifold object. Created by `pmanifold()`
 //' @return An integer. 0 if the testable parts pass.
-//' @export
+// @export
 // [[Rcpp::export]]
 int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
   Rcout << "Starting tests" << std::endl;
@@ -66,12 +66,12 @@ int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
 }
 
 
-//' @title Apply to `toM` function of a manifold object
+// @title Apply to `toM` function of a manifold object
 //' @description Apply the `toM` function of a manifold object.
 //' @param pman An XPtr to a manifold object. Created by `pmanifold()`.
 //' @param u A vector to be transformed to the manifold via `toM`.
 //' @return A vector on the manifold.
-//' @export
+// @export
 // [[Rcpp::export]]
 svecd ptoM(XPtr< manifold<a1type> > pman, svecd u){
   veca1 u_ad(u.size());
@@ -90,14 +90,14 @@ svecd ptoM(XPtr< manifold<a1type> > pman, svecd u){
 
 
 //in R store a pointer to the ADFun object
-//' @title The score matching objective calculator.
+// @title The score matching objective calculator.
 //' @param xbetain a concatenated vector of sqrt(x) and beta
 //' @param n The dimension of x.
 //' @param manifoldname The name of the manifold to transform to
 //' @param weightname The name of the weight function to use
 //' @param acut The constraint a_c in the weight function
 //' @return An RCpp::XPtr object pointing to the ADFun
-//' @export
+// @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
                                       svecd theta,
@@ -149,12 +149,12 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
   return(pout);
 }
 
-//' @title Tape of a log-likelihood calculation
+// @title Tape of a log-likelihood calculation
 //' @param p dimension of measurements
 //' @param bd dimension of the parameter vector
 //' @param llname name of the likelihood function
 //' @return An RCpp::XPtr object pointing to the ADFun
-//' @export
+// @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifold
                                      svecd theta,
@@ -215,13 +215,13 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
 }
 
 //for testing
-//' @title Switch Dynamic and pure Independent values
+// @title Switch Dynamic and pure Independent values
 //' @description Convert an ADFun so that the independent values become dynamic parameters
 //' and the dynamic parameters become independent values
 //' @param newvalue The value (in the sense after the switch has occured) at which to tape the ADFun
 //' @param newdynparam The value of the now dynamic parameters at which to tape the ADFun
 //' @return A pointer to an ADFun
-//' @export
+// @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svecd newvalue, svecd newdynparam){
   //convert input to an Eigen vectors
@@ -264,12 +264,12 @@ XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svec
 
 
 //for testing
-//' @title The Jacobian of recorded function
+// @title The Jacobian of recorded function
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 //' @param u A vector in the simplex.
 //' @param beta a vector of the dynamic parameters
 //' @return The Jacobian of pfun
-//' @export
+// @export
 // [[Rcpp::export]]
 svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
@@ -298,12 +298,12 @@ svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   return(out);
 }
 
-//' @title The value of a recorded function
+// @title The value of a recorded function
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 //' @param value A vector in the domain of the taped function.
 //' @param theta a vector of the dynamic parameters
 //' @return The value of pfun
-//' @export
+// @export
 // [[Rcpp::export]]
 svecd pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
@@ -328,12 +328,12 @@ svecd pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   return(out);
 }
 
-//' @title The Hessian of recorded function
+// @title The Hessian of recorded function
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 //' @param u A vector in the simplex.
 //' @param beta a vector of the dynamic parameters
 //' @return The Hessian of pfun
-//' @export
+// @export
 // [[Rcpp::export]]
 svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
@@ -363,7 +363,7 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
 }
 
 
-//' @title The value of a recorded function approximated by Taylor Expansion
+// @title The value of a recorded function approximated by Taylor Expansion
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
 //' @param value A vector in the domain of the taped function.
 //' @param centre A vector in the domain of the taped function to approximate the value from.
@@ -371,7 +371,7 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
 //' @param order The order of Taylor expansion to use.
 //' @description Wrapper for the `taylorapprox` C++ function.
 //' @return The approximate value of pfun
-//' @export
+// @export
 // [[Rcpp::export]]
 svecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
                      svecd value, svecd centre,
@@ -397,7 +397,7 @@ svecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
   return(outstd);
 }
 
-//' @title The approximate value of the gradient (wrt space 1) of recorded function
+// @title The approximate value of the gradient (wrt space 1) of recorded function
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 //' @param value A vector in the domain of the taped function.
 //' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
@@ -406,7 +406,7 @@ svecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
 //' @param order The order of Taylor expansion to use.
 //' @description Taylor expansion in the `theta` dimensions, to approximate the gradient wrt the `value` dimensions.
 //' @return The approximate value of the gradient, with respect to theta, of pfun
-//' @export
+// @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> >  pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfun,
                     svecd value, svecd theta){
@@ -436,7 +436,7 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfu
   return(pout);
 }
 
-//' @title The approximate value of the gradient (wrt space 1) of recorded function
+// @title The approximate value of the gradient (wrt space 1) of recorded function
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 //' @param value A vector in the domain of the taped function.
 //' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
@@ -445,7 +445,7 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfu
 //' @param order The order of Taylor expansion to use.
 //' @description Taylor expansion in the `theta` dimensions, to approximate the gradient wrt the `value` dimensions.
 //' @return The approximate value of the gradient, with respect to theta, of pfun
-//' @export
+// @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> >  pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun,
                                                 svecd value, svecd theta){
