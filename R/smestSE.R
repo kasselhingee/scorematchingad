@@ -40,6 +40,6 @@ smestSEsq <- function(smofun, theta, utabl,
 
   sensinv <- solve(sens)
   Ginfinv <- sensinv %*% vargradsmo %*% sensinv #inverse of the Godambe information matrix, also called the sandwich information matrix
-  out <- Ginfinv/length(gradsmoperpt)
+  out <- Ginfinv/nrow(gradsmoperpt)
   return(out) 
 }
