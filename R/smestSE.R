@@ -35,7 +35,6 @@ smestSEsq <- function(smofun, theta, utabl,
                   approxorder = approxorder)
   gradsmoperpt <- do.call(rbind, gradsmoperpt)
   if (!is.null(w)) {
-     w <- w / sum(w) #normalise so that weights are same in weighted averages etc - easier than thinking through what the covariance will do
      gradsmoperpt <- w * gradsmoperpt} #each observation's Hyvarinen divergence weighted by w
   vargradsmo <- cov(gradsmoperpt)
 
