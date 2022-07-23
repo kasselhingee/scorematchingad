@@ -165,7 +165,7 @@ test_that("controls of FixedPoint() and Rcgmin() are correctly passed", {
   m <- m / sqrt(sum(m^2))
   km <-  k * m
   set.seed(123)
-  Y <- Directional::rvmf(10, m, k)
+  Y <- movMF::rmovMF(10, m * k)
 
   out_default <- vMF(Y, method = "Mardia", cW = 0.1) #use this packages defaults this is pretty fussy!
 
