@@ -1,4 +1,4 @@
-#' @title Compute value of score matching objective for multiple observations
+# @title Compute value of score matching objective for multiple observations
 #' @description The value of the score matching objective for a given beta
 #' @param smofun A tape of the score matching objective calculation
 #' @param theta A parameter set
@@ -10,7 +10,7 @@
 #' For best results these locations should be further from the manifold boundary and close to their corresponding measurements.
 #' Taylor approximation around the rows of `boundaryapprox` will be used to approximate the score matching objective for these measurements.
 #' @param stopifnan If TRUE function will create an error when the return is not a number.
-#' @export
+# @export
 smobj <- function(smofun, theta, utabl,
                   smofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
                   stopifnan = FALSE, w = NULL){
@@ -44,8 +44,8 @@ smobj_b <- function(theta, ...){
   do.call(smobj, c(list(theta = theta), args2))
 }
 
-#' @describeIn smobj The gradient of the score matching objective function at given beta
-#' @export
+# @describeIn smobj The gradient of the score matching objective function at given beta
+# @export
 smobjgrad <- function(smofun, theta, utabl,
                       Jsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
                       stopifnan = FALSE, w = NULL){
@@ -87,8 +87,8 @@ smobjgrad_b <- function(theta, ...){
   do.call(smobjgrad, c(list(theta = theta), args2))
 }
 
-#' @describeIn smobj Hessian of the score matching objective
-#' @export
+# @describeIn smobj Hessian of the score matching objective
+# @export
 smobjhess <- function(smofun, theta, utabl,
                       Hsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
                       stopifnan = FALSE, w = NULL){
