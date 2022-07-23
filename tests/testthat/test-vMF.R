@@ -11,7 +11,7 @@ test_that("von-Mises Fisher likelihood runs and fits", {
                         weightname = "ones",
                         verbose = FALSE)
   expect_equal(pForward0(tapes$lltape, sample[1, ], theta), sum(sample[1, ]  * theta)) ## very important to check a tape
-  out <- smest(tapes$smotape, thetatape, sample, control = list(tol = 1E-10))
+  out <- cppadest(tapes$smotape, thetatape, sample, control = list(tol = 1E-10))
   cdabyppi:::expect_lt_v(abs(out$par - theta), 3 * out$SE)
 })
 

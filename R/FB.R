@@ -37,7 +37,7 @@ FB <- function(sample, km = NULL, A = NULL, control = default_Rcgmin()){
                weightname = "ones",
                verbose = FALSE)
 
-  sminfo <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample,
+  sminfo <- cppadest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample,
                control = control)
   theta <- intheta
   theta[is.na(intheta)] <- sminfo$par

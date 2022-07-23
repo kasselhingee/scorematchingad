@@ -140,7 +140,7 @@ test_that("Test ppi() against direct when there are boundary points", {
   cdabyppi:::expect_absdiff_lte_v(est$est$theta, c(direct$estimator1, m$beta0[3]), 0.1*abs(c(direct$estimator1, 0)))
 })
 
-test_that("Taylor approx of smestSE gives suitable SE for estimates", {
+test_that("Taylor approx of cppadSE gives suitable SE for estimates", {
   set.seed(123)
   m <- ppi_egmodel(100)
   #add some zeroes
@@ -235,7 +235,7 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
   Hsmofun_u <- pTapeHessianSwap(tapes$smotape, m$theta, datasplit$interior[1, ])
 
   #comparisons isolated from the Rcgmin optimiser
-  SE <- smestSE(
+  SE <- cppadSE(
     tapes$smotape, theta = direct$estimator1, datasplit$interior,
     Jsmofun_u = Jsmofun_u,
     Hsmofun_u = Hsmofun_u,

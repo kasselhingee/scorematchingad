@@ -55,7 +55,7 @@ Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){
   tapes <- buildsmotape("Snative", "Bingham",
                            utape, intheta,
                            weightname = "ones")
-  out <- smest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample, control = control)
+  out <- cppadest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample, control = control)
   theta <- intheta
   theta[is.na(intheta)] <- out$par
   tSE <- intheta * 0
@@ -89,7 +89,7 @@ Bingham_Mardia <- function(sample,  control = default_Rcgmin()){
                         rep(1, p) / sqrt(p), intheta,
                         weightname = "ones")
 
-  sm <- smest(tapes$smotape, seq(length.out = sum(is.na(intheta))), samplestd, control = control)
+  sm <- cppadest(tapes$smotape, seq(length.out = sum(is.na(intheta))), samplestd, control = control)
   theta <- intheta
   theta[is.na(intheta)] <- sm$par
   Astd <- Bingham_theta2Amat(theta)

@@ -1,4 +1,4 @@
-#' @title Find the optimal parameter for the score matching objective
+# @title Find the optimal parameter for the score matching objective
 #' @description Using a numerical optimiser and `smobj()` and `smobjgrad()`, find the parameter set with minimal `smobj` value.
 #' This function lightly wraps `Rcgmin::Rcgmin()` with some results checking.
 #' @param smofun A tape of the score matching objective calculation
@@ -11,9 +11,9 @@
 #' For best results these locations should be further from the manifold boundary and close to their corresponding measurements.
 #' Taylor approximation around the rows of `boundaryapprox` will be used to approximate the score matching objective for these measurements.
 #' @param control Optional argument passed to `Rcgmin::Rcgmin()`.
-#' @return The output from `Rcgmin::Rcgmin()`, the squared size of the gradient at the estimate, and the standard error estimates by `smestSE()`.
-#' @export
-smest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
+#' @return The output from `Rcgmin::Rcgmin()`, the squared size of the gradient at the estimate, and the standard error estimates by `cppadSE()`.
+# @export
+cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
   if (!(is.null(uboundary) && is.null(boundaryapprox))){
     stopifnot((!is.null(uboundary)) && (!is.null(boundaryapprox))) #both need to be supplied
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))
@@ -58,7 +58,7 @@ smest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = 
   }
   if (out$convergence != 0){warning("Optimisation did not converge.")}
   out$SE <- try({
-    smestSE(
+    cppadSE(
       smofun, theta = out$par, utabl,
       Jsmofun_u = Jsmofun_u, Hsmofun_u = Hsmofun_u,
       uboundary = uboundary, boundaryapprox = boundaryapprox,

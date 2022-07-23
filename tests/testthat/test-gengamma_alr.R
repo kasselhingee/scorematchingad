@@ -37,7 +37,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
                         rep(1/p, p), thetain,
                         weightname = "ones",
                         acut = 1, verbose = FALSE)
-  est_direct_SE <- smestSE(tapes$smotape, est_direct$ppi[is.na(thetain)], prop)
+  est_direct_SE <- cppadSE(tapes$smotape, est_direct$ppi[is.na(thetain)], prop)
   expect_absdiff_lte_v(est_direct$ppi[is.na(thetain)], toPPIparamvec(ALs, bL, beta)[is.na(thetain)],
                        3 * est_direct_SE)
 

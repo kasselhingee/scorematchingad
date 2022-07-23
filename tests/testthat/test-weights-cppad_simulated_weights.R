@@ -24,13 +24,13 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights", {
   expect_equal(smohess_sim, smohess_direct)
 })
 
-test_that("smest() for ppi with minsq match itself and estimatorall1", {
+test_that("cppadest() for ppi with minsq match itself and estimatorall1", {
   psphere <- pmanifold("sphere")
   pppi <- ptapell(rep(0.1, m$p), m$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
   smoppi <- ptapesmo(rep(0.1, m$p), 1:length(m$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
-  out_sim <- smest(smoppi, m$theta * 0 + 1, vw$newY, control = list(tol = 1E-15))
-  out_dir <- smest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-15), w = vw$w)
+  out_sim <- cppadest(smoppi, m$theta * 0 + 1, vw$newY, control = list(tol = 1E-15))
+  out_dir <- cppadest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-15), w = vw$w)
   expect_equal(out_sim[!(names(out_sim) %in% c("counts", "SE"))], 
      out_dir[!(names(out_sim) %in% c("counts", "SE"))],
      tolerance = 1E-3)

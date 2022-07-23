@@ -160,7 +160,7 @@ ppi_cppad <- function(prop, usertheta,
   # split data into boundary and interior
   datasplit <- simplex_boundarysplit(prop, bdrythreshold = bdrythreshold, shiftsize = shiftsize)
 
-  opt <- smest(tapes$smotape, rep(0.2, sum(is.na(theta))), datasplit$interior,
+  opt <- cppadest(tapes$smotape, rep(0.2, sum(is.na(theta))), datasplit$interior,
                uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
                approxorder = approxorder,
                control = control)

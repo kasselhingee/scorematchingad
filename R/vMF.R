@@ -123,7 +123,7 @@ vMF_kappa <- function(Y, startk, isfixed = FALSE, control = default_Rcgmin(), w 
                                    isfixed = c(FALSE, rep(TRUE, p-1)),
                                    weightname = "ones",
                                    verbose = FALSE)
-    sminfo <- smest(tapes$smotape, startk, Y, control = control, w = w)
+    sminfo <- cppadest(tapes$smotape, startk, Y, control = control, w = w)
     k <- sminfo$par
     SE <- sminfo$SE
   } else {
@@ -147,7 +147,7 @@ vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w 
                         rep(1, p)/sqrt(p), starttheta, isfixed,
                         weightname = "ones",
                         verbose = FALSE)
-  out <- smest(tapes$smotape, t_si2f(starttheta, isfixed), sample, control = control, w=w)
+  out <- cppadest(tapes$smotape, t_si2f(starttheta, isfixed), sample, control = control, w=w)
   theta <- t_sfi2u(out$par, starttheta, isfixed)
 
   SE <- t_sfi2u(out$SE, rep(0, length(starttheta)), isfixed)

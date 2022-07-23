@@ -61,7 +61,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 
   # it looks like the taped function above is not altering bL or beta
   # potentially the ordering of the theta values is wrong??
-  out <- smest(ppitapes$smotape, theta * 0 + 1, utabl, list(tol = 1E-10))
+  out <- cppadest(ppitapes$smotape, theta * 0 + 1, utabl, list(tol = 1E-10))
   stopifnot(out$convergence == 0)
 
   cppadest <- fromPPIparamvec(out$par, p)
@@ -78,9 +78,9 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   expect_lt(out$sqgradsize,
                sum(smobjgrad(ppitapes$smotape, c(rep(0, length(theta) - p), directestimate), utabl)^2))
 
-  cppadestSE <- fromPPIparamvec(out$SE, p)
-  cdabyppi:::expect_lt_v(abs(cppadest$beta0 - directestimate)[1:3] / cppadestSE$beta0[1:3], 1)
-  expect_lt(abs(cppadest$beta - directestimate)[4] / cppadestSE$beta[4], 3) #largest beta is hard to estimate well
+  cppadSE <- fromPPIparamvec(out$SE, p)
+  cdabyppi:::expect_lt_v(abs(cppadest$beta0 - directestimate)[1:3] / cppadSE$beta0[1:3], 1)
+  expect_lt(abs(cppadest$beta - directestimate)[4] / cppadSE$beta[4], 3) #largest beta is hard to estimate well
 
   cdabyppi:::expect_lt_v(abs(out$par - theta) / out$SE, 3)#assuming normally distributed with SE given by SE above
 })
@@ -185,7 +185,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel", {
   pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(model$theta)), verbose = FALSE)
   smoppi <- ptapesmo(rep(0.1, model$p), 1:length(model$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
-  out <- smest(smoppi, model$theta * 0 + 1, model$sample, control = list(tol = 1E-15))
+  out <- cppadest(smoppi, model$theta * 0 + 1, model$sample, control = list(tol = 1E-15))
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimatorall1(model$sample, acut)
@@ -207,7 +207,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
   pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
   smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
-  out <- smest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
+  out <- cppadest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
                control = list(tol = 1E-10))
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
@@ -230,7 +230,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
   pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
   smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
-  out <- smest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
+  out <- cppadest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
                control = list(tol = 1E-10, trace = 0)) #very slow at 10000
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
@@ -253,7 +253,7 @@ test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psimplex, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
   smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psimplex, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
-  out <- smest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
+  out <- cppadest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
                control = list(tol = 1E-15))
 
   cdabyppi:::expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)

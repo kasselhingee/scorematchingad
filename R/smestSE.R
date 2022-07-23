@@ -17,12 +17,12 @@
 #' where `n` is the number of observations, regardless of their weight.
 #' @return The square root of the diagonal of the matrix `invG/n`, which is an estimate of estimator SE.
 #' @export
-smestSE <- function(smofun, theta, utabl, ...){
-  sqrt(diag(smestSEsq(smofun, theta, utabl, ...)))
+cppadSE <- function(smofun, theta, utabl, ...){
+  sqrt(diag(cppadSEsq(smofun, theta, utabl, ...)))
 }
 
-#' @describeIn smestSE Returns the matrix `invG/n`.
-smestSEsq <- function(smofun, theta, utabl,
+#' @describeIn cppadSE Returns the matrix `invG/n`.
+cppadSEsq <- function(smofun, theta, utabl,
                       Jsmofun_u = NULL, Hsmofun_u = NULL,
                       uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
   sens <- -smobjhess(smofun, theta, utabl,

@@ -68,7 +68,7 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
                     fixedtheta = rep(FALSE, length(thetaFB)), verbose = FALSE)
   smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(thetaFB)),
                       lltape, pman, "ones", 1, verbose = FALSE)
-  est <- smest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
+  est <- cppadest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
                control = list(tol = 1E-10))
 
   cdabyppi:::expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
@@ -108,7 +108,7 @@ test_that("rfb() simulation for general symmetric matrices via Bingham() fitting
                     fixedtheta = rep(FALSE, length(thetaFB)), verbose = FALSE)
   smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(thetaFB)),
                       lltape, pman, "ones", 1, verbose = FALSE)
-  est <- smest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
+  est <- cppadest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
                control = list(tol = 1E-10))
   cdabyppi:::expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
   # yay! it works, but oh man the estimates SEs are huge
@@ -134,7 +134,7 @@ test_that("rfb() simulation for general symmetric matrices fitting", {
                     fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
   smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(theta)),
                       lltape, pman, "ones", 1, verbose = FALSE)
-  est <- smest(smotape, seq.int(1, length.out = length(theta)), sample,
+  est <- cppadest(smotape, seq.int(1, length.out = length(theta)), sample,
                control = list(tol = 1E-10))
   cdabyppi:::expect_lt_v(abs(est$par - theta), 3 * est$SE)
   # whooo it is working! But sample huge and SEs are still huge - it is almost like the model is misspecified
