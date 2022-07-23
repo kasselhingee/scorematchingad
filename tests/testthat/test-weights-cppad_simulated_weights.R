@@ -22,10 +22,6 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights", {
   smohess_sim <- smobjhess(tapes$smotape, m$theta, vw$newY)
   smohess_direct <- smobjhess(tapes$smotape, m$theta, m$sample, w=vw$w)
   expect_equal(smohess_sim, smohess_direct)
-
-  smoSE_sim <- smestSE(tapes$smotape, m$theta, vw$newY)
-  smoSE_direct <- smestSE(tapes$smotape, m$theta, m$sample, w=vw$w)
-  expect_equal(smoSE_sim, smoSE_direct, tolerance = 1E-3)
 })
 
 test_that("smest() for ppi with minsq match itself and estimatorall1", {
@@ -35,7 +31,9 @@ test_that("smest() for ppi with minsq match itself and estimatorall1", {
 
   out_sim <- smest(smoppi, m$theta * 0 + 1, vw$newY, control = list(tol = 1E-15))
   out_dir <- smest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-15), w = vw$w)
-  expect_equal(out_sim[names(out_sim) != "counts"], out_dir[names(out_sim) != "counts"], tolerance = 1E-3)
+  expect_equal(out_sim[!(names(out_sim) %in% c("counts", "SE"))], 
+     out_dir[!(names(out_sim) %in% c("counts", "SE"))],
+     tolerance = 1E-3)
 
   directestimate <- estimatorall1(m$sample, acut, w = vw$w)
 
