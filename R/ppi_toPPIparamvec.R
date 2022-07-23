@@ -1,5 +1,5 @@
-#' @title To or From vector form of parameters for PPI
-#' @export
+# @title To or From vector form of parameters for PPI
+# @export
 toPPIparamvec <- function(ALs, bL, beta){
   stopifnot(isSymmetric.matrix(ALs))
   theta <- c(fromsmatrix(ALs), bL, beta)
@@ -13,8 +13,8 @@ toPPIcannparam <- function(ALs, bL, beta, manifold = "sphere"){
   return(out)
 }
 
-#' @describeIn toPPIparamvec Reverse of `toPPIparamvec()`.
-#' @export
+# @describeIn toPPIparamvec Reverse of `toPPIparamvec()`.
+# @export
 fromPPIparamvec <- function(theta, p = NULL){
   calcp <- ppiltheta2p(length(theta))
   if(!is.null(p)){stopifnot(p == calcp)}
