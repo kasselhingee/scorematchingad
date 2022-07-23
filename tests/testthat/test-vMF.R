@@ -68,7 +68,7 @@ test_that("vMF() fitting works on dimension 5", {
   cdabyppi:::expect_lt_v(abs(out$k - k), 3 * out$SE$k)
 })
 
-test_that("vMF matches for simulated weights", {
+test_that("vMF matches for simulated weights, ignoring SE, which shouldn't match", {
   set.seed(123)
   p <- 3
   k <- 3
@@ -85,11 +85,11 @@ test_that("vMF matches for simulated weights", {
   sim1 <- vMF(vw$newY, method = "Mardia")
   set.seed(321)
   dir1 <-  vMF(Y, method = "Mardia", w = vw$w)
-  expect_equal(sim1, dir1, tolerance = 1E-3)
+  expect_equal(sim1[c("k", "m")], dir1[c("k", "m")])
 
   sim2 <- vMF(vw$newY, method = "smfull")
   dir2 <-  vMF(Y, method = "smfull", w = vw$w)
-  expect_equal(sim2, dir2, tolerance = 1E-3)
+  expect_equal(sim2[c("k", "m")], dir2[c("k", "m")])
 })
 
 
