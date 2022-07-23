@@ -50,7 +50,7 @@ test_that("vMF() fitting works on dimension 5", {
   m <- m / sqrt(sum(m^2))
   km <-  k * m
   set.seed(12412)
-  sample <- Directional::rvmf(1000, m, k)
+  sample <- movMF::rmovMF(1000, m * k)
   #full method
   out <- vMF(sample, method = "smfull", control = list(tol = 1E-10))
   cdabyppi:::expect_lt_v(abs(out$km - km), 3 * out$SE$km)
