@@ -17,7 +17,7 @@ test_that("windam_raw gives correct params on simulated data, with two outliers.
   inWW <- ppi_cppad_thetaprocessor(m$p, AL = TRUE, bL = FALSE, beta = FALSE) #all dimensions have negative beta.
   ppildenfun <- function(sample, theta){
     ppiparmats <- fromPPIparamvec(theta)
-    logden <- qldppi(sample, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
+    logden <- dppi(sample, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
     return(logden)
   }
   ppiestimator <- function(Y, starttheta, isfixed, w){

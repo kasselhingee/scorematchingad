@@ -37,7 +37,7 @@
 #' segments(0, 1, 1, 0)
 #' segments(1, 0, 0, 0)
 #'
-#' qldppi(samp$samp3, beta0, ALs, bL)
+#' dppi(samp$samp3, beta0, ALs, bL)
 #' @export
 rppi <- function(n,p,beta0,ALs,bL,maxden){
   # a warning if maxden is high
@@ -122,10 +122,10 @@ rppi_block <- function(n,p,beta0,ALs,bL,maxden){
   return(list(accepted = accepted, maxden = maxden))
 }
 
-#' @describeIn rppi Compute the logarithm of the improper density for the PPI model for the given matrix of measurements `prop`.
+#' @describeIn rppi Compute the *logarithm* of the *improper* density for the PPI model for the given matrix of measurements `prop`.
 #' @param `prop` A matrix of measurements.
 #' @export
-qldppi <- function(prop,beta0,ALs,bL){
+dppi <- function(prop,beta0,ALs,bL){
   p <- ncol(prop)
   sp <- p - 1
   if (!("matrix" %in% class(bL))){bL <- as.matrix(bL, ncol = 1)}

@@ -29,7 +29,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
   #preparing ppi specific info
   ppildenfun <- function(sample, theta){
     ppiparmats <- fromPPIparamvec(theta)
-    logden <- qldppi(sample, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
+    logden <- dppi(sample, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
     return(logden)
   }
 
