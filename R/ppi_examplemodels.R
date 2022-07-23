@@ -26,7 +26,8 @@ ppi_egmodel <- function(n, maxden = 4, betaadd = 0){
     theta = toPPIparamvec(mats$AL, mats$bL, mats$beta)
     ),
     mats,
-    list(beta0 = mats$beta))
+    list(beta0 = mats$beta,
+         ALs = mats$AL))
 
 
   return(out)
@@ -49,7 +50,8 @@ ppi_egmodel_p4 <- function(n, maxden = 8){
     theta = toPPIparamvec(mats$AL, mats$bL, mats$beta)
     ),
     mats,
-    list(beta0 = mats$beta))
+    list(beta0 = mats$beta,
+         ALs = mats$AL))
 
 
   return(out)
