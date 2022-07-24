@@ -1,12 +1,10 @@
 
-ppi_cppad <- function(prop, usertheta,
+ppi_cppad <- function(prop, stheta, isfixed,
                       bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10,
                       pow = 1, man, weightname = hsqfun, acut = NULL, control = default_Rcgmin(), hsqfun = NULL){
   # process inputs
   stopifnot("matrix" %in% class(prop))
   p = ncol(prop)
-
-  theta <- usertheta
 
   if (!(man %in% c("simplex", "sphere"))){
     if (weightname != "ones"){warning("Manifold supplied has no boundary. Setting weightname to 'ones'.")}
@@ -17,8 +15,10 @@ ppi_cppad <- function(prop, usertheta,
   }
 
   # prepare tapes
-  tapes <- buildsmotape(man, "ppi",
-                rep(1/p, p), theta,
+  tapes <- buildsmotape_internal(man, "ppi",
+                rep(1/p, p), 
+                starttheta = stheta,
+                isfixed = isfixed,
                 weightname = weightname,
                 acut = acut, verbose = FALSE
                 )
@@ -26,17 +26,14 @@ ppi_cppad <- function(prop, usertheta,
   # split data into boundary and interior
   datasplit <- simplex_boundarysplit(prop, bdrythreshold = bdrythreshold, shiftsize = shiftsize)
 
-  opt <- cppadest(tapes$smotape, rep(0.2, sum(is.na(theta))), datasplit$interior,
+  opt <- cppadest(tapes$smotape, t_si2f(stheta, isfixed), datasplit$interior,
                uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
                approxorder = approxorder,
                control = control)
 
   #process the theta and SE
-  fixedtheta <- !is.na(theta)
-  thetaest <- theta
-  thetaest[!fixedtheta] <- opt$par
-  SE <- fixedtheta * 0
-  SE[!fixedtheta] <- opt$SE
+  thetaest <- t_sfi2u(opt$par, stheta, isfixed)
+  SE <- t_sfi2u(opt$SE, rep(0, length(stheta)), isfixed)
 
   # make output
   list(

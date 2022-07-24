@@ -124,7 +124,9 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
     }
   }
   if (method == "cppad"){
-    out <- ppi_cppad(Y, usertheta, bdrythreshold, shiftsize, approxorder, pow, man, bdryweight, acut, control)
+    stheta <- t_u2s_const(usertheta, 0.2)
+    isfixed <- t_u2i(usertheta)
+    out <- ppi_cppad(Y, stheta = stheta, isfixed = isfixed, bdrythreshold, shiftsize, approxorder, pow, man, bdryweight, acut, control)
     fitfun <- "cppad"
   }
 

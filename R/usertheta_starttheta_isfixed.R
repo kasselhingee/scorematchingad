@@ -29,7 +29,7 @@ t_u2s_const <- function(usertheta, c){
 }
 
 
-#' @describeIn t_u2i Convert `starttheta` and `isfixed` back to a `starttheta` by replacing any non-fixed elements with `NA`.
+#' @describeIn t_u2i Convert `starttheta` and `isfixed` back to a `usertheta` by replacing any non-fixed elements with `NA`.
 t_sf2u <- function(starttheta, isfixed){
   stopifnot(all(isfixed %in% c(TRUE, FALSE)))
   stopifnot(length(starttheta) == length(isfixed))
