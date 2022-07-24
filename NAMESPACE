@@ -2,7 +2,6 @@
 
 export(Bingham)
 export(FB)
-export(cppadSE)
 export(default_FixedPoint)
 export(default_Rcgmin)
 export(dir_moment)
