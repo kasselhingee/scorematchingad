@@ -26,12 +26,11 @@ test_that("windam_raw gives correct params on simulated data, with two outliers.
 
   isfixed <- ppi_cppad_thetaprocessor(m$p, AL=FALSE, bL = FALSE, betaL = FALSE, betap = FALSE)
   est <- windham_raw(prop = m$sample,
-                     cW = 0.1,
+                     cW = 0.1 * inWW,
                      ldenfun = ppildenfun,
                      estimatorfun = ppiestimator,
                      starttheta = m$theta * 0,
                      isfixed = isfixed,
-                     inWW = inWW,
                      originalcorrectionmethod = TRUE)
 
   expect_equal(est$theta, est_simple$estimator1, tolerance = 0.1, ignore_attr = TRUE)

@@ -35,7 +35,6 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
   if(is.null(cW)){return(firstfit)}
 
   ###### Extra stuff for robust fit with Windham weights
-  inWW <- rep(TRUE, ncol(sample))
   ldenfun <- function(sample, theta){ #here theta is km
     k <- sqrt(sum(theta^2))
     m <- theta/k
@@ -68,12 +67,11 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
   if (is.null(estimator)){stop(sprintf("Method '%s' is not valid", method))}
 
   est <- windham_raw(prop = sample,
-                     cW = cW,
+                     cW = rep(cW, ncol(sample)),
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
                      starttheta = firstfit$km,
                      isfixed = isfixed,
-                     inWW = inWW,
                      originalcorrectionmethod = TRUE,
                      fpcontrol = controls$fp)
   est$km <- est$theta

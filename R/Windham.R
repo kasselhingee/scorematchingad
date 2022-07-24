@@ -25,6 +25,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
   ALs_ww <- matrix(0, p-1, p-1)
   ALs_ww[!ind_weightA, !ind_weightA] <- 1
   inWW <- ppi_cppad_thetaprocessor(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
+  cW <- inWW * cW
 
   #preparing ppi specific info
   ppildenfun <- function(sample, theta){
@@ -43,7 +44,6 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
                estimatorfun = ppiestimator,
                starttheta = theta,
                isfixed = isfixed,
-               inWW = inWW,
                originalcorrectionmethod = originalcorrectionmethod)
 
   estmats <- fromPPIparamvec(est$theta)
