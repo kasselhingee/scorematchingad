@@ -64,7 +64,10 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
 
   usertheta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, beta, betaL, betap)
   firstfit <- list()
+  estimator <- NULL
   fitfun <- NA
+
+  controls <- splitcontrol(control)
 
   if (method == "direct"){
     if (man == "Ralr"){
@@ -78,6 +81,10 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
           firstfit$est <- dir_sqrt_minimah(Y, acut = acut, w = w)
           fitfun <- "dir_sqrt_minimah"
+          estimator <- function(Y, starttheta, isfixed, w){
+             out <- dir_sqrt_minimah(Y, acut = acut, w = w)
+             return(t_sfi2u(out, starttheta, isfixed))
+          }
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
           firstfit <- estimator1(Y,acut = acut,incb = 0,
                             beta0 = fromPPIparamvec(usertheta)$beta,
@@ -130,8 +137,34 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
     fitfun <- "cppad"
   }
 
-  return(c(fitfun = fitfun,
+  #### No Robustness, return first fit ####
+  if (is.null(cW)){
+     return(c(fitfun = fitfun,
            firstfit))
+  }
+
+  #### Do Windham Robustness ####
+  if (length(cW == 1)){ #single number default to all of AL, all of bL and not beta 
+     cW <- cW * ppi_cppad_thetaprocessor(p, AL = TRUE, bL = TRUE, beta = FALSE)  
+  }
+  stopifnot(length(cW) == length(usertheta))
+  stopifnot(is.numeric(cW))
+
+  ldenfun <- function(sample, theta){ #here theta is the usual parameters of PPI model from 
+    mats <- fromPPIparamvec(theta, p = ncol(sample))
+    return(drop(dppi(sample, beta0=mats$beta, ALs = mats$AL, bL = mats$bL)))
+  }
+  
+  est <- windham_raw(prop = sample,
+                     cW = cW,
+                     ldenfun = ldenfun,
+                     estimatorfun = estimator,
+                     starttheta = firstfit$theta,
+                     isfixed = isfixed,
+                     originalcorrectionmethod = TRUE,
+                     fpcontrol = controls$fp)
+
+  return(est)
 }
 
 
