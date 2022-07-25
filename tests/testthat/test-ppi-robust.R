@@ -31,6 +31,49 @@ test_that("Robustness runs for direct and cppad methods", {
   m$sample <- rbind(m$sample, outlier1, outlier2)
 
   #Ralr
-  out <- ppi(m$sample, bL = 0, betap = -0.5, acut=0.1, method = "direct", trans = "alr", bdryweight = "ones", cW = 1E-1)
+  out <- ppi(m$sample, bL = 0, betap = -0.5, method = "direct", trans = "alr", cW = 1E-1)
+  expect_gt(out$optim$fpevals, 1)
+
+  #dir minsq
+  out <- ppi(m$sample, AL = 0, bL = 0, method = "direct",
+             trans = "sqrt", acut = 0.1, bdryweight = "minsq", cW = 1E-1)
+  expect_gt(out$optim$fpevals, 1) #errors
+  #dir prodsq
+  out <- ppi(m$sample, AL = 0, bL = 0, method = "direct",
+             trans = "sqrt", acut = 0.1, bdryweight = "prodsq", cW = 1E-1)
+  expect_gt(out$optim$fpevals, 1) #errors
+
+  # estimator1 bL=0
+  out <- ppi(m$sample, bL = 0, beta = m$beta, acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = 1E-2)
+  expect_gt(out$optim$fpevals, 1)
+  # estimator1 bL=0 prodsq
+  out <- ppi(m$sample, bL = 0, beta = m$beta,
+             acut=0.1, method = "direct", trans = "sqrt", bdryweight = "prodsq",
+             cW = 1E-2)
+  expect_gt(out$optim$fpevals, 1)
+
+  # estimator1 bL!=0
+  out <- ppi(m$sample, beta = m$beta, acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = 1E-2)
+  expect_gt(out$optim$fpevals, 1)
+  # estimator1 bL!=0 prodsq
+  out <- ppi(m$sample, beta = m$beta,
+             acut=0.1, method = "direct", trans = "sqrt", bdryweight = "prodsq", cW = 1E-2)
+  expect_gt(out$optim$fpevals, 1)
+  # estimatorall1 betap fixed
+  out <- ppi(m$sample, betap = tail(m$beta, 1),
+             acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq",
+             cW = 1E-2)
+  expect_gt(out$optim$fpevals, 1)
+
+  # estimatorall1 betap fitted
+  out <- ppi(m$sample,
+             acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq",
+             cW = 1E-2)
+  expect_gt(out$optim$fpevals, 1)
+
+  # cppad
+  out <- ppi(m$sample,
+             acut=0.1, method = "cppad", trans = "sqrt", bdryweight = "minsq",
+             cW = 1E-2)
   expect_gt(out$optim$fpevals, 1)
 })

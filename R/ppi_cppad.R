@@ -1,7 +1,8 @@
 
 ppi_cppad <- function(prop, stheta, isfixed,
                       bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10,
-                      pow = 1, man, weightname = hsqfun, acut = NULL, control = default_Rcgmin(), hsqfun = NULL){
+                      pow = 1, man, weightname = hsqfun, acut = NULL, control = default_Rcgmin(), hsqfun = NULL,
+                      w = NULL){
   # process inputs
   stopifnot("matrix" %in% class(prop))
   p = ncol(prop)
@@ -16,7 +17,7 @@ ppi_cppad <- function(prop, stheta, isfixed,
 
   # prepare tapes
   tapes <- buildsmotape_internal(man, "ppi",
-                rep(1/p, p), 
+                rep(1/p, p),
                 starttheta = stheta,
                 isfixed = isfixed,
                 weightname = weightname,
@@ -29,7 +30,8 @@ ppi_cppad <- function(prop, stheta, isfixed,
   opt <- cppadest(tapes$smotape, t_si2f(stheta, isfixed), datasplit$interior,
                uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
                approxorder = approxorder,
-               control = control)
+               control = control,
+               w = w)
 
   #process the theta and SE
   thetaest <- t_sfi2u(opt$par, stheta, isfixed)
@@ -37,6 +39,7 @@ ppi_cppad <- function(prop, stheta, isfixed,
 
   # make output
   list(
+    theta = thetaest,
     prop = prop,
     est = c(list(theta = thetaest),
             fromPPIparamvec(thetaest, p)),

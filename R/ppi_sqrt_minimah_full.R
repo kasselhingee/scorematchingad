@@ -53,7 +53,14 @@ estimatorall1 <- function(prop, acut, betap = NULL, w = rep(1, nrow(prop))){
   # from estimates of 1 + 2beta, to estimates of beta
   quartic_sphere[sum(tot,1):num1]=(quartic_sphere[sum(tot,1):num1]-1)/2
 
-  return(list(estimator1=quartic_sphere,W_est=Wnd$W))
+  # prepare full PPI parameter vector
+  if (is.null(betap)){
+    theta <- quartic_sphere
+  } else {
+    theta <- c(quartic_sphere, betap)
+  }
+
+  return(list(estimator1=quartic_sphere,W_est=Wnd$W, theta = theta))
 }
 
 estimatorall1_smo <- function(pi, prop,acut,betap = NULL, w = rep(1, nrow(prop))){

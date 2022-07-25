@@ -73,10 +73,10 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
   if (method == "direct"){
     if (man == "Ralr"){
       if (usertheta_estimatorlog_weight_compatible(usertheta)){
-        firstfit <- estimatorlog_weight(Y, betap = usertheta[length(usertheta)], weightW = w) #any theta is fine
+        firstfit <- estimatorlog_weight(Y, betap = tail(usertheta, 1), weightW = w) #any theta is fine
         fitfun <- "estimatorlog_weight"
         estimator <- function(Y, starttheta, isfixed, w){
-           out <- estimatorlog_weight(Y, betap = starttheta[length(starttheta)], weightW = w)
+           out <- estimatorlog_weight(Y, betap = tail(starttheta, 1), weightW = w)
            return(out$theta)
         }
       }
@@ -96,38 +96,75 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
                             beta0 = fromPPIparamvec(usertheta)$beta,
                             w= w)
           fitfun <- "estimator1_zerob"
+          estimator <- function(Y, starttheta, isfixed, w){
+             out <- estimator1(Y, acut = acut, incb = 0, beta0 = fromPPIparamvec(starttheta)$beta, w = w)
+             return(out$theta)
+          }
         } else if (ppi_usertheta_estimator1_compatible_incb(usertheta)){
           firstfit <- estimator1(Y,acut = acut,incb = 1,
                             beta0 = fromPPIparamvec(usertheta)$beta,
                             w= w)
           fitfun <- "estimator1_incb"
+          estimator <- function(Y, starttheta, isfixed, w){
+             out <- estimator1(Y, acut = acut, incb = 1, beta0 = fromPPIparamvec(starttheta)$beta, w = w)
+             return(out$theta)
+          }
         } else if (utheta_estimatorall1_betap_compatible(usertheta)){
           firstfit <- estimatorall1(Y, acut = acut,
                             betap = tail(fromPPIparamvec(usertheta)$beta, 1),
                             w= w)
           fitfun <- "estimatorall1_betap"
+          estimator <- function(Y, starttheta, isfixed, w){
+             out <- estimatorall1(Y, acut = acut,
+                                  betap = tail(fromPPIparamvec(starttheta)$beta, 1),
+                                  w = w)
+             return(out$theta)
+          }
         } else if (utheta_estimatorall1_full_compatible(usertheta)){
           firstfit <- estimatorall1(Y, acut = acut,
                                betap = NULL,
                                w= w)
           fitfun <- "estimatorall1_full"
+          estimator <- function(Y, starttheta, isfixed, w){
+             out <- estimatorall1(Y, acut = acut,
+                                  betap = NULL,
+                                  w = w)
+             return(out$theta)
+          }
         }
       }
 
       if (bdryweight == "prodsq"){
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
-          firstfit$est <- dir_sqrt_prodh(Y, acut = acut, w = w)
+          betaest <- dir_sqrt_prodh(Y, acut = acut, w = w)
           fitfun <- "dir_sqrt_prodh"
+          firstfit$theta <- t_fu2t(betaest, usertheta)
+          estimator <- function(Y, starttheta, isfixed, w){
+             out <- as.vector(dir_sqrt_prodh(Y, acut = acut, w = w))
+             return(t_sfi2u(out, starttheta, isfixed))
+          }
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
           firstfit <- estimator2(Y,acut = acut,incb = 0,
                             beta0 = fromPPIparamvec(usertheta)$beta,
                             w= w)
           fitfun <- "estimator2_zerob"
+          estimator <- function(Y, starttheta, isfixed, w){
+             out <- estimator2(Y, acut = acut, incb = 0,
+                               beta0 = fromPPIparamvec(starttheta)$beta,
+                               w = w)
+             return(out$theta)
+          }
         } else if (ppi_usertheta_estimator1_compatible_incb(usertheta)){
           firstfit <- estimator2(Y,acut = acut,incb = 1,
                             beta0 = fromPPIparamvec(usertheta)$beta,
                             w= w)
           fitfun <- "estimator2_incb"
+          estimator <- function(Y, starttheta, isfixed, w){
+             out <- estimator2(Y, acut = acut, incb = 1,
+                               beta0 = fromPPIparamvec(starttheta)$beta,
+                               w = w)
+             return(out$theta)
+          }
         }
       }
     }
@@ -139,8 +176,30 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
   if (method == "cppad"){
     stheta <- t_u2s_const(usertheta, 0.2)
     isfixed <- t_u2i(usertheta)
-    firstfit <- ppi_cppad(Y, stheta = stheta, isfixed = isfixed, bdrythreshold, shiftsize, approxorder, pow, man, bdryweight, acut, control = controls$Rcgmin)
+    firstfit <- ppi_cppad(Y, stheta = stheta, isfixed = isfixed,
+               bdrythreshold = bdrythreshold,
+               shiftsize = shiftsize,
+               approxorder = approxorder,
+               pow = pow,
+               man = man,
+               weightname = bdryweight,
+               acut = acut,
+               control = controls$Rcgmin,
+               w = w)
     fitfun <- "cppad"
+    estimator <- function(Y, starttheta, isfixed, w){
+      out <- ppi_cppad(Y, stheta = stheta, isfixed = isfixed,
+               bdrythreshold = bdrythreshold,
+               shiftsize = shiftsize,
+               approxorder = approxorder,
+               pow = pow,
+               man = man,
+               weightname = bdryweight,
+               acut = acut,
+               control = controls$Rcgmin,
+               w = w)
+      return(out$theta)
+    }
   }
 
   #### No Robustness, return first fit ####
@@ -170,7 +229,7 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
                      originalcorrectionmethod = FALSE, #for variable cW
                      fpcontrol = controls$fp)
 
-  return(est)
+  return(c(est, fitfun = fitfun))
 }
 
 

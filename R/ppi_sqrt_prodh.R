@@ -100,5 +100,11 @@ estimator2 <- function(prop,acut,incb, beta0, w = rep(1, nrow(prop)))
 	#scoring estimator
 	quartic_sphere=solve(W[1:num1,1:num1])%*%t(t(d[1:num1]))
 
-	return(list(estimator2=quartic_sphere,W_est=W_est))
+        #convert to PPI param vec
+        if (incb==1){
+          theta <- c(quartic_sphere, beta0) 
+        } else {
+          theta <- c(quartic_sphere, rep(0, p-1), beta0) 
+        }
+	return(list(estimator2=quartic_sphere,W_est=W_est, theta = theta))
 }
