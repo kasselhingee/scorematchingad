@@ -42,6 +42,7 @@
 #' @param shiftsize Measurements close to the boundary are shifted by this distance for Taylor approximation.
 #' @param approxorder Order of the Taylor approximation
 #' @param method `direct` for estimates calculated directly where possible (*list them*) or `cppad` to find the score matching estimates using automatic differentiation and the `Rcgmin()` iterative solver.
+#' @param cW Specifies the tuning mutliplier `c` for computing Windham Weights. A single number will set `c` for the elements of AL to the supplied number and all other elements of the parameter vector will receive a tuning exponent of `0`. `cW` can also be a vector of length equal to the parameter vector, which species each individually. TO DO: users won't know the format of the parameter vector - specify like the parameters proper?
 #' @examples
 #' model <- ppi_egmodel(1000)
 #' estinfo <- ppi(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
@@ -64,17 +65,21 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
 
   usertheta <- ppi_cppad_thetaprocessor(p, AL, bL, Astar, beta, betaL, betap)
   firstfit <- list()
-  estimator <- NULL
+  estimator <- function(...){stop("Estimator function needs to be defined")}
   fitfun <- NA
 
   controls <- splitcontrol(control)
 
   if (method == "direct"){
     if (man == "Ralr"){
-        if (usertheta_estimatorlog_weight_compatible(usertheta)){
+      if (usertheta_estimatorlog_weight_compatible(usertheta)){
         firstfit <- estimatorlog_weight(Y, betap = usertheta[length(usertheta)], weightW = w) #any theta is fine
         fitfun <- "estimatorlog_weight"
+        estimator <- function(Y, starttheta, isfixed, w){
+           out <- as.vector(estimatorlog_weight(Y, betap = starttheta[length(starttheta)], acut = acut, w = w))
+           return(t_sfi2u(out, starttheta, isfixed))
         }
+      }
     }
     if (man == "sphere"){ # a number of methods implemented
       if (bdryweight == "minsq"){
@@ -155,7 +160,7 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
     mats <- fromPPIparamvec(theta, p = ncol(Y))
     return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
   }
- 
+  
   est <- windham_raw(prop = Y,
                      cW = cW,
                      ldenfun = ldenfun,

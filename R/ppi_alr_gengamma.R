@@ -141,7 +141,7 @@ estimatorlog_weight <- function(prop,betap,weightW)
               rep(0,sp), #bL
               ppi[p-1 + (p-2)*(p-1)/2 + seq(1, sp)], #betaL
               betap)
-	return(list(ppi=ppiAll,W=W,d=d))
+	return(list(theta = ppiAll, ppi=ppiAll,W=W,d=d))
 
 
 }

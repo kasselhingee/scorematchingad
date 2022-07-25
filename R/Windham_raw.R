@@ -25,6 +25,7 @@ WindhamCorrection <- function(cW){
 #' @details
 #' The elements of theta will be multiplied by cW for calculating the weights
 WindhamWeights <- function(ldenfun, Y, theta, cW){
+  if (is.null(ldenfun)){stop("ldenfun is NULL")}
   stopifnot(length(cW) == length(theta))
   stopifnot(is.numeric(cW))
   thetaforweights <- cW * theta #the elements of theta with FALSE inWW will be set to zero
@@ -61,6 +62,7 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, or
     ...)
 
 {
+  if (is.null(estimatorfun)){stop("estimatorfun is NULL")}
   if(!all(names(formals(estimatorfun)[1:4]) == c("Y",  "starttheta", "isfixed", "w"))){
     stop("First four arguments of estimatorfun must be called: Y, starttheta, isfixed, and w.")
   }
