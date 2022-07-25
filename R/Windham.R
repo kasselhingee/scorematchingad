@@ -28,9 +28,9 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
   cW <- inWW * cW
 
   #preparing ppi specific info
-  ppildenfun <- function(sample, theta){
+  ppildenfun <- function(Y, theta){
     ppiparmats <- fromPPIparamvec(theta)
-    logden <- dppi(sample, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
+    logden <- dppi(Y, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
     return(logden)
   }
 

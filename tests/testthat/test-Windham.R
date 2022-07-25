@@ -58,7 +58,8 @@ test_that("windam_raw gives correct params on simulated data, with two outliers.
   expect_gt(mean(abs(est$theta - est_varcW$theta)), 10)
 })
 
-test_that("windam_diff with gives correct params on simulated, no outlier, data. p=3", {
+test_that("robust ppi() with Ralr transform gives correct params on simulated, no outlier, data. p=3", {
+
   set.seed(1273)
   p = 3
   ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
@@ -68,15 +69,20 @@ test_that("windam_diff with gives correct params on simulated, no outlier, data.
   prop <- rppi(1000, p, beta, ALs, bL, 4)$samp3
 
   #check non-robust estimates
-  est_unload <- estimatorlog_weight(prop, betap = beta[p], weightW = rep(1, nrow(prop)))
+  est_unload <- cdabyppi:::estimatorlog_weight(prop, betap = beta[p], weightW = rep(1, nrow(prop)))
   # fromPPIparamvec(est_unload$ppi, p)$ALs #fairly terrible at the AL
   # fromPPIparamvec(est_unload$ppi, p)$beta #pretty good at beta
 
   #calculate robust estimates
-  cW=0.1
-  est1=windham_diff(prop,cW,ALs,bL,beta, ind_weightA = c(0,0), originalcorrectionmethod = TRUE)
-  expect_equal(est1$est$ALs, ALs, tolerance = 1)
-  expect_equal(est1$est$beta, beta, tolerance = 1E-1)
+  cW=0.001
+  est1 = ppi(prop, bL = 0, betap = 0, 
+             method = "direct", trans = "alr",
+             cW = cW)
+  expect_equal(cdabyppi:::fromPPIparamvec(est1$theta)$ALs, ALs, tolerance = 1)
+  expect_equal(cdabyppi:::fromPPIparamvec(est1$theta)$beta, beta, tolerance = 1E-1)
+  rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
+  rmse(cdabyppi:::toPPIparamvec(ALs, bL, beta), est1$theta)
+  rmse(cdabyppi:::toPPIparamvec(ALs, bL, beta), est_unload$theta)
 
   est2=windham_diff(prop,cW,ALs,bL,beta, ind_weightA = c(0,0), originalcorrectionmethod = FALSE)
   expect_equal(est2$est$ALs, ALs, tolerance = 1)
