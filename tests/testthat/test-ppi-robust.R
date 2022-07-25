@@ -23,7 +23,7 @@ test_that("ppi Dirichlet with cW gives correct params on simulated data, with tw
 
 test_that("Robustness runs for direct and cppad methods", {
   set.seed(1273)
-  m <- ppi_egmodel(20, maxden = 4)
+  m <- ppi_egmodel(50, maxden = 4)  # at 20 got singularities
   outlier1 <- c(0.9, 0.9, 0.01)
   outlier1 <- outlier1/sum(outlier1)
   outlier2 <- c(0.9, 0.1, 0.01)
@@ -32,4 +32,5 @@ test_that("Robustness runs for direct and cppad methods", {
 
   #Ralr
   out <- ppi(m$sample, bL = 0, betap = -0.5, acut=0.1, method = "direct", trans = "alr", bdryweight = "ones", cW = 1E-1)
+  expect_gt(out$optim$fpevals, 1)
 })

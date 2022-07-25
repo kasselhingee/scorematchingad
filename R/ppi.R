@@ -76,8 +76,8 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
         firstfit <- estimatorlog_weight(Y, betap = usertheta[length(usertheta)], weightW = w) #any theta is fine
         fitfun <- "estimatorlog_weight"
         estimator <- function(Y, starttheta, isfixed, w){
-           out <- as.vector(estimatorlog_weight(Y, betap = starttheta[length(starttheta)], acut = acut, w = w))
-           return(t_sfi2u(out, starttheta, isfixed))
+           out <- estimatorlog_weight(Y, betap = starttheta[length(starttheta)], weightW = w)
+           return(out$theta)
         }
       }
     }
@@ -150,17 +150,17 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
   }
 
   #### Do Windham Robustness ####
-  if (length(cW == 1)){ #single number default to all of AL, all of bL and not beta 
-     cW <- cW * ppi_cppad_thetaprocessor(p, AL = TRUE, bL = TRUE, beta = FALSE)  
+  if (length(cW == 1)){ #single number default to all of AL, all of bL and not beta
+     cW <- cW * ppi_cppad_thetaprocessor(p, AL = TRUE, bL = TRUE, beta = FALSE)
   }
   stopifnot(length(cW) == length(usertheta))
   stopifnot(is.numeric(cW))
 
-  ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from 
+  ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
     mats <- fromPPIparamvec(theta, p = ncol(Y))
     return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
   }
-  
+
   est <- windham_raw(prop = Y,
                      cW = cW,
                      ldenfun = ldenfun,
