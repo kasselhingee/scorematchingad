@@ -8,16 +8,16 @@ test_that("ppi Dirichlet with cW gives correct params on simulated data, with tw
   m$sample <- rbind(m$sample, outlier1, outlier2)
 
   #non-robust estimates
-  est_norobust <- ppi(m$sample, AL = 0, bL = 0, acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq")
-  est_norobust2 <- ppi(m$sample, AL = 0, bL = 0, acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = 0)
+  est_norobust <- ppi(m$sample, betap = tail(m$beta, 1), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq")
+  est_norobust2 <- ppi(m$sample, betap = tail(m$beta, 1), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = 0)
 
   expect_equal(est_norobust2$theta, est_norobust$theta)
 
   #robust
-  est_robust1 <- ppi(m$sample, AL = 0, bL = 0, acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = 1E-1)
+  est_robust1 <- ppi(m$sample, betap = tail(m$beta, 1), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = 1E-1)
 
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
-  expect_lt(rmse(m$theta, est_norobust$theta),
+  expect_gt(rmse(m$theta, est_norobust$theta),
             rmse(m$theta, est_robust1$theta))
 })
 
