@@ -17,19 +17,19 @@ WindhamCorrection <- function(cW){
 #' @title Windham weights for a given parameter vector
 #' @description Generates the weights for each measurement.
 #' @param cW A robustness tuning constant. One value per element of theta
-#' @param ldenfun A (possibly improper) density function taking two arguments, `sample` and `theta`.
+#' @param ldenfun A (possibly improper) log density function taking two arguments, `Y` and `theta`.
 #' @param theta Parameters for the model
 #' TRUE if the parameter is used in the Windham weights.
 #' FALSE if the parameter is set to zero in the Windham weights.
 #' @param sample A matrix of measurements. Each row a measurement.
 #' @details
 #' The elements of theta will be multiplied by cW for calculating the weights
-WindhamWeights <- function(ldenfun, sample, theta, cW){
+WindhamWeights <- function(ldenfun, Y, theta, cW){
   stopifnot(length(cW) == length(theta))
   stopifnot(is.numeric(cW))
   thetaforweights <- cW * theta #the elements of theta with FALSE inWW will be set to zero
-  weights <- exp(ldenfun(sample, thetaforweights))
-  weights=nrow(sample)*(weights/sum(weights))
+  weights <- exp(ldenfun(Y = Y, theta = thetaforweights))
+  weights=nrow(Y)*(weights/sum(weights))
   return(weights)
 }
 
@@ -113,7 +113,7 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, or
 #new theta using Kassel's correction
 Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, isfixed, taucinv, ...){
    # create the vector of weights
-   weight_vec <- WindhamWeights(ldenfun = ldenfun, sample = prop,
+   weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = prop,
                  theta = theta, cW)
 
    #calculate estimate:
@@ -132,9 +132,11 @@ Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, isfixed
 #new theta using original correction
 Windham_raw_newtheta_original <- function(prop, cW, ldenfun, estimatorfun, theta, isfixed, ...){
    # create the vector of weights
-   weight_vec <- WindhamWeights(ldenfun = ldenfun, sample = prop,
+   weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = prop,
                  theta = theta, cW = cW)
-   stopifnot(var(cW[cW > 1E-10]) < (1E-10)^2) #this check because I'm not sure what the original correction method is in the presence of a different tuning constants per value
+   if (var(cW[cW > 1E-10]) > (1E-10)^2){ #this check because I'm not sure what the original correction method is in the presence of a different tuning constants per value
+     stop("Non-zero cW values vary, which is not supported by 'Original' Windham correction")
+   }
    inWW <- (cW > 1E-10)
    cW <- mean(cW[cW > 1E-10])
 

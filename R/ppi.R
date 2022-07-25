@@ -79,10 +79,11 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
     if (man == "sphere"){ # a number of methods implemented
       if (bdryweight == "minsq"){
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
-          firstfit$est <- dir_sqrt_minimah(Y, acut = acut, w = w)
+          betaest <- as.vector(dir_sqrt_minimah(Y, acut = acut, w = w))
+          firstfit$theta <- t_fu2t(betaest, usertheta)
           fitfun <- "dir_sqrt_minimah"
           estimator <- function(Y, starttheta, isfixed, w){
-             out <- dir_sqrt_minimah(Y, acut = acut, w = w)
+             out <- as.vector(dir_sqrt_minimah(Y, acut = acut, w = w))
              return(t_sfi2u(out, starttheta, isfixed))
           }
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
@@ -133,7 +134,7 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
   if (method == "cppad"){
     stheta <- t_u2s_const(usertheta, 0.2)
     isfixed <- t_u2i(usertheta)
-    firstfit <- ppi_cppad(Y, stheta = stheta, isfixed = isfixed, bdrythreshold, shiftsize, approxorder, pow, man, bdryweight, acut, control)
+    firstfit <- ppi_cppad(Y, stheta = stheta, isfixed = isfixed, bdrythreshold, shiftsize, approxorder, pow, man, bdryweight, acut, control = controls$Rcgmin)
     fitfun <- "cppad"
   }
 
@@ -150,18 +151,18 @@ ppi <- function(Y, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL
   stopifnot(length(cW) == length(usertheta))
   stopifnot(is.numeric(cW))
 
-  ldenfun <- function(sample, theta){ #here theta is the usual parameters of PPI model from 
-    mats <- fromPPIparamvec(theta, p = ncol(sample))
-    return(drop(dppi(sample, beta0=mats$beta, ALs = mats$AL, bL = mats$bL)))
+  ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from 
+    mats <- fromPPIparamvec(theta, p = ncol(Y))
+    return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
   }
-  
-  est <- windham_raw(prop = sample,
+ 
+  est <- windham_raw(prop = Y,
                      cW = cW,
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
                      starttheta = firstfit$theta,
-                     isfixed = isfixed,
-                     originalcorrectionmethod = TRUE,
+                     isfixed = t_u2i(usertheta),
+                     originalcorrectionmethod = FALSE, #for variable cW
                      fpcontrol = controls$fp)
 
   return(est)
