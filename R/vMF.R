@@ -35,10 +35,10 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
   if(is.null(cW)){return(firstfit)}
 
   ###### Extra stuff for robust fit with Windham weights
-  ldenfun <- function(sample, theta){ #here theta is km
+  ldenfun <- function(Y, theta){ #here theta is km
     k <- sqrt(sum(theta^2))
     m <- theta/k
-    return(drop(Directional::dvmf(sample, k, m, logden = TRUE)))
+    return(drop(Directional::dvmf(Y, k, m, logden = TRUE)))
   }
 
   if (method == "smfull"){
