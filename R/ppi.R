@@ -42,7 +42,7 @@
 #' @param shiftsize Measurements close to the boundary are shifted by this distance for Taylor approximation.
 #' @param approxorder Order of the Taylor approximation
 #' @param method `direct` for estimates calculated directly where possible (*list them*) or `cppad` to find the score matching estimates using automatic differentiation and the `Rcgmin()` iterative solver.
-#' @param cW Specifies the tuning mutliplier `c` for computing Windham Weights. A single number will set `c` for the elements of AL to the supplied number and all other elements of the parameter vector will receive a tuning exponent of `0`. `cW` can also be a vector of length equal to the parameter vector, which species each individually. TO DO: users won't know the format of the parameter vector - specify like the parameters proper?
+#' @param cW Specifies the tuning mutliplier `c` for computing Windham Weights. NULL for no robustness. Otherwise, easiest way specify `cW` is via [ppi_cW()] or [ppi_cW_auto()]. Use [ppi_paramvec()] greater customisation (at your own risk).
 #' @examples
 #' model <- ppi_egmodel(1000)
 #' estinfo <- ppi(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
