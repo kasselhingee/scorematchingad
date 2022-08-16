@@ -38,7 +38,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   estimate1all=estimator$estimator1
 
   # Get SE from CppAD methods
-  intheta <- cdabyppi:::ppi_paramvec(p)
+  intheta <- ppi_paramvec(p)
   tapes <- buildsmotape("sphere", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",

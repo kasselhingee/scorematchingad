@@ -196,7 +196,7 @@ test_that("ppi() operates when minimal points in the interior", {
   acut = 0.1
   direct <- estimator1(newsample, acut = acut, incb = 1, beta0 = m$beta0)
 
-  est <- ppi(newsample, ppi_paramvec(betaL = m$beta0[1:2]), betap = m$beta0[3], trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est <- ppi(newsample, ppi_paramvec(betaL = m$beta0[1:2], betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                             control = list(tol = 1E-10))
   expect_absdiff_lte_v(est$est$theta, c(direct$estimator1, m$beta0), 1E-1 * abs(c(direct$estimator1, m$beta0)))
 })
