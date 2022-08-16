@@ -3,7 +3,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 3",
   set.seed(1234)
   m <- ppi_egmodel(10000, maxden = 4)
 
-  est_cppad <- ppi(m$sample, bL = rep(0, 3-1), betap = m$beta0[3], trans = "alr", method = "cppad", bdryweight = "ones",
+  est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", bdryweight = "ones",
                          control = list(tol = 1E-10))
 
   est_direct <- estimatorlog_weight(m$sample, betap = m$beta0[3], weightW = rep(1, nrow(m$sample)))
@@ -21,7 +21,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
   set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
   prop <- rppi(1000, p, beta, ALs, bL, 5)$samp3 #rppi_singly took 1005 seconds, rppi() took 13seconds
 
-  est_cppad <- ppi(prop, bL = bL, betap = beta[p], trans = "alr", method = "cppad", bdryweight = "ones",
+  est_cppad <- ppi(prop, ppi_paramvec(bL = bL, betap = beta[p]), trans = "alr", method = "cppad", bdryweight = "ones",
                          bdrythreshold = 1E-20,
                          control = list(tol = 1E-10))
   expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)

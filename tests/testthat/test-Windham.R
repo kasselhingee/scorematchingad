@@ -75,7 +75,7 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
 
   #calculate robust estimates
   cW=0.001
-  est1 = ppi(prop, bL = 0, betap = 0, 
+  est1 = ppi(prop, ppi_paramvec(p=3, bL = 0, betap = 0), 
              method = "direct", trans = "alr",
              cW = cW)
   expect_equal(cdabyppi:::fromPPIparamvec(est1$theta)$ALs, ALs, tolerance = 1)

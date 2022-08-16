@@ -133,7 +133,7 @@ test_that("Test ppi() against direct when there are boundary points", {
   acut = 0.1
   direct <- estimatorall1(newsample, acut = acut, betap = m$beta0[3])
 
-  est <- ppi(newsample, betap = m$beta0[3], trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est <- ppi(newsample, ppi_paramvec(p = 3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
   cdabyppi:::expect_lte_v(abs(est$est$theta - c(direct$estimator1, m$beta0[3])),
                           0.1*abs(c(direct$estimator1, 0)))
@@ -155,7 +155,7 @@ test_that("Taylor approx of cppadSE gives suitable SE for estimates", {
   mean(apply(newsample, 1, min) == 0) #28% have a zero
 
   acut = 0.1
-  est <- ppi(newsample, betap = m$beta0[3], trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est <- ppi(newsample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
   cdabyppi:::expect_absdiff_lte_v(est$est$theta, m$theta, 3 * est$SE$theta)
   # note that the SE is a bit hard to test on here because the data has been truncated
@@ -168,10 +168,10 @@ test_that("Taylor approx of ppi() SE matches on the interior", {
   acut = 0.1
   direct <- estimatorall1(m$sample, acut = acut, betap = m$beta0[3])
 
-  est_default <- ppi(m$sample, betap = m$beta0[3], trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est_default <- ppi(m$sample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
 
-  est_interior <- ppi(m$sample, betap = m$beta0[3], trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est_interior <- ppi(m$sample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                             bdrythreshold = -1,
                             control = list(tol = 1E-10))
 
@@ -196,7 +196,7 @@ test_that("ppi() operates when minimal points in the interior", {
   acut = 0.1
   direct <- estimator1(newsample, acut = acut, incb = 1, beta0 = m$beta0)
 
-  est <- ppi(newsample, betaL = m$beta0[1:2], betap = m$beta0[3], trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est <- ppi(newsample, ppi_paramvec(betaL = m$beta0[1:2]), betap = m$beta0[3], trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                             control = list(tol = 1E-10))
   expect_absdiff_lte_v(est$est$theta, c(direct$estimator1, m$beta0), 1E-1 * abs(c(direct$estimator1, m$beta0)))
 })

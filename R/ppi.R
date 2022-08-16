@@ -22,8 +22,8 @@
 #' @param cW Specifies the tuning mutliplier `c` for computing Windham Weights. NULL for no robustness. Otherwise, easiest way specify `cW` is via [ppi_cW()] or [ppi_cW_auto()]. Use [ppi_paramvec()] greater customisation (at your own risk).
 #' @examples
 #' model <- ppi_egmodel(1000)
-#' estinfo <- ppi(model$sample, betap = -0.5, man = "Ralr", weightname = "ones")
-#' misspecified <- ppi(model$sample, AL = "diag", bL = 0, betap = -0.5, man = "Ralr", weightname = "ones")
+#' estinfo <- ppi(model$sample, paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)), trans = "alr", method = "cppad")
+#' misspecified <- ppi(model$sample, paramvec = ppi_paramvec(bL = 0, betap = -0.5, p = ncol(model$sample)), trans = "alr", method = "direct")
 #' @export
 ppi <- function(Y, paramvec = NULL,
                 pow = 1, trans, method = "direct", w = rep(1, nrow(Y)), cW = NULL,
@@ -41,6 +41,7 @@ ppi <- function(Y, paramvec = NULL,
            none = "simplex")
 
   if (is.null(paramvec)){usertheta <- rep(NA, ppithetalength(p))}
+  else {usertheta <- paramvec}
 
   stopifnot(length(usertheta) == ppithetalength(p))
 

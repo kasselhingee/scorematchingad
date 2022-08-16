@@ -90,7 +90,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
   model <- ppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
-  out <- ppi(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
+  out <- ppi(model$sample, paramvec = ppi_paramvec(betaL = model$beta0[1:2], betap = model$beta0[3]),
             method = "cppad",
                    bdrythreshold = 1E-10,
             trans = "sqrt", bdryweight = "minsq", acut = acut)
@@ -115,7 +115,7 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmo
   model <- ppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
-  out <- ppi(model$sample, betaL = model$beta0[1:2], betap = model$beta0[3],
+  out <- ppi(model$sample, ppi_paramvec(betaL = model$beta0[1:2], betap = model$beta0[3]),
              method = "cppad",
                    trans = "sqrt", bdryweight = "prodsq", acut = acut)
 
@@ -270,7 +270,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   acut = 0.1
   est_direct <- estimator1(prop, acut, incb = 0, beta0 = beta)
 
-  est_cppad <- ppi(prop, bL = bL, beta = beta,
+  est_cppad <- ppi(prop, ppi_paramvec(bL = bL, beta = beta),
                    method = "cppad",
                          trans = "sqrt", acut = acut, bdryweight = "minsq",
                          control = list(tol = 1E-13))

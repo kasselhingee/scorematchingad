@@ -1,5 +1,5 @@
 #' @title User friendly preparation of parameter vector for PPI model
-#' @description The PPI model is parametrised using a symmetric covariance-like matrix \eqn{A_L}, a location-like vector \eqn{b_L} and a set of Dirichlet exponents \eqn{\beta}. For `p` components, \eqn{A_L} has `p-1` rows, \eqn{b_L} is a vector with `p-1` elements and \eqn{\beta} is a vector with `p` elements. 
+#' @description The PPI model is parametrised using a symmetric covariance-like matrix \eqn{A_L}, a location-like vector \eqn{b_L} and a set of Dirichlet exponents \eqn{\beta}. For `p` components, \eqn{A_L} has `p-1` rows, \eqn{b_L} is a vector with `p-1` elements and \eqn{\beta} is a vector with `p` elements.
 #' These are converted to a single vector using `ppi_paramvec` that can then be used for fitting with [ppi()], where NA-valued elements are fitted and all other elements are fixed.
 #' @return
 #' A vector starting with the diagonal elements of \eqn{A_L}, then the off-diagonal elements (extracted by [upper.tri()] - along each row, left to right, then top to bottom), then \eqn{b_L}, then \eqn{\beta}.
@@ -14,10 +14,10 @@
 #' If non-null, then overrides AL and bL.
 #' If a matrix, all elements must be non-NA and Astar will be converted to `AL` and `bL`.
 #' (This is because transforming to AL and bL from an incomplete Astar appears impossible).
-#' @param beta NULL, a number, or a vector of length p. 
+#' @param beta NULL, a number, or a vector of length p.
 #' If NULL then all elements of `beta` will be set to NA, and [ppi()] will estimate them.
 #' If a number then the beta elements will be fixed at the given number.
-#' @param betaL NULL, a number, or a vector of length (p-1). 
+#' @param betaL NULL, a number, or a vector of length (p-1).
 #' If NULL then the 1...(p-1) beta elements will be set to NA, and [ppi()] will estimate them.
 #' If a number then the 1...(p-1) beta elements fixed at the given number.
 #' @param betap NULL or a number.
@@ -33,7 +33,7 @@ ppi_paramvec <- function(p = NULL, AL = NULL, bL = NULL, Astar = NULL, beta = NU
     if (!is.null(Astar)){p <- nrow(Astar)}
     else if (isTRUE(is.matrix(AL))){p <- nrow(as.matrix(AL)) + 1}
     else if (isTRUE((is.matrix(bL) || is.vector(bL)) && (length(bL) > 1))){p <- length(as.vector(bL)) + 1}
-    else if (isTRUE( (is.matrix(betaL) || is.vector(betaL)) && (length(betaL) > 1))){p <- length(as.vector(betaL) + 1)}
+    else if (isTRUE( (is.matrix(betaL) || is.vector(betaL)) && (length(betaL) > 1))){p <- length(as.vector(betaL)) + 1}
     else if (isTRUE( (is.matrix(beta) || is.vector(beta)) && (length(beta) > 1))){p <- length(as.vector(beta))}
     else {stop("Could not guess 'p' from other arguments. Please specify 'p'.")}
   }
