@@ -16,14 +16,14 @@
 
 #' @return A vector of the estimates for individual entries of \eqn{A_L}, \eqn{b_L}, and \eqn{\beta}{beta}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A_L}, then the upper triangle of \eqn{A_L}, then the elements of \eqn{b_L}, and then finally the estimates of \eqn{\beta}{beta}.
 utheta_estimatorall1_betap_compatible <- function(usertheta){
-  d_isfixed <- ppi_cppad_thetaprocessor(ppiltheta2p(length(usertheta)),
+  d_isfixed <- ppi_paramvec(ppiltheta2p(length(usertheta)),
                                         AL = FALSE, bL = FALSE, betaL = FALSE, betap = TRUE)
   if (all(d_isfixed == t_u2i(usertheta))){return(TRUE)}
   else (return(FALSE))
 }
 
 utheta_estimatorall1_full_compatible <- function(usertheta){
-  d_isfixed <- ppi_cppad_thetaprocessor(ppiltheta2p(length(usertheta)),
+  d_isfixed <- ppi_paramvec(ppiltheta2p(length(usertheta)),
                                         AL = FALSE, bL = FALSE, beta = FALSE)
   if (all(d_isfixed == t_u2i(usertheta))){return(TRUE)}
   else (return(FALSE))

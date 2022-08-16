@@ -77,7 +77,7 @@ dir_sqrt_minimah <- function(dirfit,acut, w=rep(1, nrow(dirfit)))
 # function that determins if a ppi usertheta matches a dirichlet model
 ppi_usertheta_for_dir_sqrt_minimah <- function(usertheta){
   p <- ppiltheta2p(length(usertheta))
-  d_utheta <- ppi_cppad_thetaprocessor(p, AL=0, bL = 0)
+  d_utheta <- ppi_paramvec(p, AL=0, bL = 0)
   if (isTRUE(all(d_utheta[!is.na(d_utheta)] ==
              usertheta[!is.na(d_utheta)])) &&
       all(is.na(usertheta[is.na(d_utheta)]))){

@@ -18,7 +18,7 @@
 
 ppi_usertheta_estimator1_compatible_incb <- function(usertheta){
   p <- ppiltheta2p(length(usertheta))
-  d_isfixed <- ppi_cppad_thetaprocessor(p, AL = FALSE, bL = FALSE, beta = TRUE)
+  d_isfixed <- ppi_paramvec(p, AL = FALSE, bL = FALSE, beta = TRUE)
   isfixed <- t_u2i(usertheta)
   if (all(d_isfixed == isfixed)){return(TRUE)}
   else {return(FALSE)}
@@ -26,7 +26,7 @@ ppi_usertheta_estimator1_compatible_incb <- function(usertheta){
 
 ppi_usertheta_estimator1_compatible_zerob <- function(usertheta){
   p <- ppiltheta2p(length(usertheta))
-  d_isfixed <- ppi_cppad_thetaprocessor(p, AL = FALSE, bL = TRUE, beta = TRUE)
+  d_isfixed <- ppi_paramvec(p, AL = FALSE, bL = TRUE, beta = TRUE)
   isfixed <- t_u2i(usertheta)
   if (!all(d_isfixed == isfixed)){return(FALSE)}
 

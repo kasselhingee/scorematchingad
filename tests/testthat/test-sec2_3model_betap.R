@@ -18,7 +18,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   set.seed(321)
   samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
   samp3=samp1$samp3
-  theta <- cdabyppi:::ppi_cppad_thetaprocessor(p,
+  theta <- cdabyppi:::ppi_paramvec(p,
               AL = ALs, bL = drop(bL), beta = drop(beta0))
 
   #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
@@ -38,7 +38,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   estimate1all=estimator$estimator1
 
   # Get SE from CppAD methods
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(p)
+  intheta <- cdabyppi:::ppi_paramvec(p)
   tapes <- buildsmotape("sphere", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
@@ -58,7 +58,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   n=100
   beta0=matrix(-0.8,p,1)
   beta0[p] = 5
-  theta <- cdabyppi:::ppi_cppad_thetaprocessor(p,
+  theta <- cdabyppi:::ppi_paramvec(p,
                                                AL = ALs, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
@@ -79,7 +79,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   estimate1all=estimator$estimator1
 
   # SE from cppad
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(p, betap = beta0[p])
+  intheta <- cdabyppi:::ppi_paramvec(p, betap = beta0[p])
   tapes <- buildsmotape("sphere", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
@@ -95,7 +95,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   n=100
   beta0=matrix(-0.8,p,1)
   beta0[p]= 5
-  theta <- cdabyppi:::ppi_cppad_thetaprocessor(p,
+  theta <- cdabyppi:::ppi_paramvec(p,
                                                AL = ALs, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
@@ -115,7 +115,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   estimate1all=estimator$estimator1
 
   # SE from cppad
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(p, betap = -0.5)
+  intheta <- cdabyppi:::ppi_paramvec(p, betap = -0.5)
   tapes <- buildsmotape("sphere", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",

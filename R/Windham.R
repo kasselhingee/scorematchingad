@@ -24,7 +24,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
   #indicator for each parameter of the full ppi model
   ALs_ww <- matrix(0, p-1, p-1)
   ALs_ww[!ind_weightA, !ind_weightA] <- 1
-  inWW <- ppi_cppad_thetaprocessor(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
+  inWW <- ppi_paramvec(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
   cW <- inWW * cW
 
   #preparing ppi specific info
@@ -37,7 +37,7 @@ windham_diff=function(prop,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcor
   ppiestimator <- function(Y, starttheta, isfixed, w){
           estimatorlog_weight(prop = prop, betap = starttheta[length(starttheta)], weightW = w)$ppi}
 
-  isfixed <- ppi_cppad_thetaprocessor(p, AL=FALSE, bL = TRUE, betaL = FALSE, betap = TRUE)
+  isfixed <- ppi_paramvec(p, AL=FALSE, bL = TRUE, betaL = FALSE, betap = TRUE)
   est <- windham_raw(prop = prop,
                cW = cW,
                ldenfun = ppildenfun,

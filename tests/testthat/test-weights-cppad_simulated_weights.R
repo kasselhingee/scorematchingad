@@ -6,7 +6,7 @@ vw <- virtualweights(m$sample)
 acut = 0.1
 
 test_that("smobj, smobjgrad, smobjhess matches for simulated weights", {
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(m$p)
+  intheta <- cdabyppi:::ppi_paramvec(m$p)
   tapes <- buildsmotape("sphere", "ppi",
                         m$sample[1, ], intheta,
                         weightname = "minsq",

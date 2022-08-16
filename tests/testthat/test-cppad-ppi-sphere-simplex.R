@@ -98,7 +98,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
   directestimate <- estimator1(model$sample, acut, incb = TRUE, beta0 = model$beta0)
 
   ppitapes <- buildsmotape("sphere", "ppi",
-                           rep(0.1, model$p), ppi_cppad_thetaprocessor(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
+                           rep(0.1, model$p), ppi_paramvec(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
                            weightname = "minsq", acut = acut)
 
   expect_equal(out$smval,
@@ -120,7 +120,7 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmo
                    trans = "sqrt", bdryweight = "prodsq", acut = acut)
 
   ppitapes <- buildsmotape("sphere", "ppi",
-                           rep(0.1, model$p), ppi_cppad_thetaprocessor(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
+                           rep(0.1, model$p), ppi_paramvec(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
                            weightname = "prodsq", acut = acut)
 
   directestimate <- estimator2(model$sample, acut, incb = TRUE, beta0 = model$beta0)
@@ -159,7 +159,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
                    control = list(tol = 1E-10))
 
   ppitapes <- buildsmotape("sphere", "ppi",
-                           rep(0.1, p), ppi_cppad_thetaprocessor(p),
+                           rep(0.1, p), ppi_paramvec(p),
                            weightname = "minsq", acut = acut)
 
   directestimate <- estimatorall1(utabl, acut)
@@ -279,7 +279,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
 
   #also it makes sense that the smo and gradient are v low at the direct estimate
   ppitapes <- buildsmotape("sphere", "ppi",
-                           rep(0.1, p), ppi_cppad_thetaprocessor(p, bL = bL, beta = beta),
+                           rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
                            weightname = "minsq", acut = acut)
   expect_lt(sum(smobjgrad(ppitapes$smotape, est_direct$estimator1, prop)^2), 1E-20)
   expect_equal(smobj(ppitapes$smotape, est_direct$estimator1, prop), est_cppad$smval, tolerance = 1E-1)

@@ -23,9 +23,9 @@ test_that("windam_raw gives correct params on simulated data, with two outliers.
     ppi(Y, acut = 0.1, w = w, method = "direct", trans = "sqrt", bdryweight = "minsq")$estimator1
   }
 
-  isfixed <- cdabyppi:::ppi_cppad_thetaprocessor(m$p, AL=FALSE, bL = FALSE, betaL = FALSE, betap = FALSE)
+  isfixed <- cdabyppi:::ppi_paramvec(m$p, AL=FALSE, bL = FALSE, betaL = FALSE, betap = FALSE)
   est <- cdabyppi:::windham_raw(prop = m$sample,
-                     cW = 0.1 * cdabyppi:::ppi_cppad_thetaprocessor(m$p, AL = TRUE, bL = FALSE, beta = FALSE), #all dimensions have negative beta.
+                     cW = 0.1 * cdabyppi:::ppi_paramvec(m$p, AL = TRUE, bL = FALSE, beta = FALSE), #all dimensions have negative beta.
                      ldenfun = ppildenfun,
                      estimatorfun = ppiestimator,
                      starttheta = m$theta * 0,
@@ -33,7 +33,7 @@ test_that("windam_raw gives correct params on simulated data, with two outliers.
                      originalcorrectionmethod = TRUE)
 
   # variable c, expect estimates to be different
-  cW <- cdabyppi:::ppi_cppad_thetaprocessor(m$p, AL = matrix(c(0.1, 1E-3, 1E-3, 0.1), nrow = 2, ncol = 2),
+  cW <- cdabyppi:::ppi_paramvec(m$p, AL = matrix(c(0.1, 1E-3, 1E-3, 0.1), nrow = 2, ncol = 2),
                                  bL = 0, beta = 0)
   expect_error(cdabyppi:::windham_raw(prop = m$sample,
                      cW = cW,

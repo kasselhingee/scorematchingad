@@ -219,7 +219,7 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
   direct <- estimator1(newsample, acut = acut, incb = 1, beta0 = m$beta0)
   directSE <- estimator1SE(newsample, acut, direct$estimator1, direct$W_est, incb = 1, m$beta0)
 
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(3, betaL = m$beta0[1:2], betap = m$beta0[3])
+  intheta <- cdabyppi:::ppi_paramvec(3, betaL = m$beta0[1:2], betap = m$beta0[3])
 
   # prepare tapes
   tapes <- buildsmotape("sphere", "ppi",

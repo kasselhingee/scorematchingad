@@ -32,7 +32,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
   est_direct <- estimatorlog_weight(prop, betap = beta[p], weightW = rep(1, nrow(prop)))
 
   # Get SE of this estimate using CppAD
-  thetain <- ppi_cppad_thetaprocessor(p, bL = bL, betap = beta[p])
+  thetain <- ppi_paramvec(p, bL = bL, betap = beta[p])
   tapes <- buildsmotape("Ralr", "ppi",
                         rep(1/p, p), thetain,
                         weightname = "ones",

@@ -15,7 +15,7 @@ ppi_cW <- function(cW, ...){
   p <- length(bools) 
   ALs_ww <- matrix(0, p-1, p-1)
   ALs_ww[bools, bools] <- 1
-  inWW <- ppi_cppad_thetaprocessor(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
+  inWW <- ppi_paramvec(p, AL = ALs_ww, bL = FALSE, beta = FALSE)
 
   cW <- cW * inWW
   return(cW)
