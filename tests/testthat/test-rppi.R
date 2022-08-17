@@ -23,3 +23,14 @@ test_that("current PPI simulation method gives samples with similar empirical de
   expect_lt(time_ratio[["user.self"]], 0.05)
 })
 
+test_that("rppi() is fixed by set.seed()", {
+  m <- ppi_egmodel(2)
+
+  set.seed(3212)
+  Y1 <- rppi(100, m$p, m$beta, m$AL, m$bL, 4)
+
+  set.seed(3212)
+  Y2 <- rppi(100, m$p, m$beta, m$AL, m$bL, 4)
+
+  expect_equal(Y1, Y2)
+})
