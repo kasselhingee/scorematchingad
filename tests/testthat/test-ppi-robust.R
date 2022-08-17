@@ -9,7 +9,7 @@ test_that("ppi Dirichlet with cW gives correct params on simulated data, with tw
 
   #non-robust estimates
   est_norobust <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq")
-  est_norobust2 <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = 0)
+  est_norobust2 <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = ppi_cW_auto(0, m$sample))
 
   expect_equal(est_norobust2$theta, est_norobust$theta)
 

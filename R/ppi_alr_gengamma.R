@@ -141,7 +141,7 @@ ppi_alr_gengamma <- function(Y,betap,w)
               rep(0,sp), #bL
               ppi[p-1 + (p-2)*(p-1)/2 + seq(1, sp)], #betaL
               betap)
-	return(list(est = c(list(paramvec = ppiAll), fromPPIparamvec(ppiALL)),
+	return(list(est = c(list(paramvec = ppiAll), fromPPIparamvec(ppiAll)),
                     SE = "Not calculated.",
                     info = list(W=W,d=d)))
 
