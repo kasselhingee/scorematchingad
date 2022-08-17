@@ -195,6 +195,7 @@ ppi <- function(Y, paramvec = NULL,
   }
   stopifnot(length(cW) == length(usertheta))
   stopifnot(is.numeric(cW))
+  stopifnot(all(cW[t_u2i(usertheta)] == 0)) #all elements of cW for fixed parameters should be zero.
 
   ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
     mats <- fromPPIparamvec(theta, p = ncol(Y))

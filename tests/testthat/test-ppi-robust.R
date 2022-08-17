@@ -14,7 +14,7 @@ test_that("ppi Dirichlet with cW gives correct params on simulated data, with tw
   expect_equal(est_norobust2$theta, est_norobust$theta)
 
   #robust
-  est_robust1 <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = 1E-1)
+  est_robust1 <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = ppi_cW_auto(1E-1, m$sample))
 
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
   expect_gt(rmse(m$theta, est_norobust$theta),
@@ -34,46 +34,47 @@ test_that("Robustness runs for direct and cppad methods", {
   out <- ppi(m$sample, ppi_paramvec(p=3, bL = 0, betap = -0.5), method = "direct", trans = "alr", cW = 1E-1)
   expect_gt(out$optim$fpevals, 1)
 
-  #dir minsq
+  #dir minsq : with AL=0 and bL=0 the default weights are 1, but customisation of cW should alter this
   out <- ppi(m$sample, ppi_paramvec(p=3, AL = 0, bL = 0), method = "direct",
-             trans = "sqrt", acut = 0.1, bdryweight = "minsq", cW = 1E-1)
+             trans = "sqrt", acut = 0.1, bdryweight = "minsq", cW = 1E-1 * ppi_paramvec(p=3, AL=0, bL=0, beta=1))
   expect_gt(out$optim$fpevals, 1) #errors
   #dir prodsq
   out <- ppi(m$sample, ppi_paramvec(p=3, AL = 0, bL = 0), method = "direct",
-             trans = "sqrt", acut = 0.1, bdryweight = "prodsq", cW = 1E-1)
+             trans = "sqrt", acut = 0.1, bdryweight = "prodsq", cW = 1E-1 * ppi_paramvec(p=3, AL=0, bL=0, beta=1))
   expect_gt(out$optim$fpevals, 1) #errors
 
   # estimator1 bL=0
-  out <- ppi(m$sample, ppi_paramvec(bL = 0, beta = m$beta), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = 1E-2)
+  out <- ppi(m$sample, ppi_paramvec(bL = 0, beta = m$beta), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = ppi_cW_auto(1E-1, m$sample))
   expect_gt(out$optim$fpevals, 1)
   # estimator1 bL=0 prodsq
   out <- ppi(m$sample, ppi_paramvec(bL = 0, beta = m$beta),
              acut=0.1, method = "direct", trans = "sqrt", bdryweight = "prodsq",
-             cW = 1E-2)
+             cW = ppi_cW_auto(1E-1, m$sample))
   expect_gt(out$optim$fpevals, 1)
 
   # estimator1 bL!=0
-  out <- ppi(m$sample, ppi_paramvec(beta = m$beta), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = 1E-2)
+  out <- ppi(m$sample, ppi_paramvec(beta = m$beta), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = ppi_cW_auto(1E-1, m$sample))
   expect_gt(out$optim$fpevals, 1)
   # estimator1 bL!=0 prodsq
   out <- ppi(m$sample, ppi_paramvec(beta = m$beta),
-             acut=0.1, method = "direct", trans = "sqrt", bdryweight = "prodsq", cW = 1E-2)
+             acut=0.1, method = "direct", trans = "sqrt", bdryweight = "prodsq", cW = ppi_cW_auto(1E-2, m$sample))
   expect_gt(out$optim$fpevals, 1)
   # estimatorall1 betap fixed
   out <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)),
              acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq",
-             cW = 1E-2)
+             cW = ppi_cW_auto(1E-2, m$sample))
   expect_gt(out$optim$fpevals, 1)
 
   # estimatorall1 betap fitted
   out <- ppi(m$sample,
              acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq",
-             cW = 1E-2)
+             cW = ppi_cW_auto(1E-2, m$sample))
   expect_gt(out$optim$fpevals, 1)
 
-  # cppad
+  # cppad - the default takes a long time
   out <- ppi(m$sample,
              acut=0.1, method = "cppad", trans = "sqrt", bdryweight = "minsq",
-             cW = 1E-2)
+             control = list(tol = 1E-10, maxit = 100, MaxIter = 100),
+             cW = ppi_cW_auto(1E-2, m$sample))
   expect_gt(out$optim$fpevals, 1)
 })
