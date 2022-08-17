@@ -79,7 +79,7 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   cW=0.001
   est1 = ppi(prop, ppi_paramvec(p=3, bL = 0, betap = 0), 
              method = "direct", trans = "alr",
-             cW = cW)
+             cW = ppi_cW_auto(cW, prop))
   expect_equal(cdabyppi:::fromPPIparamvec(est1$theta)$ALs, ALs, tolerance = 1)
   expect_equal(cdabyppi:::fromPPIparamvec(est1$theta)$beta, beta, tolerance = 1E-1)
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}

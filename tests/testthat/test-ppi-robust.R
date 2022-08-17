@@ -31,7 +31,7 @@ test_that("Robustness runs for direct and cppad methods", {
   m$sample <- rbind(m$sample, outlier1, outlier2)
 
   #Ralr
-  out <- ppi(m$sample, ppi_paramvec(p=3, bL = 0, betap = -0.5), method = "direct", trans = "alr", cW = 1E-1)
+  out <- ppi(m$sample, ppi_paramvec(p=3, bL = 0, betap = -0.5), method = "direct", trans = "alr", cW = ppi_cW_auto(m$sample))
   expect_gt(out$optim$fpevals, 1)
 
   #dir minsq : with AL=0 and bL=0 the default weights are 1, but customisation of cW should alter this
