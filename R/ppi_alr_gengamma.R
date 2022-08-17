@@ -147,6 +147,7 @@ estimatorlog_weight <- function(prop,betap,weightW)
 }
 
 usertheta_estimatorlog_weight_compatible <- function(usertheta){
+  if (is.na(tail(fromPPIparamvec(usertheta)$beta, 1))){return(FALSE)}
   p <- ppiltheta2p(length(usertheta))
   d_utheta <- ppi_paramvec(p, bL = 0, betap = tail(fromPPIparamvec(usertheta)$beta, 1))
   if (isTRUE(all((d_utheta == usertheta)[!is.na(d_utheta)])) &&
