@@ -122,7 +122,10 @@ ppi <- function(Y, paramvec = NULL,
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
           betaest <- dir_sqrt_prodh(Y, acut = acut, w = w)
           fitfun <- "dir_sqrt_prodh"
-          firstfit$theta <- t_fu2t(betaest, usertheta)
+          estparamvec <- t_fu2t(betaest, usertheta)
+          firstfit$est <- c(list(paramvec = estparamvec),
+                            fromPPIparamvec(estparamvec))
+          firstfit$SE <- "Not calculated."
           estimator <- function(Y, starttheta, isfixed, w){
              out <- as.vector(dir_sqrt_prodh(Y, acut = acut, w = w))
              return(t_sfi2u(out, starttheta, isfixed))
@@ -206,7 +209,7 @@ ppi <- function(Y, paramvec = NULL,
                      cW = cW,
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
-                     starttheta = firstfit$theta,
+                     starttheta = firstfit$est$paramvec,
                      isfixed = t_u2i(usertheta),
                      originalcorrectionmethod = FALSE, #for variable cW
                      fpcontrol = controls$fp)
