@@ -1,9 +1,9 @@
 # @title Score matching estimate of the PPI model using a minima-based Hyvarinen weight function
-# @description Estimates \eqn{A_L} and \eqn{b_L} of the PPI model using score matching and a minimum-like Hyvarinen weight function. \eqn{\beta_0}{beta0} is fixed.
-# @param prop compositional data (each row is a sample, each column corresponds to a component)
+# @description Estimates \eqn{A_L} and \eqn{b_L} of the PPI model using score matching and a minimum-like Hyvarinen weight function. \eqn{\beta} is fixed.
+# @param Y compositional data (each row is a sample, each column corresponds to a component)
 # @param  acut \eqn{a_c} for the weighting function \eqn{h}.
 # @param incb if `incb=1` then \eqn{b_L} is estimated, otherwise \eqn{b_L} is fixed at zero
-# @param beta0 The (fixed) beta0 of the model.
+# @param beta The (fixed) Dirichlet exponents (\eqn{\beta}) of the model.
 # @details The PPI model is given in equation 3 of (Scealy and Wood, 2021). The matrices \eqn{A_L} and \eqn{b_L} must be estimated.
 # This function implements the score matching estimator,
 # \deqn{\hat{W}^{-1}\hat{d},}{W^{-1}d,}
@@ -36,12 +36,12 @@ ppi_usertheta_estimator1_compatible_zerob <- function(usertheta){
 }
 
 # @export
-estimator1 <- function(prop,acut,incb, beta0, w=rep(1, nrow(prop)))
+estimator1 <- function(Y,acut,incb, beta, w=rep(1, nrow(Y)))
 {
-  n <- nrow(prop) #number of samples
-  p <- ncol(prop) #number of dimensions, although what happens when the beta need to be estimated?
+  n <- nrow(Y) #number of samples
+  p <- ncol(Y) #number of dimensions, although what happens when the beta need to be estimated?
 	#response on sphere scale
-	z=sqrt(prop)
+	z=sqrt(Y)
 
 	#h is the h function without taking the bound acut into account
 	h=matrix(1,n,1)
@@ -82,7 +82,7 @@ estimator1 <- function(prop,acut,incb, beta0, w=rep(1, nrow(prop)))
 	W <- calcW11(p, z, h, ind, qind, w=w)
 
 	################### ##calculate d(6) ##################
-	ev <- calcd6_fixedbeta(p, sp, z, h, ind, qind, beta0, w=w)
+	ev <- calcd6_fixedbeta(p, sp, z, h, ind, qind, beta, w=w)
 
 	################### ##calculate d(1) ##################
 	d <- calcd1A(p, sp, z, h, ind, qind, w=w)
@@ -113,11 +113,12 @@ estimator1 <- function(prop,acut,incb, beta0, w=rep(1, nrow(prop)))
 
         #convert to PPI param vec
         if (incb==1){
-          theta <- c(quartic_sphere, beta0) 
+          theta <- c(quartic_sphere, beta) 
         } else {
-          theta <- c(quartic_sphere, rep(0, p-1), beta0) 
+          theta <- c(quartic_sphere, rep(0, p-1), beta) 
         }
-	return(list(estimator1=quartic_sphere,W_est=W_est, theta = theta))
+	return(list(est = c(list(paramvec=theta), fromPPIparamvec(theta)),
+                    info = list(W=W_est))
 }
 
 
