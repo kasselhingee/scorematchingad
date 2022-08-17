@@ -35,13 +35,14 @@ test_that("windam_raw gives correct params on simulated data, with two outliers.
   # variable c, expect estimates to be different
   cW <- cdabyppi:::ppi_paramvec(m$p, AL = matrix(c(0.1, 1E-3, 1E-3, 0.1), nrow = 2, ncol = 2),
                                  bL = 0, beta = 0)
-  errest <- cdabyppi:::windham_raw(prop = m$sample,
+  errmsg <- capture.output(errest <- cdabyppi:::windham_raw(prop = m$sample,
                      cW = cW,
                      ldenfun = ppildenfun,
                      estimatorfun = ppiestimator,
                      starttheta = m$theta * 0,
                      isfixed = isfixed,
-                     originalcorrectionmethod = TRUE) #error because original correction method doesn't cope with variable non-zero cW elements
+                     originalcorrectionmethod = TRUE), type = "message") #error because original correction method doesn't cope with variable non-zero cW elements
+  expect_match(paste0(errmsg, collapse = ""), ".*Original.*")
   expect_match(errest$optim$Finish, "Could not execute function.*")
 
   est_varcW <-  cdabyppi:::windham_raw(prop = m$sample,
@@ -86,12 +87,6 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   rmse(cdabyppi:::toPPIparamvec(ALs, bL, beta), est1$theta)
   rmse(cdabyppi:::toPPIparamvec(ALs, bL, beta), est_unload$theta)
 
-  est2=windham_diff(prop,cW,ALs,bL,beta, ind_weightA = c(0,0), originalcorrectionmethod = FALSE)
-  expect_equal(est2$est$ALs, ALs, tolerance = 1)
-  expect_equal(est2$est$beta, beta, tolerance = 1E-1)
-
-  expect_equal(est2$est$theta, est1$theta)
-
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
   expect_gt(rmse(beta, est_unload$ppi[6:8]), rmse(beta, fromPPIparamvec(est1$theta)$beta))
 })
@@ -109,12 +104,9 @@ test_that("windam_diff gives correct params on simulated, no outlier, data. p = 
 
   #calculate robust estimates
   cW=0.1
-  est1=windham_diff(prop,cW,ALs,bL,beta, ind_weightA = c(0,0,0,1), originalcorrectionmethod = TRUE)
-  expect_equal(est1$est$ALs, ALs, tolerance = 1E0)
-  expect_equal(est1$est$beta, beta, tolerance = 1E-1)
-
-  est2=windham_diff(prop,cW,ALs,bL,beta, ind_weightA = c(0,0,0,1), originalcorrectionmethod = FALSE)
-  expect_equal(est1$est$theta, est2$est$theta)
+  est1=ppi(Y = prop, paramvec = ppi_paramvec(bL = 0, betap = tail(beta, 1), p=5), cW = ppi_cW(cW, 1, 1, 1, 0, 0), trans = "alr", method = "direct")
+  expect_equal(fromPPIparamvec(est1$theta)$ALs, ALs, tolerance = 1E0)
+  expect_equal(fromPPIparamvec(est1$theta)$beta, beta, tolerance = 1E-1)
 })
 
 
