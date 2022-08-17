@@ -66,7 +66,10 @@ ppi <- function(Y, paramvec = NULL,
       if (bdryweight == "minsq"){
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
           betaest <- as.vector(dir_sqrt_minimah(Y, acut = acut, w = w))
-          firstfit$theta <- t_fu2t(betaest, usertheta)
+          estparamvec <- t_fu2t(betaest, usertheta)
+          firstfit$est <- c(list(paramvec = estparamvec),
+                            fromPPIparamvec(estparamvec))
+          firstfit$SE <- "Not calculated."
           fitfun <- "dir_sqrt_minimah"
           estimator <- function(Y, starttheta, isfixed, w){
              out <- as.vector(dir_sqrt_minimah(Y, acut = acut, w = w))
@@ -185,7 +188,7 @@ ppi <- function(Y, paramvec = NULL,
 
   #### No Robustness, return first fit ####
   if (is.null(cW)){
-     return(c(fitfun = fitfun,
+     return(c(list(info = list(method = fitfun)),
            firstfit))
   }
 

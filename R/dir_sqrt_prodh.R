@@ -1,16 +1,16 @@
 #' @title Score matching estimates for the Dirichlet distribution
-#' @description Score matching estimates for the Dirichlet distribution, which is the PPI with \eqn{A_L=0} and \eqn{b_L=0}. The parameters to be estimates are the \eqn{\beta}{beta}.
-#' @param dirfit Compositional data (n by p matrix)
+#' @description Score matching estimates for the Dirichlet distribution, which is the PPI with \eqn{A_L=0} and \eqn{b_L=0}. The parameters to be estimates are the \eqn{\beta}{beta}. Standard errors are not calculated.
+#' @param Y Compositional data (n by p matrix)
 #' @param acut \eqn{a_c} for \eqn{h} function.
 #' @return A vector of estimates.
 #' @describeIn estimator_dir The score matching estimator using the product-based Hyvarinen weight
 #' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2).}
 #' @export
-dir_sqrt_prodh <- function(dirfit,acut, w = rep(1, nrow(dirfit)))
+dir_sqrt_prodh <- function(Y,acut, w = rep(1, nrow(Y)))
 {
-  n=nrow(dirfit)
-  p=ncol(dirfit)
-	z=sqrt(dirfit)
+  n=nrow(Y)
+  p=ncol(Y)
+	z=sqrt(Y)
 
 	h=matrix(1,n,1)
 	for (j in 1:p)
