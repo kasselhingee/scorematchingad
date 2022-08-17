@@ -50,9 +50,9 @@ test_that("dir_sqrt_prodh matches for simulated weights", {
   expect_equal(est_direct, est_sim)
 })
 
-test_that("estimatorlog_weight matches for simulated weights", {
-  est_sim <- estimatorlog_weight(vw$newY, betap = m$beta0[3], weightW = rep(1, nrow(vw$newY)))
-  est_direct <- estimatorlog_weight(m$sample, betap = m$beta0[3], weightW = vw$w)
+test_that("ppi_alr_gengamma matches for simulated weights", {
+  est_sim <- ppi_alr_gengamma(vw$newY, betap = m$beta0[3], weightW = rep(1, nrow(vw$newY)))
+  est_direct <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], weightW = vw$w)
   expect_equal(est_direct$ppi, est_sim$ppi)
 })
 

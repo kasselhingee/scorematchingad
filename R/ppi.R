@@ -53,11 +53,11 @@ ppi <- function(Y, paramvec = NULL,
 
   if (method == "direct"){
     if (man == "Ralr"){
-      if (usertheta_estimatorlog_weight_compatible(usertheta)){
-        firstfit <- estimatorlog_weight(Y, betap = tail(usertheta, 1), weightW = w) #any theta is fine
-        fitfun <- "estimatorlog_weight"
+      if (usertheta_ppi_alr_gengamma_compatible(usertheta)){
+        firstfit <- ppi_alr_gengamma(Y, betap = tail(usertheta, 1), weightW = w) #any theta is fine
+        fitfun <- "ppi_alr_gengamma"
         estimator <- function(Y, starttheta, isfixed, w){
-           out <- estimatorlog_weight(Y, betap = tail(starttheta, 1), weightW = w)
+           out <- ppi_alr_gengamma(Y, betap = tail(starttheta, 1), weightW = w)
            return(out$theta)
         }
       }

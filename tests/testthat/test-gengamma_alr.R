@@ -1,4 +1,4 @@
-test_that("estimatorlog_weight matches CppAD method for constant weight, p = 3", {
+test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 3", {
   skip_on_cran() #v slow
   set.seed(1234)
   m <- ppi_egmodel(10000, maxden = 4)
@@ -6,11 +6,11 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 3",
   est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", bdryweight = "ones",
                          control = list(tol = 1E-10))
 
-  est_direct <- estimatorlog_weight(m$sample, betap = m$beta0[3], weightW = rep(1, nrow(m$sample)))
+  est_direct <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], weightW = rep(1, nrow(m$sample)))
   expect_equal(est_direct$ppi, est_cppad$est$theta, tolerance = 1E-5)
 })
 
-test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5", {
+test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 5", {
   skip_on_cran() #slow but useful
   set.seed(1273)
   p = 5
@@ -29,7 +29,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
   #expect that the SE are small relative to size of the coefficients
   expect_lt(median(abs(est_cppad$SE$theta/est_cppad$est$theta), na.rm = TRUE), 0.3)
 
-  est_direct <- estimatorlog_weight(prop, betap = beta[p], weightW = rep(1, nrow(prop)))
+  est_direct <- ppi_alr_gengamma(prop, betap = beta[p], weightW = rep(1, nrow(prop)))
 
   # Get SE of this estimate using CppAD
   thetain <- ppi_paramvec(p, bL = bL, betap = beta[p])
@@ -53,7 +53,7 @@ test_that("estimatorlog_weight matches CppAD method for constant weight, p = 5",
 })
 
 
-test_that("estimatorlog_weight matches for simulated weights", {
+test_that("ppi_alr_gengamma matches for simulated weights", {
   set.seed(1234)
   m <- ppi_egmodel(100, maxden = 4)
   #simulate weights
@@ -62,7 +62,7 @@ test_that("estimatorlog_weight matches for simulated weights", {
   weights[as.numeric(names(table(ind)))] <- table(ind)
   newsample <- m$sample[ind, ]
 
-  est_sim <- estimatorlog_weight(newsample, betap = m$beta0[3], weightW = rep(1, nrow(newsample)))
-  est_direct <- estimatorlog_weight(m$sample, betap = m$beta0[3], weightW = weights)
+  est_sim <- ppi_alr_gengamma(newsample, betap = m$beta0[3], weightW = rep(1, nrow(newsample)))
+  est_direct <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], weightW = weights)
   expect_equal(est_direct$ppi, est_sim$ppi)
 })

@@ -6,7 +6,7 @@
 # @param betap The (fixed) final element of beta0 for the model.
 # @param weightW A vector of weights to apply to the measurements in `prop`. The length of `weightW` must equal the number of rows of `prop`.
 # @export
-estimatorlog_weight <- function(prop,betap,weightW)
+ppi_alr_gengamma <- function(prop,betap,weightW)
 {
         p=ncol(prop)
 	sp=p-1
@@ -146,7 +146,7 @@ estimatorlog_weight <- function(prop,betap,weightW)
 
 }
 
-usertheta_estimatorlog_weight_compatible <- function(usertheta){
+usertheta_ppi_alr_gengamma_compatible <- function(usertheta){
   if (is.na(tail(fromPPIparamvec(usertheta)$beta, 1))){return(FALSE)}
   p <- ppiltheta2p(length(usertheta))
   d_utheta <- ppi_paramvec(p, bL = 0, betap = tail(fromPPIparamvec(usertheta)$beta, 1))

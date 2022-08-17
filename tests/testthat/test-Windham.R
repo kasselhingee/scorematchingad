@@ -72,7 +72,7 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   prop <- rppi(1000, p, beta, ALs, bL, 4)$samp3
 
   #check non-robust estimates
-  est_unload <- cdabyppi:::estimatorlog_weight(prop, betap = beta[p], weightW = rep(1, nrow(prop)))
+  est_unload <- cdabyppi:::ppi_alr_gengamma(prop, betap = beta[p], weightW = rep(1, nrow(prop)))
   # fromPPIparamvec(est_unload$ppi, p)$ALs #fairly terrible at the AL
   # fromPPIparamvec(est_unload$ppi, p)$beta #pretty good at beta
 

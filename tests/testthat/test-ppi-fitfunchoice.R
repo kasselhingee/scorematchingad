@@ -14,7 +14,7 @@ test_that("Correctly chooses Dirichlet", {
 
 test_that("Correctly chooses estimatorlog_ratio", {
   out <- ppi(m$sample, ppi_paramvec(p=3, bL = 0, betap = tail(m$beta0, 1)), trans = "alr", method = "direct")
-  expect_equal(out$info$method, "estimatorlog_weight")
+  expect_equal(out$info$method, "ppi_alr_gengamma")
 })
 
 test_that("Correctly chooses sphere estimators with fixed beta", {
