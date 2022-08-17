@@ -190,9 +190,6 @@ ppi <- function(Y, paramvec = NULL,
   }
 
   #### Do Windham Robustness ####
-  if (length(cW == 1)){ #single number default to all of AL, all of bL and not beta
-     cW <- cW * ppi_paramvec(p, AL = TRUE, bL = TRUE, beta = FALSE)
-  }
   stopifnot(length(cW) == length(usertheta))
   stopifnot(is.numeric(cW))
   stopifnot(all(cW[t_u2i(usertheta)] == 0)) #all elements of cW for fixed parameters should be zero.
