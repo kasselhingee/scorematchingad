@@ -54,10 +54,10 @@ ppi <- function(Y, paramvec = NULL,
   if (method == "direct"){
     if (man == "Ralr"){
       if (usertheta_ppi_alr_gengamma_compatible(usertheta)){
-        firstfit <- ppi_alr_gengamma(Y, betap = tail(usertheta, 1), weightW = w) #any theta is fine
+        firstfit <- ppi_alr_gengamma(Y, betap = tail(usertheta, 1), w = w) #any theta is fine
         fitfun <- "ppi_alr_gengamma"
         estimator <- function(Y, starttheta, isfixed, w){
-           out <- ppi_alr_gengamma(Y, betap = tail(starttheta, 1), weightW = w)
+           out <- ppi_alr_gengamma(Y, betap = tail(starttheta, 1), w = w)
            return(out$theta)
         }
       }
@@ -191,8 +191,8 @@ ppi <- function(Y, paramvec = NULL,
 
   #### No Robustness, return first fit ####
   if (is.null(cW)){
-     return(c(list(info = list(method = fitfun)),
-           firstfit))
+     firstfit$info$method <- fitfun
+     return(firstfit)
   }
 
   #### Do Windham Robustness ####

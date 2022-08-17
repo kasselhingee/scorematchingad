@@ -51,9 +51,9 @@ test_that("dir_sqrt_prodh matches for simulated weights", {
 })
 
 test_that("ppi_alr_gengamma matches for simulated weights", {
-  est_sim <- ppi_alr_gengamma(vw$newY, betap = m$beta0[3], weightW = rep(1, nrow(vw$newY)))
-  est_direct <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], weightW = vw$w)
-  expect_equal(est_direct$ppi, est_sim$ppi)
+  est_sim <- ppi_alr_gengamma(vw$newY, betap = m$beta0[3], w = rep(1, nrow(vw$newY)))
+  est_direct <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], w = vw$w)
+  expect_equal(est_direct$est$paramvec, est_sim$est$paramvec)
 })
 
 test_that("dir_moment matches for simulated weights", {
