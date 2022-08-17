@@ -1,6 +1,6 @@
 skip_on_cran() #too slow
 
-test_that("windham_diff estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
+test_that("robust ppi via alr estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
 
 data("microdata", package = "cdabyppi")
 countdata=as.matrix(microdata[,12:31])
@@ -113,7 +113,7 @@ expect_snapshot_value(signif(fromPPIparamvec(est1$theta)$beta,6), style = "json2
 
 
 
-test_that("windham_diff estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
+test_that("robust ppi via alr estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
   data("microdata", package = "cdabyppi")
   countdata=as.matrix(microdata[,12:31])
 

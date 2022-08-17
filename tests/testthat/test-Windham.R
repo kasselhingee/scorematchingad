@@ -91,7 +91,7 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   expect_gt(rmse(beta, est_unload$ppi[6:8]), rmse(beta, fromPPIparamvec(est1$theta)$beta))
 })
 
-test_that("windam_diff gives correct params on simulated, no outlier, data. p = 5", {
+test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5", {
   set.seed(1273)
   p = 5
   ALs <- rsymmetricmatrix(p-1, -4, 4)
