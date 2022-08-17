@@ -1,4 +1,4 @@
-test_that("ppi Dirichlet with cW gives correct params on simulated data, with two outliers. p=3", {
+test_that("ppi including betaL with cW gives correct params on simulated data, with two outliers. p=3", {
   set.seed(1273)
   m <- ppi_egmodel(1000, maxden = 4)
   outlier1 <- c(0.9, 0.9, 0.01)
@@ -31,7 +31,7 @@ test_that("Robustness runs for direct and cppad methods", {
   m$sample <- rbind(m$sample, outlier1, outlier2)
 
   #Ralr
-  out <- ppi(m$sample, ppi_paramvec(p=3, bL = 0, betap = -0.5), method = "direct", trans = "alr", cW = ppi_cW_auto(m$sample))
+  out <- ppi(m$sample, ppi_paramvec(p=3, bL = 0, betap = -0.5), method = "direct", trans = "alr", cW = ppi_cW_auto(1E-1, m$sample))
   expect_gt(out$optim$fpevals, 1)
 
   #dir minsq : with AL=0 and bL=0 the default weights are 1, but customisation of cW should alter this

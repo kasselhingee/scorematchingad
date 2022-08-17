@@ -118,7 +118,7 @@ estimator1 <- function(Y,acut,incb, beta, w=rep(1, nrow(Y)))
           theta <- c(quartic_sphere, rep(0, p-1), beta) 
         }
 	return(list(est = c(list(paramvec=theta), fromPPIparamvec(theta)),
-                    info = list(W=W_est))
+                    info = list(W=W_est)))
 }
 
 

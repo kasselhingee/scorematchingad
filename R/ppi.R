@@ -58,7 +58,7 @@ ppi <- function(Y, paramvec = NULL,
         fitfun <- "ppi_alr_gengamma"
         estimator <- function(Y, starttheta, isfixed, w){
            out <- ppi_alr_gengamma(Y, betap = tail(starttheta, 1), w = w)
-           return(out$theta)
+           return(out$est$paramvec)
         }
       }
     }
