@@ -58,10 +58,10 @@ test_that("Score1ac estimate is within 3 standard errors for 75% of parameters",
 
   #calculate scoring estimate:
   estimator=cdabyppi:::estimator1(samp3,acut,0, beta0 = beta0)
-  estimate1=estimator$estimator1
+  estimate1=estimator$est$paramvec
 
   #estimate of W matrix
-  W_est=estimator$W_est
+  W_est=estimator$info$W
 
   #standard errors for Score1ac
   std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,W_est,0, beta0 = beta0)
@@ -78,10 +78,10 @@ test_that("Score1ac estimate is within 3 standard errors with large a_c for 75% 
 
   #calculate scoring estimate:
   estimator=cdabyppi:::estimator1(samp3,acut,0, beta0 = beta0)
-  estimate1=estimator$estimator1
+  estimate1=estimator$est$paramvec
 
   #estimate of W matrix
-  W_est=estimator$W_est
+  W_est=estimator$info$W
 
   #standard errors for Score1ac
   std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,W_est,0, beta0 = beta0)
@@ -123,10 +123,10 @@ test_that("Score1ac for multinomial PPI is on average within 3 SE of each parame
 
   #calculate scoring estimate:
   estimator=cdabyppi:::estimator1(prop1,acut,0, beta0 = beta0)
-  estimate1=estimator$estimator1
+  estimate1=estimator$est$paramvec
 
   #estimate of W matrix
-  W_est=estimator$W_est
+  W_est=estimator$info$W
 
   #standard errors for Score1ac
   std1=cdabyppi:::estimator1SE(prop1,acut,estimate1,W_est,0, beta0 = beta0)

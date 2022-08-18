@@ -96,7 +96,7 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
 
   #calculate scoring estimate:
   estimator= cdabyppi:::estimator1(propreal,acut,1, beta0)
-  estimate1=estimator$estimator1
+  estimate1=estimator$est$paramvec
   #rearrange to historical ordering
   ordindx <- order(combparam2uppertriorder(length(estimate1) + p)) #the plus p is for the beta that isn't estimated
   ordindx <- ordindx[1:length(estimate1)]
@@ -106,19 +106,19 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   expect_snapshot_value(signif(estimate1, 8), style = "json2") #8 is the default number of digits for jsonlite::serializeJSON
 
   #estimate of W matrix
-  W_est=estimator$W_est
+  W_est=estimator$info$W
   expect_snapshot_value(round(max(W_est), 8), style = "json2") #have to use round here because the json conversion doesn't necessarily show it in scientific notation
   expect_snapshot_value(signif(mean(W_est), 8), style = "json2")
   expect_snapshot_value(signif(which.max(W_est), 8), style = "json")
 
   #standard errors
-  std1=cdabyppi:::estimator1SE(propreal,acut,estimator$estimator1,estimator$W_est,1, beta0)
+  std1=cdabyppi:::estimator1SE(propreal,acut,estimator$est$paramvec,estimator$info$W,1, beta0)
   #rearrange back to combn ordering
   std1 <- std1[ordindx]
   expect_snapshot_value(signif(std1, 8), style = "json2")
 
   #estimated parameters
-  thetamats <- fromPPIparamvec(c(estimator$estimator1, rep(NA, p)))
+  thetamats <- fromPPIparamvec(c(estimator$est$paramvec, rep(NA, p)))
   ALs <- thetamats$ALs
   bL <- thetamats$bL
   dim(bL) <- c(length(bL), 1)
@@ -134,7 +134,7 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
 
   #calculate scoring estimate:
   estimator=cdabyppi:::estimator1(propreal,acut,0, beta0)
-  estimate1=estimator$estimator1
+  estimate1=estimator$est$paramvec
   #rearrange to historical ordering
   ordindx <- order(combparam2uppertriorder_matrix(length(estimate1)))
   estimate1 <- estimate1[ordindx]
@@ -142,17 +142,17 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
   expect_snapshot_value(signif(estimate1, 8), style = "json2")
 
   #estimate of W matrix
-  W_est=estimator$W_est
+  W_est=estimator$info$W
   expect_snapshot_value(round(max(W_est), 8), style = "json2") #have to use round here because the json conversion doesn't necessarily show it in scientific notation
   expect_snapshot_value(signif(mean(W_est), 8), style = "json2")
   expect_snapshot_value(signif(which.max(W_est), 8), style = "json")
 
   #standard errors
-  std1=estimator1SE(propreal,acut,estimator$estimator1,estimator$W_est,0, beta0)
+  std1=estimator1SE(propreal,acut,estimator$est$paramvec,estimator$info$W,0, beta0)
   std1 <- std1[ordindx] #rearrange to combn ordering for historical comparison
 
   #estimated parameters
-  thetamats <- fromPPIparamvec(c(estimator$estimator1, rep(NA, p-1), rep(NA, p)))
+  thetamats <- fromPPIparamvec(c(estimator$est$paramvec, rep(NA, p-1), rep(NA, p)))
   ALs <- thetamats$ALs
 
   #values in Table 3 in the article:

@@ -55,8 +55,8 @@ test_that("Score1ac estimator works on highly concentrated data, with some compo
 
   #calculate scoring estimate with beta fixed at beta0:
   estimator=cdabyppi:::estimator1(samp3,acut,1, beta0)
-  estimate1=estimator$estimator1
-  std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,estimator$W_est,1, beta0)
+  estimate1=estimator$est$paramvec
+  std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,estimator$info$W,1, beta0)
   # check
   #2*SE bounds
   expect_true(all(abs(theta - estimate1) < 2*std1))

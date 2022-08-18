@@ -61,8 +61,8 @@ test_that("Score1ac estimator of A, b and beta works on highly concentrated data
 
   #calculate scoring estimate with beta fixed at beta0:
   estimator=cdabyppi:::estimator1(samp3,acut,1, beta0)
-  estimate1=estimator$estimator1
-  std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,estimator$W_est,1, beta0)
+  estimate1=estimator$est$paramvec
+  std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,estimator$info$W,1, beta0)
   # check
   theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL)
   #2*SE bounds for 75% of parameters
@@ -90,8 +90,8 @@ test_that("Score1ac estimator of A and b only (beta fixed) works on highly conce
 
   #calculate scoring estimate with beta fixed at beta0:
   estimator=cdabyppi:::estimator1(samp3,acut,1, beta0)
-  estimate1=estimator$estimator1
-  std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,estimator$W_est,1, beta0)
+  estimate1=estimator$est$paramvec
+  std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,estimator$info$W,1, beta0)
   # check
   theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL)
   #2*SE bounds

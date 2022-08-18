@@ -198,7 +198,7 @@ test_that("ppi() operates when minimal points in the interior", {
 
   est <- ppi(newsample, ppi_paramvec(betaL = m$beta0[1:2], betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                             control = list(tol = 1E-10))
-  expect_absdiff_lte_v(est$est$theta, c(direct$estimator1, m$beta0), 1E-1 * abs(c(direct$estimator1, m$beta0)))
+  expect_absdiff_lte_v(est$est$theta, c(direct$est$paramvec, m$beta0), 1E-1 * abs(c(direct$est$paramvec, m$beta0)))
 })
 
 test_that("Taylor approx of matches estimator1SE with data on the boundary", {
@@ -217,7 +217,7 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
 
   acut = 0.1
   direct <- estimator1(newsample, acut = acut, incb = 1, beta0 = m$beta0)
-  directSE <- estimator1SE(newsample, acut, direct$estimator1, direct$W_est, incb = 1, m$beta0)
+  directSE <- estimator1SE(newsample, acut, direct$est$paramvec, direct$info$W, incb = 1, m$beta0)
 
   intheta <- cdabyppi:::ppi_paramvec(3, betaL = m$beta0[1:2], betap = m$beta0[3])
 

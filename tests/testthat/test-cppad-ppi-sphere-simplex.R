@@ -102,11 +102,11 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
                            weightname = "minsq", acut = acut)
 
   expect_equal(out$smval,
-               smobj(ppitapes$smotape, directestimate$estimator1, model$sample)) #failing now?
+               smobj(ppitapes$smotape, directestimate$est$paramvec, model$sample)) #failing now?
   expect_equal(out$sqgradsize,
-               sum(smobjgrad(ppitapes$smotape, directestimate$estimator1, model$sample)^2))
+               sum(smobjgrad(ppitapes$smotape, directestimate$est$paramvec, model$sample)^2))
 
-  cdabyppi:::expect_lte_v(abs(out$est$theta - c(directestimate$estimator1, model$beta0)), 0.01 * out$SE$theta) #proxy for optimisation flatness
+  cdabyppi:::expect_lte_v(abs(out$est$theta - c(directestimate$est$paramvec, model$beta0)), 0.01 * out$SE$theta) #proxy for optimisation flatness
   cdabyppi:::expect_lte_v(abs(out$est$theta - model$theta), 2 * out$SE$theta)
 })
 
