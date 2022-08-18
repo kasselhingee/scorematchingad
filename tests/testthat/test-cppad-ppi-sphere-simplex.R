@@ -98,15 +98,15 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
   directestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta0)
 
   ppitapes <- buildsmotape("sphere", "ppi",
-                           rep(0.1, model$p), ppi_paramvec(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
+                           rep(0.1, model$p), ppi_paramvec(model$p, beta = model$beta0),
                            weightname = "minsq", acut = acut)
 
   expect_equal(out$smval,
-               smobj(ppitapes$smotape, directestimate$est$paramvec, model$sample)) #failing now?
+               smobj(ppitapes$smotape, directestimate$est$paramvec[1:(length(model$theta)-3)], model$sample)) #failing now?
   expect_equal(out$sqgradsize,
-               sum(smobjgrad(ppitapes$smotape, directestimate$est$paramvec, model$sample)^2))
+               sum(smobjgrad(ppitapes$smotape, directestimate$est$paramvec[1:(length(model$theta)-3)], model$sample)^2))
 
-  cdabyppi:::expect_lte_v(abs(out$est$theta - c(directestimate$est$paramvec, model$beta0)), 0.01 * out$SE$theta) #proxy for optimisation flatness
+  cdabyppi:::expect_lte_v(abs(out$est$theta - directestimate$est$paramvec), 0.01 * out$SE$theta) #proxy for optimisation flatness
   cdabyppi:::expect_lte_v(abs(out$est$theta - model$theta), 2 * out$SE$theta)
 })
 
@@ -281,10 +281,10 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   ppitapes <- buildsmotape("sphere", "ppi",
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
                            weightname = "minsq", acut = acut)
-  expect_lt(sum(smobjgrad(ppitapes$smotape, est_direct$estimator1, prop)^2), 1E-20)
-  expect_equal(smobj(ppitapes$smotape, est_direct$estimator1, prop), est_cppad$smval, tolerance = 1E-1)
+  expect_lt(sum(smobjgrad(ppitapes$smotape, fromsmatrix(est_direct$est$ALs), prop)^2), 1E-20)
+  expect_equal(smobj(ppitapes$smotape, fromsmatrix(est_direct$est$ALs), prop), est_cppad$smval, tolerance = 1E-1)
 
   # check that rearrangement has large gradient
-  expect_gt(sum(smobjgrad(ppitapes$smotape, est_direct$estimator1[c(1:6, 8, 7, 9, 10)], prop)^2), 1E-2)
+  expect_gt(sum(smobjgrad(ppitapes$smotape, fromsmatrix(est_direct$est$ALs)[c(1:6, 8, 7, 9, 10)], prop)^2), 1E-2)
 
 })
