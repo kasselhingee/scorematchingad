@@ -4,6 +4,7 @@
 # @param  acut \eqn{a_c} for the weighting function \eqn{h}.
 # @param incb if `incb=1` then \eqn{b_L} is estimated, otherwise \eqn{b_L} is fixed at zero
 # @param beta The (fixed) Dirichlet exponents (\eqn{\beta}) of the model.
+# @param computeSE Computes the standard error using [estimator1SE()]
 # @details The PPI model is given in equation 3 of (Scealy and Wood, 2021). The matrices \eqn{A_L} and \eqn{b_L} must be estimated.
 # This function implements the score matching estimator,
 # \deqn{\hat{W}^{-1}\hat{d},}{W^{-1}d,}
@@ -36,7 +37,7 @@ ppi_usertheta_estimator1_compatible_zerob <- function(usertheta){
 }
 
 # @export
-estimator1 <- function(Y,acut,incb, beta, w=rep(1, nrow(Y)))
+estimator1 <- function(Y,acut,incb, beta, w=rep(1, nrow(Y)), computeSE = FALSE)
 {
   n <- nrow(Y) #number of samples
   p <- ncol(Y) #number of dimensions, although what happens when the beta need to be estimated?
@@ -117,8 +118,23 @@ estimator1 <- function(Y,acut,incb, beta, w=rep(1, nrow(Y)))
         } else {
           theta <- c(quartic_sphere, rep(0, p-1), beta) 
         }
+
+        # compute SE
+        if (computeSE){
+          SE <- try(estimator1SE(Y, acut, quartic_sphere, W_est, incb, beta, w))
+          if (length(quartic_sphere_SE) > 1){
+            if (incb==1){
+              SE <- c(SE, 0*beta) 
+            } else {
+              SE <- c(SE, rep(0, p-1), 0*beta) 
+            }
+          }
+        } else {
+          SE <- "Not calculated."
+        }
+
 	return(list(est = c(list(paramvec=theta), fromPPIparamvec(theta)),
+                    SE = SE,
                     info = list(W=W_est)))
 }
-
 
