@@ -78,7 +78,7 @@ ppi <- function(Y, paramvec = NULL,
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
           firstfit <- estimator1(Y,acut = acut,incb = 0,
                             beta = fromPPIparamvec(usertheta)$beta,
-                            w= w)
+                            w= w, computeSE = TRUE)
           fitfun <- "estimator1_zerob"
           estimator <- function(Y, starttheta, isfixed, w){
              out <- estimator1(Y, acut = acut, incb = 0, beta = fromPPIparamvec(starttheta)$beta, w = w)

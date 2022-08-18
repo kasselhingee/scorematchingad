@@ -95,7 +95,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
                    bdrythreshold = 1E-10,
             trans = "sqrt", bdryweight = "minsq", acut = acut)
 
-  directestimate <- estimator1(model$sample, acut, incb = TRUE, beta0 = model$beta0)
+  directestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta0)
 
   ppitapes <- buildsmotape("sphere", "ppi",
                            rep(0.1, model$p), ppi_paramvec(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
@@ -268,13 +268,13 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   prop <- rppi(1000, p, beta, ALs, bL, 35)$samp3
 
   acut = 0.1
-  est_direct <- estimator1(prop, acut, incb = 0, beta0 = beta)
+  est_direct <- estimator1(prop, acut, incb = 0, beta = beta)
 
   est_cppad <- ppi(prop, ppi_paramvec(bL = bL, beta = beta),
                    method = "cppad",
                          trans = "sqrt", acut = acut, bdryweight = "minsq",
                          control = list(tol = 1E-13))
-  expect_equal(est_cppad$est$theta[1:length(est_direct$estimator1)], est_direct$estimator1, tolerance = 1E-1,
+  expect_equal(est_cppad$est$theta, est_direct$est$paramvec, tolerance = 1E-1,
                ignore_attr = TRUE)
 
   #also it makes sense that the smo and gradient are v low at the direct estimate

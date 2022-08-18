@@ -122,12 +122,13 @@ estimator1 <- function(Y,acut,incb, beta, w=rep(1, nrow(Y)), computeSE = FALSE)
         # compute SE
         if (computeSE){
           SE <- try(estimator1SE(Y, acut, quartic_sphere, W_est, incb, beta, w))
-          if (length(quartic_sphere_SE) > 1){
+          if (length(SE) > 1){
             if (incb==1){
-              SE <- c(SE, 0*beta) 
+              SE <- c(SE, 0*beta)
             } else {
               SE <- c(SE, rep(0, p-1), 0*beta) 
             }
+            SE <- c(list(paramvec = SE), fromPPIparamvec(SE))
           }
         } else {
           SE <- "Not calculated."

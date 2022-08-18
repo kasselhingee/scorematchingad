@@ -95,7 +95,7 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
 
 
   #calculate scoring estimate:
-  estimator= cdabyppi:::estimator1(propreal,acut,1, beta0)
+  estimator= cdabyppi:::estimator1(propreal,acut,1, beta0, computeSE = TRUE)
   estimate1=estimator$est$paramvec
   #rearrange to historical ordering
   ordindx <- order(combparam2uppertriorder(length(estimate1) + p)) #the plus p is for the beta that isn't estimated
@@ -112,7 +112,7 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   expect_snapshot_value(signif(which.max(W_est), 8), style = "json")
 
   #standard errors
-  std1=cdabyppi:::estimator1SE(propreal,acut,estimator$est$paramvec,estimator$info$W,1, beta0)
+  std1= estimator$SE$paramvec
   #rearrange back to combn ordering
   std1 <- std1[ordindx]
   expect_snapshot_value(signif(std1, 8), style = "json2")
