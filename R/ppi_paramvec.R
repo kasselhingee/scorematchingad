@@ -70,6 +70,10 @@ ppi_paramvec <- function(p = NULL, AL = NULL, bL = NULL, Astar = NULL, beta = NU
     #bL
     # If a number, then bL will be fixed at the supplied value.
     if (!is.null(bL)){
+      if (is.matrix(bL)){
+         if ((nrow(bL) == 1) || (ncol(bL) == 1)){bL <- as.vector(bL)}
+         else {stop("bL is a matrix with multiple rows and columns")}
+      }
       if (!is.vector(bL, mode = "any")){stop("bL must be a vector or value")}
       if (length(bL) == 1){
         bLprep = rep(bL, p-1)
