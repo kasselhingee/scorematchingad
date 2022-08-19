@@ -7,6 +7,7 @@ skip_on_cran()
 #### Simulate Model ####
 set.seed(31241)
 m <- ppi_eggengamma(92*5)
+p <- m$p
 Y <- m$sample
 n <- nrow(Y)
 

@@ -29,13 +29,9 @@ test_that("ppi_mmmm matches for simulated weights", {
 })
 
 test_that("estimator1 and SE matches for simulated weights", {
-  est_sim <- estimator1(vw$newY, acut = acut, incb = 1, beta0 = m$beta0)
-  est_direct <- estimator1(m$sample, acut = acut, incb = 1, beta0 = m$beta0, w = vw$w)
+  est_sim <- estimator1(vw$newY, acut = acut, incb = 1, beta = m$beta0, computeSE = TRUE)
+  est_direct <- estimator1(m$sample, acut = acut, incb = 1, beta = m$beta0, w = vw$w, computeSE = TRUE)
   expect_equal(est_direct, est_sim)
-
-  estSE_sim <- estimator1SE(vw$newY,acut,est_sim$est$paramvec, est_sim$info$W, incb = 1, beta0 = m$beta0)
-  estSE_direct <- estimator1SE(m$sample, acut = acut, est_sim$est$paramvec, est_sim$info$W, incb = 1, beta0 = m$beta0, w = vw$w)
-  expect_equal(estSE_direct, estSE_sim)
 })
 
 test_that("estimatorall1 matches for simulated weights", {

@@ -194,11 +194,11 @@ test_that("ppi() operates when minimal points in the interior", {
   newsample <- rbind(newsample, m$sample[1:3, , drop = FALSE])
 
   acut = 0.1
-  direct <- estimator1(newsample, acut = acut, incb = 1, beta0 = m$beta0)
+  direct <- estimator1(newsample, acut = acut, incb = 1, beta = m$beta0)
 
   est <- ppi(newsample, ppi_paramvec(betaL = m$beta0[1:2], betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                             control = list(tol = 1E-10))
-  expect_absdiff_lte_v(est$est$theta, c(direct$est$paramvec, m$beta0), 1E-1 * abs(c(direct$est$paramvec, m$beta0)))
+  expect_absdiff_lte_v(est$est$theta, direct$est$paramvec, 1E-1 * abs(direct$est$paramvec))
 })
 
 test_that("Taylor approx of matches estimator1SE with data on the boundary", {
@@ -216,8 +216,8 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
   mean(apply(newsample, 1, min) == 0) #28% have a zero
 
   acut = 0.1
-  direct <- estimator1(newsample, acut = acut, incb = 1, beta0 = m$beta0)
-  directSE <- estimator1SE(newsample, acut, direct$est$paramvec, direct$info$W, incb = 1, m$beta0)
+  direct <- estimator1(newsample, acut = acut, incb = 1, beta = m$beta0, computeSE = TRUE)
+  directSE <- direct$SE$paramvec
 
   intheta <- cdabyppi:::ppi_paramvec(3, betaL = m$beta0[1:2], betap = m$beta0[3])
 
@@ -236,10 +236,10 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
 
   #comparisons isolated from the Rcgmin optimiser
   SE <- cppadSE(
-    tapes$smotape, theta = direct$estimator1, datasplit$interior,
+    tapes$smotape, theta = direct$est$paramvec[1:(length(intheta) - p)], datasplit$interior,
     Jsmofun_u = Jsmofun_u,
     Hsmofun_u = Hsmofun_u,
     uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
     approxorder = 100)
-  expect_equal(SE, directSE, tolerance = 1E-2)
+  expect_equal(SE, directSE[1:(length(intheta) - p)], tolerance = 1E-2)
 })
