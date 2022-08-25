@@ -136,9 +136,9 @@ Windham_raw_newtheta_original <- function(prop, cW, ldenfun, estimatorfun, theta
    # create the vector of weights
    weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = prop,
                  theta = theta, cW = cW)
-   if (var(cW[cW > 1E-10]) > (1E-10)^2){ #this check because I'm not sure what the original correction method is in the presence of a different tuning constants per value
+   if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #this check because I'm not sure what the original correction method is in the presence of a different tuning constants per value
      stop("Non-zero cW values vary, which is not supported by 'Original' Windham correction")
-   }
+   }}
    inWW <- (cW > 1E-10)
    cW <- mean(cW[cW > 1E-10])
 
