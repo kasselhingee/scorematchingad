@@ -11,16 +11,16 @@ default_Rcgmin <- function(){
 #' @describeIn default_Rcgmin Default control parameters for `FixedPoint()`, used in robust estimation.
 #' @export
 default_FixedPoint <- function(){
-  list(Method = "VEA", ConvergenceMetricThreshold = 1E-10)
+  list(Method = "Simple", ConvergenceMetricThreshold = 1E-10)
 }
 
 
 #### Fixed Point Iteration ####
 fp <- function(...){
   args = list(...)
-  if (is.null(args$control)){args$control <- default_FixedPoint()} #default control
   args <- c(args, args$control) #put control arguments into the highest level of the list
   args2 <- args[names(args) %in% formalArgs(FixedPoint::FixedPoint), drop = FALSE]
+  args2 <- c(args2, default_FixedPoint()[setdiff(names(default_FixedPoint()), names(args2))]) #this line adds any of the missing default controls to args2
   do.call(FixedPoint::FixedPoint, args2)
 }
 

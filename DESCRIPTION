@@ -1,6 +1,6 @@
 Package: cdabyppi
 Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.0010
+Version: 0.0.0.0011
 Authors@R: 
     c(person(given = "Kassel Liam", family = "Hingee", email = "kassel.hingee@anu.edu.au", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9894-2407")),
     person("Janice", "Scealy", role = c("aut")),

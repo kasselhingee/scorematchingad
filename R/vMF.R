@@ -13,7 +13,7 @@
 #' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
 #' vMF(Y, method = "smfull")
 #' vMF(Y, method = "Mardia")
-#' est <- vMF(Y, method = "Mardia_robustsm", cW = 1E-5, control = list(tol = 1E-10, maxit = 100, MaxIter = 8))
+#' est <- vMF(Y, method = "Mardia_robustsm", cW = 1E-5, control = list(tol = 1E-10, maxit = 100, MaxIter = 100))
 #' @export
 vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin(), default_FixedPoint()), w = rep(1, nrow(sample)), cW = NULL){
   firstfit <- NULL
