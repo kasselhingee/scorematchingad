@@ -167,6 +167,15 @@ ppi <- function(Y, paramvec = NULL,
                acut = acut,
                control = controls$Rcgmin,
                w = w)
+    #refactor results to fit with ppi() standard output
+    firstfit$est <- c(list(paramvec = firstfit$est$theta),
+                      fromPPIparamvec(firstfit$est$theta))
+    firstfit$SE <- c(list(paramvec = firstfit$SE$theta),
+                      fromPPIparamvec(firstfit$SE$theta))
+    names(firstfit)
+    firstfit$info <- firstfit[setdiff(names(firstfit), c("theta", "prop", "est", "SE", "info"))]
+    firstfit[setdiff(names(firstfit), c("est", "SE", "info"))] <- NULL
+    #
     fitfun <- "cppad"
     estimator <- function(Y, starttheta, isfixed, w){
       out <- ppi_cppad(Y, stheta = stheta, isfixed = isfixed,

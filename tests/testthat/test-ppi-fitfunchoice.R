@@ -62,14 +62,17 @@ test_that("Correctly chooses cppad", {
   expect_warning(out <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta0, 1)), trans = "sqrt", method = "direct",
              acut = 0.1,
              bdryweight = "prodsq"))
+  expect_ppi_str(out, m$p)
   expect_equal(out$info$method, "cppad")
 
   expect_warning(out <- ppi(m$sample, trans = "sqrt", method = "direct",
              acut = 0.1,
              bdryweight = "prodsq"))
+  expect_ppi_str(out, m$p)
 
   out <- ppi(m$sample, ppi_paramvec(beta = m$beta0), trans = "sqrt", method = "cppad",
              acut = 0.1,
              bdryweight = "prodsq")
+  expect_ppi_str(out, m$p)
   expect_equal(out$info$method, "cppad")
 })
