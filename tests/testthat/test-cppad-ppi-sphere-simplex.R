@@ -101,9 +101,9 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
                            rep(0.1, model$p), ppi_paramvec(model$p, beta = model$beta0),
                            weightname = "minsq", acut = acut)
 
-  expect_equal(out$smval,
+  expect_equal(out$info$smval,
                smobj(ppitapes$smotape, directestimate$est$paramvec[1:(length(model$theta)-3)], model$sample)) #failing now?
-  expect_equal(out$sqgradsize,
+  expect_equal(out$info$sqgradsize,
                sum(smobjgrad(ppitapes$smotape, directestimate$est$paramvec[1:(length(model$theta)-3)], model$sample)^2))
 
   cdabyppi:::expect_lte_v(abs(out$est$theta - directestimate$est$paramvec), 0.01 * out$SE$theta) #proxy for optimisation flatness
@@ -125,9 +125,9 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmo
 
   directestimate <- estimator2(model$sample, acut, incb = TRUE, beta0 = model$beta0)
 
-  expect_equal(out$smval,
+  expect_equal(out$info$smval,
                smobj(ppitapes$smotape, directestimate$estimator2, model$sample))
-  expect_equal(out$sqgradsize,
+  expect_equal(out$info$sqgradsize,
                sum(smobjgrad(ppitapes$smotape, directestimate$estimator2, model$sample)^2))
 
   cdabyppi:::expect_lte_v(abs(out$est$theta - c(directestimate$estimator2, model$beta0)), 0.01 * out$SE$theta) #proxy for optimisation flatness
@@ -164,10 +164,10 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
 
   directestimate <- estimatorall1(utabl, acut)
 
-  expect_equal(out$smval,
+  expect_equal(out$info$smval,
                smobj(ppitapes$smotape, directestimate$estimator1, utabl),
                tolerance = 1E-2)
-  expect_equal(out$sqgradsize,
+  expect_equal(out$info$sqgradsize,
                sum(smobjgrad(ppitapes$smotape, directestimate$estimator1, utabl)^2))
 
   cdabyppi:::expect_lt_v(abs(out$est$theta - directestimate$estimator1), out$SE$theta) #proxy for optimisation flatness
@@ -274,7 +274,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
                    method = "cppad",
                          trans = "sqrt", acut = acut, bdryweight = "minsq",
                          control = list(tol = 1E-13))
-  expect_equal(est_cppad$est$theta, est_direct$est$paramvec, tolerance = 1E-1,
+  expect_equal(est_cppad$est$paramvec, est_direct$est$paramvec, tolerance = 1E-1,
                ignore_attr = TRUE)
 
   #also it makes sense that the smo and gradient are v low at the direct estimate
@@ -282,7 +282,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
                            weightname = "minsq", acut = acut)
   expect_lt(sum(smobjgrad(ppitapes$smotape, fromsmatrix(est_direct$est$ALs), prop)^2), 1E-20)
-  expect_equal(smobj(ppitapes$smotape, fromsmatrix(est_direct$est$ALs), prop), est_cppad$smval, tolerance = 1E-1)
+  expect_equal(smobj(ppitapes$smotape, fromsmatrix(est_direct$est$ALs), prop), est_cppad$info$smval, tolerance = 1E-1)
 
   # check that rearrangement has large gradient
   expect_gt(sum(smobjgrad(ppitapes$smotape, fromsmatrix(est_direct$est$ALs)[c(1:6, 8, 7, 9, 10)], prop)^2), 1E-2)

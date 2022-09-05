@@ -50,7 +50,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   # compare to ppi via cppad
   expect_lt(sum(smobjgrad(tapes$smotape, estimate1all, samp3)^2), 1E-14)
   est2 <- ppi(samp3, trans = "sqrt", bdryweight = "minsq", acut = acut, bdrythreshold = 1E-20, control = list(tol = 1E-20), method = "cppad")
-  expect_equal(est2$est$theta, drop(estimate1all), tolerance = 1E-2) #within 1% of each other roughly
+  expect_equal(est2$est$paramvec, drop(estimate1all), tolerance = 1E-2) #within 1% of each other roughly
 })
 
 test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger than -0.5", {

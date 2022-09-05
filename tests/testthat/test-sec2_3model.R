@@ -24,6 +24,7 @@ test_that("Score1ac estimator works on highly concentrated data, with some compo
   beta0[p]=-0.5
 
   #simulate sample from PPI model
+  set.seed(31654)
   samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
 
   #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
