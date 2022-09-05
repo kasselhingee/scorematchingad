@@ -10,9 +10,11 @@ expect_ppi_str <- function(object, p){
   }
 
   correctest <- correcteststr(object$est, p)
-  if (object$SE != "Not calculated."){
+  if ((length(object$SE) == 1) && (object$SE == "Not calculated.")){
+    correctSE = list(SEnotcalculated = TRUE)
+  } else {
     correctSE <- correcteststr(object$SE, p)
-  } else {correctSE = list(SEnotcalculated = TRUE)}
+  }
 
   correctmethodstr <- isTRUE((class(object$info$method) == "character") & (nchar(object$info$method) > 0))
   passsummary <- list(
