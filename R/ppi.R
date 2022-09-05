@@ -87,17 +87,16 @@ ppi <- function(Y, paramvec = NULL,
         } else if (ppi_usertheta_estimator1_compatible_incb(usertheta)){
           firstfit <- estimator1(Y,acut = acut,incb = 1,
                             beta = fromPPIparamvec(usertheta)$beta,
-                            w= w)
+                            w= w, computeSE = TRUE)
           fitfun <- "estimator1_incb"
           estimator <- function(Y, starttheta, isfixed, w){
              out <- estimator1(Y, acut = acut, incb = 1, beta = fromPPIparamvec(starttheta)$beta, w = w)
              return(out$est$paramvec)
           }
         } else if (utheta_estimatorall1_betap_compatible(usertheta)){
-          firstfit <- estimatorall1(Y, acut = acut,
-                            betap = tail(fromPPIparamvec(usertheta)$beta, 1),
-                            w= w)
-          fitfun <- "estimatorall1_betap"
+          firstfit <- ppi_sqrt_minimah_full(Y, acut, tail(fromPPIparamvec(usertheta)$beta, 1),
+                                            w)
+          fitfun <- "ppi_sqrt_minimah_betap"
           estimator <- function(Y, starttheta, isfixed, w){
              out <- estimatorall1(Y, acut = acut,
                                   betap = tail(fromPPIparamvec(starttheta)$beta, 1),
@@ -105,10 +104,9 @@ ppi <- function(Y, paramvec = NULL,
              return(out$theta)
           }
         } else if (utheta_estimatorall1_full_compatible(usertheta)){
-          firstfit <- estimatorall1(Y, acut = acut,
-                               betap = NULL,
-                               w= w)
-          fitfun <- "estimatorall1_full"
+          firstfit <- ppi_sqrt_minimah_full(Y, acut, betap = NULL,
+                                            w)
+          fitfun <- "ppi_sqrt_minimah_full"
           estimator <- function(Y, starttheta, isfixed, w){
              out <- estimatorall1(Y, acut = acut,
                                   betap = NULL,
@@ -131,10 +129,8 @@ ppi <- function(Y, paramvec = NULL,
              return(t_sfi2u(out, starttheta, isfixed))
           }
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
-          firstfit <- estimator2(Y,acut = acut,incb = 0,
-                            beta0 = fromPPIparamvec(usertheta)$beta,
-                            w= w)
-          fitfun <- "estimator2_zerob"
+          firstfit <- ppi_sqrt_prodh_zerob(Y, acut, beta = fromPPIparamvec(usertheta)$beta, w)
+          fitfun <- "ppi_sqrt_prodh_zerob"
           estimator <- function(Y, starttheta, isfixed, w){
              out <- estimator2(Y, acut = acut, incb = 0,
                                beta0 = fromPPIparamvec(starttheta)$beta,
@@ -142,10 +138,8 @@ ppi <- function(Y, paramvec = NULL,
              return(out$theta)
           }
         } else if (ppi_usertheta_estimator1_compatible_incb(usertheta)){
-          firstfit <- estimator2(Y,acut = acut,incb = 1,
-                            beta0 = fromPPIparamvec(usertheta)$beta,
-                            w= w)
-          fitfun <- "estimator2_incb"
+          firstfit <- ppi_sqrt_prodh(Y, acut, beta = fromPPIparamvec(usertheta)$beta, w)
+          fitfun <- "ppi_sqrt_prodh"
           estimator <- function(Y, starttheta, isfixed, w){
              out <- estimator2(Y, acut = acut, incb = 1,
                                beta0 = fromPPIparamvec(starttheta)$beta,

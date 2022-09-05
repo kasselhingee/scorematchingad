@@ -189,5 +189,17 @@ estimatorall1_Wnd <- function(prop,acut,betap = NULL, w = rep(1, nrow(prop)))
 
 }
 
-
+# a clean wrapping for use in ppi()
+ppi_sqrt_minimah_full <- function(Y, acut, betap, w){
+  rawfit <- estimatorall1(Y, acut = acut,
+                            betap = betap,
+                            w= w)
+  paramvec <- drop(rawfit$estimator1)
+  if (!is.null(betap)){paramvec <- c(paramvec, betap)}
+  fit <- list()
+  fit$est <- c(list(paramvec = paramvec),
+               fromPPIparamvec(paramvec))
+  fit$SE <- "Not calculated."
+  return(fit)
+}
 
