@@ -54,6 +54,26 @@ WindhamWeights <- function(ldenfun, Y, theta, cW){
 #' isfixed = a vecotr of booleans. FALSE means that element of theta is estimated,
 #' w = a vector of weights
 #' TRUE means that element of theta is fixed at the value in `theta`.
+#' The result of `estimator` must a numeric vector the same length as `starttheta`.
+test_estimator <- function(estimator, Y, starttheta, isfixed, w){
+  if (is.null(estimator)){stop("estimator is NULL")}
+  if(!all(names(formals(estimator)[1:4]) == c("Y",  "starttheta", "isfixed", "w"))){
+    stop("First four arguments of estimator must be called: Y, starttheta, isfixed, and w.")
+  }
+
+  if (is.null(w)){
+    w <- runif(nrow(Y), 0, 1)
+    w <- w / sum(w)
+  }
+
+  newtheta <- estimator(Y, starttheta, isfixed, w)
+  if (!isTRUE(class(newtheta) == "numeric")){stop("Estimator must return a numeric value")}
+  if (!isTRUE(is.vector(newtheta))){stop("Estimator must return a vector")}
+  if (!isTRUE(length(newtheta) == length(starttheta))){stop("Estimator must return a vector of the same length as the input parameter vector")}
+  invisible(NULL)
+}
+
+
 #' @param fpcontrol A named list of control arguments to pass to `FixedPoint::FixedPoint()` for finding the robust estimate.
 #' @param ... Arguments passed to `estimator`.
 #' @export
@@ -62,16 +82,13 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, or
     ...)
 
 {
-  if (is.null(estimatorfun)){stop("estimatorfun is NULL")}
-  if(!all(names(formals(estimatorfun)[1:4]) == c("Y",  "starttheta", "isfixed", "w"))){
-    stop("First four arguments of estimatorfun must be called: Y, starttheta, isfixed, and w.")
-  }
+  
+  test_estimator(estimatorfun, Y[1:min(50, nrow(Y)), ], starttheta, isfixed, w = NULL)
 
   if (!originalcorrectionmethod){
     tauc <- WindhamCorrection(cW)
     taucinv <- solve(tauc)
   }
-
   myfun <- function(unisfixed){
     stopifnot(length(unisfixed) == sum(!isfixed))
     previous <- unisfixed
