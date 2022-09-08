@@ -98,20 +98,16 @@ ppi <- function(Y, paramvec = NULL,
                                             w)
           fitfun <- "ppi_sqrt_minimah_betap"
           estimator <- function(Y, starttheta, isfixed, w){
-             out <- estimatorall1(Y, acut = acut,
-                                  betap = tail(fromPPIparamvec(starttheta)$beta, 1),
-                                  w = w)
-             return(out$theta)
+             out <- ppi_sqrt_minimah_full(Y, acut, betap = tail(starttheta, 1), w = w)
+             return(out$est$paramvec)
           }
         } else if (utheta_estimatorall1_full_compatible(usertheta)){
           firstfit <- ppi_sqrt_minimah_full(Y, acut, betap = NULL,
                                             w)
           fitfun <- "ppi_sqrt_minimah_full"
           estimator <- function(Y, starttheta, isfixed, w){
-             out <- estimatorall1(Y, acut = acut,
-                                  betap = NULL,
-                                  w = w)
-             return(out$theta)
+             out <-  ppi_sqrt_minimah_full(Y, acut, betap = NULL, w)
+             return(out$est$paramvec)
           }
         }
       }
