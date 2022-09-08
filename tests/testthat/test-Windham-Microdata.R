@@ -1,7 +1,7 @@
 skip_on_cran() #too slow
 
 test_that("robust ppi via alr estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
-
+warning("Commit 9d5451f73ca837e41eefcd3b7ce206bf3ce75210 found that using ppi() gave different estimates to historical and my best guess is that the difference is from the starting parameters")
 data("microdata", package = "cdabyppi")
 countdata=as.matrix(microdata[,12:31])
 
