@@ -93,7 +93,7 @@ test_that("vMF matches for simulated weights, ignoring SE, which shouldn't match
 })
 
 
-test_that("vMF() robust fitting works on dimension 5", {
+test_that("vMF() robust fitting works on dimension 5 with direction outliers", {
   set.seed(123)
   p <- 5
   k <- 3
@@ -141,7 +141,7 @@ test_that("robust vMF() with concentration outliers is poor with full robustness
   sample <- movMF::rmovMF(100, km)
   # add outliers in concentration only
   set.seed(2151)
-  outliers <- movMF::rmovMF(5, 0.1 * km)
+  outliers <- movMF::rmovMF(30, 0.1 * km)
   sample_o <- rbind(sample, outliers)
 
   #Mardia method
@@ -150,6 +150,7 @@ test_that("robust vMF() with concentration outliers is poor with full robustness
   out2 <- vMF(sample_o, method = "Mardia", cW = 1E-2)
   #expect partially robust Mardia method to be better at k
   out3 <- vMF(sample_o, method = "Mardia_robustsm", cW = 0.01)
+  out1$k; out2$k; out3$k
   sum((out1$km - km)^2)
   sum((out2$km - km)^2)
   expect_false(all(abs(out2$km - km) < abs(out1$km - km)))
