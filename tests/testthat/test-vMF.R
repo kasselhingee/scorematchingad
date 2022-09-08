@@ -130,10 +130,10 @@ test_that("vMF() robust fitting works on dimension 5 with direction outliers", {
   expect_true(all(abs(out3$km - km) > abs(out1$km - km)))
 })
 
-test_that("robust vMF() with concentration outliers is poor with full robustness, better with partial robustnes, p = 5", {
+test_that("robust vMF() with concentration outliers: ok with full robust, better with hybrid, p = 5", {
   set.seed(123)
   p <- 5
-  k <- 3
+  k <- 10 #probably more realistic than 3 - higher concentration means outliers are possible - low concentration means distribution looks uniform
   m <- rep(1, p) #uniform direction poorness due to outliers is evenly distributed in each element
   m <- m / sqrt(sum(m^2))
   km <-  k * m
@@ -141,7 +141,7 @@ test_that("robust vMF() with concentration outliers is poor with full robustness
   sample <- movMF::rmovMF(100, km)
   # add outliers in concentration only
   set.seed(2151)
-  outliers <- movMF::rmovMF(30, 0.1 * km)
+  outliers <- movMF::rmovMF(5, 0.1 * km)
   sample_o <- rbind(sample, outliers)
 
   #Mardia method
@@ -150,12 +150,14 @@ test_that("robust vMF() with concentration outliers is poor with full robustness
   out2 <- vMF(sample_o, method = "Mardia", cW = 1E-2)
   #expect partially robust Mardia method to be better at k
   out3 <- vMF(sample_o, method = "Mardia_robustsm", cW = 0.01)
-  out1$k; out2$k; out3$k
-  sum((out1$km - km)^2)
-  sum((out2$km - km)^2)
+
+  #mixed results for full robust - choosing mean direction
+  expect_lt(abs(out2$k - k), abs(out1$k - k))
   expect_false(all(abs(out2$km - km) < abs(out1$km - km)))
-  expect_false(abs(out2$k - k) < abs(out1$k - k))
+
+  # for hybrid, results more solid
   expect_equal(out3$m, out1$m) #because m is estimated the same way
+  expect_true(all(abs(out3$k * out3$m - km) < abs(out1$km - km)))
   expect_lt(abs(out3$k - k), abs(out1$k - k))
 })
 
