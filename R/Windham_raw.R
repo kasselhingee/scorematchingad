@@ -83,7 +83,7 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, or
 
 {
   
-  test_estimator(estimatorfun, prop[1:min(50, nrow(Y)), ], starttheta, isfixed, w = NULL)
+  test_estimator(estimatorfun, prop[1:min(50, nrow(prop)), , drop = FALSE], starttheta, isfixed, w = NULL)
 
   if (!originalcorrectionmethod){
     tauc <- WindhamCorrection(cW)
