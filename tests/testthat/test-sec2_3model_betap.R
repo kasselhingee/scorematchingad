@@ -21,13 +21,6 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   theta <- cdabyppi:::ppi_paramvec(p,
               AL = ALs, bL = drop(bL), beta = drop(beta0))
 
-  #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
-  #a few times to check that it is an appropriate upper bound.
-  # 4 seems to be pretty good (I've run the above rppi many times).
-  # I.e. the simulation result doesn't suggest changing maxden=4
-  stopifnot(samp1$maxden <= 4)
-  maxden <- 4
-
   ####Score1ac estimator##
 
   #a_c for h function:
@@ -49,8 +42,9 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
 
   # compare to ppi via cppad
   expect_lt(sum(smobjgrad(tapes$smotape, estimate1all, samp3)^2), 1E-14)
-  est2 <- ppi(samp3, trans = "sqrt", bdryweight = "minsq", acut = acut, bdrythreshold = 1E-20, control = list(tol = 1E-20), method = "cppad")
+  est2 <- ppi(samp3, trans = "sqrt", bdryweight = "minsq", acut = acut, bdrythreshold = 1E-20, control = list(tol = 1E-20), method = "cppad", w = NULL)
   expect_equal(est2$est$paramvec, drop(estimate1all), tolerance = 1E-2) #within 1% of each other roughly
+  cdabyppi:::expect_absdiff_lte_v(drop(estimate1all), est2$est$paramvec, 2*est2$SE$paramvec)
 })
 
 test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger than -0.5", {
