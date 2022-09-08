@@ -20,8 +20,9 @@ test_that("windam_raw gives correct params on simulated data, with two outliers.
     return(logden)
   }
   ppiestimator <- function(Y, starttheta, isfixed, w){
-    ppi(Y, acut = 0.1, w = w, method = "direct", trans = "sqrt", bdryweight = "minsq")$estimator1
+    ppi(Y, acut = 0.1, w = w, method = "direct", trans = "sqrt", bdryweight = "minsq")$est$paramvec
   }
+  test_estimator(ppiestimator, m$sample[1:10,], m$theta, rep(FALSE, length(m$theta)), w = NULL)
 
   isfixed <- cdabyppi:::ppi_paramvec(m$p, AL=FALSE, bL = FALSE, betaL = FALSE, betap = FALSE)
   est <- cdabyppi:::windham_raw(prop = m$sample,
@@ -53,9 +54,9 @@ test_that("windam_raw gives correct params on simulated data, with two outliers.
                      isfixed = isfixed,
                      originalcorrectionmethod = FALSE)
 
-  expect_equal(est$theta, est_simple$estimator1, tolerance = 0.1, ignore_attr = TRUE)
+  expect_equal(est$theta, est_simple$est$paramvec, tolerance = 0.1, ignore_attr = TRUE)
   #below checks that the non-robust estimate with outliers is much different to the robust estimate
-  expect_error(expect_equal(est$theta, est_simple_outlier$estimator1, tolerance = 0.1, ignore_attr = TRUE))
+  expect_error(expect_equal(est$theta, est_simple_outlier$est$paramvec, tolerance = 0.1, ignore_attr = TRUE))
 
   # expect that the different cW values would lead to different estimates
   expect_gt(mean(abs(est$theta - est_varcW$theta)), 10)
@@ -88,7 +89,7 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   rmse(cdabyppi:::toPPIparamvec(ALs, bL, beta), est_unload$est$paramvec)
 
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
-  expect_gt(rmse(beta, est_unload$ppi[6:8]), rmse(beta, fromPPIparamvec(est1$theta)$beta))
+  expect_gt(rmse(beta, est_unload$est$beta), rmse(beta, fromPPIparamvec(est1$theta)$beta))
 })
 
 test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5", {
