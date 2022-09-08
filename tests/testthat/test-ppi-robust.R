@@ -11,13 +11,13 @@ test_that("ppi including betaL with cW gives correct params on simulated data, w
   est_norobust <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq")
   est_norobust2 <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = ppi_cW_auto(0, m$sample))
 
-  expect_equal(est_norobust2$theta, est_norobust$theta)
+  expect_equal(est_norobust2$theta, est_norobust$est$paramvec)
 
   #robust
   est_robust1 <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)), acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq", cW = ppi_cW_auto(1E-1, m$sample))
 
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
-  expect_gt(rmse(m$theta, est_norobust$theta),
+  expect_gt(rmse(m$theta, est_norobust$est$paramvec),
             rmse(m$theta, est_robust1$theta))
 })
 
