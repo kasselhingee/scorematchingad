@@ -141,17 +141,19 @@ test_that("robust vMF() with concentration outliers is poor with full robustness
   sample <- movMF::rmovMF(100, km)
   # add outliers in concentration only
   set.seed(2151)
-  outliers <- movMF::rmovMF(10, 10 * km)
+  outliers <- movMF::rmovMF(5, 0.1 * km)
   sample_o <- rbind(sample, outliers)
 
   #Mardia method
   out1 <- vMF(sample_o, method = "Mardia")
-  #full method, robust, expect to be closer to true value
-  out2 <- vMF(sample_o, method = "Mardia", cW = 0.01)
+  #full method, robust, expect to be closer to true value overall, but have mixed results
+  out2 <- vMF(sample_o, method = "Mardia", cW = 1E-2)
+  #expect partially robust Mardia method to be better at k
+  out3 <- vMF(sample_o, method = "Mardia_robustsm", cW = 0.01)
+  sum((out1$km - km)^2)
+  sum((out2$km - km)^2)
   expect_false(all(abs(out2$km - km) < abs(out1$km - km)))
   expect_false(abs(out2$k - k) < abs(out1$k - k))
-  #expect partially robust Mardia method to be better at k
-  out3 <- vMF(sample_o, method = "Mardia_robustsm", cW = 0.1)
   expect_equal(out3$m, out1$m) #because m is estimated the same way
   expect_lt(abs(out3$k - k), abs(out1$k - k))
 })
