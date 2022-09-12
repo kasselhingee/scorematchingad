@@ -1,5 +1,6 @@
-# @title Compute value of score matching objective for multiple observations
-#' @description Computes n times the score matching objective for n observations, given theta
+#' @NoRd
+#' @title Compute value of score matching objective for multiple observations
+#' @description Computes the score matching objective given theta
 #' @param smofun A tape of the score matching objective calculation
 #' @param theta A parameter set
 #' @param utabl A matrix of observations, each row being an observation.
@@ -10,8 +11,18 @@
 #' For best results these locations should be further from the manifold boundary and close to their corresponding measurements.
 #' Taylor approximation around the rows of `boundaryapprox` will be used to approximate the score matching objective for these measurements.
 #' @param stopifnan If TRUE function will create an error when the return is not a number.
+#' @return The functions `*_sum` all return a value with an attribute 'normaliser' that is the normalising constant needed to turn the result into an average. The functions `smobj()`, `smobjgrad()`, `smobjhess()`.
 # @export
-smobj <- function(smofun, theta, utabl,
+smobj <- function(...){ #smobj average of observations (i.e. smobj_sum / sum(w))
+  args <- list(...)
+  asum <- do.call(smobj_sum, args)
+  asum / attr(asum, "normaliser")
+  attr(asum, "normaliser") <- NULL
+  return(asum)
+}
+
+# @describeIn smobj The sum of score-matching objective value (no division by n - useful for optimisation where floating point issues can accumulate)
+smobj_sum <- function(smofun, theta, utabl,
                   smofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
                   stopifnan = FALSE, w = NULL){
   sc_perpt_interior <- c()
@@ -32,28 +43,48 @@ smobj <- function(smofun, theta, utabl,
     })
   }
   sc_perpt <- c(sc_perpt_interior, sc_perpt_boundary)
-  if (is.null(w)){nscmo <- sum(unlist(sc_perpt))}
-  else {nscmo <- sum(unlist(sc_perpt) * w)}
+  if (is.null(w)){
+     nscmo <- sum(unlist(sc_perpt))
+     attr(nscmo, "normaliser") <- length(sc_perpt)
+  } else {
+     stopifnot(length(w) == length(sc_perpt))
+     nscmo <- sum(unlist(sc_perpt) * w)
+     attr(nscmo, "normaliser") <- sum(w)}
   if (stopifnan && is.nan(nscmo)){stop("smobj() generates a NaN")}
   return(nscmo)
 }
 
-smobj_b <- function(theta, ...){
+smobj_sum_b <- function(theta, ...){
   args = list(...)
-  args2 <- args[names(args) %in% formalArgs(smobj)]
-  do.call(smobj, c(list(theta = theta), args2))
+  args2 <- args[names(args) %in% formalArgs(smobj_sum)]
+  do.call(smobj_sum, c(list(theta = theta), args2))
 }
 
 # @describeIn smobj The gradient of the score matching objective function at given beta
 # @export
-smobjgrad <- function(smofun, theta, utabl,
+smobjgrad <- function(...){ #smobjgrad average of observations (i.e. smobjgrad_sum / sum(w))
+  args <- list(...)
+  asum <- do.call(smobjgrad_sum, args)
+  asum / attr(asum, "normaliser")
+  attr(asum, "normaliser") <- NULL
+  return(asum)
+}
+
+smobjgrad_sum <- function(smofun, theta, utabl,
                       Jsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
                       stopifnan = FALSE, w = NULL){
   grad_perpt <- smobjgrad_perpt(smofun, theta, utabl,
                   Jsmofun_u = Jsmofun_u, uboundary = uboundary, boundaryapprox = boundaryapprox,
                   approxorder = approxorder)
-  if (is.null(w)){ngrad <- colSums(do.call(rbind, grad_perpt))}
-  else {ngrad <- apply(do.call(rbind, grad_perpt), MARGIN = 2, function(x) sum(x * w))}
+  grad_perpt <- do.call(rbind, grad_perpt)
+  if (is.null(w)){
+    ngrad <- colSums(grad_perpt)
+    attr(ngrad, "normaliser") <- nrow(grad_perpt)
+  } else {
+    stopifnot(length(w) == nrow(grad_perpt))
+    ngrad <- colSums(grad_perpt * w)
+    attr(ngrad, "normaliser") <- sum(w)
+  }
   if (stopifnan && any(is.nan(ngrad))){stop("smobjgrad() generates a NaN")}
   return(ngrad)
 }
@@ -81,15 +112,22 @@ smobjgrad_perpt <- function(smofun, theta, utabl,
   return(grad_perpt)
 }
 
-smobjgrad_b <- function(theta, ...){
+smobjgrad_sum_b <- function(theta, ...){
   args = list(...)
-  args2 <- args[names(args) %in% formalArgs(smobjgrad)]
-  do.call(smobjgrad, c(list(theta = theta), args2))
+  args2 <- args[names(args) %in% formalArgs(smobjgrad_sum)]
+  do.call(smobjgrad_sum, c(list(theta = theta), args2))
 }
 
 # @describeIn smobj Hessian of the score matching objective
 # @export
-smobjhess <- function(smofun, theta, utabl,
+smobjhess <- function(...){ #smobjgrad average of observations (i.e. smobjgrad_sum / sum(w))
+  args <- list(...)
+  asum <- do.call(smobjhess_sum, args)
+  asum / attr(asum, "normaliser")
+  attr(asum, "normaliser") <- NULL
+  return(asum)
+}
+smobjhess_sum <- function(smofun, theta, utabl,
                       Hsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
                       stopifnan = FALSE, w = NULL){
   hess_perpt_interior <- list()
@@ -111,10 +149,16 @@ smobjhess <- function(smofun, theta, utabl,
   }
 
   hess_perpt <- c(hess_perpt_interior, hess_perpt_boundary)
-
-  if (is.null(w)){nhess <- colSums(do.call(rbind, hess_perpt))}
-  else {nhess <- apply(do.call(rbind, hess_perpt), MARGIN = 2, function(x)sum(x*w))}
+  hess_perpt <- do.call(rbind, hess_perpt)
+  if (is.null(w)){
+    nhess <- colSums(hess_perpt)
+    attr(nhess, "normaliser") <- length(hess_perpt)
+  } else {
+    stopifnot(length(w) == nrow(hess_perpt))
+    nhess <- apply(hess_perpt, MARGIN = 2, function(x)sum(x*w))
+    attr(nhess, "normaliser") <- sum(w)}
   dim(nhess) <- rep(length(theta), 2)
   if (stopifnan && any(is.nan(nhess))){stop("smobjhess() generates a NaN")}
   return(nhess)
 }
+

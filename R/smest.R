@@ -36,8 +36,8 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
   }
 
   out <- Rcgmin::Rcgmin(par = theta,
-                        fn = smobj_b,
-                        gr = smobjgrad_b,
+                        fn = smobj_sum_b,
+                        gr = smobjgrad_sum_b,
                         # function(theta, ...){smobj(smofun, theta, utabl, smofun_u, ...)},
                         # gr = function(theta, ...){smobjgrad(smofun, theta, utabl, Jsmofun_u, ...)},
                         smofun = smofun,
@@ -57,6 +57,13 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
     }
   }
   if (out$convergence != 0){warning("Optimisation did not converge.")}
+
+  # return results as if averages, not sums were used
+  attr(out$par, "normaliser") <- NULL
+  out$value <- out$value / attr(out$value, "normaliser")
+  attr(out$value, "normaliser") <- NULL
+
+
   out$SE <- try({
     cppadSE(
       smofun, theta = out$par, utabl,
@@ -69,13 +76,6 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
                          uboundary = uboundary, boundaryapprox = boundaryapprox,
                          approxorder = approxorder,
                          w = w)
-  if (is.null(w)){ #this is because smobj etc are sums of the observations, not averages
-     if (is.null(uboundary)){n <- nrow(utabl)}
-     else {n <- nrow(utabl) + nrow(uboundary)} 
-     gradatest <- gradatest / n
-  } else {
-     gradatest <- gradatest / sum(w)
-  }
   out$sqgradsize <- sum(gradatest)^2
   return(out)
 }
