@@ -67,6 +67,7 @@ test_that("Correctly chooses cppad", {
 
   expect_warning(out <- ppi(m$sample, trans = "sqrt", method = "direct",
              acut = 0.1,
+             control = list(tol = 1E-10),
              bdryweight = "prodsq"))
   expect_ppi_str(out, m$p)
 
