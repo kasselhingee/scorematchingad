@@ -16,9 +16,9 @@
 smobj <- function(...){ #smobj average of observations (i.e. smobj_sum / sum(w))
   args <- list(...)
   asum <- do.call(smobj_sum, args)
-  asum / attr(asum, "normaliser")
-  attr(asum, "normaliser") <- NULL
-  return(asum)
+  avg <- asum / attr(asum, "normaliser")
+  attr(avg, "normaliser") <- NULL
+  return(avg)
 }
 
 # @describeIn smobj The sum of score-matching objective value (no division by n - useful for optimisation where floating point issues can accumulate)
@@ -65,9 +65,9 @@ smobj_sum_b <- function(theta, ...){
 smobjgrad <- function(...){ #smobjgrad average of observations (i.e. smobjgrad_sum / sum(w))
   args <- list(...)
   asum <- do.call(smobjgrad_sum, args)
-  asum / attr(asum, "normaliser")
-  attr(asum, "normaliser") <- NULL
-  return(asum)
+  avg <- asum / attr(asum, "normaliser")
+  attr(avg, "normaliser") <- NULL
+  return(avg)
 }
 
 smobjgrad_sum <- function(smofun, theta, utabl,
@@ -123,9 +123,9 @@ smobjgrad_sum_b <- function(theta, ...){
 smobjhess <- function(...){ #smobjgrad average of observations (i.e. smobjgrad_sum / sum(w))
   args <- list(...)
   asum <- do.call(smobjhess_sum, args)
-  asum / attr(asum, "normaliser")
-  attr(asum, "normaliser") <- NULL
-  return(asum)
+  avg <- asum / attr(asum, "normaliser")
+  attr(avg, "normaliser") <- NULL
+  return(avg)
 }
 smobjhess_sum <- function(smofun, theta, utabl,
                       Hsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,

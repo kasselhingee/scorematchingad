@@ -1,6 +1,8 @@
-# @title Find the optimal parameter for the score matching objective
+#' @NoRd
+#' @title Find the optimal parameter for the score matching objective
 #' @description Using a numerical optimiser and `smobj()` and `smobjgrad()`, find the parameter set with minimal `smobj` value.
 #' This function lightly wraps `Rcgmin::Rcgmin()` with some results checking.
+#' @details The call to `Rcgmin()` uses the *sum* of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to `Rcgmin()` (e.g. `tol`). The results are converted into averages as appropriate so the use of sums (as opposed to averages) can be ignored when not setting control parameters, or studying the behaviour of Rcgmin. 
 #' @param smofun A tape of the score matching objective calculation
 #' @param theta The starting parameter set
 #' @param utabl A matrix of observations, each row being an observation.
