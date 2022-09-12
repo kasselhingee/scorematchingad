@@ -16,12 +16,12 @@ test_that("prodsq weights match estimator2", {
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2017/11/why-optim-is-out-of-date/)
 
   out <- Rcgmin::Rcgmin(par = beta*0,
-               fn = function(beta){smobj(tapes$smotape, beta, utabl)},
-               gr = function(beta){smobjgrad(tapes$smotape, beta, utabl)})
+               fn = function(beta){smobj_sum(tapes$smotape, beta, utabl)}, # as.numeric() removes the attributes
+               gr = function(beta){smobjgrad_sum(tapes$smotape, beta, utabl)})
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- dir_sqrt_prodh(utabl, acut)
-  expect_equal(out$par, directestimate, tolerance = 1E-3, ignore_attr = TRUE)
+  expect_equal(out$par, directestimate, ignore_attr = TRUE)
 })
 
 
@@ -40,12 +40,12 @@ test_that("minsq weights match estimator2", {
 
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
   out <- Rcgmin::Rcgmin(par = beta*0,
-               fn = function(beta){smobj(tapes$smotape, beta, utabl)},
-               gr = function(beta){smobjgrad(tapes$smotape, beta, utabl)})
+               fn = function(beta){smobj_sum(tapes$smotape, beta, utabl)},
+               gr = function(beta){smobjgrad_sum(tapes$smotape, beta, utabl)})
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- dir_sqrt_minimah(utabl, acut)
-  expect_equal(out$par, directestimate, tolerance = 1E-3, ignore_attr = TRUE)
+  expect_equal(out$par, directestimate, ignore_attr = TRUE)
 })
 
 
@@ -63,12 +63,12 @@ test_that("minsq weights match estimator2 for d = 4", {
 
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2016/11/why-optim-is-out-of-date/)
   out <- Rcgmin::Rcgmin(par = beta*0,
-               fn = function(beta){smobj(tapes$smotape, beta, utabl)},
-               gr = function(beta){smobjgrad(tapes$smotape, beta, utabl)})
+               fn = function(beta){smobj_sum(tapes$smotape, beta, utabl)},
+               gr = function(beta){smobjgrad_sum(tapes$smotape, beta, utabl)})
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- dir_sqrt_minimah(utabl, acut)
-  expect_equal(out$par, directestimate, tolerance = 1E-3, ignore_attr = TRUE)
+  expect_equal(out$par, directestimate, ignore_attr = TRUE)
 })
 
 test_that("fixed beta[p] with minsq weights match true value", {
@@ -85,8 +85,8 @@ test_that("fixed beta[p] with minsq weights match true value", {
 
   # There are better optimisers than below: John Nash at https://www.r-bloggers.com/2017/11/why-optim-is-out-of-date/)
   out <- Rcgmin::Rcgmin(par = beta[-3] * 0,
-               fn = function(beta){smobj(tapes$smotape, beta, utabl)},
-               gr = function(beta){smobjgrad(tapes$smotape, beta, utabl)})
+               fn = function(beta){smobj_sum(tapes$smotape, beta, utabl)},
+               gr = function(beta){smobjgrad_sum(tapes$smotape, beta, utabl)})
 
   directestimate <- dir_sqrt_minimah(utabl, acut)
   expect_equal(out$par, directestimate[-3], tolerance = 0.05, ignore_attr = TRUE) #tolerance is usually relative
@@ -106,8 +106,8 @@ test_that("cppad-based Score2 estimate leads to a match for large number of obse
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
   out <- Rcgmin::Rcgmin(par = beta*0,
-               fn = function(beta){smobj(tapes$smotape, beta,utabl)},
-               gr = function(beta){smobjgrad(tapes$smotape, beta, utabl)})
+               fn = function(beta){smobj_sum(tapes$smotape, beta,utabl)},
+               gr = function(beta){smobjgrad_sum(tapes$smotape, beta, utabl)})
 
   expect_equal(out$par, beta, tolerance = 1E-1, ignore_attr = TRUE)
 })
