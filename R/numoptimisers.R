@@ -6,7 +6,7 @@
 #' The default for `Rcgmin()` is `list(tol = 1E-20)`, which means the optimisation won't end until the squared size of the gradient at the estimate is less than 1E-20.
 #' @export
 default_Rcgmin <- function(){
-  list(tol = 1E-20)
+  list(tol = 1E-15)
 }
 #' @describeIn default_Rcgmin Default control parameters for `FixedPoint()`, used in robust estimation.
 #' @export
