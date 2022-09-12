@@ -58,7 +58,7 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
   cdabyppi:::expect_lt_v(abs(est$A - rotatedA)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -rotatedA)
-  est <- Bingham_full(sample, control = list(1E-15))
+  est <- Bingham_full(sample, control = list(tol = 1E-15))
   cdabyppi:::expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   # try out FB estimation

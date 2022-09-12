@@ -68,11 +68,11 @@ test_that("Inputs to ppi() are processed into the correct theta", {
 test_that("ppi with cppad method works easily on ppi_egmodel", {
   set.seed(1245)
   model <- ppi_egmodel(100)
-  out <- ppi(model$sample, trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad")
+  out <- ppi(model$sample, trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad", control = list(tol = 1E-10))
   cdabyppi:::expect_lt_v(abs(out$est$theta - model$theta) / out$SE$theta, 3)
 
   # try fixing betap
-  out <- ppi(model$sample, ppi_paramvec(p = 3, betap = -0.5), trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad")
+  out <- ppi(model$sample, ppi_paramvec(p = 3, betap = -0.5), trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad", control = list(tol = 1E-10))
   cdabyppi:::expect_lte_v(abs(out$est$theta - model$theta), 3 * out$SE$theta)
   expect_equal(out$est$beta[model$p], -0.5)
   expect_equal(out$SE$beta[model$p], 0)
@@ -83,7 +83,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   bL = rep(0, 2)
   prop <- rppi(100, 3, beta, AL, bL, 4)[[1]]
   theta <- toPPIparamvec(AL, bL, beta)
-  out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", betap = -0.5), trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad")
+  out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", betap = -0.5), trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad", control = list(tol = 1E-10))
   cdabyppi:::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
   expect_equal(out$est$beta[model$p], -0.5)
   expect_equal(out$est$ALs[1, 2], 0)
@@ -94,7 +94,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   bL = rep(0, 2)
   prop <- rppi(100, 3, beta, AL, bL, 4)[[1]]
   theta <- toPPIparamvec(AL, bL, beta)
-  out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", bL = 0, betap = -0.5), trans = "alr", bdryweight = "ones", method = "cppad")
+  out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", bL = 0, betap = -0.5), trans = "alr", bdryweight = "ones", method = "cppad", control = list(tol = 1E-10))
   cdabyppi:::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
   expect_equal(out$est$beta[model$p], -0.5)
   expect_equal(out$est$ALs[1, 2], 0)
