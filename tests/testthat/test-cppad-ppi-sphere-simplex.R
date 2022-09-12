@@ -117,7 +117,8 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmo
   acut = 0.1
   out <- ppi(model$sample, ppi_paramvec(betaL = model$beta0[1:2], betap = model$beta0[3]),
              method = "cppad",
-                   trans = "sqrt", bdryweight = "prodsq", acut = acut)
+                   trans = "sqrt", bdryweight = "prodsq", acut = acut, 
+                   control = list(tol = 1E-12))
 
   ppitapes <- buildsmotape("sphere", "ppi",
                            rep(0.1, model$p), ppi_paramvec(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
@@ -185,7 +186,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel", {
   pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(model$theta)), verbose = FALSE)
   smoppi <- ptapesmo(rep(0.1, model$p), 1:length(model$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
-  out <- cppadest(smoppi, model$theta * 0 + 1, model$sample, control = list(tol = 1E-15))
+  out <- cppadest(smoppi, model$theta * 0 + 1, model$sample, control = list(tol = 1E-12))
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   directestimate <- estimatorall1(model$sample, acut)
@@ -254,7 +255,7 @@ test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psimplex, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
   out <- cppadest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
-               control = list(tol = 1E-15))
+               control = list(tol = 1E-12))
 
   cdabyppi:::expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
 })
