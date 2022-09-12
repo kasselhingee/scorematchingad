@@ -15,7 +15,6 @@ test_that("full ppi estimates are mostly within 3 SE for difficult AL with large
                          bdrythreshold = 1E-20,
                          control = list(tol = 1E-12))
   expect_gt(mean(abs(est_cppad$est$paramvec - ppi_paramvec(AL = ALs, bL = bL, beta = beta)) <= 3 * est_cppad$SE$paramvec), 0.85)
-  expect_absdiff_lte_v(est_cppad$est$beta, beta, 3 * est_cppad$SE$beta)
 
   #don't expect that the beta are within a fraction of the true values
   expect_error(expect_equal(est_cppad$est$beta, beta, tolerance = 1E-1))
