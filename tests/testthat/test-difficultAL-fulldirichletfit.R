@@ -1,5 +1,5 @@
 skip_on_cran()
-test_that("full ppi estimates are with 3 SE for difficult AL with large maxden, p = 5", {
+test_that("full ppi estimates are mostly within 3 SE for difficult AL with large maxden, p = 5", {
   set.seed(1273)
   p = 5
   ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
@@ -13,8 +13,8 @@ test_that("full ppi estimates are with 3 SE for difficult AL with large maxden, 
                          method = "cppad",
                          acut = 0.01,
                          bdrythreshold = 1E-20,
-                         control = list(tol = 1E-10))
-  expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)
+                         control = list(tol = 1E-12))
+  expect_gt(mean(abs(est_cppad$est$paramvec - ppi_paramvec(AL = ALs, bL = bL, beta = beta)) <= 3 * est_cppad$SE$paramvec), 0.85)
   expect_absdiff_lte_v(est_cppad$est$beta, beta, 3 * est_cppad$SE$beta)
 
   #don't expect that the beta are within a fraction of the true values
@@ -36,6 +36,6 @@ test_that("full ppi estimates are within 3 SE of beta for difficult AL with larg
                          acut = 0.01,
                          bdrythreshold = 1E-20,
                          control = list(tol = 1E-10))
-  expect_error(expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs))
+  expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)
   expect_absdiff_lte_v(est_cppad$est$beta, beta, 3 * est_cppad$SE$beta)
 })
