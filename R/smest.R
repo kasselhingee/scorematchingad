@@ -69,7 +69,7 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
                          uboundary = uboundary, boundaryapprox = boundaryapprox,
                          approxorder = approxorder,
                          w = w)
-  if (is.null(w)){
+  if (is.null(w)){ #this is because smobj etc are sums of the observations, not averages
      if (is.null(uboundary)){n <- nrow(utabl)}
      else {n <- nrow(utabl) + nrow(uboundary)} 
      gradatest <- gradatest / n
