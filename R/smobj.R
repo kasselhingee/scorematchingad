@@ -152,10 +152,10 @@ smobjhess_sum <- function(smofun, theta, utabl,
   hess_perpt <- do.call(rbind, hess_perpt)
   if (is.null(w)){
     nhess <- colSums(hess_perpt)
-    attr(nhess, "normaliser") <- length(hess_perpt)
+    attr(nhess, "normaliser") <- nrow(hess_perpt)
   } else {
     stopifnot(length(w) == nrow(hess_perpt))
-    nhess <- apply(hess_perpt, MARGIN = 2, function(x)sum(x*w))
+    nhess <- colSums(hess_perpt * w)
     attr(nhess, "normaliser") <- sum(w)}
   dim(nhess) <- rep(length(theta), 2)
   if (stopifnan && any(is.nan(nhess))){stop("smobjhess() generates a NaN")}
