@@ -1,9 +1,10 @@
-# @title Draft standard error estimates for a CppAD-based estimator
+#' @NoRd
+#' @title Draft standard error estimates for a CppAD-based estimator
 #' @description The standard errors of an estimator via the Godambe information matrix (or sandwich information matrix).
-#' WARNING: Theory for this method in this situation has not been confirmed by KLH. Ideas from the Section 2.2 and Section 2.3 of Varin et al (2011) 'An overview of composite likelihood methods.
 #' @param smofun A tape of the score matching objective calculation
 #' @param est The parameter set
 #' @param utabl A matrix of observations, each row being an observation.
+#' @param Other Other arguments are the same as in `smobj_sum()`, `smobjgrad_sum()` and `smobjhess_sum()`. 
 #' @details It seems likely that `sqrt(n) * (est - true)` will have an asympotically normal distribution with zero mean and a covariance of
 #' given by the inverse of the Godambe information matrix, `invG`.
 #' 

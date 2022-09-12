@@ -11,7 +11,7 @@
 #' For best results these locations should be further from the manifold boundary and close to their corresponding measurements.
 #' Taylor approximation around the rows of `boundaryapprox` will be used to approximate the score matching objective for these measurements.
 #' @param stopifnan If TRUE function will create an error when the return is not a number.
-#' @return The functions `*_sum` all return a value with an attribute 'normaliser' that is the normalising constant needed to turn the result into an average. The functions `smobj()`, `smobjgrad()`, `smobjhess()`.
+#' @return The functions `*_sum` all return a value with an attribute 'normaliser' that is the normalising constant needed to turn the result into an average. The functions `smobj()`, `smobjgrad()`, `smobjhess()` are wrapper of the `*_sum` functions for easier testing and UI.
 # @export
 smobj <- function(...){ #smobj average of observations (i.e. smobj_sum / sum(w))
   args <- list(...)
