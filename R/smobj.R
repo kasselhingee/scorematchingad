@@ -1,5 +1,5 @@
 # @title Compute value of score matching objective for multiple observations
-#' @description The value of the score matching objective for a given beta
+#' @description Computes n times the score matching objective for n observations, given theta
 #' @param smofun A tape of the score matching objective calculation
 #' @param theta A parameter set
 #' @param utabl A matrix of observations, each row being an observation.
@@ -32,10 +32,10 @@ smobj <- function(smofun, theta, utabl,
     })
   }
   sc_perpt <- c(sc_perpt_interior, sc_perpt_boundary)
-  if (is.null(w)){scmo <- mean(unlist(sc_perpt))}
-  else {scmo <- weighted.mean(unlist(sc_perpt), w=w)}
-  if (stopifnan && is.nan(scmo)){stop("smobj() generates a NaN")}
-  return(scmo)
+  if (is.null(w)){nscmo <- sum(unlist(sc_perpt))}
+  else {nscmo <- sum(unlist(sc_perpt) * w)}
+  if (stopifnan && is.nan(nscmo)){stop("smobj() generates a NaN")}
+  return(nscmo)
 }
 
 smobj_b <- function(theta, ...){
@@ -52,10 +52,10 @@ smobjgrad <- function(smofun, theta, utabl,
   grad_perpt <- smobjgrad_perpt(smofun, theta, utabl,
                   Jsmofun_u = Jsmofun_u, uboundary = uboundary, boundaryapprox = boundaryapprox,
                   approxorder = approxorder)
-  if (is.null(w)){grad <- colMeans(do.call(rbind, grad_perpt))}
-  else {grad <- apply(do.call(rbind, grad_perpt), MARGIN = 2, weighted.mean, w=w)}
-  if (stopifnan && any(is.nan(grad))){stop("smobjgrad() generates a NaN")}
-  return(grad)
+  if (is.null(w)){ngrad <- colSums(do.call(rbind, grad_perpt))}
+  else {ngrad <- apply(do.call(rbind, grad_perpt), MARGIN = 2, function(x) sum(x * w))}
+  if (stopifnan && any(is.nan(ngrad))){stop("smobjgrad() generates a NaN")}
+  return(ngrad)
 }
 
 smobjgrad_perpt <- function(smofun, theta, utabl,
@@ -112,9 +112,9 @@ smobjhess <- function(smofun, theta, utabl,
 
   hess_perpt <- c(hess_perpt_interior, hess_perpt_boundary)
 
-  if (is.null(w)){hess <- colMeans(do.call(rbind, hess_perpt))}
-  else {hess <- apply(do.call(rbind, hess_perpt), MARGIN = 2, weighted.mean, w=w)}
-  dim(hess) <- rep(length(theta), 2)
-  if (stopifnan && any(is.nan(hess))){stop("smobjhess() generates a NaN")}
-  return(hess)
+  if (is.null(w)){nhess <- colSums(do.call(rbind, hess_perpt))}
+  else {nhess <- apply(do.call(rbind, hess_perpt), MARGIN = 2, function(x)sum(x*w))}
+  dim(nhess) <- rep(length(theta), 2)
+  if (stopifnan && any(is.nan(nhess))){stop("smobjhess() generates a NaN")}
+  return(nhess)
 }

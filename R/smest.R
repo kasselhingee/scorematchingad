@@ -69,6 +69,11 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
                          uboundary = uboundary, boundaryapprox = boundaryapprox,
                          approxorder = approxorder,
                          w = w)
+  if (is.null(w)){
+     if (is.null(uboundary)){n <- nrow(utabl)}
+     else {n <- nrow(utabl) + nrow(uboundary)} 
+     gradatest <- gradatest / n
+  }
   out$sqgradsize <- sum(gradatest)^2
   return(out)
 }

@@ -34,6 +34,7 @@ cppadSEsq <- function(smofun, theta, utabl,
                   uboundary = uboundary, boundaryapprox = boundaryapprox,
                   approxorder = approxorder)
   gradsmoperpt <- do.call(rbind, gradsmoperpt)
+  if (is.null(w)){sens <- sens/nrow(gradsmoperpt)} else {sens <- sens/sum(w)} # because smobjhess sums across observations, doesn't take mean - to experiment with reducing floating point error
   if (!is.null(w)) {
      gradsmoperpt <- w * gradsmoperpt} #each observation's Hyvarinen divergence weighted by w
   vargradsmo <- cov(gradsmoperpt)
