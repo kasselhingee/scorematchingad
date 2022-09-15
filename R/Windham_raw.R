@@ -148,6 +148,11 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, or
     ...)
 
 {
+  
+  # cW checks
+  stopifnot(length(cW) == length(starttheta))
+  stopifnot(is.numeric(cW))
+  if (any((cW * starttheta)[isfixed] != 0)){stop("Elements of cW corresponding to fixed non-zero parameters should be zero")}
 
   test_estimator(estimatorfun, prop[1:min(50, nrow(prop)), , drop = FALSE], starttheta, isfixed, w = NULL)
 

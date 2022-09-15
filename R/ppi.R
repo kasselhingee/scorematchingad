@@ -19,7 +19,6 @@
 #' @param shiftsize Measurements close to the boundary are shifted by this distance for Taylor approximation.
 #' @param approxorder Order of the Taylor approximation
 #' @param method `direct` for estimates calculated directly where possible (*list them*) or `cppad` to find the score matching estimates using automatic differentiation and the `Rcgmin()` iterative solver.
-#' @param cW Specifies the tuning mutliplier `c` for computing Windham Weights. NULL for no robustness. Otherwise, easiest way specify `cW` is via [ppi_cW()] or [ppi_cW_auto()]. Use [ppi_paramvec()] greater customisation (at your own risk).
 #' @param paramvec_start Only for method `cppad`. The starting guess for the iterative solver with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec` easily using [ppi_paramvec()].
 #' @examples
 #' model <- ppi_egmodel(1000)
@@ -27,7 +26,7 @@
 #' misspecified <- ppi(model$sample, paramvec = ppi_paramvec(bL = 0, betap = -0.5, p = ncol(model$sample)), trans = "alr", method = "direct")
 #' @export
 ppi <- function(Y, paramvec = NULL,
-                pow = 1, trans, method = "direct", w = rep(1, nrow(Y)), cW = NULL,
+                pow = 1, trans, method = "direct", w = rep(1, nrow(Y)),
                 bdryweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin(), paramvec_start = NULL#specific to cppad methods
                 ){
@@ -191,31 +190,7 @@ ppi <- function(Y, paramvec = NULL,
     }
   }
 
-  #### No Robustness, return first fit ####
-  if (is.null(cW)){
-     firstfit$info$method <- fitfun
-     return(firstfit)
-  }
-
-  #### Do Windham Robustness ####
-  stopifnot(length(cW) == length(usertheta))
-  stopifnot(is.numeric(cW))
-  stopifnot(all((cW * usertheta)[t_u2i(usertheta)] == 0)) #all elements of cW for fixed non-zero parameters should be zero.
-
-  ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
-    mats <- fromPPIparamvec(theta, p = ncol(Y))
-    return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
-  }
-
-  est <- windham_raw(prop = Y,
-                     cW = cW,
-                     ldenfun = ldenfun,
-                     estimatorfun = estimator,
-                     starttheta = firstfit$est$paramvec,
-                     isfixed = t_u2i(usertheta),
-                     originalcorrectionmethod = FALSE, #for variable cW
-                     fpcontrol = controls$fp)
-
-  return(c(est, fitfun = fitfun))
+  firstfit$info$method <- fitfun
+  return(firstfit)
 }
 
