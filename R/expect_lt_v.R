@@ -30,7 +30,7 @@ expect_op_v <- function(object, expected, operation = function(x, y) x < y, comp
   comparison <- operation(object, expected)
   ok = all(comparison)
   if (ok){
-    succeed()
+    testthat::succeed()
     return(invisible(act$val))
   }
   failid <- which(!comparison)
