@@ -70,7 +70,7 @@ t_us2s <- function(usertheta, starttheta){
 
   #join the two by taking usertheta and writing in values from starttheta
   outstarttheta <- usertheta
-  outstarttheta[!is.na(starttheta)] <- starttheta[!is.na(starttheta)]
+  outstarttheta[is.na(usertheta)] <- starttheta[is.na(usertheta)]
 
   #### now check the results
   # look for NA values
@@ -79,11 +79,13 @@ t_us2s <- function(usertheta, starttheta){
           paste(which(is.na(outstarttheta)), collapse = ", ")))
   }
 
-  # check that fixed values match
-  isfixed <- t_u2i(usertheta)
-  absdiff_big <- abs(usertheta[isfixed] - outstarttheta[isfixed]) > sqrt(.Machine$double.eps)
+  # warn if starttheta elements (corresponding fixed ones) have been overwritten
+  absdiff_big <- abs(starttheta - outstarttheta) > sqrt(.Machine$double.eps)
+  absdiff_big[is.na(starttheta)] <- FALSE #the NA values of starttheta should be overrided - it make no sense to flag a warning for them
   if (any(absdiff_big)){
-    warning(paste("paramvec_start inconsistent with fixed elements supplied in paramvec:", paste(which(absdiff_big), collapse = ", "), " paramvec_start will be ignored for these elements."))
+    warning(paste("paramvec_start inconsistent with fixed elements supplied in paramvec:",
+                  paste(which(absdiff_big), collapse = ", "),
+                  "paramvec_start will be ignored for these elements."))
   }
 
   return(outstarttheta)

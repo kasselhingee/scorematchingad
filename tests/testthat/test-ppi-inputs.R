@@ -109,7 +109,7 @@ test_that("paramvec and paramvec_start are tested and made consistent correctly"
 
   paramvec <- ppi_paramvec(AL = AL)
   paramvec_start <- ppi_paramvec(beta = beta)
-  expect_error(t_us2s(paramvec, paramvec_start), regexp("paramvec_start needs to supply"))
+  expect_error(t_us2s(paramvec, paramvec_start), regexp = "paramvec_start needs to supply.*4.*5")
 
   paramvec <- ppi_paramvec(AL = AL)
   paramvec_start <- ppi_paramvec(bL = bL, beta = beta)
@@ -117,13 +117,14 @@ test_that("paramvec and paramvec_start are tested and made consistent correctly"
 
   paramvec <- ppi_paramvec(AL = AL)
   paramvec_start <- ppi_paramvec(AL = AL + 1, bL = bL, beta = beta)
-  expect_warning(t_us2s(paramvec, paramvec_start), regexp = "paramvec_start inconsistent")
+  expect_warning(t_us2s(paramvec, paramvec_start), regexp = "paramvec_start inconsistent.*1.*2.*3")
 
   paramvec <- ppi_paramvec(AL = AL, bL = bL)
   paramvec_start <- ppi_paramvec(AL = AL, bL = bL + 1, beta = beta)
-  expect_warning(t_us2s(paramvec, paramvec_start), regexp = "paramvec_start inconsistent")
+  expect_warning(t_us2s(paramvec, paramvec_start), regexp = "paramvec_start inconsistent.*4.*5")
 
   paramvec <- ppi_paramvec(AL = AL, beta = beta)
   paramvec_start <- ppi_paramvec(AL = AL, bL = bL, beta = beta + 1)
-  expect_warning(t_us2s(paramvec, paramvec_start), regexp = "paramvec_start inconsistent")
+  expect_warning(t_us2s(paramvec, paramvec_start), regexp = "paramvec_start inconsistent.*6.*7.*8")
+  expect_equal(suppressWarnings(t_us2s(paramvec, paramvec_start)), ppi_paramvec(AL = AL, bL = bL, beta = beta))
 })
