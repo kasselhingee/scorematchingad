@@ -62,3 +62,29 @@ t_si2f <- function(starttheta, isfixed){
   stopifnot(all(isfixed %in% c(TRUE, FALSE)))
   return(starttheta[!isfixed])
 }
+
+#' @describeIn t_u2i Safely join a usertheta with a user-defined starttheta (which may have NA values) to create a full starttheta
+t_us2s <- function(usertheta, starttheta){
+  if (is.null(starttheta)){return(NULL)}
+  if (length(usertheta) != length(starttheta)){stop("Length of paramvec and paramvec_start does not match.")}
+
+  #join the two by taking usertheta and writing in values from starttheta
+  outstarttheta <- usertheta
+  outstarttheta[!is.na(starttheta)] <- starttheta[!is.na(starttheta)]
+
+  #### now check the results
+  # look for NA values
+  if (any(is.na(outstarttheta))){
+    stop(paste("paramvec_start needs to supply the following elements of the parameter vector:",
+          paste(which(is.na(outstarttheta)), collapse = ", ")))
+  }
+
+  # check that fixed values match
+  isfixed <- t_u2i(usertheta)
+  absdiff_big <- abs(usertheta[isfixed] - outstarttheta[isfixed]) > sqrt(.Machine$double.eps)
+  if (any(absdiff_big)){
+    warning(paste("paramvec_start inconsistent with fixed elements supplied in paramvec:", paste(which(absdiff_big), collapse = ", "), " paramvec_start will be ignored for these elements."))
+  }
+
+  return(outstarttheta)
+}

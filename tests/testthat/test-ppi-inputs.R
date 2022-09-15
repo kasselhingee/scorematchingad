@@ -99,3 +99,31 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   expect_equal(out$est$beta[model$p], -0.5)
   expect_equal(out$est$ALs[1, 2], 0)
 })
+
+test_that("paramvec and paramvec_start are tested and made consistent correctly", {
+  #basic elements to plug in
+  AL <-matrix(c(-166, 117, 117, -333), ncol = 2, nrow = 2)
+  beta <- c(0.5, -0.1, 0)
+  bL <- rep(0, 2)
+  p <- 3
+
+  paramvec <- ppi_paramvec(AL = AL)
+  paramvec_start <- ppi_paramvec(beta = beta)
+  expect_error(t_us2s(paramvec, paramvec_start), regexp("paramvec_start needs to supply"))
+
+  paramvec <- ppi_paramvec(AL = AL)
+  paramvec_start <- ppi_paramvec(bL = bL, beta = beta)
+  expect_equal(t_us2s(paramvec, paramvec_start), ppi_paramvec(AL = AL, bL = bL, beta = beta))
+
+  paramvec <- ppi_paramvec(AL = AL)
+  paramvec_start <- ppi_paramvec(AL = AL + 1, bL = bL, beta = beta)
+  expect_warning(t_us2s(paramvec, paramvec_start), regexp = "paramvec_start inconsistent")
+
+  paramvec <- ppi_paramvec(AL = AL, bL = bL)
+  paramvec_start <- ppi_paramvec(AL = AL, bL = bL + 1, beta = beta)
+  expect_warning(t_us2s(paramvec, paramvec_start), regexp = "paramvec_start inconsistent")
+
+  paramvec <- ppi_paramvec(AL = AL, beta = beta)
+  paramvec_start <- ppi_paramvec(AL = AL, bL = bL, beta = beta + 1)
+  expect_warning(t_us2s(paramvec, paramvec_start), regexp = "paramvec_start inconsistent")
+})
