@@ -28,7 +28,8 @@ Imports:
     FixedPoint,
     Directional,
     mclust,
-    Rdpack
+    Rdpack,
+    ellipsis
 RdMacros: Rdpack
 LinkingTo: Rcpp
 Config/testthat/edition: 3

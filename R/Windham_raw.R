@@ -10,6 +10,7 @@
 #' @export
 WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)
+  ellipsis::check_dots_used()
   ### build the estimatorfun from estimator to match windham_raw() [messy but will work for testing now, then can clean later]
   # assuming estimator has arguments: Y, paramvec, w, and optionally paramvec_start.
   # and assume that the return vector can be extracted using `extract_paramvec()` and this it is the full model parameter vector, including the fixed elements.
