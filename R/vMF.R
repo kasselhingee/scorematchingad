@@ -52,7 +52,7 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
       return(out$km)
     }
   est <- windham_raw(prop = sample,
-                     cW = rep(cW, ncol(sample)),
+                     cW = cW * !isfixed,
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
                      starttheta = firstfit$km,
@@ -70,7 +70,7 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
       return(out$km)
     }
   est <- windham_raw(prop = sample,
-                     cW = rep(cW, ncol(sample)),
+                     cW = cW * !isfixed,
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
                      starttheta = firstfit$km,
