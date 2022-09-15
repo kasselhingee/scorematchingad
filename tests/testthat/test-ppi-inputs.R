@@ -100,6 +100,16 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   expect_equal(out$est$ALs[1, 2], 0)
 })
 
+test_that("ppi() uses paramvec_start}", {
+  set.seed(1245)
+  model <- ppi_egmodel(100)
+  direct <- ppi(model$sample, trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "direct")
+  out <- ppi(model$sample, trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad", control = list(tol = 1E-10), paramvec_start = direct$est$paramvec)
+
+  #expect very few iterations
+  cdabyppi:::expect_lte_v(out$info$counts, rep(1, 1))
+})
+
 test_that("paramvec and paramvec_start are tested and made consistent correctly", {
   #basic elements to plug in
   AL <-matrix(c(-166, 117, 117, -333), ncol = 2, nrow = 2)

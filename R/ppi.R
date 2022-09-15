@@ -20,6 +20,7 @@
 #' @param approxorder Order of the Taylor approximation
 #' @param method `direct` for estimates calculated directly where possible (*list them*) or `cppad` to find the score matching estimates using automatic differentiation and the `Rcgmin()` iterative solver.
 #' @param cW Specifies the tuning mutliplier `c` for computing Windham Weights. NULL for no robustness. Otherwise, easiest way specify `cW` is via [ppi_cW()] or [ppi_cW_auto()]. Use [ppi_paramvec()] greater customisation (at your own risk).
+#' @param paramvec_start Only for method `cppad`. The starting guess for the iterative solver with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec` easily using [ppi_paramvec()].
 #' @examples
 #' model <- ppi_egmodel(1000)
 #' estinfo <- ppi(model$sample, paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)), trans = "alr", method = "cppad")
@@ -28,7 +29,7 @@
 ppi <- function(Y, paramvec = NULL,
                 pow = 1, trans, method = "direct", w = rep(1, nrow(Y)), cW = NULL,
                 bdryweight = "ones", acut = NULL, #specific to some methods
-                bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin()#specific to cppad methods
+                bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin(), paramvec_start = NULL#specific to cppad methods
                 ){
   # process inputs
   stopifnot("matrix" %in% class(Y))
@@ -152,7 +153,8 @@ ppi <- function(Y, paramvec = NULL,
     }
   }
   if (method == "cppad"){
-    stheta <- t_u2s_const(usertheta, 0.2)
+    if (is.null(paramvec_start)){stheta <- t_u2s_const(usertheta, 0.2)}
+    else {stheta <- t_us2s(usertheta, paramvec_start)}
     isfixed <- t_u2i(usertheta)
     firstfit <- ppi_cppad(Y, stheta = stheta, isfixed = isfixed,
                bdrythreshold = bdrythreshold,
