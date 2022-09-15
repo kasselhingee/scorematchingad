@@ -108,13 +108,11 @@ ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model 
   return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
 }
 
-est1=WindhamRobust(Y = propreal,
-                   estimator = ppi,
-                   ldenfun = ldenfun,
-                   cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE),
-                   method = "direct", trans = "alr",
-                   paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
-                   paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
+est1=ppi_robust(Y = propreal,
+                cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE),
+                method = "direct", trans = "alr",
+                paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+                paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
 
 #estimate of A_L:
 expect_snapshot_value(signif(fromPPIparamvec(est1$theta)$ALs,6), style = "json2")
@@ -194,13 +192,7 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
 
   #calculate robust estimates
   cW=1.25
-  ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
-    mats <- cdabyppi:::fromPPIparamvec(theta, p = ncol(Y))
-    return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
-  }
-  est1=WindhamRobust(Y = propreal,
-                   estimator = ppi,
-                   ldenfun = ldenfun,
+  est1=ppi_robust(Y = propreal,
                    cW = ppi_cW(cW, TRUE, TRUE, TRUE, TRUE, FALSE),
                    method = "direct", trans = "alr",
                    paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
