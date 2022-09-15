@@ -5,9 +5,71 @@
 #' with \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u}.
 #' and \eqn{a} is *linear* function.
 #' The linear assumption means that \eqn{\tau_c(\theta)} is a simple matrix operation.
-#' @param cW A robustness tuning constant.
-#' TRUE if the parameter is used in the Windham weights.
-#' FALSE if the parameter is set to zero in the Windham weights.
+#'
+#' Assumes that `estimator` takes an argument paramvec if any parameter elements are fixed.
+#' @export
+WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
+  extraargs <- list(...)
+  ### build the estimatorfun from estimator to match windham_raw() [messy but will work for testing now, then can clean later]
+  # assuming estimator has arguments: Y, paramvec, w, and optionally paramvec_start.
+  # and assume that the return vector can be extracted using `extract_paramvec()` and this it is the full model parameter vector, including the fixed elements.
+  # also pass in ...
+  ##### there are probably ways to do this where all the different types of estimatorfun are created seperately, rather than one estimator fun that does them all
+  estimatorfun <- function(Y, starttheta, isfixed, w){
+    paramvec <- starttheta
+    paramvec[!isfixed] <- NA
+    args = c(list(
+      Y = Y,
+      paramvec = paramvec,
+      w = w
+      ),
+      extraargs[names(extraargs) != "paramvec"])
+    if ("paramvec_start" %in% formalArgs(estimator)){
+      paramvec_start <- starttheta
+      args$paramvec_start <- paramvec_start #overwrites or adds a new element to the argument list
+    }
+    estobj <- do.call(estimator, args = args)
+
+    #extract estimated vector
+    estparamvec <- extract_paramvec(estobj)
+    return(estparamvec)
+  }
+
+
+
+  # extract start vector from a paramvec and paramvec_start
+  if (!is.null(paramvec_start)){
+    if (!is.null(extraargs$paramvec)){
+      starttheta <- t_us2s(extraargs$paramvec, paramvec_start)
+    } else {
+      starttheta <- paramvec_start
+    }
+  } else { #use estimator for the start values
+    estobj <- do.call(estimator, args = c(list(Y = Y), extraargs))
+    starttheta <- extract_paramvec(estobj)
+  }
+
+  # calculate isfixed
+  if (!is.null(extraargs$paramvec)){isfixed = t_u2i(extraargs$paramvec)}
+  else {isfixed <- rep(FALSE, length(starttheta))}
+
+  # check estimator fun
+  chck <- estimatorfun(Y, starttheta, isfixed, w = rep(1, nrow(Y)))
+
+  out <- windham_raw(
+    prop = Y,
+    cW = cW,
+    ldenfun = ldenfun,
+    estimatorfun = estimatorfun,
+    starttheta = starttheta,
+    isfixed = isfixed,
+    originalcorrectionmethod = FALSE,
+    fpcontrol = fpcontrol
+  )
+  return(out)
+}
+
+#' @param cW A vector of robustness tuning constants - the parameter vector is multiplied by these when computing the log-density of each observation for the Windham weights. For the PPI model, generate `cW` easily using [ppi_cW()] and [ppi_cW_auto()].
 WindhamCorrection <- function(cW){
   weightthetamat <- diag(cW) #matrix that converts theta to the new theta*cW based on inclusion/exclusion
   tauc <- weightthetamat + diag(1,nrow = length(cW))
@@ -48,7 +110,7 @@ WindhamWeights <- function(ldenfun, Y, theta, cW){
 #' FALSE if the parameter is to be estimated.
 #' TRUE if the parameter is used in the Windham weights.
 #' FALSE if the parameter is set to zero in the Windham weights.
-#' @param estimator A function f(Y, starttheta, isfixed, w, ...) that generates parameter estimates given
+#' @param estimatorfun A function f(Y, starttheta, isfixed, w, ...) that generates parameter estimates given
 #' Y = a sample,
 #' starthteta = a vector of theta values to start the iteration
 #' isfixed = a vecotr of booleans. FALSE means that element of theta is estimated,
@@ -70,6 +132,9 @@ test_estimator <- function(estimator, Y, starttheta, isfixed, w){
   if (!isTRUE(class(newtheta) == "numeric")){stop("Estimator must return a numeric value")}
   if (!isTRUE(is.vector(newtheta))){stop("Estimator must return a vector")}
   if (!isTRUE(length(newtheta) == length(starttheta))){stop("Estimator must return a vector of the same length as the input parameter vector")}
+  if (any(abs(newtheta[isfixed] - starttheta[isfixed]) > sqrt(.Machine$double.eps))){
+    stop("The fixed elements of theta are altered by estimator.")
+  }
   invisible(NULL)
 }
 
@@ -82,7 +147,7 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, or
     ...)
 
 {
-  
+
   test_estimator(estimatorfun, prop[1:min(50, nrow(prop)), , drop = FALSE], starttheta, isfixed, w = NULL)
 
   if (!originalcorrectionmethod){
@@ -123,7 +188,7 @@ windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, or
   theta <- starttheta
   theta[!isfixed] <- est$FixedPoint
 
-  return(list(theta = theta, 
+  return(list(theta = theta,
            optim = list(FixedPoint = est$FixedPoint,
                         fpevals = est$fpevals,
                         Finish = est$Finish)))
@@ -140,7 +205,7 @@ Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, isfixed
 # a vector of weights
 # a vector of theta values (where NA are estimated, non-NA are fixed - as in buildsmotape)
 # a vector of starting values for the estimator.
-   theta <- estimatorfun(Y = prop, starttheta = theta, isfixed = isfixed, 
+   theta <- estimatorfun(Y = prop, starttheta = theta, isfixed = isfixed,
                          w = weight_vec, ...)
 
    ### correct estimates (Step 4 in Notes5.pdf)
@@ -162,7 +227,7 @@ Windham_raw_newtheta_original <- function(prop, cW, ldenfun, estimatorfun, theta
    # generate the tuning constants dbeta, dA
    dtheta <- -cW * theta * (!inWW)
    #calculate estimate:
-   theta <- estimatorfun(Y = prop, starttheta = theta, isfixed = isfixed, 
+   theta <- estimatorfun(Y = prop, starttheta = theta, isfixed = isfixed,
                          w = weight_vec, ...)
 
    ### correct estimates (Step 4 in Notes5.pdf)
