@@ -51,6 +51,7 @@ ppi <- function(Y, paramvec = NULL,
 
   controls <- splitcontrol(control)
 
+  # Switch between the different methods
   if (method == "direct"){
     if (man == "Ralr"){
       if (usertheta_ppi_alr_gengamma_compatible(usertheta)){
