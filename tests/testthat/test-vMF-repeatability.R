@@ -83,10 +83,10 @@ test_that("Estimating repeated vMF estimation for the same data gives identical 
   m <- m / sqrt(sum(m^2))
   km <-  k * m
   set.seed(1241)
-  Y <- Directional::rvmf(100, m, k) #this ignores the seed it seems
+  Y <- movMF::rmovMF(100, m * k)
 
   kests <- replicate(100, {
     sim1 <- vMF(Y, method = "Mardia")
-    sim1$k })
+    sim1$est$k })
   expect_lt(sum(range(kests) * c(1, -1)), 1E-10)
 })
