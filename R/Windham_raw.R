@@ -21,10 +21,12 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
     paramvec[!isfixed] <- NA
     args = c(list(
       Y = Y,
-      paramvec = paramvec,
       w = w
       ),
-      extraargs[names(extraargs) != "paramvec"])
+      extraargs)
+    if ("paramvec" %in% formalArgs(estimator)){
+      args$paramvec <- paramvec
+    }
     if ("paramvec_start" %in% formalArgs(estimator)){
       paramvec_start <- starttheta
       args$paramvec_start <- paramvec_start #overwrites or adds a new element to the argument list
