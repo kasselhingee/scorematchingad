@@ -9,9 +9,11 @@
 #' @param w An optional vector of weights for each measurement in `sample`
 #' @param cW Optional. If supplied then robust estimation using the Windham weights method is applied, and the value of `cW` is the robustness tuning constant.
 #' @examples
-#' sample <- Directional::rvmf(100, c(1, -1) / sqrt(2), 3)
-#' vMF(sample, method = "smfull")
-#' vMF(sample, method = "Mardia")
+#' set.seed(12342)
+#' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+#' vMF(Y, method = "smfull")
+#' vMF(Y, method = "Mardia")
+#' est <- vMF(Y, method = "Mardia_robustsm", cW = 1E-5, control = list(tol = 1E-10, maxit = 100, MaxIter = 100))
 #' @export
 vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin(), default_FixedPoint()), w = rep(1, nrow(sample)), cW = NULL){
   firstfit <- NULL
@@ -35,11 +37,10 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
   if(is.null(cW)){return(firstfit)}
 
   ###### Extra stuff for robust fit with Windham weights
-  inWW <- rep(TRUE, ncol(sample))
-  ldenfun <- function(sample, theta){ #here theta is km
+  ldenfun <- function(Y, theta){ #here theta is km
     k <- sqrt(sum(theta^2))
     m <- theta/k
-    return(drop(Directional::dvmf(sample, k, m, logden = TRUE)))
+    return(drop(Directional::dvmf(Y, k, m, logden = TRUE)))
   }
 
   if (method == "smfull"){
@@ -50,43 +51,69 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
                       control = controls$Rcgmin, w=w)
       return(out$km)
     }
-  } else if (method == "Mardia"){
-    estimator <- function(Y, starttheta, isfixed, w){
-      startk <- sqrt(sum(starttheta^2))
-      out <- vMF_Mardia(Y, startk, control = controls$Rcgmin, w=w)
-      return(out$km)
-    }
-  } else if (method == "Mardia_robustsm"){
-    sample <- vMF_stdY(sample, firstfit$m) #standardise sample
-    estimator <- function(Y, starttheta, isfixed, w){
-      startk <- sqrt(sum(starttheta^2))
-      m <- starttheta/startk
-      out <- vMF_kappa(Y, startk, control = controls$Rcgmin, w=w)
-      return(m * out$k)
-    }
-  }
-  if (is.null(estimator)){stop(sprintf("Method '%s' is not valid", method))}
-
   est <- windham_raw(prop = sample,
-                     cW = cW,
+                     cW = cW * !isfixed,
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
                      starttheta = firstfit$km,
                      isfixed = isfixed,
-                     inWW = inWW,
                      originalcorrectionmethod = TRUE,
                      fpcontrol = controls$fp)
   est$km <- est$theta
   est$theta <- NULL
   est$k <- sqrt(sum(est$km^2))
   est$m <- est$km/est$k
+  } else if (method == "Mardia"){
+    estimator <- function(Y, starttheta, isfixed, w){
+      startk <- sqrt(sum(starttheta^2))
+      out <- vMF_Mardia(Y, startk, control = controls$Rcgmin, w=w)
+      return(out$km)
+    }
+  est <- windham_raw(prop = sample,
+                     cW = cW * !isfixed,
+                     ldenfun = ldenfun,
+                     estimatorfun = estimator,
+                     starttheta = firstfit$km,
+                     isfixed = isfixed,
+                     originalcorrectionmethod = TRUE,
+                     fpcontrol = controls$fp)
+  est$km <- est$theta
+  est$theta <- NULL
+  est$k <- sqrt(sum(est$km^2))
+  est$m <- est$km/est$k
+  } else if (method == "Mardia_robustsm"){
+    sample <- vMF_stdY(sample, firstfit$m) #standardise sample
+    # after standardisation there is only one parameter to fit in the vMF model
+    ldenfun <- function(Y, theta){ #here theta is just k
+      k <- theta
+      m <- c(1, rep(0, ncol(Y) - 1))
+      return(drop(Directional::dvmf(Y, k, m, logden = TRUE)))
+    }
+    estimator <- function(Y, starttheta, isfixed, w){ #starttheta is k in this case
+      out <- vMF_kappa(Y, starttheta, control = controls$Rcgmin, w=w)
+      return(out$k)
+    }
+  est <- windham_raw(prop = sample,
+                     cW = cW, #plugs into ldenfun
+                     ldenfun = ldenfun,
+                     estimatorfun = estimator,
+                     starttheta = firstfit$k,
+                     isfixed = c(FALSE),
+                     originalcorrectionmethod = TRUE,
+                     fpcontrol = controls$fp)
+  est$k <- est$theta
+  est$theta <- NULL
+  est$m <- firstfit$m
+  }
+  if (is.null(estimator)){stop(sprintf("Method '%s' is not valid", method))}
+
   return(est)
 }
 
 vMF_stdY <- function(Y, m = NULL, w = NULL){
   if(is.null(m)){
     m <- apply(Y, MARGIN = 2, weighted.mean, w)
-    m <- mu/sqrt(sum(m^2))
+    m <- m/sqrt(sum(m^2))
   }
   Rtrans <- Directional::rotation(m, c(1, rep(0, length(m) - 1)))
   out <- Y %*% t(Rtrans)
@@ -118,12 +145,12 @@ vMF_kappa <- function(Y, startk, isfixed = FALSE, control = default_Rcgmin(), w 
   if (!isfixed){ #as if k isn't supplied
     p <- ncol(Y)
     tapes <- buildsmotape_internal("Snative", "vMF",
-                                   rep(1, p)/sqrt(p), 
-                                   starttheta = c(startk, rep(0, p-1)), 
+                                   rep(1, p)/sqrt(p),
+                                   starttheta = c(startk, rep(0, p-1)),
                                    isfixed = c(FALSE, rep(TRUE, p-1)),
                                    weightname = "ones",
                                    verbose = FALSE)
-    sminfo <- smest(tapes$smotape, startk, Y, control = control, w = w)
+    sminfo <- cppadest(tapes$smotape, startk, Y, control = control, w = w)
     k <- sminfo$par
     SE <- sminfo$SE
   } else {
@@ -147,7 +174,7 @@ vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w 
                         rep(1, p)/sqrt(p), starttheta, isfixed,
                         weightname = "ones",
                         verbose = FALSE)
-  out <- smest(tapes$smotape, t_si2f(starttheta, isfixed), sample, control = control, w=w)
+  out <- cppadest(tapes$smotape, t_si2f(starttheta, isfixed), sample, control = control, w=w)
   theta <- t_sfi2u(out$par, starttheta, isfixed)
 
   SE <- t_sfi2u(out$SE, rep(0, length(starttheta)), isfixed)

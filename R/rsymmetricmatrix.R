@@ -1,7 +1,7 @@
-#' @title Quickly generate a symmetric matrix for examples
+#' @title Quickly generate a symmetric matrix for testing and examples
 #' @description A simple function for generating a symmetric matrix for use in examples.
-#' Distributional aspects of this simulation have not been considered.
-#' Elements of the matrix are simulated from a uniform distribution.
+#' The diagonal, and upper-triangular elements of the matrix are simulated independently from a uniform distribution. The lower-triangle of the output matrix is copied from the upper-triangle.
+#' These matrices __do not__ represent the full range of possible symmetric matrices.
 #' @param p The desired dimension of the matrix
 #' @param min The minimum of the uniform distribution.
 #' @param max The maximum of the uniform distribution

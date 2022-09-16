@@ -1,12 +1,24 @@
 set.seed(1234)
-m <- sec2_3model(1000, maxden = 4)
+m <- ppi_egmodel(1000, maxden = 4)
 #simulate weights
 set.seed(134)
 vw <- virtualweights(m$sample)
 acut = 0.1
 
-test_that("smobj, smobjgrad, smobjhess matches for simulated weights", {
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(m$p)
+test_that("w = rep(1, nrow(Y)) is near the result as if w omitted", {
+  psphere <- pmanifold("sphere")
+  pppi <- ptapell(rep(0.1, m$p), m$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
+  smoppi <- ptapesmo(rep(0.1, m$p), 1:length(m$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+
+  out_constant <- cppadest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12), w = rep(1, nrow(m$sample)))
+  out_ommit <- cppadest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12))
+
+  expect_equal(out_ommit$par, out_constant$par)
+  expect_equal(out_ommit$value, out_constant$value)
+})
+
+test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constant weights", {
+  intheta <- cdabyppi:::ppi_paramvec(m$p)
   tapes <- buildsmotape("sphere", "ppi",
                         m$sample[1, ], intheta,
                         weightname = "minsq",
@@ -22,27 +34,25 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights", {
   smohess_sim <- smobjhess(tapes$smotape, m$theta, vw$newY)
   smohess_direct <- smobjhess(tapes$smotape, m$theta, m$sample, w=vw$w)
   expect_equal(smohess_sim, smohess_direct)
-
-  smoSE_sim <- smestSE(tapes$smotape, m$theta, vw$newY)
-  smoSE_direct <- smestSE(tapes$smotape, m$theta, m$sample, w=vw$w)
-  expect_equal(smoSE_sim, smoSE_direct, tolerance = 1E-3)
 })
 
-test_that("smest() for ppi with minsq match itself and estimatorall1", {
+test_that("cppadest() for ppi with minsq match itself and estimatorall1", {
   psphere <- pmanifold("sphere")
   pppi <- ptapell(rep(0.1, m$p), m$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
   smoppi <- ptapesmo(rep(0.1, m$p), 1:length(m$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
 
-  out_sim <- smest(smoppi, m$theta * 0 + 1, vw$newY, control = list(tol = 1E-15))
-  out_dir <- smest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-15), w = vw$w)
-  expect_equal(out_sim[names(out_sim) != "counts"], out_dir[names(out_sim) != "counts"], tolerance = 1E-3)
+  out_sim <- cppadest(smoppi, m$theta * 0 + 1, vw$newY, control = list(tol = 1E-12))
+  out_dir <- cppadest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12), w = vw$w)
+  expect_equal(out_sim[!(names(out_sim) %in% c("counts", "SE"))], 
+     out_dir[!(names(out_sim) %in% c("counts", "SE"))],
+     tolerance = 1E-3)
 
   directestimate <- estimatorall1(m$sample, acut, w = vw$w)
 
   expect_lt(out_dir$value,
             smobj(smoppi, directestimate$estimator1, m$sample, w = vw$w) + 1E-5 * abs(out_dir$value))
 
-  cdabyppi:::expect_lt_v(abs(out_dir$par - directestimate$estimator1) / out_dir$SE, 1) #proxy for optimisation flatness
-  cdabyppi:::expect_lt_v(abs(out_dir$par - m$theta) / out_dir$SE, 3)
+  expect_lt_v(abs(out_dir$par - directestimate$estimator1) / out_dir$SE, 1E-3) #proxy for optimisation flatness
+  expect_lt_v(abs(out_dir$par - m$theta) / out_dir$SE, 3)
 })
 

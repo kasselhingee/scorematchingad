@@ -1,6 +1,8 @@
+#' @NoRd
 #' @title Find the optimal parameter for the score matching objective
 #' @description Using a numerical optimiser and `smobj()` and `smobjgrad()`, find the parameter set with minimal `smobj` value.
 #' This function lightly wraps `Rcgmin::Rcgmin()` with some results checking.
+#' @details The call to `Rcgmin()` uses the *sum* of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to `Rcgmin()` (e.g. `tol`). The results are converted into averages as appropriate so the use of sums (as opposed to averages) can be ignored when not setting control parameters, or studying the behaviour of Rcgmin. 
 #' @param smofun A tape of the score matching objective calculation
 #' @param theta The starting parameter set
 #' @param utabl A matrix of observations, each row being an observation.
@@ -11,9 +13,9 @@
 #' For best results these locations should be further from the manifold boundary and close to their corresponding measurements.
 #' Taylor approximation around the rows of `boundaryapprox` will be used to approximate the score matching objective for these measurements.
 #' @param control Optional argument passed to `Rcgmin::Rcgmin()`.
-#' @return The output from `Rcgmin::Rcgmin()`, the squared size of the gradient at the estimate, and the standard error estimates by `smestSE()`.
-#' @export
-smest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
+#' @return The output from `Rcgmin::Rcgmin()`, the squared size of the gradient at the estimate, and the standard error estimates by `cppadSE()`.
+# @export
+cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
   if (!(is.null(uboundary) && is.null(boundaryapprox))){
     stopifnot((!is.null(uboundary)) && (!is.null(boundaryapprox))) #both need to be supplied
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))
@@ -36,8 +38,8 @@ smest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = 
   }
 
   out <- Rcgmin::Rcgmin(par = theta,
-                        fn = smobj_b,
-                        gr = smobjgrad_b,
+                        fn = smobj_sum_b,
+                        gr = smobjgrad_sum_b,
                         # function(theta, ...){smobj(smofun, theta, utabl, smofun_u, ...)},
                         # gr = function(theta, ...){smobjgrad(smofun, theta, utabl, Jsmofun_u, ...)},
                         smofun = smofun,
@@ -57,8 +59,15 @@ smest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = 
     }
   }
   if (out$convergence != 0){warning("Optimisation did not converge.")}
+
+  # return results as if averages, not sums were used
+  attr(out$par, "normaliser") <- NULL
+  out$value <- out$value / attr(out$value, "normaliser")
+  attr(out$value, "normaliser") <- NULL
+
+
   out$SE <- try({
-    smestSE(
+    cppadSE(
       smofun, theta = out$par, utabl,
       Jsmofun_u = Jsmofun_u, Hsmofun_u = Hsmofun_u,
       uboundary = uboundary, boundaryapprox = boundaryapprox,

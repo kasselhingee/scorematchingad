@@ -1,4 +1,4 @@
-#' @title Internal function for building Score-Matching Objective Tapes
+# @title Internal function for building Score-Matching Objective Tapes
 #' @examples
 #' @param utape A measurment to use for taping
 #' @param intheta A vector of parameters. NA values will be estimated, non-NA values will be fixed.
@@ -14,7 +14,7 @@
 #'               )
 #' pForward0(tapes$lltape, u, runif(n = ltheta))
 #' pForward0(tapes$smotape, runif(n = ltheta), u)
-#' @export
+# @export
 buildsmotape <- function(manifoldname, llname,
                          utape, usertheta,
                          weightname = "ones", acut = 1,

@@ -1,16 +1,19 @@
-#' @title The ScoreMult estimator (dimension=3 only)
-#' @description Calculates Scealy and Wood's (2021) ScoreMult estimator and assumes \eqn{\beta=\beta_0}{beta=beta0} is the same for each category (component).
+#' @importFrom Rdpack reprompt
+#' @title A PPI score-matching Marginal Moment Matching estimator derived from moments of the Multinomial distribution (dimension=3 only)
+#' @description Calculates the \insertCite{scealy2022sc;textual}{cdabyppi} ScoreMult estimator and assumes \eqn{\beta=\beta_0}{beta=beta0} is the same for each category (component).
 #' @details
-#' Note: Currently only \eqn{A_L} is estimated. \eqn{\beta=\beta_0}{beta=beta0} is fixed and not estimated. \eqn{b_L} is fixed at zero.
-#' See A.8 of (Scealy and Wood, 2021).
-#' Score matching with the unthresholded product weight function
-#' $$\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2)$$
+#' Note: Currently only \eqn{A_L} is estimated. \eqn{\beta=\beta_0} is fixed and not estimated. \eqn{b_L} is fixed at zero.
+#' See Section 6.2 and A.8 of \insertCite{scealy2022sc}{cdabyppi}.
+#' The weight function in the score matching objective is the unthresholded product weight function
+#' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2).}
 #' @param x Count data (n by 3 matrix)
 #' @param ni The total for each sample (sum across rows)
 #' @param beta0 \eqn{\beta=\beta_0}{beta=beta0} is the same for each category.
 #' @return A vector of estimates for \eqn{A_L} entries (diagonal and off diagonal)
+#' @references
+#' \insertAllCited{}
 #' @export
-multestimator <- function(x, ni, beta0, w = rep(1, nrow(x)))
+ppi_mmmm <- function(x, ni, beta0, w = rep(1, nrow(x)))
 {
 
 	X1=x

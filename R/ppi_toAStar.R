@@ -1,4 +1,4 @@
-#' Convert AL and bL to Astar parametrisation
+#  @title Convert AL and bL to Astar parametrisation
 #' @description Equation 3 of the JASA paper parameterises the quadratic term of the density as a matrix A and a vector b.
 #' This function combines these into the single matrix of parameters, Astar, as defined in equation 2.
 #' @param ALs The block of A that is non zero (which is the first p-1th row and column)
@@ -13,7 +13,7 @@
 #' Astar <- toAstar(AL, bL)
 #' fromAstar(Astar)
 #'
-#' @export
+# @export
 toAstar <- function(AL, bL){
   stop("toAstar() is faulty - it has the same result for measurements on the simplex, but not the appropriate eigenvectors.")
   p <- ncol(AL) + 1
@@ -47,8 +47,8 @@ toAstar <- function(AL, bL){
   return(Astar)
 }
 
-#' @describeIn toAstar The reverse of toAstar()
-#' @export
+# @describeIn toAstar The reverse of toAstar()
+# @export
 fromAstar <- function(Astar){
   p = ncol(Astar)
   stopifnot(isSymmetric.matrix(Astar))

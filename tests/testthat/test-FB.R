@@ -46,6 +46,7 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
 })
 
 test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
+  skip_on_cran() #rfb() tested when fitting tested
   p <- 3
   A <- diag(c(30, 1, -31))
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -A)
@@ -57,7 +58,7 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
   cdabyppi:::expect_lt_v(abs(est$A - rotatedA)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -rotatedA)
-  est <- Bingham_full(sample)
+  est <- Bingham_full(sample, control = list(tol = 1E-15))
   cdabyppi:::expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   # try out FB estimation
@@ -67,7 +68,7 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
                     fixedtheta = rep(FALSE, length(thetaFB)), verbose = FALSE)
   smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(thetaFB)),
                       lltape, pman, "ones", 1, verbose = FALSE)
-  est <- smest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
+  est <- cppadest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
                control = list(tol = 1E-10))
 
   cdabyppi:::expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
@@ -75,6 +76,7 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
 })
 
 test_that("rfb() simulation for general symmetric matrices via Bingham() fitting", {
+  skip_on_cran() #rfb() tested when fitting tested
   p <- 3
   set.seed(345)
   theta <- runif(p-1 + (p - 1) * p/2)
@@ -106,7 +108,7 @@ test_that("rfb() simulation for general symmetric matrices via Bingham() fitting
                     fixedtheta = rep(FALSE, length(thetaFB)), verbose = FALSE)
   smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(thetaFB)),
                       lltape, pman, "ones", 1, verbose = FALSE)
-  est <- smest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
+  est <- cppadest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
                control = list(tol = 1E-10))
   cdabyppi:::expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
   # yay! it works, but oh man the estimates SEs are huge
@@ -114,6 +116,7 @@ test_that("rfb() simulation for general symmetric matrices via Bingham() fitting
 
 
 test_that("rfb() simulation for general symmetric matrices fitting", {
+  skip_on_cran() #rfb() tested when fitting tested
   p <- 3
   set.seed(111)
   theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
@@ -131,7 +134,7 @@ test_that("rfb() simulation for general symmetric matrices fitting", {
                     fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
   smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(theta)),
                       lltape, pman, "ones", 1, verbose = FALSE)
-  est <- smest(smotape, seq.int(1, length.out = length(theta)), sample,
+  est <- cppadest(smotape, seq.int(1, length.out = length(theta)), sample,
                control = list(tol = 1E-10))
   cdabyppi:::expect_lt_v(abs(est$par - theta), 3 * est$SE)
   # whooo it is working! But sample huge and SEs are still huge - it is almost like the model is misspecified
@@ -146,6 +149,7 @@ test_that("rfb() simulation for general symmetric matrices fitting", {
 
 
 test_that("FB() fits for p = 3", {
+  skip_on_cran() #test with various fixed elements is sufficient
   p <- 3
   set.seed(111)
   theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
@@ -173,7 +177,7 @@ test_that("FB() fits with various fixed elements", {
   #a fixed A element
   inA <- matrix(NA, nrow = p, ncol = p)
   inA[p, 1] <- inA[1, p] <- thetamats$A[1, p]
-  est <- FB(sample, A = inA, control = list(tol = 1E-15))
+  est <- FB(sample, A = inA, control = list(tol = 1E-12))
   cdabyppi:::expect_lte_v(abs(est$A - thetamats$A)[-(p*p)], 3 * est$SE$A[-(p*p)])
   expect_equal(est$A[!is.na(inA)], thetamats$A[!is.na(inA)])
   expect_equal(est$SE$A[!is.na(inA)], 0 * thetamats$A[!is.na(inA)])
@@ -186,13 +190,13 @@ test_that("FB() fits with various fixed elements", {
   # a fixed Fisher element
   inkm <- rep(NA, p)
   inkm[p] <- thetamats$m[p] * thetamats$k
-  est <- FB(sample, km = inkm, control = list(tol = 1E-15))
+  est <- FB(sample, km = inkm, control = list(tol = 1E-12))
   cdabyppi:::expect_lte_v(abs(est$km - thetamats$km), 3 * est$SE$km + 1E-10)
   expect_equal(est$km[!is.na(inkm)], thetamats$km[!is.na(inkm)])
   expect_equal(est$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
 })
 
-test_that("FB() with many fixed elements leads so smaller smobjgrad", {
+test_that("FB() with many fixed elements leads to smaller smobjgrad", {
   skip("Fixing many of the elements doesn't improve smobjgrad")
   p <- 3
   set.seed(111)

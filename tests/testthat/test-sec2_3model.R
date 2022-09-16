@@ -24,11 +24,12 @@ test_that("Score1ac estimator works on highly concentrated data, with some compo
   beta0[p]=-0.5
 
   #simulate sample from PPI model
-  samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,4)
+  set.seed(31654)
+  samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
 
   #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
   #a few times to check that it is an appropriate upper bound.
-  # 4 seems to be pretty good (I've run the above rhybrid many times).
+  # 4 seems to be pretty good (I've run the above rppi many times).
   # I.e. the simulation result doesn't suggest changing maxden=4
   stopifnot(samp1$maxden <= 4)
   maxden <- 4
@@ -54,11 +55,11 @@ test_that("Score1ac estimator works on highly concentrated data, with some compo
   expect_true(all(abs(beta0[-p] - estimate1all[6:7]) <= 2*3/sqrt(n)))
 
   #calculate scoring estimate with beta fixed at beta0:
-  estimator=cdabyppi:::estimator1(samp3,acut,1, beta0)
-  estimate1=estimator$estimator1
-  std1=cdabyppi:::estimator1SE(samp3,acut,estimate1,estimator$W_est,1, beta0)
+  estimator=cdabyppi:::estimator1(samp3,acut,1, beta0, computeSE = TRUE)
+  estimate1=estimator$est$paramvec
+  std1=estimator$SE$paramvec
   # check
   #2*SE bounds
-  expect_true(all(abs(theta - estimate1) < 2*std1))
+  expect_true(all(abs(theta - estimate1[1:length(theta)]) < 2*std1[1:length(theta)]))
 })
 

@@ -29,7 +29,7 @@ t_u2s_const <- function(usertheta, c){
 }
 
 
-#' @describeIn t_u2i Convert `starttheta` and `isfixed` back to a `starttheta` by replacing any non-fixed elements with `NA`.
+#' @describeIn t_u2i Convert `starttheta` and `isfixed` back to a `usertheta` by replacing any non-fixed elements with `NA`.
 t_sf2u <- function(starttheta, isfixed){
   stopifnot(all(isfixed %in% c(TRUE, FALSE)))
   stopifnot(length(starttheta) == length(isfixed))
@@ -61,4 +61,32 @@ t_si2f <- function(starttheta, isfixed){
   stopifnot(length(starttheta) == length(isfixed))
   stopifnot(all(isfixed %in% c(TRUE, FALSE)))
   return(starttheta[!isfixed])
+}
+
+#' @describeIn t_u2i Safely join a usertheta with a user-defined starttheta (which may have NA values) to create a full starttheta
+t_us2s <- function(usertheta, starttheta){
+  if (is.null(starttheta)){return(NULL)}
+  if (length(usertheta) != length(starttheta)){stop("Length of paramvec and paramvec_start does not match.")}
+
+  #join the two by taking usertheta and writing in values from starttheta
+  outstarttheta <- usertheta
+  outstarttheta[is.na(usertheta)] <- starttheta[is.na(usertheta)]
+
+  #### now check the results
+  # look for NA values
+  if (any(is.na(outstarttheta))){
+    stop(paste("paramvec_start needs to supply the following elements of the parameter vector:",
+          paste(which(is.na(outstarttheta)), collapse = ", ")))
+  }
+
+  # warn if starttheta elements (corresponding fixed ones) have been overwritten
+  absdiff_big <- abs(starttheta - outstarttheta) > sqrt(.Machine$double.eps)
+  absdiff_big[is.na(starttheta)] <- FALSE #the NA values of starttheta should be overrided - it make no sense to flag a warning for them
+  if (any(absdiff_big)){
+    warning(paste("paramvec_start inconsistent with fixed elements supplied in paramvec:",
+                  paste(which(absdiff_big), collapse = ", "),
+                  "paramvec_start will be ignored for these elements."))
+  }
+
+  return(outstarttheta)
 }

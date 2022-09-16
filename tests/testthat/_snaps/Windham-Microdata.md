@@ -1,4 +1,4 @@
-# windham_diff estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled
+# robust ppi via alr estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled
 
     {
       "type": "double",
@@ -20,7 +20,7 @@
       "value": [-0.770598, -0.870534, -0.079014, -0.149064, 0]
     }
 
-# windham_diff estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled
+# robust ppi via alr estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled
 
     {
       "type": "double",

@@ -1,7 +1,6 @@
+skip_on_cran() #too slow
 
-
-test_that("windham_diff estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
-
+test_that("robust ppi via alr estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
 data("microdata", package = "cdabyppi")
 countdata=as.matrix(microdata[,12:31])
 
@@ -95,7 +94,7 @@ beta0_est=beta0
 sp=p-1
 
 #try simulating to see required maxden
-expect_silent(sim <- rhybrid(1000, p, beta0, ALs, bL, maxden = 0))
+expect_silent(sim <- rppi(1000, p, beta0, ALs, bL, maxden = 0))
 
 #non-robust components (k^*=2 here)
 ind_weightA=matrix(0,sp,1)
@@ -104,21 +103,26 @@ ind_weightA[4]=1
 
 #calculate robust estimates
 cW=0.7
-est1=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = TRUE)
-#estimate of A_L:
-expect_snapshot_value(signif(est1$est$ALs,6), style = "json2")
-#estimate of beta:
-expect_snapshot_value(signif(est1$est$beta,6), style = "json2")
+ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
+  mats <- cdabyppi:::fromPPIparamvec(theta, p = ncol(Y))
+  return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
+}
 
-#Use Kassel's correction method
-est2=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = FALSE)
-expect_equal(est1$est$ALs, est2$est$ALs, tolerance = 1E-5)
-expect_equal(est1$est$beta, est2$est$beta, tolerance = 1E-5)
+est1=ppi_robust(Y = propreal,
+                cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE),
+                method = "direct", trans = "alr",
+                paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+                paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
+
+#estimate of A_L:
+expect_snapshot_value(signif(fromPPIparamvec(est1$theta)$ALs,6), style = "json2")
+#estimate of beta:
+expect_snapshot_value(signif(fromPPIparamvec(est1$theta)$beta,6), style = "json2")
 })
 
 
 
-test_that("windham_diff estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
+test_that("robust ppi via alr estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
   data("microdata", package = "cdabyppi")
   countdata=as.matrix(microdata[,12:31])
 
@@ -188,15 +192,14 @@ test_that("windham_diff estimator matches historical results on dataset with Spi
 
   #calculate robust estimates
   cW=1.25
-  est1=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA = ind_weightA, originalcorrectionmethod = TRUE)
+  est1=ppi_robust(Y = propreal,
+                   cW = ppi_cW(cW, TRUE, TRUE, TRUE, TRUE, FALSE),
+                   method = "direct", trans = "alr",
+                   paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+                   paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
   #estimate of A_L:
-  expect_snapshot_value(signif(est1$est$ALs,6), style = "json2")
+  expect_snapshot_value(signif(fromPPIparamvec(est1$theta)$ALs,6), style = "json2")
   #estimate of beta:
-  expect_snapshot_value(signif(est1$est$beta,6), style = "json2")
-
-  #Use Kassel's correction method
-  est2=windham_diff(propreal,cW,ALs_est,bL_est,beta0_est, ind_weightA, originalcorrectionmethod = FALSE)
-  expect_equal(est1$est$ALs, est2$est$ALs, tolerance = 1E-4)
-  expect_equal(est1$est$beta, est2$est$beta, tolerance = 1E-5)
+  expect_snapshot_value(signif(fromPPIparamvec(est1$theta)$beta,6), style = "json2")
 })
 

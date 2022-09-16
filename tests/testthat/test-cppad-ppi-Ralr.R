@@ -1,6 +1,7 @@
 test_that("Fitting ppi via alr transform with fixed beta gets close to true values", {
+  skip_on_cran()
   set.seed(1234)
-  model <- sec2_3model(1000, maxden = 4)
+  model <- ppi_egmodel(1000, maxden = 4)
 
   acut = 0.1 #not needed for Ralr per se, but code still expects it
 
@@ -10,7 +11,7 @@ test_that("Fitting ppi via alr transform with fixed beta gets close to true valu
   smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - model$p),
                      pll = pppi, pman = pman, "ones", acut = acut, verbose = FALSE) #tape of the score function
 
-  out <- smest(smoppi, 1:(length(model$theta) - model$p), model$sample, control = list(tol = 1E-10))
+  out <- cppadest(smoppi, 1:(length(model$theta) - model$p), model$sample, control = list(tol = 1E-10))
 
   expect_lt(out$value, smobj(smoppi, model$theta[1:(length(model$theta) - model$p)], model$sample))
   expect_lt(out$sqgradsize, sum(smobjgrad(smoppi, model$theta[1:(length(model$theta) - model$p)], model$sample)^2))
@@ -20,7 +21,7 @@ test_that("Fitting ppi via alr transform with fixed beta gets close to true valu
 
 test_that("Fitting ppi via alr inc all beta gets close to true values", {
   set.seed(111)
-  model <- sec2_3model(1000, maxden = 4)
+  model <- ppi_egmodel(1000, maxden = 4)
 
   acut = 0.1 #not needed for Ralr per se, but code still expects it
 
@@ -30,7 +31,7 @@ test_that("Fitting ppi via alr inc all beta gets close to true values", {
   smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta)),
                      pll = pppi, pman = pman, "ones", acut = acut, verbose = FALSE) #tape of the score function
 
-  out <- smest(smoppi, 1:length(model$theta), model$sample, control = list(tol = 1E-10))
+  out <- cppadest(smoppi, 1:length(model$theta), model$sample, control = list(tol = 1E-10))
 
   expect_lt(out$value, smobj(smoppi, model$theta, model$sample))
   expect_lt(out$sqgradsize, sum(smobjgrad(smoppi, model$theta, model$sample)^2))

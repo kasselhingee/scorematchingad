@@ -1,4 +1,4 @@
-#' @title Score matching estimators for PPI model include beta
+# @title Score matching estimators for PPI model include beta
 #' @description Score matching estimators for the PPI model that estimate \eqn{A_L}, \eqn{b_L} and \eqn{\beta}{beta}.
 #' @param prop compositional data (n by p matrix)
 #' @param acut \eqn{a_c} for the weighting function \eqn{h}.
@@ -16,21 +16,21 @@
 
 #' @return A vector of the estimates for individual entries of \eqn{A_L}, \eqn{b_L}, and \eqn{\beta}{beta}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A_L}, then the upper triangle of \eqn{A_L}, then the elements of \eqn{b_L}, and then finally the estimates of \eqn{\beta}{beta}.
 utheta_estimatorall1_betap_compatible <- function(usertheta){
-  d_isfixed <- ppi_cppad_thetaprocessor(ppiltheta2p(length(usertheta)),
+  d_isfixed <- ppi_paramvec(ppiltheta2p(length(usertheta)),
                                         AL = FALSE, bL = FALSE, betaL = FALSE, betap = TRUE)
   if (all(d_isfixed == t_u2i(usertheta))){return(TRUE)}
   else (return(FALSE))
 }
 
 utheta_estimatorall1_full_compatible <- function(usertheta){
-  d_isfixed <- ppi_cppad_thetaprocessor(ppiltheta2p(length(usertheta)),
+  d_isfixed <- ppi_paramvec(ppiltheta2p(length(usertheta)),
                                         AL = FALSE, bL = FALSE, beta = FALSE)
   if (all(d_isfixed == t_u2i(usertheta))){return(TRUE)}
   else (return(FALSE))
 }
 
 
-#' @export
+# @export
 estimatorall1 <- function(prop, acut, betap = NULL, w = rep(1, nrow(prop))){
   Wnd <- estimatorall1_Wnd(prop,acut,betap, w = w)
 
@@ -53,7 +53,14 @@ estimatorall1 <- function(prop, acut, betap = NULL, w = rep(1, nrow(prop))){
   # from estimates of 1 + 2beta, to estimates of beta
   quartic_sphere[sum(tot,1):num1]=(quartic_sphere[sum(tot,1):num1]-1)/2
 
-  return(list(estimator1=quartic_sphere,W_est=Wnd$W))
+  # prepare full PPI parameter vector
+  if (is.null(betap)){
+    theta <- quartic_sphere
+  } else {
+    theta <- c(quartic_sphere, betap)
+  }
+
+  return(list(estimator1=quartic_sphere,W_est=Wnd$W, theta = theta))
 }
 
 estimatorall1_smo <- function(pi, prop,acut,betap = NULL, w = rep(1, nrow(prop))){
@@ -182,5 +189,17 @@ estimatorall1_Wnd <- function(prop,acut,betap = NULL, w = rep(1, nrow(prop)))
 
 }
 
-
+# a clean wrapping for use in ppi()
+ppi_sqrt_minimah_full <- function(Y, acut, betap, w){
+  rawfit <- estimatorall1(Y, acut = acut,
+                            betap = betap,
+                            w= w)
+  paramvec <- drop(rawfit$estimator1)
+  if (!is.null(betap)){paramvec <- c(paramvec, betap)}
+  fit <- list()
+  fit$est <- c(list(paramvec = paramvec),
+               fromPPIparamvec(paramvec))
+  fit$SE <- "Not calculated."
+  return(fit)
+}
 

@@ -1,3 +1,4 @@
+skip_on_cran()
 # test of the 'model 1' described in section A.11 of the supplementary material.
 # This is a gGamma model with β = (−0.80, −0.85, 0, −0.2, 0), b = 0, and A_L = Table 3. Beta and b considered fixed.
 
@@ -24,7 +25,7 @@ beta0[2]=-0.85
 beta0[3]=0
 
 #simulate sample from the PPI model
-samp1=cdabyppi:::rhybrid(n,p,beta0,ALs,bL,0)
+samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,0)
 
 #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
 #a few times to check that it is an appropriate upper bound.
@@ -35,7 +36,7 @@ stopifnot(maxden <= 0)
 samp3=samp1$samp3
 
 #### Estimate from Simulated Sample ####
-test_that("multestimator gives numerical non-NA values", {
+test_that("ppi_mmmm gives numerical non-NA values", {
   #simulate sample from the multinomial PPI model:
   ni=matrix(2000,n,1)
   ni=as.vector(ni)
@@ -45,7 +46,7 @@ test_that("multestimator gives numerical non-NA values", {
     x[j,]=rmultinom(1,ni[j],prob=samp3[j,])
   }
 
-  mult=cdabyppi:::multestimator(x, ni, beta0)
+  mult=cdabyppi:::ppi_mmmm(x, ni, beta0)
   expect_length(mult, 3)
   expect_true(sum(mult) != 0)
 })

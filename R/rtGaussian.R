@@ -1,11 +1,12 @@
-#' @title Generate random observations from a truncated Gaussian model
-#' @description Generates random observations from a truncated Gaussian model with \eqn{\beta=0}{beta=0}.
-#' @param n Sample size
-#' @param p Dimension (number of components)
-#' @param muL Untruncated Gaussian mean. See (Scealy and Wood, 2021; Appendix A.1.1).
-#' @param SigA Untruncated Gaussian covariance matrix. See (Sealy and Wood, 2021; Appendix A.1.1).
-#' @return A matrix with `n` rows and `p` columns.
-#' @export
+# @title Generate random observations from a truncated Gaussian model
+# @description Generates random observations from a truncated Gaussian model with \eqn{\beta=0}{beta=0}.
+# Purely for testing Model 4 from Section A.11 of Scealy and Wood (2022).
+# @param n Sample size
+# @param p Dimension (number of components)
+# @param muL Untruncated Gaussian mean. See (Scealy and Wood, 2022; Appendix A.1.1).
+# @param SigA Untruncated Gaussian covariance matrix. See (Sealy and Wood, 2022; Appendix A.1.1).
+# @return A matrix with `n` rows and `p` columns.
+# @export
 rtGaussian <- function(n,p,muL,SigA)
 {
 
