@@ -11,9 +11,15 @@
 #' @examples
 #' set.seed(12342)
 #' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+#' movMF::movMF(Y, 1) #maximum likelihood estimate
 #' vMF(Y, method = "smfull")
 #' vMF(Y, method = "Mardia")
 #' est <- vMF(Y, method = "Mardia_robustsm", cW = 1E-5, control = list(tol = 1E-10, maxit = 100, MaxIter = 100))
+#' @return
+#' A list of `est`, `SE` and `info`.
+#' `est` contains the estimates in vector form, `paramvec`, and with user friendly names `k` and `m`.
+#' `SE` contains estimates of the standard errors if computed by the estimating method. Standard error estimates of `k` and `m` are not computed.
+#' `info` contains a variety of information about the model fitting procedure.
 #' @export
 vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin(), default_FixedPoint()), w = rep(1, nrow(sample)), cW = NULL){
   firstfit <- NULL
@@ -49,13 +55,13 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
       km[isfixed] <- starttheta[isfixed]
       out <- vMF_full(Y, starttheta, isfixed,
                       control = controls$Rcgmin, w=w)
-      return(out$km)
+      return(out$est$paramvec)
     }
   est <- windham_raw(prop = sample,
                      cW = cW * !isfixed,
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
-                     starttheta = firstfit$km,
+                     starttheta = firstfit$est$paramvec,
                      isfixed = isfixed,
                      originalcorrectionmethod = TRUE,
                      fpcontrol = controls$fp)
@@ -67,13 +73,13 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
     estimator <- function(Y, starttheta, isfixed, w){
       startk <- sqrt(sum(starttheta^2))
       out <- vMF_Mardia(Y, startk, control = controls$Rcgmin, w=w)
-      return(out$km)
+      return(out$est$paramvec)
     }
   est <- windham_raw(prop = sample,
                      cW = cW * !isfixed,
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
-                     starttheta = firstfit$km,
+                     starttheta = firstfit$est$paramvec,
                      isfixed = isfixed,
                      originalcorrectionmethod = TRUE,
                      fpcontrol = controls$fp)
@@ -82,7 +88,7 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
   est$k <- sqrt(sum(est$km^2))
   est$m <- est$km/est$k
   } else if (method == "Mardia_robustsm"){
-    sample <- vMF_stdY(sample, firstfit$m) #standardise sample
+    sample <- vMF_stdY(sample, firstfit$est$m, w = w) #standardise sample
     # after standardisation there is only one parameter to fit in the vMF model
     ldenfun <- function(Y, theta){ #here theta is just k
       k <- theta
@@ -90,20 +96,20 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
       return(drop(Directional::dvmf(Y, k, m, logden = TRUE)))
     }
     estimator <- function(Y, starttheta, isfixed, w){ #starttheta is k in this case
-      out <- vMF_kappa(Y, starttheta, control = controls$Rcgmin, w=w)
+      out <- vMF_kappa_coarse(Y, starttheta, control = controls$Rcgmin, w=w)
       return(out$k)
     }
   est <- windham_raw(prop = sample,
                      cW = cW, #plugs into ldenfun
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
-                     starttheta = firstfit$k,
+                     starttheta = firstfit$est$k,
                      isfixed = c(FALSE),
                      originalcorrectionmethod = TRUE,
                      fpcontrol = controls$fp)
   est$k <- est$theta
   est$theta <- NULL
-  est$m <- firstfit$m
+  est$m <- firstfit$est$m
   }
   if (is.null(estimator)){stop(sprintf("Method '%s' is not valid", method))}
 
@@ -126,44 +132,20 @@ vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin
   stopifnot(length(isfixed) == 1)
   mu <- apply(sample, MARGIN = 2, weighted.mean, w)
   mu <- mu/sqrt(sum(mu^2))
-  samplestd <- vMF_stdY(sample, m = mu)
+  samplestd <- vMF_stdY(sample, m = mu, w = w)
   # check: mustd <- colMeans(samplestd); mustd <- mustd / sqrt(sum(mustd^2))
-  kappainfo <- vMF_kappa(samplestd, startk, isfixed = isfixed, control = control, w = w)
+  kappainfo <- vMF_kappa_coarse(samplestd, startk, isfixed = isfixed, control = control, w = w)
   return(list(
-    k = kappainfo$k,
-    m = mu,
-    km =  kappainfo$k * mu,
-    SE = list(k = kappainfo$SE),
-    sminfo = kappainfo
+    est = list(paramvec = kappainfo$k * mu,
+               k = kappainfo$k,
+               m = mu),
+    SE = list(paramvec = "Not calculated.",
+              k = kappainfo$SE,
+              m = "Not calculated."),
+    info = kappainfo
   ))
 }
 
-# this function assumes a standardised data set with mean direction equal to the northpole
-vMF_kappa <- function(Y, startk, isfixed = FALSE, control = default_Rcgmin(), w = rep(1, nrow(Y))){
-  # do estimate, where all but the first component of theta are fixed at zero
-  # because kappa * e1 = (kappa, 0, 0, 0, ...)
-  if (!isfixed){ #as if k isn't supplied
-    p <- ncol(Y)
-    tapes <- buildsmotape_internal("Snative", "vMF",
-                                   rep(1, p)/sqrt(p),
-                                   starttheta = c(startk, rep(0, p-1)),
-                                   isfixed = c(FALSE, rep(TRUE, p-1)),
-                                   weightname = "ones",
-                                   verbose = FALSE)
-    sminfo <- cppadest(tapes$smotape, startk, Y, control = control, w = w)
-    k <- sminfo$par
-    SE <- sminfo$SE
-  } else {
-    sminfo <- NULL
-    k <- startk
-    SE <- 0
-  }
-  return(list(
-    k = k,
-    SE = SE,
-    sminfo = sminfo
-  ))
-}
 
 vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w = NULL){
   p <- ncol(sample)
@@ -179,10 +161,20 @@ vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w 
 
   SE <- t_sfi2u(out$SE, rep(0, length(starttheta)), isfixed)
   return(list(
-    km = theta,
-    k = sqrt(sum(theta^2)),
-    m = theta / sqrt(sum(theta^2)),
-    SE = list(km = SE),
-    sminfo = out
+    est = list(paramvec = theta,
+               k = sqrt(sum(theta^2)),
+               m = theta / sqrt(sum(theta^2))),
+    SE = list(paramvec = SE),
+    info = out
   ))
+}
+
+vMF_paramvec <- function(m, k){
+  return(k*m)
+}
+
+vMF_fromparamvec <- function(paramvec){
+  k <- sqrt(sum(paramvec^2))
+  m <- paramvec / m
+  return(list(m = m, k = k))
 }
