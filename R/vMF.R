@@ -1,7 +1,8 @@
 #' @title Score matching estimate for the von-Mises Fisher distribution
+#' @details The parameter vector for vMF is the `K * m` where `k` is the concentration, `m` is the mean direction.
 #' @param sample Samples from the vMF distribution in cartesian Rd coordinates. Each row is a measurement.
-#' @param km Optional for the `smfull` method. A vector of same length as the dimension, representing the elements of the concentraction * Fisher direction vector.
-#' If supplied, the non-NA elements are fixed.
+#' @param paramvec Optional for the `smfull` method. A vector of same length as the dimension, representing the elements of the concentraction * Fisher direction vector. It is `k * m` where `k` is the concentration, `m` is the mean direction.
+#' If supplied, the non-NA elements are fixed. It is easy to generate `paramvec` using [vMF_paramvec()].
 #' @param control Control parameters passed to `Rcgmin::Rcgmin()` and eventually `FixedPoint::FixedPoint()`
 #' @param method Either `Mardia` for the hybrid score matching estimate from Mardia et al 2016
 #'  or `smfull` for a full score matching estimate.
@@ -21,22 +22,22 @@
 #' `SE` contains estimates of the standard errors if computed by the estimating method. Standard error estimates of `k` and `m` are not computed.
 #' `info` contains a variety of information about the model fitting procedure.
 #' @export
-vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin(), default_FixedPoint()), w = rep(1, nrow(sample)), cW = NULL){
+vMF <- function(Y, paramvec = NULL, method = "smfull", control = c(default_Rcgmin(), default_FixedPoint()), w = rep(1, nrow(Y)), cW = NULL){
   firstfit <- NULL
   controls <- splitcontrol(control)
   if (method == "smfull"){
-    if (is.null(km)){
-      km <- rep(NA, ncol(sample))
+    if (is.null(paramvec)){
+      paramvec <- rep(NA, ncol(Y))
     }
-    starttheta <- t_u2s_const(km, 0.1)
-    isfixed <- t_u2i(km)
-    firstfit <- vMF_full(sample, starttheta, isfixed, control = controls$Rcgmin, w=w)
+    starttheta <- t_u2s_const(paramvec, 0.1)
+    isfixed <- t_u2i(paramvec)
+    firstfit <- vMF_full(Y, starttheta, isfixed, control = controls$Rcgmin, w=w)
   }
   if (method %in% c("Mardia", "Mardia_robustsm")){
     if (method == "Mardia_robustsm"){stopifnot(!is.null(cW))} #for robust score matching, need to use  cW
-    stopifnot(is.null(km))
-    firstfit <- vMF_Mardia(sample, startk = 10, control = controls$Rcgmin, w=w)
-    isfixed <- rep(FALSE, ncol(sample)) #for Windham robust estimation, if it is used
+    stopifnot(is.null(paramvec))
+    firstfit <- vMF_Mardia(Y, startk = 10, control = controls$Rcgmin, w=w)
+    isfixed <- rep(FALSE, ncol(Y)) #for Windham robust estimation, if it is used
   }
   if (is.null(firstfit)){stop(sprintf("Method '%s' is not valid", method))}
 
@@ -51,13 +52,13 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
 
   if (method == "smfull"){
     estimator <- function(Y, starttheta, isfixed, w){
-      km <- rep(NA, ncol(Y))
-      km[isfixed] <- starttheta[isfixed]
+      paramvec <- rep(NA, ncol(Y))
+      paramvec[isfixed] <- starttheta[isfixed]
       out <- vMF_full(Y, starttheta, isfixed,
                       control = controls$Rcgmin, w=w)
       return(out$est$paramvec)
     }
-  est <- windham_raw(prop = sample,
+  est <- windham_raw(prop = Y,
                      cW = cW * !isfixed,
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
@@ -65,17 +66,17 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
                      isfixed = isfixed,
                      originalcorrectionmethod = TRUE,
                      fpcontrol = controls$fp)
-  est$km <- est$theta
+  est$paramvec <- est$theta
   est$theta <- NULL
-  est$k <- sqrt(sum(est$km^2))
-  est$m <- est$km/est$k
+  est$k <- sqrt(sum(est$paramvec^2))
+  est$m <- est$paramvec/est$k
   } else if (method == "Mardia"){
     estimator <- function(Y, starttheta, isfixed, w){
       startk <- sqrt(sum(starttheta^2))
       out <- vMF_Mardia(Y, startk, control = controls$Rcgmin, w=w)
       return(out$est$paramvec)
     }
-  est <- windham_raw(prop = sample,
+  est <- windham_raw(prop = Y,
                      cW = cW * !isfixed,
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
@@ -83,12 +84,12 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
                      isfixed = isfixed,
                      originalcorrectionmethod = TRUE,
                      fpcontrol = controls$fp)
-  est$km <- est$theta
+  est$paramvec <- est$theta
   est$theta <- NULL
-  est$k <- sqrt(sum(est$km^2))
-  est$m <- est$km/est$k
+  est$k <- sqrt(sum(est$paramvec^2))
+  est$m <- est$paramvec/est$k
   } else if (method == "Mardia_robustsm"){
-    sample <- vMF_stdY(sample, firstfit$est$m, w = w) #standardise sample
+    Y <- vMF_stdY(Y, firstfit$est$m, w = w) #standardise sample
     # after standardisation there is only one parameter to fit in the vMF model
     ldenfun <- function(Y, theta){ #here theta is just k
       k <- theta
@@ -99,7 +100,7 @@ vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin
       out <- vMF_kappa_coarse(Y, starttheta, control = controls$Rcgmin, w=w)
       return(out$k)
     }
-  est <- windham_raw(prop = sample,
+  est <- windham_raw(prop = Y,
                      cW = cW, #plugs into ldenfun
                      ldenfun = ldenfun,
                      estimatorfun = estimator,
