@@ -74,7 +74,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
 
 #' @param cW A vector of robustness tuning constants - the parameter vector is multiplied by these when computing the log-density of each observation for the Windham weights. For the PPI model, generate `cW` easily using [ppi_cW()] and [ppi_cW_auto()].
 WindhamCorrection <- function(cW){
-  weightthetamat <- diag(cW) #matrix that converts theta to the new theta*cW based on inclusion/exclusion
+  weightthetamat <- diag(cW, nrow = length(cW)) #matrix that converts theta to the new theta*cW based on inclusion/exclusion  #klh: the extra argument nrow = length(cW) forces diag() to use the cW values on the diagonal, rather than treat them as the size of the matrix desired - useful when cW is legitimately length 1
   tauc <- weightthetamat + diag(1,nrow = length(cW))
   return(tauc)
 }
