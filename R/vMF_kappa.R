@@ -11,8 +11,8 @@
 #' `SE` contains estimates of the standard errors if computed by the estimating method.
 #' `info` contains a variety of information about the model fitting procedure.
 #' @export
-vMF_kappa <- function(Y, w = rep(1, nrow(Y)), paramvec_start = NULL, paramvec = NA){
-  vMF_
+vMF_kappa <- function(Y, w = rep(1, nrow(Y)), paramvec_start = NULL, paramvec = NA, control = default_Rcgmin()){
+  vMF_kappa_coarse(Y = Y, startk = 10, isfixed = FALSE, control = control, w = w)
 }
 
 

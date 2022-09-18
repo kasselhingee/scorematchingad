@@ -109,25 +109,24 @@ test_that("vMF() robust fitting works on dimension 5 with direction outliers", {
   #full method, not robust
   out1 <- vMF(Y = sample_o, method = "smfull", control = list(tol = 1E-10))
   #full method, robust, expect to be closer to true value (due to the outliers)
-  out2 <- vMF(Y = sample_o, method = "smfull", control = list(tol = 1E-10), cW = 0.1)
+  out2 <- vMF_robust(Y = sample_o, cW = rep(0.1, 5), method = "smfull", control = list(tol = 1E-10))
   expect_true(all(abs(out2$est$paramvec - km) < abs(out1$est$paramvec - km)))
 
   #check that fixed components remain fixed for full method
   inkm <- km
   inkm[2] <- NA
   inkm[p] <- NA
-  out <- vMF(Y = sample_o, paramvec = inkm, method = "smfull", cW = 0.1)
-  expect_equal(out$paramvec[!is.na(inkm)], km[!is.na(inkm)])
+  out <- vMF_robust(Y = sample_o, cW = 0.1 * is.na(inkm), paramvec = inkm, method = "smfull")
+  expect_equal(out$est$paramvec[!is.na(inkm)], km[!is.na(inkm)])
 
   #Mardia method
   out1 <- vMF(Y = sample_o, method = "Mardia")
   #full method, robust, expect to be closer to true value (due to the outliers)
-  out2 <- vMF(Y = sample_o, method = "Mardia", cW = 0.1)
+  out2 <- vMF_robust(Y = sample_o, cW = rep(0.1, length(km)), method = "Mardia")
   expect_true(all(abs(out2$paramvec - km) < abs(out1$est$paramvec - km)))
-  #expect partially robust Mardia method to not be partially closer
-  out3 <- vMF(Y = sample_o, method = "Mardia_robustsm", cW = 0.1)
-  expect_equal(out3$m, out1$est$m) #because m is estimated the same way
-  expect_true(all(abs(out3$paramvec - km) > abs(out1$est$paramvec - km)))
+  #robust estimate of kappa, the outlying points look like low concentration so I'd expect robustness of kappa to do better than non-robust method, and potentially about the same as the full robust method.
+  out3 <- vMF_kappa_robust(Y = sample_o, cW = 0.1)
+  expect_lt(abs(out3$est$k - k), abs(out1$est$k - k))
 })
 
 test_that("robust vMF() with concentration outliers: ok with full robust, better with hybrid, p = 5", {
@@ -146,19 +145,19 @@ test_that("robust vMF() with concentration outliers: ok with full robust, better
 
   #Mardia method
   out1 <- vMF(Y = sample_o, method = "Mardia")
+  expect_equal(out1$est$m, vMF_m(sample_o)) #because m is estimated as the mean direction
   #full method, robust, expect to be closer to true value overall, but have mixed results
-  out2 <- vMF(Y = sample_o, method = "Mardia", cW = 1E-2)
+  out2 <- vMF_robust(Y = sample_o, cW = rep(1E-2, ncol(sample_o)), method = "Mardia")
   #expect partially robust Mardia method to be better at k
-  out3 <- vMF(Y = sample_o, method = "Mardia_robustsm", cW = 0.01)
+  out3 <- vMF_kappa_robust(Y = sample_o, cW = 0.01)
 
   #mixed results for full robust - choosing mean direction
-  expect_lt(abs(out2$k - k), abs(out1$est$k - k))
-  expect_false(all(abs(out2$paramvec - km) < abs(out1$est$paramvec - km)))
+  expect_lt(abs(out2$est$k - k), abs(out1$est$k - k))
+  expect_false(all(abs(out2$est$paramvec - km) < abs(out1$est$paramvec - km)))
 
   # for hybrid, results more solid
-  expect_equal(out3$m, out1$est$m) #because m is estimated the same way
   expect_true(all(abs(out3$k * out3$m - km) < abs(out1$est$paramvec - km)))
-  expect_lt(abs(out3$k - k), abs(out1$est$k - k))
+  expect_lt(abs(out3$est$k - k), abs(out1$est$k - k))
 })
 
 
@@ -172,22 +171,22 @@ test_that("controls of FixedPoint() and Rcgmin() are correctly passed", {
   set.seed(123)
   Y <- movMF::rmovMF(10, m * k)
 
-  out_default <- vMF(Y, method = "Mardia", cW = 0.1) #use this packages defaults this is pretty fussy!
+  out_default <- vMF_robust(Y, cW = rep(0.1, ncol(Y)), method = "Mardia") #use this packages defaults this is pretty fussy!
 
-  suppressWarnings(out1 <- vMF(Y, method = "Mardia", cW = 0.1,
-             control = list(MaxIter = 2, #Fixed point iterations of only 2
-                            maxit = 1)))  #Rcgmin iterations of only 1 - warnings of non-convergence
-  expect_equal(out1$optim$fpevals, 2)
+  suppressWarnings(out1 <- vMF_robust(Y, cW = rep(0.1, ncol(Y)), method = "Mardia",
+             fpcontrol = list(MaxIter = 2), #Fixed point iterations of only 2
+             control = list(maxit = 1)))  #Rcgmin iterations of only 1 - warnings of non-convergence
+  expect_equal(out1$info$fpevals, 2)
   expect_error(expect_equal(out_default, out1))
 
   # expect a different result when Rcgmin package defaults used
-  out2 <- vMF(Y, method = "Mardia", cW = 0.1,
-           control = list(MaxIter = 2))
-  expect_error(expect_equal(out1$paramvec, out2$paramvec))
-  expect_error(expect_equal(out_default$paramvec, out2$paramvec))
+  out2 <- vMF_robust(Y, cW = 0.1, method = "Mardia",
+           fpcontrol = list(MaxIter = 2))
+  expect_error(expect_equal(out1$est$paramvec, out2$est$paramvec))
+  expect_error(expect_equal(out_default$est$paramvec, out2$est$paramvec))
 
   # expect a different result when FixedPoint() package defaults used
-  suppressWarnings(out3 <- vMF(Y, method = "Mardia", cW = 0.1,
+  suppressWarnings(out3 <- vMF_robust(Y, cW = 0.1, method = "Mardia",
               control = list(maxit = 1)))
   expect_error(expect_equal(out1, out3))
   expect_error(expect_equal(out_default, out3))

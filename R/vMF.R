@@ -35,7 +35,7 @@ vMF <- function(Y, paramvec = NULL, method = "smfull", control = c(default_Rcgmi
   }
   if (method %in% c("Mardia", "Mardia_robustsm")){
     if (method == "Mardia_robustsm"){stopifnot(!is.null(cW))} #for robust score matching, need to use  cW
-    stopifnot(is.null(paramvec))
+    if (!is.null(paramvec)){if (any(!is.na(paramvec))){stop("Mardia estimator cannot fix any elements of paramvec")}}
     firstfit <- vMF_Mardia(Y, startk = 10, control = controls$Rcgmin, w=w)
     isfixed <- rep(FALSE, ncol(Y)) #for Windham robust estimation, if it is used
   }
@@ -117,15 +117,6 @@ vMF <- function(Y, paramvec = NULL, method = "smfull", control = c(default_Rcgmi
   return(est)
 }
 
-vMF_stdY <- function(Y, m = NULL, w = NULL){
-  if(is.null(m)){
-    m <- apply(Y, MARGIN = 2, weighted.mean, w)
-    m <- m/sqrt(sum(m^2))
-  }
-  Rtrans <- Directional::rotation(m, c(1, rep(0, length(m) - 1)))
-  out <- Y %*% t(Rtrans)
-  return(out)
-}
 
 #for vMF_Mardia startk must be the value of the k parameter
 vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin(), w = rep(1, nrow(sample))){
@@ -176,6 +167,6 @@ vMF_paramvec <- function(m, k){
 
 vMF_fromparamvec <- function(paramvec){
   k <- sqrt(sum(paramvec^2))
-  m <- paramvec / m
+  m <- paramvec / k
   return(list(m = m, k = k))
 }
