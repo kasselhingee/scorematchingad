@@ -2,11 +2,9 @@
 
 test_estimator2 <- function(estimator, Y, w, ...){
   if (is.null(estimator)){stop("estimator is NULL")}
-  if (length(setdiff(c("Y", "w"), formalArgs(estimator))) == 0){
-    hasYnw <- TRUE
-  } else {
-    message("Estimator must have arguments 'Y' and 'w'.")
-    hasYnW = FALSE
+  estimatorformals <- formals(estimator)
+  if (length(setdiff(c("Y", "w"), names(estimatorformals))) != 0){
+    stop("Estimator must have arguments 'Y' and 'w'.")
   }
 
   if (is.null(w)){
@@ -17,34 +15,42 @@ test_estimator2 <- function(estimator, Y, w, ...){
   estargs <- list(...)
   estargs$w <- w
   estargs$Y <- Y
-  if ("paramvec" %in% formalArgs(estimator)){
-    paramvec = TRUE
-    estargs$paramvec <- t_sf2u(starttheta, isfixed)
-  } else {
-    paramvec = FALSE
-  }
-
-  if ("paramvec_start" %in% formalArgs(estimator)){
-    paramvec_start = TRUE
-  } else {
-    paramvec_start = FALSE
-  }
-  
-
   estobj <- do.call(estimator, estargs)
   estlocation <- find_paramvec_location(estobj)
 
-  newtheta <- extract_paramvec(estobj)
+  newparamvec <- extract_paramvec(estobj)
 
-  if (!isTRUE(length(newtheta) == length(starttheta))){stop("Estimator must return a vector of the same length as the input parameter vector")}
-  if (any(abs(newtheta[isfixed] - starttheta[isfixed]) > sqrt(.Machine$double.eps))){
-    stop("The fixed elements of theta are altered by estimator.")
+  # check that newparamvec has the correct length, if the length can be determined
+  paramvec_length = 0
+  paramvec = FALSE 
+  if ("paramvec" %in% names(estimatorformals)){
+    paramvec = TRUE
+    if (!is.null(estargs$paramvec)){paramvec_length <- max(paramvec_length, length(estargs$paramvec))} #use max here to ignore times when the default is 'NULL'
+    else if (class(estimatorformals$paramvec) == "call"){paramvec_length <- max(paramvec_length, length(eval(estimatorformals$paramvec)))}
   }
+  paramvec_start = FALSE 
+  if ("paramvec_start" %in% names(estimatorformals)){
+    paramvec_start = TRUE
+    if (!is.null(estargs$paramvec_start)){paramvec_length <- max(paramvec_length, length(estargs$paramvec_start))}
+    else if (class(estimatorformals$paramvec_start) == "call"){paramvec_length <- max(paramvec_length, length(eval(estimatorformals$paramvec_start)))}
+  } 
+  if ((paramvec_length > 0) && (length(newparamvec) != paramvec_length)){
+    stop(sprintf("Returned estimate has different length (%i) to input paramvec or paramvec_start (%i)", length(newparamvec), paramvec_length))
+  }
+
+  #check that fixing works, but only when paramvec is passed
+  if (paramvec){
+    if (!is.null(estargs$paramvec)){ 
+      if (any(abs(newparamvec[t_u2i(estargs$paramvec)] - estargs$paramvec[t_u2i(estargs$paramvec)]) > sqrt(.Machine$double.eps))){
+        stop("Fixed elements of the parameter vector are altered by estimator.")
+    }}
+  }
+
   return(list(
     paramvec = paramvec,
     paramvec_start = paramvec_start,
     estlocation = estlocation,
-    passes_tests = all(hasYnW)
+    paramvec_length_tested = (paramvec_length > 0)
   ))
 }
 

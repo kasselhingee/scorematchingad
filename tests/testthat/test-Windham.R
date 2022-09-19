@@ -113,70 +113,62 @@ test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5
 test_that("test_estimator works", {
   set.seed(3121)
   Y <- matrix(runif(10*5), nrow = 10, ncol = 5)
-  starttheta <- rep(0.1222, 7)
-  isfixed <- c(FALSE, FALSE, rep(TRUE, 5))
   w <- NULL
- 
-  goodfun_no_paramvec <- function(Y, w = rep(1, nrow(Y))){
+
+  assessment <- test_estimator2(function(Y, w = rep(1, nrow(Y))){
     return(colMeans(Y * w))
-  }
-  assessment <- test_estimator2(goodfun_no_paramvec, Y = Y, starttheta = NULL, isfixed = NULL, w = NULL)
+  }, Y = Y, w = NULL)
   expect_equal(assessment, list(paramvec = FALSE,
        paramvec_start = FALSE,
        estlocation = "[]",
-       passestests = TRUE))
+       paramvec_length_tested = FALSE))
 
-  goodfun_no_paramvec_start <- function(Y, paramvec, w = rep(1, nrow(Y))){
-    m <- colMeans(Y*w)
-    m[t_u2i(paramvec)] <- paramvec[t_u2i(paramvec)]
-    return(m)
-  }
-  assessment <- test_estimator2(goodfun_no_paramvec, Y = Y, starttheta = NULL, isfixed = NULL, w = NULL)
+  assessment <- test_estimator2(
+    function(Y, paramvec, w = rep(1, nrow(Y))){
+      m <- colMeans(Y*w)
+      m[t_u2i(paramvec)] <- paramvec[t_u2i(paramvec)]
+      return(m)
+    },
+    Y = Y, w = NULL, paramvec = rep(NA, ncol(Y)))
   expect_equal(assessment, list(paramvec = TRUE,
        paramvec_start = FALSE,
        estlocation = "[]",
-       passestests = TRUE))
+       paramvec_length_tested = TRUE))
   
   goodfun <- function(Y, paramvec, paramvec_start = NULL, w = rep(1, nrow(Y))){
     m <- colMeans(Y*w)
     m[t_u2i(paramvec)] <- paramvec[t_u2i(paramvec)]
     return(m)
   }
-  assessment <- test_estimator2(goodfun, Y = Y, starttheta = NULL, isfixed = NULL, w = NULL)
+  assessment <- test_estimator2(goodfun, Y = Y, w = NULL, paramvec = rep(NA, ncol(Y)))
   expect_equal(assessment, list(paramvec = TRUE,
        paramvec_start = TRUE,
        estlocation = "[]",
-       passestests = TRUE))
+       paramvec_length_tested = TRUE))
+
+  assessment <- test_estimator2(goodfun, Y = Y, w = NULL, paramvec = NULL)
+  expect_equal(assessment, list(paramvec = TRUE,
+       paramvec_start = TRUE,
+       estlocation = "[]",
+       paramvec_length_tested = FALSE))
 
 
   # test the estimation location detection
-  goodfun_rawout <- function(Y, paramvec, paramvec_start = NULL, w = rep(1, nrow(Y))){
+  assessment <- test_estimator2(function(Y, paramvec = rep(NA, ncol(Y)), paramvec_start = NULL, w = rep(1, nrow(Y))){
     m <- goodfun(Y, paramvec, paramvec_start = paramvec_start, w = w)
     return(m)
-  }
-  assessment <- test_estimator2(goodfun_rawout, Y = Y, starttheta = NULL, isfixed = NULL, w = NULL)
-  expect_equal(assessment, list(paramvec = TRUE,
-       paramvec_start = TRUE,
-       estlocation = "[]",
-       passestests = TRUE))
+  } , Y = Y, w = NULL)
+  expect_equal(assessment$estlocation, "[]")
   
-  goodfun_est_paramvec <- function(Y, paramvec, paramvec_start = NULL, w = rep(1, nrow(Y))){
+  assessment <- test_estimator2(function(Y, paramvec, paramvec_start = NULL, w = rep(1, nrow(Y))){
     m <- goodfun(Y, paramvec, paramvec_start = paramvec_start, w = w)
     return(list(est = list(paramvec = m)))
-  }
-  assessment <- test_estimator2(goodfun_est_paramvec, Y = Y, starttheta = NULL, isfixed = NULL, w = NULL)
-  expect_equal(assessment, list(paramvec = TRUE,
-       paramvec_start = TRUE,
-       estlocation = "[['est']][['paramvec']]",
-       passestests = TRUE))
+  }, Y = Y, w = NULL, paramvec = NULL)
+  expect_equal(assessment$estlocation, "[['est']][['paramvec']]")
   
-  goodfun_firstslot <- function(Y, paramvec, paramvec_start = NULL, w = rep(1, nrow(Y))){
+  assessment <- test_estimator2(function(Y, paramvec, paramvec_start = NULL, w = rep(1, nrow(Y))){
     m <- goodfun(Y, paramvec, paramvec_start = paramvec_start, w = w)
     return(list(est = m))
-  }
-  assessment <- test_estimator2(goodfun_firstslot, Y = Y, starttheta = NULL, isfixed = NULL, w = NULL)
-  expect_equal(assessment, list(paramvec = TRUE,
-       paramvec_start = TRUE,
-       estlocation = "[[1]]",
-       passestests = TRUE))
+  }, Y = Y, w = NULL, paramvec = NULL)
+  expect_equal(assessment$estlocation, "[[1]]")
 })
