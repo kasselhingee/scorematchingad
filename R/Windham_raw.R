@@ -5,6 +5,7 @@
 #' with \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u}.
 #' and \eqn{a} is *linear* function.
 #' The linear assumption means that \eqn{\tau_c(\theta)} is a simple matrix operation.
+#' @param cW A vector of robustness tuning constants - the parameter vector is multiplied by these when computing the log-density of each observation for the Windham weights. For the PPI model, generate `cW` easily using [ppi_cW()] and [ppi_cW_auto()].
 #'
 #' Assumes that `estimator` takes an argument paramvec if any parameter elements are fixed.
 #' @export
@@ -12,7 +13,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   extraargs <- list(...)
   ellipsis::check_dots_used()
   ### build the estimatorfun from estimator to match windham_raw() [messy but will work for testing now, then can clean later]
-  # assuming estimator has arguments: Y, paramvec, w, and optionally paramvec_start.
+  # assuming estimator has arguments: Y and w, and optionally paramvec and/or paramvec_start.
   # and assume that the return vector can be extracted using `extract_paramvec()` and this it is the full model parameter vector, including the fixed elements.
   # also pass in ...
   ##### there are probably ways to do this where all the different types of estimatorfun are created seperately, rather than one estimator fun that does them all
@@ -56,8 +57,14 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   if (!is.null(extraargs$paramvec)){isfixed = t_u2i(extraargs$paramvec)}
   else {isfixed <- rep(FALSE, length(starttheta))}
 
-  # check estimator fun
+  # check that estimator function runs
   chck <- estimatorfun(Y, starttheta, isfixed, w = rep(1, nrow(Y)))
+ 
+  #### Iterate to the estimate. Main elements here are: Y, starttheta, isfixed, ldenfun and estimatorfun 
+  # cW checks
+  stopifnot(length(cW) == length(starttheta))
+  stopifnot(is.numeric(cW))
+  if (any((cW * starttheta)[isfixed] != 0)){stop("Elements of cW corresponding to fixed non-zero parameters should be zero")}
 
   out <- windham_raw(
     prop = Y,
@@ -72,7 +79,63 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   return(out)
 }
 
-#' @param cW A vector of robustness tuning constants - the parameter vector is multiplied by these when computing the log-density of each observation for the Windham weights. For the PPI model, generate `cW` easily using [ppi_cW()] and [ppi_cW_auto()].
+#' @param fpcontrol A named list of control arguments to pass to `FixedPoint::FixedPoint()` for finding the robust estimate.
+#' @param ... Arguments passed to `estimator`.
+#' @export
+windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, originalcorrectionmethod = TRUE,
+   fpcontrol = NULL,
+    ...)
+
+{
+  
+  test_estimator(estimatorfun, prop[1:min(50, nrow(prop)), , drop = FALSE], starttheta, isfixed, w = NULL)
+
+  if (!originalcorrectionmethod){
+    tauc <- WindhamCorrection(cW)
+    taucinv <- solve(tauc)
+  }
+  myfun <- function(unisfixed){
+    stopifnot(length(unisfixed) == sum(!isfixed))
+    previous <- unisfixed
+    fulltheta <- starttheta
+    fulltheta[!isfixed] <- unisfixed
+    if (originalcorrectionmethod){
+      theta <- Windham_raw_newtheta_original(prop = prop, cW = cW,
+          ldenfun = ldenfun,
+          estimatorfun = estimatorfun,
+          theta = fulltheta,
+          isfixed = isfixed)
+    } else {
+      theta <- Windham_raw_newtheta(prop = prop, cW = cW,
+          ldenfun = ldenfun,
+          estimatorfun = estimatorfun,
+          theta = fulltheta,
+          isfixed = isfixed,
+          taucinv = taucinv)
+    }
+    unisfixed <- theta[!isfixed]
+    return(unisfixed)
+  }
+
+  rlang::warn("Using the FixedPoint package - should investigate alternatives",
+              .frequency = "once",
+              .frequency_id = "FixedPoint_package")
+  est <- fp(Function = myfun, Inputs = starttheta[!isfixed],
+                    control = fpcontrol)
+  nevals <- ncol(est$Inputs)
+  #print(abs(est$Inputs[11, nevals] -
+  #      est$Inputs[11, nevals - 1]))
+  theta <- starttheta
+  theta[!isfixed] <- est$FixedPoint
+
+  return(list(theta = theta,
+           optim = list(FixedPoint = est$FixedPoint,
+                        fpevals = est$fpevals,
+                        Finish = est$Finish)))
+}
+
+
+#### Windham Robust Helpers #####
 WindhamCorrection <- function(cW){
   weightthetamat <- diag(cW, nrow = length(cW)) #matrix that converts theta to the new theta*cW based on inclusion/exclusion  #klh: the extra argument nrow = length(cW) forces diag() to use the cW values on the diagonal, rather than treat them as the size of the matrix desired - useful when cW is legitimately length 1
   tauc <- weightthetamat + diag(1,nrow = length(cW))
@@ -142,78 +205,18 @@ test_estimator <- function(estimator, Y, starttheta, isfixed, w){
 }
 
 
-#' @param fpcontrol A named list of control arguments to pass to `FixedPoint::FixedPoint()` for finding the robust estimate.
-#' @param ... Arguments passed to `estimator`.
-#' @export
-windham_raw <- function(prop, cW, ldenfun, estimatorfun, starttheta, isfixed, originalcorrectionmethod = TRUE,
-   fpcontrol = NULL,
-    ...)
-
-{
-  
-  # cW checks
-  stopifnot(length(cW) == length(starttheta))
-  stopifnot(is.numeric(cW))
-  if (any((cW * starttheta)[isfixed] != 0)){stop("Elements of cW corresponding to fixed non-zero parameters should be zero")}
-
-  test_estimator(estimatorfun, prop[1:min(50, nrow(prop)), , drop = FALSE], starttheta, isfixed, w = NULL)
-
-  if (!originalcorrectionmethod){
-    tauc <- WindhamCorrection(cW)
-    taucinv <- solve(tauc)
-  }
-  myfun <- function(unisfixed){
-    stopifnot(length(unisfixed) == sum(!isfixed))
-    previous <- unisfixed
-    fulltheta <- starttheta
-    fulltheta[!isfixed] <- unisfixed
-    if (originalcorrectionmethod){
-      theta <- Windham_raw_newtheta_original(prop = prop, cW = cW,
-          ldenfun = ldenfun,
-          estimatorfun = estimatorfun,
-          theta = fulltheta,
-          isfixed = isfixed)
-    } else {
-      theta <- Windham_raw_newtheta(prop = prop, cW = cW,
-          ldenfun = ldenfun,
-          estimatorfun = estimatorfun,
-          theta = fulltheta,
-          isfixed = isfixed,
-          taucinv = taucinv)
-    }
-    unisfixed <- theta[!isfixed]
-    return(unisfixed)
-  }
-
-  rlang::warn("Using the FixedPoint package - should investigate alternatives",
-              .frequency = "once",
-              .frequency_id = "FixedPoint_package")
-  est <- fp(Function = myfun, Inputs = starttheta[!isfixed],
-                    control = fpcontrol)
-  nevals <- ncol(est$Inputs)
-  #print(abs(est$Inputs[11, nevals] -
-  #      est$Inputs[11, nevals - 1]))
-  theta <- starttheta
-  theta[!isfixed] <- est$FixedPoint
-
-  return(list(theta = theta,
-           optim = list(FixedPoint = est$FixedPoint,
-                        fpevals = est$fpevals,
-                        Finish = est$Finish)))
-}
-
 #new theta using Kassel's correction
-Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, isfixed, taucinv, ...){
+Windham_raw_newtheta <- function(Y, cW, ldenfun, estimatorfun, theta, isfixed, taucinv, ...){
    # create the vector of weights
-   weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = prop,
+   weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = Y,
                  theta = theta, cW)
 
    #calculate estimate:
 # a sample,
 # a vector of weights
-# a vector of theta values (where NA are estimated, non-NA are fixed - as in buildsmotape)
 # a vector of starting values for the estimator.
-   theta <- estimatorfun(Y = prop, starttheta = theta, isfixed = isfixed,
+# a vector of the fixed values for the estimator
+   theta <- estimatorfun(Y = Y, starttheta = theta, isfixed = isfixed,
                          w = weight_vec, ...)
 
    ### correct estimates (Step 4 in Notes5.pdf)
@@ -222,9 +225,9 @@ Windham_raw_newtheta <- function(prop, cW, ldenfun, estimatorfun, theta, isfixed
 }
 
 #new theta using original correction
-Windham_raw_newtheta_original <- function(prop, cW, ldenfun, estimatorfun, theta, isfixed, ...){
+Windham_raw_newtheta_original <- function(Y, cW, ldenfun, estimatorfun, theta, isfixed, ...){
    # create the vector of weights
-   weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = prop,
+   weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = Y,
                  theta = theta, cW = cW)
    if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #this check because I'm not sure what the original correction method is in the presence of a different tuning constants per value
      stop("Non-zero cW values vary, which is not supported by 'Original' Windham correction")
@@ -235,7 +238,7 @@ Windham_raw_newtheta_original <- function(prop, cW, ldenfun, estimatorfun, theta
    # generate the tuning constants dbeta, dA
    dtheta <- -cW * theta * (!inWW)
    #calculate estimate:
-   theta <- estimatorfun(Y = prop, starttheta = theta, isfixed = isfixed,
+   theta <- estimatorfun(Y = Y, starttheta = theta, isfixed = isfixed,
                          w = weight_vec, ...)
 
    ### correct estimates (Step 4 in Notes5.pdf)
