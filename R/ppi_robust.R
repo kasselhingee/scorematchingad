@@ -18,5 +18,13 @@ ppi_robust <- function(Y, cW, ...){
                     ldenfun = ldenfun,
                     cW = cW,
                     ...)
-  return(est)
+
+  #make results nicer and consistent with ppi()
+  out <- list(
+    est = c(list(paramvec = est$theta), fromPPIparamvec(est$theta)),
+    SE = "Not calculated.",
+    info = est$optim
+  )
+
+  return(out)
 }

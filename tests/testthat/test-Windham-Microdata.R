@@ -115,9 +115,9 @@ est1=ppi_robust(Y = propreal,
                 paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
 
 #estimate of A_L:
-expect_snapshot_value(signif(fromPPIparamvec(est1$theta)$ALs,6), style = "json2")
+expect_snapshot_value(signif(fromPPIparamvec(est1$est$paramvec)$ALs,6), style = "json2")
 #estimate of beta:
-expect_snapshot_value(signif(fromPPIparamvec(est1$theta)$beta,6), style = "json2")
+expect_snapshot_value(signif(fromPPIparamvec(est1$est$paramvec)$beta,6), style = "json2")
 })
 
 
@@ -198,8 +198,8 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
                    paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                    paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
   #estimate of A_L:
-  expect_snapshot_value(signif(fromPPIparamvec(est1$theta)$ALs,6), style = "json2")
+  expect_snapshot_value(signif(fromPPIparamvec(est1$est$paramvec)$ALs,6), style = "json2")
   #estimate of beta:
-  expect_snapshot_value(signif(fromPPIparamvec(est1$theta)$beta,6), style = "json2")
+  expect_snapshot_value(signif(fromPPIparamvec(est1$est$paramvec)$beta,6), style = "json2")
 })
 

@@ -82,14 +82,14 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   est1 = ppi_robust(Y = prop, paramvec = ppi_paramvec(p=3, bL = 0, betap = 0),
              method = "direct", trans = "alr",
              cW = ppi_cW_auto(cW, prop))
-  expect_equal(cdabyppi:::fromPPIparamvec(est1$theta)$ALs, ALs, tolerance = 1)
-  expect_equal(cdabyppi:::fromPPIparamvec(est1$theta)$beta, beta, tolerance = 1E-1)
+  expect_equal(est1$est$ALs, ALs, tolerance = 1)
+  expect_equal(est1$est$beta, beta, tolerance = 1E-1)
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
-  rmse(cdabyppi:::toPPIparamvec(ALs, bL, beta), est1$theta)
-  rmse(cdabyppi:::toPPIparamvec(ALs, bL, beta), est_unload$est$paramvec)
+  rmse(toPPIparamvec(ALs, bL, beta), est1$est$paramvec)
+  rmse(toPPIparamvec(ALs, bL, beta), est_unload$est$paramvec)
 
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
-  expect_gt(rmse(beta, est_unload$est$beta), rmse(beta, fromPPIparamvec(est1$theta)$beta))
+  expect_gt(rmse(beta, est_unload$est$beta), rmse(beta, est1$est$beta))
 })
 
 test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5", {
@@ -106,8 +106,8 @@ test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5
   #calculate robust estimates
   cW=0.1
   est1=ppi_robust(Y = prop, paramvec = ppi_paramvec(bL = 0, betap = tail(beta, 1), p=5), cW = ppi_cW(cW, 1, 1, 1, 0, 0), trans = "alr", method = "direct")
-  expect_equal(fromPPIparamvec(est1$theta)$ALs, ALs, tolerance = 1E0)
-  expect_equal(fromPPIparamvec(est1$theta)$beta, beta, tolerance = 1E-1)
+  expect_equal(est1$est$ALs, ALs, tolerance = 1E0)
+  expect_equal(est1$est$beta, beta, tolerance = 1E-1)
 })
 
 
