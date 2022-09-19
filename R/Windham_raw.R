@@ -16,6 +16,10 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   # and assume that the return vector can be extracted using `extract_paramvec()` and this it is the full model parameter vector, including the fixed elements.
   # also pass in ...
   ##### there are probably ways to do this where all the different types of estimatorfun are created seperately, rather than one estimator fun that does them all
+
+  estargs <- c(list(Y = Y), extraargs)
+  estargs$paramvec_start <- paramvec_start #adding this slot this way so that it is omitted if NULL
+  assessment <- do.call(test_estimator2, c(list(estimator = estimator), estargs))
   estimatorfun <- function(Y, starttheta, isfixed, w){
     paramvec <- starttheta
     paramvec[!isfixed] <- NA
