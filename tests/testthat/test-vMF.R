@@ -90,6 +90,11 @@ test_that("vMF matches for simulated weights, ignoring SE, which shouldn't match
   sim2 <- vMF(vw$newY, method = "smfull")
   dir2 <-  vMF(Y, method = "smfull", w = vw$w)
   expect_equal(sim2$est[c("k", "m")], dir2$est[c("k", "m")])
+
+  sim3_m <- vMF_m(vw$newY)
+  dir3_m <- vMF_m(Y, w = vw$w)
+  expect_equal(sim3_m, dir3_m)
+  expect_error(expect_equal(dir3_m, vMF_m(Y)), "not equal to")
 })
 
 
