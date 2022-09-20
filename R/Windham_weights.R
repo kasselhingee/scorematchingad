@@ -1,5 +1,6 @@
 #' @title Windham weights for a given parameter vector
-#' @description Generates weights for Windham robustness for each measurement.
+#' @description Computes Windham's robustness weights [ref Windham 1995] for a density proportional to 
+#' \eqn{\exp(\eta(\theta) \cdot T(x))} where \eqn{\eta(\theta)} is linear and \eqn{x} is an observation (potentially multivariate).
 #' @param cW The robustness tuning constants. One value per element of theta. Easily created for the PPI model using [ppi_cw()] and [ppi_cW_auto()].
 #' @param ldenfun A (possibly improper) log density function taking two arguments, `Y` and `theta`.
 #' @param theta Parameters for the model

@@ -1,15 +1,23 @@
-#' @title Windham transform matrix for a given parameter vector
-#' @description Generates the correction matrix \eqn{\tau_c(\theta) = \tau_c \theta} for models
-#' with density proportional to
-#' \eqn{\exp(a(\theta) t(u))}
-#' with \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u}.
-#' and \eqn{a} is *linear* function.
-#' The linear assumption means that \eqn{\tau_c(\theta)} is a simple matrix operation.
-#'
-#' Assumes that `estimator` takes an argument paramvec if any parameter elements are fixed.
-#' @param cW A vector of robustness tuning constants - the parameter vector is multiplied by these when computing the log-density of each observation for the Windham weights. For the PPI model, generate `cW` easily using [ppi_cW()] and [ppi_cW_auto()].
-#' @param fpcontrol A named list of control arguments to pass to `FixedPoint::FixedPoint()` for finding the robust estimate.
+#' @title Windham Robustness for Estimators of Exponential Family Distributions
+#' @description Performs Windham's robustness method [ref Windham 1995] for point estimators of many exponential family distributions. `WindhamRobust` works for any distribution with density proportional to 
+#' \eqn{\exp(\eta(\theta) \cdot T(x))} where \eqn{\eta(\theta)} is linear and \eqn{x} is an observation (potentially multivariate). The estimate is found iteratively through a fixed point method as suggested by Windham [ref Windham 1995].
+
+
+#' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
+#' @param estimator A function that estimates parameters from weighted observations.
+#' It must have arguments `Y` that is a matrix of measurements and `w` that are weights associated with each row of `Y`. If it accepts arguments `paramvec` or `paramvec_start` then these will be used to specify fixed elements of the parameter vector and the starting guess of the parameter vector, respectively. The estimated parameter vector, including any fixed elements, must be returned by itself, as the first element of a list, or as the `paramvec` slot within the `est` slot of the returned object.
+#' @param ldenfun A function that returns a vector of values propotional to the log-density for a matrix of observations `Y` and parameter vector `theta`.
 #' @param ... Arguments passed to `estimator`.
+#' @param paramvec_start
+#' If `estimator` accepts a `paramvec_start`, then the current estimate of the parameter vector is passed as `paramvec_start` to `estimator` in each iteration. Otherwise `paramvec_start` is only used to check `estimator`.
+#' @param cW A vector of robustness tuning constants - the parameter vector is multiplied by these when computing the log-density of each observation for the Windham weights. For the PPI model, generate `cW` easily using [ppi_cW()] and [ppi_cW_auto()].
+#' @param fpcontrol A named list of control arguments to pass to [FixedPoint::FixedPoint()] for the fixed point iteration. The default control arguments are printed by [default_FixedPoint()].
+
+
+#' @details For exponential families, the Windham weights are easy to compute using the density without the base measure (i.e. with the part that is written like \eqn{\exp(...)}) [ref Windham 1995]. For simplicity, `WindhamRobust` assumes that `ldenfun` ommits the base measure, and that the natural parameter vector \eqn{\eta(\theta)} is a *linear* function of the parameter vector estimated by `estimator` \eqn{\theta}.
+.
+
+#' @seealso [ppi_robust()] [vMF_robust()] [Windham_weights()]
 #' @export
 WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)
@@ -18,7 +26,6 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   # assuming estimator has arguments: Y, paramvec, w, and optionally paramvec_start.
   # and assume that the return vector can be extracted using `extract_paramvec()` and this it is the full model parameter vector, including the fixed elements.
   # also pass in ...
-  ##### there are probably ways to do this where all the different types of estimatorfun are created seperately, rather than one estimator fun that does them all
 
   estargs <- c(list(Y = Y), extraargs)
   estargs$paramvec_start <- paramvec_start #adding this slot this way so that it is omitted if NULL
@@ -46,7 +53,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   if (any((cW * starttheta)[isfixed] != 0)){stop("Elements of cW corresponding to fixed non-zero parameters should be zero")}
  
   # Weight correction preparation 
-  originalcorrectionmethod = FALSE # use the WindhamCorrection() instead of Scealy draft method
+  originalcorrectionmethod = TRUE # use the WindhamCorrection() instead of Scealy draft method
   if (originalcorrectionmethod){
    if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #this check because I'm not sure what the original correction method is in the presence of a different tuning constants per value
      stop("Non-zero cW values vary, which is not supported by 'Original' Windham correction")
@@ -115,55 +122,23 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
                         Finish = est$Finish)))
 }
 
+# @title Windham transform matrix for a given parameter vector
+# @description Generates the correction matrix \eqn{\tau_c(\theta) = \tau_c \theta} for models
+# with density proportional to
+# \eqn{\exp(a(\theta) t(u))}
+# with \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u}.
+# and \eqn{a} is *linear* function.
+# The linear assumption means that \eqn{\tau_c(\theta)} is a simple matrix operation.
 WindhamCorrection <- function(cW){
   weightthetamat <- diag(cW, nrow = length(cW)) #matrix that converts theta to the new theta*cW based on inclusion/exclusion  #klh: the extra argument nrow = length(cW) forces diag() to use the cW values on the diagonal, rather than treat them as the size of the matrix desired - useful when cW is legitimately length 1
   tauc <- weightthetamat + diag(1,nrow = length(cW))
   return(tauc)
 }
 
-#' @title Robust score matching estimates for the generalised-gamma form of the PPI model
-#' @description Uses Windham weights after alr transform to estimate parameters for the PPI model with b_L=0.
-#' The final (pth) component of beta0 is not estimated.
-#' @param prop compositional data (n by p matrix)
-#' @param cW the robustness tuning constant c for each element of the parameter vector
-#' @param starttheta
-#' @param isfixed Boolean vector.
-#' TRUE if parameter is fixed at the starting value.
-#' FALSE if the parameter is to be estimated.
-#' TRUE if the parameter is used in the Windham weights.
-#' FALSE if the parameter is set to zero in the Windham weights.
-#' @param estimatorfun A function f(Y, starttheta, isfixed, w, ...) that generates parameter estimates given
-#' Y = a sample,
-#' starthteta = a vector of theta values to start the iteration
-#' isfixed = a vecotr of booleans. FALSE means that element of theta is estimated,
-#' w = a vector of weights
-#' TRUE means that element of theta is fixed at the value in `theta`.
-#' The result of `estimator` must a numeric vector the same length as `starttheta`.
-test_estimator <- function(estimator, Y, starttheta, isfixed, w){
-  if (is.null(estimator)){stop("estimator is NULL")}
-  if(!all(names(formals(estimator)[1:4]) == c("Y",  "starttheta", "isfixed", "w"))){
-    stop("First four arguments of estimator must be called: Y, starttheta, isfixed, and w.")
-  }
-
-  if (is.null(w)){
-    w <- runif(nrow(Y), 0, 1)
-    w <- w / sum(w)
-  }
-
-  newtheta <- estimator(Y, starttheta, isfixed, w)
-  if (!isTRUE(class(newtheta) == "numeric")){stop("Estimator must return a numeric value")}
-  if (!isTRUE(is.vector(newtheta))){stop("Estimator must return a vector")}
-  if (!isTRUE(length(newtheta) == length(starttheta))){stop("Estimator must return a vector of the same length as the input parameter vector")}
-  if (any(abs(newtheta[isfixed] - starttheta[isfixed]) > sqrt(.Machine$double.eps))){
-    stop("The fixed elements of theta are altered by estimator.")
-  }
-  invisible(NULL)
-}
-
 # returns adjustment of the new estimate according to Scealy's first draft
 WindhamCorrection_original <- function(newtheta, previoustheta, cW, cWav){ #cW is a vector, cWav is the average of the non-zero elements of cW
   # generate the tuning constants dbeta, dA
-  dtheta <- theta * (cW - cWav) # = theta * cWav * (inWW - 1) = theta * cWav * -1 * !inWW = -cW * theta * !inWW
+  dtheta <- previoustheta * (cW - cWav) # = theta * cWav * (inWW - 1) = theta * cWav * -1 * !inWW = -cW * theta * !inWW
   return((newtheta - dtheta)/(cWav + 1))
 }
 
