@@ -23,6 +23,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
 
   # build the estimator fun depending on testing results
   estimatorfun <- NULL
+  getparamfun <- extract_paramvec_fun(assessment$estlocation)
   if (assessment$paramvec & !assessment$paramvec_start){
     estimatorfun <- function(Y, starttheta, isfixed, w){
       paramvec <- starttheta
@@ -30,7 +31,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
       args = c(list(Y = Y, w = w), extraargs)
       args$paramvec <- paramvec
       estobj <- do.call(estimator, args = args)
-      estparamvec <- extract_paramvec(estobj) #extract result
+      estparamvec <- getparamfun(estobj) #extract result
       return(estparamvec)
     }
   }
@@ -43,7 +44,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
       args$paramvec <- paramvec
       args$paramvec_start <- starttheta #overwrites or adds a new element to the argument list
       estobj <- do.call(estimator, args = args)
-      estparamvec <- extract_paramvec(estobj) #extract result
+      estparamvec <- getparamfun(estobj) #extract result
       return(estparamvec)
     }
   }
@@ -55,7 +56,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
       args = c(list(Y = Y, w = w), extraargs)
       args$paramvec_start <- starttheta #overwrites or adds a new element to the argument list
       estobj <- do.call(estimator, args = args)
-      estparamvec <- extract_paramvec(estobj) #extract result
+      estparamvec <- getparamfun(estobj) #extract result
       return(estparamvec)
     }
   }
@@ -66,7 +67,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
       paramvec[!isfixed] <- NA
       args = c(list(Y = Y, w = w), extraargs)
       estobj <- do.call(estimator, args = args)
-      estparamvec <- extract_paramvec(estobj) #extract result
+      estparamvec <- getparamfun(estobj) #extract result
       return(estparamvec)
     }
   }

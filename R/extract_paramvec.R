@@ -10,6 +10,15 @@ extract_paramvec <- function(estobj){
   return(paramvec)
 }
 
+# returns a FUNCTION
+extract_paramvec_fun <- function(paramvec_location){
+  fun <- switch(paramvec_location,
+         "[['est']][['paramvec']]" = function(x){x$est$paramvec},
+         "[[1]]" = function(x){x[[1]]},
+         "[]" = function(x){x})
+  return(fun)
+}
+
 find_paramvec_location <- function(estobj){
    if (is.list(estobj)){
       estparamvec <- try(estobj$est$paramvec, silent = TRUE)
