@@ -81,8 +81,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
       starttheta <- paramvec_start
     }
   } else { #use estimator for the start values
-    estobj <- do.call(estimator, args = c(list(Y = Y), extraargs))
-    starttheta <- extract_paramvec(estobj)
+    starttheta <- assessment$est
   }
 
   # calculate isfixed

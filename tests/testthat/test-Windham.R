@@ -118,7 +118,7 @@ test_that("test_estimator works", {
   assessment <- test_estimator2(function(Y, w = rep(1, nrow(Y))){
     return(colMeans(Y * w))
   }, Y = Y, w = NULL)
-  expect_equal(assessment, list(paramvec = FALSE,
+  expect_equal(assessment[1:4], list(paramvec = FALSE,
        paramvec_start = FALSE,
        estlocation = "[]",
        paramvec_length_tested = FALSE))
@@ -130,7 +130,7 @@ test_that("test_estimator works", {
       return(m)
     },
     Y = Y, w = NULL, paramvec = rep(NA, ncol(Y)))
-  expect_equal(assessment, list(paramvec = TRUE,
+  expect_equal(assessment[1:4], list(paramvec = TRUE,
        paramvec_start = FALSE,
        estlocation = "[]",
        paramvec_length_tested = TRUE))
@@ -141,13 +141,13 @@ test_that("test_estimator works", {
     return(m)
   }
   assessment <- test_estimator2(goodfun, Y = Y, w = NULL, paramvec = rep(NA, ncol(Y)))
-  expect_equal(assessment, list(paramvec = TRUE,
+  expect_equal(assessment[1:4], list(paramvec = TRUE,
        paramvec_start = TRUE,
        estlocation = "[]",
        paramvec_length_tested = TRUE))
 
   assessment <- test_estimator2(goodfun, Y = Y, w = NULL, paramvec = NULL)
-  expect_equal(assessment, list(paramvec = TRUE,
+  expect_equal(assessment[1:4], list(paramvec = TRUE,
        paramvec_start = TRUE,
        estlocation = "[]",
        paramvec_length_tested = FALSE))

@@ -8,8 +8,7 @@ test_estimator2 <- function(estimator, Y, ..., w = NULL){
   }
 
   if (is.null(w)){
-    w <- runif(nrow(Y), 0, 1)
-    w <- w / sum(w)
+    w <- rep(1, nrow(Y)) / sqrt(nrow(Y))
   }
 
   estargs <- list(...)
@@ -50,7 +49,8 @@ test_estimator2 <- function(estimator, Y, ..., w = NULL){
     paramvec = paramvec,
     paramvec_start = paramvec_start,
     estlocation = estlocation,
-    paramvec_length_tested = (paramvec_length > 0)
+    paramvec_length_tested = (paramvec_length > 0),
+    est = newparamvec
   ))
 }
 
