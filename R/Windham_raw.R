@@ -53,7 +53,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   if (any((cW * starttheta)[isfixed] != 0)){stop("Elements of cW corresponding to fixed non-zero parameters should be zero")}
  
   # Weight correction preparation 
-  originalcorrectionmethod = TRUE # use the WindhamCorrection() instead of Scealy draft method
+  originalcorrectionmethod = FALSE # use the WindhamCorrection() instead of Scealy draft method
   if (originalcorrectionmethod){
    if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #this check because I'm not sure what the original correction method is in the presence of a different tuning constants per value
      stop("Non-zero cW values vary, which is not supported by 'Original' Windham correction")
