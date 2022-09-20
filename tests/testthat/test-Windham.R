@@ -1,4 +1,4 @@
-test_that("windam_raw gives correct params on simulated data, with two outliers. p=3", {
+test_that("WindamRobust() via ppi_robust() gives correct params on simulated data, with two outliers. p=3", {
   skip_on_cran()#"only extra checks are the variable cW ones"
   set.seed(1273)
   m <- ppi_egmodel(1000, maxden = 4)
@@ -14,52 +14,24 @@ test_that("windam_raw gives correct params on simulated data, with two outliers.
   est_simple_outlier <- ppi(m$sample, acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq")
 
   #calculate robust estimates
-  ppildenfun <- function(Y, theta){
-    ppiparmats <- cdabyppi:::fromPPIparamvec(theta)
-    logden <- dppi(Y, ppiparmats$beta, ppiparmats$ALs, ppiparmats$bL)
-    return(logden)
-  }
-  ppiestimator <- function(Y, starttheta, isfixed, w){
-    ppi(Y, acut = 0.1, w = w, method = "direct", trans = "sqrt", bdryweight = "minsq")$est$paramvec
-  }
-  test_estimator(ppiestimator, m$sample[1:10,], m$theta, rep(FALSE, length(m$theta)), w = NULL)
-
-  isfixed <- cdabyppi:::ppi_paramvec(m$p, AL=FALSE, bL = FALSE, betaL = FALSE, betap = FALSE)
-  est <- cdabyppi:::windham_raw(prop = m$sample,
-                     cW = 0.1 * cdabyppi:::ppi_paramvec(m$p, AL = TRUE, bL = FALSE, beta = FALSE), #all dimensions have negative beta.
-                     ldenfun = ppildenfun,
-                     estimatorfun = ppiestimator,
-                     starttheta = m$theta * 0,
-                     isfixed = isfixed,
-                     originalcorrectionmethod = TRUE)
+  est <- ppi_robust(Y = m$sample, 
+           cW = 0.1 * cdabyppi:::ppi_paramvec(m$p, AL = TRUE, bL = FALSE, beta = FALSE),
+           acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq")
 
   # variable c, expect estimates to be different
   cW <- cdabyppi:::ppi_paramvec(m$p, AL = matrix(c(0.1, 1E-3, 1E-3, 0.1), nrow = 2, ncol = 2),
                                  bL = 0, beta = 0)
-  errmsg <- capture.output(errest <- cdabyppi:::windham_raw(prop = m$sample,
-                     cW = cW,
-                     ldenfun = ppildenfun,
-                     estimatorfun = ppiestimator,
-                     starttheta = m$theta * 0,
-                     isfixed = isfixed,
-                     originalcorrectionmethod = TRUE), type = "message") #error because original correction method doesn't cope with variable non-zero cW elements
-  expect_match(paste0(errmsg, collapse = ""), ".*Original.*")
-  expect_match(errest$optim$Finish, "Could not execute function.*")
+  est_varcW <-  ppi_robust(Y = m$sample, 
+           cW = cW,
+           acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq")
 
-  est_varcW <-  cdabyppi:::windham_raw(prop = m$sample,
-                     cW = cW,
-                     ldenfun = ppildenfun,
-                     estimatorfun = ppiestimator,
-                     starttheta = m$theta * 0,
-                     isfixed = isfixed,
-                     originalcorrectionmethod = FALSE)
 
-  expect_equal(est$theta, est_simple$est$paramvec, tolerance = 0.1, ignore_attr = TRUE)
+  expect_equal(est$est$paramvec, est_simple$est$paramvec, tolerance = 0.1, ignore_attr = TRUE)
   #below checks that the non-robust estimate with outliers is much different to the robust estimate
-  expect_error(expect_equal(est$theta, est_simple_outlier$est$paramvec, tolerance = 0.1, ignore_attr = TRUE))
+  expect_error(expect_equal(est$est$paramvec, est_simple_outlier$est$paramvec, tolerance = 0.1, ignore_attr = TRUE))
 
   # expect that the different cW values would lead to different estimates
-  expect_gt(mean(abs(est$theta - est_varcW$theta)), 10)
+  expect_gt(mean(abs(est$est$paramvec - est_varcW$est$paramvec)), 10)
 })
 
 test_that("robust ppi() with Ralr transform gives correct params on simulated, no outlier, data. p=3", {
