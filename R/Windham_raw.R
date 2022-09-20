@@ -21,57 +21,6 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   estargs$paramvec_start <- paramvec_start #adding this slot this way so that it is omitted if NULL
   assessment <- do.call(test_estimator2, c(list(estimator = estimator), estargs))
 
-  # build the estimator fun depending on testing results
-  estimatorfun <- NULL
-  getparamfun <- extract_paramvec_fun(assessment$estlocation)
-  if (assessment$paramvec & !assessment$paramvec_start){
-    estimatorfun <- function(Y, starttheta, isfixed, w){
-      paramvec <- starttheta
-      paramvec[!isfixed] <- NA
-      args = c(list(Y = Y, w = w), extraargs)
-      args$paramvec <- paramvec
-      estobj <- do.call(estimator, args = args)
-      estparamvec <- getparamfun(estobj) #extract result
-      return(estparamvec)
-    }
-  }
-
-  if (assessment$paramvec & assessment$paramvec_start){
-    estimatorfun <- function(Y, starttheta, isfixed, w){
-      paramvec <- starttheta
-      paramvec[!isfixed] <- NA
-      args = c(list(Y = Y, w = w), extraargs)
-      args$paramvec <- paramvec
-      args$paramvec_start <- starttheta #overwrites or adds a new element to the argument list
-      estobj <- do.call(estimator, args = args)
-      estparamvec <- getparamfun(estobj) #extract result
-      return(estparamvec)
-    }
-  }
-  
-  if (!assessment$paramvec & assessment$paramvec_start){
-    estimatorfun <- function(Y, starttheta, isfixed, w){
-      paramvec <- starttheta
-      paramvec[!isfixed] <- NA
-      args = c(list(Y = Y, w = w), extraargs)
-      args$paramvec_start <- starttheta #overwrites or adds a new element to the argument list
-      estobj <- do.call(estimator, args = args)
-      estparamvec <- getparamfun(estobj) #extract result
-      return(estparamvec)
-    }
-  }
-  
-  if (!assessment$paramvec & !assessment$paramvec_start){
-    estimatorfun <- function(Y, starttheta, isfixed, w){
-      paramvec <- starttheta
-      paramvec[!isfixed] <- NA
-      args = c(list(Y = Y, w = w), extraargs)
-      estobj <- do.call(estimator, args = args)
-      estparamvec <- getparamfun(estobj) #extract result
-      return(estparamvec)
-    }
-  }
-
 
   # extract start vector from a paramvec and paramvec_start
   if (!is.null(paramvec_start)){
@@ -92,39 +41,118 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   stopifnot(length(cW) == length(starttheta))
   stopifnot(is.numeric(cW))
   if (any((cW * starttheta)[isfixed] != 0)){stop("Elements of cW corresponding to fixed non-zero parameters should be zero")}
-
+ 
+  # Weight correction preparation 
   originalcorrectionmethod = FALSE # use the WindhamCorrection() instead
   if (!originalcorrectionmethod){
     tauc <- WindhamCorrection(cW)
     taucinv <- solve(tauc)
   }
-  myfun <- function(unisfixed){
-    stopifnot(length(unisfixed) == sum(!isfixed))
-    previous <- unisfixed
-    fulltheta <- starttheta
-    fulltheta[!isfixed] <- unisfixed
-    if (originalcorrectionmethod){
-      theta <- Windham_raw_newtheta_original(prop = Y, cW = cW,
-          ldenfun = ldenfun,
-          estimatorfun = estimatorfun,
-          theta = fulltheta,
-          isfixed = isfixed)
-    } else {
-      theta <- Windham_raw_newtheta(prop = Y, cW = cW,
-          ldenfun = ldenfun,
-          estimatorfun = estimatorfun,
-          theta = fulltheta,
-          isfixed = isfixed,
-          taucinv = taucinv)
+  
+  # build the function that takes a theta and returns a new theta, depending on assessment results
+  fpiterator <- NULL
+  getparamfun <- extract_paramvec_fun(assessment$estlocation)
+  if (assessment$paramvec & !assessment$paramvec_start){
+    fpiterator <- function(fitted){
+      stopifnot(length(fitted) == sum(!isfixed))
+      previous <- fitted
+      fulltheta <- t_sfi2u(fitted, starttheta, isfixed) #including fitted and non-fitted parameter elements
+      weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = Y,
+                 theta = fulltheta, cW)
+
+      #calculate estimate:
+      args = c(list(Y = Y, w = weight_vec), extraargs) #paramvec passed
+      estobj <- do.call(estimator, args = args)
+      estparamvec <- getparamfun(estobj) #extract result
+      fitted <- t_si2f(estparamvec, isfixed)
+      #### adjust the estimates (Step 4 in Notes5.pdf)
+      fitted <- taucinv %*% fitted
+      return(fitted)
     }
-    unisfixed <- theta[!isfixed]
-    return(unisfixed)
   }
+
+  if (assessment$paramvec & assessment$paramvec_start){
+    fpiterator <- function(fitted){
+      stopifnot(length(fitted) == sum(!isfixed))
+      previous <- fitted
+      fulltheta <- t_sfi2u(fitted, starttheta, isfixed) #including fitted and non-fitted parameter elements
+      weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = Y,
+                 theta = fulltheta, cW)
+      #calculate estimate:
+      args = c(list(Y = Y, w = weight_vec), extraargs) #paramvec passed
+      args$paramvec_start <- starttheta #overwrites or adds a new element to the argument list
+      estobj <- do.call(estimator, args = args)
+      estparamvec <- getparamfun(estobj) #extract result
+      fitted <- t_si2f(estparamvec, isfixed)
+      #### adjust the estimates (Step 4 in Notes5.pdf)
+      fitted <- taucinv %*% fitted
+      return(fitted)
+    }
+  }
+  
+  if (!assessment$paramvec & assessment$paramvec_start){
+    fpiterator <- function(fitted){
+      stopifnot(length(fitted) == sum(!isfixed))
+      previous <- fitted
+      fulltheta <- t_sfi2u(fitted, starttheta, isfixed) #including fitted and non-fitted parameter elements
+      weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = Y,
+                 theta = fulltheta, cW)
+      args = c(list(Y = Y, w = w), extraargs)
+      args$paramvec_start <- starttheta #overwrites or adds a new element to the argument list
+      estobj <- do.call(estimator, args = args)
+      estparamvec <- getparamfun(estobj) #extract result
+      fitted <- t_si2f(estparamvec, isfixed)
+      #### adjust the estimates (Step 4 in Notes5.pdf)
+      fitted <- taucinv %*% fitted
+      return(fitted)
+    }
+  }
+  
+  if (!assessment$paramvec & !assessment$paramvec_start){
+    fpiterator <- function(fitted){
+      stopifnot(length(fitted) == sum(!isfixed))
+      previous <- fitted
+      fulltheta <- t_sfi2u(fitted, starttheta, isfixed) #including fitted and non-fitted parameter elements
+      weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = Y,
+                 theta = fulltheta, cW)
+      args = c(list(Y = Y, w = w), extraargs)
+      estobj <- do.call(estimator, args = args)
+      estparamvec <- getparamfun(estobj) #extract result
+      fitted <- t_si2f(estparamvec, isfixed)
+      #### adjust the estimates (Step 4 in Notes5.pdf)
+      fitted <- taucinv %*% fitted
+      return(fitted)
+    }
+  }
+
+
+#  fpiterator <- function(fitted){
+#    stopifnot(length(fitted) == sum(!isfixed))
+#    previous <- fitted
+#    fulltheta <- starttheta
+#    fulltheta[!isfixed] <- fitted
+#    if (originalcorrectionmethod){
+#      theta <- Windham_raw_newtheta_original(prop = Y, cW = cW,
+#          ldenfun = ldenfun,
+#          estimatorfun = estimatorfun,
+#          theta = fulltheta,
+#          isfixed = isfixed)
+#    } else {
+#      theta <- Windham_raw_newtheta(prop = Y, cW = cW,
+#          ldenfun = ldenfun,
+#          estimatorfun = estimatorfun,
+#          theta = fulltheta,
+#          isfixed = isfixed,
+#          taucinv = taucinv)
+#    }
+#    fitted <- theta[!isfixed]
+#    return(fitted)
+#  }
 
   rlang::warn("Using the FixedPoint package - should investigate alternatives",
               .frequency = "once",
               .frequency_id = "FixedPoint_package")
-  est <- fp(Function = myfun, Inputs = starttheta[!isfixed],
+  est <- fp(Function = fpiterator, Inputs = starttheta[!isfixed],
                     control = fpcontrol)
   nevals <- ncol(est$Inputs)
   #print(abs(est$Inputs[11, nevals] -
