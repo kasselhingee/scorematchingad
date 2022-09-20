@@ -43,82 +43,58 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   if (any((cW * starttheta)[isfixed] != 0)){stop("Elements of cW corresponding to fixed non-zero parameters should be zero")}
  
   # Weight correction preparation 
-  originalcorrectionmethod = FALSE # use the WindhamCorrection() instead
-  if (!originalcorrectionmethod){
+  originalcorrectionmethod = FALSE # use the WindhamCorrection() instead of Scealy draft method
+  if (originalcorrectionmethod){
+   if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #this check because I'm not sure what the original correction method is in the presence of a different tuning constants per value
+     stop("Non-zero cW values vary, which is not supported by 'Original' Windham correction")
+   }}
+   inWW <- (cW > 1E-10)
+   cWav <- mean(cW[cW > 1E-10]) #note that cW ~~ inWW * cWav
+   thetaadjuster <- WindhamCorrection_original
+  } else {
     tauc <- WindhamCorrection(cW)
     taucinv <- solve(tauc)
+    cWav <- NULL  #not relevant to this correction method
+    thetaadjuster <- function(newtheta, previoustheta = NULL, cW = NULL, cWav = NULL){taucinv %*% newtheta}
   }
-  
-  # build the function that takes a theta and returns a new theta, depending on assessment results
-  fpiterator <- NULL
+
+  # functions for adding paramvec_start or otherwise to estimator arguments
+  if (!assessment$paramvec_start){
+    additionalargsbuilder <- function(extraargs = list(), paramvec_start = NULL){
+      return(extraargs) #paramvec passed as part of extraargs
+    }
+  } 
+  if (assessment$paramvec_start){
+    additionalargsbuilder <- function(extraargs = list(), paramvec_start = NULL){
+      extraargs$paramvec_start <- paramvec_start #overwrites or adds a new element to the argument list
+      return(extraargs) #paramvec passed as part of extraargs
+    }
+  }
+
+  # define the function that extracts the estimated parameter value
   getparamfun <- extract_paramvec_fun(assessment$estlocation)
-  if (assessment$paramvec & !assessment$paramvec_start){
-    fpiterator <- function(fitted){
+ 
+  ############# 
+  # build the function that takes a theta and returns a new theta, depending on assessment results
+  #############
+  
+  fpiterator <- function(fitted){
       stopifnot(length(fitted) == sum(!isfixed))
       fulltheta <- t_sfi2u(fitted, starttheta, isfixed) #including fitted and non-fitted parameter elements
+      previous <- fulltheta
       weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = Y,
                  theta = fulltheta, cW)
 
       #calculate estimate:
-      args = c(list(Y = Y, w = weight_vec), extraargs) #paramvec passed
+      args = c(list(Y = Y, w = weight_vec), additionalargsbuilder(extraargs, starttheta)) #paramvec passed
       estobj <- do.call(estimator, args = args)
       estparamvec <- getparamfun(estobj) #extract result
       #### adjust the estimates (Step 4 in Notes5.pdf)
+      estparamvec <- thetaadjuster(estparamvec, previous, cW, cWav) #for WindhamCorrections() only estparamvec is used
       estparamvec <- taucinv %*% estparamvec
+#      estparamvec <- WindhamCorrection_original(previoustheta, newtheta, cW, cWav)
       fitted <- t_si2f(estparamvec, isfixed)
       return(fitted)
-    }
-  }
-
-  if (assessment$paramvec & assessment$paramvec_start){
-    fpiterator <- function(fitted){
-      stopifnot(length(fitted) == sum(!isfixed))
-      fulltheta <- t_sfi2u(fitted, starttheta, isfixed) #including fitted and non-fitted parameter elements
-      weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = Y,
-                 theta = fulltheta, cW)
-      #calculate estimate:
-      args = c(list(Y = Y, w = weight_vec), extraargs) #paramvec passed
-      args$paramvec_start <- starttheta #overwrites or adds a new element to the argument list
-      estobj <- do.call(estimator, args = args)
-      estparamvec <- getparamfun(estobj) #extract result
-      #### adjust the estimates (Step 4 in Notes5.pdf)
-      estparamvec <- taucinv %*% estparamvec
-      fitted <- t_si2f(estparamvec, isfixed)
-      return(fitted)
-    }
-  }
-  
-  if (!assessment$paramvec & assessment$paramvec_start){
-    fpiterator <- function(fitted){
-      stopifnot(length(fitted) == sum(!isfixed))
-      fulltheta <- t_sfi2u(fitted, starttheta, isfixed) #including fitted and non-fitted parameter elements
-      weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = Y,
-                 theta = fulltheta, cW)
-      args = c(list(Y = Y, w = w), extraargs)
-      args$paramvec_start <- starttheta #overwrites or adds a new element to the argument list
-      estobj <- do.call(estimator, args = args)
-      estparamvec <- getparamfun(estobj) #extract result
-      #### adjust the estimates (Step 4 in Notes5.pdf)
-      estparamvec <- taucinv %*% estparamvec
-      fitted <- t_si2f(estparamvec, isfixed)
-      return(fitted)
-    }
-  }
-  
-  if (!assessment$paramvec & !assessment$paramvec_start){
-    fpiterator <- function(fitted){
-      stopifnot(length(fitted) == sum(!isfixed))
-      fulltheta <- t_sfi2u(fitted, starttheta, isfixed) #including fitted and non-fitted parameter elements
-      weight_vec <- WindhamWeights(ldenfun = ldenfun, Y = Y,
-                 theta = fulltheta, cW)
-      args = c(list(Y = Y, w = w), extraargs)
-      estobj <- do.call(estimator, args = args)
-      estparamvec <- getparamfun(estobj) #extract result
-      #### adjust the estimates (Step 4 in Notes5.pdf)
-      estparamvec <- taucinv %*% estparamvec
-      fitted <- t_si2f(estparamvec, isfixed)
-      return(fitted)
-    }
   }
 
 
@@ -267,7 +243,7 @@ Windham_raw_newtheta_original <- function(prop, cW, ldenfun, estimatorfun, theta
    cW <- mean(cW[cW > 1E-10])
 
    # generate the tuning constants dbeta, dA
-   dtheta <- -cW * theta * (!inWW)
+   dtheta <- -cW * theta * (!inWW)  #theta * (-cWav) (1-inWW) = -cWav + cW = cW - cWav
    #calculate estimate:
    theta <- estimatorfun(Y = prop, starttheta = theta, isfixed = isfixed,
                          w = weight_vec, ...)
@@ -275,4 +251,11 @@ Windham_raw_newtheta_original <- function(prop, cW, ldenfun, estimatorfun, theta
    ### correct estimates (Step 4 in Notes5.pdf)
    theta <- (theta - dtheta)/(cW+1)
    return(theta)
+}
+
+# returns adjustment of the new estimate
+WindhamCorrection_original <- function(newtheta, previoustheta, cW, cWav){
+  # generate the tuning constants dbeta, dA
+  dtheta <- theta * (cW - cWav) # = theta * cWav * (inWW - 1) = theta * cWav * -1 * !inWW = -cW * theta * !inWW
+  return((newtheta - dtheta)/(cWav + 1))
 }
