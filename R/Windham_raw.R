@@ -20,28 +20,56 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   estargs <- c(list(Y = Y), extraargs)
   estargs$paramvec_start <- paramvec_start #adding this slot this way so that it is omitted if NULL
   assessment <- do.call(test_estimator2, c(list(estimator = estimator), estargs))
-  estimatorfun <- function(Y, starttheta, isfixed, w){
-    paramvec <- starttheta
-    paramvec[!isfixed] <- NA
-    args = c(list(
-      Y = Y,
-      w = w
-      ),
-      extraargs)
-    if ("paramvec" %in% formalArgs(estimator)){
-      args$paramvec <- paramvec
-    }
-    if ("paramvec_start" %in% formalArgs(estimator)){
-      paramvec_start <- starttheta
-      args$paramvec_start <- paramvec_start #overwrites or adds a new element to the argument list
-    }
-    estobj <- do.call(estimator, args = args)
 
-    #extract estimated vector
-    estparamvec <- extract_paramvec(estobj)
-    return(estparamvec)
+  # build the estimator fun depending on testing results
+  estimatorfun <- NULL
+  if (assessment$paramvec & !assessment$paramvec_start){
+    estimatorfun <- function(Y, starttheta, isfixed, w){
+      paramvec <- starttheta
+      paramvec[!isfixed] <- NA
+      args = c(list(Y = Y, w = w), extraargs)
+      args$paramvec <- paramvec
+      estobj <- do.call(estimator, args = args)
+      estparamvec <- extract_paramvec(estobj) #extract result
+      return(estparamvec)
+    }
   }
 
+  if (assessment$paramvec & assessment$paramvec_start){
+    estimatorfun <- function(Y, starttheta, isfixed, w){
+      paramvec <- starttheta
+      paramvec[!isfixed] <- NA
+      args = c(list(Y = Y, w = w), extraargs)
+      args$paramvec <- paramvec
+      args$paramvec_start <- starttheta #overwrites or adds a new element to the argument list
+      estobj <- do.call(estimator, args = args)
+      estparamvec <- extract_paramvec(estobj) #extract result
+      return(estparamvec)
+    }
+  }
+  
+  if (!assessment$paramvec & assessment$paramvec_start){
+    estimatorfun <- function(Y, starttheta, isfixed, w){
+      paramvec <- starttheta
+      paramvec[!isfixed] <- NA
+      args = c(list(Y = Y, w = w), extraargs)
+      args$paramvec_start <- starttheta #overwrites or adds a new element to the argument list
+      estobj <- do.call(estimator, args = args)
+      estparamvec <- extract_paramvec(estobj) #extract result
+      return(estparamvec)
+    }
+  }
+  
+  if (!assessment$paramvec & !assessment$paramvec_start){
+    estimatorfun <- function(Y, starttheta, isfixed, w){
+      paramvec <- starttheta
+      paramvec[!isfixed] <- NA
+      args = c(list(Y = Y, w = w), extraargs)
+      estobj <- do.call(estimator, args = args)
+      estparamvec <- extract_paramvec(estobj) #extract result
+      return(estparamvec)
+    }
+  }
 
 
   # extract start vector from a paramvec and paramvec_start
