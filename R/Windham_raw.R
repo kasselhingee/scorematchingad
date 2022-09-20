@@ -15,7 +15,6 @@
 
 
 #' @details For exponential families, the Windham weights are easy to compute using the density without the base measure (i.e. with the part that is written like \eqn{\exp(...)}) [ref Windham 1995]. For simplicity, `WindhamRobust` assumes that `ldenfun` ommits the base measure, and that the natural parameter vector \eqn{\eta(\theta)} is a *linear* function of the parameter vector estimated by `estimator` \eqn{\theta}.
-.
 
 #' @seealso [ppi_robust()] [vMF_robust()] [Windham_weights()]
 #' @export
