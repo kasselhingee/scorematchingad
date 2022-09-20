@@ -86,13 +86,11 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
                  theta = fulltheta, cW)
 
       #calculate estimate:
-      args = c(list(Y = Y, w = weight_vec), additionalargsbuilder(extraargs, starttheta)) #paramvec passed
+      args = c(list(Y = Y, w = weight_vec), additionalargsbuilder(extraargs, fulltheta)) #paramvec passed
       estobj <- do.call(estimator, args = args)
       estparamvec <- getparamfun(estobj) #extract result
       #### adjust the estimates (Step 4 in Notes5.pdf)
       estparamvec <- thetaadjuster(estparamvec, previous, cW, cWav) #for WindhamCorrections() only estparamvec is used
-      estparamvec <- taucinv %*% estparamvec
-#      estparamvec <- WindhamCorrection_original(previoustheta, newtheta, cW, cWav)
       fitted <- t_si2f(estparamvec, isfixed)
       return(fitted)
   }
