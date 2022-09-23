@@ -55,13 +55,13 @@ vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin
   kappaest <- vMF_kappa(Y = samplestd, w = w, paramvec_start = startk, 
                         control = control)
   return(list(
-    est = list(paramvec = kappainfo$k * mu,
+    est = list(paramvec = kappaest$k * mu,
                k = kappaest$k,
                m = mu),
     SE = list(paramvec = "Not calculated.",
               k = kappaest$SE,
               m = "Not calculated."),
-    info = kappainfo
+    info = kappaest
   ))
 }
 
