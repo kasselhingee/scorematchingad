@@ -1,15 +1,5 @@
 #' @title Mean direction and rotation for von Mises Fisher
-#' @export
-vMF_stdY <- function(Y, m = NULL, w = NULL){
-  if(is.null(m)){
-    m <- vMF_m(Y)
-  }
-  Rtrans <- Directional::rotation(m, c(1, rep(0, length(m) - 1)))
-  out <- Y %*% t(Rtrans)
-  return(out)
-}
-
-#' @describeIn vMF_stdY The mean direction of a sample, which is also the maximum likelihood estimate for the mean direction parameter `m` in the von Mises Fisher distribution.
+#' @description The mean direction of a sample, which is also the maximum likelihood estimate for the mean direction parameter `m` in the von Mises Fisher distribution.
 #' @export
 vMF_m <- function(Y, w = NULL){
   if (is.null(w)){m <- colMeans(Y)}
@@ -17,3 +7,16 @@ vMF_m <- function(Y, w = NULL){
   m <- m/sqrt(sum(m^2))
   return(m)
 }
+
+#' @describeIn Rotates a set of observations on a sphere to have mean direction of (1, 0, 0, ..., 0).
+#' @param m Mean direction. If omitted then it will be computed using `vMF_m()`.
+#' @export
+vMF_stdY <- function(Y, m = NULL, w = NULL){
+  if(is.null(m)){
+    m <- vMF_m(Y, w = w)
+  }
+  Rtrans <- Directional::rotation(m, c(1, rep(0, length(m) - 1)))
+  out <- Y %*% t(Rtrans)
+  return(out)
+}
+
