@@ -68,10 +68,9 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
    cWav <- mean(cW[cW > 1E-10]) #note that cW ~~ inWW * cWav
    thetaadjuster <- WindhamCorrection_additive
   } else {
-    tauc <- WindhamCorrection_multiplicative_tau(cW)
-    taucinv <- solve(tauc)
+    tauinv <- WindhamCorrection_multiplicative_tauinv(cW)
     cWav <- NULL  #not relevant to this correction method
-    thetaadjuster <- function(newtheta, previoustheta = NULL, cW = NULL, cWav = NULL){taucinv %*% newtheta}
+    thetaadjuster <- function(newtheta, previoustheta = NULL, cW = NULL, cWav = NULL){tauinv %*% newtheta}
   }
 
   # functions for adding paramvec_start or otherwise to estimator arguments
@@ -117,8 +116,6 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   est <- fp(Function = fpiterator, Inputs = starttheta[!isfixed],
                     control = fpcontrol)
   nevals <- ncol(est$Inputs)
-  #print(abs(est$Inputs[11, nevals] -
-  #      est$Inputs[11, nevals - 1]))
   theta <- starttheta
   theta[!isfixed] <- est$FixedPoint
 
@@ -135,10 +132,9 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
 # with \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u}.
 # and \eqn{\eta} is *linear* function.
 # The linear assumption means that \eqn{\tau_c(\theta)} is a multiplication by the matrix diag(1 + cW).
-WindhamCorrection_multiplicative_tau <- function(cW){
-  weightthetamat <- diag(cW, nrow = length(cW)) #matrix that converts theta to the new theta*cW based on inclusion/exclusion  #klh: the extra argument nrow = length(cW) forces diag() to use the cW values on the diagonal, rather than treat them as the size of the matrix desired - useful when cW is legitimately length 1
-  tauc <- weightthetamat + diag(1,nrow = length(cW))
-  return(tauc)
+WindhamCorrection_multiplicative_tauinv <- function(cW){
+  tauinv <- diag(1/(1 + cW), nrow = length(cW)) #matrix that converts theta to the new theta*cW based on inclusion/exclusion  #klh: the extra argument nrow = length(cW) forces diag() to use the cW values on the diagonal, rather than treat them as the size of the matrix desired - useful when cW is legitimately length 1
+  return(tauinv)
 }
 
 # returns adjustment of the new estimate according to Scealy's first draft
