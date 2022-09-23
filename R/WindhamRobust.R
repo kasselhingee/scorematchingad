@@ -15,15 +15,15 @@
 
 
 #' @details 
-#' Windham [ref Windham 1995] proposed method weighted an observation $x$ proportional to $f(x; \theta)^c_W$ where $c_W$ was a tuning constant and $f$ was the density of the model with given parameter set $\theta$.
-#' For samples drawn from exponential models without base measure, this weighting converts samples to be akin to sampling from the distribution with natural parameters $(1+c_W)\eta(\theta)$, where $\eta(\theta)$ was the natural parameter set of the original model.
-#' When $\eta$ is a linear function, then the parameter set $\theta$ becomes $(1+c)\theta$.
+#' Windham [ref Windham 1995] proposed method weighted an observation \eqn{x} proportional to \eqn{f(x; \theta)^c_W}{f(x; theta)^cW} where \eqn{c_W}{cW} was a tuning constant and \eqn{f} was the density of the model with given parameter set \eqn{\theta}.
+#' For samples drawn from exponential models without base measure, this weighting converts samples to be akin to sampling from the distribution with natural parameters \eqn{(1+c_W)\eta(\theta)}{(1+cW)eta(theta)}, where \eqn{\eta(\theta)} was the natural parameter set of the original model.
+#' When \eqn{\eta} is a linear function, then the parameter set \eqn{\theta} becomes \eqn{(1+c_W)\theta}{(1+cW)theta}.
 #'
-#' `WindhamRobust()` applies a modification of Windham's method that multiplies each element of $\theta$ by a different tuning constant $c_W$.
-#' Given a parameter set $\theta_n$, `WindhamRobust()` first computes weights $f(x; diag(c_W)\theta)$ of each observation $x$, where $diag(c_W)$ is a diagonal matrix with elements of $c_W$. 
-#' Then, a new parameter set $\tilde{\theta_{n+1}}$ is estimated by `estimator` with the computed weights.
-#' This new parameter set is multiplied by the inverse of $I + diag(c_W)$ to obtain an adjusted parameter set $\theta_{n+1} = (I + diag(c_W))^{-1} \tilde{\theta_{n+1}}$ (multiplying is equivalent to Windham's $\tau_c$).
-#' The estimate returned by `WindhamRobust()` is the parameter set $\hat{\theta}$ such that $\theta_n = \theta_{n+1}$.
+#' `WindhamRobust()` applies a modification of Windham's method that multiplies each element of \eqn{\theta} by a different tuning constant \eqn{c_W}{cW}.
+#' Given a parameter set \eqn{\theta_n}, `WindhamRobust()` first computes weights \eqn{f(x; diag(c_W)\theta)} of each observation \eqn{x}, where \eqn{diag(c_W)} is a diagonal matrix with elements of \eqn{c_W}. 
+#' Then, a new parameter set \eqn{\tilde{\theta_{n+1}}} is estimated by `estimator` with the computed weights.
+#' This new parameter set is multiplied by the inverse of \eqn{I + diag(c_W)} to obtain an adjusted parameter set \eqn{\theta_{n+1} = (I + diag(c_W))^{-1} \tilde{\theta_{n+1}}} (multiplying is equivalent to Windham's \eqn{\tau_c}).
+#' The estimate returned by `WindhamRobust()` is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n = \theta_{n+1}}.
 #' @seealso [ppi_robust()] [vMF_robust()] [Windham_weights()]
 #' @export
 WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named

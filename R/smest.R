@@ -1,4 +1,4 @@
-#' @NoRd
+#' @noRd
 #' @title Find the optimal parameter for the score matching objective
 #' @description Using a numerical optimiser and `smobj()` and `smobjgrad()`, find the parameter set with minimal `smobj` value.
 #' This function lightly wraps `Rcgmin::Rcgmin()` with some results checking.

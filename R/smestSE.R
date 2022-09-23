@@ -1,4 +1,4 @@
-#' @NoRd
+#' @noRd
 #' @title Draft standard error estimates for a CppAD-based estimator
 #' @description The standard errors of an estimator via the Godambe information matrix (or sandwich information matrix).
 #' @param smofun A tape of the score matching objective calculation
