@@ -28,7 +28,7 @@ vMF <- function(Y, paramvec = NULL, method = "smfull", control = default_Rcgmin(
     if (is.null(paramvec_start)){ starttheta <- t_u2s_const(paramvec, 0.1) }
     else {starttheta <- t_us2s(paramvec, paramvec_start) }
     isfixed <- t_u2i(paramvec)
-    firstfit <- vMF_full(Y, , isfixed, control = control, w=w, paramvec_start = paramvec_start)
+    firstfit <- vMF_full(Y, starttheta = starttheta, isfixed, control = control, w=w)
   }
   if (method %in% c("Mardia")){
     if (!is.null(paramvec)){if (any(!is.na(paramvec))){stop("Mardia estimator cannot fix any elements of paramvec")}}
