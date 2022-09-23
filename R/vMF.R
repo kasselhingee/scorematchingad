@@ -19,20 +19,22 @@
 #' `SE` contains estimates of the standard errors if computed by the estimating method. Standard error estimates of `k` and `m` are not computed.
 #' `info` contains a variety of information about the model fitting procedure.
 #' @export
-vMF <- function(Y, paramvec = NULL, method = "smfull", control = default_Rcgmin(), w = rep(1, nrow(Y)), cW = NULL){
+vMF <- function(Y, paramvec = NULL, method = "smfull", control = default_Rcgmin(), w = rep(1, nrow(Y)), paramvec_start = NULL){
   firstfit <- NULL
-  controls <- splitcontrol(control)
   if (method == "smfull"){
     if (is.null(paramvec)){
       paramvec <- rep(NA, ncol(Y))
     }
-    starttheta <- t_u2s_const(paramvec, 0.1)
+    if (is.null(paramvec_start)){ starttheta <- t_u2s_const(paramvec, 0.1) }
+    else {starttheta <- t_us2s(paramvec, paramvec_start) }
     isfixed <- t_u2i(paramvec)
-    firstfit <- vMF_full(Y, starttheta, isfixed, control = controls$Rcgmin, w=w)
+    firstfit <- vMF_full(Y, , isfixed, control = control, w=w, paramvec_start = paramvec_start)
   }
   if (method %in% c("Mardia")){
     if (!is.null(paramvec)){if (any(!is.na(paramvec))){stop("Mardia estimator cannot fix any elements of paramvec")}}
-    firstfit <- vMF_Mardia(Y, startk = 10, control = controls$Rcgmin, w=w)
+    if (is.null(paramvec_start)){ startk <- 10 }
+    else {startk <- sqrt(sum(paramvec_start^2))}
+    firstfit <- vMF_Mardia(Y, startk = startk, control = control, w=w)
     isfixed <- rep(FALSE, ncol(Y)) #for Windham robust estimation, if it is used
   }
   if (is.null(firstfit)){stop(sprintf("Method '%s' is not valid", method))}
