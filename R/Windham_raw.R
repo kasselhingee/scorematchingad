@@ -14,8 +14,24 @@
 #' @param fpcontrol A named list of control arguments to pass to [FixedPoint::FixedPoint()] for the fixed point iteration. The default control arguments are printed by [default_FixedPoint()].
 
 
-#' @details For exponential families, the Windham weights are easy to compute using the density without the base measure (i.e. with the part that is written like \eqn{\exp(...)}) [ref Windham 1995]. For simplicity, `WindhamRobust` assumes that `ldenfun` ommits the base measure, and that the natural parameter vector \eqn{\eta(\theta)} is a *linear* function of the parameter vector estimated by `estimator` \eqn{\theta}.
+#' @details 
+#' Windham [ref Windham 1995] proposed method weighted an observation $x$ proportional to $f(x; \theta)^c_W$ where $c_W$ was a tuning constant and $f$ was the density of the model with given parameter set $\theta$.
+#' For samples drawn from exponential models without base measure, this weighting converts samples to be akin to sampling from the distribution with natural parameters $(1+c_W)\eta(\theta)$, where $\eta(\theta)$ was the natural parameter set of the original model.
+#' When $\eta$ is a linear function, then the parameter set $\theta$ becomes $(1+c)\theta$.
+#'
+#' `WindhamRobust()` applies a modification of Windham's method that multiplies each element of $\theta$ by a different tuning constant $c_W$.
+#' Given a parameter set $\theta_n$, `WindhamRobust()` first computes weights $f(x; diag(c_W)\theta)$ of each observation $x$, where $diag(c_W)$ is a diagonal matrix with elements of $c_W$. 
+#' Then, a new parameter set $\tilde{\theta_{n+1}}$ is estimated by `estimator` with the computed weights.
+#' This new parameter set is multiplied by the inverse of $I + diag(c_W)$ to obtain an adjusted parameter set $\theta_{n+1} = (I + diag(c_W))^{-1} \tilde{\theta_{n+1}}$ (multiplying is equivalent to Windham's $\tau_c$).
+#' The estimate returned by `WindhamRobust()` is the parameter set $\hat{\theta}$ such that the above steps return $\hat{\theta}$.
 
+#' From the starting parameter set (supplied by `paramater_vec` or found using a non-weighted fit)
+#' That is, `WindhamRobust()` weights each observation $x$ by $f(x; c_W\theta)$, where the multiplication of $c_W$ and $\theta$ is element-wise.
+#' 
+
+#' `WindhamRobust` requires that the natural parameter vector \eqn{\eta(\theta)} is a *linear* function of the parameter vector estimated by `estimator` \eqn{\theta}, this allows the for easy calculation of the correction applied to each weighted estimate via a simple matrix.
+
+#' For exponential families without base measure (i.e. with the part that is written like \eqn{\exp(...)}), the Windham weights can often be easily computed [ref Windham 1995].
 #' @seealso [ppi_robust()] [vMF_robust()] [Windham_weights()]
 #' @export
 WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
