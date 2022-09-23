@@ -211,3 +211,24 @@ test_that("dmovMF() and dmvf() are NOT equal", {
                Directional::dvmf(sample, k, m, logden = TRUE)))
 })
 
+test_that("vMF(), vMF_stdY() and vMF_m() differs when weights differ", {
+  p <- 5
+  k <- 3
+  m <- runif(p, min = -10, 10)
+  m <- m / sqrt(sum(m^2))
+  Y <- movMF::rmovMF(100, k * m)
+
+  m <- vMF_m(Y)
+  set.seed(13423)
+  m_w <- vMF_m(Y, w = runif(nrow(Y)))
+  expect_gt(sqrt(sum((m_w - m)^2)), 1E-5)
+
+
+  expect_equal(vMF(Y, method = "Mardia")$est$m, m)
+  set.seed(13423)
+  expect_equal(vMF(Y, method = "Mardia", w = runif(nrow(Y)))$est$m, m_w)
+
+  expect_equal(colMeans(vMF_stdY(Y))[-1], rep(0, p-1))
+  set.seed(13423)
+  expect_gt(sqrt(sum(colMeans(vMF_stdY(Y, w = runif(nrow(Y))))[-1]^2)), 1E-5)
+})
