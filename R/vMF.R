@@ -45,17 +45,19 @@ vMF <- function(Y, paramvec = NULL, method = "smfull", control = default_Rcgmin(
 vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin(), w = rep(1, nrow(sample))){
   stopifnot(length(startk) == 1)
   stopifnot(length(isfixed) == 1)
+  stopifnot(!isfixed)
   mu <- apply(sample, MARGIN = 2, weighted.mean, w)
   mu <- mu/sqrt(sum(mu^2))
   samplestd <- vMF_stdY(sample, m = mu, w = w)
   # check: mustd <- colMeans(samplestd); mustd <- mustd / sqrt(sum(mustd^2))
-  kappainfo <- vMF_kappa_coarse(samplestd, startk, isfixed = isfixed, control = control, w = w)
+  kappaest <- vMF_kappa(Y = samplestd, w = w, paramvec_start = startk, 
+                        control = control)
   return(list(
     est = list(paramvec = kappainfo$k * mu,
-               k = kappainfo$k,
+               k = kappaest$k,
                m = mu),
     SE = list(paramvec = "Not calculated.",
-              k = kappainfo$SE,
+              k = kappaest$SE,
               m = "Not calculated."),
     info = kappainfo
   ))
