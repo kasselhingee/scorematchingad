@@ -23,28 +23,19 @@
 #' Given a parameter set $\theta_n$, `WindhamRobust()` first computes weights $f(x; diag(c_W)\theta)$ of each observation $x$, where $diag(c_W)$ is a diagonal matrix with elements of $c_W$. 
 #' Then, a new parameter set $\tilde{\theta_{n+1}}$ is estimated by `estimator` with the computed weights.
 #' This new parameter set is multiplied by the inverse of $I + diag(c_W)$ to obtain an adjusted parameter set $\theta_{n+1} = (I + diag(c_W))^{-1} \tilde{\theta_{n+1}}$ (multiplying is equivalent to Windham's $\tau_c$).
-#' The estimate returned by `WindhamRobust()` is the parameter set $\hat{\theta}$ such that the above steps return $\hat{\theta}$.
-
-#' From the starting parameter set (supplied by `paramater_vec` or found using a non-weighted fit)
-#' That is, `WindhamRobust()` weights each observation $x$ by $f(x; c_W\theta)$, where the multiplication of $c_W$ and $\theta$ is element-wise.
-#' 
-
-#' `WindhamRobust` requires that the natural parameter vector \eqn{\eta(\theta)} is a *linear* function of the parameter vector estimated by `estimator` \eqn{\theta}, this allows the for easy calculation of the correction applied to each weighted estimate via a simple matrix.
-
-#' For exponential families without base measure (i.e. with the part that is written like \eqn{\exp(...)}), the Windham weights can often be easily computed [ref Windham 1995].
+#' The estimate returned by `WindhamRobust()` is the parameter set $\hat{\theta}$ such that $\theta_n = \theta_{n+1}$.
 #' @seealso [ppi_robust()] [vMF_robust()] [Windham_weights()]
 #' @export
 WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)
   ellipsis::check_dots_used()
-  ### build the estimatorfun from estimator to match windham_raw() [messy but will work for testing now, then can clean later]
   # assuming estimator has arguments: Y, paramvec, w, and optionally paramvec_start.
-  # and assume that the return vector can be extracted using `extract_paramvec()` and this it is the full model parameter vector, including the fixed elements.
-  # also pass in ...
-
+  # and assume that the return vector can be extracted using `extract_paramvec()` and similar and that this is the full model parameter vector, including the fixed elements (this is important for computing density).
   estargs <- c(list(Y = Y), extraargs)
   estargs$paramvec_start <- paramvec_start #adding this slot this way so that it is omitted if NULL
-  assessment <- do.call(test_estimator2, c(list(estimator = estimator), estargs))
+
+  #assess the passes estimator
+  assessment <- do.call(Windham_assess_estimator, c(list(estimator = estimator), estargs))
 
 
   # extract start vector from a paramvec and paramvec_start
@@ -67,17 +58,17 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   stopifnot(is.numeric(cW))
   if (any((cW * starttheta)[isfixed] != 0)){stop("Elements of cW corresponding to fixed non-zero parameters should be zero")}
  
-  # Weight correction preparation 
-  originalcorrectionmethod = FALSE # use the WindhamCorrection() instead of Scealy draft method
-  if (originalcorrectionmethod){
-   if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #this check because I'm not sure what the original correction method is in the presence of a different tuning constants per value
-     stop("Non-zero cW values vary, which is not supported by 'Original' Windham correction")
+  # Correction of parameter preparation 
+  multiplicativecorrection = TRUE # use the WindhamCorrection(), the alternative is Scealy's original additive method in the draft paper
+  if (!multiplicativecorrection){
+   if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #require constant cW (or zero) because I'm not sure what Scealy's correction method should be in the presence of a different tuning constants per value
+     stop("Non-zero cW values vary, which is not supported by 'additive' correction of the parameter estimate.")
    }}
    inWW <- (cW > 1E-10)
    cWav <- mean(cW[cW > 1E-10]) #note that cW ~~ inWW * cWav
-   thetaadjuster <- WindhamCorrection_original
+   thetaadjuster <- WindhamCorrection_additive
   } else {
-    tauc <- WindhamCorrection(cW)
+    tauc <- WindhamCorrection_multiplicative_tau(cW)
     taucinv <- solve(tauc)
     cWav <- NULL  #not relevant to this correction method
     thetaadjuster <- function(newtheta, previoustheta = NULL, cW = NULL, cWav = NULL){taucinv %*% newtheta}
@@ -138,20 +129,20 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
 }
 
 # @title Windham transform matrix for a given parameter vector
-# @description Generates the correction matrix \eqn{\tau_c(\theta) = \tau_c \theta} for models
+# @description Generates the correction matrix $\eqn{\tau_c(\theta) = \tau_c \theta}$ for models
 # with density proportional to
-# \eqn{\exp(a(\theta) t(u))}
+# $\eqn{\exp(\eta(\theta) t(u))}$
 # with \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u}.
-# and \eqn{a} is *linear* function.
-# The linear assumption means that \eqn{\tau_c(\theta)} is a simple matrix operation.
-WindhamCorrection <- function(cW){
+# and \eqn{\eta} is *linear* function.
+# The linear assumption means that \eqn{\tau_c(\theta)} is a multiplication by the matrix diag(1 + cW).
+WindhamCorrection_multiplicative_tau <- function(cW){
   weightthetamat <- diag(cW, nrow = length(cW)) #matrix that converts theta to the new theta*cW based on inclusion/exclusion  #klh: the extra argument nrow = length(cW) forces diag() to use the cW values on the diagonal, rather than treat them as the size of the matrix desired - useful when cW is legitimately length 1
   tauc <- weightthetamat + diag(1,nrow = length(cW))
   return(tauc)
 }
 
 # returns adjustment of the new estimate according to Scealy's first draft
-WindhamCorrection_original <- function(newtheta, previoustheta, cW, cWav){ #cW is a vector, cWav is the average of the non-zero elements of cW
+WindhamCorrection_additive <- function(newtheta, previoustheta, cW, cWav){ #cW is a vector, cWav is the average of the non-zero elements of cW
   # generate the tuning constants dbeta, dA
   dtheta <- previoustheta * (cW - cWav) # = theta * cWav * (inWW - 1) = theta * cWav * -1 * !inWW = -cW * theta * !inWW
   return((newtheta - dtheta)/(cWav + 1))

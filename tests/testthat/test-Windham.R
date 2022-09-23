@@ -87,7 +87,7 @@ test_that("test_estimator works", {
   Y <- matrix(runif(10*5), nrow = 10, ncol = 5)
   w <- NULL
 
-  assessment <- test_estimator2(function(Y, w = rep(1, nrow(Y))){
+  assessment <- Windham_assess_estimator(function(Y, w = rep(1, nrow(Y))){
     return(colMeans(Y * w))
   }, Y = Y, w = NULL)
   expect_equal(assessment[1:4], list(paramvec = FALSE,
@@ -95,7 +95,7 @@ test_that("test_estimator works", {
        estlocation = "[]",
        paramvec_length_tested = FALSE))
 
-  assessment <- test_estimator2(
+  assessment <- Windham_assess_estimator(
     function(Y, paramvec, w = rep(1, nrow(Y))){
       m <- colMeans(Y*w)
       m[t_u2i(paramvec)] <- paramvec[t_u2i(paramvec)]
@@ -112,13 +112,13 @@ test_that("test_estimator works", {
     m[t_u2i(paramvec)] <- paramvec[t_u2i(paramvec)]
     return(m)
   }
-  assessment <- test_estimator2(goodfun, Y = Y, w = NULL, paramvec = rep(NA, ncol(Y)))
+  assessment <- Windham_assess_estimator(goodfun, Y = Y, w = NULL, paramvec = rep(NA, ncol(Y)))
   expect_equal(assessment[1:4], list(paramvec = TRUE,
        paramvec_start = TRUE,
        estlocation = "[]",
        paramvec_length_tested = TRUE))
 
-  assessment <- test_estimator2(goodfun, Y = Y, w = NULL, paramvec = NULL)
+  assessment <- Windham_assess_estimator(goodfun, Y = Y, w = NULL, paramvec = NULL)
   expect_equal(assessment[1:4], list(paramvec = TRUE,
        paramvec_start = TRUE,
        estlocation = "[]",
@@ -126,19 +126,19 @@ test_that("test_estimator works", {
 
 
   # test the estimation location detection
-  assessment <- test_estimator2(function(Y, paramvec = rep(NA, ncol(Y)), paramvec_start = NULL, w = rep(1, nrow(Y))){
+  assessment <- Windham_assess_estimator(function(Y, paramvec = rep(NA, ncol(Y)), paramvec_start = NULL, w = rep(1, nrow(Y))){
     m <- goodfun(Y, paramvec, paramvec_start = paramvec_start, w = w)
     return(m)
   } , Y = Y, w = NULL)
   expect_equal(assessment$estlocation, "[]")
   
-  assessment <- test_estimator2(function(Y, paramvec, paramvec_start = NULL, w = rep(1, nrow(Y))){
+  assessment <- Windham_assess_estimator(function(Y, paramvec, paramvec_start = NULL, w = rep(1, nrow(Y))){
     m <- goodfun(Y, paramvec, paramvec_start = paramvec_start, w = w)
     return(list(est = list(paramvec = m)))
   }, Y = Y, w = NULL, paramvec = NULL)
   expect_equal(assessment$estlocation, "[['est']][['paramvec']]")
   
-  assessment <- test_estimator2(function(Y, paramvec, paramvec_start = NULL, w = rep(1, nrow(Y))){
+  assessment <- Windham_assess_estimator(function(Y, paramvec, paramvec_start = NULL, w = rep(1, nrow(Y))){
     m <- goodfun(Y, paramvec, paramvec_start = paramvec_start, w = w)
     return(list(est = m))
   }, Y = Y, w = NULL, paramvec = NULL)

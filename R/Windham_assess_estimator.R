@@ -1,6 +1,6 @@
 #' @param ... passed directly to estimator for testing purposes
 
-test_estimator2 <- function(estimator, Y, ..., w = NULL){
+Windham_assess_estimator <- function(estimator, Y, ..., w = NULL){
   if (is.null(estimator)){stop("estimator is NULL")}
   estimatorformals <- formals(estimator)
   if (length(setdiff(c("Y", "w"), names(estimatorformals))) != 0){
