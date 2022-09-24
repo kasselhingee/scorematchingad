@@ -2,9 +2,10 @@
 #' @description Given parameters of the PPI model, generates independent samples.
 #' @param n Sample size
 #' @param p Dimension (number of components)
-#' @param beta0 The \eqn{\beta_0}{beta0} shape parameter vector
-#' @param ALs The \eqn{A_L} parameter matrix
+#' @param beta The \eqn{\beta}{beta} shape parameter vector
+#' @param AL The \eqn{A_L} parameter matrix
 #' @param bL The \eqn{b_L} parameter vector
+#' @param paramvec The PPI parameter vector, created easily using [ppi_paramvec()] and also returned by [ppi()].
 #' @param maxden This is the constant \eqn{log(C)} in (Scealy and Wood, 2021; Appendix A.1.1)
 #' @return A list. The first element is the sample in the form of a matrix with `n` rows and `p` columns.
 #' The second element is the maxden updated based on whether the sample exceeds the input maxden.
@@ -27,19 +28,19 @@
 #' cor=0.5
 #' SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
 #' SigA[2,1]=SigA[1,2]
-#' ALs=-0.5*solve(SigA)
+#' AL=-0.5*solve(SigA)
 #' bL=solve(SigA)%*%muL
 #'
-#' samp <- rppi(n,p,beta0,ALs,bL,4)
+#' samp <- rppi(n,p,beta,AL,bL,4)
 #' plot(ks::kde(samp$samp3[,-p]),
 #'  xlim = c(0, 1), ylim = c(0, 1))
 #' segments(0, 0, 0, 1)
 #' segments(0, 1, 1, 0)
 #' segments(1, 0, 0, 0)
 #'
-#' dppi(samp$samp3, beta0, ALs, bL)
+#' dppi(samp$samp3, beta, AL, bL)
 #' @export
-rppi <- function(n,p,beta0,ALs,bL,maxden){
+rppi <- function(n, beta = NULL, AL = NULL, bL = NULL, paramvec = NULL, maxden = 4){
   # a warning if maxden is high
   if (maxden > 10){
     rlang::warn(message = paste(sprintf("'maxden' of %0.2f is higher than 10.", maxden),
@@ -51,15 +52,26 @@ rppi <- function(n,p,beta0,ALs,bL,maxden){
                 .frequency_id = "highmaxden")
   }
 
+  #process inputs
+  if (is.null(paramvec)){if (any(is.null(beta), is.null(AL), is.null(bL))){stop("If paramvec isn't supplied then beta, AL, and bL must be supplied")}}
+  else {
+    if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA")}
+    parammats <- ppi_fromPPIparamvec(paramvec)
+    beta <- parammats$beta
+    AL <- parammats$ALs
+    bL <- parammats$bL
+  }
+  p <- length(beta)
+
   maxdenin <- maxden
   # first simulate starting with a block of Dirichlet samples of size n.
-  firstaccepted <- rppi_block(n,p,beta0,ALs,bL,maxden)
+  firstaccepted <- rppi_block(n,p,beta = beta,AL = AL,bL,maxden)
   maxden <- firstaccepted$maxden
   samples <- firstaccepted$accepted
   propaccepted <- max(nrow(samples) / n, 1E-3)
   # based on the number of samples that came out, simulate the remaining
   while (nrow(samples) < n){
-    newsamples <- rppi_block(ceiling((n - nrow(samples)) * 1/propaccepted),p,beta0,ALs,bL,maxden)
+    newsamples <- rppi_block(ceiling((n - nrow(samples)) * 1/propaccepted),p,beta,AL,bL,maxden)
     maxden <- newsamples$maxden
     samples <- rbind(samples, newsamples$accepted)
     # continue until n or more samples accepted
@@ -77,10 +89,10 @@ rppi <- function(n,p,beta0,ALs,bL,maxden){
 
 
 # simulates samples one at a time
-rppi_singly <- function(n,p,beta0,ALs,bL,maxden)
+rppi_singly <- function(n,p,beta,AL,bL,maxden)
 {
 
-	alpha=beta0+1
+	alpha=beta+1
 	coun=0
 	samp1=matrix(0,1,p)
 	count2=0
@@ -92,7 +104,7 @@ rppi_singly <- function(n,p,beta0,ALs,bL,maxden)
 		u=stats::runif(1,0,1)
 		Uni_nop <- Uni[1:(p-1)]
 		tUni_nop <- t(Uni[1:(p-1)])
-    num <- ppi_uAstaru(matrix(Uni_nop, nrow = 1), ALs, bL) - maxden #uT * ALs * u + t(bL) * u - maxden
+    num <- ppi_uAstaru(matrix(Uni_nop, nrow = 1), AL, bL) - maxden #uT * AL * u + t(bL) * u - maxden
 		if (num > 0){maxden=num+maxden}
 		#print(maxden)
 		if (u < exp(num)){samp1=rbind(samp1,Uni);coun=coun+1}
@@ -106,10 +118,10 @@ rppi_singly <- function(n,p,beta0,ALs,bL,maxden)
 
 
 # try generating samples without a 'while' loop
-rppi_block <- function(n,p,beta0,ALs,bL,maxden){
-  Uni <- MCMCpack::rdirichlet(n, beta0+1)
+rppi_block <- function(n,p,beta,AL,bL,maxden){
+  Uni <- MCMCpack::rdirichlet(n, beta+1)
   Uni_nop <- Uni[, -p]
-  nums <- ppi_uAstaru(Uni_nop, ALs, bL) - maxden #uT * ALs * u + t(bL) * u - maxden
+  nums <- ppi_uAstaru(Uni_nop, AL, bL) - maxden #uT * AL * u + t(bL) * u - maxden
 
   # update maxdens
   max_num <- max(nums)
