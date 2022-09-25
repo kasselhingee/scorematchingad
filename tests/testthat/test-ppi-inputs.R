@@ -81,7 +81,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   AL = diag(c(-100, -50))
   beta = c(-0.8, -0.8, -0.5)
   bL = rep(0, 2)
-  prop <- rppi(100, 3, beta, AL, bL, 4)[[1]]
+  prop <- rppi(100, beta, AL, bL, maxden=4)[[1]]
   theta <- toPPIparamvec(AL, bL, beta)
   out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", betap = -0.5), trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad", control = list(tol = 1E-10))
   cdabyppi:::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
@@ -92,7 +92,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   AL = diag(c(-100, -50))
   beta = c(-0.8, -0.8, -0.5)
   bL = rep(0, 2)
-  prop <- rppi(100, 3, beta, AL, bL, 4)[[1]]
+  prop <- rppi(100, beta, AL, bL, maxden=4)[[1]]
   theta <- toPPIparamvec(AL, bL, beta)
   out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", bL = 0, betap = -0.5), trans = "alr", bdryweight = "ones", method = "cppad", control = list(tol = 1E-10))
   cdabyppi:::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
