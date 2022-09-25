@@ -32,7 +32,7 @@ ppi_eggengamma <- function(n, maxden = 0){
   beta0[5]=0
 
   #simulate sample from PPI model
-  samp1=rppi(n,p,beta0 = beta0,ALs = ALs,bL = bL, maxden)
+  samp1=rppi(n,beta = beta0,AL = ALs,bL = bL, maxden=maxden)
 
   #simulated sample:
   samp3=samp1$samp3

@@ -15,7 +15,7 @@ ppi_egmodel <- function(n, maxden = 4, betaadd = 0){
   mats$beta = mats$beta + betaadd
 
   #simulate sample from PPI model
-  samp1=rppi(n,3,beta0 = mats$beta,ALs = mats$AL,bL = mats$bL, maxden)
+  samp1=rppi(n,beta = mats$beta,AL = mats$AL,bL = mats$bL, maxden = maxden)
 
   #simulated sample:
   samp3=samp1$samp3
@@ -39,7 +39,7 @@ ppi_egmodel_p4 <- function(n, maxden = 8){
   mats <- pars_sec2dot3model(4)
 
   #simulate sample from PPI model
-  samp1=rppi(n,4,beta0 = mats$beta,ALs = mats$AL,bL = mats$bL, maxden)
+  samp1=rppi(n,beta = mats$beta,AL = mats$AL,bL = mats$bL, maxden = maxden)
 
   #simulated sample:
   samp3=samp1$samp3

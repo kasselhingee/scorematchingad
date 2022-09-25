@@ -13,7 +13,7 @@ test_that("current PPI simulation method gives samples with similar empirical de
   H <- ks::Hpi(samp2$samp3[, -m$p])
   kde_historic <- ks::kde(samp2$samp3[, -m$p], H)
   #simulate sample from PPI model
-  time_current <- system.time(samp1 <- cdabyppi:::rppi(n,m$p,m$beta0,m$ALs,m$bL,4))
+  time_current <- system.time(samp1 <- cdabyppi:::rppi(n,beta = m$beta0,AL=m$ALs,bL=m$bL, maxden = 4))
   H <- ks::Hpi(samp1$samp3[, -m$p])
   kde_current <- ks::kde(samp1$samp3[, -m$p], H)
 
@@ -27,10 +27,28 @@ test_that("rppi() is fixed by set.seed()", {
   m <- ppi_egmodel(2)
 
   set.seed(3212)
-  Y1 <- rppi(100, m$p, m$beta, m$AL, m$bL, 4)
+  Y1 <- rppi(100, beta = m$beta, m$AL, m$bL, maxden=4)
 
   set.seed(3212)
-  Y2 <- rppi(100, m$p, m$beta, m$AL, m$bL, 4)
+  Y2 <- rppi(100, beta = m$beta, m$AL, m$bL, maxden=4)
 
   expect_equal(Y1, Y2)
+})
+
+test_that("rppi() passed a paramvec works", {
+
+  set.seed(3212)
+  Y1 <- rppi(100, m$beta, m$AL, m$bL, maxden=4)
+  
+  set.seed(3212)
+  Y2 <- rppi(100, paramvec = m$theta, maxden=4)
+  
+  expect_equal(Y1, Y2)
+})
+
+test_that("rppi() errors appropriately", {
+
+  expect_error(rppi(100, m$beta, m$AL, m$bL, paramvec = m$theta, maxden = 4))
+  expect_error(rppi(100, beta = c(m$beta, m$beta), m$AL, m$bL, maxden = 4))
+  expect_error(rppi(100, beta = m$beta, m$bL, maxden = 4))
 })

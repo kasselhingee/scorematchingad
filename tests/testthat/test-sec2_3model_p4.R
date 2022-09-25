@@ -31,7 +31,7 @@ beta0[p]=-0.5
 test_that("Score1ac estimator of A, b and beta works on highly concentrated data, with some components close to the boundary", {
   #simulate sample from PPI model
   set.seed(1210)
-  samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
+  samp1=cdabyppi:::rppi(n,beta0,ALs,bL,maxden=4)
 
   #simulated sample:
   samp3=samp1$samp3
@@ -66,7 +66,7 @@ test_that("Score1ac estimator of A, b and beta works on highly concentrated data
 test_that("Score1ac estimator of A and b only (beta fixed) works on highly concentrated data, with some components close to the boundary", {
   #simulate sample from PPI model
   set.seed(124)
-  samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
+  samp1=cdabyppi:::rppi(n,beta0,ALs,bL,maxden=4)
 
   #simulated sample:
   samp3=samp1$samp3
