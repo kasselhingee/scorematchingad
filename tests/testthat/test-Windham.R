@@ -42,7 +42,7 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   bL <- matrix(0, nrow = p-1)
   beta <- c(-0.8, -0.3, 0)
   set.seed(1345) #this seed generates samples that are representative-enough for estimatorlog_ratio() to give close estimates
-  prop <- rppi(1000, beta, ALs, bL, maxden=4)$samp3
+  prop <- rppi(1000, beta, ALs, bL, maxden=4)
 
   #check non-robust estimates
   est_unload <- ppi_alr_gengamma(prop, betap = beta[p], w = rep(1, nrow(prop)))
@@ -71,8 +71,7 @@ test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5
   bL <- matrix(0, nrow = p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
   set.seed(13456) #this seed generates samples that are representative-enough for estimatorlog_ratio() to give close estimates
-  sim <- rppi(1000, beta, ALs, bL, maxden=4)
-  prop <- sim$samp3
+  prop <- rppi(1000, beta, ALs, bL, maxden=4)
   # prop %>% as_tibble() %>% tidyr::pivot_longer(everything()) %>% ggplot() + facet_wrap(vars(name)) + geom_freqpoly(aes(x=value))
 
   #calculate robust estimates

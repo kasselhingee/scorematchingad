@@ -25,7 +25,7 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
   bL = matrix(0, nrow = p-1, ncol = 1)
   theta = toPPIparamvec(ALs, bL, beta)
 
-  utabl <- rppi(10,beta=beta,AL=ALs,bL=bL,maxden=4)$samp3
+  utabl <- rppi(10,beta=beta,AL=ALs,bL=bL,maxden=4)
 
   acut = 0.1
   dirtapes <- buildsmotape("sphere", "dirichlet",
@@ -49,7 +49,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   theta = toPPIparamvec(ALs, bL, beta)
 
   set.seed(1234)
-  utabl <- cdabyppi:::rppi(100,beta=beta,AL=ALs,bL=bL,maxden=4)$samp3
+  utabl <- rppi(100,beta=beta,AL=ALs,bL=bL,maxden=4)
 
   acut = 0.1
   dirtapes <- buildsmotape("sphere", "dirichlet",
@@ -151,7 +151,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
   theta <- toPPIparamvec(ALs, bL, beta)
 
   set.seed(13418)
-  utabl <- cdabyppi:::rppi(n,beta=beta,AL=ALs,bL=bL,maxden=4)$samp3
+  utabl <- rppi(n,beta=beta,AL=ALs,bL=bL,maxden=4)
   u <- utabl[2, ]
 
   out <- ppi(utabl,
@@ -266,7 +266,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
-  prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=35)$samp3
+  prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=35)
 
   acut = 0.1
   est_direct <- estimator1(prop, acut, incb = 0, beta = beta)

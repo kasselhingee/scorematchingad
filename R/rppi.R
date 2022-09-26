@@ -7,13 +7,14 @@
 #' @param bL The \eqn{b_L} parameter vector
 #' @param paramvec The PPI parameter vector, created easily using [ppi_paramvec()] and also returned by [ppi()].
 #' @param maxden This is the constant \eqn{log(C)} in (Scealy and Wood, 2021; Appendix A.1.1)
-#' @return A list. The first element is the sample in the form of a matrix with `n` rows and `p` columns.
-#' The second element is the maxden updated based on whether the sample exceeds the input maxden.
+#' @return A matrix with `n` rows. Each row is a independent draw from the specified PPI distribution.
 #' @details
 #' \eqn{A_L} controls the covariance between components.
 #' \eqn{b_L} controls the location of the distribution within the simplex
 #' \eqn{\beta_0[i]}{beta0[i]} controls the shap of the density when the ith component is close to zero.
 #' If \eqn{b_L} is such that the ith component is typically far from zero, then \eqn{\beta_0[i]}{beta0[i]} will have negligible effect.
+#'
+#' We recommend running `rppi()` a number of times to ensure the choice of `maxden` is good. `rppi()` will error when `maxden` is too low.
 #' @examples
 #' n=1000
 #' p=3
@@ -32,13 +33,13 @@
 #' bL=solve(SigA)%*%muL
 #'
 #' samp <- rppi(n,p,beta,AL,bL,4)
-#' plot(ks::kde(samp$samp3[,-p]),
+#' plot(ks::kde(samp[,-p]),
 #'  xlim = c(0, 1), ylim = c(0, 1))
 #' segments(0, 0, 0, 1)
 #' segments(0, 1, 1, 0)
 #' segments(1, 0, 0, 0)
 #'
-#' dppi(samp$samp3, beta, AL, bL)
+#' dppi(samp, beta, AL, bL)
 #' @export
 rppi <- function(n, beta = NULL, AL = NULL, bL = NULL, paramvec = NULL, maxden = 4){
   # a warning if maxden is high
@@ -85,7 +86,7 @@ rppi <- function(n, beta = NULL, AL = NULL, bL = NULL, paramvec = NULL, maxden =
 
   samples <- samples[1:n, ] # remove extra samples
 
-  return(list(samp3=samples,maxden=maxden))
+  return(samples)
 }
 
 

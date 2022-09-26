@@ -25,17 +25,7 @@ test_that("Score1ac estimator works on highly concentrated data, with some compo
 
   #simulate sample from PPI model
   set.seed(31654)
-  samp1=cdabyppi:::rppi(n,beta0,ALs,bL,maxden=4)
-
-  #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
-  #a few times to check that it is an appropriate upper bound.
-  # 4 seems to be pretty good (I've run the above rppi many times).
-  # I.e. the simulation result doesn't suggest changing maxden=4
-  stopifnot(samp1$maxden <= 4)
-  maxden <- 4
-
-  #simulated sample:
-  samp3=samp1$samp3
+  samp3=rppi(n,beta0,ALs,bL,maxden=4)
 
   ####Score1ac estimator##
 

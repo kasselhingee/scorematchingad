@@ -19,7 +19,7 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 5", {
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
   # set.seed(1345) #this seed leads to samples with that give reasonable estimates
   set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
-  prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=5)$samp3 #rppi_singly took 1005 seconds, rppi() took 13seconds
+  prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=5) #rppi_singly took 1005 seconds, rppi() took 13seconds
 
   est_cppad <- ppi(prop, ppi_paramvec(bL = bL, betap = beta[p]), trans = "alr", method = "cppad", bdryweight = "ones",
                          bdrythreshold = 1E-20,

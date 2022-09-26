@@ -25,15 +25,7 @@ beta0[2]=-0.85
 beta0[3]=0
 
 #simulate sample from the PPI model
-samp1=cdabyppi:::rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=0)
-
-#maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
-#a few times to check that it is an appropriate upper bound.
-maxden=samp1$maxden
-stopifnot(maxden <= 0)
-
-#simulated sample:
-samp3=samp1$samp3
+samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=0)
 
 #### Estimate from Simulated Sample ####
 test_that("ppi_mmmm gives numerical non-NA values", {
