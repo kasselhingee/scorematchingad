@@ -131,13 +131,14 @@ test_that("Test ppi() against direct when there are boundary points", {
   mean(apply(newsample, 1, min) == 0) #28% have a zero
 
   acut = 0.1
-  direct <- estimatorall1(newsample, acut = acut, betap = m$beta0[3])
+  direct <- ppi(newsample, 
+                paramvec = ppi_paramvec(p = ncol(newsample), betap = tail(m$beta0, 1)),
+                trans = "sqrt", bdryweight = "minsq", 
+                acut = acut)
 
   est <- ppi(newsample, ppi_paramvec(p = 3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
-  cdabyppi:::expect_lte_v(abs(est$est$theta - c(direct$estimator1, m$beta0[3])),
-                          0.1*abs(c(direct$estimator1, 0)))
-  cdabyppi:::expect_absdiff_lte_v(est$est$theta, c(direct$estimator1, m$beta0[3]), 0.1*abs(c(direct$estimator1, 0)))
+  expect_equal(est$est$paramvec, direct$est$paramvec, tolerance = 1E-4)
 })
 
 test_that("Taylor approx of cppadSE gives suitable SE for estimates", {
