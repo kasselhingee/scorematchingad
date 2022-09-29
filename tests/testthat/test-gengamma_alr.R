@@ -8,7 +8,7 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 3", {
   est_direct <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct")
 
   #est_direct <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], w = rep(1, nrow(m$sample)))
-  expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec, tolerance = 1E-5)
+  expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec)
 })
 
 test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 5", {
