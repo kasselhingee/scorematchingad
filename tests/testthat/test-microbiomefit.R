@@ -104,6 +104,14 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   #check historically
   expect_snapshot_value(signif(estimate1, 8), style = "json2") #8 is the default number of digits for jsonlite::serializeJSON
 
+  #check it matches cppad ppi()
+  est_cppad <- ppi(Y = propreal, acut = acut,
+                   method = "cppad",
+                   trans = "sqrt", bdryweight = "minsq",
+                   bdrythreshold = 1E-5, shiftsize = 1E-10,
+                   paramvec = ppi_paramvec(beta = beta0))
+  expect_equal(est_cppad$est$paramvec, estimator$est$paramvec, tolerance = 1E-3)
+
   #estimate of W matrix
   W_est=estimator$info$W
   expect_snapshot_value(round(max(W_est), 8), style = "json2") #have to use round here because the json conversion doesn't necessarily show it in scientific notation
@@ -125,6 +133,21 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   expect_snapshot_value(signif(ALs[upper.tri(ALs, diag = TRUE)], 8), style = "json2")
   expect_snapshot_value(signif(bL, 8), style = "json2")
   expect_snapshot_value(signif(estimate1/std1, 8), style = "json2")
+
+
+
+
+  #check alr estimators too
+  est_alr <- ppi(Y = propreal, method = "direct",
+                 trans = "alr", 
+                 paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))
+
+  est_alr_cppad <- ppi(Y = propreal, method = "cppad",
+                 trans = "alr", 
+                 bdrythreshold = 1E-25,
+                 paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))
+  expect_equal(est_alr$est$paramvec, est_alr_cppad$est$paramvec)
+
 
 })
 

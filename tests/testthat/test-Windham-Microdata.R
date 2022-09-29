@@ -75,10 +75,11 @@ est_direct=ppi(Y = propreal,
 est_cppad=ppi(Y = propreal,
          method = "cppad", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
-         bdrythreshold = 1E-20)
+         bdrythreshold = 1E-20, shiftsize = 1E-20)
 expect_gt(length(est_direct$est$paramvec), 0)
 expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec)
 
+# prepare for robustness
 #initial values for robust estimators
 ALs=matrix(0,p-1,p-1)
 bL=matrix(0,p-1,1)
