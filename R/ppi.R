@@ -46,7 +46,6 @@ ppi <- function(Y, paramvec = NULL,
   stopifnot(length(usertheta) == ppithetalength(p))
 
   firstfit <- list()
-  estimator <- function(...){stop("Estimator function needs to be defined")}
   fitfun <- NA
 
   controls <- splitcontrol(control)
@@ -57,10 +56,6 @@ ppi <- function(Y, paramvec = NULL,
       if (usertheta_ppi_alr_gengamma_compatible(usertheta)){
         firstfit <- ppi_alr_gengamma(Y, betap = tail(usertheta, 1), w = w) #any theta is fine
         fitfun <- "ppi_alr_gengamma"
-        estimator <- function(Y, starttheta, isfixed, w){
-           out <- ppi_alr_gengamma(Y, betap = tail(starttheta, 1), w = w)
-           return(out$est$paramvec)
-        }
       }
     }
     if (man == "sphere"){ # a number of methods implemented
@@ -72,44 +67,24 @@ ppi <- function(Y, paramvec = NULL,
                             fromPPIparamvec(estparamvec))
           firstfit$SE <- "Not calculated."
           fitfun <- "dir_sqrt_minimah"
-          estimator <- function(Y, starttheta, isfixed, w){
-             out <- as.vector(dir_sqrt_minimah(Y, acut = acut, w = w))
-             return(t_sfi2u(out, starttheta, isfixed))
-          }
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
           firstfit <- estimator1(Y,acut = acut,incb = 0,
                             beta = fromPPIparamvec(usertheta)$beta,
                             w= w, computeSE = TRUE)
           fitfun <- "estimator1_zerob"
-          estimator <- function(Y, starttheta, isfixed, w){
-             out <- estimator1(Y, acut = acut, incb = 0, beta = fromPPIparamvec(starttheta)$beta, w = w)
-             return(out$est$paramvec)
-          }
         } else if (ppi_usertheta_estimator1_compatible_incb(usertheta)){
           firstfit <- estimator1(Y,acut = acut,incb = 1,
                             beta = fromPPIparamvec(usertheta)$beta,
                             w= w, computeSE = TRUE)
           fitfun <- "estimator1_incb"
-          estimator <- function(Y, starttheta, isfixed, w){
-             out <- estimator1(Y, acut = acut, incb = 1, beta = fromPPIparamvec(starttheta)$beta, w = w)
-             return(out$est$paramvec)
-          }
         } else if (utheta_estimatorall1_betap_compatible(usertheta)){
           firstfit <- ppi_sqrt_minimah_full(Y, acut, tail(fromPPIparamvec(usertheta)$beta, 1),
                                             w)
           fitfun <- "ppi_sqrt_minimah_betap"
-          estimator <- function(Y, starttheta, isfixed, w){
-             out <- ppi_sqrt_minimah_full(Y, acut, betap = tail(starttheta, 1), w = w)
-             return(out$est$paramvec)
-          }
         } else if (utheta_estimatorall1_full_compatible(usertheta)){
           firstfit <- ppi_sqrt_minimah_full(Y, acut, betap = NULL,
                                             w)
           fitfun <- "ppi_sqrt_minimah_full"
-          estimator <- function(Y, starttheta, isfixed, w){
-             out <-  ppi_sqrt_minimah_full(Y, acut, betap = NULL, w)
-             return(out$est$paramvec)
-          }
         }
       }
 
@@ -121,28 +96,12 @@ ppi <- function(Y, paramvec = NULL,
           firstfit$est <- c(list(paramvec = estparamvec),
                             fromPPIparamvec(estparamvec))
           firstfit$SE <- "Not calculated."
-          estimator <- function(Y, starttheta, isfixed, w){
-             out <- as.vector(dir_sqrt_prodh(Y, acut = acut, w = w))
-             return(t_sfi2u(out, starttheta, isfixed))
-          }
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
           firstfit <- ppi_sqrt_prodh_zerob(Y, acut, beta = fromPPIparamvec(usertheta)$beta, w)
           fitfun <- "ppi_sqrt_prodh_zerob"
-          estimator <- function(Y, starttheta, isfixed, w){
-             out <- estimator2(Y, acut = acut, incb = 0,
-                               beta0 = fromPPIparamvec(starttheta)$beta,
-                               w = w)
-             return(out$theta)
-          }
         } else if (ppi_usertheta_estimator1_compatible_incb(usertheta)){
           firstfit <- ppi_sqrt_prodh(Y, acut, beta = fromPPIparamvec(usertheta)$beta, w)
           fitfun <- "ppi_sqrt_prodh"
-          estimator <- function(Y, starttheta, isfixed, w){
-             out <- estimator2(Y, acut = acut, incb = 1,
-                               beta0 = fromPPIparamvec(starttheta)$beta,
-                               w = w)
-             return(out$theta)
-          }
         }
       }
     }
@@ -175,19 +134,6 @@ ppi <- function(Y, paramvec = NULL,
     firstfit[setdiff(names(firstfit), c("est", "SE", "info"))] <- NULL
     #
     fitfun <- "cppad"
-    estimator <- function(Y, starttheta, isfixed, w){
-      out <- ppi_cppad(Y, stheta = stheta, isfixed = isfixed,
-               bdrythreshold = bdrythreshold,
-               shiftsize = shiftsize,
-               approxorder = approxorder,
-               pow = pow,
-               man = man,
-               weightname = bdryweight,
-               acut = acut,
-               control = controls$Rcgmin,
-               w = w)
-      return(out$theta)
-    }
   }
 
   firstfit$info$method <- fitfun

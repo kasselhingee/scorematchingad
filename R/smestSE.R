@@ -25,16 +25,17 @@ cppadSE <- function(smofun, theta, utabl, ...){
 # @describeIn cppadSE Returns the matrix `invG/n`.
 cppadSEsq <- function(smofun, theta, utabl,
                       Jsmofun_u = NULL, Hsmofun_u = NULL,
-                      uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
+                      uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL, wboundary = NULL){
   sens <- -smobjhess(smofun, theta, utabl,
                      Hsmofun_u = Hsmofun_u,
                      uboundary = uboundary, boundaryapprox = boundaryapprox,
-                     approxorder = approxorder, w = w)
+                     approxorder = approxorder, w = w, wboundary = wboundary)
   gradsmoperpt <- smobjgrad_perpt(smofun, theta, utabl,
                   Jsmofun_u = Jsmofun_u,
                   uboundary = uboundary, boundaryapprox = boundaryapprox,
                   approxorder = approxorder)
   gradsmoperpt <- do.call(rbind, gradsmoperpt)
+  w <- c(w, wboundary)
   if (!is.null(w)) {
      gradsmoperpt <- w * gradsmoperpt} #each observation's Hyvarinen divergence weighted by w
   vargradsmo <- cov(gradsmoperpt)
