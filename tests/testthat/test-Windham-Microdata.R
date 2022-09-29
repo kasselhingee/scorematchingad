@@ -67,6 +67,17 @@ pzero*100
 ##Estimation
 ####################################
 
+# quick check of cppad vs direct
+est_direct=ppi(Y = propreal,
+         method = "direct", trans = "alr",
+         paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0))
+
+est_cppad=ppi(Y = propreal,
+         method = "cppad", trans = "alr",
+         paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+         bdrythreshold = 1E-20)
+expect_gt(length(est_direct$est$paramvec), 0)
+expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec)
 
 #initial values for robust estimators
 ALs=matrix(0,p-1,p-1)
@@ -96,28 +107,38 @@ sp=p-1
 #try simulating to see required maxden
 expect_silent(sim <- rppi(1000, beta0, ALs, bL, maxden = 0))
 
-#non-robust components (k^*=2 here)
-ind_weightA=matrix(0,sp,1)
-ind_weightA[3]=1
-ind_weightA[4]=1
 
 #calculate robust estimates
 cW=0.7
-ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
-  mats <- cdabyppi:::fromPPIparamvec(theta, p = ncol(Y))
-  return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
-}
-
 est1=ppi_robust(Y = propreal,
                 cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE),
                 method = "direct", trans = "alr",
                 paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                 paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
-
 #estimate of A_L:
-expect_snapshot_value(signif(fromPPIparamvec(est1$est$paramvec)$ALs,6), style = "json2")
+expect_snapshot_value(signif(est1$est$ALs,6), style = "json2")
 #estimate of beta:
-expect_snapshot_value(signif(fromPPIparamvec(est1$est$paramvec)$beta,6), style = "json2")
+expect_snapshot_value(signif(est1$est$beta,6), style = "json2")
+
+
+# check that restarting fp ends up in a quick finish
+est1b=ppi_robust(Y = propreal,
+                cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE),
+                method = "direct", trans = "alr",
+                paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+                paramvec_start = est1$est$paramvec,
+                fpcontrol = list(ConvergenceMetricThreshold = 1E-9)) #slightly larger to beat est1
+expect_equal(est1b$est$paramvec, est1$est$paramvec)
+
+# Doing the full fp search with cppad fitting took too long and with maxit = 100, the estimate was poor.
+# instead verify the est1 result
+browser()
+est2=ppi_robust(Y = propreal,
+                cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE),
+                method = "cppad", trans = "alr",
+                paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+                paramvec_start = est1$est$paramvec,
+                fpcontrol = list(PrintReports = TRUE))
 })
 
 
@@ -186,9 +207,6 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
   bL_est=bL
   ALs_est=ALs
   beta0_est=beta0
-
-  #non-robust components (k^*=4 here)
-  ind_weightA=matrix(0,p-1,1)
 
   #calculate robust estimates
   cW=1.25
