@@ -144,7 +144,8 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
 
   est_alr_cppad <- ppi(Y = propreal, method = "cppad",
                  trans = "alr", 
-                 bdrythreshold = 1E-25,
+                 bdrythreshold = 1E-15, shiftsize = 1E-15,
+                 approxorder = 100,
                  paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))
   expect_equal(est_alr$est$paramvec, est_alr_cppad$est$paramvec)
 
