@@ -116,7 +116,7 @@ test_that("Taylor Approx of Grad SMO gets correct value on boundary of simplex",
 })
 
 
-test_that("Test ppi() against direct when there are boundary points", {
+test_that("Test ppi() against direct when there are boundary points, with and without weights", {
   set.seed(123)
   m <- ppi_egmodel(100)
   #add some zeroes
@@ -139,6 +139,21 @@ test_that("Test ppi() against direct when there are boundary points", {
   est <- ppi(newsample, ppi_paramvec(p = 3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
   expect_equal(est$est$paramvec, direct$est$paramvec, tolerance = 1E-4)
+
+  # with weights!!
+  w <- runif(nrow(newsample))
+
+  direct <- ppi(newsample, 
+                paramvec = ppi_paramvec(p = ncol(newsample), betap = tail(m$beta0, 1)),
+                trans = "sqrt", bdryweight = "minsq", 
+                acut = acut,
+                w = w)
+
+  est <- ppi(newsample, ppi_paramvec(p = 3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+                   w = w,
+                   control = list(tol = 1E-10))
+  expect_equal(est$est$paramvec, direct$est$paramvec, tolerance = 1E-4)
+
 })
 
 test_that("Taylor approx of cppadSE gives suitable SE for estimates", {
@@ -158,7 +173,7 @@ test_that("Taylor approx of cppadSE gives suitable SE for estimates", {
   acut = 0.1
   est <- ppi(newsample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
-  cdabyppi:::expect_absdiff_lte_v(est$est$theta, m$theta, 3 * est$SE$theta)
+  cdabyppi:::expect_absdiff_lte_v(est$est$paramvec, m$theta, 3 * est$SE$paramvec)
   # note that the SE is a bit hard to test on here because the data has been truncated
 })
 
@@ -199,7 +214,7 @@ test_that("ppi() operates when minimal points in the interior", {
 
   est <- ppi(newsample, ppi_paramvec(betaL = m$beta0[1:2], betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                             control = list(tol = 1E-10))
-  expect_absdiff_lte_v(est$est$theta, direct$est$paramvec, 1E-1 * abs(direct$est$paramvec))
+  expect_absdiff_lte_v(est$est$paramvec, direct$est$paramvec, 1E-1 * abs(direct$est$paramvec))
 })
 
 test_that("Taylor approx of matches estimator1SE with data on the boundary", {
@@ -237,10 +252,10 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
 
   #comparisons isolated from the Rcgmin optimiser
   SE <- cppadSE(
-    tapes$smotape, theta = direct$est$paramvec[1:(length(intheta) - p)], datasplit$interior,
+    tapes$smotape, theta = direct$est$paramvec[1:(length(intheta) - m$p)], datasplit$interior,
     Jsmofun_u = Jsmofun_u,
     Hsmofun_u = Hsmofun_u,
     uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
     approxorder = 100)
-  expect_equal(SE, directSE[1:(length(intheta) - p)], tolerance = 1E-2)
+  expect_equal(SE, directSE[1:(length(intheta) - m$p)], tolerance = 1E-2)
 })
