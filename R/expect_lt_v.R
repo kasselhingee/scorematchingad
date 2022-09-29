@@ -20,6 +20,8 @@ expect_op_v <- function(object, expected, operation = function(x, y) x < y, comp
   act <- testthat::quasi_label(rlang::enquo(object), arg = "object")
 
   # check
+  stopifnot(length(expected) > 0) #important because passing vectors
+  stopifnot(length(object) > 0) #important because passing vectors
   if (length(expected) != length(object)){
     if (length(object) %% length(expected) == 0){
       expected <- rep(expected, length(object) / length(expected))
