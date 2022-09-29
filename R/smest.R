@@ -15,7 +15,7 @@
 #' @param control Optional argument passed to `Rcgmin::Rcgmin()`.
 #' @return The output from `Rcgmin::Rcgmin()`, the squared size of the gradient at the estimate, and the standard error estimates by `cppadSE()`.
 # @export
-cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL){
+cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL, wboundary = NULL){
   if (!(is.null(uboundary) && is.null(boundaryapprox))){
     stopifnot((!is.null(uboundary)) && (!is.null(boundaryapprox))) #both need to be supplied
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))
@@ -49,6 +49,7 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
                         uboundary = uboundary, boundaryapprox = boundaryapprox,
                         approxorder = approxorder,
                         w = w,
+                        wboundary = wboundary,
                         stopifnan = TRUE,
                         control = control)
   if (out$convergence == 2){
@@ -72,12 +73,13 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
       Jsmofun_u = Jsmofun_u, Hsmofun_u = Hsmofun_u,
       uboundary = uboundary, boundaryapprox = boundaryapprox,
       approxorder = approxorder,
-      w = w)})
+      w = w, wboundary = wboundary)})
   gradatest <- smobjgrad(smofun, out$par, utabl,
                          Jsmofun_u = Jsmofun_u,
                          uboundary = uboundary, boundaryapprox = boundaryapprox,
                          approxorder = approxorder,
-                         w = w)
+                         w = w,
+                         wboundary = wboundary)
   out$sqgradsize <- sum(gradatest)^2
   return(out)
 }
