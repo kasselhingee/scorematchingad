@@ -1,12 +1,13 @@
 test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 3", {
   skip_on_cran() #v slow
   set.seed(1234)
-  m <- ppi_egmodel(10000, maxden = 4)
+  m <- ppi_egmodel(100, maxden = 4)
 
   est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", bdryweight = "ones",
                          control = list(tol = 1E-10))
+  est_direct <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct")
 
-  est_direct <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], w = rep(1, nrow(m$sample)))
+  #est_direct <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], w = rep(1, nrow(m$sample)))
   expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec, tolerance = 1E-5)
 })
 
