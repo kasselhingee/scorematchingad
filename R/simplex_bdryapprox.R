@@ -35,12 +35,14 @@ simplex_isboundary <- function(utabl, bdrythreshold = 1E-15){
 }
 
 
-simplex_boundarysplit <- function(utabl, bdrythreshold = 1E-15, shiftsize = 1E-10){
+simplex_boundarysplit <- function(utabl, bdrythreshold = 1E-15, shiftsize = 1E-10, w = NULL){
   onbdry <- simplex_isboundary(utabl, bdrythreshold = bdrythreshold)
   acentres <- simplex_boundaryshift(utabl[onbdry, , drop = FALSE], shiftsize = shiftsize)
   return(list(
     interior = utabl[!onbdry, , drop = FALSE],
     uboundary = utabl[onbdry, , drop = FALSE],
-    boundaryapprox = acentres))
+    boundaryapprox = acentres,
+    winterior = w[!onbdry, drop = FALSE],  #when w NULL, then this is NULL too
+    wboundary = w[onbdry, drop = FALSE]))
 }
 

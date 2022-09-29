@@ -25,13 +25,14 @@ ppi_cppad <- function(prop, stheta, isfixed,
                 )
 
   # split data into boundary and interior
-  datasplit <- simplex_boundarysplit(prop, bdrythreshold = bdrythreshold, shiftsize = shiftsize)
+  datasplit <- simplex_boundarysplit(prop, bdrythreshold = bdrythreshold, shiftsize = shiftsize, w = w)
 
   opt <- cppadest(tapes$smotape, t_si2f(stheta, isfixed), datasplit$interior,
                uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
                approxorder = approxorder,
                control = control,
-               w = w)
+               w = datasplit$winterior,
+               wboundary = datasplit$wboundary)
 
   #process the theta and SE
   thetaest <- t_sfi2u(opt$par, stheta, isfixed)

@@ -11,6 +11,8 @@
 #' For best results these locations should be further from the manifold boundary and close to their corresponding measurements.
 #' Taylor approximation around the rows of `boundaryapprox` will be used to approximate the score matching objective for these measurements.
 #' @param stopifnan If TRUE function will create an error when the return is not a number.
+#' @param w Weights for the observations in `utabl`
+#' @param `wboundary` if provided must the weights for the observations in `uboundary`.
 #' @return The functions `*_sum` all return a value with an attribute 'normaliser' that is the normalising constant needed to turn the result into an average. The functions `smobj()`, `smobjgrad()`, `smobjhess()` are wrapper of the `*_sum` functions for easier testing and UI.
 # @export
 smobj <- function(...){ #smobj average of observations (i.e. smobj_sum / sum(w))
@@ -24,7 +26,8 @@ smobj <- function(...){ #smobj average of observations (i.e. smobj_sum / sum(w))
 # @describeIn smobj The sum of score-matching objective value (no division by n - useful for optimisation where floating point issues can accumulate)
 smobj_sum <- function(smofun, theta, utabl,
                   smofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
-                  stopifnan = FALSE, w = NULL){
+                  stopifnan = FALSE, w = NULL,
+                  wboundary = NULL){
   sc_perpt_interior <- c()
   if (nrow(utabl) > 0){
     sc_perpt_interior <- lapply(1:nrow(utabl), function(i){
@@ -35,7 +38,10 @@ smobj_sum <- function(smofun, theta, utabl,
 
   sc_perpt_boundary <- c()
   if (any(isTRUE(nrow(uboundary) > 0), isTRUE(nrow(boundaryapprox) > 0))){
-    stopifnot(all(!is.null(smofun_u), isTRUE(nrow(uboundary) > 0), isTRUE(nrow(boundaryapprox) > 0), !is.null(approxorder)))
+    stopifnot(!is.null(smofun_u))
+    stopifnot(isTRUE(nrow(uboundary) > 0))
+    stopifnot(isTRUE(nrow(boundaryapprox) > 0))
+    stopifnot(!is.null(approxorder))
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))
     sc_perpt_boundary <- lapply(1:nrow(uboundary), function(i){
       scobj <- pTaylorApprox(smofun_u, uboundary[i,], boundaryapprox[i, ], theta, order = approxorder)
@@ -43,6 +49,7 @@ smobj_sum <- function(smofun, theta, utabl,
     })
   }
   sc_perpt <- c(sc_perpt_interior, sc_perpt_boundary)
+  w <- c(w, wboundary)
   if (is.null(w)){
      nscmo <- sum(unlist(sc_perpt))
      attr(nscmo, "normaliser") <- length(sc_perpt)
@@ -72,10 +79,12 @@ smobjgrad <- function(...){ #smobjgrad average of observations (i.e. smobjgrad_s
 
 smobjgrad_sum <- function(smofun, theta, utabl,
                       Jsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
-                      stopifnan = FALSE, w = NULL){
+                      stopifnan = FALSE, w = NULL,
+                      wboundary = NULL){
   grad_perpt <- smobjgrad_perpt(smofun, theta, utabl,
                   Jsmofun_u = Jsmofun_u, uboundary = uboundary, boundaryapprox = boundaryapprox,
                   approxorder = approxorder)
+  w = c(w, wboundary)
   grad_perpt <- do.call(rbind, grad_perpt)
   if (is.null(w)){
     ngrad <- colSums(grad_perpt)
@@ -129,7 +138,7 @@ smobjhess <- function(...){ #smobjgrad average of observations (i.e. smobjgrad_s
 }
 smobjhess_sum <- function(smofun, theta, utabl,
                       Hsmofun_u = NULL, uboundary = NULL, boundaryapprox = NULL, approxorder = NULL,
-                      stopifnan = FALSE, w = NULL){
+                      stopifnan = FALSE, w = NULL, wboundary = NULL){
   hess_perpt_interior <- list()
   if (nrow(utabl) > 0){
     hess_perpt_interior <- lapply(1:nrow(utabl), function(i){
@@ -149,6 +158,7 @@ smobjhess_sum <- function(smofun, theta, utabl,
   }
 
   hess_perpt <- c(hess_perpt_interior, hess_perpt_boundary)
+  w <- c(w, wboundary)
   hess_perpt <- do.call(rbind, hess_perpt)
   if (is.null(w)){
     nhess <- colSums(hess_perpt)

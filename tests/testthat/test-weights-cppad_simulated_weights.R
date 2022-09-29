@@ -36,6 +36,85 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
   expect_equal(smohess_sim, smohess_direct)
 })
 
+test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constant weights with boundary data", {
+  intheta <- cdabyppi:::ppi_paramvec(m$p)
+
+  ds <- simplex_boundarysplit(m$sample, bdrythreshold = 1E-2, shiftsize = 1E-5, w = vw$w)
+  nds <- simplex_boundarysplit(vw$newY, bdrythreshold = 1E-2, shiftsize = 1E-5)
+
+  tapes <- buildsmotape("sphere", "ppi",
+                        m$sample[1, ], intheta,
+                        weightname = "minsq",
+                        acut = acut)
+
+  #extra tapes for approximation
+  smofun_u <- swapDynamic(tapes$smotape, m$sample[1, ], m$theta) #don't use a boundary point here!
+  Jsmofun_u <- pTapeJacobianSwap(tapes$smotape, m$theta, m$sample[1, ])
+  Hsmofun_u <- pTapeHessianSwap(tapes$smotape, m$theta, m$sample[1, ])
+
+
+  smo_sim <- smobj(tapes$smotape, 
+                   theta = m$theta, 
+                   utabl = nds$interior, 
+                   smofun_u = smofun_u,
+                   uboundary = nds$uboundary,
+                   boundaryapprox = nds$boundaryapprox,
+                   approxorder = 10,
+                   w = nds$winterior,
+                   wboundary = nds$wboundary)
+  smo_direct <- smobj(tapes$smotape, 
+                   theta = m$theta, 
+                   utabl = ds$interior, 
+                   smofun_u = smofun_u,
+                   uboundary = ds$uboundary,
+                   boundaryapprox = ds$boundaryapprox,
+                   approxorder = 10,
+                   w = ds$winterior,
+                   wboundary = ds$wboundary)
+  expect_equal(smo_sim, smo_direct)
+
+  smograd_sim <- smobjgrad(tapes$smotape, 
+                   theta = m$theta, 
+                   utabl = nds$interior, 
+                   Jsmofun_u = Jsmofun_u,
+                   uboundary = nds$uboundary,
+                   boundaryapprox = nds$boundaryapprox,
+                   approxorder = 10,
+                   w = nds$winterior,
+                   wboundary = nds$wboundary)
+  smograd_direct <- smobjgrad(tapes$smotape, 
+                   theta = m$theta, 
+                   utabl = ds$interior, 
+                   Jsmofun_u = Jsmofun_u,
+                   uboundary = ds$uboundary,
+                   boundaryapprox = ds$boundaryapprox,
+                   approxorder = 10,
+                   w = ds$winterior,
+                   wboundary = ds$wboundary)
+  expect_equal(smograd_sim, smograd_direct)
+
+  smohess_sim <- smobjhess(tapes$smotape, 
+                   theta = m$theta, 
+                   utabl = nds$interior, 
+                   Hsmofun_u = Hsmofun_u,
+                   uboundary = nds$uboundary,
+                   boundaryapprox = nds$boundaryapprox,
+                   approxorder = 10,
+                   w = nds$winterior,
+                   wboundary = nds$wboundary)
+  smohess_direct <- smobjhess(tapes$smotape, 
+                   theta = m$theta, 
+                   utabl = ds$interior, 
+                   Hsmofun_u = Hsmofun_u,
+                   uboundary = ds$uboundary,
+                   boundaryapprox = ds$boundaryapprox,
+                   approxorder = 10,
+                   w = ds$winterior,
+                   wboundary = ds$wboundary)
+  expect_equal(smohess_sim, smohess_direct)
+})
+
+
 test_that("cppadest() for ppi with minsq match itself and estimatorall1", {
   psphere <- pmanifold("sphere")
   pppi <- ptapell(rep(0.1, m$p), m$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
