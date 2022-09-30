@@ -133,13 +133,13 @@ expect_equal(est1b$est$paramvec, est1$est$paramvec)
 
 # Doing the full fp search with cppad fitting took too long and with maxit = 100, the estimate was poor.
 # instead verify the est1 result
-browser()
 est2=ppi_robust(Y = propreal,
                 cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE),
                 method = "cppad", trans = "alr",
                 paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                 paramvec_start = est1$est$paramvec,
                 fpcontrol = list(PrintReports = TRUE))
+expect_equal(est2$est$paramvec, est1$est$paramvec)
 })
 
 
