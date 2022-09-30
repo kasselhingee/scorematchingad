@@ -27,6 +27,10 @@ ppi_cppad <- function(prop, stheta, isfixed,
   # split data into boundary and interior
   datasplit <- simplex_boundarysplit(prop, bdrythreshold = bdrythreshold, shiftsize = shiftsize, w = w)
 
+  numboundarypoints <- switch(1 + is.null(datasplit$uboundary), 
+                           nrow(datasplit$uboundary),
+                           0)
+
   opt <- cppadest(tapes$smotape, t_si2f(stheta, isfixed), datasplit$interior,
                uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
                approxorder = approxorder,
@@ -50,7 +54,8 @@ ppi_cppad <- function(prop, stheta, isfixed,
     sqgradsize = opt$sqgradsize,
     counts = opt$counts,
     convergence = opt$convergence,
-    message = opt$convergence
+    message = opt$convergence,
+    boundarypoints = numboundarypoints
     )
 }
 
