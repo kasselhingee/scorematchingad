@@ -6,7 +6,19 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 3", {
                          control = list(tol = 1E-10))
   est_direct <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct")
 
-  #est_direct <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], w = rep(1, nrow(m$sample)))
+  expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec)
+})
+
+test_that("ppi_alr_gengamma matches CppAD method for constant weight and data with zeros, p = 3", {
+  set.seed(1234)
+  m <- ppi_egmodel(100, maxden = 4)
+  dsample <- round(m$sample * 100)/100
+
+  est_direct <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct")
+  est_cppad <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", bdryweight = "ones",
+                         bdrythreshold = 1E-200,
+                         control = list(tol = 1E-20))
+
   expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec)
 })
 
