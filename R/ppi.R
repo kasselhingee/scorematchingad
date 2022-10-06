@@ -33,6 +33,13 @@ ppi <- function(Y, paramvec = NULL,
   # process inputs
   stopifnot("matrix" %in% class(Y))
   p = ncol(Y)
+  if (any(Y < 0)){
+     warning(sprintf("Y contains %i negative values.", sum(Y < 0)))
+  }
+  if (any(rowSums(Y) != 1)){
+     warning(paste("Y contains measurement that don't add to 1. Largest discrepancy is", max(abs(rowSums(Y) - 1))))
+  }
+
   stopifnot(pow == 1)
   stopifnot(trans %in% c("alr", "sqrt", "none"))
   man <- switch(trans,
