@@ -79,7 +79,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
                sum(smobjgrad(ppitapes$smotape, c(rep(0, length(theta) - p), directestimate), utabl)^2))
 
   cppadSE <- fromPPIparamvec(out$SE, p)
-  cdabyppi:::expect_lt_v(abs(cppadest$beta0 - directestimate)[1:3] / cppadSE$beta0[1:3], 1)
+  cdabyppi:::expect_absdiff_lte_v(cppadest$beta[1:3], directestimate[1:3], cppadSE$beta[1:3])
   expect_lt(abs(cppadest$beta - directestimate)[4] / cppadSE$beta[4], 3) #largest beta is hard to estimate well
 
   cdabyppi:::expect_lt_v(abs(out$par - theta) / out$SE, 3)#assuming normally distributed with SE given by SE above
@@ -106,8 +106,8 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
   expect_equal(out$info$sqgradsize,
                sum(smobjgrad(ppitapes$smotape, directestimate$est$paramvec[1:(length(model$theta)-3)], model$sample)^2))
 
-  cdabyppi:::expect_lte_v(abs(out$est$theta - directestimate$est$paramvec), 0.01 * out$SE$theta) #proxy for optimisation flatness
-  cdabyppi:::expect_lte_v(abs(out$est$theta - model$theta), 2 * out$SE$theta)
+  cdabyppi:::expect_absdiff_lte_v(out$est$paramvec, directestimate$est$paramvec, 0.01 * out$SE$theta) #proxy for optimisation flatness
+  cdabyppi:::expect_absdiff_lte_v(out$est$theta, model$theta, 2 * out$SE$theta)
 })
 
 test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmodel", {
@@ -131,9 +131,9 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmo
   expect_equal(out$info$sqgradsize,
                sum(smobjgrad(ppitapes$smotape, directestimate$estimator2, model$sample)^2))
 
-  cdabyppi:::expect_lte_v(abs(out$est$theta - c(directestimate$estimator2, model$beta0)), 0.01 * out$SE$theta) #proxy for optimisation flatness
+  cdabyppi:::expect_absdiff_lte_v(out$est$paramvec, c(directestimate$estimator2, model$beta0), 0.01 * out$SE$paramvec) #proxy for optimisation flatness
 
-  cdabyppi:::expect_lte_v(abs(out$est$theta - model$theta), 3 * out$SE$theta)
+  cdabyppi:::expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
 
 test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero params", {
@@ -171,9 +171,9 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
   expect_equal(out$info$sqgradsize,
                sum(smobjgrad(ppitapes$smotape, directestimate$estimator1, utabl)^2))
 
-  cdabyppi:::expect_lt_v(abs(out$est$theta - directestimate$estimator1), out$SE$theta) #proxy for optimisation flatness
+  cdabyppi:::expect_absdiff_lt_v(out$est$paramvec, directestimate$estimator1, out$SE$paramvec) #proxy for optimisation flatness
 
-  cdabyppi:::expect_lt_v(abs(out$est$theta - theta), 3 * out$SE$theta)
+  cdabyppi:::expect_absdiff_lt_v(out$est$paramvec, theta, 3 * out$SE$paramvec)
 })
 
 test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel", {
