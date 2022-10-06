@@ -58,7 +58,7 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 5", {
   expect_lt(smobj(tapes$smotape, est_direct$est$paramvec[is.na(thetain)], prop), est_cppad$info$smval)
 
   # check that estimates via cppad are close to direct
-  expect_absdiff_lte_v(est_direct$est$paramvec[is.na(thetain)], est_cppad$est$theta[is.na(thetain)],
+  expect_absdiff_lte_v(est_direct$est$paramvec[is.na(thetain)], est_cppad$est$paramvec[is.na(thetain)],
                        1.2 * est_direct_SE) #the smovals are quite flat in the ALs dimensions for this region!
   # and that the beta estimates are really close to each other
   expect_equal(fromPPIparamvec(est_direct$est$paramvec)$beta, est_cppad$est$beta, tolerance = 1E-3)
