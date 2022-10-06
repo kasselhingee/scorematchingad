@@ -69,7 +69,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   set.seed(1245)
   model <- ppi_egmodel(100)
   out <- ppi(model$sample, trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad", control = list(tol = 1E-10))
-  cdabyppi:::expect_absdiff_lt_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
+  cdabyppi:::expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 
   # try fixing betap
   out <- ppi(model$sample, ppi_paramvec(p = 3, betap = -0.5), trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad", control = list(tol = 1E-10))
