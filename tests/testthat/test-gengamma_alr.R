@@ -9,10 +9,152 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 3", {
   expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec)
 })
 
+test_that("Direct estimate has low smgrad values", {
+  mnongamma <- ppi_egmodel(1)
+  theta <- ppi_paramvec(beta = c(-0.95, -0.9, 0.5), AL = mnongamma$AL, bL = 0)
+  set.seed(1234)
+  Ycts <- rppi(1000, paramvec = theta)
+  dsample <- round(Ycts * 100)/ 100
+  dsample[, 3] <- 1 - rowSums(dsample[, 1:2])
+  colMeans(dsample == 0)
+  mean(apply(dsample, 1, min) == 0)  #0.96
+
+  usertheta = ppi_paramvec(p = ncol(dsample),
+                           bL = 0,
+                           betap = tail(theta, 1))
+  est_direct <- ppi(dsample, paramvec = usertheta, trans = "alr", method = "direct")
+
+  smotapes <- buildsmotape(manifoldname = "Ralr",
+                         llname = "ppi",
+                         utape = rep(1, ncol(dsample))/ncol(dsample),
+                         usertheta = usertheta,
+                         weightname = "ones", 
+                         acut = 1,
+                         thetatape_creator = function(n){seq(length.out = n)},
+                         verbose = FALSE)
+   
+  eginteriorpt <- rep(1, ncol(dsample))/ncol(dsample) 
+  theta_for_taping <- t_si2f(smotapes$info$starttheta, smotapes$info$isfixed)
+  smofun_u <- swapDynamic(smotapes$smotape, eginteriorpt, theta_for_taping)
+  Jsmofun_u <- pTapeJacobianSwap(smotapes$smotape, theta_for_taping, eginteriorpt)
+  Hsmofun_u <- pTapeHessianSwap(smotapes$smotape, theta_for_taping, eginteriorpt)
+
+  datasplit <- simplex_boundarysplit(dsample, 
+                         bdrythreshold = 1E-10, 
+                         shiftsize = 1E-10)
+
+  objval <- smobj(smofun = smotapes$smotape,
+        theta = t_si2f(est_direct$est$paramvec, smotapes$info$isfixed),
+        utabl = datasplit$interior,
+        smofun_u = smofun_u,
+        uboundary = datasplit$uboundary,
+        boundaryapprox = datasplit$boundaryapprox,
+        approxorder = 10
+        )
+
+  objval_model <- smobj(smofun = smotapes$smotape,
+        theta = t_si2f(theta, smotapes$info$isfixed),
+        utabl = datasplit$interior,
+        smofun_u = smofun_u,
+        uboundary = datasplit$uboundary,
+        boundaryapprox = datasplit$boundaryapprox,
+        approxorder = 10
+        )
+  expect_lt(objval, objval_model) #because for any given sample the estimate would be better than the true value
+
+  gradval <- smobjgrad(smofun = smotapes$smotape,
+        theta = t_si2f(est_direct$est$paramvec, smotapes$info$isfixed),
+        utabl = datasplit$interior,
+        Jsmofun_u = Jsmofun_u,
+        uboundary = datasplit$uboundary,
+        boundaryapprox = datasplit$boundaryapprox,
+        approxorder = 10
+        )
+  
+  gradval_model <- smobjgrad(smofun = smotapes$smotape,
+        theta = t_si2f(theta, smotapes$info$isfixed),
+        utabl = datasplit$interior,
+        Jsmofun_u = Jsmofun_u,
+        uboundary = datasplit$uboundary,
+        boundaryapprox = datasplit$boundaryapprox,
+        approxorder = 10
+        )
+  expect_lt_v(abs(gradval), abs(gradval_model)) #because the estimate will be better for any given sample
+  expect_lt_v(abs(gradval), rep(1E-10, length(gradval)))
+})
+
+test_that("model theta has low cppad smgrad values for rounded data with zeroes", {
+  # my guess is that this works when the direct estimate is close to the model theta
+  mnongamma <- ppi_egmodel(1)
+  theta <- ppi_paramvec(beta = c(-0.95, -0.9, 0.5), AL = mnongamma$AL, bL = 0)
+  set.seed(1234)
+  Ycts <- rppi(10000, paramvec = theta)
+  dsample <- round(Ycts * 100)/ 100
+  dsample[, 3] <- 1 - rowSums(dsample[, 1:2])
+  colMeans(dsample == 0)
+  mean(apply(dsample, 1, min) == 0)
+
+  usertheta = ppi_paramvec(p = ncol(dsample),
+                           bL = 0,
+                           betap = tail(theta, 1))
+  est_direct <- ppi(dsample, paramvec = usertheta, trans = "alr", method = "direct")
+  stopifnot(mean(abs(est_direct$est$paramvec - theta)) < 15)
+
+  smotapes <- buildsmotape(manifoldname = "Ralr",
+                         llname = "ppi",
+                         utape = rep(1, ncol(dsample))/ncol(dsample),
+                         usertheta = usertheta,
+                         weightname = "ones", 
+                         acut = 1,
+                         thetatape_creator = function(n){seq(length.out = n)},
+                         verbose = FALSE)
+   
+  eginteriorpt <- rep(1, ncol(dsample))/ncol(dsample) 
+  theta_for_taping <- t_si2f(smotapes$info$starttheta, smotapes$info$isfixed)
+  smofun_u <- swapDynamic(smotapes$smotape, eginteriorpt, theta_for_taping)
+  Jsmofun_u <- pTapeJacobianSwap(smotapes$smotape, theta_for_taping, eginteriorpt)
+  Hsmofun_u <- pTapeHessianSwap(smotapes$smotape, theta_for_taping, eginteriorpt)
+
+  datasplit <- simplex_boundarysplit(dsample, 
+                         bdrythreshold = 1E-10, 
+                         shiftsize = 1E-10)
+
+  objval <- smobj(smofun = smotapes$smotape,
+        theta = t_si2f(theta, smotapes$info$isfixed),
+        utabl = datasplit$interior,
+        smofun_u = smofun_u,
+        uboundary = datasplit$uboundary,
+        boundaryapprox = datasplit$boundaryapprox,
+        approxorder = 10
+        )
+
+  gradval <- smobjgrad(smofun = smotapes$smotape,
+        theta = t_si2f(theta, smotapes$info$isfixed),
+        utabl = datasplit$interior,
+        Jsmofun_u = Jsmofun_u,
+        uboundary = datasplit$uboundary,
+        boundaryapprox = datasplit$boundaryapprox,
+        approxorder = 10
+        )
+
+  expect_lt_v(abs(gradval), rep(1E-5, sum(!smotapes$info$isfixed)))
+
+  gradval_direct_est <- smobjgrad(smofun = smotapes$smotape,
+        theta = t_si2f(est_direct$est$paramvec, smotapes$info$isfixed),
+        utabl = datasplit$interior,
+        Jsmofun_u = Jsmofun_u,
+        uboundary = datasplit$uboundary,
+        boundaryapprox = datasplit$boundaryapprox,
+        approxorder = 10
+        )
+  expect_lt_v(abs(gradval_direct_est), rep(1E-5, sum(!smotapes$info$isfixed)))
+})
+
 test_that("ppi_alr_gengamma matches CppAD method for constant weight and data with zeros, p = 3", {
   set.seed(1234)
   m <- ppi_egmodel(100, maxden = 4)
   dsample <- round(m$sample * 100)/100
+  dsample[, 3] <- 1 - rowSums(dsample[, 1:2])
 
   est_direct <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct")
   est_cppad <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", bdryweight = "ones",
