@@ -75,7 +75,7 @@ directvals <- ppi_cppad_values(propreal,
          acut = 1)
 expect_lt_v(directvals$grad, rep(1E-15, length(directvals$grad))) 
 
-skip("cppad estimate takes hours")
+skip("next calculation, the cppad estimate, takes hours")
 system.time({est_cppad=ppi(Y = propreal,
          method = "cppad", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
