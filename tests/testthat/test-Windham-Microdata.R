@@ -75,13 +75,14 @@ directvals <- ppi_cppad_values(propreal,
          acut = 1)
 expect_lt_v(directvals$grad, rep(1E-15, length(directvals$grad))) 
 
-est_cppad=ppi(Y = propreal,
+system.time({est_cppad=ppi(Y = propreal,
          method = "cppad", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
          bdrythreshold = 1E-20, shiftsize = 1E-20,
-         control = list(maxit = 1E5, tol = 1E-20 * n))
+         control = list(maxit = 1E5, tol = 1E-20 * n))})
 # the defaults for Rcgmin are meaning the estimate takes too long to converge!
-# from the default starting parameter vec it takes many more iterations than normal to get to converge to the correct result. In this case 43961 evaluations of the gradient.
+# from the default starting parameter vec it takes many more iterations than normal to get to converge to the correct result. In this case of default tolerance, then 43961 evaluations of the gradient.
+# With current tolerance of 1E-20*n, then 4559 seconds (1.3 hours), 81479 grad evaluations.
 expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec, tolerance = 1E-3)
 })
 
