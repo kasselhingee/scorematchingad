@@ -84,7 +84,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   prop <- rppi(100, beta, AL, bL, maxden=4)
   theta <- toPPIparamvec(AL, bL, beta)
   out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", betap = -0.5), trans = "sqrt", bdryweight = "minsq", acut = 0.1, method = "cppad", control = list(tol = 1E-10))
-  cdabyppi:::expect_lte_v(abs(out$est$theta - theta), 3 * out$SE$theta)
+  cdabyppi:::expect_lte_v(abs(out$est$paramvec - theta), 3 * out$SE$paramvec)
   expect_equal(out$est$beta[model$p], -0.5)
   expect_equal(out$est$ALs[1, 2], 0)
 
