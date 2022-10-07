@@ -1,6 +1,5 @@
 skip_on_cran() #too slow
 
-test_that("robust ppi via alr estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
 data("microdata", package = "cdabyppi")
 countdata=as.matrix(microdata[,12:31])
 
@@ -62,23 +61,31 @@ for (j in 1:p)
 pzero=pzero/n
 pzero*100
 
-
-##############################
-##Estimation
-####################################
+test_that("direct alr estimator matches cppad calculations for Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
 
 # quick check of cppad vs direct
 est_direct=ppi(Y = propreal,
          method = "direct", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0))
+directvals <- ppi_cppad_values(propreal,
+         stheta = est_direct$est$paramvec,
+         isfixed = t_u2i(ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0)),
+         man = "Ralr",
+         hsqfun = "ones", 
+         acut = 1)
+expect_lt_v(directvals$grad, rep(1E-15, length(directvals$grad))) 
 
 est_cppad=ppi(Y = propreal,
          method = "cppad", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
-         bdrythreshold = 1E-20, shiftsize = 1E-20)
-expect_gt(length(est_direct$est$paramvec), 0)
-expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec)
+         bdrythreshold = 1E-20, shiftsize = 1E-20,
+         control = list(maxit = 1E5, tol = 1E-20 * n))
+# the defaults for Rcgmin are meaning the estimate takes too long to converge!
+# from the default starting parameter vec it takes many more iterations than normal to get to converge to the correct result. In this case 43961 evaluations of the gradient.
+expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec, tolerance = 1E-3)
+})
 
+test_that("robust ppi via alr estimator matches historical results on dataset with Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
 # prepare for robustness
 #initial values for robust estimators
 ALs=matrix(0,p-1,p-1)
@@ -138,7 +145,8 @@ est2=ppi_robust(Y = propreal,
                 method = "cppad", trans = "alr",
                 paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                 paramvec_start = est1$est$paramvec,
-                fpcontrol = list(PrintReports = TRUE))
+                control = list(maxit = 1E-5),
+                fpcontrol = list(PrintReports = TRUE, MaxIter = 5))
 expect_equal(est2$est$paramvec, est1$est$paramvec)
 })
 

@@ -24,63 +24,23 @@ test_that("Direct estimate has low smgrad values", {
                            betap = tail(theta, 1))
   est_direct <- ppi(dsample, paramvec = usertheta, trans = "alr", method = "direct")
 
-  smotapes <- buildsmotape(manifoldname = "Ralr",
-                         llname = "ppi",
-                         utape = rep(1, ncol(dsample))/ncol(dsample),
-                         usertheta = usertheta,
-                         weightname = "ones", 
-                         acut = 1,
-                         thetatape_creator = function(n){seq(length.out = n)},
-                         verbose = FALSE)
-   
-  eginteriorpt <- rep(1, ncol(dsample))/ncol(dsample) 
-  theta_for_taping <- t_si2f(smotapes$info$starttheta, smotapes$info$isfixed)
-  smofun_u <- swapDynamic(smotapes$smotape, eginteriorpt, theta_for_taping)
-  Jsmofun_u <- pTapeJacobianSwap(smotapes$smotape, theta_for_taping, eginteriorpt)
-  Hsmofun_u <- pTapeHessianSwap(smotapes$smotape, theta_for_taping, eginteriorpt)
+  directvals <- ppi_cppad_values(dsample,
+         stheta = est_direct$est$paramvec,
+         isfixed = t_u2i(usertheta),
+         man = "Ralr",
+         hsqfun = "ones", 
+         acut = 1)
+  modelvals <- ppi_cppad_values(dsample,
+         stheta = theta,
+         isfixed = t_u2i(usertheta),
+         man = "Ralr",
+         hsqfun = "ones", 
+         acut = 1)
 
-  datasplit <- simplex_boundarysplit(dsample, 
-                         bdrythreshold = 1E-10, 
-                         shiftsize = 1E-10)
+  expect_lt(directvals$obj, modelvals$obj) #because for any given sample the estimate would be better than the true value
 
-  objval <- smobj(smofun = smotapes$smotape,
-        theta = t_si2f(est_direct$est$paramvec, smotapes$info$isfixed),
-        utabl = datasplit$interior,
-        smofun_u = smofun_u,
-        uboundary = datasplit$uboundary,
-        boundaryapprox = datasplit$boundaryapprox,
-        approxorder = 10
-        )
-
-  objval_model <- smobj(smofun = smotapes$smotape,
-        theta = t_si2f(theta, smotapes$info$isfixed),
-        utabl = datasplit$interior,
-        smofun_u = smofun_u,
-        uboundary = datasplit$uboundary,
-        boundaryapprox = datasplit$boundaryapprox,
-        approxorder = 10
-        )
-  expect_lt(objval, objval_model) #because for any given sample the estimate would be better than the true value
-
-  gradval <- smobjgrad(smofun = smotapes$smotape,
-        theta = t_si2f(est_direct$est$paramvec, smotapes$info$isfixed),
-        utabl = datasplit$interior,
-        Jsmofun_u = Jsmofun_u,
-        uboundary = datasplit$uboundary,
-        boundaryapprox = datasplit$boundaryapprox,
-        approxorder = 10
-        )
-  
-  gradval_model <- smobjgrad(smofun = smotapes$smotape,
-        theta = t_si2f(theta, smotapes$info$isfixed),
-        utabl = datasplit$interior,
-        Jsmofun_u = Jsmofun_u,
-        uboundary = datasplit$uboundary,
-        boundaryapprox = datasplit$boundaryapprox,
-        approxorder = 10
-        )
-  expect_lt_v(abs(gradval), abs(gradval_model)) #because the estimate will be better for any given sample
-  expect_lt_v(abs(gradval), rep(1E-10, length(gradval)))
+  expect_lt_v(abs(directvals$grad), abs(modelvals$grad)) #because the estimate will be better for any given sample
+  expect_lt_v(abs(directvals$grad), rep(1E-10, length(directvals$grad)))
 })
 
 test_that("ppi_alr_gengamma matches CppAD method for constant weight and data with zeros, p = 3", {
