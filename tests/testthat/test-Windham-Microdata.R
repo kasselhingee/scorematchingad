@@ -75,6 +75,7 @@ directvals <- ppi_cppad_values(propreal,
          acut = 1)
 expect_lt_v(directvals$grad, rep(1E-15, length(directvals$grad))) 
 
+skip("cppad estimate takes hours")
 system.time({est_cppad=ppi(Y = propreal,
          method = "cppad", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
@@ -141,14 +142,25 @@ expect_equal(est1b$est$paramvec, est1$est$paramvec)
 
 # Doing the full fp search with cppad fitting took too long and with maxit = 100, the estimate was poor.
 # instead verify the est1 result
-est2=ppi_robust(Y = propreal,
-                cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE),
-                method = "cppad", trans = "alr",
-                paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
-                paramvec_start = est1$est$paramvec,
-                control = list(maxit = 1E-5),
-                fpcontrol = list(PrintReports = TRUE, MaxIter = 5))
-expect_equal(est2$est$paramvec, est1$est$paramvec)
+ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
+  mats <- fromPPIparamvec(theta, p = ncol(Y))
+  return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
+}
+
+weights <- Windham_weights(ldenfun = ldenfun, Y = propreal,
+                theta = est1b$est$paramvec,
+                cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE))
+
+tauctheta <- (1 + ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE))*est1b$est$paramvec
+
+vals <- ppi_cppad_values(propreal,
+         stheta = tauctheta,
+         isfixed = t_u2i(ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0)),
+         man = "Ralr",
+         hsqfun = "ones", 
+         acut = 1,
+         w = weights)
+expect_lt(sum(vals$grad^2), 1E-10)
 })
 
 
