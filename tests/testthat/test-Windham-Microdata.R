@@ -1,5 +1,6 @@
 skip_on_cran() #too slow
 
+##### Prepare First Data Set #####
 data("microdata", package = "cdabyppi")
 countdata=as.matrix(microdata[,12:31])
 
@@ -26,9 +27,7 @@ for (j in 1:n)
 
 
 
-##########################################################
-##Reduce dimensions to p=5
-##########################################################
+###Reduce dimensions to p=5
 
 
 #calculate 5D dataset
@@ -71,9 +70,9 @@ directvals <- ppi_cppad_values(propreal,
          stheta = est_direct$est$paramvec,
          isfixed = t_u2i(ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0)),
          man = "Ralr",
-         hsqfun = "ones", 
+         hsqfun = "ones",
          acut = 1)
-expect_lt_v(directvals$grad, rep(1E-15, length(directvals$grad))) 
+expect_lt_v(directvals$grad, rep(1E-15, length(directvals$grad)))
 
 skip("next calculation, the cppad estimate, takes hours")
 system.time({est_cppad=ppi(Y = propreal,
@@ -120,8 +119,9 @@ expect_silent(sim <- rppi(1000, beta0, ALs, bL, maxden = 0))
 
 #calculate robust estimates
 cW=0.7
+cWvec <- ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE)
 est1=ppi_robust(Y = propreal,
-                cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE),
+                cW = cWvec,
                 method = "direct", trans = "alr",
                 paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                 paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
@@ -133,7 +133,7 @@ expect_snapshot_value(signif(est1$est$beta,6), style = "json2")
 
 # check that restarting fp ends up in a quick finish
 est1b=ppi_robust(Y = propreal,
-                cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE),
+                cW = cWvec,
                 method = "direct", trans = "alr",
                 paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                 paramvec_start = est1$est$paramvec,
@@ -141,29 +141,28 @@ est1b=ppi_robust(Y = propreal,
 expect_equal(est1b$est$paramvec, est1$est$paramvec)
 
 # Doing the full fp search with cppad fitting took too long and with maxit = 100, the estimate was poor.
-# instead verify the est1 result
+# instead verify the est1 result. The Windham solution theta is such that tauc(theta) = T(F weighted by c,theta)
 ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
   mats <- fromPPIparamvec(theta, p = ncol(Y))
   return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
 }
 
 weights <- Windham_weights(ldenfun = ldenfun, Y = propreal,
-                theta = est1b$est$paramvec,
-                cW = ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE))
+                theta = est1$est$paramvec,
+                cW = cWvec)
+expect_lt(max(abs(est1$info$finalweights - weights)), 1E-10)
 
-tauctheta <- (1 + ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE))*est1b$est$paramvec
-
-vals <- ppi_cppad_values(propreal,
-         stheta = tauctheta,
+vals <- ppi_cppad_values(prop = propreal,
+         stheta = est1$est$paramvec * (1 + cWvec), #this is Tauc(theta), which should be the solution to the weighted estimator
          isfixed = t_u2i(ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0)),
          man = "Ralr",
-         hsqfun = "ones", 
+         hsqfun = "ones",
          acut = 1,
          w = weights)
 expect_lt(sum(vals$grad^2), 1E-10)
 })
 
-
+#### Test Second Data Set ####
 
 test_that("robust ppi via alr estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
   data("microdata", package = "cdabyppi")
@@ -190,9 +189,7 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
     prop[j,]=countdata[j,]/tot[j]
   }
 
-  ##########################################################
   ##Reduce dimensions to p=5
-  ##########################################################
 
 
   #dimension
@@ -214,9 +211,7 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
   propreal=comb
   proprealA=propreal
 
-  ##############################
   ##Estimation
-  ####################################
 
   #initial values for robust estimators
   ALs=matrix(-10000,p-1,p-1)

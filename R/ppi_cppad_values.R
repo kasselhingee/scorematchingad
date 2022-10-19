@@ -30,10 +30,6 @@ ppi_cppad_values <- function(prop, stheta, isfixed,
   Jsmofun_u <- pTapeJacobianSwap(tapes$smotape, theta_for_taping, eginteriorpt)
   Hsmofun_u <- pTapeHessianSwap(tapes$smotape, theta_for_taping, eginteriorpt)
 
-  datasplit <- simplex_boundarysplit(prop, 
-                         bdrythreshold = bdrythreshold, 
-                         shiftsize = shiftsize)
-
   objval <- smobj(smofun = tapes$smotape,
         theta = t_si2f(stheta, tapes$info$isfixed),
         utabl = datasplit$interior,
