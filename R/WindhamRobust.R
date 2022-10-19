@@ -1,5 +1,5 @@
 #' @title Windham Robustness for Estimators of Exponential Family Distributions
-#' @description Performs Windham's robustness method [ref Windham 1995] for point estimators of many exponential family distributions. `WindhamRobust` works for any distribution with density proportional to 
+#' @description Performs Windham's robustness method [ref Windham 1995] for point estimators of many exponential family distributions. `WindhamRobust` works for any distribution with density proportional to
 #' \eqn{\exp(\eta(\theta) \cdot T(x))} where \eqn{\eta(\theta)} is linear and \eqn{x} is an observation (potentially multivariate). The estimate is found iteratively through a fixed point method as suggested by Windham [ref Windham 1995].
 
 
@@ -14,13 +14,13 @@
 #' @param fpcontrol A named list of control arguments to pass to [FixedPoint::FixedPoint()] for the fixed point iteration. The default control arguments are printed by [default_FixedPoint()].
 
 
-#' @details 
+#' @details
 #' Windham [ref Windham 1995] proposed method weighted an observation \eqn{x} proportional to \eqn{f(x; \theta)^c_W}{f(x; theta)^cW} where \eqn{c_W}{cW} was a tuning constant and \eqn{f} was the density of the model with given parameter set \eqn{\theta}.
 #' For samples drawn from exponential models without base measure, this weighting converts samples to be akin to sampling from the distribution with natural parameters \eqn{(1+c_W)\eta(\theta)}{(1+cW)eta(theta)}, where \eqn{\eta(\theta)} was the natural parameter set of the original model.
 #' When \eqn{\eta} is a linear function, then the parameter set \eqn{\theta} becomes \eqn{(1+c_W)\theta}{(1+cW)theta}.
 #'
 #' `WindhamRobust()` applies a modification of Windham's method that multiplies each element of \eqn{\theta} by a different tuning constant \eqn{c_W}{cW}.
-#' Given a parameter set \eqn{\theta_n}, `WindhamRobust()` first computes weights \eqn{f(x; diag(c_W)\theta)} of each observation \eqn{x}, where \eqn{diag(c_W)} is a diagonal matrix with elements of \eqn{c_W}. 
+#' Given a parameter set \eqn{\theta_n}, `WindhamRobust()` first computes weights \eqn{f(x; diag(c_W)\theta)} of each observation \eqn{x}, where \eqn{diag(c_W)} is a diagonal matrix with elements of \eqn{c_W}.
 #' Then, a new parameter set \eqn{\tilde{\theta_{n+1}}} is estimated by `estimator` with the computed weights.
 #' This new parameter set is multiplied by the inverse of \eqn{I + diag(c_W)} to obtain an adjusted parameter set \eqn{\theta_{n+1} = (I + diag(c_W))^{-1} \tilde{\theta_{n+1}}} (multiplying is equivalent to Windham's \eqn{\tau_c}).
 #' The estimate returned by `WindhamRobust()` is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n = \theta_{n+1}}.
@@ -57,8 +57,8 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   stopifnot(length(cW) == length(starttheta))
   stopifnot(is.numeric(cW))
   if (any((cW * starttheta)[isfixed] != 0)){stop("Elements of cW corresponding to fixed non-zero parameters should be zero")}
- 
-  # Correction of parameter preparation 
+
+  # Correction of parameter preparation
   multiplicativecorrection = TRUE # use the WindhamCorrection(), the alternative is Scealy's original additive method in the draft paper
   if (!multiplicativecorrection){
    if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #require constant cW (or zero) because I'm not sure what Scealy's correction method should be in the presence of a different tuning constants per value
@@ -78,7 +78,7 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
     additionalargsbuilder <- function(extraargs = list(), paramvec_start = NULL){
       return(extraargs) #paramvec passed as part of extraargs
     }
-  } 
+  }
   if (assessment$paramvec_start){
     additionalargsbuilder <- function(extraargs = list(), paramvec_start = NULL){
       extraargs$paramvec_start <- paramvec_start #overwrites or adds a new element to the argument list
@@ -88,11 +88,11 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
 
   # define the function that extracts the estimated parameter value
   getparamfun <- extract_paramvec_fun(assessment$estlocation)
- 
-  ############# 
+
+  #############
   # build the function that takes a theta and returns a new theta, depending on assessment results
   #############
-  
+
   fpiterator <- function(fitted){
       stopifnot(length(fitted) == sum(!isfixed))
       fulltheta <- t_sfi2u(fitted, starttheta, isfixed) #including fitted and non-fitted parameter elements
@@ -119,10 +119,16 @@ WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, para
   theta <- starttheta
   theta[!isfixed] <- est$FixedPoint
 
+  # get weights corresponding the final iteration
+  thetaprevious <- t_sfi2u(est$Inputs[,ncol(est$Inputs)], starttheta, isfixed) #including fitted and non-fitted parameter elements
+  weight_vec <- Windham_weights(ldenfun = ldenfun, Y = Y,
+                                theta = thetaprevious, cW)
+
   return(list(theta = theta,
            optim = list(FixedPoint = est$FixedPoint,
                         fpevals = est$fpevals,
-                        Finish = est$Finish)))
+                        Finish = est$Finish,
+                        finalweights = weight_vec)))
 }
 
 # @title Windham transform matrix for a given parameter vector
