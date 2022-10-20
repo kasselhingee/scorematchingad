@@ -143,6 +143,7 @@ test_that("alr and cppad estimator for this data set are consistent", {
                  paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))
 
   skip("next calculation, the cppad estimate, takes hours")
+  stop("The number iterations required has not been checked - has taken multiple hours without finishing")
   system.time({est_alr_cppad <- ppi(Y = propreal, method = "cppad",
                  trans = "alr", 
                  bdrythreshold = 1E-15, shiftsize = 1E-15,
