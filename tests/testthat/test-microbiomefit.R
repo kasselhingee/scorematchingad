@@ -133,21 +133,23 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   expect_snapshot_value(signif(ALs[upper.tri(ALs, diag = TRUE)], 8), style = "json2")
   expect_snapshot_value(signif(bL, 8), style = "json2")
   expect_snapshot_value(signif(estimate1/std1, 8), style = "json2")
+})
 
 
-
-
+test_that("alr and cppad estimator for this data set are consistent", {
   #check alr estimators too
   est_alr <- ppi(Y = propreal, method = "direct",
                  trans = "alr", 
                  paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))
 
-  est_alr_cppad <- ppi(Y = propreal, method = "cppad",
+  skip("next calculation, the cppad estimate, takes hours")
+  system.time({est_alr_cppad <- ppi(Y = propreal, method = "cppad",
                  trans = "alr", 
                  bdrythreshold = 1E-15, shiftsize = 1E-15,
-                 approxorder = 100,
-                 paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))
-  expect_equal(est_alr$est$paramvec, est_alr_cppad$est$paramvec)
+                 approxorder = 10,
+                 control = list(maxit = 1E15, tol = 1E-20 * nrow(propreal)),
+                 paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))})
+  expect_equal(est_alr$est$paramvec, est_alr_cppad$est$paramvec, tolerance = 1E-2)
 
 
 })
