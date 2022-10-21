@@ -136,7 +136,7 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
   return(list(accepted = accepted, maxden = maxden))
 }
 
-#' @describeIn rppi Compute the *logarithm* of the *improper* density for the PPI model for the given matrix of measurements `prop`.
+#' @describeIn rppi Compute the *logarithm* of the *improper* density for the PPI model for the given matrix of measurements `prop`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
 #' @param `prop` A matrix of measurements.
 #' @export
 dppi <- function(prop,beta0,ALs,bL){
@@ -151,7 +151,12 @@ dppi <- function(prop,beta0,ALs,bL){
   # define u^0 as 1 when u goes to -Inf
   logprop[, beta0 == 0] <- 0
   logdirichlet <- logprop %*% beta0
-  return(as.vector(uAstaru + logdirichlet))
+  logdensity <- as.vector(uAstaru + logdirichlet)
+  # set points outside the simplex to 0
+  negatives <- rowSums(prop < 0) > 0
+  sumisnt1 <- abs(rowSums(prop) -1) > 1E-15
+  logdensity[negatives|sumisnt1] <- -Inf
+  return(logdensity)
 }
 
 # below is function for uT * ALs * u + t(bL) * u
