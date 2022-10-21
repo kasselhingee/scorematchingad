@@ -4,9 +4,7 @@
 getinstallinfo <- function(){
 cdabyppiinfo <- packageDescription("cdabyppi")
 pkgimportant <- paste(cdabyppiinfo[c("Suggests", "Imports", "Depends")], collapse = ", ")
-pkgimportant <- gsub("[^,ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]", "", pkgimportant) %>%
-  strsplit(",") %>%
-  unlist()
+pkgimportant <- unlist(strsplit(gsub("[^,ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]", "", pkgimportant), ","))
 pkgimportant <- c(pkgimportant, "cdabyppi")
 pkginfo <- as.data.frame(installed.packages(field = c("Built", "Packaged")))
 pkginfo <- pkginfo[pkginfo$Package %in% pkgimportant, 
