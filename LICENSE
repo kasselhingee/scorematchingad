@@ -1,2 +1,12 @@
 YEAR: 2022
-COPYRIGHT HOLDER: cdabyppi authors
+
+This package contains source code for CppAD and Eigen. The package as a whole is licensed under GPL (>=3), described in GPL_LICENSE.md.
+COPYRIGHT HOLDERS: Kassel Liam Hingee, Janice Scealy, and authors of CppAD and Eigen. The source code for this package is available at ??.
+
+
+CppAD is distributed under the terms of the Eclipse Public License Version 2.0 (in inst/include/CppAD_LICENSE). The CppAD Source Code may also be made available under the following Secondary License when the conditions for such availability set forth in the Eclipse Public License, Version 2.0 are satisfied: GNU General Public License, Version 2.0 or later. The copyright for CppAD is held by Bradley M. Bell (Copyright (C) 2003-18). The CppAD source code is available at https://github.com/coin-or/CppAD.git .
+
+
+Eigen is licensed under the Mozilla Public License v2.0, which is in the file inst/include/Eigen_LICENSE, and also available at http://mozilla.org/MPL/2.0/. The Eigen source code is available from https://gitlab.com/libeigen/eigen.git . The copyright is held by Gael Guennebaus (2008-2011 Gael Guennebaud <gael.guennebaud@inria.fr>).
+
+
