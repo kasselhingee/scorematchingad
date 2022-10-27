@@ -1,11 +1,15 @@
-Package: cdabyppi
-Title: Score Matching for Polynomially-Tilted Pairwise Interaction Composition Models and Some Directional Models
-Version: 0.0.0.0022
+Package: scoredircomp
+Title: Score-Matching for Directional and Compositional Data
+Version: 0.0.0.0023
 Authors@R: 
     c(person(given = "Kassel Liam", family = "Hingee", email = "kassel.hingee@anu.edu.au", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9894-2407")),
     person("Janice", "Scealy", role = c("aut")),
     person("Bradley M.", "Bell", role = c("cph")),
-    person("Insert", "EigenPerson", role = c("cph")))
+    person("Gael", "Guennebaud", role = c("cph")),
+    person("Gael", "Guennebaud", role = c("cph")),
+    person("Ngunnawal Country", role = c("ctb")),
+    person("Ngambri Country", role = c("ctb"))
+    )
 Description: Score matching is a useful estimation technique when the normalising constant for a probability distribution is difficult to compute. The package includes methods by Scealy and Wood [refs] for compositional data and the Polynomially-Tilted Pairwise Interaction (PPI), which perform well when there are zeros (even many zeros). The package also includes hybrid estimators for directional distributions proposed by Mardia et al [ref].
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -17,6 +21,7 @@ Suggests:
     tibble,
     ks,
     movMF,
+    MASS,
     numDeriv
 Depends: 
     R (>= 3.5.0)
@@ -24,7 +29,6 @@ Imports:
     MCMCpack,
     Rcpp (>= 0.10.2),
     Rcgmin,
-    MASS,
     FixedPoint,
     Directional,
     mclust,
