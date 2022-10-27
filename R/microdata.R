@@ -8,9 +8,10 @@
 #'
 #' ```
 #' microdata <- readxl::read_excel("microbiome_data.xlsx")
+#' microdata <- as.data.frame(microdata)
 #' save(microdata, file = "./data/microdata.rda")
 #' ```
 #'
-#' @format A [tibble][tibble::tibble()] with 94 rows and 31 columns.
+#' @format A `data.frame` with 94 rows and 31 columns.
 #' @source is there a source?
 "microdata"
