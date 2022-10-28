@@ -38,7 +38,7 @@ test_that("ppi_mmmm gives numerical non-NA values", {
     x[j,]=rmultinom(1,ni[j],prob=samp3[j,])
   }
 
-  mult=cdabyppi:::ppi_mmmm(x, ni, beta0)
+  mult=ppi_mmmm(x, ni, beta0)
   expect_length(mult, 3)
   expect_true(sum(mult) != 0)
 })

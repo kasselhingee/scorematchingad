@@ -17,7 +17,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   #simulate sample from PPI model
   set.seed(321)
   samp3=rppi(n,beta0,ALs,bL,maxden=4)
-  theta <- cdabyppi:::ppi_paramvec(p,
+  theta <- ppi_paramvec(p,
               AL = ALs, bL = drop(bL), beta = drop(beta0))
 
   ####Score1ac estimator##
@@ -26,7 +26,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   acut=1.6e-02
 
   #calculate scoring estimate for full model
-  estimator=cdabyppi:::estimatorall1(samp3,acut, betap = NULL)
+  estimator=estimatorall1(samp3,acut, betap = NULL)
   estimate1all=estimator$estimator1
 
   # Get SE from CppAD methods
@@ -43,7 +43,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   expect_lt(sum(smobjgrad(tapes$smotape, estimate1all, samp3)^2), 1E-14)
   est2 <- ppi(samp3, trans = "sqrt", bdryweight = "minsq", acut = acut, bdrythreshold = 1E-20, control = list(tol = 1E-12), method = "cppad", w = NULL)
   expect_equal(est2$est$paramvec, drop(estimate1all), tolerance = 1E-2) #within 1% of each other roughly
-  cdabyppi:::expect_absdiff_lte_v(drop(estimate1all), est2$est$paramvec, 2*est2$SE$paramvec)
+  expect_absdiff_lte_v(drop(estimate1all), est2$est$paramvec, 2*est2$SE$paramvec)
 })
 
 test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger than -0.5", {
@@ -51,7 +51,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   n=100
   beta0=matrix(-0.8,p,1)
   beta0[p] = 5
-  theta <- cdabyppi:::ppi_paramvec(p,
+  theta <- ppi_paramvec(p,
                                                AL = ALs, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
@@ -64,11 +64,11 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   acut=1.6e-02
 
   #calculate scoring estimate for full model, beta[p] correctly fixed
-  estimator=cdabyppi:::estimatorall1(samp3,acut, betap = beta0[p])
+  estimator=estimatorall1(samp3,acut, betap = beta0[p])
   estimate1all=estimator$estimator1
 
   # SE from cppad
-  intheta <- cdabyppi:::ppi_paramvec(p, betap = beta0[p])
+  intheta <- ppi_paramvec(p, betap = beta0[p])
   tapes <- buildsmotape("sphere", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
@@ -84,7 +84,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   n=100
   beta0=matrix(-0.8,p,1)
   beta0[p]= 5
-  theta <- cdabyppi:::ppi_paramvec(p,
+  theta <- ppi_paramvec(p,
                                                AL = ALs, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
@@ -96,11 +96,11 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   acut=1.6e-02
 
   #calculate scoring estimate for full model, beta[p] correctly fixed
-  estimator=cdabyppi:::estimatorall1(samp3,acut, betap = -0.5)
+  estimator=estimatorall1(samp3,acut, betap = -0.5)
   estimate1all=estimator$estimator1
 
   # SE from cppad
-  intheta <- cdabyppi:::ppi_paramvec(p, betap = -0.5)
+  intheta <- ppi_paramvec(p, betap = -0.5)
   tapes <- buildsmotape("sphere", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",

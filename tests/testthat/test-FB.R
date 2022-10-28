@@ -55,11 +55,11 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
   m <- c(1, 0, 0)
   B <- Directional::rotation(c(0, 1, 0), m)
   rotatedA <- B %*% A %*% solve(B) #rotate A so that size of diagonal is increasing
-  cdabyppi:::expect_lt_v(abs(est$A - rotatedA)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
+  expect_lt_v(abs(est$A - rotatedA)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -rotatedA)
   est <- Bingham_full(sample, control = list(tol = 1E-15))
-  cdabyppi:::expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
+  expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   # try out FB estimation
   pman <- pmanifold("Snative")
@@ -71,7 +71,7 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
   est <- cppadest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
                control = list(tol = 1E-10))
 
-  cdabyppi:::expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
+  expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
   # yay! it works, but oh man the estimates SEs are huge
 })
 
@@ -97,7 +97,7 @@ test_that("rfb() simulation for general symmetric matrices via Bingham() fitting
   #results have the same eigen values
   expect_equal(estA_es$values, A_es$values, tolerance = 0.5)
   #matrix values match
-  cdabyppi:::expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
+  expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
 
   # note that parameter estimates have suprisingly large margin given that there is 1000 samples
 
@@ -110,7 +110,7 @@ test_that("rfb() simulation for general symmetric matrices via Bingham() fitting
                       lltape, pman, "ones", 1, verbose = FALSE)
   est <- cppadest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
                control = list(tol = 1E-10))
-  cdabyppi:::expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
+  expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
   # yay! it works, but oh man the estimates SEs are huge
 })
 
@@ -136,7 +136,7 @@ test_that("rfb() simulation for general symmetric matrices fitting", {
                       lltape, pman, "ones", 1, verbose = FALSE)
   est <- cppadest(smotape, seq.int(1, length.out = length(theta)), sample,
                control = list(tol = 1E-10))
-  cdabyppi:::expect_lt_v(abs(est$par - theta), 3 * est$SE)
+  expect_lt_v(abs(est$par - theta), 3 * est$SE)
   # whooo it is working! But sample huge and SEs are still huge - it is almost like the model is misspecified
   # lapply(FB_theta2mats(est$par), round, 2)
   # lapply(thetamats, round, 2)
@@ -161,7 +161,7 @@ test_that("FB() fits for p = 3", {
 
   #Fit
   est <- FB(sample, control = list(tol = 1E-10))
-  cdabyppi:::expect_lt_v(abs(est$sminfo$par - theta), 3 * est$sminfo$SE)
+  expect_lt_v(abs(est$sminfo$par - theta), 3 * est$sminfo$SE)
 })
 
 test_that("FB() fits with various fixed elements", {
@@ -178,7 +178,7 @@ test_that("FB() fits with various fixed elements", {
   inA <- matrix(NA, nrow = p, ncol = p)
   inA[p, 1] <- inA[1, p] <- thetamats$A[1, p]
   est <- FB(sample, A = inA, control = list(tol = 1E-12))
-  cdabyppi:::expect_lte_v(abs(est$A - thetamats$A)[-(p*p)], 3 * est$SE$A[-(p*p)])
+  expect_lte_v(abs(est$A - thetamats$A)[-(p*p)], 3 * est$SE$A[-(p*p)])
   expect_equal(est$A[!is.na(inA)], thetamats$A[!is.na(inA)])
   expect_equal(est$SE$A[!is.na(inA)], 0 * thetamats$A[!is.na(inA)])
 
@@ -191,7 +191,7 @@ test_that("FB() fits with various fixed elements", {
   inkm <- rep(NA, p)
   inkm[p] <- thetamats$m[p] * thetamats$k
   est <- FB(sample, km = inkm, control = list(tol = 1E-12))
-  cdabyppi:::expect_lte_v(abs(est$km - thetamats$km), 3 * est$SE$km + 1E-10)
+  expect_lte_v(abs(est$km - thetamats$km), 3 * est$SE$km + 1E-10)
   expect_equal(est$km[!is.na(inkm)], thetamats$km[!is.na(inkm)])
   expect_equal(est$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
 })

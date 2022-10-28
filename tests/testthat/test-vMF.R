@@ -12,7 +12,7 @@ test_that("von-Mises Fisher likelihood runs and fits", {
                         verbose = FALSE)
   expect_equal(pForward0(tapes$lltape, sample[1, ], theta), sum(sample[1, ]  * theta)) ## very important to check a tape
   out <- cppadest(tapes$smotape, thetatape, sample, control = list(tol = 1E-10))
-  cdabyppi:::expect_lt_v(abs(out$par - theta), 3 * out$SE)
+  expect_lt_v(abs(out$par - theta), 3 * out$SE)
 })
 
 test_that("vMF_Mardia() function works for data centred off the north pole", {
@@ -23,7 +23,7 @@ test_that("vMF_Mardia() function works for data centred off the north pole", {
   sample <- movMF::rmovMF(1000, km)
   out <- vMF(Y = sample, method = "Mardia")
   expect_equal(out$est$m , m, tolerance = 1E-1) #moment estimate part
-  cdabyppi:::expect_lt_v(abs(out$est$k - k), 3 * out$SE$k)
+  expect_lt_v(abs(out$est$k - k), 3 * out$SE$k)
 })
 
 test_that("vMF_Full() function works", {
@@ -33,13 +33,13 @@ test_that("vMF_Full() function works", {
   km <-  k * m
   sample <- movMF::rmovMF(100, km) #faithful to seed
   out <- vMF(Y = sample, method = "smfull")
-  cdabyppi:::expect_lt_v(abs(out$est$paramvec - km), 3 * out$SE$paramvec)
+  expect_lt_v(abs(out$est$paramvec - km), 3 * out$SE$paramvec)
 
   #with a fixed component
   inkm <- km
   inkm[2] <- NA
   out <- vMF(Y = sample, paramvec = inkm, method = "smfull")
-  cdabyppi:::expect_lte_v(abs(out$est$paramvec - km), 3 * out$SE$paramvec)
+  expect_lte_v(abs(out$est$paramvec - km), 3 * out$SE$paramvec)
 })
 
 test_that("vMF() fitting works on dimension 5", {
@@ -53,19 +53,19 @@ test_that("vMF() fitting works on dimension 5", {
   sample <- movMF::rmovMF(1000, m * k)
   #full method
   out <- vMF(Y = sample, method = "smfull", control = list(tol = 1E-10))
-  cdabyppi:::expect_lt_v(abs(out$est$paramvec - km), 3 * out$SE$paramvec)
+  expect_lt_v(abs(out$est$paramvec - km), 3 * out$SE$paramvec)
   #full with a fixed components
   inkm <- km
   inkm[2] <- NA
   inkm[p] <- NA
   out <- vMF(Y = sample, paramvec = inkm, method = "smfull")
-  cdabyppi:::expect_lte_v(abs(out$est$paramvec - km), 3 * out$SE$paramvec)
+  expect_lte_v(abs(out$est$paramvec - km), 3 * out$SE$paramvec)
   expect_equal(out$SE$paramvec[!is.na(inkm)], rep(0, sum(!is.na(inkm))))
 
   #Mardia method
   out <- vMF(Y = sample, method = "Mardia")
   expect_equal(out$est$m , m, tolerance = 1E-1) #moment estimate part
-  cdabyppi:::expect_lt_v(abs(out$est$k - k), 3 * out$SE$k)
+  expect_lt_v(abs(out$est$k - k), 3 * out$SE$k)
 })
 
 test_that("vMF matches for simulated weights, ignoring SE, which shouldn't match", {

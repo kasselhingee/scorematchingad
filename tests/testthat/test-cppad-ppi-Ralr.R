@@ -16,7 +16,7 @@ test_that("Fitting ppi via alr transform with fixed beta gets close to true valu
   expect_lt(out$value, smobj(smoppi, model$theta[1:(length(model$theta) - model$p)], model$sample))
   expect_lt(out$sqgradsize, sum(smobjgrad(smoppi, model$theta[1:(length(model$theta) - model$p)], model$sample)^2))
 
-  cdabyppi:::expect_lt_v(abs(out$par - model$theta[1:(length(model$theta) - model$p)]) / out$SE, 3)
+  expect_lt_v(abs(out$par - model$theta[1:(length(model$theta) - model$p)]) / out$SE, 3)
 })
 
 test_that("Fitting ppi via alr inc all beta gets close to true values", {
@@ -36,6 +36,6 @@ test_that("Fitting ppi via alr inc all beta gets close to true values", {
   expect_lt(out$value, smobj(smoppi, model$theta, model$sample))
   expect_lt(out$sqgradsize, sum(smobjgrad(smoppi, model$theta, model$sample)^2))
 
-  cdabyppi:::expect_lt_v(abs(out$par - model$theta) / out$SE, 3)
+  expect_lt_v(abs(out$par - model$theta) / out$SE, 3)
   # eestimating the -0.8 betas is poor
 })

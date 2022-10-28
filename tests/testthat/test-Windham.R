@@ -15,11 +15,11 @@ test_that("WindamRobust() via ppi_robust() gives correct params on simulated dat
 
   #calculate robust estimates
   est <- ppi_robust(Y = m$sample, 
-           cW = 0.1 * cdabyppi:::ppi_paramvec(m$p, AL = TRUE, bL = FALSE, beta = FALSE),
+           cW = 0.1 * ppi_paramvec(m$p, AL = TRUE, bL = FALSE, beta = FALSE),
            acut=0.1, method = "direct", trans = "sqrt", bdryweight = "minsq")
 
   # variable c, expect estimates to be different
-  cW <- cdabyppi:::ppi_paramvec(m$p, AL = matrix(c(0.1, 1E-3, 1E-3, 0.1), nrow = 2, ncol = 2),
+  cW <- ppi_paramvec(m$p, AL = matrix(c(0.1, 1E-3, 1E-3, 0.1), nrow = 2, ncol = 2),
                                  bL = 0, beta = 0)
   est_varcW <-  ppi_robust(Y = m$sample, 
            cW = cW,

@@ -25,7 +25,7 @@ beta0=matrix(0,p,1)
 
 
 #simulate sample from the tGaussian model:
-samp3=cdabyppi:::rtGaussian(n,p,muL,SigA)
+samp3=rtGaussian(n,p,muL,SigA)
 
 
 #the response variable prop is the true proportions samp3
@@ -36,7 +36,7 @@ test_that("Score1ac is within 3 SE for 75% of parameters", {
   acut=0.1
 
   #calculate scoring estimate:
-  estimator=cdabyppi:::estimator1(prop,acut,1, beta0, computeSE = TRUE)
+  estimator=estimator1(prop,acut,1, beta0, computeSE = TRUE)
   estimate1=estimator$est$paramvec
 
   #standard errors for Score1ac
@@ -49,14 +49,14 @@ test_that("Score2ac is within 3 SE for 75% of parameters", {
   acut=2e-07
 
   #calculate scoring estimate:
-  estimator=cdabyppi:::estimator2(prop,acut,1, beta0)
+  estimator=estimator2(prop,acut,1, beta0)
   estimate2=estimator$estimator2
 
   #estimate of W matrix
   W_est=estimator$W_est
 
   #standard errors for Score2ac
-  std2=cdabyppi:::estimator2SE(prop,acut,estimate2,W_est,1, beta0)
+  std2=estimator2SE(prop,acut,estimate2,W_est,1, beta0)
   theta = c(diag(ALs), ALs[upper.tri(ALs)], bL)
   expect_gt(mean(abs(theta - estimate2) <= 3*std2), 0.75)
 })
@@ -65,11 +65,11 @@ test_that("Score2 estimate with 3 Score2ac-SE for 75% of parameters", {
   acut=10
 
   #calculate scoring estimate:
-  estimator=cdabyppi:::estimator2(prop,acut,1, beta0)
+  estimator=estimator2(prop,acut,1, beta0)
   estimate3=estimator$estimator2
 
   # Get SE with a hack
-  std2=cdabyppi:::estimator2SE(prop,acut, estimator$estimator2, estimator$W_est,1, beta0)
+  std2=estimator2SE(prop,acut, estimator$estimator2, estimator$W_est,1, beta0)
   theta = c(diag(ALs), ALs[upper.tri(ALs)], bL)
   expect_gt(mean(abs(theta - estimate3) <= 3*std2), 0.75)
 })
@@ -78,7 +78,7 @@ test_that("Score1 estimate with large acut within 3 SE for 75% of parameters", {
   acut=10
 
   #calculate scoring estimate:
-  estimator=cdabyppi:::estimator1(prop,acut,1, beta0, computeSE = TRUE)
+  estimator=estimator1(prop,acut,1, beta0, computeSE = TRUE)
   estimate4=estimator$est$paramvec
 
   std=estimator$SE$paramvec

@@ -18,7 +18,7 @@ test_that("w = rep(1, nrow(Y)) is near the result as if w omitted", {
 })
 
 test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constant weights", {
-  intheta <- cdabyppi:::ppi_paramvec(m$p)
+  intheta <- ppi_paramvec(m$p)
   tapes <- buildsmotape("sphere", "ppi",
                         m$sample[1, ], intheta,
                         weightname = "minsq",
@@ -37,7 +37,7 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
 })
 
 test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constant weights with boundary data", {
-  intheta <- cdabyppi:::ppi_paramvec(m$p)
+  intheta <- ppi_paramvec(m$p)
 
   ds <- simplex_boundarysplit(m$sample, bdrythreshold = 1E-2, shiftsize = 1E-5, w = vw$w)
   nds <- simplex_boundarysplit(vw$newY, bdrythreshold = 1E-2, shiftsize = 1E-5)

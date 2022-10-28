@@ -17,7 +17,7 @@ test_that("Score1ac estimate is within 3 standard errors for 75% of parameters",
   acut=0.01
 
   #calculate scoring estimate:
-  estimator=cdabyppi:::estimator1(Y,acut,0, beta = m$beta, computeSE = TRUE)
+  estimator=estimator1(Y,acut,0, beta = m$beta, computeSE = TRUE)
   estimate1=estimator$est$paramvec
 
   #estimate of W matrix
@@ -36,7 +36,7 @@ test_that("Score1ac estimate is within 3 standard errors with large a_c for 75% 
   acut=10
 
   #calculate scoring estimate:
-  estimator=cdabyppi:::estimator1(Y,acut,0, beta = m$beta, computeSE = TRUE)
+  estimator=estimator1(Y,acut,0, beta = m$beta, computeSE = TRUE)
   estimate1=estimator$est$paramvec
 
   #standard errors for Score1ac
@@ -51,11 +51,11 @@ test_that("Score2 is within 3 SE (SE given by Score2ac) for 75% of parameters", 
   acut=10
 
   #calculate scoring estimate:
-  estimator=cdabyppi:::estimator2(prop=Y,acut,0, beta0=m$beta)
+  estimator=estimator2(prop=Y,acut,0, beta0=m$beta)
   estimate3=estimator$estimator2
 
   # get an SE
-  std1=cdabyppi:::estimator2SE(Y,acut,estimate3,estimator$W_est,0, beta0 = m$beta)
+  std1=estimator2SE(Y,acut,estimate3,estimator$W_est,0, beta0 = m$beta)
 
   # test
   theta = c(diag(m$AL), m$AL[upper.tri(m$AL)])
@@ -77,7 +77,7 @@ test_that("Score1ac for multinomial PPI is on average within 3 SE of each parame
   acut=0.0001
 
   #calculate scoring estimate:
-  estimator=cdabyppi:::estimator1(prop1,acut,0, beta = m$beta, computeSE = TRUE)
+  estimator=estimator1(prop1,acut,0, beta = m$beta, computeSE = TRUE)
   estimate1=estimator$est$paramvec
 
   #estimate of W matrix
@@ -105,11 +105,11 @@ test_that("Score2 is within 3 SE for multinomial PPI (SE given by Score2ac) for 
   acut=10
 
   #calculate scoring estimate:
-  estimator=cdabyppi:::estimator2(prop1,acut,0, beta0=m$beta)
+  estimator=estimator2(prop1,acut,0, beta0=m$beta)
   estimate3=estimator$estimator2
 
   # get an SE
-  std1=cdabyppi:::estimator2SE(prop1,acut,estimate3,estimator$W_est,0, beta0 = m$beta)
+  std1=estimator2SE(prop1,acut,estimate3,estimator$W_est,0, beta0 = m$beta)
 
   # test
   theta = c(diag(m$AL), m$AL[upper.tri(m$AL)])

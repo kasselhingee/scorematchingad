@@ -173,7 +173,7 @@ test_that("Taylor approx of cppadSE gives suitable SE for estimates", {
   acut = 0.1
   est <- ppi(newsample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
-  cdabyppi:::expect_absdiff_lte_v(est$est$paramvec, m$theta, 3 * est$SE$paramvec)
+  expect_absdiff_lte_v(est$est$paramvec, m$theta, 3 * est$SE$paramvec)
   # note that the SE is a bit hard to test on here because the data has been truncated
 })
 
@@ -235,7 +235,7 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
   direct <- estimator1(newsample, acut = acut, incb = 1, beta = m$beta0, computeSE = TRUE)
   directSE <- direct$SE$paramvec
 
-  intheta <- cdabyppi:::ppi_paramvec(3, betaL = m$beta0[1:2], betap = m$beta0[3])
+  intheta <- ppi_paramvec(3, betaL = m$beta0[1:2], betap = m$beta0[3])
 
   # prepare tapes
   tapes <- buildsmotape("sphere", "ppi",
