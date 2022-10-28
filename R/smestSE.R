@@ -10,7 +10,7 @@
 #' 
 #' The weights `w` are assumed fix so that the minimiser of the score-matching divergence is still an M-estimator.
 #' The sensitivity matrix is estimated as
-#' \deqn{\hat{H(\theta) = \hat{E} -grad(grad(w smo(\theta;Y))),}
+#' \deqn{\hat{H(\theta)} = \hat{E} -grad(grad(w smo(\theta;Y))),}
 #' the variability matrix is estimated as
 #' \deqn{\hat{J}(\theta) = var(grad(w smo(\theta;Y))),}
 #' and the variance of estimator is estimated as
