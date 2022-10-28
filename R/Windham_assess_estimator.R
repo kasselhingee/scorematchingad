@@ -1,3 +1,4 @@
+#' @noRd
 #' @param ... passed directly to estimator for testing purposes
 
 Windham_assess_estimator <- function(estimator, Y, ..., w = NULL){

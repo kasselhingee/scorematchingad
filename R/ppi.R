@@ -1,5 +1,5 @@
 #' @title Score-Matching Estimation of PPI Parameters
-#' @description For certain situations computes the score matching estimate directly (e.g. \insertCite{scealy2022sc}{scorecompdir}), otherwise iteratively minimises the *Hyvarinen divergence* \insertCite{@Equation 2, @hyvarinen2005es}{scorecompdir} using derivatives computed by CppAD and [Rcgmin::Rcgmin()].
+#' @description For certain situations computes the score matching estimate directly (e.g. \insertCite{scealy2022sc}{scorecompdir}), otherwise iteratively minimises the *Hyvarinen divergence* \insertCite{@Equation 2, @hyvarinen2005es}{scorecompdir} using derivatives computed by CppAD and [`Rcgmin::Rcgmin()`].
 
 #' @details
 #' Estimation may be performed via transformation onto Euclidean space, the positive quadrant of the sphere, or without any transformation. In the latter two situations there is a boundary and *weighted Hyvarinen divergence* \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
@@ -7,6 +7,14 @@
 #' Direct estimates are available for the following situations
 #' + `trans='alr'` and `betap` supplied (and typically positive)
 #' + `trans='sqrt'` and ....
+#'
+#' There are three divergence weight functions available.
+#' * The function 'ones' applies no weights and should be used whenever the manifold does not have a bounday.
+#' * The function 'minsq' is the minima-based divergence weight function for the PPI model \insertCite{@Equation 12, @scealy2022sc}{scorecompdir}
+#' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
+#' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
+#' and \eqn{z_j}{zj} is the jth component of z.
+#' * The function 'prodsq' is the product-based
 
 #' @param trans The name of the transformation: 'alr' (additive log ratio), 'sqrt' or 'none'.
 #' @param pow The power of `u` in the PPI density - by default `pow` is `1`. NOT YET IMPLEMENTED

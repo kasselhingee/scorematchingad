@@ -1,15 +1,11 @@
-# @title Score matching estimators for PPI model include beta
-#' @description Score matching estimators for the PPI model that estimate \eqn{A_L}, \eqn{b_L} and \eqn{\beta}{beta}.
+#' @noRd 
+#' @title Score matching estimators for PPI model include beta
+#' @description See [`ppi()`] for details. This help is only for internal used.
+#' Score matching estimators for the PPI model that estimate \eqn{A_L}, \eqn{b_L} and \eqn{\beta}{beta}.
 #' @param prop compositional data (n by p matrix)
 #' @param acut \eqn{a_c} for the weighting function \eqn{h}.
 #' @param betap the pth element of \eqn{\beta}{beta}, if NULL then this element is estimated.
 #' @details The PPI model is given in equation 3 of (Scealy and Wood, 2021). The matrix \eqn{A_L} and vectors \eqn{b_L} and \eqn{\beta}{beta} must be estimated.
-#' This function implements the score matching estimator,
-#' \deqn{\hat{W}^{-1}\hat{d},}{W^{-1}d,}
-#' using a minima-based Hyvarinen weight function
-#' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
-#' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
-#' and \eqn{z_j}{zj} is the jth component of z.
 #' For details of the score matching estimator see equations 16 - 19 in (Scealy and Wood, 2021).
 #' If \eqn{a_c} is greater than or equal to 1 then this Hyvarinen weight function corresponds to (Scealy and Wood, 2021; eqn 11), if it is less than 1 then it corresponds to (Scealy and Wood, 2021; eqn 12).
 #' For more on the Hyvarinen weight (see equation 7 and Section 3.2 of (Scealy and Wood, 2021)).
