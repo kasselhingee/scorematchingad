@@ -3,7 +3,7 @@
 #' @param w A vector of weights to apply to the measurements in `Y`. The length of `w` must equal the number of rows of `Y`.
 #' @examples
 #' Y <- MCMCpack::rdirichlet(100, c(0.1, 0.2, 1.5))
-#' cdabyppi::dir_moment(Y)
+#' scorecompdir::dir_moment(Y)
 #' warning("who is the author for this function?")
 #' @export
 dir_moment <- function(Y, w = rep(1, nrow(Y))) {

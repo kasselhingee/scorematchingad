@@ -1,5 +1,5 @@
 #### Preparing microbiome data #############################################
-data("microdata", package = "cdabyppi")
+data("microdata", package = "scorecompdir")
 microdata <- microdata[!microdata$IndividualID %in% c(2079, 2280), ] #remove two outlying measurements
 countdata=as.matrix(microdata[,12:31])
 
@@ -95,7 +95,7 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
 
 
   #calculate scoring estimate:
-  estimator= cdabyppi:::estimator1(propreal,acut,1, beta0, computeSE = TRUE)
+  estimator= scorecompdir:::estimator1(propreal,acut,1, beta0, computeSE = TRUE)
   estimate1=estimator$est$paramvec
   #rearrange to historical ordering
   ordindx <- order(combparam2uppertriorder(length(estimate1))) #the plus p is for the beta that isn't estimated
@@ -159,10 +159,10 @@ test_that("alr and cppad estimator for this data set are consistent", {
 test_that("estimator1 and SE is historically correct with b_L ommitted (article table 3)", {
 
   #calculate scoring estimate:
-  estimator=cdabyppi:::estimator1(propreal,acut,0, beta0, computeSE = TRUE)
+  estimator=scorecompdir:::estimator1(propreal,acut,0, beta0, computeSE = TRUE)
   estimate1=estimator$est$paramvec
   #rearrange to historical ordering
-  ordindx <- order(cdabyppi:::combparam2uppertriorder(length(estimate1)))
+  ordindx <- order(scorecompdir:::combparam2uppertriorder(length(estimate1)))
   estimate1 <- estimate1[ordindx][1:(length(estimate1) - p - (p-1))]
   dim(estimate1) <- c(length(estimate1), 1)
   expect_snapshot_value(signif(estimate1, 8), style = "json2")
@@ -189,6 +189,6 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
 
 #### Dirchlet Model ####
 test_that("Dirchlet moment fitting is historically correct", {
-  alpha_dir=cdabyppi:::dir_moment(propreal)
+  alpha_dir=scorecompdir:::dir_moment(propreal)
   expect_snapshot_value(signif(alpha_dir, 8), style = "json2")
 })

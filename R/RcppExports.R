@@ -87,50 +87,50 @@ NULL
 NULL
 
 pmanifold <- function(manifoldname) {
-    .Call('_cdabyppi_pmanifold', PACKAGE = 'cdabyppi', manifoldname)
+    .Call('_scorecompdir_pmanifold', PACKAGE = 'scorecompdir', manifoldname)
 }
 
 testmanifold <- function(pman, u) {
-    .Call('_cdabyppi_testmanifold', PACKAGE = 'cdabyppi', pman, u)
+    .Call('_scorecompdir_testmanifold', PACKAGE = 'scorecompdir', pman, u)
 }
 
 ptoM <- function(pman, u) {
-    .Call('_cdabyppi_ptoM', PACKAGE = 'cdabyppi', pman, u)
+    .Call('_scorecompdir_ptoM', PACKAGE = 'scorecompdir', pman, u)
 }
 
 ptapesmo <- function(u, theta, pll, pman, weightname, acut, verbose) {
-    .Call('_cdabyppi_ptapesmo', PACKAGE = 'cdabyppi', u, theta, pll, pman, weightname, acut, verbose)
+    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u, theta, pll, pman, weightname, acut, verbose)
 }
 
 ptapell <- function(z, theta, llname, pman, fixedtheta, verbose) {
-    .Call('_cdabyppi_ptapell', PACKAGE = 'cdabyppi', z, theta, llname, pman, fixedtheta, verbose)
+    .Call('_scorecompdir_ptapell', PACKAGE = 'scorecompdir', z, theta, llname, pman, fixedtheta, verbose)
 }
 
 swapDynamic <- function(pfun, newvalue, newdynparam) {
-    .Call('_cdabyppi_swapDynamic', PACKAGE = 'cdabyppi', pfun, newvalue, newdynparam)
+    .Call('_scorecompdir_swapDynamic', PACKAGE = 'scorecompdir', pfun, newvalue, newdynparam)
 }
 
 pJacobian <- function(pfun, value, theta) {
-    .Call('_cdabyppi_pJacobian', PACKAGE = 'cdabyppi', pfun, value, theta)
+    .Call('_scorecompdir_pJacobian', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 
 pForward0 <- function(pfun, value, theta) {
-    .Call('_cdabyppi_pForward0', PACKAGE = 'cdabyppi', pfun, value, theta)
+    .Call('_scorecompdir_pForward0', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 
 pHessian <- function(pfun, value, theta) {
-    .Call('_cdabyppi_pHessian', PACKAGE = 'cdabyppi', pfun, value, theta)
+    .Call('_scorecompdir_pHessian', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 
 pTaylorApprox <- function(pfun, value, centre, theta, order) {
-    .Call('_cdabyppi_pTaylorApprox', PACKAGE = 'cdabyppi', pfun, value, centre, theta, order)
+    .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, value, centre, theta, order)
 }
 
 pTapeJacobianSwap <- function(pfun, value, theta) {
-    .Call('_cdabyppi_pTapeJacobianSwap', PACKAGE = 'cdabyppi', pfun, value, theta)
+    .Call('_scorecompdir_pTapeJacobianSwap', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 
 pTapeHessianSwap <- function(pfun, value, theta) {
-    .Call('_cdabyppi_pTapeHessianSwap', PACKAGE = 'cdabyppi', pfun, value, theta)
+    .Call('_scorecompdir_pTapeHessianSwap', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 

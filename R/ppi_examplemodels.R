@@ -6,7 +6,7 @@
 #' @examples
 #' ppi_egmodel(1000)
 #' @description 
-#' The model is the 3-component model from \insertCite{@Section 2.3, @scealy2022sc}{cdabyppi}.
+#' The model is the 3-component model from \insertCite{@Section 2.3, @scealy2022sc}{scorecompdir}.
 #' @references
 #' \insertAllCited{}
 #' @export

@@ -1,8 +1,8 @@
 #' @title Score-Matching Estimation of PPI Parameters
-#' @description For certain situations computes the score matching estimate directly (e.g. \insertCite{scealy2022sc}{cdabyppi}), otherwise iteratively minimises the *Hyvarinen divergence* \insertCite{@Equation 2, @hyvarinen2005es}{cdabyppi} using derivatives computed by CppAD and [Rcgmin::Rcgmin()].
+#' @description For certain situations computes the score matching estimate directly (e.g. \insertCite{scealy2022sc}{scorecompdir}), otherwise iteratively minimises the *Hyvarinen divergence* \insertCite{@Equation 2, @hyvarinen2005es}{scorecompdir} using derivatives computed by CppAD and [Rcgmin::Rcgmin()].
 
 #' @details
-#' Estimation may be performed via transformation onto Euclidean space, the positive quadrant of the sphere, or without any transformation. In the latter two situations there is a boundary and *weighted Hyvarinen divergence* \insertCite{@Equation 7, @scealy2022sc}{cdabyppi} is used.
+#' Estimation may be performed via transformation onto Euclidean space, the positive quadrant of the sphere, or without any transformation. In the latter two situations there is a boundary and *weighted Hyvarinen divergence* \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
 #'
 #' Direct estimates are available for the following situations
 #' + `trans='alr'` and `betap` supplied (and typically positive)

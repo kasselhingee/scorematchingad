@@ -6,7 +6,7 @@
 #' @author Kassel Liam Hingee <kassel.hingee@anu.edu.au>
 #' @import Rcpp
 #' @importFrom Rcpp evalCpp
-#' @useDynLib cdabyppi
-#' @name cdabyppi
+#' @useDynLib scorecompdir
+#' @name scorecompdir
 NULL
 

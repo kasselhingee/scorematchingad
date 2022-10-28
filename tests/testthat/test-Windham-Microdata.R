@@ -1,7 +1,7 @@
 skip_on_cran() #too slow
 
 ##### Prepare First Data Set #####
-data("microdata", package = "cdabyppi")
+data("microdata", package = "scorecompdir")
 countdata=as.matrix(microdata[,12:31])
 
 #sample size
@@ -165,7 +165,7 @@ expect_lt(sum(vals$grad^2), 1E-10)
 #### Test Second Data Set ####
 
 test_that("robust ppi via alr estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
-  data("microdata", package = "cdabyppi")
+  data("microdata", package = "scorecompdir")
   countdata=as.matrix(microdata[,12:31])
 
   #sample size

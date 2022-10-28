@@ -10,7 +10,7 @@ output:
 This document contains plots of a number of example PPI models.
 
 ```{r setup, include=FALSE}
-library(cdabyppi)
+library(scorecompdir)
 library(Ternary)
 library(ggtern)
 library(ggplot2)

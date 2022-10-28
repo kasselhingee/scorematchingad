@@ -1,4 +1,4 @@
-# include "../cdabyppi_types.h"
+# include "../scorecompdir_types.h"
 # include "approx.cpp"
 # include "sm_possphere.cpp"
 # include "manifold_simplex.cpp"
