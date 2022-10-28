@@ -1,4 +1,4 @@
-Package: scoredircomp
+Package: scorecompdir
 Title: Score-Matching for Directional and Compositional Data
 Version: 0.0.0.0023
 Authors@R: 
@@ -6,11 +6,10 @@ Authors@R:
     person("Janice", "Scealy", role = c("aut")),
     person("Bradley M.", "Bell", role = c("cph")),
     person("Gael", "Guennebaud", role = c("cph")),
-    person("Gael", "Guennebaud", role = c("cph")),
     person("Ngunnawal Country", role = c("ctb")),
     person("Ngambri Country", role = c("ctb"))
     )
-Description: Score matching is a useful estimation technique when the normalising constant for a probability distribution is difficult to compute. The package includes methods by Scealy and Wood [refs] for compositional data and the Polynomially-Tilted Pairwise Interaction (PPI), which perform well when there are zeros (even many zeros). The package also includes hybrid estimators for directional distributions proposed by Mardia et al [ref].
+Description: Score matching is a useful estimation technique when the normalising constant for a probability distribution is difficult to compute. This package includes methods by Scealy and Wood (2022) for compositional data and the Polynomially-Tilted Pairwise Interaction (PPI) model, which performs well when there are zeros (even many zeros). The package also includes hybrid estimators for directional distributions proposed by Mardia, Kent and Laha (2016).
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
