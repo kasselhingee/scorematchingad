@@ -1,6 +1,6 @@
 #' @describeIn ppi_egmodel Simulates the 5-component model of \insertCite{@Section A.11, @scealy2022sc}{scorecompdir}. This model is a generalised gamma (i.e. \eqn{b_L} = 0).
 #' The covariance-like matrix \eqn{A_L} is given in \insertCite{@Table 3ection A.11, @scealy2022sc}{scorecompdir}.
-#' The parameters of the Dirichlet part are \eqn{\beta = (−0.80, −0.85, 0, −0.2, 0)}.
+#' The parameters of the Dirichlet part are \eqn{\beta = (-0.80, -0.85, 0, -0.2, 0)}.
 #' @references
 #' \insertAllCited{}
 #' @export
