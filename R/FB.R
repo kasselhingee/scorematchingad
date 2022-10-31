@@ -1,4 +1,5 @@
-#' @title Estimate Fisher-Bingham distribution
+#' @title Estimate the Fisher-Bingham distribution
+#' @description Estimates parameters for the Fisher-Bingham distribution using score-matching.
 #' @param control A list of control parameters passed to `Rcgmin::Rcgmin()`.
 #' @examples
 #' p <- 3
@@ -6,21 +7,25 @@
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
 #' m <- runif(p, -10, 10)
 #' m <- m / sqrt(sum(m^2))
-#' sample <- rFB(1000, 2, m, A)
-#' FB(sample)
-#' @param sample An array of samples, each row an individual sample.
-#' @param km Optional. A vector of same length as the dimension, representing the elements of the Fisher component (concentraction * vector).
+#' Y <- rFB(1000, 2, m, A)
+#' FB(Y)
+#' @param Y An array of multivariate observations. Each row a single measurement, each column is a different dimension of the measurement.
+#' @param km Optional. A vector of same length as the dimension, representing the parameter vector for the von Mises-Fisher component (i.e. the \eqn{\kappa \mu}).
 #' If supplied, the non-NA elements are fixed.
 #' @param A Optional. The Bingham matrix. If supplied the non-NA elements of the Bingham matrix is fixed.
 #' The final diagonal of `A` here must be NA as the software calculates this value to ensure the trace is zero.
 #' @details
-#' Warning: the score matching estimate appears to converge very slowly for the Fisher-Bingham distribution.
+#' The density of the Fisher-Bingham distribution is proportional to 
+#' \deqn{\exp(z^TAz + \kappa\mu^Tz,}
+#' where \eqn{A} is a matrix as in the Bingham distribution, and
+#' \eqn{\kappa} and \eqn{\mu} are the concentration and mean direction, respectively, as in the von Mises-Fisher distribution.
+#' @section Warning The score matching estimate appears to converge very slowly for the Fisher-Bingham distribution.
 #' Even with a million simulated measurements,
 #'  the gradient of the score matching objective at the true theta is
 #'  is of size 0.001, which is substantially non-zero.
 #' @export
-FB <- function(sample, km = NULL, A = NULL, control = default_Rcgmin()){
-  p <- ncol(sample)
+FB <- function(Y, km = NULL, A = NULL, control = default_Rcgmin()){
+  p <- ncol(Y)
   if (is.null(A)){
     A <- matrix(NA, nrow = p, ncol = p)
   }
@@ -37,7 +42,7 @@ FB <- function(sample, km = NULL, A = NULL, control = default_Rcgmin()){
                weightname = "ones",
                verbose = FALSE)
 
-  sminfo <- cppadest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample,
+  sminfo <- cppadest(tapes$smotape, rep(0.1, sum(is.na(intheta))), Y,
                control = control)
   theta <- intheta
   theta[is.na(intheta)] <- sminfo$par
@@ -45,8 +50,17 @@ FB <- function(sample, km = NULL, A = NULL, control = default_Rcgmin()){
   SE <- intheta * 0
   SE[is.na(intheta)] <- sminfo$SE
   SE <- FB_theta2mats(SE, isSE = TRUE)
-  return(c(thetamat, list(sminfo = sminfo, SE = SE)))
+  return(list(
+   est = c(thetamat, list(paramvec = theta)),
+   SE = c(SE, list(paramvec = sminfo$SE)),
+   info = sminfo
+  ))
 }
+#' @return
+#' A list of `est`, `SE`, and `info`
+#'  * `est` contains a slot for the estimate of \eqn{A} and \eqn{\kappa\mu}, and the vector form of the full Fisher-Bingham parameter set `paramvec`.
+#'  * `SE` like `est`, but containing estimates of the standard error based on the sandwich method.
+#'  * `info` a variety of information about the estimation process and results.
 
 # non-normalised density function
 qdFB <- function(u, k, m, A){

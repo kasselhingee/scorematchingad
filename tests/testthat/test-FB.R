@@ -160,8 +160,8 @@ test_that("FB() fits for p = 3", {
   sample <- rFB(10000, thetamats$k, thetamats$m, thetamats$A)
 
   #Fit
-  est <- FB(sample, control = list(tol = 1E-10))
-  expect_lt_v(abs(est$sminfo$par - theta), 3 * est$sminfo$SE)
+  estobj <- FB(sample, control = list(tol = 1E-10))
+  expect_lt_v(abs(estobj$est$paramvec - theta), 3 * estobj$SE$paramvec)
 })
 
 test_that("FB() fits with various fixed elements", {
@@ -177,10 +177,10 @@ test_that("FB() fits with various fixed elements", {
   #a fixed A element
   inA <- matrix(NA, nrow = p, ncol = p)
   inA[p, 1] <- inA[1, p] <- thetamats$A[1, p]
-  est <- FB(sample, A = inA, control = list(tol = 1E-12))
-  expect_lte_v(abs(est$A - thetamats$A)[-(p*p)], 3 * est$SE$A[-(p*p)])
-  expect_equal(est$A[!is.na(inA)], thetamats$A[!is.na(inA)])
-  expect_equal(est$SE$A[!is.na(inA)], 0 * thetamats$A[!is.na(inA)])
+  estobj <- FB(sample, A = inA, control = list(tol = 1E-12))
+  expect_lte_v(abs(estobj$est$A - thetamats$A)[-(p*p)], 3 * estobj$SE$A[-(p*p)])
+  expect_equal(estobj$est$A[!is.na(inA)], thetamats$A[!is.na(inA)])
+  expect_equal(estobj$SE$A[!is.na(inA)], 0 * thetamats$A[!is.na(inA)])
 
   #fixed final diagonal element should error
   inA <- matrix(NA, nrow = p, ncol = p)
@@ -190,10 +190,10 @@ test_that("FB() fits with various fixed elements", {
   # a fixed Fisher element
   inkm <- rep(NA, p)
   inkm[p] <- thetamats$m[p] * thetamats$k
-  est <- FB(sample, km = inkm, control = list(tol = 1E-12))
-  expect_lte_v(abs(est$km - thetamats$km), 3 * est$SE$km + 1E-10)
-  expect_equal(est$km[!is.na(inkm)], thetamats$km[!is.na(inkm)])
-  expect_equal(est$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
+  estobj <- FB(sample, km = inkm, control = list(tol = 1E-12))
+  expect_lte_v(abs(estobj$est$km - thetamats$km), 3 * estobj$SE$km + 1E-10)
+  expect_equal(estobj$est$km[!is.na(inkm)], thetamats$km[!is.na(inkm)])
+  expect_equal(estobj$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
 })
 
 test_that("FB() with many fixed elements leads to smaller smobjgrad", {
