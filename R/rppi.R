@@ -8,14 +8,8 @@
 #' @param paramvec The PPI parameter vector, created easily using [ppi_paramvec()] and also returned by [ppi()].
 #' @param maxden This is the constant \eqn{log(C)} in (Scealy and Wood, 2021; Appendix A.1.1)
 #' @return A matrix with `n` rows. Each row is a independent draw from the specified PPI distribution.
+#' @inherit ppi sections
 #' @details
-#' The PPI model density is proportional to
-#' \deqn{\exp(z^TA_Lz + b_L^Tz)\prod_{i=1}^p z_i^{\beta_i}.}
-#' \eqn{A_L} controls the covariance between components.
-#' \eqn{b_L} controls the location of the distribution within the simplex
-#' \eqn{\beta_0[i]}{beta0[i]} controls the shap of the density when the ith component is close to zero.
-#' If \eqn{b_L} is such that the ith component is typically far from zero, then \eqn{\beta_0[i]}{beta0[i]} will have negligible effect.
-#'
 #' We recommend running `rppi()` a number of times to ensure the choice of `maxden` is good. `rppi()` will error when `maxden` is too low.
 #' @examples
 #' n=1000

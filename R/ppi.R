@@ -1,38 +1,64 @@
-#' @title Score-Matching Estimation of PPI Parameters
-#' @description For certain situations computes the score matching estimate directly (e.g. \insertCite{scealy2022sc}{scorecompdir}), otherwise iteratively minimises the *Hyvarinen divergence* \insertCite{@Equation 2, @hyvarinen2005es}{scorecompdir} using derivatives computed by CppAD and [`Rcgmin::Rcgmin()`].
+#' @title Estimation of Polynomially-Tilted Pairwise Interaction (PPI) model
+#' @description 
+#' Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir}) for compositional data.
+#' For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JS (\insertCite{scealy2022sc}{scorecompdir}).
+#' In the other situations, the score matching estimate is found by iteratively minimising the *weighted Hyvarinen divergence* \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (`CppAD`) and [`Rcgmin::Rcgmin()`].
 
+#' @section PPI Model:
+#' The PPI model density is proportional to
+#' \deqn{\exp(z^TA_Lz + b_L^Tz)\prod_{i=1}^p z_i^{\beta_i},}
+#' where \eqn{p} is the dimension of \eqn{z}, and \eqn{z_{-p}} represents the multivariate measurement \eqn{z} without the final (\eqn{p}th) component.
+#' \eqn{A_L} is a \eqn{p-1 \times p-1} symmetric matrix that controls the covariance between components.
+#' \eqn{b_L} is \eqn{p-1} vector that controls the location of the distribution within the simplex
+#' The \eqn{i}th component of \eqn{\beta} controls the concentration of density when the \eqn{i}th component is close to zero.
+#' 
 #' @details
-#' Estimation may be performed via transformation onto Euclidean space, the positive quadrant of the sphere, or without any transformation. In the latter two situations there is a boundary and *weighted Hyvarinen divergence* \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
-#'
-#' Direct estimates are available for the following situations
-#' + `trans='alr'` and `betap` supplied (and typically positive)
-#' + `trans='sqrt'` and ....
+#' Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and *weighted Hyvarinen divergence* \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
 #'
 #' There are three divergence weight functions available.
-#' * The function 'ones' applies no weights and should be used whenever the manifold does not have a bounday.
-#' * The function 'minsq' is the minima-based divergence weight function for the PPI model \insertCite{@Equation 12, @scealy2022sc}{scorecompdir}
+#' * The function "ones" applies no weights and should be used whenever the manifold does not have a bounday.
+#' * The function "minsq" is the minima-based divergence weight function for the PPI model \insertCite{@Equation 12, @scealy2022sc}{scorecompdir}
 #' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
 #' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 #' and \eqn{z_j}{zj} is the jth component of z.
-#' * The function 'prodsq' is the product-based \insertCite{@Equation 9, @scealy2022sc}{scorecompdir}
-#' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2).}
+#' * The function "prodsq" is the product-based \insertCite{@Equation 9, @scealy2022sc}{scorecompdir}
+#' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2),}
+#' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
+#' and \eqn{z_j}{zj} is the jth component of z.
+#'
+#' Hard-coded estimators are available for the following situations
+#'  + Square root transformation ("sqrt") with the "minsq" divergence weight function:
+#'    + full parameter vector (`paramvec` not provided)
+#'    + `paramvec` fixes only the final element of \eqn{\beta}
+#'    + `paramvec` fixes all elements of \eqn{\beta} 
+#'    + `paramvec` fixes \eqn{b_L = 0} and provides fixed values of \eqn{\beta}
+#'    + `paramvec` fixes \eqn{A_L=0} and \eqn{b_L=0}, leaving \eqn{\beta} to be fitted. 
+#'  + Square root transformation ("sqrt") with the "prodsq" divergence weight function:
+#'    + `paramvec` fixes all elements of \eqn{\beta} 
+#'    + `paramvec` fixes \eqn{b_L = 0} and provides fixed values of \eqn{\beta}
+#'    + `paramvec` fixes \eqn{A_L=0} and \eqn{b_L=0}, leaving \eqn{\beta} to be fitted. 
+#'  + The additive log ratio transformation ("alr") using the final component on the denominator, with \eqn{b_L=0} and fixed final component of \eqn{\beta}.
 
-#' @param trans The name of the transformation: 'alr' (additive log ratio), 'sqrt' or 'none'.
-#' @param pow The power of `u` in the PPI density - by default `pow` is `1`. NOT YET IMPLEMENTED
+#' @param trans The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".
 #' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
-#' @param paramvec Optionally a standard-form vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate `paramvec` easily using [ppi_paramvec()].
-#' @param hsqfun The h-squared function for down weighting as measurements approach the manifold boundary.
-#' @param acut The threshold in `hsqfun` to avoid over-weighting measurements interior to the simplex
-#' @param control Control parameters to `Rcgmin`, of primary use is the tolerance parameter of the squared gradient size
-#' @param bdrythreshold For measurements close to the boundary of the simplex Taylor approximation is applied.
-#' @param shiftsize Measurements close to the boundary are shifted by this distance for Taylor approximation.
-#' @param approxorder Order of the Taylor approximation
-#' @param method `direct` for estimates calculated directly where possible (*list them*) or `cppad` to find the score matching estimates using automatic differentiation and the `Rcgmin()` iterative solver.
-#' @param paramvec_start Only for method `cppad`. The starting guess for the iterative solver with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec` easily using [ppi_paramvec()].
+#' @param paramvec Optionally a vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate `paramvec` easily using [ppi_paramvec()].
+#' @param divweight The divergence weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
+#' @param acut The threshold \eqn{a_c} in `divweight` to avoid over-weighting measurements interior to the simplex
+#' @param control `CppAD` only. Passed to [`Rcgmin::Rcgmin()`] to control the iterative solver. Default values are given by [`default_Rcgmin()`].
+#' @param bdrythreshold `CppAD` only. For measurements close to the boundary of the simplex Taylor approximation is applied. See [`simplex_isboundary()`].
+#' @param shiftsize `CppAD` only. For Taylor approximation, approximation centres are chosen based on `shiftsize`. See [`simplex_boundaryshift()`].
+#' @param approxorder `CppAD` only. Order of the Taylor approximation for measurements on the boundary of the simplex.
+#' @param method "direct" uses the hardcoded estimators by JS. "cppad" uses `CppAD` and [`Rcgmin::Rcgmin()`] to iteratively find the minimum of the weighted Hyvarinen divergence.
+#' @param paramvec_start `CppAD` only. The starting guess for `Rcgmin` with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec_start` easily using [`ppi_paramvec()`].
+#' @references
+#' \insertAllCited{}
 #' @examples
 #' model <- ppi_egmodel(1000)
-#' estinfo <- ppi(model$sample, paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)), trans = "alr", method = "cppad")
-#' misspecified <- ppi(model$sample, paramvec = ppi_paramvec(bL = 0, betap = -0.5, p = ncol(model$sample)), trans = "alr", method = "direct")
+#' estalr <- ppi(model$sample,
+#'               paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)),
+#'               trans = "alr", method = "cppad")
+#' estsqrt <- ppi(model$sample,
+#'               trans = "sqrt", method = "direct")
 #' @export
 ppi <- function(Y, paramvec = NULL,
                 pow = 1, trans, method = "direct", w = rep(1, nrow(Y)),
