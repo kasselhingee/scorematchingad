@@ -133,10 +133,10 @@ test_that("Test ppi() against direct when there are boundary points, with and wi
   acut = 0.1
   direct <- ppi(newsample, 
                 paramvec = ppi_paramvec(p = ncol(newsample), betap = tail(m$beta0, 1)),
-                trans = "sqrt", bdryweight = "minsq", 
+                trans = "sqrt", divweight = "minsq", 
                 acut = acut)
 
-  est <- ppi(newsample, ppi_paramvec(p = 3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est <- ppi(newsample, ppi_paramvec(p = 3, betap = m$beta0[3]), trans = "sqrt", divweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
   expect_equal(est$est$paramvec, direct$est$paramvec, tolerance = 1E-4)
 
@@ -145,11 +145,11 @@ test_that("Test ppi() against direct when there are boundary points, with and wi
 
   direct <- ppi(newsample, 
                 paramvec = ppi_paramvec(p = ncol(newsample), betap = tail(m$beta0, 1)),
-                trans = "sqrt", bdryweight = "minsq", 
+                trans = "sqrt", divweight = "minsq", 
                 acut = acut,
                 w = w)
 
-  est <- ppi(newsample, ppi_paramvec(p = 3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est <- ppi(newsample, ppi_paramvec(p = 3, betap = m$beta0[3]), trans = "sqrt", divweight = "minsq", acut = acut, method = "cppad",
                    w = w,
                    control = list(tol = 1E-10))
   expect_equal(est$est$paramvec, direct$est$paramvec, tolerance = 1E-4)
@@ -171,7 +171,7 @@ test_that("Taylor approx of cppadSE gives suitable SE for estimates", {
   mean(apply(newsample, 1, min) == 0) #28% have a zero
 
   acut = 0.1
-  est <- ppi(newsample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est <- ppi(newsample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", divweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
   expect_absdiff_lte_v(est$est$paramvec, m$theta, 3 * est$SE$paramvec)
   # note that the SE is a bit hard to test on here because the data has been truncated
@@ -184,10 +184,10 @@ test_that("Taylor approx of ppi() SE matches on the interior", {
   acut = 0.1
   direct <- estimatorall1(m$sample, acut = acut, betap = m$beta0[3])
 
-  est_default <- ppi(m$sample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est_default <- ppi(m$sample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", divweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
 
-  est_interior <- ppi(m$sample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est_interior <- ppi(m$sample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", divweight = "minsq", acut = acut, method = "cppad",
                             bdrythreshold = -1,
                             control = list(tol = 1E-10))
 
@@ -212,7 +212,7 @@ test_that("ppi() operates when minimal points in the interior", {
   acut = 0.1
   direct <- estimator1(newsample, acut = acut, incb = 1, beta = m$beta0)
 
-  est <- ppi(newsample, ppi_paramvec(betaL = m$beta0[1:2], betap = m$beta0[3]), trans = "sqrt", bdryweight = "minsq", acut = acut, method = "cppad",
+  est <- ppi(newsample, ppi_paramvec(betaL = m$beta0[1:2], betap = m$beta0[3]), trans = "sqrt", divweight = "minsq", acut = acut, method = "cppad",
                             control = list(tol = 1E-10))
   expect_absdiff_lte_v(est$est$paramvec, direct$est$paramvec, 1E-1 * abs(direct$est$paramvec))
 })

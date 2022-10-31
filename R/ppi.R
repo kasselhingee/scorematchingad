@@ -56,13 +56,13 @@
 #' model <- ppi_egmodel(1000)
 #' estalr <- ppi(model$sample,
 #'               paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)),
-#'               trans = "alr", method = "cppad")
+#'               trans = "alr", method = "direct")
 #' estsqrt <- ppi(model$sample,
-#'               trans = "sqrt", method = "direct")
+#'               trans = "sqrt", method = "direct", divweight = "minsq")
 #' @export
 ppi <- function(Y, paramvec = NULL,
                 pow = 1, trans, method = "direct", w = rep(1, nrow(Y)),
-                bdryweight = "ones", acut = NULL, #specific to some methods
+                divweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin(), paramvec_start = NULL#specific to cppad methods
                 ){
   # process inputs
@@ -103,7 +103,7 @@ ppi <- function(Y, paramvec = NULL,
       }
     }
     if (man == "sphere"){ # a number of methods implemented
-      if (bdryweight == "minsq"){
+      if (divweight == "minsq"){
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
           betaest <- as.vector(dir_sqrt_minimah(Y, acut = acut, w = w))
           estparamvec <- t_fu2t(betaest, usertheta)
@@ -132,7 +132,7 @@ ppi <- function(Y, paramvec = NULL,
         }
       }
 
-      if (bdryweight == "prodsq"){
+      if (divweight == "prodsq"){
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
           betaest <- dir_sqrt_prodh(Y, acut = acut, w = w)
           fitfun <- "dir_sqrt_prodh"
@@ -164,7 +164,7 @@ ppi <- function(Y, paramvec = NULL,
                approxorder = approxorder,
                pow = pow,
                man = man,
-               weightname = bdryweight,
+               weightname = divweight,
                acut = acut,
                control = controls$Rcgmin,
                w = w)

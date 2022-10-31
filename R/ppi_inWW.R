@@ -30,7 +30,7 @@ ppi_cW <- function(cW, ...){
 #' @export
 ppi_cW_auto <- function(cW, Y){
   anest <- ppi(Y = Y, paramvec = ppi_paramvec(p = ncol(Y), AL=0, bL=0),
-    trans = "sqrt", bdryweight = "minsq", acut = 0.01, method = "direct")
+    trans = "sqrt", divweight = "minsq", acut = 0.01, method = "direct")
   betaest <- anest$est$beta
   cW <- do.call(ppi_cW, c(list(cW = cW), as.list(betaest < 0)))
   return(cW)

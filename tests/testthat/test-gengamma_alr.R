@@ -2,7 +2,7 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 3", {
   set.seed(1234)
   m <- ppi_egmodel(100, maxden = 4)
 
-  est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", bdryweight = "ones",
+  est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", divweight = "ones",
                          control = list(tol = 1E-10))
   est_direct <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct")
 
@@ -50,7 +50,7 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight and data wi
   dsample[, 3] <- 1 - rowSums(dsample[, 1:2])
 
   est_direct <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct")
-  est_cppad <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", bdryweight = "ones",
+  est_cppad <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", divweight = "ones",
                          bdrythreshold = 1E-200,
                          control = list(tol = 1E-20))
 
@@ -68,7 +68,7 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 5", {
   set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
   prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=5) #rppi_singly took 1005 seconds, rppi() took 13seconds
 
-  est_cppad <- ppi(prop, ppi_paramvec(bL = bL, betap = beta[p]), trans = "alr", method = "cppad", bdryweight = "ones",
+  est_cppad <- ppi(prop, ppi_paramvec(bL = bL, betap = beta[p]), trans = "alr", method = "cppad", divweight = "ones",
                          bdrythreshold = 1E-20,
                          control = list(tol = 1E-10), w = NULL) #w = NULL here to temporarily dodge the issue with weights of 1 generating different results to no weights
   expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)
@@ -120,7 +120,7 @@ test_that("ppi_alr_gengamma() and cppad match for a randomly selected weight vec
   set.seed(1212)
   w <- runif(100)
 
-  est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", bdryweight = "ones",
+  est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", divweight = "ones",
                          w = w,
                          control = list(tol = 1E-10))
   est_direct <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct", w = w)

@@ -107,7 +107,7 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   #check it matches cppad ppi()
   est_cppad <- ppi(Y = propreal, acut = acut,
                    method = "cppad",
-                   trans = "sqrt", bdryweight = "minsq",
+                   trans = "sqrt", divweight = "minsq",
                    bdrythreshold = 1E-5, shiftsize = 1E-10,
                    paramvec = ppi_paramvec(beta = beta0))
   expect_equal(est_cppad$est$paramvec, estimator$est$paramvec, tolerance = 1E-3)

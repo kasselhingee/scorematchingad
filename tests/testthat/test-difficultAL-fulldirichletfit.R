@@ -9,7 +9,7 @@ test_that("full ppi estimates are mostly within 3 SE for difficult AL with large
   suppressMessages(prop <- rppi(1000, beta = beta, AL=ALs, bL=bL, maxden=35)) #rppi_singly took 1005 seconds, rppi() took 13seconds
   #prop %>% as_tibble() %>% tidyr::pivot_longer(everything()) %>% ggplot() + facet_wrap(vars(name)) + geom_freqpoly(aes(x=value))
 
-  est_cppad <- ppi(prop, ppi_paramvec(bL = bL), trans = "sqrt", bdryweight = "minsq",
+  est_cppad <- ppi(prop, ppi_paramvec(bL = bL), trans = "sqrt", divweight = "minsq",
                          method = "cppad",
                          acut = 0.01,
                          bdrythreshold = 1E-20,
@@ -30,7 +30,7 @@ test_that("full ppi estimates are within 3 SE of beta for difficult AL with larg
   suppressMessages(prop <- rppi(20000, beta=beta, AL=ALs, bL=bL, maxden=20))
   expect_equal(colMeans(prop), c(0.1, 0.99, 0.1), tolerance = 0.5)
 
-  est_cppad <- ppi(prop, ppi_paramvec(bL = bL), trans = "sqrt", bdryweight = "minsq",
+  est_cppad <- ppi(prop, ppi_paramvec(bL = bL), trans = "sqrt", divweight = "minsq",
                          method = "cppad",
                          acut = 0.01,
                          bdrythreshold = 1E-20,
