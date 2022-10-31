@@ -136,8 +136,12 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
   return(list(accepted = accepted, maxden = maxden))
 }
 
-#' @describeIn rppi Compute the *logarithm* of the *improper* density for the PPI model for the given matrix of measurements `prop`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
-#' @param `prop` A matrix of measurements.
+#' @title Improper Log-Density of the PPI Model
+#' @description Compute the natural logarithm of the improper density for the PPI model for the given matrix of measurements `prop`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
+#' @param Y A matrix of measurements.
+#' @inheritParams rppi
+#' @details The value calculated by `dppi` is
+#' \deqn{z^TA_Lz + b_L^Tz + \beta^T \log(z).}
 #' @export
 dppi <- function(prop,beta0,ALs,bL){
   p <- ncol(prop)
