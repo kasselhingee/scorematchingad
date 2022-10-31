@@ -33,11 +33,6 @@ prop=x/ni
 #dirfit=prop
 dirfit=dirprop
 
-test_that("Dirichlet moment estimator runs", {
-  estimate6=dir_moment(dirfit)-1
-  expect_gt(mean(abs(estimate6 - alpha) < abs(alpha)) , 0.6)
-})
-
 test_that("Score2 runs", {
   #a_c for h function (any large value):
   acut=10

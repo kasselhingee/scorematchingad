@@ -22,14 +22,16 @@ ppi_cW <- function(cW, ...){
 }
 
 #' @param Y A matrix of observations
-#' @describeIn ppi_cW Automatically detects concentrations near zero by fitting a Dirichlet distribution via method of moments `dir_moment`.  
+#' @describeIn ppi_cW Automatically detects concentrations near zero by fitting a PPI distribution with \eqn{A_L=0} and \eqn{b_L=0} (i.e. a Dirichlet distribution) with the square root transformation and minima-based divergence weight function.
 #' @examples
-#' Y <- MCMCpack::rdirichlet(100, c(0.1, 0.2, 1.5))
+#' Y <- ppi_egmodel(100)$sample
 #' ppi_cW_auto(0.01, Y)
 #' ppi_cW(0.01, TRUE, TRUE, FALSE)
 #' @export
 ppi_cW_auto <- function(cW, Y){
-  betaest <- dir_moment(Y)-1
+  anest <- ppi(Y = Y, paramvec = ppi_paramvec(p = ncol(Y), AL=0, bL=0),
+    trans = "sqrt", bdryweight = "minsq", acut = 0.01, method = "direct")
+  betaest <- anest$est$beta
   cW <- do.call(ppi_cW, c(list(cW = cW), as.list(betaest < 0)))
   return(cW)
 }

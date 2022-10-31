@@ -52,12 +52,6 @@ test_that("ppi_alr_gengamma matches for simulated weights", {
   expect_equal(est_direct$est$paramvec, est_sim$est$paramvec)
 })
 
-test_that("dir_moment matches for simulated weights", {
-  est_sim <- dir_moment(vw$newY)
-  est_direct <- dir_moment(m$sample, w = vw$w)
-  expect_equal(est_direct, est_sim)
-})
-
 test_that("dir_sqrt_minimah matches for simulated weights", {
   est_sim <- dir_sqrt_minimah(vw$newY, acut = acut)
   est_direct <- dir_sqrt_minimah(m$sample, acut = acut, w = vw$w)

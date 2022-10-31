@@ -187,8 +187,3 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
 
 })
 
-#### Dirchlet Model ####
-test_that("Dirchlet moment fitting is historically correct", {
-  alpha_dir=scorecompdir:::dir_moment(propreal)
-  expect_snapshot_value(signif(alpha_dir, 8), style = "json2")
-})
