@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Try to extract estimated parameter vector from the result of an estimator
 #' @param estobj The output from an estimator in this package.
 #' @description If `estobj` is a list then looks first in the slot `est$paramvec` then the first element of the list. If the output is a numeric vector then it will use this. If none of these return a numeric vector then an error will be flagged.

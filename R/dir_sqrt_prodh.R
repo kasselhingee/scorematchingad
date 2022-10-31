@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Score matching estimates for the Dirichlet distribution
 #' @description Score matching estimates for the Dirichlet distribution, which is the PPI with \eqn{A_L=0} and \eqn{b_L=0}. The parameters to be estimates are the \eqn{\beta}{beta}. Standard errors are not calculated.
 #' @param Y Compositional data (n by p matrix)

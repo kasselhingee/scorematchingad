@@ -14,7 +14,8 @@
 #' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
 #' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 #' and \eqn{z_j}{zj} is the jth component of z.
-#' * The function 'prodsq' is the product-based
+#' * The function 'prodsq' is the product-based \insertCite{@Equation 9, @scealy2022sc}{scorecompdir}
+#' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2).}
 
 #' @param trans The name of the transformation: 'alr' (additive log ratio), 'sqrt' or 'none'.
 #' @param pow The power of `u` in the PPI density - by default `pow` is `1`. NOT YET IMPLEMENTED
