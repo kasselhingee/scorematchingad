@@ -56,7 +56,7 @@ test_that("rppi() errors appropriately", {
 test_that("dppi() produces -Inf results outside simplex", {
   m <- ppi_egmodel(1)
   prop <- matrix(c(-1, 1, 1, 0.1, 0.1, 0.1, 0.8, 0.8, 0.7), ncol = 3, byrow = TRUE)
-  suppressWarnings(logdens <- dppi(prop, beta0 = m$beta, ALs = m$AL, bL = m$bL) )
+  suppressWarnings(logdens <- dppi(prop, beta = m$beta, AL = m$AL, bL = m$bL) )
   expect_equal(logdens, rep(-Inf, 3))
 })
 

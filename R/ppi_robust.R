@@ -9,8 +9,7 @@
 ppi_robust <- function(Y, cW, ...){
   ellipsis::check_dots_used()
   ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
-    mats <- fromPPIparamvec(theta, p = ncol(Y))
-    return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
+    return(drop(dppi(Y, paramvec = theta)))
   }
 
   est = WindhamRobust(Y = Y,

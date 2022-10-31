@@ -143,8 +143,7 @@ expect_equal(est1b$est$paramvec, est1$est$paramvec)
 # Doing the full fp search with cppad fitting took too long and with maxit = 100, the estimate was poor.
 # instead verify the est1 result. The Windham solution theta is such that tauc(theta) = T(F weighted by c,theta)
 ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
-  mats <- fromPPIparamvec(theta, p = ncol(Y))
-  return(drop(dppi(Y, beta0=mats$beta, ALs = mats$ALs, bL = mats$bL)))
+  return(drop(dppi(Y, paramvec = theta)))
 }
 
 weights <- Windham_weights(ldenfun = ldenfun, Y = propreal,

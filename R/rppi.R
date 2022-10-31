@@ -9,6 +9,8 @@
 #' @param maxden This is the constant \eqn{log(C)} in (Scealy and Wood, 2021; Appendix A.1.1)
 #' @return A matrix with `n` rows. Each row is a independent draw from the specified PPI distribution.
 #' @details
+#' The PPI model density is proportional to
+#' \deqn{\exp(z^TA_Lz + b_L^Tz)\prod_{i=1}^p z_i^{\beta_i}.}
 #' \eqn{A_L} controls the covariance between components.
 #' \eqn{b_L} controls the location of the distribution within the simplex
 #' \eqn{\beta_0[i]}{beta0[i]} controls the shap of the density when the ith component is close to zero.
@@ -39,7 +41,7 @@
 #' segments(0, 1, 1, 0)
 #' segments(1, 0, 0, 0)
 #'
-#' dppi(samp, beta, AL, bL)
+#' dppi(samp, AL=AL, bL=bL, beta=beta)
 #' @export
 rppi <- function(n, beta = NULL, AL = NULL, bL = NULL, paramvec = NULL, maxden = 4){
   # a warning if maxden is high
@@ -143,22 +145,35 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
 #' @details The value calculated by `dppi` is
 #' \deqn{z^TA_Lz + b_L^Tz + \beta^T \log(z).}
 #' @export
-dppi <- function(prop,beta0,ALs,bL){
-  p <- ncol(prop)
-  sp <- p - 1
+dppi <- function(Y, AL = NULL,bL = NULL, beta = NULL, paramvec = NULL){
+  #process inputs
+  if (is.null(paramvec)){if (any(is.null(beta), is.null(AL), is.null(bL))){stop("If paramvec isn't supplied then beta, AL, and bL must be supplied")}}
+  else {
+    if (!all(is.null(beta), is.null(AL), is.null(bL))){stop("Providing a paramvec is incompatible with providing a beta, AL or bL.")}
+    if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA")}
+    parammats <- fromPPIparamvec(paramvec)
+    beta <- parammats$beta
+    AL <- parammats$ALs
+    bL <- parammats$bL
+  }
+
+  p <- ncol(Y)
   if (!("matrix" %in% class(bL))){bL <- as.matrix(bL, ncol = 1)}
   stopifnot(isTRUE(ncol(bL) == 1))
-  uAstaru <- ppi_uAstaru(prop[,-p, drop = FALSE], ALs, bL) #result is a vector
-  if (all(beta0 == 0)){return(as.vector(uAstaru))} #skip the computation below when beta0 is zero
-  if (!("matrix" %in% class(beta0))){beta0 <- as.matrix(beta0, ncol = 1)}
-  logprop <- log(prop)
+
+  uAstaru <- ppi_uAstaru(Y[,-p, drop = FALSE], AL, bL) #result is a vector
+  if (all(beta == 0)){return(as.vector(uAstaru))} #skip the computation below when beta0 is zero
+
+  if (!("matrix" %in% class(beta))){beta <- as.matrix(beta, ncol = 1)}
+  logprop <- log(Y)
   # define u^0 as 1 when u goes to -Inf
-  logprop[, beta0 == 0] <- 0
+  logprop[, beta == 0] <- 0
   logdirichlet <- logprop %*% beta0
   logdensity <- as.vector(uAstaru + logdirichlet)
+
   # set points outside the simplex to 0
-  negatives <- rowSums(prop < 0) > 0
-  sumisnt1 <- abs(rowSums(prop) -1) > 1E-15
+  negatives <- rowSums(Y < 0) > 0
+  sumisnt1 <- abs(rowSums(Y) -1) > 1E-15
   logdensity[negatives|sumisnt1] <- -Inf
   return(logdensity)
 }
