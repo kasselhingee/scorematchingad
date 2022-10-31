@@ -10,19 +10,18 @@
 #' Y <- rFB(1000, 2, m, A)
 #' FB(Y)
 #' @param Y An array of multivariate observations. Each row a single measurement, each column is a different dimension of the measurement.
-#' @param km Optional. A vector of same length as the dimension, representing the parameter vector for the von Mises-Fisher component (i.e. the \eqn{\kappa \mu}).
+#' @param km Optional. A vector of same length as the dimension, representing the parameter vector for the von Mises-Fisher component (i.e. the \eqn{\kappa \mu}see [`vMF()`]).
 #' If supplied, the non-NA elements are fixed.
-#' @param A Optional. The Bingham matrix. If supplied the non-NA elements of the Bingham matrix is fixed.
-#' The final diagonal of `A` here must be NA as the software calculates this value to ensure the trace is zero.
+#' @param A Optional. The Bingham matrix. If supplied the non-NA elements of the Bingham matrix are fixed.
+#' The final element of the diagonal of `A` must be NA as the software calculates this value to ensure the trace is zero.
 #' @details
 #' The density of the Fisher-Bingham distribution is proportional to 
-#' \deqn{\exp(z^TAz + \kappa\mu^Tz,}
+#' \deqn{\exp(z^TAz + \kappa\mu^Tz),}
 #' where \eqn{A} is a matrix as in the Bingham distribution, and
 #' \eqn{\kappa} and \eqn{\mu} are the concentration and mean direction, respectively, as in the von Mises-Fisher distribution.
-#' @section Warning The score matching estimate appears to converge very slowly for the Fisher-Bingham distribution.
+#' @section Warning: The score matching estimate appears to converge very slowly for the Fisher-Bingham distribution.
 #' Even with a million simulated measurements,
-#'  the gradient of the score matching objective at the true theta is
-#'  is of size 0.001, which is substantially non-zero.
+#'  the gradient of the score matching objective at the true parameters has size 0.001, which is substantially non-zero.
 #' @export
 FB <- function(Y, km = NULL, A = NULL, control = default_Rcgmin()){
   p <- ncol(Y)
