@@ -168,7 +168,7 @@ dppi <- function(Y, AL = NULL,bL = NULL, beta = NULL, paramvec = NULL){
   logprop <- log(Y)
   # define u^0 as 1 when u goes to -Inf
   logprop[, beta == 0] <- 0
-  logdirichlet <- logprop %*% beta0
+  logdirichlet <- logprop %*% beta
   logdensity <- as.vector(uAstaru + logdirichlet)
 
   # set points outside the simplex to 0
