@@ -12,7 +12,7 @@
 #' @param ... Arguments passed to `estimator`.
 #' @param paramvec_start
 #' Initially used to check the function `estimator`. If `estimator` accepts a `paramvec_start`, then the current estimate of the parameter vector is passed as `paramvec_start` to `estimator` in each iteration.
-#' @param cW A vector of robustness tuning constants - the parameter vector is multiplied by these when computing the log-density of each observation for the Windham weights. For the PPI model, generate `cW` easily using [ppi_cW()] and [ppi_cW_auto()].
+#' @param cW A vector of robustness tuning constants. When computing the weight for an observation the parameter vector is multiplied element-wise with `cW`. For the PPI model, generate `cW` easily using [ppi_cW()] and [ppi_cW_auto()].
 #' @param fpcontrol A named list of control arguments to pass to [FixedPoint::FixedPoint()] for the fixed point iteration.
 
 

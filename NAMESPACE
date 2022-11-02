@@ -2,7 +2,7 @@
 
 export(Bingham)
 export(FB)
-export(WindhamRobust)
+export(Windham)
 export(Windham_weights)
 export(default_FixedPoint)
 export(default_Rcgmin)
