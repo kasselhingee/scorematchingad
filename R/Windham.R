@@ -28,13 +28,13 @@
 #' The estimate returned by `Windham()` is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n \approx \theta_{n+1}}.
 #'
 #' An exponential model with a base rate may be used with `Windham()` so long as the base rate is omitted from `ldenfun` (i.e. not used for weighting).
-#' @family Windham robust functions
+#' @family Windham functions
 #' @return
 #' A list:
 #' * `theta` the estimated parameter vector
 #' * `optim` information about the fixed point iterations and opimisation process. Including a slot `finalweights` for the weights in the final iteration.
 #' @export
-WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
+Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)
   ellipsis::check_dots_used()
   # assuming estimator has arguments: Y, paramvec, w, and optionally paramvec_start.

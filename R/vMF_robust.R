@@ -5,7 +5,7 @@
 #' @param cW Tuning constants for each parameter in the vMF parameter vector. If a single number then the constant is the same for each element of the parameter vector.
 #' @param Y A matrix of observations in Cartesian coordinates.
 #' @param ... Passed to [`Windham()`] and then passed onto either [`vMF()`] or [`vMF_kappa()`].
-#' @family Windham robust functions
+#' @family Windham functions
 #' @export
 vMF_robust <- function(Y, cW, ...){
   ellipsis::check_dots_used()
@@ -27,7 +27,7 @@ vMF_robust <- function(Y, cW, ...){
     m <- theta/k
     return(drop(Directional::dvmf(Y, k, m, logden = TRUE)))
   }
-  est <- WindhamRobust(Y = Y,
+  est <- Windham(Y = Y,
                      estimator = vMF,
                      ldenfun = ldenfun,
                      cW = cW,
@@ -41,7 +41,7 @@ vMF_robust <- function(Y, cW, ...){
 }
 
 #' @rdname 
-#' @family Windham robust functions
+#' @family Windham functions
 #' @export
 vMF_kappa_robust <- function(Y, cW, ...){
   extraargs <- list(...)
@@ -52,7 +52,7 @@ vMF_kappa_robust <- function(Y, cW, ...){
     m <- c(1 , rep(0, ncol(Y) - 1))
     return(drop(Directional::dvmf(Y, k, m, logden = TRUE)))
   }
-  est <- WindhamRobust(Y = Y,
+  est <- Windham(Y = Y,
                      estimator = vMF_kappa,
                      ldenfun = ldenfun,
                      cW = cW,
