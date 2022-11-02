@@ -6,7 +6,7 @@
 
 #' @section PPI Model:
 #' The PPI model density is proportional to
-#' \deqn{\exp(z^TA_Lz + b_L^Tz)\prod_{i=1}^p z_i^{\beta_i},}
+#' \deqn{\exp(z_{-p}^TA_Lz_{-p} + b_L^Tz_{-p})\prod_{i=1}^p z_i^{\beta_i},}
 #' where \eqn{p} is the dimension of \eqn{z}, and \eqn{z_{-p}} represents the multivariate measurement \eqn{z} without the final (\eqn{p}th) component.
 #' \eqn{A_L} is a \eqn{p-1 \times p-1} symmetric matrix that controls the covariance between components.
 #' \eqn{b_L} is \eqn{p-1} vector that controls the location of the distribution within the simplex

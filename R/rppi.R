@@ -1,16 +1,20 @@
 #' @title Generate random observations from the PPI model
 #' @description Given parameters of the PPI model, generates independent samples.
 #' @param n Sample size
-#' @param p Dimension (number of components)
+#' @param p Number of components
 #' @param beta The \eqn{\beta}{beta} shape parameter vector
 #' @param AL The \eqn{A_L} parameter matrix
 #' @param bL The \eqn{b_L} parameter vector
 #' @param paramvec The PPI parameter vector, created easily using [ppi_paramvec()] and also returned by [ppi()].
-#' @param maxden This is the constant \eqn{log(C)} in (Scealy and Wood, 2021; Appendix A.1.1)
-#' @return A matrix with `n` rows. Each row is a independent draw from the specified PPI distribution.
+#' @param maxden This is the constant \eqn{log(C)} in \insertCite{@Appendix A.1.3 @scealy2022sc}{scorecompdir}.
+#' @return A matrix with `n` rows and `p` columns. Each row is an independent draw from the specified PPI distribution.
 #' @inherit ppi sections
 #' @details
 #' We recommend running `rppi()` a number of times to ensure the choice of `maxden` is good. `rppi()` will error when `maxden` is too low.
+#' 
+#' The simulation uses a rejection-sampling algorithm with Dirichlet proposal \insertCite{@Appendix A.1.3 @scealy2022sc}{scorecompdir}.
+#' Initially \eqn{\tilde n}=`n` Dirichlet proposals are generated. After rejection there are fewer samples remaining, say \eqn{n^*}.
+#' The the ratio \eqn{n^*/{\tilde n}} is used to guess the number of Dirichlet proposals until `n` samples of the PPI model are generated.
 #' @examples
 #' n=1000
 #' p=3
@@ -28,14 +32,12 @@
 #' AL=-0.5*solve(SigA)
 #' bL=solve(SigA)%*%muL
 #'
-#' samp <- rppi(n,p,beta,AL,bL,4)
+#' samp <- rppi(n,p,beta=beta,AL=AL,bL=bL,maxden4)
 #' plot(ks::kde(samp[,-p]),
 #'  xlim = c(0, 1), ylim = c(0, 1))
 #' segments(0, 0, 0, 1)
 #' segments(0, 1, 1, 0)
 #' segments(1, 0, 0, 0)
-#'
-#' dppi(samp, AL=AL, bL=bL, beta=beta)
 #' @export
 rppi <- function(n, beta = NULL, AL = NULL, bL = NULL, paramvec = NULL, maxden = 4){
   # a warning if maxden is high
