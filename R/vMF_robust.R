@@ -40,7 +40,7 @@ vMF_robust <- function(Y, cW, ...){
   return(out)
 }
 
-#' @rdname 
+#' @rdname vMF_robust 
 #' @family Windham functions
 #' @export
 vMF_kappa_robust <- function(Y, cW, ...){

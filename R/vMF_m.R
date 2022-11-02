@@ -10,7 +10,7 @@ vMF_m <- function(Y, w = NULL){
   return(m)
 }
 
-#' @rdname 
+#' @rdname  vMF_m
 #' @details `vMF_m()` Rotates a set of observations on a sphere to have mean direction of \eqn{(1, 0, 0, ..., 0)}.
 #' @param m Mean direction. If omitted then it will be computed using `vMF_m()`.
 #' @export
