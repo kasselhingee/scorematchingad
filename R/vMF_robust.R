@@ -1,6 +1,10 @@
 #' @title Robust fitting of von Mises Fisher
-
+#' @description
+#' Robust fitting for von Mises Fisher distribution using [`Windham()`], 
+#' for the full parameter vector \eqn{\kappa\mu} with `vMF_robust()` or just the concentration with `vMF_kappa_robust()` assuming a mean direction of `c(1, 0, 0, ....)`.
 #' @param cW Tuning constants for each parameter in the vMF parameter vector. If a single number then the constant is the same for each element of the parameter vector.
+#' @param Y A matrix of observations in Cartesian coordinates.
+#' @param ... Passed to [`Windham()`] and then passed onto either [`vMF()`] or [`vMF_kappa()`].
 #' @export
 vMF_robust <- function(Y, cW, ...){
   ellipsis::check_dots_used()
@@ -35,7 +39,7 @@ vMF_robust <- function(Y, cW, ...){
   return(out)
 }
 
-#' @describeIn vMF_robust Robust fitting of the concentration of von Mises Fisher only. The sample `Y` is standardised to have mean direction `c(1, 0, 0, ....)`.
+#' @rdname 
 #' @export
 vMF_kappa_robust <- function(Y, cW, ...){
   extraargs <- list(...)

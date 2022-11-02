@@ -1,11 +1,13 @@
 #' @title Estimate the concentration for a von Mises Fisher distribution
-#' @description Estimates the concentration `k` from a sample with mean direction of `c(1, 0, 0, ...)`. Often such a sample is created by estimating the mean direction and rotating the data such that the mean direction equals `c(1, 0, 0, ...)`.
-#' Performing this mean direction estimate, rotation, then estimating concentration with score matching correponds to Mardia et al's \insertCite{@mardia2016sc}{scorecompdir} hybrid estimator for von Mises-Fisher distribution.
+#' @description Using score matching, estimates the concentration \eqn{\kappa} from a sample with mean direction of `c(1, 0, 0, ..., 0)`. 
+#' Results by \insertCite{mardia2016sc;textual}{scorecompdir} and some experiments of our own suggest that good implementations of the maximum likelihood estimator (e.g. [`movMF::movMF()`] ) will out perform `vMF_kappa()`.
+#'
+#' Often a sample with mean direction of `c(1, 0, 0, ...., 0)` is created by estimating the mean direction and rotating the data such that the mean direction equals `c(1, 0, 0, ...)`.
+#' Performing this mean direction estimate, rotation, then estimating concentration with score matching correponds to the hybrid estimator by \insertCite{mardia2016sc;textual}{scorecompdir}.
+#' @inherit vMF sections
+#' @references \insertAllCited()
 #' @details
-#' The von Mises Fisher distribution has two parameters, the concentration \eqn{\kappa} and mean direction \eqn{\mu} with density \eqn{f(z; \kappa, \mu)} proportional to
-#' \deqn{\exp(\kappa \mu^T z).}
-#'  
-#' The concentration and mean direction have well defined and in-a-sense independent impact on the distribution \insertCite{p169 @mardia2000di}, which allows for them to be estimated seperately. The function here estimates *only* the concentration, assuming that \eqn{\mu} is \eqn{(1, 0, 0, ..., 0)}.
+#' The function `vMF_kappa()` estimates *only* the concentration \eqn{\kappa}, and assumes that \eqn{\mu} is \eqn{(1, 0, 0, ..., 0)}.
 #' @return
 #' A list of `est`, `SE` and `info`.
 #' `est` contains the estimate of the concentration in the slot `k` for easy use and `paramvec` for compatibility with other functions in this package.
