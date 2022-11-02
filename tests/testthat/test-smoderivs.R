@@ -61,7 +61,7 @@ test_that("Gradient of smo approxcentre for ppi wrt theta is correct", {
   # set.seed(123)
   m <- ppi_egmodel(2)
   m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
-  acentres <- approxcentre(m$sample, shiftsize = 1E-15)
+  acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-15)
   acut <- 0.1
 
   psphere <- pmanifold("sphere") #because above ppill_r is for the simplex
@@ -115,7 +115,7 @@ test_that("Gradient of smo approxcentre for ppi wrt u is close", {
   set.seed(123)
   m <- ppi_egmodel(2)
   m$sample[1, ] <- c(0, 0.08, 0.92) #make first measurement on boundary
-  acentres <- approxcentre(m$sample, shiftsize = 1E-3)
+  acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-3)
   acut <- 0.1
 
   psphere <- pmanifold("sphere") #because above ppill_r is for the simplex

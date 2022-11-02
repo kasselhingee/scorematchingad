@@ -5,7 +5,7 @@
 #' @param p The desired dimension of the matrix
 #' @param min The minimum of the uniform distribution.
 #' @param max The maximum of the uniform distribution
-#' @return A `p`x`p` symmetric matrix.
+#' @return A `p` x `p` symmetric matrix.
 #' @examples
 #' rsymmetricmatrix(5)
 #' @export
