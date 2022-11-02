@@ -5,6 +5,7 @@
 #' @param cW Tuning constants for each parameter in the vMF parameter vector. If a single number then the constant is the same for each element of the parameter vector.
 #' @param Y A matrix of observations in Cartesian coordinates.
 #' @param ... Passed to [`Windham()`] and then passed onto either [`vMF()`] or [`vMF_kappa()`].
+#' @family Windham robust functions
 #' @export
 vMF_robust <- function(Y, cW, ...){
   ellipsis::check_dots_used()
@@ -40,6 +41,7 @@ vMF_robust <- function(Y, cW, ...){
 }
 
 #' @rdname 
+#' @family Windham robust functions
 #' @export
 vMF_kappa_robust <- function(Y, cW, ...){
   extraargs <- list(...)

@@ -4,6 +4,7 @@
 #' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
 #' @param cW A vector of robustness tuning constants. Easy to build using [`ppi_cW()`] and [`ppi_cW_auto()`]. See [`WindhamRobust()`] for more details on `cW`.
 #' @param ... Passed to [`Windham()`] then to [`ppi()`].
+#' @family Windham robust functions
 #' @export
 ppi_robust <- function(Y, cW, ...){
   ellipsis::check_dots_used()

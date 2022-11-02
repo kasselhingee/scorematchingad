@@ -9,6 +9,7 @@
 #' The elements of theta will be multiplied by cW for calculating the weights.
 #' @return
 #' For each row of Y, the density at parameter set `cW * theta` is computed using the exponential of `ldenfun`. The returned values are normalised to sum to 1.
+#' @family Windham robust functions
 #' @export
 Windham_weights <- function(ldenfun, Y, theta, cW){
   if (is.null(ldenfun)){stop("ldenfun is NULL")}

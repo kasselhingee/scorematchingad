@@ -1,5 +1,5 @@
 #' @title Windham Robustification of Point Estimators for Exponential Family Distributions
-#' @description Performs a generalisation of Windham's robustifying method \insertCite{windham1995ro}{scorecompdir}.
+#' @description Performs a generalisation of Windham's robustifying method \insertCite{windham1995ro}{scorecompdir} for exponential models with natural parameters that are a linear function of the parameters for estimation.
 #' Estimators must solve estimating equations of the form
 #' \deqn{\sum_{i = 1}^n U(z_i; \theta) = 0.}
 #' The estimate is found iteratively through a fixed point method as suggested by \insertCite{windham1995ro;textual}{scorecompdir}.
@@ -11,9 +11,9 @@
 #' @param ldenfun A function that returns a vector of values propotional to the log-density for a matrix of observations `Y` and parameter vector `theta`.
 #' @param ... Arguments passed to `estimator`.
 #' @param paramvec_start
-#' If `estimator` accepts a `paramvec_start`, then the current estimate of the parameter vector is passed as `paramvec_start` to `estimator` in each iteration. Otherwise `paramvec_start` is only used to check `estimator`.
+#' Initially used to check the function `estimator`. If `estimator` accepts a `paramvec_start`, then the current estimate of the parameter vector is passed as `paramvec_start` to `estimator` in each iteration.
 #' @param cW A vector of robustness tuning constants - the parameter vector is multiplied by these when computing the log-density of each observation for the Windham weights. For the PPI model, generate `cW` easily using [ppi_cW()] and [ppi_cW_auto()].
-#' @param fpcontrol A named list of control arguments to pass to [FixedPoint::FixedPoint()] for the fixed point iteration. The default control arguments are printed by [default_FixedPoint()].
+#' @param fpcontrol A named list of control arguments to pass to [FixedPoint::FixedPoint()] for the fixed point iteration.
 
 
 #' @details
@@ -23,12 +23,16 @@
 #'
 #' The solution is found iteratively \insertCite{windham1995ro}{scorecompdir}. 
 #' Given a parameter set \eqn{\theta_n}, `Windham()` first computes weights \eqn{f(z; c \circ \theta_n)} for each observation \eqn{z}.
-#' Then, a new parameter set \eqn{\tilde{\theta_{n+1}}} is estimated by `estimator` with the computed weights.
+#' Then, a new parameter set \eqn{\tilde{\theta}_{n+1}} is estimated by `estimator` with the computed weights.
 #' This new parameter set is element-wise-multiplied by the (element-wise) reciprical of \eqn{1+c} to obtain an adjusted parameter set \eqn{\theta_{n+1}}.
 #' The estimate returned by `Windham()` is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n \approx \theta_{n+1}}.
 #'
 #' An exponential model with a base rate may be used with `Windham()` so long as the base rate is omitted from `ldenfun` (i.e. not used for weighting).
-#' @seealso Windham robust functions
+#' @family Windham robust functions
+#' @return
+#' A list:
+#' * `theta` the estimated parameter vector
+#' * `optim` information about the fixed point iterations and opimisation process. Including a slot `finalweights` for the weights in the final iteration.
 #' @export
 WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)
