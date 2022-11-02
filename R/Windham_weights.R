@@ -1,14 +1,14 @@
 #' @title Windham weights for a given parameter vector
-#' @description Computes Windham's robustness weights [ref Windham 1995] for a density proportional to 
-#' \eqn{\exp(\eta(\theta) \cdot T(x))} where \eqn{\eta(\theta)} is linear and \eqn{x} is an observation (potentially multivariate).
-#' @param cW The robustness tuning constants. One value per element of theta. Easily created for the PPI model using [ppi_cw()] and [ppi_cW_auto()].
+#' @description Evaluates \eqn{f(z, c\circ\theta)}, which is the density \eqn{f} at observation \eqn{z}, given a parameter set \eqn{\theta} and vector of tuning constants \eqn{c}. The multiplication \eqn{\circ} is element-wise.
+#' These are the weights used by [`Windham()`].
+#' The density function is passed to `Windham_weights()` in log form.
+#' @param cW The robustness tuning constants. A vector of the same length as `theta`. Easily created for the PPI model using [`ppi_cw()`] and [`ppi_cW_auto()`].
 #' @param ldenfun A (possibly improper) log density function taking two arguments, `Y` and `theta`.
-#' @param theta Parameters for the model
-#' @param Y A matrix of measurements. Each row a measurement.
-#' @details
-#' The elements of theta will be multiplied by cW for calculating the weights.
+#' @param theta Parameters for the model. The element-wise multiplication `cW * theta` is passed to `ldenfun`.
+#' @param Y A matrix of measurements. Each row a measurement. Passed to `ldenfun`.
 #' @return
-#' For each row of Y, the density at parameter set `cW * theta` is computed using the exponential of `ldenfun`. The returned values are normalised to sum to 1.
+#' A vector of weights corresponding to the rows of `Y`.
+#' The weights are normalised to sum to 1.
 #' @family Windham functions
 #' @export
 Windham_weights <- function(ldenfun, Y, theta, cW){
