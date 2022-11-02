@@ -1,6 +1,6 @@
 #' @title Score matching estimator for the von-Mises Fisher distribution
 #' @description
-#' We recommend using [`movMF::movMF()`] over the function here, `vMF()`, for estimating the von Mises Fisher distribution.  
+#' We recommend using [`movMF::movMF()`] over the function here, `vMF()`, for estimating the von Mises Fisher distribution. 
 #' 
 #' \insertCite{mardia2016sc;textual}{scorecompdir} suggest score matching for the von Mises Fisher distribution to avoid the difficult-to-compute normalising constant of the von Mises Fisher distributions.
 #' \insertCite{mardia2016sc;textual}{scorecompdir} suggested both full score matching and a hybrid estimator, where by the mean direction is estimated via the maximum-likelihood approach and the concentration is estimated via score matching.
