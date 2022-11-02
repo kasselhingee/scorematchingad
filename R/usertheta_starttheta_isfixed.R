@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Functions for converting between a user friendly theta and other forms of theta
 #' @param usertheta A parameter vector. NA elements are to be fitted other elements are fixed.
 #' @param isfixed A boolean vector same length as the parameter vector. `TRUE` values are fixed at the value of `starttheta`, `FALSE` are fitted.
