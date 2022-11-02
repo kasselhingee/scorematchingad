@@ -26,6 +26,8 @@
 #' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 #' and \eqn{z_j}{zj} is the jth component of z.
 #'
+#' \insertCite{@Theorem 1, @scealy2022sc}{scorecompdir} prove the general case when the divergence weight function is smooth, and further prove that functions "minsq" and "prod" also satisfy ?? when the manifold is the simplex or positive orthant of a sphere.
+#'
 #' Hard-coded estimators are available for the following situations
 #'  + Square root transformation ("sqrt") with the "minsq" divergence weight function:
 #'    + full parameter vector (`paramvec` not provided)
