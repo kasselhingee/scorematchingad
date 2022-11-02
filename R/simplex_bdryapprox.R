@@ -22,11 +22,6 @@ simplex_boundaryshift <- function(Y, shiftsize = 1E-4){
   return(approxcentre)
 }
 
-approxcentre <- function(Y, shiftsize = 1E-4){
-  warning("approxcentre() will become obsolete")
-  simplex_boundaryshift(Y = Y, shiftsize = shiftsize)
-}
-
 #' @title Determine whether points are on the simplex boundary
 #' @description Tests whether points are within `bdrythreshold` distance of the boundary, where distance is the size of minimum component. 
 #' @param Y Measurement matrix.
