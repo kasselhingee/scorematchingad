@@ -1,18 +1,25 @@
-#' @title Build and simulate from example PPI models
+#' @title Load and simulate example PPI models
 #' @param n Number of samples to generate
-#' @param maxden the log(C) maximum in simulating a PPI model
-#' @param betaadd A number to add to the \eqn{\beta} parameter vector, which may be useful for experimenting with how 'Dirichlet' the model look.
-#' @return A list of the samples and model parameter information
+#' @param maxden the log(C) maximum in simulating a PPI model. See [`rppi()`].
+#' @return A list: 
+#'  * `sample` A matrix of the simulated samples (`n` rows)
+#'  * `p` The number of components of the model
+#'  * `theta` The PPI parameter vector
+#'  * `AL` The \eqn{A_L} parameter matrix
+#'  * `bL` The \eqn{b_L} parameter vector
+#'  * `beta` The \eqn{\beta} parameter vector 
 #' @examples
 #' ppi_egmodel(1000)
+#' ppi_eggengamma(100)
 #' @description 
-#' The model is the 3-component model from \insertCite{@Section 2.3, @scealy2022sc}{scorecompdir}.
+#' The function `ppi_egmodel()` simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2022sc}{scorecompdir}. The function `ppi_eggengamma()` simulates from the 5-component model of \insertCite{@Section A.11, @scealy2022sc}{scorecompdir}, which is a generalised gamma (i.e. \eqn{b_L} = 0) model.
+#' Model parameters and the simulated sample are returned.
 #' @references
 #' \insertAllCited{}
 #' @export
-ppi_egmodel <- function(n, maxden = 4, betaadd = 0){
+ppi_egmodel <- function(n, maxden = 4){
   mats <- pars_sec2dot3model(3)
-  mats$beta = mats$beta + betaadd
+  mats$beta = mats$beta
 
   #simulate sample from PPI model
   samp3=rppi(n,beta = mats$beta,AL = mats$AL,bL = mats$bL, maxden = maxden)
@@ -30,7 +37,7 @@ ppi_egmodel <- function(n, maxden = 4, betaadd = 0){
   return(out)
 }
 
-# @describeIn ppi_egmodel
+# @rdname ppi_egmodel
 # @export
 ppi_egmodel_p4 <- function(n, maxden = 8){
   mats <- pars_sec2dot3model(4)
