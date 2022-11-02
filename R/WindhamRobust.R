@@ -1,7 +1,9 @@
-#' @title Windham Robustness for Estimators of Exponential Family Distributions
-#' @description Performs Windham's robustness method [ref Windham 1995] for point estimators of many exponential family distributions. `WindhamRobust` works for any distribution with density proportional to
-#' \eqn{\exp(\eta(\theta) \cdot T(x))} where \eqn{\eta(\theta)} is linear and \eqn{x} is an observation (potentially multivariate). The estimate is found iteratively through a fixed point method as suggested by Windham [ref Windham 1995].
-
+#' @title Windham Robustification of Point Estimators for Exponential Family Distributions
+#' @description Performs a generalisation of Windham's robustifying method \insertCite{windham1995ro}{scorecompdir}.
+#' Estimators must solve estimating equations of the form
+#' \deqn{\sum_{i = 1}^n U(z_i; \theta) = 0.}
+#' The estimate is found iteratively through a fixed point method as suggested by \insertCite{windham1995ro;textual}{scorecompdir}.
+#'
 
 #' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
 #' @param estimator A function that estimates parameters from weighted observations.
@@ -15,16 +17,18 @@
 
 
 #' @details
-#' Windham [ref Windham 1995] proposed method weighted an observation \eqn{x} proportional to \eqn{f(x; \theta)^c_W}{f(x; theta)^cW} where \eqn{c_W}{cW} was a tuning constant and \eqn{f} was the density of the model with given parameter set \eqn{\theta}.
-#' For samples drawn from exponential models without base measure, this weighting converts samples to be akin to sampling from the distribution with natural parameters \eqn{(1+c_W)\eta(\theta)}{(1+cW)eta(theta)}, where \eqn{\eta(\theta)} was the natural parameter set of the original model.
-#' When \eqn{\eta} is a linear function, then the parameter set \eqn{\theta} becomes \eqn{(1+c_W)\theta}{(1+cW)theta}.
+#' For any family of models with density \eqn{f(z; \theta)}, Windham's method finds the parameter set \eqn{\hat\theta} such that the estimator applied to observations weighted by \eqn{f(z; \hat\theta)^c} returns an estimate that matches the theoretical effect of weighting the full population of the model.
+#' When \eqn{f} is proportional to \eqn{\exp(\eta(\theta) \cdot T(z))} and \eqn{\eta(\theta)} is linear, then these weights are equivalent to \eqn{f(z; c\hat\theta)} and the theoretical effect of the weighting on the full population is to scale the parameter vector \eqn{\theta} by \eqn{1+c}.
+#' The function `Windham()` assumes that this is the case, and allows a generalisation where \eqn{c} is a vector so the weight for an observation \eqn{z} is \deqn{f(z; c \circ \theta),} where \eqn{f} is the proposed model density function,  \eqn{\theta} is the parameter vector, \eqn{c} is a vector of tuning constants, and \eqn{\circ} is the element-wise product (Hadamard product).
 #'
-#' `WindhamRobust()` applies a modification of Windham's method that multiplies each element of \eqn{\theta} by a different tuning constant \eqn{c_W}{cW}.
-#' Given a parameter set \eqn{\theta_n}, `WindhamRobust()` first computes weights \eqn{f(x; diag(c_W)\theta)} of each observation \eqn{x}, where \eqn{diag(c_W)} is a diagonal matrix with elements of \eqn{c_W}.
+#' The solution is found iteratively \insertCite{windham1995ro}{scorecompdir}. 
+#' Given a parameter set \eqn{\theta_n}, `Windham()` first computes weights \eqn{f(z; c \circ \theta_n)} for each observation \eqn{z}.
 #' Then, a new parameter set \eqn{\tilde{\theta_{n+1}}} is estimated by `estimator` with the computed weights.
-#' This new parameter set is multiplied by the inverse of \eqn{I + diag(c_W)} to obtain an adjusted parameter set \eqn{\theta_{n+1} = (I + diag(c_W))^{-1} \tilde{\theta_{n+1}}} (multiplying is equivalent to Windham's \eqn{\tau_c}).
-#' The estimate returned by `WindhamRobust()` is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n = \theta_{n+1}}.
-#' @seealso [ppi_robust()] [vMF_robust()] [Windham_weights()]
+#' This new parameter set is element-wise-multiplied by the (element-wise) reciprical of \eqn{1+c} to obtain an adjusted parameter set \eqn{\theta_{n+1}}.
+#' The estimate returned by `Windham()` is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n \approx \theta_{n+1}}.
+#'
+#' An exponential model with a base rate may be used with `Windham()` so long as the base rate is omitted from `ldenfun` (i.e. not used for weighting).
+#' @seealso Windham robust functions
 #' @export
 WindhamRobust <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)
