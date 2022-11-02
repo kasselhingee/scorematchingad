@@ -1,29 +1,28 @@
 #' @title User friendly preparation of parameter vector for PPI model
 #' @description The PPI model is parametrised using a symmetric covariance-like matrix \eqn{A_L}, a location-like vector \eqn{b_L} and a set of Dirichlet exponents \eqn{\beta}. For `p` components, \eqn{A_L} has `p-1` rows, \eqn{b_L} is a vector with `p-1` elements and \eqn{\beta} is a vector with `p` elements.
-#' These are converted to a single vector using `ppi_paramvec` that can then be used for fitting with [ppi()], where NA-valued elements are fitted and all other elements are fixed.
+#' These are converted to a single vector using `ppi_paramvec()` that can then be used for fitting with [ppi()], where NA-valued elements are fitted and all other elements are fixed.
 #' @return
-#' A vector starting with the diagonal elements of \eqn{A_L}, then the off-diagonal elements (extracted by [upper.tri()] - along each row, left to right, then top to bottom), then \eqn{b_L}, then \eqn{\beta}.
-#' @param AL NULL, a p-1 x p-1 symmetric matrix, a number, or "diag".
-#' If NULL then all AL elements will be set to NA, and [ppi()] will estimate them.
-#' If a single number, then AL will be fixed as a matrix of the given value.
-#' If "diag" then the non-diagonal elements of AL will be fixed to 0.
-#' @param bL NULL, a number, or a vector of length (p-1).
-#' If NULL, then all elements of `bL` will be set to NA, and [ppi()] will estimate them.
-#' If a number, then bL will be fixed at the supplied value.
-#' @param Astar  NULL or a p x p matrix.
-#' If non-null, then overrides AL and bL.
-#' If a matrix, all elements must be non-NA and Astar will be converted to `AL` and `bL`.
-#' (This is because transforming to AL and bL from an incomplete Astar appears impossible).
-#' @param beta NULL, a number, or a vector of length p.
-#' If NULL then all elements of `beta` will be set to NA, and [ppi()] will estimate them.
-#' If a number then the beta elements will be fixed at the given number.
-#' @param betaL NULL, a number, or a vector of length (p-1).
-#' If NULL then the 1...(p-1) beta elements will be set to NA, and [ppi()] will estimate them.
-#' If a number then the 1...(p-1) beta elements fixed at the given number.
-#' @param betap NULL or a number.
-#' If NULL then the pth element of beta will be set to NA, and [ppi()] will estimate it.
-#' If a number, then the pth element of beta will be fixed at the given value.
-#' @param p The number of components. If NULL then will be guessed from other inputs.
+#' A vector starting with the diagonal elements of \eqn{A_L}, then the off-diagonal elements extracted by [`upper.tri()`] (which extracts elements of \eqn{A_L} along each row, left to right, then top to bottom), then \eqn{b_L}, then \eqn{\beta}.
+#' @param AL Either `NULL`, a p-1 x p-1 symmetric matrix, a number, or "diag".
+#' If NULL then all \eqn{A_L} elements will be set to NA, and [ppi()] will estimate them.
+#' If a single number, then \eqn{A_L} will be fixed as a matrix of the given value.
+#' If "diag" then the non-diagonal elements of \eqn{A_L} will be fixed to 0, and the diagonal will be `NA` (and estimated by [`ppi()`]).
+#' @param bL Either `NULL`, a number, or a vector of length p-1.
+#' If `NULL`, then all elements of \eqn{b_L} will be set to `NA`, and [ppi()] will estimate them.
+#' If a number, then \eqn{b_L} will be fixed at the supplied value.
+#' @param Astar  Either `NULL` or a p x p matrix.
+#' If non-null, then overrides `AL` and `bL`.
+#' If a matrix, all elements must be non-`NA` and `Astar` will be converted to `AL` and `bL`.
+#' @param beta Either `NULL`, a number, or a vector of length p.
+#' If NULL then all elements of \eqn{\beta} will be set to `NA`, and [`ppi()`] will estimate them.
+#' If a number then the \eqn{\beta} elements will be fixed at the given number.
+#' @param betaL Either `NULL`, a number, or a vector of length p-1.
+#' If `NULL` then the 1...(p-1)th \eqn{\beta} elements will be set to `NA`, and [`ppi()`] will estimate them.
+#' If a number then the 1...(p-1)th \eqn{\beta} elements fixed at the given number.
+#' @param betap Either `NULL` or a number.
+#' If `NULL` then the `p`th element of \eqn{\beta} will be set to `NA`, and [`ppi()`] will estimate it.
+#' If a number, then the pth element of \eqn{\beta} will be fixed at the given value.
+#' @param p The number of components. If `NULL` then will be guessed from other inputs.
 #' @examples
 #' ppi_paramvec(AL = "diag", bL = 0, betap = -0.5, p = 3)
 #' @export
