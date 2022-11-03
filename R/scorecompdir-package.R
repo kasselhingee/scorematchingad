@@ -26,9 +26,9 @@
 #'  * Implementations of score matching estimators that use algorithmic differentiation to avoid tedious by-hand algebraic calculations.
 #' The package uses `CppAD` and `Eigen` to differentiate model densities and an empiricial score matching objective function.
 #' The score matching objective is minimised by a modern implementation of conjugate gradient descent available through [`Rcgmin::Rcgmin()`].
-#'  * Score matching estimators for the Polynomially-Tilted Pairwise Interaction (PPI) Model \insertCite{scealy2022sc}{scorecompdir}.
+#'  * Function [`ppi()`], containing score matching estimators for the Polynomially-Tilted Pairwise Interaction (PPI) Model \insertCite{scealy2022sc}{scorecompdir}.
 #'  * Score matching and hybrid score matching estimators for some directional distributions \insertCite{mardia2016sc}{scorecompdir}.
-#'  * Implementation of a modification of Windham's robustifying method \insertCite{windham1995ro}{scorecompdir} for many exponential family distributions. 
+#'  * Function [`Windham()`], that implements a modification of Windham's robustifying method \insertCite{windham1995ro}{scorecompdir} for many exponential family distributions. 
 #' For some models the density approaches infinity at some locations, creating difficulties for the weights in Windham's original method \insertCite{@scealy2022ro}{scorecompdir}.
 #' \insertNoCite{*}{scorecompdir}
 #' @references
