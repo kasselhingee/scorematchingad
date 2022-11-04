@@ -2,7 +2,7 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom Rdpack reprompt
 #' @useDynLib scorecompdir
-#' @details
+#' @section Score Matching:
 #' This package includes score matching estimators for particular distributions and a general capacity to implement additional score matching estimators.
 #' Score matching is a popular estimation technique when normalising constants for the proposed model are difficult to calculate or compute.
 #' Score matching was first developed by \insertCite{hyvarinen2005es}{scorecompdir} and was further developed for subsets of Euclidean space \insertCite{@hyvarinen2007ex; @yu2019ge; @yu2020ge, @liu2021es}{scorecompdir}, Riemannian manifolds \insertCite{@mardia2016sc; @mardia2018ne}{scorecompdir},
@@ -31,14 +31,15 @@
 #' When \eqn{n} iid observations from \eqn{f_0} are available, the integration in \eqn{\psi(f, f_0)} can be approximated by an average over the observations, 
 #'  \deqn{\psi(f, f_0) \approx \hat\psi(f, f_0) = \frac{1}{2n} \sum_{i = 1}^n A(z_i) + B(z_i) + C(z_i).}
 #' The *score matching estimator* minimises \eqn{\hat\psi(f, f_0)}.
-#' 
+#'
+#' @details
 #' This package's major contributions are
-#'  * Implementations of score matching estimators that use algorithmic differentiation to avoid tedious by-hand algebraic calculations.
-#' The package uses `CppAD` and `Eigen` to differentiate model densities and an empiricial score matching objective function.
+#'  * A general capacity to implement score matching estimators that use algorithmic differentiation to avoid tedious manual algebra.
+#' The package uses `CppAD` and `Eigen` to differentiate model densities and compute the score matching objective (the \eqn{\hat\psi(f, f_0)} in __Score Matching__ section below).
 #' The score matching objective is minimised by a modern implementation of conjugate gradient descent available through [`Rcgmin::Rcgmin()`].
-#'  * Function [`ppi()`], containing score matching estimators for the Polynomially-Tilted Pairwise Interaction (PPI) Model \insertCite{scealy2022sc}{scorecompdir}.
-#'  * Score matching and hybrid score matching estimators for some directional distributions \insertCite{mardia2016sc}{scorecompdir}.
-#'  * Function [`Windham()`], that implements a modification of Windham's robustifying method \insertCite{windham1995ro}{scorecompdir} for many exponential family distributions. 
+#'  * Score matching estimators for the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir}. See function [`ppi()`].
+#'  * Score matching and hybrid score matching estimators for von Mises Fisher and Bingham directional distributions \insertCite{mardia2016sc}{scorecompdir}.
+#'  * Implementation of a modification of Windham's robustifying method \insertCite{windham1995ro}{scorecompdir} for many exponential family distributions. See [`Windham()`].
 #' For some models the density approaches infinity at some locations, creating difficulties for the weights in Windham's original method \insertCite{@scealy2022ro}{scorecompdir}.
 #' \insertNoCite{*}{scorecompdir}
 #' @references

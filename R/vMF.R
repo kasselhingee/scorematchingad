@@ -27,6 +27,7 @@
 #' @param w An optional vector of weights for each measurement in `Y`
 #' @references
 #' \insertAllCited{}
+#' @family Mardia hybrid estimators
 #' @examples
 #' set.seed(12342)
 #' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))

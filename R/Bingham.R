@@ -14,6 +14,7 @@
 #' sample <- rBingham(100, A)
 #'
 #' Bingham(sample, method = "Mardia")
+#' @family Mardia hybrid estimators
 #' @export
 Bingham <- function(sample, A = NULL, method = "smfull", control = default_Rcgmin()){
   if (method == "smfull"){
