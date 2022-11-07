@@ -7,7 +7,7 @@
 
 #' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
 #' @param estimator A function that estimates parameters from weighted observations.
-#' It must have arguments `Y` that is a matrix of measurements and `w` that are weights associated with each row of `Y`. If it accepts arguments `paramvec` or `paramvec_start` then these will be used to specify fixed elements of the parameter vector and the starting guess of the parameter vector, respectively. The estimated parameter vector, including any fixed elements, must be returned by itself, as the first element of a list, or as the `paramvec` slot within the `est` slot of the returned object.
+#' It must have arguments `Y` that is a matrix of measurements and `w` that are weights associated with each row of `Y`. If it accepts arguments `paramvec` or `paramvec_start` then these will be used to specify fixed elements of the parameter vector and the starting guess of the parameter vector, respectively. The estimated parameter vector, including any fixed elements, must be the returned object, or the first element of a returned list, or as the `paramvec` slot within the `est` slot of the returned object.
 #' @param ldenfun A function that returns a vector of values propotional to the log-density for a matrix of observations `Y` and parameter vector `theta`.
 #' @param ... Arguments passed to `estimator`.
 #' @param paramvec_start

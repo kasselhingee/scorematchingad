@@ -1,21 +1,21 @@
 #' @title Estimation of Polynomially-Tilted Pairwise Interaction (PPI) model
 #' @description 
-#' Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir}) for compositional data.
-#' For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JS (\insertCite{scealy2022sc}{scorecompdir}).
+#' Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir} for compositional data.
+#' For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2022sc}{scorecompdir}.
 #' In the other situations, the score matching estimate is found by iteratively minimising the *weighted Hyvarinen divergence* \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (`CppAD`) and [`Rcgmin::Rcgmin()`].
 
 #' @section PPI Model:
 #' The PPI model density is proportional to
-#' \deqn{\exp(z_{-p}^TA_Lz_{-p} + b_L^Tz_{-p})\prod_{i=1}^p z_i^{\beta_i},}
-#' where \eqn{p} is the dimension of \eqn{z}, and \eqn{z_{-p}} represents the multivariate measurement \eqn{z} without the final (\eqn{p}th) component.
+#' \deqn{\exp(z_L^TA_Lz_L + b_L^Tz_L)\prod_{i=1}^p z_i^{\beta_i},}
+#' where \eqn{p} is the dimension of \eqn{z}, and \eqn{z_L} represents a multivariate measurement \eqn{z} without the final (\eqn{p}th) component.
 #' \eqn{A_L} is a \eqn{p-1 \times p-1} symmetric matrix that controls the covariance between components.
-#' \eqn{b_L} is \eqn{p-1} vector that controls the location of the distribution within the simplex
+#' \eqn{b_L} is \eqn{p-1} vector that controls the location within the simplex
 #' The \eqn{i}th component of \eqn{\beta} controls the concentration of density when the \eqn{i}th component is close to zero.
 #' 
 #' @details
 #' Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and *weighted Hyvarinen divergence* \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
 #'
-#' There are three divergence weight functions available.
+#' There are three divergence weight functions available:
 #' * The function "ones" applies no weights and should be used whenever the manifold does not have a bounday.
 #' * The function "minsq" is the minima-based divergence weight function for the PPI model \insertCite{@Equation 12, @scealy2022sc}{scorecompdir}
 #' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
@@ -26,9 +26,10 @@
 #' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 #' and \eqn{z_j}{zj} is the jth component of z.
 #'
-#' \insertCite{@Theorem 1, @scealy2022sc}{scorecompdir} prove the general case when the divergence weight function is smooth, and further prove that functions "minsq" and "prod" also satisfy ?? when the manifold is the simplex or positive orthant of a sphere.
+#' Scealy and Wood \insertCite{@Theorem 1, @scealy2022sc}{scorecompdir} prove that minimising the weighted Hyvarinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See __Score Matching__ in [`scorecompdir-package`])
+#' when the divergence weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
 #'
-#' Hard-coded estimators are available for the following situations
+#' Hard-coded estimators are available for the following situations:
 #'  + Square root transformation ("sqrt") with the "minsq" divergence weight function:
 #'    + full parameter vector (`paramvec` not provided)
 #'    + `paramvec` fixes only the final element of \eqn{\beta}

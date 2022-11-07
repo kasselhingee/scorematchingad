@@ -1,6 +1,4 @@
 #' @rdname ppi_egmodel
-#' @references
-#' \insertAllCited{}
 #' @export
 ppi_eggengamma <- function(n, maxden = 0){
   p <- 5

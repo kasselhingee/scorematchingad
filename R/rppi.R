@@ -13,8 +13,8 @@
 #' We recommend running `rppi()` a number of times to ensure the choice of `maxden` is good. `rppi()` will error when `maxden` is too low.
 #' 
 #' The simulation uses a rejection-sampling algorithm with Dirichlet proposal \insertCite{@Appendix A.1.3 @scealy2022sc}{scorecompdir}.
-#' Initially \eqn{\tilde n}=`n` Dirichlet proposals are generated. After rejection there are fewer samples remaining, say \eqn{n^*}.
-#' The the ratio \eqn{n^*/{\tilde n}} is used to guess the number of Dirichlet proposals until `n` samples of the PPI model are generated.
+#' Initially `n` Dirichlet proposals are generated. After rejection there are fewer samples remaining, say \eqn{n^*}{n*}.
+#' The ratio \eqn{n^*/n}{n*/n} is used to guess the number of new Dirichlet proposals to generate until `n` samples of the PPI model are reached.
 #' @examples
 #' n=1000
 #' p=3
@@ -135,11 +135,12 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
 }
 
 #' @title Improper Log-Density of the PPI Model
-#' @description Compute the natural logarithm of the improper density for the PPI model for the given matrix of measurements `prop`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
+#' @description Compute the __natural logarithm__ of the improper density for the PPI model for the given matrix of measurements `Y`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
 #' @param Y A matrix of measurements.
 #' @inheritParams rppi
 #' @details The value calculated by `dppi` is
-#' \deqn{z^TA_Lz + b_L^Tz + \beta^T \log(z).}
+#' \deqn{z_L^TA_Lz_L + b_L^Tz_L + \beta^T \log(z),}
+#' where \eqn{z} is the multivariate observation, and \eqn{z_L} ommits the final element of \eqn{z}.
 #' @export
 dppi <- function(Y, AL = NULL,bL = NULL, beta = NULL, paramvec = NULL){
   #process inputs

@@ -4,7 +4,8 @@
 #' 
 #' \insertCite{mardia2016sc;textual}{scorecompdir} suggest score matching for the von Mises Fisher distribution to avoid the difficult-to-compute normalising constant of the von Mises Fisher distributions.
 #' \insertCite{mardia2016sc;textual}{scorecompdir} suggested both full score matching and a hybrid estimator, where by the mean direction is estimated via the maximum-likelihood approach and the concentration is estimated via score matching.
-#' However, \insertCite{mardia2016sc;textual}{scorecompdir} found, consistent with some of our preliminary experiments, that these score matching estimators were not as a efficient as the maximum likelihood estimators (e.g. [`movMF::movMF()`] ).
+#' However, \insertCite{mardia2016sc;textual}{scorecompdir} found, that these score matching estimators were not as a efficient as the maximum likelihood estimators (e.g. [`movMF::movMF()`] ) on the circle.
+#' Some of our own experiments suggest this is also the case for higher dimensions, despite the more complex approximations required for the maximum likelihood estimators.
 
 #' @section von Mises Fisher Model: 
 #' The von Mises Fisher density is proportional to
@@ -17,7 +18,7 @@
 
 #' @details
 #' The method "smfull" uses score matching to estimate the vector \eqn{\kappa \mu}.
-#' The method "Mardia" uses [`vMF_stdY()`] and [`vMF_kappa()`] to estimate the parameters of the von Mises Fisher distribution.
+#' The method "Mardia" uses [`vMF_stdY()`] and [`vMF_kappa()`] to estimate \eqn{\kappa} and \eqnn{\mu} seperately.
 #' @param Y A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.
 #' @param paramvec `smfull` method only: Optional. A vector of same length as the dimension, representing the elements of the vector \eqn{\kappa \mu}. 
 #' If supplied, the non-NA elements are fixed. It is easy to generate `paramvec` using [`vMF_paramvec()`].

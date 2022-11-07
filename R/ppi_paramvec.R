@@ -22,7 +22,7 @@
 #' @param betap Either `NULL` or a number.
 #' If `NULL` then the `p`th element of \eqn{\beta} will be set to `NA`, and [`ppi()`] will estimate it.
 #' If a number, then the pth element of \eqn{\beta} will be fixed at the given value.
-#' @param p The number of components. If `NULL` then will be guessed from other inputs.
+#' @param p The number of components. If `NULL` then `p` will be inferred from other inputs.
 #' @examples
 #' ppi_paramvec(AL = "diag", bL = 0, betap = -0.5, p = 3)
 #' @export
