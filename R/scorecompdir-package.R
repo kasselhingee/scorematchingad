@@ -5,7 +5,7 @@
 #' @section Score Matching:
 #' This package includes score matching estimators for particular distributions and a general capacity to implement additional score matching estimators.
 #' Score matching is a popular estimation technique when normalising constants for the proposed model are difficult to calculate or compute.
-#' Score matching was first developed by \insertCite{hyvarinen2005es}{scorecompdir} and was further developed for subsets of Euclidean space \insertCite{@hyvarinen2007ex; @yu2019ge; @yu2020ge, @liu2021es}{scorecompdir}, Riemannian manifolds \insertCite{@mardia2016sc; @mardia2018ne}{scorecompdir},
+#' Score matching was first developed by \insertCite{hyvarinen2005es}{scorecompdir} and was further developed for subsets of Euclidean space \insertCite{hyvarinen2007ex,yu2019ge,yu2020ge,liu2021es}{scorecompdir}, Riemannian manifolds \insertCite{mardia2016sc,mardia2018ne}{scorecompdir},
 #' and Riemannian manifolds with boundary \insertCite{scealy2022sc}{scorecompdir}.
 #' In the most general form (Riemannian manifolds with boundary) score matching minimises the weighted Hyvarinen divergence \insertCite{@Equation 7 @scealy2022sc}{scorecompdir} 
 #' \deqn{\phi(f, f_0) =  \frac{1}{2} \int_M f_0(z)h(z)^2 \left\lVert P(z)\Big(\nabla_z \log(f) - \nabla_z \log(f_0)\Big)\right\rVert^2 dM(z),}
