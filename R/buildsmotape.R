@@ -7,7 +7,7 @@
 #' @param utape An example observation (a single vector) to use for taping. The results shouldn't depend on `utape` so long as `utape` is in the manifold and the other functions are properly implemented.
 #' @param usertheta A vector of parameter elements for the likelihood function. `NA` elements are to be fitted. Other elements are fixed at the provided value.
 #' @param weightname The name of the divergence weight function ('ones' for manifolds without boundary).
-#' @param acut The threshold `a_c` in the divergence weight function.
+#' @param acut The threshold \eqn{a_c} in the divergence weight function.
 #' @param thetatape_creator A function that accepts an integer `n`, and returns a vector of `n` length. The function is used to fill in the `NA` elements of `usertheta` when building the tapes.
 #' @param verbose If `TRUE` more details are printed when taping.
 #' @description
