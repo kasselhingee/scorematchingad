@@ -1,12 +1,25 @@
 #' @title Score matching estimates for the Bingham distribution
-#' @param sample Samples from the Bingham distribution in cartesian Rd coordinates. Each row is a measurement.
-#' @param control Control parameters passed to `Rcgmin::Rcgmin()`
-#' @param A Full score matching only: If supplied, then NA elements of `A` are estimated and the other elements are fixed.
-#' @param method The estimating method, either `smfull` for score matching estimates for all parameters
-#'  or `Mardia` for the Mardia et al hybrid method. `hybrid` will also select the Mardia et al method.
+#' @param sample A matrix of observations in Cartesian coordinates. Each row is a (multivariate) measurement.
+#' @param control Control parameters passed to [`Rcgmin::Rcgmin()`].
+#' @param A For full score matching only: if supplied, then NA elements of `A` are estimated and the other elements are fixed.
+#' @param method The estimating method, either "smfull" for score matching estimates for all parameters
+#'  or "Mardia" for the \insertCite{mardia2016sc}{scorecompdir} hybrid estimator.
 
-#' @description The Bingham distribution as described by Mardia et al 2016.
-#'  Book Mardia and Jupp 2000 would likely be a better reference.
+
+#' @description
+#' Score matching estimator of the Bingham matrix.
+#' @details
+#' The Bingham distribution , which has a density proportional to
+#' \deqn{\exp(z^T A z),}
+#' where \eqn{A} is a symmetric matrix and the trace (sum of the diagonals) of \eqn{A} zero for identifiability \insertCite{@p181, @mardia2000di}{scorecompdir}.
+#'
+#' The function `Bingham()` calculates the final diagonal element of \eqn{A} from the sum of the other diagonal elements to ensure that the trace of \eqn{A} is zero. All other elements of \eqn{A} are estimated using score matching.
+#'
+#' The estimating method by \insertCite{mardia2016sc;textual}{scorecompdir} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}. 
+#' The observations `Y` are then standardised to `Y`\eqn{G}. 
+#' After this standardisation, the non-diagonal elements of \eqn{A} are zero.
+#' The diagonal elements are estimated using score matching.
+#' See \insertCite{mardia2016sc}{scorecompdir} for details.
 #' @examples
 #' p <- 4
 #' A <- rsymmetricmatrix(p)
@@ -26,6 +39,7 @@ Bingham <- function(sample, A = NULL, method = "smfull", control = default_Rcgmi
   return(out)
 }
 
+#' @noRd
 #' @describeIn Bingham Uses `Directional::rbingham` to simulate from the Bingham distribution.
 #' @param A is the parameter matrix for the Bingham distribution. The log density is proportional to `t(u) * A * u`
 #' @param n The number of samples to generate.
