@@ -93,7 +93,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // pJacobian
-svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta);
+vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta);
 RcppExport SEXP _scorecompdir_pJacobian(SEXP pfunSEXP, SEXP valueSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

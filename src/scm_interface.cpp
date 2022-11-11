@@ -272,7 +272,7 @@ XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svec
 //' @return The Jacobian of pfun
 // @export
 // [[Rcpp::export]]
-svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
+vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   //convert input to an Eigen vectors
   vecd value_e(value.size());
   for (long int i=0; i<value.size(); i++){
@@ -296,7 +296,7 @@ svecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
   for (long int i = 0; i<grad.size(); i++){
     out[i] = grad[i];
   }
-  return(out);
+  return(grad);
 }
 
 // @title The value of a recorded function
