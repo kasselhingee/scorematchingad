@@ -1,3 +1,4 @@
+# include <RcppCommon.h>
 # include <iostream>        // standard input/output
 # include <vector>          // standard vector
 # include <cppad/example/cppad_eigen.hpp>  //load eigen
@@ -5,11 +6,17 @@
 # include <cppad/utility/index_sort.hpp> //for index sorting - for Rivest model
 # include <Eigen/LU> //for matrix determinant
 # include <Eigen/Eigenvalues> //for matrix eigenvalues - for Rivest model
+
+typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vecd; //a vector of double values
+typedef std::vector<double> svecd;
+namespace Rcpp {
+  template <> vecd as( SEXP );
+  template <> SEXP wrap(const vecd&);
+}
+
 # include <Rcpp.h>
 using namespace Rcpp;
 
-typedef std::vector<double> svecd;
-typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vecd; //a vector of double values
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matd;//a matrix of double
 typedef CppAD::AD<double> a1type;   // for first (outer) level of taping
 typedef Eigen::Matrix<a1type, Eigen::Dynamic, 1> veca1; //a vector of a1type values

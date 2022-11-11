@@ -2,6 +2,7 @@
 
 #include "mycpp/scm.cpp"
 using namespace Rcpp;
+#include "mycpp/wrapas.cpp"
 
 ////////////// Create Pointers to Manifold Objects ///////////////
 //in R store a pointer to the ADFun object
