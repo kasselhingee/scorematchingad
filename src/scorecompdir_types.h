@@ -8,7 +8,6 @@
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vecd; //a vector of double values
 typedef std::vector<double> svecd;
 
-# include <Rcpp.h>
 using namespace Rcpp;
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matd;//a matrix of double
