@@ -1,8 +1,9 @@
 //for content that is Rcpp specific
+#include <RcppEigen.h>
+// [[Rcpp::depends(RcppEigen)]]
 
 #include "mycpp/scm.cpp"
 using namespace Rcpp;
-#include "mycpp/wrapas.cpp"
 
 ////////////// Create Pointers to Manifold Objects ///////////////
 //in R store a pointer to the ADFun object

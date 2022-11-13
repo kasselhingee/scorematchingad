@@ -35,5 +35,5 @@ Imports:
     rlang,
     ellipsis
 RdMacros: Rdpack
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppEigen
 Config/testthat/edition: 3
