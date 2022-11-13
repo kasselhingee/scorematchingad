@@ -39,7 +39,7 @@ correcteststr <- function(est, p){
   correctestnames <- setequal(names(est), c("paramvec", "ALs", "bL", "beta"))
   correctestdims <- list()
   if (correctestnames){
-    correctestdims$paramvec <- (length(est$paramvec) == scorecompdir:::ppithetalength(p))
+    correctestdims$paramvec <- (length(est$paramvec) == ppithetalength(p))
     correctestdims$ALs <- isTRUE(all(dim(est$ALs) == c(p-1, p-1)))
     correctestdims$bL <- (length(est$bL) == p-1)
     correctestdims$beta <- (length(est$beta) == p)
