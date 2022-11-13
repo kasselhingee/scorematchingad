@@ -98,12 +98,12 @@ ptoM <- function(pman, u_ad) {
     .Call('_scorecompdir_ptoM', PACKAGE = 'scorecompdir', pman, u_ad)
 }
 
-ptapesmo <- function(u, theta, pll, pman, weightname, acut, verbose) {
-    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u, theta, pll, pman, weightname, acut, verbose)
+ptapesmo <- function(u_ad, theta_ad, pll, pman, weightname, acut, verbose) {
+    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, pman, weightname, acut, verbose)
 }
 
-ptapell <- function(z, theta, llname, pman, fixedtheta, verbose) {
-    .Call('_scorecompdir_ptapell', PACKAGE = 'scorecompdir', z, theta, llname, pman, fixedtheta, verbose)
+ptapell <- function(z_ad, theta_ad, llname, pman, fixedtheta, verbose) {
+    .Call('_scorecompdir_ptapell', PACKAGE = 'scorecompdir', z_ad, theta_ad, llname, pman, fixedtheta, verbose)
 }
 
 swapDynamic <- function(pfun, newvalue, newdynparam) {

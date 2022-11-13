@@ -88,8 +88,8 @@ veca1 ptoM(XPtr< manifold<a1type> > pman, veca1 u_ad){
 //' @return An RCpp::XPtr object pointing to the ADFun
 // @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
-                                      svecd theta,
+XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
+                                      veca1 theta_ad,
                                       XPtr< CppAD::ADFun<double> > pll,
                                       XPtr< manifold<a1type> > pman,
                                       std::string weightname,
@@ -116,16 +116,6 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
     throw std::invalid_argument("Matching weight function not found");
   }
 
-  //convert svecd to veca1
-  veca1 u_ad(u.size());
-  for (long int i=0; i<u.size(); i++){
-    u_ad[i] = u[i];
-  }
-  veca1 theta_ad(theta.size());
-  for (long int i=0; i<theta.size(); i++){
-    theta_ad[i] = theta[i];
-  }
-
   *out = tapesmo(u_ad,
                  theta_ad,
                  *pll,
@@ -145,17 +135,13 @@ XPtr< CppAD::ADFun<double> > ptapesmo(svecd u,
 //' @return An RCpp::XPtr object pointing to the ADFun
 // @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifold
-                                     svecd theta,
+XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M manifold
+                                     veca1 theta_ad,
                                      std::string llname,
                                      XPtr< manifold<a1type> > pman,
-                                     std::vector<int> fixedtheta,
+                                     Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
                                      bool verbose
                                      ){
-  Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta_e(fixedtheta.size());
-  for (long int i=0;i<fixedtheta.size();i++){
-    fixedtheta_e[i] = fixedtheta[i];
-  }
 
   //choose ll function
   a1type (*ll)(const veca1 &, const veca1 &) = nullptr;
@@ -182,21 +168,13 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
     throw std::invalid_argument("Matching ll function not found");
   }
 
-  veca1 z_ad(z.size());
-  for (long int i=0; i<z.size(); i++){
-    z_ad[i] = z[i];
-  }
-  veca1 theta_ad(theta.size());
-  for (long int i=0; i<theta.size(); i++){
-    theta_ad[i] = theta[i];
-  }
 
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   *out = tapell(z_ad,
                 theta_ad,
                 ll,
                 pman.checked_get(),
-                fixedtheta_e,
+                fixedtheta,
                 verbose);
 
   XPtr< CppAD::ADFun<double> > pout(out, true);
@@ -212,20 +190,10 @@ XPtr< CppAD::ADFun<double> > ptapell(svecd z, //data measurement on the M manifo
 //' @return A pointer to an ADFun
 // @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svecd newvalue, svecd newdynparam){
-  //convert input to an Eigen vectors
-  veca1 value(newvalue.size());
-  for (long int i=0; i<newvalue.size(); i++){
-    value[i] = newvalue[i];
-  }
-  veca1 dynparam(newdynparam.size());
-  for (long int i=0; i<newdynparam.size(); i++){
-    dynparam[i] = newdynparam[i];
-  }
-
+XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam){
   //check inputs and tape match
-  if (pfun->Domain() != dynparam.size()){stop("Size of newdynparam must match domain size of taped function.");}
-  if (pfun->size_dyn_ind() != value.size()){stop("Size of newvalue must match the parameter size of the taped function.");}
+  if (pfun->Domain() != newdynparam.size()){stop("Size of newdynparam must match domain size of taped function.");}
+  if (pfun->size_dyn_ind() != newvalue.size()){stop("Size of newvalue must match the parameter size of the taped function.");}
 
 
 
@@ -236,14 +204,14 @@ XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svec
   veca1 y(1);
 
   //START TAPING
-  CppAD::Independent(value, dynparam);
+  CppAD::Independent(newvalue, newdynparam);
 
-  pfunhigher.new_dynamic(value); //before switch the value is the dynamic parameter vector
-  y = pfunhigher.Forward(0, dynparam); //before the switch the dynparam is the independent value
+  pfunhigher.new_dynamic(newvalue); //before switch the newvalue is the dynamic parameter vector
+  y = pfunhigher.Forward(0, newdynparam); //before the switch the newdynparam is the independent value
 
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  out->Dependent(value, y);
+  out->Dependent(newvalue, y);
   out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
   out->check_for_nan(false);
 
@@ -279,25 +247,14 @@ vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
 //' @return The value of pfun
 // @export
 // [[Rcpp::export]]
-svecd pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
-  //convert input to an Eigen vectors
-  vecd value_e(value.size());
-  for (long int i=0; i<value.size(); i++){ value_e[i] = value[i]; }
-  vecd theta_e(theta.size());
-  for (long int i=0; i<theta.size(); i++){
-    theta_e[i] = theta[i];
-  }
-
+vecd pForward0(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
   //check inputs and tape match
-  if (pfun->Domain() != value_e.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value_e.size(), pfun->Domain());}
-  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta_e.size(), pfun->size_dyn_ind());}
+  if (pfun->Domain() != value.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != theta.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta.size(), pfun->size_dyn_ind());}
 
-  vecd out_e(1);
-  pfun->new_dynamic(theta_e);
-  out_e = pfun->Forward(0, value_e);  //treat the XPtr as a regular pointer
-
-  svecd out(out_e.size());
-  for (long int i=0; i<out_e.size(); i++){out[i] = out_e[i];}
+  vecd out(1);
+  pfun->new_dynamic(theta);
+  out = pfun->Forward(0, value);  //treat the XPtr as a regular pointer
 
   return(out);
 }
@@ -309,31 +266,15 @@ svecd pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
 //' @return The Hessian of pfun
 // @export
 // [[Rcpp::export]]
-svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
-  //convert input to an Eigen vectors
-  vecd value_e(value.size());
-  for (long int i=0; i<value.size(); i++){
-    value_e[i] = value[i];
-  }
-  vecd theta_e(theta.size());
-  for (long int i=0; i<theta.size(); i++){
-    theta_e[i] = theta[i];
-  }
-
+vecd pHessian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
   //check inputs and tape match
-  if (pfun->Domain() != value_e.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value_e.size(), pfun->Domain());}
-  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta_e.size(), pfun->size_dyn_ind());}
+  if (pfun->Domain() != value.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != theta.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta.size(), pfun->size_dyn_ind());}
 
-  vecd hess(value_e.size() * value_e.size(), 1);
-  svecd out(hess.size());
-  pfun->new_dynamic(theta_e);
-  hess = pfun->Hessian(value_e, 0);  //treat the XPtr as a regular pointer
-
-  //convert to std::vector
-  for (long int i = 0; i<hess.size(); i++){
-    out[i] = hess[i];
-  }
-  return(out);
+  vecd hess(value.size() * value.size(), 1);
+  pfun->new_dynamic(theta);
+  hess = pfun->Hessian(value, 0);  //treat the XPtr as a regular pointer
+  return(hess);
 }
 
 
@@ -347,28 +288,17 @@ svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta){
 //' @return The approximate value of pfun
 // @export
 // [[Rcpp::export]]
-svecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
-                     svecd value, svecd centre,
-                     svecd theta, size_t order){
-  // //convert to eigen
-  vecd value_e(value.size());
-  for (long int i=0; i<value.size(); i++){ value_e[i] = value[i]; }
-  vecd centre_e(centre.size());
-  for (long int i=0; i<centre.size(); i++){ centre_e[i] = centre[i]; }
-  vecd theta_e(theta.size());
-  for (long int i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
-
+vecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
+                     vecd value, vecd centre,
+                     vecd theta, size_t order){
   Eigen::Matrix<double, Eigen::Dynamic, 1> out(pfun->Range());
-  pfun->new_dynamic(theta_e);
+  pfun->new_dynamic(theta);
   out = taylorapprox(*pfun,
-                     centre_e,
+                     centre,
                      order,
-                     value_e);
+                     value);
 
-  svecd outstd(out.size());
-  for (long int i=0; i<out.size(); i++){ outstd[i] = out[i]; }
-
-  return(outstd);
+  return(out);
 }
 
 // @title The approximate value of the gradient (wrt space 1) of recorded function
@@ -383,26 +313,21 @@ svecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
 // @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> >  pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfun,
-                    svecd value, svecd theta){
-  // //convert to eigen
-  veca1 value_e(value.size());
-  for (long int i=0; i<value.size(); i++){ value_e[i] = value[i]; }
-  veca1 theta_e(theta.size());
-  for (long int i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
+                    veca1 value, veca1 theta){
 
   //convert taped object to higher order
   CppAD::ADFun<a1type, double> pfunhigher;
   pfunhigher = pfun->base2ad();
 
-  //first tape the Jacobian of pfun but with the theta_e becoming the independent variables
-  CppAD::Independent(theta_e, value_e);  //for this tape, theta must be altered using new_dynamic
-  pfunhigher.new_dynamic(theta_e);
-  veca1 grad(value_e.size());
-  grad = pfunhigher.Jacobian(value_e);
+  //first tape the Jacobian of pfun but with the theta becoming the independent variables
+  CppAD::Independent(theta, value);  //for this tape, theta must be altered using new_dynamic
+  pfunhigher.new_dynamic(theta);
+  veca1 grad(value.size());
+  grad = pfunhigher.Jacobian(value);
 
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  out->Dependent(theta_e, grad);
+  out->Dependent(theta, grad);
   out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
   out->check_for_nan(false);
 
@@ -422,26 +347,20 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfu
 // @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> >  pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun,
-                                                svecd value, svecd theta){
-  // //convert to eigen
-  veca1 value_e(value.size());
-  for (long int i=0; i<value.size(); i++){ value_e[i] = value[i]; }
-  veca1 theta_e(theta.size());
-  for (long int i=0; i<theta.size(); i++){ theta_e[i] = theta[i]; }
-
+                                                veca1 value, veca1 theta){
   //convert taped object to higher order
   CppAD::ADFun<a1type, double> pfunhigher;
   pfunhigher = pfun->base2ad();
 
-  //first tape the Jacobian of pfun but with the theta_e becoming the independent variables
-  CppAD::Independent(theta_e, value_e);  //for this tape, theta must be altered using new_dynamic
-  pfunhigher.new_dynamic(theta_e);
-  veca1 hess(value_e.size() * value_e.size());
-  hess = pfunhigher.Hessian(value_e, 0);
+  //first tape the Jacobian of pfun but with the theta becoming the independent variables
+  CppAD::Independent(theta, value);  //for this tape, theta must be altered using new_dynamic
+  pfunhigher.new_dynamic(theta);
+  veca1 hess(value.size() * value.size());
+  hess = pfunhigher.Hessian(value, 0);
 
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  out->Dependent(theta_e, hess);
+  out->Dependent(theta, hess);
   out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
   out->check_for_nan(false);
 

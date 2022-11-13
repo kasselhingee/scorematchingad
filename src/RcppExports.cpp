@@ -48,47 +48,47 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapesmo
-XPtr< CppAD::ADFun<double> > ptapesmo(svecd u, svecd theta, XPtr< CppAD::ADFun<double> > pll, XPtr< manifold<a1type> > pman, std::string weightname, const double acut, bool verbose);
-RcppExport SEXP _scorecompdir_ptapesmo(SEXP uSEXP, SEXP thetaSEXP, SEXP pllSEXP, SEXP pmanSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
+XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad, veca1 theta_ad, XPtr< CppAD::ADFun<double> > pll, XPtr< manifold<a1type> > pman, std::string weightname, const double acut, bool verbose);
+RcppExport SEXP _scorecompdir_ptapesmo(SEXP u_adSEXP, SEXP theta_adSEXP, SEXP pllSEXP, SEXP pmanSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< svecd >::type u(uSEXP);
-    Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type u_ad(u_adSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type theta_ad(theta_adSEXP);
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pll(pllSEXP);
     Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
     Rcpp::traits::input_parameter< std::string >::type weightname(weightnameSEXP);
     Rcpp::traits::input_parameter< const double >::type acut(acutSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapesmo(u, theta, pll, pman, weightname, acut, verbose));
+    rcpp_result_gen = Rcpp::wrap(ptapesmo(u_ad, theta_ad, pll, pman, weightname, acut, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // ptapell
-XPtr< CppAD::ADFun<double> > ptapell(svecd z, svecd theta, std::string llname, XPtr< manifold<a1type> > pman, std::vector<int> fixedtheta, bool verbose);
-RcppExport SEXP _scorecompdir_ptapell(SEXP zSEXP, SEXP thetaSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
+XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, veca1 theta_ad, std::string llname, XPtr< manifold<a1type> > pman, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
+RcppExport SEXP _scorecompdir_ptapell(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< svecd >::type z(zSEXP);
-    Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type z_ad(z_adSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type theta_ad(theta_adSEXP);
     Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
     Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
-    Rcpp::traits::input_parameter< std::vector<int> >::type fixedtheta(fixedthetaSEXP);
+    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type fixedtheta(fixedthetaSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapell(z, theta, llname, pman, fixedtheta, verbose));
+    rcpp_result_gen = Rcpp::wrap(ptapell(z_ad, theta_ad, llname, pman, fixedtheta, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // swapDynamic
-XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svecd newvalue, svecd newdynparam);
+XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
 RcppExport SEXP _scorecompdir_swapDynamic(SEXP pfunSEXP, SEXP newvalueSEXP, SEXP newdynparamSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< svecd >::type newvalue(newvalueSEXP);
-    Rcpp::traits::input_parameter< svecd >::type newdynparam(newdynparamSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type newvalue(newvalueSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type newdynparam(newdynparamSEXP);
     rcpp_result_gen = Rcpp::wrap(swapDynamic(pfun, newvalue, newdynparam));
     return rcpp_result_gen;
 END_RCPP
@@ -107,68 +107,68 @@ BEGIN_RCPP
 END_RCPP
 }
 // pForward0
-svecd pForward0(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta);
+vecd pForward0(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
 RcppExport SEXP _scorecompdir_pForward0(SEXP pfunSEXP, SEXP valueSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< svecd >::type value(valueSEXP);
-    Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< vecd >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< vecd >::type theta(thetaSEXP);
     rcpp_result_gen = Rcpp::wrap(pForward0(pfun, value, theta));
     return rcpp_result_gen;
 END_RCPP
 }
 // pHessian
-svecd pHessian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta);
+vecd pHessian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
 RcppExport SEXP _scorecompdir_pHessian(SEXP pfunSEXP, SEXP valueSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< svecd >::type value(valueSEXP);
-    Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< vecd >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< vecd >::type theta(thetaSEXP);
     rcpp_result_gen = Rcpp::wrap(pHessian(pfun, value, theta));
     return rcpp_result_gen;
 END_RCPP
 }
 // pTaylorApprox
-svecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd centre, svecd theta, size_t order);
+vecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd centre, vecd theta, size_t order);
 RcppExport SEXP _scorecompdir_pTaylorApprox(SEXP pfunSEXP, SEXP valueSEXP, SEXP centreSEXP, SEXP thetaSEXP, SEXP orderSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< svecd >::type value(valueSEXP);
-    Rcpp::traits::input_parameter< svecd >::type centre(centreSEXP);
-    Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< vecd >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< vecd >::type centre(centreSEXP);
+    Rcpp::traits::input_parameter< vecd >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< size_t >::type order(orderSEXP);
     rcpp_result_gen = Rcpp::wrap(pTaylorApprox(pfun, value, centre, theta, order));
     return rcpp_result_gen;
 END_RCPP
 }
 // pTapeJacobianSwap
-XPtr< CppAD::ADFun<double> > pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta);
+XPtr< CppAD::ADFun<double> > pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfun, veca1 value, veca1 theta);
 RcppExport SEXP _scorecompdir_pTapeJacobianSwap(SEXP pfunSEXP, SEXP valueSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< svecd >::type value(valueSEXP);
-    Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type theta(thetaSEXP);
     rcpp_result_gen = Rcpp::wrap(pTapeJacobianSwap(pfun, value, theta));
     return rcpp_result_gen;
 END_RCPP
 }
 // pTapeHessianSwap
-XPtr< CppAD::ADFun<double> > pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta);
+XPtr< CppAD::ADFun<double> > pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun, veca1 value, veca1 theta);
 RcppExport SEXP _scorecompdir_pTapeHessianSwap(SEXP pfunSEXP, SEXP valueSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< svecd >::type value(valueSEXP);
-    Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type theta(thetaSEXP);
     rcpp_result_gen = Rcpp::wrap(pTapeHessianSwap(pfun, value, theta));
     return rcpp_result_gen;
 END_RCPP
