@@ -1,6 +1,9 @@
 #' @import Rcpp
 #' @importFrom Rcpp evalCpp
 #' @importFrom Rdpack reprompt
+#' @importFrom methods formalArgs
+#' @importFrom stats cov runif var weighted.mean
+#' @importFrom utils installed.packages packageDescription tail
 #' @useDynLib scorecompdir
 #' @section Score Matching:
 #' This package includes score matching estimators for particular distributions and a general capacity to implement additional score matching estimators.
