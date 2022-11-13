@@ -272,15 +272,25 @@ XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svec
 //' @return The Jacobian of pfun
 // @export
 // [[Rcpp::export]]
-vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
+vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, svecd theta){
+  //convert input to an Eigen vectors
+  vecd value_e(value.size());
+  for (long int i=0; i<value.size(); i++){
+    value_e[i] = value[i];
+  }
+  vecd theta_e(theta.size());
+  for (long int i=0; i<theta.size(); i++){
+    theta_e[i] = theta[i];
+  }
 
   //check inputs and tape match
-  if (pfun->Domain() != value.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value.size(), pfun->Domain());}
-  if (pfun->size_dyn_ind() != theta.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta.size(), pfun->size_dyn_ind());}
+  if (pfun->Domain() != value_e.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value_e.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta_e.size(), pfun->size_dyn_ind());}
 
-  vecd grad(value.size());
-  pfun->new_dynamic(theta);
-  grad = pfun->Jacobian(value);  //treat the XPtr as a regular pointer
+  vecd grad(value_e.size());
+  svecd out(value_e.size());
+  pfun->new_dynamic(theta_e);
+  grad = pfun->Jacobian(value_e);  //treat the XPtr as a regular pointer
 
   return(grad);
 }

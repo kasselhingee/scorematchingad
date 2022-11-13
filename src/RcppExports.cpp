@@ -93,13 +93,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // pJacobian
-vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, svecd value, svecd theta);
+vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, svecd theta);
 RcppExport SEXP _scorecompdir_pJacobian(SEXP pfunSEXP, SEXP valueSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< svecd >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< vecd >::type value(valueSEXP);
     Rcpp::traits::input_parameter< svecd >::type theta(thetaSEXP);
     rcpp_result_gen = Rcpp::wrap(pJacobian(pfun, value, theta));
     return rcpp_result_gen;
