@@ -272,19 +272,13 @@ XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, svec
 //' @return The Jacobian of pfun
 // @export
 // [[Rcpp::export]]
-vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, svecd theta){
-  //convert input to an Eigen vectors
-  vecd theta_e(theta.size());
-  for (long int i=0; i<theta.size(); i++){
-    theta_e[i] = theta[i];
-  }
-
+vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
   //check inputs and tape match
   if (pfun->Domain() != value.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value.size(), pfun->Domain());}
-  if (pfun->size_dyn_ind() != theta_e.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta_e.size(), pfun->size_dyn_ind());}
+  if (pfun->size_dyn_ind() != theta.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta.size(), pfun->size_dyn_ind());}
 
   vecd grad(value.size());
-  pfun->new_dynamic(theta_e);
+  pfun->new_dynamic(theta);
   grad = pfun->Jacobian(value);  //treat the XPtr as a regular pointer
 
   return(grad);
