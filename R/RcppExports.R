@@ -94,8 +94,8 @@ testmanifold <- function(pman, u_ad) {
     .Call('_scorecompdir_testmanifold', PACKAGE = 'scorecompdir', pman, u_ad)
 }
 
-ptoM <- function(pman, u) {
-    .Call('_scorecompdir_ptoM', PACKAGE = 'scorecompdir', pman, u)
+ptoM <- function(pman, u_ad) {
+    .Call('_scorecompdir_ptoM', PACKAGE = 'scorecompdir', pman, u_ad)
 }
 
 ptapesmo <- function(u, theta, pll, pman, weightname, acut, verbose) {

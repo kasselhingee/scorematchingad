@@ -9,4 +9,13 @@ namespace Rcpp {
     }
     return(out);
   }
+
+  // eigen vector of a1type to SEXP
+  template <> SEXP wrap(const veca1 &invec){
+    svecd out(invec.size());
+    for (long int i=0; i<out.size(); i++){
+      out[i] = CppAD::Value(invec[i]);
+    }
+    return(Rcpp::wrap(out)); //returns SEXP
+  } 
 }

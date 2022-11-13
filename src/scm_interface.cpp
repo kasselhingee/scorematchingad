@@ -71,19 +71,10 @@ int testmanifold(XPtr< manifold<a1type> > pman, veca1 u_ad){
 //' @return A vector on the manifold.
 // @export
 // [[Rcpp::export]]
-svecd ptoM(XPtr< manifold<a1type> > pman, svecd u){
-  veca1 u_ad(u.size());
-  for (long int i=0; i<u.size(); i++){
-    u_ad[i] = u[i];
-  }
-  veca1 z_ad(u.size());
+veca1 ptoM(XPtr< manifold<a1type> > pman, veca1 u_ad){
+  veca1 z_ad(u_ad.size());
   z_ad = pman->toM(u_ad);
-
-  svecd out(z_ad.size());
-  for (long int i=0; i<out.size(); i++){
-    out[i] = CppAD::Value(z_ad[i]);
-  }
-  return(out);
+  return(z_ad);
 }
 
 

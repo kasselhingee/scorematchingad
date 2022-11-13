@@ -41,5 +41,6 @@ struct manifold { //exactly like a class, but with default public members https:
 
 namespace Rcpp {
   template <> veca1 as( SEXP );
+  template <> SEXP wrap(const veca1&);
 }
 
