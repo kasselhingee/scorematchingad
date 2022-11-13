@@ -28,6 +28,7 @@ Depends:
 Imports:
     MCMCpack,
     Rcpp (>= 1.0.9),
+    RcppEigen (>= 0.3.3.7),
     Rcgmin,
     FixedPoint,
     Directional,

@@ -24,14 +24,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // testmanifold
-int testmanifold(XPtr< manifold<a1type> > pman, svecd u);
-RcppExport SEXP _scorecompdir_testmanifold(SEXP pmanSEXP, SEXP uSEXP) {
+int testmanifold(XPtr< manifold<a1type> > pman, veca1 u_ad);
+RcppExport SEXP _scorecompdir_testmanifold(SEXP pmanSEXP, SEXP u_adSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< manifold<a1type> > >::type pman(pmanSEXP);
-    Rcpp::traits::input_parameter< svecd >::type u(uSEXP);
-    rcpp_result_gen = Rcpp::wrap(testmanifold(pman, u));
+    Rcpp::traits::input_parameter< veca1 >::type u_ad(u_adSEXP);
+    rcpp_result_gen = Rcpp::wrap(testmanifold(pman, u_ad));
     return rcpp_result_gen;
 END_RCPP
 }

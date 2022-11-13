@@ -4,6 +4,7 @@
 
 #include "mycpp/scm.cpp"
 using namespace Rcpp;
+#include "mycpp/wrapas.cpp"
 
 ////////////// Create Pointers to Manifold Objects ///////////////
 //in R store a pointer to the ADFun object
@@ -38,19 +39,14 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
 //' @return An integer. 0 if the testable parts pass.
 // @export
 // [[Rcpp::export]]
-int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
+int testmanifold(XPtr< manifold<a1type> > pman, veca1 u_ad){
   Rcout << "Starting tests" << std::endl;
-  veca1 u_ad(u.size());
-  for (long int i=0; i<u.size(); i++){
-    u_ad[i] = u[i];
-  }
-
   // toM then fromM get back to u
   std::cout << "               Input u was: " << u_ad.transpose() << std::endl;
-  veca1 z_ad(u.size());
+  veca1 z_ad(u_ad.size());
   z_ad = pman->toM(u_ad);
   std::cout << "                 After toM: " << z_ad.transpose() << std::endl;
-  veca1 u2_ad(u.size());
+  veca1 u2_ad(u_ad.size());
   u2_ad = pman->fromM(z_ad);
   std::cout << "      After toM then fromM: " << u2_ad.transpose() << std::endl;
   if ((u2_ad - u_ad).array().abs().maxCoeff() > 1E-8){
@@ -61,7 +57,7 @@ int testmanifold(XPtr< manifold<a1type> > pman, svecd u){
   // Run the other elements
   std::cout << " logdetJ_fromM at toM(u): " << pman->logdetJfromM(z_ad) << std::endl;
   std::cout << " Pmat at toM(u): " << std::endl << pman->Pmatfun(z_ad) << std::endl;
-  for (long int d=0; d<u.size(); d++){
+  for (long int d=0; d<u_ad.size(); d++){
     std::cout << " dPmat at toM(u) in dimension " << d <<":" << std::endl << pman->dPmatfun(z_ad, d) << std::endl;
   }
   return(0);

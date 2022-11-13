@@ -90,8 +90,8 @@ pmanifold <- function(manifoldname) {
     .Call('_scorecompdir_pmanifold', PACKAGE = 'scorecompdir', manifoldname)
 }
 
-testmanifold <- function(pman, u) {
-    .Call('_scorecompdir_testmanifold', PACKAGE = 'scorecompdir', pman, u)
+testmanifold <- function(pman, u_ad) {
+    .Call('_scorecompdir_testmanifold', PACKAGE = 'scorecompdir', pman, u_ad)
 }
 
 ptoM <- function(pman, u) {
