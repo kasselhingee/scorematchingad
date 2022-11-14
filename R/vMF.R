@@ -18,7 +18,7 @@
 
 #' @details
 #' The method "smfull" uses score matching to estimate the vector \eqn{\kappa \mu}.
-#' The method "Mardia" uses [`vMF_stdY()`] and [`vMF_kappa()`] to estimate \eqn{\kappa} and \eqnn{\mu} seperately.
+#' The method "Mardia" uses [`vMF_stdY()`] and [`vMF_kappa()`] to estimate \eqn{\kappa} and \eqn{\mu} seperately.
 #' @param Y A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.
 #' @param paramvec `smfull` method only: Optional. A vector of same length as the dimension, representing the elements of the vector \eqn{\kappa \mu}. 
 #' If supplied, the non-NA elements are fixed. It is easy to generate `paramvec` using [`vMF_paramvec()`].

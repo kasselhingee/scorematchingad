@@ -33,6 +33,9 @@ Imports:
     FixedPoint,
     Directional,
     Rdpack,
+    methods,
+    stats,
+    utils,
     rlang,
     ellipsis
 RdMacros: Rdpack

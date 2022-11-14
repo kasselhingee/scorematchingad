@@ -1,4 +1,3 @@
 library(testthat)
-library(cdabyppi)
 
-test_check("cdabyppi")
+test_check("scorecompdir")

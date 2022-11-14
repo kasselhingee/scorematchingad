@@ -10,7 +10,7 @@
 #' For discretised compositional observations (e.g. microbiome data),
 #' observed components with a value of zero are common,
 #' creating weights of infinity for models with concentrations at zero \insertCite{scealy2022ro}{scorecompdir}.
-#' \insertCite{scealy2022ro;textural}{scorecompdir} avoided these infinite-valued weights by setting some parameters of the PPI model to zero when calculating the weights, choosing tuning exponents of zero for:
+#' \insertCite{scealy2022ro;textual}{scorecompdir} avoided these infinite-valued weights by setting some parameters of the PPI model to zero when calculating the weights, choosing tuning exponents of zero for:
 #'  * elements of \eqn{\beta} corresponding to concentrations near zero, which avoids infinite weights
 #'  * any parameter elements corresponding to components that do not have a strong concentration, because outliers are not possible on the simplex if there isn't a strong concentration.
 #'

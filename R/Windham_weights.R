@@ -2,7 +2,7 @@
 #' @description Evaluates \eqn{f(z, c\circ\theta)}, which is the density \eqn{f} at observation \eqn{z}, given a parameter set \eqn{\theta} and vector of tuning constants \eqn{c}. The multiplication \eqn{\circ} is element-wise.
 #' These are the weights used by [`Windham()`].
 #' The density function is passed to `Windham_weights()` in log form.
-#' @param cW The robustness tuning constants. A vector of the same length as `theta`. Easily created for the PPI model using [`ppi_cw()`] and [`ppi_cW_auto()`].
+#' @param cW The robustness tuning constants. A vector of the same length as `theta`. Easily created for the PPI model using [`ppi_cW()`] and [`ppi_cW_auto()`].
 #' @param ldenfun A (possibly improper) log density function taking two arguments, `Y` and `theta`.
 #' @param theta Parameters for the model. The element-wise multiplication `cW * theta` is passed to `ldenfun`.
 #' @param Y A matrix of measurements. Each row a measurement. Passed to `ldenfun`.
