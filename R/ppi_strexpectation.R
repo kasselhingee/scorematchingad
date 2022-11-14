@@ -24,7 +24,7 @@ expect_ppi_str <- function(object, p){
     info_method_exists = correctmethodstr
   )
   if (all(unlist(passsummary))){
-    succeed()
+    testthat::succeed()
     return(invisible(act$val))
   }
   else {
