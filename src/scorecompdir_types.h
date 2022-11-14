@@ -20,6 +20,8 @@ typedef Eigen::Matrix<a1type, Eigen::Dynamic, Eigen::Dynamic> mata1;//a matrix o
 typedef CppAD::AD<a1type> a2type;  // for second (inner) level of taping
 typedef Eigen::Matrix<a2type, Eigen::Dynamic, 1> veca2;
 
+typedef CppAD::ADFun<double> ADFun_double; //required for RCPP_MODULE exporting. See RcppAnnoy for an example
+
 // template <typename T>
 // struct manifold {
 //   Eigen::Matrix<T, Eigen::Dynamic, 1> (*toM)(const Eigen::Matrix<T, Eigen::Dynamic, 1> &); //map from simplex to manifold
