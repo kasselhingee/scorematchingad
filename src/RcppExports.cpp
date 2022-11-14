@@ -133,17 +133,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // pTaylorApprox
-vecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd centre, vecd theta, size_t order);
-RcppExport SEXP _scorecompdir_pTaylorApprox(SEXP pfunSEXP, SEXP valueSEXP, SEXP centreSEXP, SEXP thetaSEXP, SEXP orderSEXP) {
+vecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun, vecd u, vecd centre, vecd dynparam, size_t order);
+RcppExport SEXP _scorecompdir_pTaylorApprox(SEXP pfunSEXP, SEXP uSEXP, SEXP centreSEXP, SEXP dynparamSEXP, SEXP orderSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< vecd >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< vecd >::type u(uSEXP);
     Rcpp::traits::input_parameter< vecd >::type centre(centreSEXP);
-    Rcpp::traits::input_parameter< vecd >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
     Rcpp::traits::input_parameter< size_t >::type order(orderSEXP);
-    rcpp_result_gen = Rcpp::wrap(pTaylorApprox(pfun, value, centre, theta, order));
+    rcpp_result_gen = Rcpp::wrap(pTaylorApprox(pfun, u, centre, dynparam, order));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -57,15 +57,6 @@ NULL
 #' @return The Hessian of pfun
 NULL
 
-#' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
-#' @param value A vector in the domain of the taped function.
-#' @param centre A vector in the domain of the taped function to approximate the value from.
-#' @param theta a vector of the dynamic parameters
-#' @param order The order of Taylor expansion to use.
-#' @description Wrapper for the `taylorapprox` C++ function.
-#' @return The approximate value of pfun
-NULL
-
 #' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 #' @param value A vector in the domain of the taped function.
 #' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
@@ -122,8 +113,17 @@ pHessian <- function(pfun, value, theta) {
     .Call('_scorecompdir_pHessian', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 
-pTaylorApprox <- function(pfun, value, centre, theta, order) {
-    .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, value, centre, theta, order)
+#' @title The value of a recorded function approximated by Taylor expansion
+#' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
+#' @param u A vector in the domain of the taped function.
+#' @param centre A vector in the domain of the taped function to approximate the value at `u` from.
+#' @param dynparam a vector of the dynamic parameters
+#' @param order The order of Taylor expansion to use.
+#' @description Approximates the value of a `CppAD` tape at `u` using a Taylor approximation at `centre`. The dynamic parameters of the tape are set by `dynparam`.
+#' @return The approximate value of pfun
+#' @export
+pTaylorApprox <- function(pfun, u, centre, dynparam, order) {
+    .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, u, centre, dynparam, order)
 }
 
 pTapeJacobianSwap <- function(pfun, value, theta) {

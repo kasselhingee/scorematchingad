@@ -278,25 +278,25 @@ vecd pHessian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
 }
 
 
-// @title The value of a recorded function approximated by Taylor Expansion
+//' @title The value of a recorded function approximated by Taylor expansion
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
-//' @param value A vector in the domain of the taped function.
-//' @param centre A vector in the domain of the taped function to approximate the value from.
-//' @param theta a vector of the dynamic parameters
+//' @param u A vector in the domain of the taped function.
+//' @param centre A vector in the domain of the taped function to approximate the value at `u` from.
+//' @param dynparam a vector of the dynamic parameters
 //' @param order The order of Taylor expansion to use.
-//' @description Wrapper for the `taylorapprox` C++ function.
+//' @description Approximates the value of a `CppAD` tape at `u` using a Taylor approximation at `centre`. The dynamic parameters of the tape are set by `dynparam`.
 //' @return The approximate value of pfun
-// @export
+//' @export
 // [[Rcpp::export]]
 vecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
-                     vecd value, vecd centre,
-                     vecd theta, size_t order){
-  Eigen::Matrix<double, Eigen::Dynamic, 1> out(pfun->Range());
-  pfun->new_dynamic(theta);
+                     vecd u, vecd centre,
+                     vecd dynparam, size_t order){
+  vecd out(pfun->Range());
+  pfun->new_dynamic(dynparam);
   out = taylorapprox(*pfun,
                      centre,
                      order,
-                     value);
+                     u);
 
   return(out);
 }
