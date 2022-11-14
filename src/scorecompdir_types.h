@@ -1,3 +1,6 @@
+# ifndef scorecompdir_TYPES
+# define scorecompdir_TYPES
+
 # include <RcppCommon.h>
 # include <iostream>        // standard input/output
 # include <vector>          // standard vector
@@ -43,4 +46,6 @@ namespace Rcpp {
   template <> veca1 as( SEXP );
   template <> SEXP wrap(const veca1&);
 }
+
+# endif
 

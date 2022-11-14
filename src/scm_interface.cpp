@@ -1,3 +1,6 @@
+# ifndef SCM_INTERFACE
+# define SCM_INTERFACE
+
 //for content that is Rcpp specific
 #include <RcppEigen.h>
 // [[Rcpp::depends(RcppEigen)]]
@@ -368,4 +371,4 @@ XPtr< CppAD::ADFun<double> >  pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun
   return(pout);
 }
 
-
+# endif
