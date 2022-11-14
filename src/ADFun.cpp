@@ -14,14 +14,14 @@ using namespace Rcpp;
 
 // class ADFun_double defined as a special version of the templated ADFun
 // following how RcppAnnoy has done it
-RCPP_EXPOSED_CLASS(ADFun_double_mod)
-RCPP_MODULE(ADFun_double_mod) {
+RCPP_EXPOSED_CLASS_NODECL(ADFun_double)
+RCPP_MODULE(ADFun_double) {
 
-  class_<ADFun_double>("ADFun_double")
+  class_<ADFun_double>("ADFun")
 
   .constructor() //the default constructor
 
-  .constructor<ADFun_double>(); //the copy constructor too
+  //would love the copy constructor too, but want to stop R from actually copying
 
   //.method("Domain", &CppAD::ADFun<double>::Domain, "The dimension of the domain (i.e. the length of the vector that this ADFun evaluates")
 
