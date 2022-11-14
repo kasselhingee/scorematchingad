@@ -42,23 +42,23 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
 int testmanifold(XPtr< manifold<a1type> > pman, veca1 u_ad){
   Rcout << "Starting tests" << std::endl;
   // toM then fromM get back to u
-  std::cout << "               Input u was: " << u_ad.transpose() << std::endl;
+  Rcout << "               Input u was: " << u_ad.transpose() << std::endl;
   veca1 z_ad(u_ad.size());
   z_ad = pman->toM(u_ad);
-  std::cout << "                 After toM: " << z_ad.transpose() << std::endl;
+  Rcout << "                 After toM: " << z_ad.transpose() << std::endl;
   veca1 u2_ad(u_ad.size());
   u2_ad = pman->fromM(z_ad);
-  std::cout << "      After toM then fromM: " << u2_ad.transpose() << std::endl;
+  Rcout << "      After toM then fromM: " << u2_ad.transpose() << std::endl;
   if ((u2_ad - u_ad).array().abs().maxCoeff() > 1E-8){
-    std::cout << "toM then fromM not passed." << std::endl;
+    Rcout << "toM then fromM not passed." << std::endl;
     return(1);
   }
 
   // Run the other elements
-  std::cout << " logdetJ_fromM at toM(u): " << pman->logdetJfromM(z_ad) << std::endl;
-  std::cout << " Pmat at toM(u): " << std::endl << pman->Pmatfun(z_ad) << std::endl;
+  Rcout << " logdetJ_fromM at toM(u): " << pman->logdetJfromM(z_ad) << std::endl;
+  Rcout << " Pmat at toM(u): " << std::endl << pman->Pmatfun(z_ad) << std::endl;
   for (long int d=0; d<u_ad.size(); d++){
-    std::cout << " dPmat at toM(u) in dimension " << d <<":" << std::endl << pman->dPmatfun(z_ad, d) << std::endl;
+    Rcout << " dPmat at toM(u) in dimension " << d <<":" << std::endl << pman->dPmatfun(z_ad, d) << std::endl;
   }
   return(0);
 }
