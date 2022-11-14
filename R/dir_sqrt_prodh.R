@@ -31,7 +31,7 @@ dir_sqrt_prodh <- function(Y,acut, w = rep(1, nrow(Y)))
 	ind=indqind$ind
 	qind=indqind$qind
 
-	h4m <- h2onz2_mean(p, n, z, h, indh, hstyle = "product", w = w)
+	h4m <- h2onz2_mean(p, n, z, h, indh = NULL, hstyle = "product", w = w)#note that indh
   W <- calcW22(p, h, h4m, w = w)
 
 	d1=t(((p-2)*weighted.mean(h^2, w=w)+h4m))
