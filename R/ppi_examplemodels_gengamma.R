@@ -33,7 +33,7 @@ ppi_eggengamma <- function(n, maxden = 0){
   out <- list(
     sample = samp3,
     p = p,
-    paramvec = toPPIparamvec(AL = ALs, bL = bL, beta = beta0),
+    paramvec = ppi_paramvec(AL = ALs, bL = bL, beta = beta0),
     AL = ALs,
     bL = bL,
     beta = beta0)

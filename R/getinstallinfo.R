@@ -6,7 +6,7 @@ scorecompdirinfo <- packageDescription("scorecompdir")
 pkgimportant <- paste(scorecompdirinfo[c("Suggests", "Imports", "Depends")], collapse = ", ")
 pkgimportant <- unlist(strsplit(gsub("[^,ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]", "", pkgimportant), ","))
 pkgimportant <- c(pkgimportant, "scorecompdir")
-pkginfo <- as.data.frame(installed.packages(field = c("Built", "Packaged")))
+pkginfo <- as.data.frame(installed.packages(fields = c("Built", "Packaged")))
 pkginfo <- pkginfo[pkginfo$Package %in% pkgimportant, 
                    c("Package", "LibPath", "Version",
                      "Built", "Packaged")]
