@@ -37,27 +37,27 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   }
 
   if (verbose){
-    std::cout << "Fixing according to pattern: " << std::endl;
+    Rcout << "Fixing according to pattern: " << std::endl;
     for (long int i=0;i<fixedtheta.size();i++){
-      std::cout << " " << fixedtheta[i];
+      Rcout << " " << fixedtheta[i];
     }
-    std::cout << std::endl;
+    Rcout << std::endl;
 
-    std::cout << "Fixed theta is:";
+    Rcout << "Fixed theta is:";
     if (thetafxd.size() == 0){
-      std::cout << " none" << std::endl;
+      Rcout << " none" << std::endl;
     } else {
       for (long int i=0;i<thetafxd.size();i++){
-        std::cout << " " << thetafxd[i];
+        Rcout << " " << thetafxd[i];
       }
-      std::cout << std::endl;
+      Rcout << std::endl;
     }
   }
 
   //tape relationship between x and log-likelihood
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
-    std::cout << "thetavar is: " << thetavar.transpose() << std::endl;
+    Rcout << "thetavar is: " << thetavar.transpose() << std::endl;
     PrintForVec("\n thetavar is: ", thetavar);
   }
 
@@ -73,7 +73,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
     }
   }
   if (verbose){
-    std::cout << "thetarecom is: " << thetarecom.transpose() << std::endl;
+    Rcout << "thetarecom is: " << thetarecom.transpose() << std::endl;
     PrintForVec("\n thetarecom is: ", thetarecom);
   }
 
@@ -89,9 +89,9 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
   if (verbose){
-    std::cout << "tape has " << tape.size_dyn_ind() << " independent dynamic parameters" << std::endl;
-    std::cout << "tape requires vectors of length " << tape.Domain() << std::endl;
-    std::cout << "tape returns vectors of length " << tape.Range() << std::endl;
+    Rcout << "tape has " << tape.size_dyn_ind() << " independent dynamic parameters" << std::endl;
+    Rcout << "tape requires vectors of length " << tape.Domain() << std::endl;
+    Rcout << "tape returns vectors of length " << tape.Range() << std::endl;
   }
   return(tape);
 }

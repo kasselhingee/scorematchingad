@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv)
  {   using CppAD::AD;   // use AD as abbreviation for CppAD::AD
-       std::cout << "Reading inputs" << std::endl;
+       Rcout << "Reading inputs" << std::endl;
        //read inputs
        size_t n = 3;
        veca1 z_ad(n);
@@ -23,11 +23,11 @@ int main(int argc, char** argv)
        fixedtheta_e[fixedtheta_e.size() - 1] = 1;
        fixedtheta_e[fixedtheta_e.size() - 2] = 1;
 
-       std::cout << "Creating manifold object" << std::endl;
+       Rcout << "Creating manifold object" << std::endl;
        manifold<a1type> * man;
        man = new Spos<a1type>();
 
-   std::cout << "Preparing to tape" << std::endl;
+   Rcout << "Preparing to tape" << std::endl;
    CppAD::ADFun<double> out; //returning a pointer
    out = tapell(z_ad,
                  theta_ad,

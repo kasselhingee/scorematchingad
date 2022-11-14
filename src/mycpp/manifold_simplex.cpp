@@ -58,7 +58,7 @@ struct simplex : public manifold<T> {
      Eigen::Matrix<T, Eigen::Dynamic, 1> centre(xbeta.size());
      centre = xbeta;
      centre.block(0,0,x.size(), 1) << x + shiftdir;
-     std::cout << "Approximation centre is:" << shiftdir.transpose() << std::endl;
+     Rcout << "Approximation centre is:" << shiftdir.transpose() << std::endl;
      Eigen::Matrix<T, Eigen::Dynamic, 1> out(0);
      out = taylorapprox(f, centre, order, xbeta);
      return(out);

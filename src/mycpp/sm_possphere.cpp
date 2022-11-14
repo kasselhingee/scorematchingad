@@ -92,7 +92,7 @@ struct Spos : public manifold<Type> {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> centre(xbeta.size());
      centre = xbeta;
      centre.block(0,0,x.size(), 1) << x + shiftdir;
-     std::cout << "Approximation centre is:" << shiftdir.transpose() << std::endl;
+     Rcout << "Approximation centre is:" << shiftdir.transpose() << std::endl;
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(0);
      out = taylorapprox(f, centre, order, xbeta);
      return(out);
