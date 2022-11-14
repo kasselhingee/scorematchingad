@@ -26,13 +26,13 @@ Windham_assess_estimator <- function(estimator, Y, ..., w = NULL){
   if ("paramvec" %in% names(estimatorformals)){
     paramvec = TRUE
     if (!is.null(estargs$paramvec)){paramvec_length <- max(paramvec_length, length(estargs$paramvec))} #use max here to ignore times when the default is 'NULL'
-    else if (class(estimatorformals$paramvec) == "call"){paramvec_length <- max(paramvec_length, length(eval(estimatorformals$paramvec)))}
+    else if (isa(estimatorformals$paramvec, "call")){paramvec_length <- max(paramvec_length, length(eval(estimatorformals$paramvec)))}
   }
   paramvec_start = FALSE 
   if ("paramvec_start" %in% names(estimatorformals)){
     paramvec_start = TRUE
     if (!is.null(estargs$paramvec_start)){paramvec_length <- max(paramvec_length, length(estargs$paramvec_start))}
-    else if (class(estimatorformals$paramvec_start) == "call"){paramvec_length <- max(paramvec_length, length(eval(estimatorformals$paramvec_start)))}
+    else if (isa(estimatorformals$paramvec_start, "call")){paramvec_length <- max(paramvec_length, length(eval(estimatorformals$paramvec_start)))}
   } 
   if ((paramvec_length > 0) && (length(newparamvec) != paramvec_length)){
     stop(sprintf("Returned estimate has different length (%i) to input paramvec or paramvec_start (%i)", length(newparamvec), paramvec_length))
