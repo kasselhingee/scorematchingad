@@ -395,6 +395,10 @@ XPtr< CppAD::ADFun<double> >  pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun
 XPtr< CppAD::ADFun<double> >  pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam){
   // x and dynparam must have elements of a1type so that taping can proceed
+  //check inputs and tape match
+  if (pfun->Domain() != x.size()){stop("Size of input vector %i does not match domain size %i of taped function.", x.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != dynparam.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", dynparam.size(), pfun->size_dyn_ind());}
+
 
 
   //convert taped object to higher order, so that the 'base' type of the tape is a1type, so x and dynparam can be passed into Jacobian()
@@ -433,6 +437,10 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun,
 XPtr< CppAD::ADFun<double> >  pTapeHessian(XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam){
   // x and dynparam must have elements of a1type so that taping can proceed
+  //check inputs and tape match
+  if (pfun->Domain() != x.size()){stop("Size of input vector %i does not match domain size %i of taped function.", x.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != dynparam.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", dynparam.size(), pfun->size_dyn_ind());}
+
 
   if (pfun->Range()>1){
     stop("Taped function 'pfun' must return a vector of length 1. Currently 'pfun' returns a vector of length %i.", pfun->Range());
@@ -465,6 +473,9 @@ XPtr< CppAD::ADFun<double> >  pTapeHessian(XPtr< CppAD::ADFun<double> > pfun,
 //' @export
 // [[Rcpp::export]]
 std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun, vecd dynparam){
+  //check inputs and tape match
+  if (pfun->size_dyn_ind() != dynparam.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", dynparam.size(), pfun->size_dyn_ind());}
+
   pfun->new_dynamic(dynparam);
   std::vector<bool> isparameter(pfun->Range());
   for (size_t i = 0; i < pfun->Range(); i++){
