@@ -5,6 +5,7 @@
 #' @param tape An `Rcpp::XPtr` to a CppAD tape.
 #' @param xmat If passed, the third-order derivatives at values of the rows of `xmat` are tested.
 #' @param dynparammat The dynamic parameters for the tape. If passed, the rows of `dynparammat` are passed to the tape as `dynparam`.
+#' @param verbose If TRUE information about the failed tests is passed.
 #' @details Uses the `xtape` and `dyntape` attributes of `tape` to create new tapes.
 #' A tape of Hessian is obtained by applying [`pTapeJacobian()`] twice. Using [`pTapeHessian()`] directly did not show constant parameters via [`pParameter()`] in tests.
 #'
@@ -27,13 +28,17 @@
 #'
 #'  testquadratictape(ppismotape)
 #' @export
-testquadratictape <- function(tape, xmat = NULL, dynparammat = NULL){
+testquadratictape <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE){
   tapeJ <- pTapeJacobian(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
   tapeH <- pTapeJacobian(tapeJ, attr(tape, "xtape"), attr(tape, "dyntape"))
 
   #pParameter() test
   isparameter <- pParameter(tapeH)
   result_pParameter <- all(isparameter)
+  if (verbose && !result_pParameter){
+    message(sprintf("The Hessian was non-constant according to pParameter() for elements %s.",
+                    paste(which(!isparameter), collapse = ", ")))
+  }
 
   if (is.null(xmat) && is.null(dynparammat)){return(result_pParameter)}
 
@@ -44,18 +49,12 @@ testquadratictape <- function(tape, xmat = NULL, dynparammat = NULL){
   })
   isallzero <- unlist(lapply(thirdderivs, function(vec){all(vec == 0)}))
   result_thirdderiv <- all(isallzero)
+  if (verbose && !result_thirdderiv){
+    message(sprintf("The Jacobian of the Hessian was non-zero for row %s of xmat and dynparammat",
+                    paste(which(!isallzero), collapse = ", ")))
+  }
 
   finalresult <- result_thirdderiv && result_pParameter
-  if (result_thirdderiv != result_pParameter){
-    if (!result_thirdderiv){
-      message(sprintf("The Jacobian of the Hessian was non-zero for row %s of xmat and dynparammat",
-                      paste(which(!isallzero, collapse = ", "))))
-    }
-    if (!result_pParameter){
-      message(sprintf("The Hessian was non-constant according to pParameter() for elements %s.",
-                      paste(which(!isparameter, collapse = ", "))))
-    }
-  }
   return(finalresult)
 }
 
