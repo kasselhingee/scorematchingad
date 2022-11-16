@@ -371,4 +371,45 @@ XPtr< CppAD::ADFun<double> >  pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun
   return(pout);
 }
 
+//' @title Tape the Jacobian of CppAD Tape
+//' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
+//' @param x A vector in the domain of the taped function.
+//' this vector forms the centre of the Taylor approximation
+//' @param dynparam a vector of the dynamic parameters
+//' @description Creates a tape of the Jacobian of function taped by CppAD.
+//' When the function returns a real value (as is the case for densities and the score matching objective) the Jacobian is equivalent to the gradient.
+//' The `x` vector is used as the value to conduct the taping.
+//' @details
+//' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Jacobian in long format (see [https://coin-or.github.io/CppAD/doc/jacobian.htm]).
+//' Suppose the function represented by `pfun` maps from \eqn{n}-dimensional space to \eqn{m}-dimensional space, then
+//' the first \eqn{n} elements of vector is the gradient of the first component of function output.
+//' The next \eqn{n} elements of the vector is the gradient of the second component of the function output.
+//' The Jacobian as a matrix, could then be obtained by [`as.matrix()`] with `byrow = TRUE` and `ncol = n`.
+//' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+//' @export
+// [[Rcpp::export]]
+XPtr< CppAD::ADFun<double> >  pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun,
+                    veca1 x, veca1 dynparam){
+  // x and dynparam must have elements of a1type so that taping can proceed
+
+
+  //convert taped object to higher order, so that the 'base' type of the tape is a1type, so x and dynparam can be passed into Jacobian()
+  CppAD::ADFun<a1type, double> pfunhigher;
+  pfunhigher = pfun->base2ad();
+
+  CppAD::Independent(x, dynparam);  //start taping with x as the usual independent parameter and dynparam as the dynamic parameter
+  pfunhigher.new_dynamic(dynparam);
+  veca1 jac(pfunhigher->Domain() * pfunhigher->Range());
+  jac = pfunhigher.Jacobian(x);
+
+  //end taping
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  out->Dependent(jac, dynparam);
+  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  out->check_for_nan(false);
+
+  XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}
+
 # endif
