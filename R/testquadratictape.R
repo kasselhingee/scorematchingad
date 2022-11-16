@@ -9,18 +9,30 @@
 #' A tape of Hessian is obtained by applying [`pTapeJacobian()`] twice. Using [`pTapeHessian()`] directly did not show constant parameters via [`pParameter()`] in tests.
 #'
 #' Two tests are conducted on the tape of the Hessian.
-#' [`pParameter()`] is evaluated with dynamic parameters given by the `dyntape` attribute of `tape`.
 #' For a function of quadratic form, [`pParameter()`] should return a vector of `TRUE` values.
 #' The other test evaluates the Jacobian at each row of `xmat` and `dynparammat` (if `xmat` and `dynparammat` are non-NULL). The result should be zero when `tape` represents a function of quadratic form.
 #' If the results of the tests differ the returned value is `FALSE` and a message is printed indicating which test failed.
 #' @return `TRUE` or `FALSE`
+#' @examples
+#'  sqrtman <- pmanifold("sphere")
+#'  ppitape <- tapell(llname = "ppi",
+#'                    xtape = c(0.2, 0.3, 0.5),
+#'                    usertheta = ppi_paramvec(p = 3), 
+#'                    pmanifoldtransform = sqrtman)
+#'  ppismotape <- tapesmo(lltape = ppitape,
+#'                        pmanifoldtransform = sqrtman,
+#'                        divweight = "minsq",
+#'                        acut = 0.1,
+#'                        verbose = FALSE)
+#'
+#'  testquadratictape(ppismotape)
 #' @export
 testquadratictape <- function(tape, xmat = NULL, dynparammat = NULL){
   tapeJ <- pTapeJacobian(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
   tapeH <- pTapeJacobian(tapeJ, attr(tape, "xtape"), attr(tape, "dyntape"))
 
   #pParameter() test
-  isparameter <- pParameter(tapeH, attr(tape, "dyntape"))
+  isparameter <- pParameter(tapeH)
   result_pParameter <- all(isparameter)
 
   if (is.null(xmat) && is.null(dynparammat)){return(result_pParameter)}

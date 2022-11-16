@@ -67,6 +67,15 @@ NULL
 #' @return The approximate value of the gradient, with respect to theta, of pfun
 NULL
 
+#' @title Indicate Constant Components of Range
+#' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the `x` arguments.
+#' @param pfun A CppAD tape.
+#' @param dynparam A set of dynamic parameters for `pfun`.
+#' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
+#' @details The `CppAD` function `Parameter(i)` [https://coin-or.github.io/CppAD/doc/fun_property.htm] returns `TRUE` when the `i`th component of the range does not depend on the value of the `x` argument
+#' (the `i`th component may still depend on the value of the dynamic parameters (see 'Dynamic' in [https://coin-or.github.io/CppAD/doc/glossary.htm#Parameter]) ).
+NULL
+
 #' @title Generate manifold with transformation object
 #' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
 #' @return An RCpp::XPtr object pointing to the C++ manifold object
@@ -175,13 +184,8 @@ pTapeHessian <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pTapeHessian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
-#' @title Indicate Constant Components of Range
-#' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the `x` arguments.
-#' @param pfun A CppAD tape.
-#' @param dynparam A set of dynamic parameters for `pfun`.
-#' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
 #' @export
-pParameter <- function(pfun, dynparam) {
-    .Call('_scorecompdir_pParameter', PACKAGE = 'scorecompdir', pfun, dynparam)
+pParameter <- function(pfun) {
+    .Call('_scorecompdir_pParameter', PACKAGE = 'scorecompdir', pfun)
 }
 

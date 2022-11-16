@@ -470,13 +470,12 @@ XPtr< CppAD::ADFun<double> >  pTapeHessian(XPtr< CppAD::ADFun<double> > pfun,
 //' @param pfun A CppAD tape.
 //' @param dynparam A set of dynamic parameters for `pfun`.
 //' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
+//' @details The `CppAD` function `Parameter(i)` [https://coin-or.github.io/CppAD/doc/fun_property.htm] returns `TRUE` when the `i`th component of the range does not depend on the value of the `x` argument
+//' (the `i`th component may still depend on the value of the dynamic parameters (see 'Dynamic' in [https://coin-or.github.io/CppAD/doc/glossary.htm#Parameter]) ).
+// According to the help, applying Variable(u) to each return value would be false if u depends on the dynamic parameters and does not depend on the independent variable vector.
 //' @export
 // [[Rcpp::export]]
-std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun, vecd dynparam){
-  //check inputs and tape match
-  if (pfun->size_dyn_ind() != dynparam.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", dynparam.size(), pfun->size_dyn_ind());}
-
-  pfun->new_dynamic(dynparam);
+std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun){
   std::vector<bool> isparameter(pfun->Range());
   for (size_t i = 0; i < pfun->Range(); i++){
     isparameter[i] = pfun->Parameter(i);
