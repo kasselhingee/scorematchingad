@@ -399,7 +399,7 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun,
 
   CppAD::Independent(x, dynparam);  //start taping with x as the usual independent parameter and dynparam as the dynamic parameter
   pfunhigher.new_dynamic(dynparam);
-  veca1 jac(pfunhigher->Domain() * pfunhigher->Range());
+  veca1 jac(pfunhigher.Domain() * pfunhigher.Range());
   jac = pfunhigher.Jacobian(x);
 
   //end taping
