@@ -248,21 +248,21 @@ vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
   return(grad);
 }
 
-// @title The value of a recorded function
+//' @title Evaluate a CppAD tape
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-//' @param value A vector in the domain of the taped function.
-//' @param theta a vector of the dynamic parameters
-//' @return The value of pfun
-// @export
+//' @param x A vector in the domain of the taped function.
+//' @param dynparam a vector of the dynamic parameters
+//' @return The value of `pfun` evaluated at `x` with parameters `dynparam`.
+//' @export
 // [[Rcpp::export]]
-vecd pForward0(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
+vecd pForward0(XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam){
   //check inputs and tape match
-  if (pfun->Domain() != value.size()){stop("Size of input vector %i does not match domain size %i of taped function.", value.size(), pfun->Domain());}
-  if (pfun->size_dyn_ind() != theta.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta.size(), pfun->size_dyn_ind());}
+  if (pfun->Domain() != x.size()){stop("Size of input vector %i does not match domain size %i of taped function.", x.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != dynparam.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", dynparam.size(), pfun->size_dyn_ind());}
 
   vecd out(1);
-  pfun->new_dynamic(theta);
-  out = pfun->Forward(0, value);  //treat the XPtr as a regular pointer
+  pfun->new_dynamic(dynparam);
+  out = pfun->Forward(0, x);  //treat the XPtr as a regular pointer
 
   return(out);
 }
