@@ -409,7 +409,7 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun,
 
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  out->Dependent(jac, dynparam);
+  out->Dependent(x, jac);
   out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
   out->check_for_nan(false);
 
