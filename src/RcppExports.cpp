@@ -199,6 +199,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pParameter
+std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun, vecd dynparam);
+RcppExport SEXP _scorecompdir_pParameter(SEXP pfunSEXP, SEXP dynparamSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
+    rcpp_result_gen = Rcpp::wrap(pParameter(pfun, dynparam));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_ADFun_module();
 
@@ -217,6 +229,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_pTapeHessianSwap", (DL_FUNC) &_scorecompdir_pTapeHessianSwap, 3},
     {"_scorecompdir_pTapeJacobian", (DL_FUNC) &_scorecompdir_pTapeJacobian, 3},
     {"_scorecompdir_pTapeHessian", (DL_FUNC) &_scorecompdir_pTapeHessian, 3},
+    {"_scorecompdir_pParameter", (DL_FUNC) &_scorecompdir_pParameter, 2},
     {"_rcpp_module_boot_ADFun_module", (DL_FUNC) &_rcpp_module_boot_ADFun_module, 0},
     {NULL, NULL, 0}
 };

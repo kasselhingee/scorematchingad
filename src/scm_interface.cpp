@@ -457,4 +457,20 @@ XPtr< CppAD::ADFun<double> >  pTapeHessian(XPtr< CppAD::ADFun<double> > pfun,
   return(pout);
 }
 
+//' @title Indicate Constant Components of Range
+//' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the `x` arguments.
+//' @param pfun A CppAD tape.
+//' @param dynparam A set of dynamic parameters for `pfun`.
+//' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
+//' @export
+// [[Rcpp::export]]
+std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun, vecd dynparam){
+  pfun->new_dynamic(dynparam);
+  std::vector<bool> isparameter(pfun->Range());
+  for (size_t i = 0; i < pfun->Range(); i++){
+    isparameter[i] = pfun->Parameter(i);
+  }
+  return(isparameter);
+}
+
 # endif

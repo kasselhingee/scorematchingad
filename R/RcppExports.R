@@ -175,3 +175,13 @@ pTapeHessian <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pTapeHessian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
+#' @title Indicate Constant Components of Range
+#' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the `x` arguments.
+#' @param pfun A CppAD tape.
+#' @param dynparam A set of dynamic parameters for `pfun`.
+#' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
+#' @export
+pParameter <- function(pfun, dynparam) {
+    .Call('_scorecompdir_pParameter', PACKAGE = 'scorecompdir', pfun, dynparam)
+}
+
