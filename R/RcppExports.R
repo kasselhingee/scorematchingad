@@ -42,12 +42,6 @@ NULL
 NULL
 
 #' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-#' @param value A vector in the domain of the taped function.
-#' @param theta a vector of the dynamic parameters
-#' @return The value of pfun
-NULL
-
-#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 #' @param u A vector in the simplex.
 #' @param beta a vector of the dynamic parameters
 #' @return The Hessian of pfun
@@ -110,8 +104,14 @@ pJacobian <- function(pfun, value, theta) {
     .Call('_scorecompdir_pJacobian', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 
-pForward0 <- function(pfun, value, theta) {
-    .Call('_scorecompdir_pForward0', PACKAGE = 'scorecompdir', pfun, value, theta)
+#' @title Evaluate a CppAD tape
+#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+#' @param x A vector in the domain of the taped function.
+#' @param dynparam a vector of the dynamic parameters
+#' @return The value of `pfun` evaluated at `x` with parameters `dynparam`.
+#' @export
+pForward0 <- function(pfun, x, dynparam) {
+    .Call('_scorecompdir_pForward0', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
 pHessian <- function(pfun, value, theta) {
@@ -142,7 +142,6 @@ pTapeHessianSwap <- function(pfun, value, theta) {
 #' @title Tape the Jacobian of CppAD Tape
 #' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 #' @param x A vector in the domain of the taped function.
-#' this vector forms the centre of the Taylor approximation
 #' @param dynparam a vector of the dynamic parameters
 #' @description Creates a tape of the Jacobian of function taped by CppAD.
 #' When the function returns a real value (as is the case for densities and the score matching objective) the Jacobian is equivalent to the gradient.
@@ -157,5 +156,22 @@ pTapeHessianSwap <- function(pfun, value, theta) {
 #' @export
 pTapeJacobian <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pTapeJacobian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+}
+
+#' @title Tape the Hessian of a CppAD Tape
+#' @inheritParams pTapeJacobian
+#' @description Creates a tape of the Hessian of a function taped by CppAD.
+#' The taped function represented by `pfun` must be scalar-valued (i.e. a vector of length 1).
+#' The `x` vector and `dynparam` are used as the values to conduct the taping.
+#' @details
+#' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Hessian in long format (see [https://coin-or.github.io/CppAD/doc/hessian.htm]).
+#' Suppose the function represented by `pfun` maps from \eqn{n}-dimensional space to \eqn{1}-dimensional space, then
+#' the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
+#' The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
+#' The Hessian as a matrix, can be obtained by using [`as.matrix()`] with `ncol = n`.
+#' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+#' @export
+pTapeHessian <- function(pfun, x, dynparam) {
+    .Call('_scorecompdir_pTapeHessian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 

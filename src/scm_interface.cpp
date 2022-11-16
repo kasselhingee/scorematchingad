@@ -379,7 +379,6 @@ XPtr< CppAD::ADFun<double> >  pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun
 //' @title Tape the Jacobian of CppAD Tape
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 //' @param x A vector in the domain of the taped function.
-//' this vector forms the centre of the Taylor approximation
 //' @param dynparam a vector of the dynamic parameters
 //' @description Creates a tape of the Jacobian of function taped by CppAD.
 //' When the function returns a real value (as is the case for densities and the score matching objective) the Jacobian is equivalent to the gradient.
@@ -410,6 +409,47 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun,
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   out->Dependent(x, jac);
+  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  out->check_for_nan(false);
+
+  XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}
+
+//' @title Tape the Hessian of a CppAD Tape
+//' @inheritParams pTapeJacobian
+//' @description Creates a tape of the Hessian of a function taped by CppAD.
+//' The taped function represented by `pfun` must be scalar-valued (i.e. a vector of length 1).
+//' The `x` vector and `dynparam` are used as the values to conduct the taping.
+//' @details
+//' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Hessian in long format (see [https://coin-or.github.io/CppAD/doc/hessian.htm]).
+//' Suppose the function represented by `pfun` maps from \eqn{n}-dimensional space to \eqn{1}-dimensional space, then
+//' the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
+//' The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
+//' The Hessian as a matrix, can be obtained by using [`as.matrix()`] with `ncol = n`.
+//' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+//' @export
+// [[Rcpp::export]]
+XPtr< CppAD::ADFun<double> >  pTapeHessian(XPtr< CppAD::ADFun<double> > pfun,
+                    veca1 x, veca1 dynparam){
+  // x and dynparam must have elements of a1type so that taping can proceed
+
+  if (pfun->Range()>1){
+    stop("Taped function 'pfun' must return a vector of length 1. Currently 'pfun' returns a vector of length %i.", pfun->Range());
+  }
+
+  //convert taped object to higher order, so that the 'base' type of the tape is a1type, so x and dynparam can be passed into Hessian()
+  CppAD::ADFun<a1type, double> pfunhigher;
+  pfunhigher = pfun->base2ad();
+
+  CppAD::Independent(x, dynparam);  //start taping with x as the usual independent parameter and dynparam as the dynamic parameter
+  pfunhigher.new_dynamic(dynparam);
+  veca1 hess(pfunhigher.Domain() * pfunhigher.Domain());
+  hess = pfunhigher.Hessian(x, 0);
+
+  //end taping
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  out->Dependent(x, hess);
   out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
   out->check_for_nan(false);
 

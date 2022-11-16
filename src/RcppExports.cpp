@@ -107,15 +107,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // pForward0
-vecd pForward0(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
-RcppExport SEXP _scorecompdir_pForward0(SEXP pfunSEXP, SEXP valueSEXP, SEXP thetaSEXP) {
+vecd pForward0(XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
+RcppExport SEXP _scorecompdir_pForward0(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< vecd >::type value(valueSEXP);
-    Rcpp::traits::input_parameter< vecd >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(pForward0(pfun, value, theta));
+    Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
+    Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
+    rcpp_result_gen = Rcpp::wrap(pForward0(pfun, x, dynparam));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -186,6 +186,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pTapeHessian
+XPtr< CppAD::ADFun<double> > pTapeHessian(XPtr< CppAD::ADFun<double> > pfun, veca1 x, veca1 dynparam);
+RcppExport SEXP _scorecompdir_pTapeHessian(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type x(xSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type dynparam(dynparamSEXP);
+    rcpp_result_gen = Rcpp::wrap(pTapeHessian(pfun, x, dynparam));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_ADFun_module();
 
@@ -203,6 +216,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_pTapeJacobianSwap", (DL_FUNC) &_scorecompdir_pTapeJacobianSwap, 3},
     {"_scorecompdir_pTapeHessianSwap", (DL_FUNC) &_scorecompdir_pTapeHessianSwap, 3},
     {"_scorecompdir_pTapeJacobian", (DL_FUNC) &_scorecompdir_pTapeJacobian, 3},
+    {"_scorecompdir_pTapeHessian", (DL_FUNC) &_scorecompdir_pTapeHessian, 3},
     {"_rcpp_module_boot_ADFun_module", (DL_FUNC) &_rcpp_module_boot_ADFun_module, 0},
     {NULL, NULL, 0}
 };
