@@ -10,17 +10,20 @@ test_that("PPI model with sqrt transformation, minsq divergence weight, acut of 
                         acut = 0.1,
                         verbose = FALSE)
   ppismotapeJ <- pTapeJacobian(ppismotape, attr(ppismotape, "xtape"), attr(ppismotape, "dyntape"))
-  pForward0(ppismotapeJ, 
-    ppi_paramvec(p = 3, AL=0, bL=0, beta=c(-0.1,-0.1,0.5)),
-    c(0.1, 0.1, 0.8)) 
+  ppismotapeH <- pTapeHessian(ppismotape, attr(ppismotape, "xtape"), attr(ppismotape, "dyntape"))
+  ppismotapeH2 <- pTapeJacobian(ppismotapeJ, attr(ppismotape, "xtape"), attr(ppismotape, "dyntape"))
+
+  expect_equal(
+  pForward0(ppismotapeH, attr(ppismotape, "xtape"), c(0.1, 0.1, 0.8)),
+  pForward0(ppismotapeH2, attr(ppismotape, "xtape"), c(0.1, 0.1, 0.8)))
   
-  objs <- buildsmotape("sphere", "ppi", c(0.2, 0.3, 0.5),
-                       weightname = "minsq", acut = 0.1,
-                       ppi_paramvec(p = 3))
-  pForward0(objs$smotape,
-    ppi_paramvec(p = 3, AL=0, bL=0, beta=c(-0.1,-0.1,0.5)),
-    c(0.1, 0.1, 0.8))
-  pJacobian(objs$smotape,
-            ppi_paramvec(p = 3, AL=0, bL=0, beta=c(-0.1,-0.1,0.5)),
-            c(0.1, 0.1, 0.8))
+  expect_equal(pParameter(ppismotapeH, c(0.1, 0.1, 0.8)), rep(TRUE, length(ppi_paramvec(p = 3))^2))
+  expect_equal(pParameter(ppismotapeH2, c(0.1, 0.1, 0.8)), rep(TRUE, length(ppi_paramvec(p = 3))^2))
+  
+  hessgrad <- scorecompdir:::pJacobian(ppismotapeH,
+                           ppi_paramvec(p = 3, AL=1, bL=1, beta=c(-0.1,-0.1,0.5)),
+                           c(0.1, 0.1, 0.8))
+  expect_equal(hessgrad, rep(0, length(ppi_paramvec(p = 3))^3))
 })
+
+
