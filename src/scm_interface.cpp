@@ -11,10 +11,15 @@ using namespace Rcpp;
 
 ////////////// Create Pointers to Manifold Objects ///////////////
 //in R store a pointer to the ADFun object
-// @title Generate manifold object
+//' @title Generate manifold with transformation object
 //' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
 //' @return An RCpp::XPtr object pointing to the C++ manifold object
-// @export
+//' @details
+//'  + "sphere" for square-root transformation from the simplex to the positive orthant of the sphere
+//'  + "simplex" for the simplex without any transformation.
+//'  + "Ralr" for the additive log-ratio transformation from the simplex to Euclidean space, using the final component of vectors in the denominator of the ratio.
+//'  + "Snative" for the sphere without any transformation
+//' @export
 // [[Rcpp::export]]
 XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   manifold<a1type> * out;  //returning a pointer
