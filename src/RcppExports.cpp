@@ -173,6 +173,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pTapeJacobian
+XPtr< CppAD::ADFun<double> > pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun, veca1 x, veca1 dynparam);
+RcppExport SEXP _scorecompdir_pTapeJacobian(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type x(xSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type dynparam(dynparamSEXP);
+    rcpp_result_gen = Rcpp::wrap(pTapeJacobian(pfun, x, dynparam));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_ADFun_module();
 
@@ -189,6 +202,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_pTaylorApprox", (DL_FUNC) &_scorecompdir_pTaylorApprox, 5},
     {"_scorecompdir_pTapeJacobianSwap", (DL_FUNC) &_scorecompdir_pTapeJacobianSwap, 3},
     {"_scorecompdir_pTapeHessianSwap", (DL_FUNC) &_scorecompdir_pTapeHessianSwap, 3},
+    {"_scorecompdir_pTapeJacobian", (DL_FUNC) &_scorecompdir_pTapeJacobian, 3},
     {"_rcpp_module_boot_ADFun_module", (DL_FUNC) &_rcpp_module_boot_ADFun_module, 0},
     {NULL, NULL, 0}
 };
