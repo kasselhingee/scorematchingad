@@ -14,7 +14,7 @@
 #'  + `dyntape` The value of non-fixed elements of `usertheta` used for taping.
 #'  + `usertheta` The vector `usertheta`.
 #' @examples 
-#' sqrtman <- pmanifold("Ralr")
+#' sqrtman <- pmanifold("sphere")
 #' ppitape <- tapell(llname = "ppi",
 #'                   xtape = c(0.2, 0.3, 0.5),
 #'                   usertheta = ppi_paramvec(p = 3), 
@@ -41,7 +41,7 @@ tapell <- function(llname,
   attr(lltape, "xtape") <- xtape
   attr(lltape, "usertheta") <- usertheta
   attr(lltape, "dyntape") <- starttheta[!t_u2i(usertheta)]
-  return(lltape) 
+  return(lltape)
 }
 
 
