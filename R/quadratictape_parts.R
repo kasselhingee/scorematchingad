@@ -2,7 +2,7 @@
 #' @description
 #' When the score matching objective function is quadratic then the gradient of the score matching objective function can be written using the Hessian and an offset term. This can be useful for solving for the situation when the gradient is zero.
 #' The Hessian and offset term are computed using `CppAD` tapes.
-#' The function `quadtraticsmo_parts_approx()` evaluates the Hessian and offset using Taylor approximation.
+#' The function `quadratictape_parts_approx()` evaluates the Hessian and offset using Taylor approximation.
 #' @details
 #' A quadratic function can be written
 #' \deqn{f(x; t) = \frac{1}{2} x^T W(t) x + b(t)^T x + c,}
@@ -27,15 +27,15 @@ quadratictape_parts <- function(tape, tmat){
 
   stopifnot(testquadratictape(tape))
 
-  Hesstape <- pTapeHessian(tape, attr(smotape, "xtape"), attr(smotape, "dyntape"))
-  OffsetTape <- pTapeGradOffset(tape, attr(smotape, "xtape"), attr(smotape, "dyntape"))
+  Hesstape <- pTapeHessian(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
+  OffsetTape <- pTapeGradOffset(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
 
   #evaluate Hessians
-  Hesss <- apply(tmat, MARGIN = 1, function(x){pForward0(Hesstape, 0*attr(tape, "xtape"), t)}, simplify = FALSE)
+  Hesss <- apply(tmat, MARGIN = 1, function(x){pForward0(Hesstape, 0*attr(tape, "xtape"), x)}, simplify = FALSE)
   Hesss <- do.call(rbind, Hesss)
  
   #evaluate Offsets 
-  offsets <- apply(tmat, MARGIN = 1, function(x){pForward0(OffsetTape, t, vector(mode = "double"))}, simplify = FALSE)
+  offsets <- apply(tmat, MARGIN = 1, function(x){pForward0(OffsetTape, x, vector(mode = "double"))}, simplify = FALSE)
   offsets <- do.call(rbind, offsets)
   return(list(
     offset = offsets,

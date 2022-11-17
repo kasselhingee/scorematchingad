@@ -1,5 +1,5 @@
 test_that("Hess + Offset match gradient for a PPI Example", {
-  mod <- ppi_egmodel(1)
+  mod <- ppi_egmodel(100)
   Y <- mod$sample
 
   Ralr <- pmanifold("Ralr")
@@ -12,31 +12,29 @@ test_that("Hess + Offset match gradient for a PPI Example", {
                       divweight = "ones",
                       verbose = FALSE)
 
-  testquadratictape(smotape)
+  values <- quadratictape_parts(smotape, Y)
 
-  Hesstape <- pTapeHessian(smotape, attr(smotape, "xtape"), attr(smotape, "dyntape"))
-  OffsetTape <- pTapeGradOffset(smotape, attr(smotape, "xtape"), attr(smotape, "dyntape"))
+  # expect results to match for gradient
+  theta <- mod$theta #theta could be anything though
+  gradorig <- t(apply(Y, MARGIN = 1, function(x){pJacobian(smotape, theta, x)}))
 
-  #expect results to match for gradient
-  x <- c(0.1, 0.1, 0.8)
-  theta <- mod$theta
-  grad1poly <- matrix(pForward0(Hesstape, 0*theta, x), ncol = length(theta)) %*% theta + 
-    pForward0(OffsetTape, x, vector(mode = "double")) 
-  grad1orig <- pJacobian(smotape, theta, x)
-  expect_equal(grad1poly, grad1orig, ignore_attr = TRUE)
+  gradpoly <- lapply(1:nrow(values$offset), function(i){
+    drop(matrix(values$Hessian[i, ], ncol = length(theta)) %*% theta + 
+      t(values$offset[i, , drop = FALSE]))
+  })
+  gradpoly <- do.call(rbind, gradpoly)
+  expect_equal(gradorig, gradpoly)
 
   # if W is symmetric then should equal the smo up to a constant
+  smoorig <- apply(Y, MARGIN = 1, function(x){pForward0(smotape, theta, x)})
+
   # my expectation is that W is symmetric for ppi
-  smo1poly <- 0.5 * theta %*% matrix(pForward0(Hesstape, 0*theta, x), ncol = length(theta)) %*% theta + 
-    pForward0(OffsetTape, x, vector(mode = "double")) %*% theta
+  smopoly <- lapply(1:nrow(values$offset), function(i){
+    drop(0.5 * theta %*% matrix(values$Hessian[i, ], ncol = length(theta)) %*% theta + 
+      values$offset[i, , drop = FALSE] %*% theta)
+  })
+  smopoly <- unlist(smopoly)
 
-  x2 <- c(0.1, 0.4, 0.5)
-  smo2poly <- 0.5 * theta %*% matrix(pForward0(Hesstape, 0*theta, x2), ncol = length(theta)) %*% theta + 
-    pForward0(OffsetTape, x2, vector(mode = "double")) %*% theta
-
-  smo1orig <- pForward0(smotape, theta, x)
-  smo2orig <- pForward0(smotape, theta, x2)
-  expect_equal(smo1poly - smo1orig, smo2poly - smo2orig, ignore_attr = TRUE)
-
+  expect_true(all(smoorig - smopoly == smoorig[[1]] - smopoly[[1]])) #seems I'm wrong!? - because there is a free parameter in the way I've set up ppi
 }
 
