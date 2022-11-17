@@ -49,6 +49,6 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
 
   est_hardcode <- ppi(dsample, paramvec = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)),
       trans = "alr", method = "direct")
-  expect_equal(est_hardcode$est$paramvec, estobj$est)
+  expect_equal(est_hardcode$est$paramvec, t_fu2t(estobj$est, attr(ppitape, "usertheta")))
 
 })
