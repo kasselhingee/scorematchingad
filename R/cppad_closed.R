@@ -6,24 +6,10 @@ cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y,
                          approxorder = 10){
   stopifnot(nrow(Y) == length(w))
   stopifnot(nrow(Y) == nrow(Yapproxcentres))
-  toapprox <- !is.na(Yapproxcentres[, 1])
-
-  parts <- list(offset = matrix(NA, ncol = length(attr(smotape, "xtape")), nrow = nrow(Y)),
-                Hessian = matrix(NA, ncol = length(attr(smotape, "xtape"))^2, nrow = nrow(Y)))
-  if (any(!toapprox)){
-    exactparts <- quadratictape_parts(smotape, Y[!toapprox, , drop = FALSE])
-    parts$offset[!toapprox, ] <- exactparts$offset
-    parts$Hessian[!toapprox, ] <- exactparts$Hessian
-  } 
-  # repeat process nearly identically for boundary points - just use approximations instead
-  if (any(toapprox)){
-    approxparts <- quadratictape_parts_approx(smotape,
-                      Y[toapprox, , drop = FALSE],
-                      centres = Yapproxcentres[toapprox, , drop = FALSE], 
-                      order = approxorder)
-    parts$offset[toapprox, ] <- approxparts$offset
-    parts$Hessian[toapprox, ] <- approxparts$Hessian
-  }
+  
+  parts <- quadratictape_parts(smotape, tmat = Y,
+                               tcentres = Yapproxcentres,
+                               approxorder = approxorder)
 
   # weight parts
   parts$offset <- parts$offset * w
