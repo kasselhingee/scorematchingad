@@ -1,6 +1,5 @@
 test_that("Hess + Offset match gradient for a PPI Example", {
-  mod <- ppi_egmodel(100)
-  Y <- mod$sample
+  mod <- ppi_egmodel(1)
 
   Ralr <- pmanifold("Ralr")
   ppitape <- tapell(llname = "ppi",
