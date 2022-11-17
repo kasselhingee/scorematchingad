@@ -1,4 +1,5 @@
 test_that("Solution without boundary considerations for PPI has zero gradient and matches numerical minimum", {
+  set.seed(13411)
   mod <- ppi_egmodel(100)
   Y <- mod$sample
 

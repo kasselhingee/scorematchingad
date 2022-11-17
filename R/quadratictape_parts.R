@@ -26,9 +26,9 @@
 #'  + `Hessian` Array of offsets \eqn{b(t)}, each row corresponding to a row in `tmat`
 #' @export
 quadratictape_parts <- function(tape, tmat, tcentres = NA * tmat, approxorder = 10){
-  stopifnot(nrow(tmat) == nrow(centres))
+  stopifnot(nrow(tmat) == nrow(tcentres))
   stopifnot(testquadratictape(tape))
-  toapprox <- !is.na(Yapproxcentres[, 1])
+  toapprox <- !is.na(tcentres[, 1])
 
   Hesstape <- pTapeHessian(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
   OffsetTape <- pTapeGradOffset(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
@@ -61,14 +61,14 @@ quadratictape_parts <- function(tape, tmat, tcentres = NA * tmat, approxorder = 
   if (any(toapprox)){
     Hesstape_switched <- swapDynamic(Hesstape, attr(tape, "dyntape"), attr(tape, "xtape")) #Hesstape is wrt to x, but we want it to be wrt to the dynamic parameter like OffsetTape is
     #approximate Hessians
-    Hesss <- lapply(1:nrow(tmat), function(i){
-      pTaylorApprox(Hesstape_switched, tmat[i, ], centres[i, ], 0*attr(tape, "xtape"), approxorder)
+    Hesss <- lapply(which(toapprox), function(i){
+      pTaylorApprox(Hesstape_switched, tmat[i, ], tcentres[i, ], 0*attr(tape, "xtape"), approxorder)
     })
     Hesss <- do.call(rbind, Hesss)
 
     #approximate Offsets 
-    offsets <- lapply(1:nrow(tmat), function(i){
-      pTaylorApprox(OffsetTape, tmat[i, ], centres[i, ], 0*attr(tape, "xtape"), approxorder)
+    offsets <- lapply(which(toapprox), function(i){
+      pTaylorApprox(OffsetTape, tmat[i, ], tcentres[i, ], 0*attr(tape, "xtape"), approxorder)
     })
     offsets <- do.call(rbind, offsets)
     
