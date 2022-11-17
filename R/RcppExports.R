@@ -76,6 +76,21 @@ NULL
 #' (the `i`th component may still depend on the value of the dynamic parameters (see 'Dynamic' in [https://coin-or.github.io/CppAD/doc/glossary.htm#Parameter]) ).
 NULL
 
+#' @title Tape the Gradient Offset of a Quadratic CppAD Tape
+#' @inheritParams pTapeJacobian
+#' @description A quadratic function can be written as
+#' \deqn{y = \frac{1}{2} x^T W(\theta) x + d(\theta)^Tx,}
+#' where \eqn{W(\theta)} is a *symmetric* matrix.
+#' The function `pTapeGradOffset` creates a tape of \eqn{d(\theta)} where \eqn{\theta} is the independent variable.
+#' @param pfun A quadratic CppAD Tape. Test for quadratic form using [`testquadratictape()`]. A symmetric \eqn{W} is assumed.
+#' @details
+#' The tape evaluates \eqn{W(\theta)} as the Hessian of `pfun`.
+#' The gradient of the function is 
+#' \deqn{\Delta y = W(\theta) x + d(\theta),}
+#' so \eqn{d(\theta)} is computed as \deqn{\Delta y - W(\theta) x} using any value of \eqn{x}.
+#' In `pTapeGradOffset()` the `x` provided as an argument is used for computing \eqn{d(\theta)}.
+NULL
+
 #' @title Generate manifold with transformation object
 #' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
 #' @return An RCpp::XPtr object pointing to the C++ manifold object
@@ -187,5 +202,12 @@ pTapeHessian <- function(pfun, x, dynparam) {
 #' @export
 pParameter <- function(pfun) {
     .Call('_scorecompdir_pParameter', PACKAGE = 'scorecompdir', pfun)
+}
+
+#' The `x` vector and `dynparam` are used as the values to conduct the taping.
+#' @return A `Rcpp::XPtr` to a CppAD::ADFun object. The independent argument to the function are the dynamic parameters of `pfun`.
+#' @export
+pTapeGradOffset <- function(pfun, x, dynparam) {
+    .Call('_scorecompdir_pTapeGradOffset', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 

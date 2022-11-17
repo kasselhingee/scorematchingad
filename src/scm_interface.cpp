@@ -483,4 +483,62 @@ std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun){
   return(isparameter);
 }
 
+//' @title Tape the Gradient Offset of a Quadratic CppAD Tape
+//' @inheritParams pTapeJacobian
+//' @description A quadratic function can be written as
+//' \deqn{y = \frac{1}{2} x^T W(\theta) x + d(\theta)^Tx,}
+//' where \eqn{W(\theta)} is a *symmetric* matrix.
+//' The function `pTapeGradOffset` creates a tape of \eqn{d(\theta)} where \eqn{\theta} is the independent variable.
+//' @param pfun A quadratic CppAD Tape. Test for quadratic form using [`testquadratictape()`]. A symmetric \eqn{W} is assumed.
+//' @details
+//' The tape evaluates \eqn{W(\theta)} as the Hessian of `pfun`.
+//' The gradient of the function is 
+//' \deqn{\Delta y = W(\theta) x + d(\theta),}
+//' so \eqn{d(\theta)} is computed as \deqn{\Delta y - W(\theta) x} using any value of \eqn{x}.
+//' In `pTapeGradOffset()` the `x` provided as an argument is used for computing \eqn{d(\theta)}.
+
+// Then for \eqn{x} the `i`th basis vector \eqn{x = e_i},
+// \deqn{y = \frac{1}{2} e_i^T W(\theta) e_i  + d(\theta)^T e_i = \frac{1}{2} W(\theta)_{ii}  + d(\theta)_i}
+// so the vector \eqn{d(\theta)} can be calculated as
+// \deqn{y(.}
+//' The `x` vector and `dynparam` are used as the values to conduct the taping.
+//' @return A `Rcpp::XPtr` to a CppAD::ADFun object. The independent argument to the function are the dynamic parameters of `pfun`.
+//' @export
+// [[Rcpp::export]]
+XPtr< CppAD::ADFun<double> >  pTapeGradOffset(XPtr< CppAD::ADFun<double> > pfun,
+                    veca1 x, veca1 dynparam){
+  // x and dynparam must have elements of a1type so that taping can proceed
+  //check inputs and tape match
+  if (pfun->Domain() != x.size()){stop("Size of input vector %i does not match domain size %i of taped function.", x.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != dynparam.size()){stop("Size of parameter vector %i does not match parameter size %i of the taped function.", dynparam.size(), pfun->size_dyn_ind());}
+
+
+  if (pfun->Range()>1){
+    stop("Taped function 'pfun' must return a vector of length 1. Currently 'pfun' returns a vector of length %i.", pfun->Range());
+  }
+
+  //convert taped object to higher order, so that the 'base' type of the tape is a1type, so x and dynparam can be passed into Hessian()
+  CppAD::ADFun<a1type, double> pfunhigher;
+  pfunhigher = pfun->base2ad();
+
+  CppAD::Independent(dynparam, x);  
+  pfunhigher.new_dynamic(dynparam);
+  veca1 jac(pfunhigher.Domain());
+  jac = pfunhigher.Jacobian(x);
+  veca1 hess(pfunhigher.Domain() * pfunhigher.Domain());
+  hess = pfunhigher.Hessian(x, 0);
+  //arrange hess into a matrix then multiply
+  veca1 gradoffset(pfunhigher.Domain());
+  gradoffset = jac - hess.reshaped(pfunhigher.Domain(),pfunhigher.Domain()) * x;  //reshaped just does a view
+
+  //end taping
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  out->Dependent(dynparam, gradoffset);
+  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  out->check_for_nan(false);
+
+  XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}
+
 # endif
