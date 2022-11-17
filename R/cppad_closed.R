@@ -11,6 +11,11 @@
 #' @param w Weights for each observation.
 #' @param approxorder The order of Taylor approximation to use.
 #' @details
+#' When the score matching function is of quadratic form, then gradient is zero at \eqn{H^{-1}b}{solve(H) %*% b},
+#' where \eqn{H} is the average of the Hessian of the score matching function evaluated at each measurement and 
+#' \eqn{b} is the average of gradient offset (see [`quadratictape_parts()`]) evaluated at each measurement. 
+#' Both the Hessian and the gradient offset are constant with respect to the model parameters for quadratic-form score matching equations.
+#'
 #' Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) [*would like a good reference for this here*].
 #' The sensitivity matrix \eqn{G} is estimated as
 #' the negative of the average over the Hessian of `smotape` evaluated at each observation in `Y`.
