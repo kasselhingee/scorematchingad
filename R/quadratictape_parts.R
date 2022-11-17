@@ -46,6 +46,7 @@ quadratictape_parts <- function(tape, tmat){
 #' @rdname quadratictape_parts
 #' @param centres The Taylor approximation centre for each row of `tmat`
 #' @param order The order of the Taylor approximation to use.
+#' @export
 quadratictape_parts_approx <- function(tape, tmat, centres, order){
   stopifnot(nrow(tmat) == nrow(centres))
 
