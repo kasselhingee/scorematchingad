@@ -38,13 +38,17 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
   Ralr <- pmanifold("Ralr")
   ppitape <- tapell(llname = "ppi",
                   xtape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(mod$beta, 1)), 
+                  usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)), 
                   pmanifoldtransform = Ralr)
   smotape <- tapesmo(lltape = ppitape,
                       pmanifoldtransform = Ralr,
                       divweight = "ones",
                       verbose = FALSE)
 
-  estobj <- cppad_closed(smotape, Y, Yapproxcentres, approxorder = 10)
+  estobj <- cppad_closed(smotape, Y = dsample, Yapproxcentres, approxorder = 10)
+
+  est_hardcode <- ppi(dsample, paramvec = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)),
+      trans = "alr", method = "direct")
+  expect_equal(est_hardcode$est$paramvec, estobj$est)
 
 })
