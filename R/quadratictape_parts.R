@@ -23,7 +23,7 @@
 #'  + `offset` Array of computed offsets \eqn{b(t)}, each row corresponding to a row in `tmat`
 #'  + `Hessian` Array of computed offsets \eqn{b(t)}, each row corresponding to a row in `tmat`
 #' @export
-quadraticsmo_parts <- function(tape, tmat){
+quadratictape_parts <- function(tape, tmat){
 
   stopifnot(testquadratictape(tape))
 
