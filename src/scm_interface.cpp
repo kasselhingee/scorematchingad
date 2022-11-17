@@ -486,21 +486,21 @@ std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun){
 //' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 //' @inheritParams pTapeJacobian
 //' @description A quadratic function can be written as
-//' \deqn{y = \frac{1}{2} x^T W(\theta) x + d(\theta)^Tx,}
-//' where \eqn{W(\theta)} is a *symmetric* matrix.
-//' The function `pTapeGradOffset` creates a tape of \eqn{d(\theta)} where \eqn{\theta} is the independent variable.
-//' @param pfun A quadratic CppAD Tape. Test for quadratic form using [`testquadratictape()`]. A symmetric \eqn{W} is assumed.
+//' \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
+//' The function `pTapeGradOffset` creates a tape of \eqn{b(\theta)} where \eqn{\theta} is the independent variable.
+//' @param pfun A quadratic CppAD Tape. Test for quadratic form using [`testquadratictape()`].
 //' @details
-//' The tape evaluates \eqn{W(\theta)} as the Hessian of `pfun`.
-//' The gradient of the function is 
-//' \deqn{\Delta y = W(\theta) x + d(\theta),}
-//' so \eqn{d(\theta)} is computed as \deqn{\Delta y - W(\theta) x} using any value of \eqn{x}.
-//' In `pTapeGradOffset()` the `x` provided as an argument is used for computing \eqn{d(\theta)}.
-
-// Then for \eqn{x} the `i`th basis vector \eqn{x = e_i},
-// \deqn{y = \frac{1}{2} e_i^T W(\theta) e_i  + d(\theta)^T e_i = \frac{1}{2} W(\theta)_{ii}  + d(\theta)_i}
-// so the vector \eqn{d(\theta)} can be calculated as
-// \deqn{y(.}
+//' The gradient of \eqn{f(x; \theta)} with respect to \eqn{\theta} is
+//' \deqn{\Delta f(x; \theta) = \frac{1}{2}(W(\theta) + W(\theta)^T)\theta + b(\theta),}
+//' and the Hessian is 
+//' \deqn{H f(x; \theta) = \frac{1}{2}(W(\theta) + W(\theta)^T),}
+//' which does not depend on \eqn{x}.
+//' The gradient of the function can be rewritten as
+//' \deqn{\Delta f(x;\theta) = H f(x; \theta) x + b(\theta)^T x.}
+//' The tape calculates \eqn{b(\theta)} as
+//'  \deqn{b(\theta) = \Delta f(x;\theta) - H f(x; \theta) x},
+//' which does not depend on \eqn{x}.
+//' In `pTapeGradOffset()` the `x` provided as an argument is used as the template for calculating \eqn{b(\theta)}.
 //' The `x` vector and `dynparam` are used as the values to conduct the taping.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object. The independent argument to the function are the dynamic parameters of `pfun`.
 //' @export
@@ -521,15 +521,17 @@ XPtr< CppAD::ADFun<double> >  pTapeGradOffset(XPtr< CppAD::ADFun<double> > pfun,
   CppAD::ADFun<a1type, double> pfunhigher;
   pfunhigher = pfun->base2ad();
 
-  CppAD::Independent(dynparam, x);  
+  CppAD::Independent(dynparam);  
   pfunhigher.new_dynamic(dynparam);
   veca1 jac(pfunhigher.Domain());
   jac = pfunhigher.Jacobian(x);
-  veca1 hess(pfunhigher.Domain() * pfunhigher.Domain());
+  mata1 hess(pfunhigher.Domain() * pfunhigher.Domain(), 1);
   hess = pfunhigher.Hessian(x, 0);
-  //arrange hess into a matrix then multiply
+  //arrange hess into a matrix
+  hess.resize(pfunhigher.Domain(),pfunhigher.Domain());
+
   veca1 gradoffset(pfunhigher.Domain());
-  gradoffset = jac - hess.reshaped(pfunhigher.Domain(),pfunhigher.Domain()) * x;  //reshaped just does a view
+  gradoffset = jac - (hess * x);
 
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
