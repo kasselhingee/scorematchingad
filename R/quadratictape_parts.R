@@ -32,54 +32,21 @@ quadratictape_parts <- function(tape, tmat, tcentres = NA * tmat, approxorder = 
 
   Hesstape <- pTapeHessian(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
   OffsetTape <- pTapeGradOffset(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
-  
-  # prepare matrices to be filled
-  alloffsets <- matrix(NA, ncol = length(attr(tape, "xtape")), nrow = nrow(tmat))
-  allHesss <- matrix(NA, ncol = length(attr(tape, "xtape"))^2, nrow = nrow(tmat))
+  Hesstape_switched <- swapDynamic(Hesstape, attr(tape, "dyntape"), attr(tape, "xtape")) #Hesstape is wrt to x (which in smo world is actually the model parameter set), but we want it to be wrt to the dynamic parameter like OffsetTape is
 
-  # exact evaluations
-  if (any(!toapprox)){
-    #evaluate Hessians
-    Hesss <- apply(tmat[!toapprox, , drop = FALSE], MARGIN = 1, 
-       function(x){
-         pForward0(Hesstape, 0*attr(tape, "xtape"), x)},
-       simplify = FALSE)
-    Hesss <- do.call(rbind, Hesss)
+  #exact and approximat evalution of Hess
+  fakeparametermat <- matrix(0, 
+                            ncol = length(attr(tape, "xtape")),
+                            nrow = nrow(tmat))   #fake because the results don't depend on it
+  emptyparametermat <- matrix(vector(mode = "double"), ncol = 0, nrow = nrow(tmat)) 
+  # for OffsetTape which has no dynamic parameters
 
-    #evaluate offsets
-    offsets <- apply(tmat[!toapprox, , drop=FALSE], MARGIN = 1,
-        function(x){
-          pForward0(OffsetTape, x, vector(mode = "double"))}, 
-        simplify = FALSE)
-    offsets <- do.call(rbind, offsets)
-
-    alloffsets[!toapprox, ] <- offsets
-    allHesss[!toapprox, ] <- Hesss
-  } 
-
-  # approximate evaluations
-  if (any(toapprox)){
-    Hesstape_switched <- swapDynamic(Hesstape, attr(tape, "dyntape"), attr(tape, "xtape")) #Hesstape is wrt to x, but we want it to be wrt to the dynamic parameter like OffsetTape is
-    #approximate Hessians
-    Hesss <- lapply(which(toapprox), function(i){
-      pTaylorApprox(Hesstape_switched, tmat[i, ], tcentres[i, ], 0*attr(tape, "xtape"), approxorder)
-    })
-    Hesss <- do.call(rbind, Hesss)
-
-    #approximate Offsets 
-    offsets <- lapply(which(toapprox), function(i){
-      pTaylorApprox(OffsetTape, tmat[i, ], tcentres[i, ], 0*attr(tape, "xtape"), approxorder)
-    })
-    offsets <- do.call(rbind, offsets)
-    
-    alloffsets[toapprox, ] <- offsets
-    allHesss[toapprox, ] <- Hesss
-  } 
-
+  Hesss <- tape_eval(Hesstape_switched, xmat = tmat, pmat = fakeparametermat, xcentres = tcentres, approxorder = approxorder)
+  offsets <- tape_eval(OffsetTape, xmat = tmat, pmat = emptyparametermat, xcentres = tcentres, approxorder = approxorder)
 
   return(list(
-    offset = alloffsets,
-    Hessian = allHesss
+    offset = offsets,
+    Hessian = Hesss
   ))
 }
 
