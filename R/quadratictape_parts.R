@@ -42,3 +42,32 @@ quadratictape_parts <- function(tape, tmat){
     Hessian = Hesss
   ))
 }
+
+#' @rdname quadratictape_parts
+#' @param centres The Taylor approximation centre for each row of `tmat`
+#' @param order The order of the Taylor approximation to use.
+quadratictape_parts_approx <- function(tape, tmat, centres, order){
+  stopifnot(nrow(tmat) == nrow(centres))
+
+  stopifnot(testquadratictape(tape))
+
+  Hesstape <- pTapeHessian(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
+  Hesstape_switched <- swapDynamic(Hesstape, attr(tape, "dyntape"), attr(tape, "xtape")) #Hesstape is wrt to x, but we want it to be wrt to the dynamic parameter like OffsetTape is
+  OffsetTape <- pTapeGradOffset(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
+
+  #approximate Hessians
+  Hesss <- lapply(1:nrow(tmat), function(i){
+    pTaylorApprox(Hesstape_switched, tmat[i, ], centres[i, ], 0*attr(tape, "xtape"), order)
+  })
+  Hesss <- do.call(rbind, Hesss)
+ 
+  #evaluate Offsets 
+  offsets <- lapply(1:nrow(tmat), function(i){
+    pTaylorApprox(OffsetTape, tmat[i, ], centres[i, ], 0*attr(tape, "xtape"), order)
+  })
+  offsets <- do.call(rbind, offsets)
+  return(list(
+    offset = offsets,
+    Hessian = Hesss
+  ))
+}
