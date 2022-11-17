@@ -21,6 +21,7 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
 
   numericalmin <- ppi(Y, paramvec = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)), trans = "alr", method = "cppad")
   expect_equal(numericalmin$est$paramvec, c(estobj$est, tail(mod$beta, 1)), ignore_attr = TRUE)
+  expect_equal(numericalmin$SE$paramvec, c(estobj$SE, 0))
 })
 
 test_that("Closed-from solution with boundary points matches hard-coded version", {

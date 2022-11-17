@@ -1,6 +1,7 @@
-#' @title Score Matching Estimator for Quadratic-Form Score-Matching Objectives
+#' @title Score Matching Estimator for Quadratic-Form Score-Matching Objective Functions
 #' @description 
 #' Returns the vector when the gradient of the score matching objective is zero for any quadratic-form tape.
+#' Many score matching estimators have score matching objective function with a quadratic form.
 #' Also estimates standard errors and covariance.
 #' @param Yapproxcentres A matrix of Taylor approximation centres for rows of Y that require approximation. `NA` for rows that do not require approximation.
 #' @param smotape A tape of a score matching objective function that has *quadratic form*. Test for quadratic form using [`testquadratictape()`].
@@ -50,7 +51,7 @@ cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y,
   covar <- NA
   if (all(w[[1]] == w)){
     covar <- cppad_closed_estvar(Y, root, parts$offset, parts$Hess)
-    SE <- sqrt(diag(estcovar))
+    SE <- sqrt(diag(covar))
   }
   return(list(
     est = root,
