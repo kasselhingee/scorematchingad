@@ -21,3 +21,30 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
   numericalmin <- ppi(Y, paramvec = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)), trans = "alr", method = "cppad")
   expect_equal(numericalmin$est$paramvec, c(estobj$est, tail(mod$beta, 1)), ignore_attr = TRUE)
 })
+
+test_that("Closed-from solution with boundary points matches hard-coded version", {
+  mnongamma <- ppi_egmodel(1)
+  theta <- ppi_paramvec(beta = c(-0.95, -0.9, 0.5), AL = mnongamma$AL, bL = 0)
+  set.seed(1234)
+  Ycts <- rppi(1000, paramvec = theta)
+  dsample <- round(Ycts * 100)/ 100
+  dsample[, 3] <- 1 - rowSums(dsample[, 1:2])
+
+  isbdry <- simplex_isboundary(dsample)
+  Yapproxcentres <- dsample
+  Yapproxcentres[!isbdry, ] <- NA 
+  Yapproxcentres[isbdry, ] <- simplex_boundaryshift(dsample[isbdry, , drop = FALSE])
+
+  Ralr <- pmanifold("Ralr")
+  ppitape <- tapell(llname = "ppi",
+                  xtape = c(0.2, 0.3, 0.5),
+                  usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(mod$beta, 1)), 
+                  pmanifoldtransform = Ralr)
+  smotape <- tapesmo(lltape = ppitape,
+                      pmanifoldtransform = Ralr,
+                      divweight = "ones",
+                      verbose = FALSE)
+
+  estobj <- cppad_closed(smotape, Y, Yapproxcentres, approxorder = 10)
+
+})
