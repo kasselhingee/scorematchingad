@@ -26,22 +26,59 @@ cppadSE <- function(smofun, theta, utabl, ...){
 cppadSEsq <- function(smofun, theta, utabl,
                       Jsmofun_u = NULL, Hsmofun_u = NULL,
                       uboundary = NULL, boundaryapprox = NULL, approxorder = NULL, w = NULL, wboundary = NULL){
-  sens <- -smobjhess(smofun, theta, utabl,
-                     Hsmofun_u = Hsmofun_u,
-                     uboundary = uboundary, boundaryapprox = boundaryapprox,
-                     approxorder = approxorder, w = w, wboundary = wboundary)
-  gradsmoperpt <- smobjgrad_perpt(smofun, theta, utabl,
-                  Jsmofun_u = Jsmofun_u,
-                  uboundary = uboundary, boundaryapprox = boundaryapprox,
-                  approxorder = approxorder)
-  gradsmoperpt <- do.call(rbind, gradsmoperpt)
-  w <- c(w, wboundary)
-  if (!is.null(w)) {
-     gradsmoperpt <- w * gradsmoperpt} #each observation's Hyvarinen divergence weighted by w
-  vargradsmo <- cov(gradsmoperpt)
 
+
+  # convert old-style boundary specification into new style
+  boundaryapprox <- rbind(NA * utabl, boundaryapprox)
+  utabl <- rbind(utabl, uboundary)
+  w <- c(w, wboundary)
+  if (is.null(w)){w <- rep(1, nrow(utabl))}
+  stopifnot(all(w[[1]] == w))
+
+  # generate tapes with respect to the measurement (parameter is dynamic)
+  if(!isTRUE(nrow(utabl) > 0)){
+    warning("Guessing an interior point for taping")
+    p <- ncol(utabl)
+    eginteriorpt <- rep(1/p, p)
+  } else {
+    eginteriorpt <- utabl[1, ]
+  }
+  Jsmofun <- pTapeJacobian(smofun, theta, eginteriorpt)
+  Hsmofun <- pTapeJacobian(Jsmofun, theta, eginteriorpt)
+  
+  Jsmofun_u <- swapDynamic(Jsmofun, eginteriorpt, theta)
+  Hsmofun_u <- swapDynamic(Hsmofun, eginteriorpt, theta)
+
+  hess <- tape_eval_wsum(Hsmofun_u, xmat = utabl, pmat = 0*theta, xcentres = boundaryapprox, approxorder = 10, w = w)
+  sens <- -hess/nrow(utabl)
   sensinv <- solve(sens)
-  Ginfinv <- sensinv %*% vargradsmo %*% sensinv #inverse of the Godambe information matrix, also called the sandwich information matrix
-  out <- Ginfinv/nrow(gradsmoperpt)
-  return(out) 
+
+  grads <- tape_eval(Jsmofun_u, xmat = utabl, pmat = 0*theta, xcentres = boundaryapprox, approxorder = 10)
+  variability <- cov(grads)
+
+  Ginfinv <- sensinv %*% variability %*% sensinv /nrow(utabl) #inverse of the Godambe information matrix, also called the sandwich information matrix
+  return(Ginfinv) 
 }
+
+# estimates of the variance of the estimator
+sme_estvar <- function(smofun, estimate, Y, Yapproxcentres = NA * Y, approxorder = 10){
+  # generate tapes with respect to the measurement (parameter is dynamic)
+  p <- ncol(Y)
+  eginteriorpt <- rep(1/p, p)
+  Jsmofun <- pTapeJacobian(smofun, estimate, eginteriorpt)
+  Hsmofun <- pTapeJacobian(Jsmofun, estimate, eginteriorpt)
+  
+  Jsmofun_u <- swapDynamic(Jsmofun, eginteriorpt, estimate)
+  Hsmofun_u <- swapDynamic(Hsmofun, eginteriorpt, estimate)
+
+  hess <- tape_eval_wsum(Hsmofun_u, xmat = Y, pmat = 0*estimate, xcentres = Yapproxcentres, approxorder = 10)
+  sens <- -matrix(hess, byrow = TRUE, ncol = length(estimate))/nrow(Y)
+  sensinv <- solve(sens)
+
+  grads <- tape_eval(Jsmofun_u, xmat = Y, pmat = estimate, xcentres = Yapproxcentres, approxorder = 10)
+  variability <- cov(grads)
+
+  Ginfinv <- sensinv %*% variability %*% sensinv /nrow(Y) #inverse of the Godambe information matrix, also called the sandwich information matrix
+  return(Ginfinv) 
+}
+

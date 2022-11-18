@@ -21,36 +21,39 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
     stopifnot(nrow(uboundary) == nrow(boundaryapprox))
     stopifnot(ncol(uboundary) == ncol(boundaryapprox))
     stopifnot(ncol(uboundary) == ncol(utabl))
-    if(!isTRUE(nrow(utabl) > 0)){
-      warning("Guessing an interior point for taping")
-      p <- ncol(utabl)
-      eginteriorpt <- rep(1/p, p)
-    } else {
-      eginteriorpt <- utabl[1, ]
-    }
-    smofun_u <- swapDynamic(smofun, eginteriorpt, theta) #don't use a boundary point here!
-    Jsmofun_u <- pTapeJacobianSwap(smofun, theta, eginteriorpt)
-    Hsmofun_u <- pTapeHessianSwap(smofun, theta, eginteriorpt)
+  }
+  
+  # convert old-style boundary specification into new style
+  boundaryapprox <- rbind(NA * utabl, boundaryapprox)
+  utabl <- rbind(utabl, uboundary)
+  w <- c(w, wboundary)
+  if (is.null(w)){w <- rep(1, nrow(utabl))}
+
+  # generate tapes with respect to the measurement (parameter is dynamic)
+  if(!isTRUE(nrow(utabl) > 0)){
+    warning("Guessing an interior point for taping")
+    p <- ncol(utabl)
+    eginteriorpt <- rep(1/p, p)
   } else {
-    smofun_u <- NULL
-    Jsmofun_u <- NULL
-    Hsmofun_u <- NULL
+    eginteriorpt <- utabl[1, ]
+  }
+  Jsmofun <- pTapeJacobian(smofun, theta, eginteriorpt)
+  Hsmofun <- pTapeJacobian(Jsmofun, theta, eginteriorpt)
+  
+  smofun_u <- swapDynamic(smofun, eginteriorpt, theta) #don't use a boundary point here!
+  Jsmofun_u <- swapDynamic(Jsmofun, eginteriorpt, theta)
+  Hsmofun_u <- swapDynamic(Hsmofun, eginteriorpt, theta)
+
+  smoobj <- function(atheta){
+    tape_eval_wsum(smofun_u, xmat = utabl, pmat = atheta, w = w, xcentres = boundaryapprox, approxorder = approxorder)
+  }
+  smograd <- function(atheta){
+    tape_eval_wsum(Jsmofun_u, xmat = utabl, pmat = atheta, w = w, xcentres = boundaryapprox, approxorder = approxorder)
   }
 
   out <- Rcgmin::Rcgmin(par = theta,
-                        fn = smobj_sum_b,
-                        gr = smobjgrad_sum_b,
-                        # function(theta, ...){smobj(smofun, theta, utabl, smofun_u, ...)},
-                        # gr = function(theta, ...){smobjgrad(smofun, theta, utabl, Jsmofun_u, ...)},
-                        smofun = smofun,
-                        utabl = utabl,
-                        smofun_u = smofun_u,
-                        Jsmofun_u = Jsmofun_u,
-                        uboundary = uboundary, boundaryapprox = boundaryapprox,
-                        approxorder = approxorder,
-                        w = w,
-                        wboundary = wboundary,
-                        stopifnan = TRUE,
+                        fn = smoobj,
+                        gr = smograd,
                         control = control)
   if (out$convergence == 2){
     if (grepl("Initial point", out$message)){
@@ -62,24 +65,12 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
   if (out$convergence != 0){warning("Optimisation did not converge.")}
 
   # return results as if averages, not sums were used
-  attr(out$par, "normaliser") <- NULL
-  out$value <- out$value / attr(out$value, "normaliser")
-  attr(out$value, "normaliser") <- NULL
-
+  out$value <- out$value / sum(w)
 
   out$SE <- try({
-    cppadSE(
-      smofun, theta = out$par, utabl,
-      Jsmofun_u = Jsmofun_u, Hsmofun_u = Hsmofun_u,
-      uboundary = uboundary, boundaryapprox = boundaryapprox,
-      approxorder = approxorder,
-      w = w, wboundary = wboundary)})
-  gradatest <- smobjgrad(smofun, out$par, utabl,
-                         Jsmofun_u = Jsmofun_u,
-                         uboundary = uboundary, boundaryapprox = boundaryapprox,
-                         approxorder = approxorder,
-                         w = w,
-                         wboundary = wboundary)
+    sqrt(diag(sme_estvar(smofun, estimate = out$par, Y = utabl, Yapproxcentres = boundaryapprox, approxorder = approxorder)))
+  })
+  gradatest <- smograd(out$par)
   out$sqgradsize <- sum(gradatest)^2
   return(out)
 }
