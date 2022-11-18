@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Build a CppAD Tape of a Score-Matching Objective Function
 #' @param utape A measurment to use for taping
 #' @param intheta A vector of parameters. NA values will be estimated, non-NA values will be fixed.
@@ -67,14 +68,16 @@ buildsmotape_internal <- function(manifoldname, llname,
   }
 
   pman <- pmanifold(manifoldname)
-  ztape <- ptoM(pman, utape) #the value of utape transformed to the manifold
-  lltape <- ptapell(ztape, starttheta,
-                    llname = llname, pman = pman,
-                    fixedtheta = isfixed, verbose = verbose)
+  ppitape <- tapell(llname = "ppi",
+                    xtape = utape,
+                    usertheta = t_si2u(starttheta, isfixed), 
+                    pmanifoldtransform = pman)
   stopifnot(is.numeric(acut))
-  smotape <- ptapesmo(utape, t_si2f(starttheta, isfixed),
-                      lltape, pman,
-                      weightname, acut, verbose = verbose)
+  smotape <- tapesmo(lltape = ppitape,
+                        pmanifoldtransform = pman,
+                        divweight = weightname,
+                        acut = acut,
+                        verbose = verbose)
   return(list(
     lltape = lltape,
     smotape = smotape,
