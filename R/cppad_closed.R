@@ -16,7 +16,7 @@
 #' \eqn{b} is the average of gradient offset (see [`quadratictape_parts()`]) evaluated at each measurement. 
 #' Both the Hessian and the gradient offset are constant with respect to the model parameters for quadratic-form score matching equations.
 #'
-#' Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) [*would like a good reference for this here*].
+#' Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (*would like a good reference for this here*).
 #' The sensitivity matrix \eqn{G} is estimated as
 #' the negative of the average over the Hessian of `smotape` evaluated at each observation in `Y`.
 # \deqn{\hat{G(\theta)} = \hat{E} -H(smo(\theta;Y))),}
@@ -31,7 +31,7 @@
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
-
+#' @export
 cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y, 
                          w = rep(1, nrow(Y)),
                          approxorder = 10){

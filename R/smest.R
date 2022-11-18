@@ -2,7 +2,6 @@
 #' @title Find the optimal parameter for the score matching objective
 #' @description Using a numerical optimiser and `smobj()` and `smobjgrad()`, find the parameter set with minimal `smobj` value.
 #' This function lightly wraps `Rcgmin::Rcgmin()` with some results checking.
-#' @details The call to `Rcgmin()` uses the *sum* of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to `Rcgmin()` (e.g. `tol`). The results are converted into averages as appropriate so the use of sums (as opposed to averages) can be ignored when not setting control parameters, or studying the behaviour of Rcgmin. 
 #' @param smofun A tape of the score matching objective calculation
 #' @param theta The starting parameter set
 #' @param utabl A matrix of observations, each row being an observation.
@@ -39,13 +38,48 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
   }
   attr(smofun, "xtape") <- theta
   attr(smofun, "dyntape") <- eginteriorpt
-  out <- cppad_search(smotape = smofun, Y = utabl, Yapproxcentres = NA * Y,
-                      w = w, approxorder = approxorder)
+  out <- cppad_search(smotape = smofun, theta = theta, Y = utabl, Yapproxcentres = NA * utabl,
+                      w = w, approxorder = approxorder, control = control)
   return(out)
 }
 
 # same parameters as cppad_closed
-cppad_search <- function(smotape, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10){
+#' @title Score Matching Estimator for Using Conjugate-Gradient Descent
+#' @description 
+#' Returns the vector when the gradient of the score matching objective is within tolerance of zero.
+#' Also estimates standard errors and covariance.
+#' Useful when the score matching objective function is not of quadratic form.
+#' For score matching objective functions that are quadratic [`cppad_closed()`] will be usually be more accurate and faster.
+#' @param Yapproxcentres A matrix of Taylor approximation centres for rows of Y that require approximation. `NA` for rows that do not require approximation.
+#' @param smotape A tape of a score matching objective function.
+#' The `smotape`'s independent variables are assumed to be the model parameters to fit
+#' and the `smotape`'s dynamic parameter is a (multivariate) measurement.
+#' @param Y A matrix of multivariate observations. Each row is an observation.
+#' @param w Weights for each observation.
+#' @param approxorder The order of Taylor approximation to use.
+#' @param control Control parameters passed to [`Rcgmin::Rcgmin()`]
+#' @details
+#' The score matching objective function and gradient of the score matching function are passed to [`Rcgmin::Rcgmin()`]. 
+#' Taylor approximations are performed using [`pTaylorApprox()`] for measurements with non-`NA` rows in `Yapproxcentres`.
+#' The call to [`Rcgmin::Rcgmin()`] uses the *sum* of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to `Rcgmin()` (e.g. `tol`). The results are converted into averages so the use of sums can be ignored when not setting control parameters, or studying the behaviour of Rcgmin. 
+#'
+#' Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (*would like a good reference for this here*).
+#' The sensitivity matrix \eqn{G} is estimated as
+#' the negative of the average over the Hessian of `smotape` evaluated at each observation in `Y`.
+# \deqn{\hat{G(\theta)} = \hat{E} -H(smo(\theta;Y))),}
+# where \eqn{smo} is the score matching objective function represented by `smotape`,
+# \eqn{H} is the Hessian with respect to \eqn{\theta}, which is constant for quadratic-form functions,
+# 
+#' The variability matrix \eqn{J} is then estimated as
+#' the sample covariance (denominator of \eqn{n-1}) of the gradiant of `smotape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
+# \deqn{\hat{J}(\theta) = var(grad(w smo(\theta;Y))),}
+
+#' The variance of the estimator is then estimated as
+#' \eqn{G^{-1}JG^{-1}/n,}
+# \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
+#' where `n` is the number of observations.
+#' @export
+cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10, control = default_Rcgmin()){
   Jsmofun <- pTapeJacobian(smotape, attr(smotape, "xtape"), attr(smotape, "dyntape"))
   Hsmofun <- pTapeJacobian(Jsmofun, attr(smotape, "xtape"), attr(smotape, "dyntape"))
   
@@ -58,7 +92,7 @@ cppad_search <- function(smotape, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)
   smograd <- function(atheta){
     tape_eval_wsum(Jsmofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
-
+ 
   out <- Rcgmin::Rcgmin(par = theta,
                         fn = smoobj,
                         gr = smograd,
