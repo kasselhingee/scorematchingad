@@ -29,7 +29,7 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
   w <- c(w, wboundary)
   if (is.null(w)){w <- rep(1, nrow(utabl))}
 
-  # generate tapes with respect to the measurement (parameter is dynamic)
+  # fake xtape and dyntape attributes
   if(!isTRUE(nrow(utabl) > 0)){
     warning("Guessing an interior point for taping")
     p <- ncol(utabl)
@@ -37,18 +37,26 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
   } else {
     eginteriorpt <- utabl[1, ]
   }
-  Jsmofun <- pTapeJacobian(smofun, theta, eginteriorpt)
-  Hsmofun <- pTapeJacobian(Jsmofun, theta, eginteriorpt)
+  attr(smofun, "xtape") <- theta
+  attr(smofun, "dyntape") <- eginteriorpt
+  out <- cppad_search(smotape = smofun, Y = utabl, Yapproxcentres = NA * Y,
+                      w = w, approxorder = approxorder)
+  return(out)
+}
+
+# same parameters as cppad_closed
+cppad_search <- function(smotape, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10){
+  Jsmofun <- pTapeJacobian(smotape, attr(smotape, "xtape"), attr(smotape, "dyntape"))
+  Hsmofun <- pTapeJacobian(Jsmofun, attr(smotape, "xtape"), attr(smotape, "dyntape"))
   
-  smofun_u <- swapDynamic(smofun, eginteriorpt, theta) #don't use a boundary point here!
-  Jsmofun_u <- swapDynamic(Jsmofun, eginteriorpt, theta)
-  Hsmofun_u <- swapDynamic(Hsmofun, eginteriorpt, theta)
+  smofun_u <- swapDynamic(smotape, attr(smotape, "dyntape"), attr(smotape, "xtape")) #don't use a boundary point here!
+  Jsmofun_u <- swapDynamic(Jsmofun, attr(smotape, "dyntape"), attr(smotape, "xtape"))
 
   smoobj <- function(atheta){
-    tape_eval_wsum(smofun_u, xmat = utabl, pmat = atheta, w = w, xcentres = boundaryapprox, approxorder = approxorder)
+    tape_eval_wsum(smofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
   smograd <- function(atheta){
-    tape_eval_wsum(Jsmofun_u, xmat = utabl, pmat = atheta, w = w, xcentres = boundaryapprox, approxorder = approxorder)
+    tape_eval_wsum(Jsmofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
 
   out <- Rcgmin::Rcgmin(par = theta,
@@ -68,13 +76,11 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
   out$value <- out$value / sum(w)
 
   out$SE <- try({
-    sqrt(diag(sme_estvar(smofun, estimate = out$par, Y = utabl, Yapproxcentres = boundaryapprox, approxorder = approxorder)))
+    sqrt(diag(sme_estvar(smotape, estimate = out$par, Y = Y, Yapproxcentres = Yapproxcentres, approxorder = approxorder)))
   })
   gradatest <- smograd(out$par) / sum(w)
   out$sqgradsize <- sum(gradatest^2)
   return(out)
 }
-
-
 
 
