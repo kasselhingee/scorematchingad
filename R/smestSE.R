@@ -35,28 +35,7 @@ cppadSEsq <- function(smofun, theta, utabl,
   if (is.null(w)){w <- rep(1, nrow(utabl))}
   stopifnot(all(w[[1]] == w))
 
-  # generate tapes with respect to the measurement (parameter is dynamic)
-  if(!isTRUE(nrow(utabl) > 0)){
-    warning("Guessing an interior point for taping")
-    p <- ncol(utabl)
-    eginteriorpt <- rep(1/p, p)
-  } else {
-    eginteriorpt <- utabl[1, ]
-  }
-  Jsmofun <- pTapeJacobian(smofun, theta, eginteriorpt)
-  Hsmofun <- pTapeJacobian(Jsmofun, theta, eginteriorpt)
-  
-  Jsmofun_u <- swapDynamic(Jsmofun, eginteriorpt, theta)
-  Hsmofun_u <- swapDynamic(Hsmofun, eginteriorpt, theta)
-
-  hess <- tape_eval_wsum(Hsmofun_u, xmat = utabl, pmat = 0*theta, xcentres = boundaryapprox, approxorder = 10, w = w)
-  sens <- -hess/nrow(utabl)
-  sensinv <- solve(sens)
-
-  grads <- tape_eval(Jsmofun_u, xmat = utabl, pmat = 0*theta, xcentres = boundaryapprox, approxorder = 10)
-  variability <- cov(grads)
-
-  Ginfinv <- sensinv %*% variability %*% sensinv /nrow(utabl) #inverse of the Godambe information matrix, also called the sandwich information matrix
+  Ginfinv <- sme_estvar(smofun, theta, Y = utabl, Yapproxcentres = boundaryapprox, approxorder = 10)
   return(Ginfinv) 
 }
 
