@@ -36,7 +36,7 @@ test_that("Hess + Offset match gradient for a PPI Example", {
   smopoly <- unlist(smopoly)
 
   expect_true(all(smoorig - smopoly == smoorig[[1]] - smopoly[[1]])) #seems I'm wrong!? - because there is a free parameter in the way I've set up ppi
-}
+})
 
 test_that("quadratictape_parts_approx is close to quadratic_parts for simplex interior points", {
   mod <- ppi_egmodel(100)
