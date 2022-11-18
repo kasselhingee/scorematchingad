@@ -3,6 +3,7 @@ ppi_cppad <- function(prop, stheta, isfixed,
                       bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10,
                       pow = 1, man, weightname = hsqfun, acut = NULL, control = default_Rcgmin(), hsqfun = NULL,
                       w = NULL){
+  
   # process inputs
   stopifnot("matrix" %in% class(prop))
   p = ncol(prop)

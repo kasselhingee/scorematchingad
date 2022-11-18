@@ -38,7 +38,7 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
   }
   attr(smofun, "xtape") <- theta
   attr(smofun, "dyntape") <- eginteriorpt
-  out <- cppad_search(smotape = smofun, theta = theta, Y = utabl, Yapproxcentres = NA * utabl,
+  out <- cppad_search(smotape = smofun, theta = theta, Y = utabl, Yapproxcentres = boundaryapprox,
                       w = w, approxorder = approxorder, control = control)
   return(out)
 }
@@ -96,8 +96,8 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
   # useful to debugging as Rcgmin hides the error codes
   #  and relatively cheap:
   # evaluating above functions at the start point
-  smoobj(theta)
-  smograd(theta)
+  stopifnot(is.finite(smoobj(theta)))
+  stopifnot(all(is.finite(smograd(theta))))
 
   # now do the search 
   out <- Rcgmin::Rcgmin(par = theta,
