@@ -70,7 +70,7 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
   out$SE <- try({
     sqrt(diag(sme_estvar(smofun, estimate = out$par, Y = utabl, Yapproxcentres = boundaryapprox, approxorder = approxorder)))
   })
-  gradatest <- smograd(out$par)
+  gradatest <- smograd(out$par) / sum(w)
   out$sqgradsize <- sum(gradatest^2)
   return(out)
 }
