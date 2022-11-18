@@ -238,21 +238,27 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
   intheta <- ppi_paramvec(3, betaL = m$beta0[1:2], betap = m$beta0[3])
 
   # prepare tapes
-  tapes <- buildsmotape("sphere", "ppi",
-                        rep(0.1, m$p), intheta,
-                        weightname = "minsq",
-                        acut = acut)
+  sqrtman <- pmanifold("sphere")
+  ppitape <- tapell(llname = "ppi",
+                    xtape = rep(0.1, m$p),
+                    usertheta = intheta, 
+                    pmanifoldtransform = sqrtman)
+  smotape <- tapesmo(lltape = ppitape,
+                        pmanifoldtransform = sqrtman,
+                        divweight = "minsq",
+                        acut = acut,
+                        verbose = FALSE)
 
   #prepare data
   datasplit <- simplex_boundarysplit(newsample, bdrythreshold = 1E-15, shiftsize = 1E-15)
 
   #extra tapes
-  Jsmofun_u <- pTapeJacobianSwap(tapes$smotape, m$theta, datasplit$interior[1, ])
-  Hsmofun_u <- pTapeHessianSwap(tapes$smotape, m$theta, datasplit$interior[1, ])
+  Jsmofun_u <- pTapeJacobianSwap(smotape, m$theta, datasplit$interior[1, ])
+  Hsmofun_u <- pTapeHessianSwap(smotape, m$theta, datasplit$interior[1, ])
 
   #comparisons isolated from the Rcgmin optimiser
   SE <- cppadSE(
-    tapes$smotape, theta = direct$est$paramvec[1:(length(intheta) - m$p)], datasplit$interior,
+    smotape, theta = direct$est$paramvec[1:(length(intheta) - m$p)], datasplit$interior,
     Jsmofun_u = Jsmofun_u,
     Hsmofun_u = Hsmofun_u,
     uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
