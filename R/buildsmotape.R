@@ -68,12 +68,12 @@ buildsmotape_internal <- function(manifoldname, llname,
   }
 
   pman <- pmanifold(manifoldname)
-  ppitape <- tapell(llname = "ppi",
+  lltape <- tapell(llname = "ppi",
                     xtape = utape,
                     usertheta = t_si2u(starttheta, isfixed), 
                     pmanifoldtransform = pman)
   stopifnot(is.numeric(acut))
-  smotape <- tapesmo(lltape = ppitape,
+  smotape <- tapesmo(lltape = lltape,
                         pmanifoldtransform = pman,
                         divweight = weightname,
                         acut = acut,
