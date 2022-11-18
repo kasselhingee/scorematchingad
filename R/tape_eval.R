@@ -4,6 +4,7 @@
 #' @param pmat A matrix of dynamic parameters.
 #' @param xcentres A matrix of approximation for Taylor approximation centres for `xmat`. Use values of `NA` for rows that do not require Taylor approximation.
 #' @description Evaluates a tape exactly or approximately for an array of provided variable values and dynamic parameter values.
+#' The function `tape_eval_wsum()` computes the column-wise weighted sum of the result.
 #' @details
 #' Approximation is via Taylor approximation of the independent variable around the approximation centre provided in `xcentres`.
 #' @return
@@ -30,4 +31,14 @@ tape_eval <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
   evals <- do.call(rbind, evals_l)
   return(evals)
 }
+
+#' @rdname tape_eval
+#' @param w Weights to apply to each row of `xmat` for computing the weighted sum.
+tape_eval_wsum <- function(tape, xmat, pmat, w=rep(1, nrow(xmat)), xcentres = NA * xmat, approxorder = 10){
+  evals <- tape_eval(tape, xmat = xmat, pmat = pmat,
+                     xcentres = xcentres, approxorder = approxorder)
+  wevals <- evals*w
+  return(colSums(wevals))
+}
+
 
