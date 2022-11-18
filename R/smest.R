@@ -92,7 +92,14 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
   smograd <- function(atheta){
     tape_eval_wsum(Jsmofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
- 
+
+  # useful to debugging as Rcgmin hides the error codes
+  #  and relatively cheap:
+  # evaluating above functions at the start point
+  smoobj(theta)
+  smograd(theta)
+
+  # now do the search 
   out <- Rcgmin::Rcgmin(par = theta,
                         fn = smoobj,
                         gr = smograd,
