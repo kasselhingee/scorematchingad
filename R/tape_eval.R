@@ -12,7 +12,7 @@
 #' @export
 tape_eval <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
   stopifnot(nrow(xmat) == nrow(xcentres))
-  if (isa(pmat, "numeric") | isTRUE(nrow(pmat) == 1)){
+  if (is.vector(pmat) | isTRUE(nrow(pmat) == 1)){
     pmat <- matrix(pmat, byrow = TRUE, nrow = nrow(xmat), ncol = length(pmat))
   }
   else {stopifnot(nrow(xmat) == nrow(pmat))}
