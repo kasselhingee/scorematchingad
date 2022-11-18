@@ -31,7 +31,7 @@ t_u2s_const <- function(usertheta, c){
 
 
 #' @describeIn t_u2i Convert `starttheta` and `isfixed` back to a `usertheta` by replacing any non-fixed elements with `NA`.
-t_sf2u <- function(starttheta, isfixed){
+t_si2u <- function(starttheta, isfixed){
   stopifnot(all(isfixed %in% c(TRUE, FALSE)))
   stopifnot(length(starttheta) == length(isfixed))
   usertheta <- starttheta
@@ -52,7 +52,7 @@ t_fu2t <- function(fitted, usertheta){
 #' @describeIn t_u2i Convert `fitted`, `starttheta` and `isfixed` to a `theta` by replacing any non-fixed elements with the fitted values.
 t_sfi2u <- function(fitted, starttheta, isfixed){
   stopifnot(length(starttheta) == length(isfixed))
-  usertheta <- t_sf2u(starttheta, isfixed)
+  usertheta <- t_si2u(starttheta, isfixed)
   theta <- t_fu2t(fitted, usertheta)
   return(theta)
 }
