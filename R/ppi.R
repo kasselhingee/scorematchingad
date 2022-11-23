@@ -180,7 +180,7 @@ ppi <- function(Y, paramvec = NULL,
     pman <- pmanifold(man)
     ppitape <- tapell(llname = "ppi",
                     xtape = rep(1/p, p),
-                    usertheta = t_sf2u(stheta, isfixed), 
+                    usertheta = t_si2u(stheta, isfixed), 
                     pmanifoldtransform = pman)
     smotape <- tapesmo(lltape = ppitape,
                        pmanifoldtransform = pman,
@@ -211,7 +211,7 @@ ppi <- function(Y, paramvec = NULL,
                       fromPPIparamvec(thetaest))
     firstfit$SE <- c(list(paramvec = SE),
                       fromPPIparamvec(SE))
-    firstfit$info <- opt
+    firstfit$info <- optimum
     firstfit$info$boundarypoints <- sum(isbdry)
     fitfun <- "cppad"
   }
