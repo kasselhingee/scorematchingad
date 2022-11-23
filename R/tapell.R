@@ -39,6 +39,7 @@ tapell <- function(llname,
                     verbose = verbose)
   attr(lltape, "fname") <- paste(attr(pmanifoldtransform, "name"), llname, sep = "-")
   attr(lltape, "xtape") <- xtape
+  attr(lltape, "manifoldtransform") <- attr(pmanifoldtransform, "name")
   attr(lltape, "usertheta") <- usertheta
   attr(lltape, "dyntape") <- starttheta[!t_u2i(usertheta)]
   return(lltape)
