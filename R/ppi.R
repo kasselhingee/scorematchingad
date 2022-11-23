@@ -68,7 +68,7 @@ ppi <- function(Y, paramvec = NULL,
                 divweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin(), paramvec_start = NULL#specific to cppad methods
                 ){
-  # process inputs
+  ###### process inputs #####
   stopifnot("matrix" %in% class(Y))
   p = ncol(Y)
   numneg <- sum(Y < 0)
@@ -86,6 +86,13 @@ ppi <- function(Y, paramvec = NULL,
            alr = "Ralr",
            sqrt = "sphere",
            none = "simplex")
+  if (!(man %in% c("simplex", "sphere"))){
+    if (divweight != "ones"){warning("Manifold supplied has no boundary. Setting divweight to 'ones'.")}
+  }
+  if (divweight == "ones"){
+    if (!is.null(acut)){warning("The value of 'acut' is ignored for divweight == 'ones'")}
+    acut <- 1 #set just for passing to CppAD
+  }
 
   if (is.null(paramvec)){usertheta <- rep(NA, ppithetalength(p))}
   else {usertheta <- paramvec}
@@ -97,7 +104,13 @@ ppi <- function(Y, paramvec = NULL,
 
   controls <- splitcontrol(control)
 
-  # Switch between the different methods
+
+
+
+  ########## DO THE FITTING ###############
+
+  
+  # hardcoded methods:
   if (method == "direct"){
     if (man == "Ralr"){
       if (usertheta_ppi_alr_gengamma_compatible(usertheta)){
@@ -157,29 +170,49 @@ ppi <- function(Y, paramvec = NULL,
       method <- "cppad"
     }
   }
+
+  # cppad_search method
   if (method == "cppad"){
     if (is.null(paramvec_start)){stheta <- t_u2s_const(usertheta, 0.2)}
     else {stheta <- t_us2s(usertheta, paramvec_start)}
     isfixed <- t_u2i(usertheta)
-    firstfit <- ppi_cppad(Y, stheta = stheta, isfixed = isfixed,
-               bdrythreshold = bdrythreshold,
-               shiftsize = shiftsize,
-               approxorder = approxorder,
-               pow = pow,
-               man = man,
-               weightname = divweight,
-               acut = acut,
-               control = controls$Rcgmin,
-               w = w)
+    # prepare tapes
+    pman <- pmanifold(man)
+    ppitape <- tapell(llname = "ppi",
+                    xtape = rep(1/p, p),
+                    usertheta = t_sf2u(stheta, isfixed), 
+                    pmanifoldtransform = pman)
+    smotape <- tapesmo(lltape = ppitape,
+                       pmanifoldtransform = pman,
+                       divweight = divweight,
+                       verbose = FALSE)
+  
+    # find boundary points and their approximation centres
+    isbdry <- simplex_isboundary(Y, bdrythreshold)
+    Yapproxcentres <- Y 
+    Yapproxcentres[!isbdry, ] <- NA
+    Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = shiftsize)
+ 
+    optimum <- cppad_search(smotape = smotape,
+                 theta = t_si2f(stheta, isfixed),
+                 Y = Y,
+                 Yapproxcentres = Yapproxcentres,
+                 w = w,
+                 approxorder = approxorder,
+                 control = control)
+
+    #process the theta and SE
+    thetaest <- t_sfi2u(optimum$par, stheta, isfixed)
+    SE <- t_sfi2u(optimum$SE, rep(0, length(stheta)), isfixed)
+                 
     #refactor results to fit with ppi() standard output
-    firstfit$est <- c(list(paramvec = firstfit$est$theta),
-                      fromPPIparamvec(firstfit$est$theta))
-    firstfit$SE <- c(list(paramvec = firstfit$SE$theta),
-                      fromPPIparamvec(firstfit$SE$theta))
-    names(firstfit)
-    firstfit$info <- firstfit[setdiff(names(firstfit), c("theta", "prop", "est", "SE", "info"))]
-    firstfit[setdiff(names(firstfit), c("est", "SE", "info"))] <- NULL
-    #
+    firstfit <- list()
+    firstfit$est <- c(list(paramvec = thetaest),
+                      fromPPIparamvec(thetaest))
+    firstfit$SE <- c(list(paramvec = SE),
+                      fromPPIparamvec(SE))
+    firstfit$info <- opt
+    firstfit$info$boundarypoints <- sum(isbdry)
     fitfun <- "cppad"
   }
 
