@@ -63,13 +63,13 @@ test_that("quadratictape_parts with approx centres is close to quadratic_parts f
                       verbose = FALSE)
   
   valuesexact <- quadratictape_parts(smotape, Y)
-  valuesapprox <- quadratictape_parts(smotape, Y, tcentres = Ycen, order = 1)
+  valuesapprox <- quadratictape_parts(smotape, Y, tcentres = Ycen, approxorder = 1)
   expect_equal(valuesexact, valuesapprox, tolerance = 1E-5)
   # but still an approximation
   expect_gt(max(abs(valuesexact$offset - valuesapprox$offset)), 1E-10)
 
   #expect higher order approximation to be closer
-  valuesapprox2 <- quadratictape_parts(smotape, Y, tcentres = Ycen, order = 10)
+  valuesapprox2 <- quadratictape_parts(smotape, Y, tcentres = Ycen, approxorder = 10)
   expect_lt(sum((valuesexact$offset - valuesapprox2$offset)^2), 
             sum((valuesexact$offset - valuesapprox$offset)^2))
 })
