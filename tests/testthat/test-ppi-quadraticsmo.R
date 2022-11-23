@@ -78,6 +78,6 @@ test_that("ppi ll tape is fails the quadratic test", {
   xmat <- cbind(xmat, 1-rowSums(xmat))
 
   expect_false(testquadratictape(ppitape, xmat = xmat, dynparammat = dynparammat))
-  expect_message(testquadratictape(ppitape, xmat = xmat, dynparammat = dynparammat))
+  expect_message(testquadratictape(ppitape, xmat = xmat, dynparammat = dynparammat, verbose = TRUE))
 })
 
