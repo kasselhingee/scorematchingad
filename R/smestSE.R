@@ -35,6 +35,8 @@ cppadSEsq <- function(smofun, theta, utabl,
   if (is.null(w)){w <- rep(1, nrow(utabl))}
   stopifnot(all(w[[1]] == w))
 
+  theta <- as.vector(theta)
+
   Ginfinv <- sme_estvar(smofun, theta, Y = utabl, Yapproxcentres = boundaryapprox, approxorder = 10)
   return(Ginfinv) 
 }
