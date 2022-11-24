@@ -48,7 +48,8 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights",
   expect_equal(smo_sim, smo_direct)
 
   # compare results to old smobj  
-  expect_equal(smobj(smofun = tapes$smotape, theta = m$theta, utabl = vw$newY), smo_sim)
+  expect_equal(smobj(smofun = tapes$smotape, theta = m$theta, utabl = vw$newY), smo_sim / nrow(vw$newY))
+  expect_equal(smobj(smofun = tapes$smotape, theta = m$theta, utabl = m$sample, w=vw$w), smo_direct/sum(vw$w))
 
   # compare results to manual calculation
   smo_sim_manual <- sum(vapply(1:nrow(vw$newY), function(i){pForward0(tapes$smotape, m$theta, vw$newY[i, ])}, FUN.VALUE = 1.3))
@@ -170,12 +171,8 @@ test_that("cppadest() for ppi with minsq match itself and estimatorall1", {
                weightname = "minsq",
                acut = acut)
 
-  out_sim <- cppadest(tapes$smotape, m$theta * 0 + 1, vw$newY, control = list(tol = 1E-12))
-  out_dir <- cppadest(tapes$smotape, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12), w = vw$w)
-
-
-  out_sim2 <- cppad_search(tapes$smotape, m$theta *0 + 1, vw$newY, control = list(tol = 1E-12))
-  out_dir2 <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12), w = vw$w)
+  out_sim <- cppad_search(tapes$smotape, m$theta *0 + 1, vw$newY, control = list(tol = 1E-12))
+  out_dir <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 1000), w = vw$w)
   expect_equal(out_sim[!(names(out_sim) %in% c("counts", "SE"))], 
      out_dir[!(names(out_sim) %in% c("counts", "SE"))],
      tolerance = 1E-3)
@@ -183,7 +180,7 @@ test_that("cppadest() for ppi with minsq match itself and estimatorall1", {
   directestimate <- estimatorall1(m$sample, acut, w = vw$w)
 
   expect_lt(out_dir$value,
-            smobj(smoppi, directestimate$estimator1, m$sample, w = vw$w) + 1E-5 * abs(out_dir$value))
+            smobj(tapes$smotape, directestimate$estimator1, m$sample, w = vw$w) + 1E-5 * abs(out_dir$value))
 
   expect_lt_v(abs(out_dir$par - directestimate$estimator1) / out_dir$SE, 1E-3) #proxy for optimisation flatness
   expect_lt_v(abs(out_dir$par - m$theta) / out_dir$SE, 3)
