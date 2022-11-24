@@ -42,11 +42,14 @@ tape_eval <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
 }
 
 #' @rdname tape_eval
-#' @param w Weights to apply to each row of `xmat` for computing the weighted sum.
-tape_eval_wsum <- function(tape, xmat, pmat, w=rep(1, nrow(xmat)), xcentres = NA * xmat, approxorder = 10){
-  stopifnot(length(w) == nrow(xmat))
+#' @param w Weights to apply to each row of `xmat` for computing the weighted sum. If `NULL` then each row is given a weight of `1`.
+tape_eval_wsum <- function(tape, xmat, pmat, w=NULL, xcentres = NA * xmat, approxorder = 10){
   evals <- tape_eval(tape, xmat = xmat, pmat = pmat,
                      xcentres = xcentres, approxorder = approxorder)
+  
+  # do weight checks afterwards so that eval results can be used to choose weights
+  if (is.null(w)){w <- rep(1, rnow(evals))}
+  stopifnot(length(w) == nrow(evals))
   wevals <- evals*w
   return(colSums(wevals))
 }
