@@ -4,4 +4,5 @@ designquestions.md
 ^LICENSE\.md$
 tests/test.sh
 tests/externtest.R
+tests/prepinteractivetesting.R
 
