@@ -70,7 +70,7 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 5", {
 
   est_cppad <- ppi(prop, ppi_paramvec(bL = bL, betap = beta[p]), trans = "alr", method = "cppad", divweight = "ones",
                          bdrythreshold = 1E-20,
-                         control = list(tol = 1E-10), w = NULL) #w = NULL here to temporarily dodge the issue with weights of 1 generating different results to no weights
+                         control = list(tol = 1E-10))
   expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)
   expect_absdiff_lte_v(est_cppad$est$beta, beta, 3 * est_cppad$SE$beta)
   #expect that the SE are small relative to size of the coefficients
