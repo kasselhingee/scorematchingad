@@ -47,19 +47,19 @@
 #' @param paramvec Optionally a vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate `paramvec` easily using [ppi_paramvec()].
 #' @param divweight The divergence weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
 #' @param acut The threshold \eqn{a_c} in `divweight` to avoid over-weighting measurements interior to the simplex
-#' @param control `CppAD` only. Passed to [`Rcgmin::Rcgmin()`] to control the iterative solver. Default values are given by [`default_Rcgmin()`].
-#' @param bdrythreshold `CppAD` only. For measurements close to the boundary of the simplex Taylor approximation is applied. See [`simplex_isboundary()`].
-#' @param shiftsize `CppAD` only. For Taylor approximation, approximation centres are chosen based on `shiftsize`. See [`simplex_boundaryshift()`].
-#' @param approxorder `CppAD` only. Order of the Taylor approximation for measurements on the boundary of the simplex.
-#' @param method "direct" uses the hardcoded estimators by JS. "cppad" uses `CppAD` and [`Rcgmin::Rcgmin()`] to iteratively find the minimum of the weighted Hyvarinen divergence.
-#' @param paramvec_start `CppAD` only. The starting guess for `Rcgmin` with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec_start` easily using [`ppi_paramvec()`].
+#' @param control `iterative` only. Passed to [`Rcgmin::Rcgmin()`] to control the iterative solver. Default values are given by [`default_Rcgmin()`].
+#' @param bdrythreshold `iterative` or `closed` methods only. For measurements close to the boundary of the simplex Taylor approximation is applied. See [`simplex_isboundary()`].
+#' @param shiftsize `iterative` or `closed` methods only. For Taylor approximation, approximation centres are chosen based on `shiftsize`. See [`simplex_boundaryshift()`].
+#' @param approxorder `iterative` or `closed` methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.
+#' @param method "hardcoded" uses the hardcoded estimators by JS. "closed" uses `CppAD` to solve in closed form the a quadratic score matching objective using [`cppad_closed()`]. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`Rcgmin::Rcgmin()`]) to iteratively find the minimum of the weighted Hyvarinen divergence.
+#' @param paramvec_start `iterative` method only. The starting guess for `Rcgmin` with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec_start` easily using [`ppi_paramvec()`].
 #' @references
 #' \insertAllCited{}
 #' @examples
 #' model <- ppi_egmodel(1000)
 #' estalr <- ppi(model$sample,
 #'               paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)),
-#'               trans = "alr", method = "direct")
+#'               trans = "alr", method = "hardcoded")
 #' estsqrt <- ppi(model$sample,
 #'               trans = "sqrt", method = "direct", divweight = "minsq")
 #' @export
@@ -102,16 +102,11 @@ ppi <- function(Y, paramvec = NULL,
   firstfit <- list()
   fitfun <- NA
 
-  controls <- splitcontrol(control)
-
-
-
-
   ########## DO THE FITTING ###############
 
   
   # hardcoded methods:
-  if (method == "direct"){
+  if (method == "hardcoded"){
     if (man == "Ralr"){
       if (usertheta_ppi_alr_gengamma_compatible(usertheta)){
         firstfit <- ppi_alr_gengamma(Y, betap = tail(usertheta, 1), w = w) #any theta is fine
@@ -166,13 +161,13 @@ ppi <- function(Y, paramvec = NULL,
       }
     }
     if (is.na(fitfun)){
-      warning("No direct estimator exists for parameter set. Using cppad.")
-      method <- "cppad"
+      warning("No hard-coded estimator exists for parameter set. Using cppad closed-form solution.")
+      method <- "closed"
     }
   }
 
   # cppad_search method
-  if (method == "cppad"){
+  if (method %in% c("iterative", "closed")){
     if (is.null(paramvec_start)){stheta <- t_u2s_const(usertheta, 0.2)}
     else {stheta <- t_us2s(usertheta, paramvec_start)}
     isfixed <- t_u2i(usertheta)
@@ -193,29 +188,52 @@ ppi <- function(Y, paramvec = NULL,
     Yapproxcentres <- Y 
     Yapproxcentres[!isbdry, ] <- NA
     Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = shiftsize)
- 
-    optimum <- cppad_search(smotape = smotape,
-                 theta = t_si2f(stheta, isfixed),
-                 Y = Y,
-                 Yapproxcentres = Yapproxcentres,
-                 w = w,
-                 approxorder = approxorder,
-                 control = control)
 
-    #process the theta and SE
-    thetaest <- t_sfi2u(optimum$par, stheta, isfixed)
-    SE <- t_sfi2u(optimum$SE, rep(0, length(stheta)), isfixed)
+    if (method == "iterative"){ 
+      optimum <- cppad_search(smotape = smotape,
+                   theta = t_si2f(stheta, isfixed),
+                   Y = Y,
+                   Yapproxcentres = Yapproxcentres,
+                   w = w,
+                   approxorder = approxorder,
+                   control = control)
+  
+      #process the theta and SE
+      thetaest <- t_sfi2u(optimum$par, stheta, isfixed)
+      SE <- t_sfi2u(optimum$SE, rep(0, length(stheta)), isfixed)
+                   
+      #refactor results to fit with ppi() standard output
+      firstfit <- list()
+      firstfit$est <- c(list(paramvec = thetaest),
+                        fromPPIparamvec(thetaest))
+      firstfit$SE <- c(list(paramvec = SE),
+                        fromPPIparamvec(SE))
+      firstfit$info <- optimum
+      firstfit$info$boundarypoints <- sum(isbdry)
+      firstfit$info$smval <- optimum$value
+      fitfun <- "iterative"
+    }
+    if (method == "closed"){
+      est <- cppad_closed(smotape = smotape,
+                   Y = Y,
+                   Yapproxcentres = Yapproxcentres,
+                   w = w,
+                   approxorder = approxorder)
+
+      #process the theta and SE
+      thetaest <- t_sfi2u(est$est, stheta, isfixed)
+      SE <- t_sfi2u(est$SE, rep(0, length(stheta)), isfixed)
                  
-    #refactor results to fit with ppi() standard output
-    firstfit <- list()
-    firstfit$est <- c(list(paramvec = thetaest),
-                      fromPPIparamvec(thetaest))
-    firstfit$SE <- c(list(paramvec = SE),
-                      fromPPIparamvec(SE))
-    firstfit$info <- optimum
-    firstfit$info$boundarypoints <- sum(isbdry)
-    firstfit$info$smval <- optimum$value
-    fitfun <- "cppad"
+      #refactor results to fit with ppi() standard output
+      firstfit <- list()
+      firstfit$est <- c(list(paramvec = thetaest),
+                        fromPPIparamvec(thetaest))
+      firstfit$SE <- c(list(paramvec = SE),
+                        fromPPIparamvec(SE))
+      firstfit$info <- est
+      firstfit$info$boundarypoints <- sum(isbdry)
+      fitfun <- "closed"
+    }
   }
 
   firstfit$info$method <- fitfun
