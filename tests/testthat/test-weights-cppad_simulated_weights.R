@@ -36,6 +36,44 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
   expect_equal(smohess_sim, smohess_direct)
 })
 
+test_that("tape_eval_wsum() matches for simulated weights and constant weights", {
+  intheta <- ppi_paramvec(m$p)
+  tapes <- buildsmotape("sphere", "ppi",
+                        m$sample[1, ], intheta,
+                        weightname = "minsq",
+                        acut = acut)
+  smo_u <- swapDynamic(tapes$smotape, attr(tapes$smotape, "dyntape"), attr(tapes$smotape, "xtape"))
+  smo_sim <- tape_eval_wsum(smo_u, vw$newY, m$theta)
+  smo_direct <- tape_eval_wsum(smo_u, m$sample, m$theta, w=vw$w)
+  expect_equal(smo_sim, smo_direct)
+})
+
+test_that("tape_eval_wsum() matches for simulated weights and constant weights with boundary data", {
+  intheta <- ppi_paramvec(m$p)
+  tapes <- buildsmotape("sphere", "ppi",
+                        m$sample[1, ], intheta,
+                        weightname = "minsq",
+                        acut = acut)
+  smo_u <- swapDynamic(tapes$smotape, attr(tapes$smotape, "dyntape"), attr(tapes$smotape, "xtape"))
+  Y <- m$sample
+  isbdry <- simplex_isboundary(Y, 1E-2)
+  Yapproxcentres <- Y 
+  Yapproxcentres[!isbdry, ] <- NA
+  Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = 1E-3)
+  origYbdry <- Yapproxcentres
+  
+  Y <- vw$Y 
+  isbdry <- simplex_isboundary(Y, 1E-2)
+  Yapproxcentres <- Y 
+  Yapproxcentres[!isbdry, ] <- NA
+  Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = 1E-3)
+  simYbdry <- Yapproxcentres
+
+  smo_sim <- tape_eval_wsum(smo_u, vw$newY, m$theta, Y)
+  smo_direct <- tape_eval_wsum(smo_u, m$sample, m$theta, w=vw$w)
+  expect_equal(smo_sim, smo_direct)
+})
+
 test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constant weights with boundary data", {
   intheta <- ppi_paramvec(m$p)
 
