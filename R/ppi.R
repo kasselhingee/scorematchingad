@@ -213,7 +213,7 @@ ppi <- function(Y, paramvec = NULL,
                       fromPPIparamvec(SE))
     firstfit$info <- optimum
     firstfit$info$boundarypoints <- sum(isbdry)
-    firstfit$info$smval <- optimim$value
+    firstfit$info$smval <- optimum$value
     fitfun <- "cppad"
   }
 
