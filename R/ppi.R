@@ -185,6 +185,7 @@ ppi <- function(Y, paramvec = NULL,
     smotape <- tapesmo(lltape = ppitape,
                        pmanifoldtransform = pman,
                        divweight = divweight,
+                       acut = acut,
                        verbose = FALSE)
   
     # find boundary points and their approximation centres
