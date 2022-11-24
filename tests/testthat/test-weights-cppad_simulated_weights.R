@@ -46,6 +46,16 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights",
   smo_sim <- tape_eval_wsum(smo_u, vw$newY, m$theta)
   smo_direct <- tape_eval_wsum(smo_u, m$sample, m$theta, w=vw$w)
   expect_equal(smo_sim, smo_direct)
+
+  # compare results to old smobj  
+  expect_equal(smobj(smofun = tapes$smotape, theta = m$theta, utabl = vw$newY), smo_sim)
+
+  # compare results to manual calculation
+  smo_sim_manual <- sum(vapply(1:nrow(vw$newY), function(i){pForward0(tapes$smotape, m$theta, vw$newY[i, ])}, FUN.VALUE = 1.3))
+  smo_dir_manual_v <- vapply(1:nrow(m$sample), function(i){pForward0(tapes$smotape, m$theta, m$sample[i, ])}, FUN.VALUE = 1.3)
+  smo_dir_manual <- sum(smo_dir_manual_v*vw$w)
+  expect_equal(smo_sim_manual, smo_sim)
+  expect_equal(smo_sim_manual, smo_dir_manual)
 })
 
 test_that("tape_eval_wsum() matches for simulated weights and constant weights with boundary data", {
@@ -154,12 +164,18 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
 
 
 test_that("cppadest() for ppi with minsq match itself and estimatorall1", {
-  psphere <- pmanifold("sphere")
-  pppi <- ptapell(rep(0.1, m$p), m$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, m$p), 1:length(m$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  tapes <- buildsmotape("sphere", "ppi",
+               utape = rep(1/m$p, m$p),
+               usertheta = ppi_paramvec(m$p),
+               weightname = "minsq",
+               acut = acut)
 
-  out_sim <- cppadest(smoppi, m$theta * 0 + 1, vw$newY, control = list(tol = 1E-12))
-  out_dir <- cppadest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12), w = vw$w)
+  out_sim <- cppadest(tapes$smotape, m$theta * 0 + 1, vw$newY, control = list(tol = 1E-12))
+  out_dir <- cppadest(tapes$smotape, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12), w = vw$w)
+
+
+  out_sim2 <- cppad_search(tapes$smotape, m$theta *0 + 1, vw$newY, control = list(tol = 1E-12))
+  out_dir2 <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12), w = vw$w)
   expect_equal(out_sim[!(names(out_sim) %in% c("counts", "SE"))], 
      out_dir[!(names(out_sim) %in% c("counts", "SE"))],
      tolerance = 1E-3)
