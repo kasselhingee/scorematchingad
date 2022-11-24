@@ -60,17 +60,17 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights w
   Yapproxcentres <- Y 
   Yapproxcentres[!isbdry, ] <- NA
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = 1E-3)
-  origYbdry <- Yapproxcentres
+  origYcentres <- Yapproxcentres
   
-  Y <- vw$Y 
+  Y <- vw$newY 
   isbdry <- simplex_isboundary(Y, 1E-2)
   Yapproxcentres <- Y 
   Yapproxcentres[!isbdry, ] <- NA
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = 1E-3)
-  simYbdry <- Yapproxcentres
+  simYcentres <- Yapproxcentres
 
-  smo_sim <- tape_eval_wsum(smo_u, vw$newY, m$theta, Y)
-  smo_direct <- tape_eval_wsum(smo_u, m$sample, m$theta, w=vw$w)
+  smo_sim <- tape_eval_wsum(smo_u, vw$newY, pmat = m$theta, xcentres = simYcentres)
+  smo_direct <- tape_eval_wsum(smo_u, m$sample, pmat = m$theta, xcentres = origYcentres, w=vw$w)
   expect_equal(smo_sim, smo_direct)
 })
 
