@@ -1,6 +1,6 @@
 #' @title Simple wrapper to evaluate CppAD tapes and derivatives many times
 #' @param tape A `CppAD` `tape`.
-#' @param xmat A matrix of (multivariate) independent variables. Each represents a single independent variable vector.
+#' @param xmat A matrix of (multivariate) independent variables. Each represents a single independent variable vector. Or a single vector of that is used for all rows of `pmat`.
 #' @param pmat A matrix of dynamic parameters. Or a single vector of dynamic parameters to use for all rows of `xmat`.
 #' @param xcentres A matrix of approximation for Taylor approximation centres for `xmat`. Use values of `NA` for rows that do not require Taylor approximation.
 #' @description Evaluates a tape exactly or approximately for an array of provided variable values and dynamic parameter values.
@@ -12,10 +12,16 @@
 #' @export
 tape_eval <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
   stopifnot(nrow(xmat) == nrow(xcentres))
-  if (is.vector(pmat) | isTRUE(nrow(pmat) == 1)){
+  if (is.vector(xmat)){xmat <- matrix(xmat, ncol = length(xmat))}
+  if (is.vector(pmat)){pmat <- matrix(pmat, ncol = length(pmat))}
+  if (isTRUE(nrow(xmat) == 1)){
+    xmat <- matrix(xmat, byrow = TRUE, nrow = nrow(pmat), ncol = length(xmat))
+    xcentres <- matrix(xcentres, byrow = TRUE, nrow = nrow(pmat), ncol = length(xcentres))
+  }
+  if (isTRUE(nrow(pmat) == 1)){
     pmat <- matrix(pmat, byrow = TRUE, nrow = nrow(xmat), ncol = length(pmat))
   }
-  else {stopifnot(nrow(xmat) == nrow(pmat))}
+  stopifnot(nrow(xmat) == nrow(pmat))
   toapprox <- !is.na(xcentres[, 1])
 
   evals_l <- list()
