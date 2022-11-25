@@ -54,3 +54,27 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
   expect_equal(est_hardcode$est$paramvec, t_fu2t(estobj$est, attr(ppitape, "usertheta")))
 
 })
+
+test_that("Closed-form solution with all boundary points and alr matches hardcoded", {
+  set.seed(123)
+  m <- ppi_egmodel(100)
+  #add some zeroes
+  pushtozero <- function(x){
+    whichmin <- which.min(x)
+    x[whichmin] <- 0
+    x <- x / sum(x) #normalise
+    return(x)
+  }
+  newsample <- t(apply(m$sample, MARGIN = 1, pushtozero))
+  mean(apply(newsample, 1, min) == 0) #100% have a zero
+
+  hardcoded <- ppi(Y = newsample,
+                   paramvec = ppi_paramvec(bL = 0, p = m$p, betap = tail(m$beta, 1)),
+                   method = "hardcoded",
+                   trans = "alr")
+  cppad <- ppi(Y = newsample,
+                   paramvec = ppi_paramvec(bL = 0, p = m$p, betap = tail(m$beta, 1)),
+                   method = "closed",
+                   trans = "alr")
+})
+
