@@ -1,6 +1,11 @@
-# Functions to make unit tests with microbiome data easier
+#' @noRd
+#' @title Functions to prepare microbiome data for unit tests
+#' @description 
+#' Prepares the micobiome data with or without two outliers.
+#' Two different subsets of the measurement components are available.
+#' @description Cleaned. TM7, Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria, other
 
-ppi_microbiomedata_prep1 <- function(){
+ppi_microbiomedata_cleaned_TCAP <- function(){
   data("microdata", package = "scorecompdir")
   microdata <- microdata[!microdata$IndividualID %in% c(2079, 2280), ] #remove two outlying measurements
   countdata=as.matrix(microdata[,12:31])
@@ -51,6 +56,54 @@ ppi_microbiomedata_prep1 <- function(){
   return(list(
     propreal = propreal,
     beta0 = beta0,
+    p = p
+  ))
+}
+
+#' @description Not cleaned. TM7, Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria, other
+ppi_microbiomedata_TCAP <- function(){
+  data("microdata", package = "scorecompdir")
+  countdata=as.matrix(microdata[,12:31])
+  
+  #sample size
+  n=94
+  
+  #dimension
+  p=20
+  
+  #calculate totals
+  tot=matrix(0,n,1)
+  for (j in 1:p)
+  {
+   tot=tot+countdata[,j]
+  }
+  tot=as.vector(tot)
+  
+  #proportion data
+  prop=countdata
+  for (j in 1:n)
+  {
+  	prop[j,]=countdata[j,]/tot[j]
+  }
+  
+  ###Reduce dimensions to p=5
+  
+  
+  #calculate 5D dataset
+  comb=matrix(0,n,5)
+  comb[,1]=prop[,"TM7"]
+  comb[,2]=prop[,"Cyanobacteria/Chloroplast"]
+  comb[,3]=prop[,"Actinobacteria"]
+  comb[,4]=prop[,"Proteobacteria"]
+  comb[,5]=abs(1-comb[,1]-comb[,2]-comb[,4]-comb[,3])
+  propreal=comb
+  
+  
+  #dimension
+  p=5
+  
+  return(list(
+    propreal = propreal,
     p = p
   ))
 }

@@ -1,5 +1,4 @@
 # test of iterative solver for ppi (compare to hardcoded):
-## microbiomfit without outliers
 ## microbiomfit with outliers
 
 test_that("ppi iterative solve match estimator1 minsq with fixed beta for ppi_egmodel", {
@@ -31,25 +30,24 @@ test_that("Simulated weights for ppi with minsq match itself and estimatorall1",
             method = "iterative",
             bdrythreshold = 0,
             trans = "sqrt", divweight = "minsq", acut = 0.01,
-            control = list(tol = 1E-20, maxit = 2000))
+            control = list(tol = 1E-15, maxit = 2000))
   out_dir <- ppi(m$sample, 
             method = "iterative",
             bdrythreshold = 0,
             trans = "sqrt", divweight = "minsq", acut = 0.01,
             w = vw$w,
-            control = list(tol = 1E-20, maxit = 2000))
+            control = list(tol = 1E-15, maxit = 2000))
 
-  expect_equal(out_sim[!(names(out_sim) %in% c("counts", "SE"))], 
-     out_dir[!(names(out_sim) %in% c("counts", "SE"))],
-     tolerance = 1E-3)
+  expect_equal(out_sim[!(names(out_sim) %in% c("info", "SE"))], 
+     out_dir[!(names(out_sim) %in% c("info", "SE"))],
+     tolerance = 1E-2)
 
   directestimate <- estimatorall1(m$sample, acut = 0.01, w = vw$w)
-  expect_equal(directestimate$estimator1, out_sim$est$paramvec, ignore_attr = TRUE)
-  expect_equal(directestimate$estimator1, out_dir$est$paramvec, ignore_attr = TRUE)
+  expect_equal(directestimate$estimator1, out_sim$est$paramvec, tolerance = 1E-2, ignore_attr = TRUE)
 })
 
 test_that("Iterative solver works on microbiome data without outliers", {
-  list2env(ppi_microbiomedata_prep1(), globalenv())
+  list2env(ppi_microbiomedata_cleaned_TCAP(), globalenv())
   
   #hardcoded estimate:
   estimator= estimator1(propreal, 0.01,1, beta0, computeSE = TRUE)
@@ -61,6 +59,24 @@ test_that("Iterative solver works on microbiome data without outliers", {
                    paramvec = ppi_paramvec(beta = beta0),
                    control = list(maxit = 100000, tol = 1E-20))
   expect_equal(est_cppad$est$paramvec, estimator$est$paramvec, tolerance = 1E-3)
+})
 
- 
+test_that("Iterative solver works on microbiome data with outliers, alr", {
+  #skip("next calculation, the cppad estimate, takes hours")
+  list2env(ppi_microbiomedata_TCAP(), globalenv())
+  
+  #hardcoded estimate:
+  est_direct=ppi(Y = propreal,
+         method = "hardcoded", trans = "alr",
+         paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0))
+
+system.time({est_cppad=ppi(Y = propreal,
+         method = "cppad", trans = "alr",
+         paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+         bdrythreshold = 1E-20, shiftsize = 1E-20,
+         control = list(maxit = 1E5, tol = 1E-20 * 100))})
+# the defaults for Rcgmin are meaning the estimate takes too long to converge!
+# from the default starting parameter vec it takes many more iterations than normal to get to converge to the correct result. In this case of default tolerance, then 43961 evaluations of the gradient.
+# With current tolerance of 1E-20*n, then 4559 seconds (1.3 hours), 81479 grad evaluations.
+expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec, tolerance = 1E-3)
 })

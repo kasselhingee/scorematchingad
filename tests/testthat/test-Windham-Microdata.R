@@ -1,64 +1,7 @@
 skip_on_cran() #too slow
 
 ##### Prepare First Data Set #####
-data("microdata", package = "scorecompdir")
-countdata=as.matrix(microdata[,12:31])
-
-#sample size
-n=94
-
-#dimension
-p=20
-
-#calculate totals
-tot=matrix(0,n,1)
-for (j in 1:p)
-{
- tot=tot+countdata[,j]
-}
-tot=as.vector(tot)
-
-#proportion data
-prop=countdata
-for (j in 1:n)
-{
-	prop[j,]=countdata[j,]/tot[j]
-}
-
-
-
-###Reduce dimensions to p=5
-
-
-#calculate 5D dataset
-comb=matrix(0,n,5)
-comb[,1]=prop[,"TM7"]
-comb[,2]=prop[,"Cyanobacteria/Chloroplast"]
-comb[,3]=prop[,"Actinobacteria"]
-comb[,4]=prop[,"Proteobacteria"]
-comb[,5]=abs(1-comb[,1]-comb[,2]-comb[,4]-comb[,3])
-propreal=comb
-
-
-#dimension
-p=5
-
-#save data
-proprealA=propreal
-
-
-
-#proportion of zeros in each category
-pzero=matrix(0,1,p)
-for (j in 1:p)
-{
-	for (k in 1:n)
-	{
-		if (propreal[k,j]==0){pzero[1,j]=pzero[1,j]+1}
-	}
-}
-pzero=pzero/n
-pzero*100
+list2env(ppi_microbiomedata_TCAP(), globalenv())
 
 test_that("direct alr estimator matches cppad calculations for Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria and pooled", {
 
