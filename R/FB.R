@@ -44,7 +44,7 @@ FB <- function(Y, km = NULL, A = NULL, control = default_Rcgmin()){
   sminfo <- cppadest(tapes$smotape, rep(0.1, sum(is.na(intheta))), Y,
                control = control)
   theta <- intheta
-  theta[is.na(intheta)] <- sminfo$par
+  theta[is.na(intheta)] <- sminfo$est
   thetamat <- FB_theta2mats(theta)
   SE <- intheta * 0
   SE[is.na(intheta)] <- sminfo$SE
