@@ -24,9 +24,8 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
                    method = "closed",
                    trans = "sqrt", divweight = "minsq",
                    bdrythreshold = 1E-15, shiftsize = 1E-10,
-                   paramvec = ppi_paramvec(beta = beta0),
-                   control = list(maxit = 100000, tol = 1E-20))
-  expect_equal(est_cppad$est$paramvec, estimator$est$paramvec, tolerance = 1E-3)
+                   paramvec = ppi_paramvec(beta = beta0))
+  expect_equal(est_cppad$est$paramvec, estimator$est$paramvec, ignore_attr = TRUE)
 
   #estimate of W matrix
   W_est=estimator$info$W
@@ -52,23 +51,16 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
 })
 
 
-test_that("alr and cppad estimator for this data set are consistent", {
+test_that("alr and cppad closed estimator for this data set are consistent", {
   #check alr estimators too
-  est_alr <- ppi(Y = propreal, method = "hardcoded",
+  est_hardcoded <- ppi(Y = propreal, method = "hardcoded",
                  trans = "alr", 
                  paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))
 
-  skip("next calculation, the cppad estimate, takes hours")
-  stop("The number iterations required has not been checked - has taken multiple hours without finishing")
-  system.time({est_alr_cppad <- ppi(Y = propreal, method = "closed",
+  est_closed <- ppi(Y = propreal, method = "closed",
                  trans = "alr", 
-                 bdrythreshold = 1E-15, shiftsize = 1E-15,
-                 approxorder = 10,
-                 control = list(maxit = 1E15, tol = 1E-20 * nrow(propreal)),
-                 paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))})
-  expect_equal(est_alr$est$paramvec, est_alr_cppad$est$paramvec, tolerance = 1E-2)
-
-
+                 paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))
+  expect_equal(est_hardcoded$est$paramvec, est_closed$est$paramvec)
 })
 
 #### Test omitting b_L ####

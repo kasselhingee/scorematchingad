@@ -13,7 +13,7 @@ test_that("w = rep(1, nrow(Y)) is near the result as if w omitted", {
   out_constant <- cppadest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12), w = rep(1, nrow(m$sample)))
   out_ommit <- cppadest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12))
 
-  expect_equal(out_ommit$par, out_constant$par)
+  expect_equal(out_ommit$est, out_constant$est)
   expect_equal(out_ommit$value, out_constant$value)
 })
 
@@ -182,7 +182,7 @@ test_that("cppadest() for ppi with minsq match itself and estimatorall1", {
   expect_lt(out_dir$value,
             smobj(tapes$smotape, hardcodedestimate$estimator1, m$sample, w = vw$w) + 1E-5 * abs(out_dir$value))
 
-  expect_lt_v(abs(out_dir$par - hardcodedestimate$estimator1) / out_dir$SE, 1E-3) #proxy for optimisation flatness
-  expect_lt_v(abs(out_dir$par - m$theta) / out_dir$SE, 3)
+  expect_lt_v(abs(out_dir$est - hardcodedestimate$estimator1) / out_dir$SE, 1E-3) #proxy for optimisation flatness
+  expect_lt_v(abs(out_dir$est - m$theta) / out_dir$SE, 3)
 })
 
