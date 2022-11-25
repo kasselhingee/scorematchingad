@@ -24,16 +24,16 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
                         weightname = "minsq",
                         acut = acut)
   smo_sim <- smobj(tapes$smotape, m$theta, vw$newY)
-  smo_direct <- smobj(tapes$smotape, m$theta, m$sample, w=vw$w)
-  expect_equal(smo_sim, smo_direct)
+  smo_hardcoded <- smobj(tapes$smotape, m$theta, m$sample, w=vw$w)
+  expect_equal(smo_sim, smo_hardcoded)
 
   smograd_sim <- smobjgrad(tapes$smotape, m$theta, vw$newY)
-  smograd_direct <- smobjgrad(tapes$smotape, m$theta, m$sample, w=vw$w)
-  expect_equal(smograd_sim, smograd_direct)
+  smograd_hardcoded <- smobjgrad(tapes$smotape, m$theta, m$sample, w=vw$w)
+  expect_equal(smograd_sim, smograd_hardcoded)
 
   smohess_sim <- smobjhess(tapes$smotape, m$theta, vw$newY)
-  smohess_direct <- smobjhess(tapes$smotape, m$theta, m$sample, w=vw$w)
-  expect_equal(smohess_sim, smohess_direct)
+  smohess_hardcoded <- smobjhess(tapes$smotape, m$theta, m$sample, w=vw$w)
+  expect_equal(smohess_sim, smohess_hardcoded)
 })
 
 test_that("tape_eval_wsum() matches for simulated weights and constant weights", {
@@ -44,12 +44,12 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights",
                         acut = acut)
   smo_u <- swapDynamic(tapes$smotape, attr(tapes$smotape, "dyntape"), attr(tapes$smotape, "xtape"))
   smo_sim <- tape_eval_wsum(smo_u, vw$newY, m$theta)
-  smo_direct <- tape_eval_wsum(smo_u, m$sample, m$theta, w=vw$w)
-  expect_equal(smo_sim, smo_direct)
+  smo_hardcoded <- tape_eval_wsum(smo_u, m$sample, m$theta, w=vw$w)
+  expect_equal(smo_sim, smo_hardcoded)
 
   # compare results to old smobj  
   expect_equal(smobj(smofun = tapes$smotape, theta = m$theta, utabl = vw$newY), smo_sim / nrow(vw$newY))
-  expect_equal(smobj(smofun = tapes$smotape, theta = m$theta, utabl = m$sample, w=vw$w), smo_direct/sum(vw$w))
+  expect_equal(smobj(smofun = tapes$smotape, theta = m$theta, utabl = m$sample, w=vw$w), smo_hardcoded/sum(vw$w))
 
   # compare results to manual calculation
   smo_sim_manual <- sum(vapply(1:nrow(vw$newY), function(i){pForward0(tapes$smotape, m$theta, vw$newY[i, ])}, FUN.VALUE = 1.3))
@@ -81,8 +81,8 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights w
   simYcentres <- Yapproxcentres
 
   smo_sim <- tape_eval_wsum(smo_u, vw$newY, pmat = m$theta, xcentres = simYcentres)
-  smo_direct <- tape_eval_wsum(smo_u, m$sample, pmat = m$theta, xcentres = origYcentres, w=vw$w)
-  expect_equal(smo_sim, smo_direct)
+  smo_hardcoded <- tape_eval_wsum(smo_u, m$sample, pmat = m$theta, xcentres = origYcentres, w=vw$w)
+  expect_equal(smo_sim, smo_hardcoded)
 })
 
 test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constant weights with boundary data", {
@@ -111,7 +111,7 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
                    approxorder = 10,
                    w = nds$winterior,
                    wboundary = nds$wboundary)
-  smo_direct <- smobj(tapes$smotape, 
+  smo_hardcoded <- smobj(tapes$smotape, 
                    theta = m$theta, 
                    utabl = ds$interior, 
                    smofun_u = smofun_u,
@@ -120,7 +120,7 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
                    approxorder = 10,
                    w = ds$winterior,
                    wboundary = ds$wboundary)
-  expect_equal(smo_sim, smo_direct)
+  expect_equal(smo_sim, smo_hardcoded)
 
   smograd_sim <- smobjgrad(tapes$smotape, 
                    theta = m$theta, 
@@ -131,7 +131,7 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
                    approxorder = 10,
                    w = nds$winterior,
                    wboundary = nds$wboundary)
-  smograd_direct <- smobjgrad(tapes$smotape, 
+  smograd_hardcoded <- smobjgrad(tapes$smotape, 
                    theta = m$theta, 
                    utabl = ds$interior, 
                    Jsmofun_u = Jsmofun_u,
@@ -140,7 +140,7 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
                    approxorder = 10,
                    w = ds$winterior,
                    wboundary = ds$wboundary)
-  expect_equal(smograd_sim, smograd_direct)
+  expect_equal(smograd_sim, smograd_hardcoded)
 
   smohess_sim <- smobjhess(tapes$smotape, 
                    theta = m$theta, 
@@ -151,7 +151,7 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
                    approxorder = 10,
                    w = nds$winterior,
                    wboundary = nds$wboundary)
-  smohess_direct <- smobjhess(tapes$smotape, 
+  smohess_hardcoded <- smobjhess(tapes$smotape, 
                    theta = m$theta, 
                    utabl = ds$interior, 
                    Hsmofun_u = Hsmofun_u,
@@ -160,7 +160,7 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
                    approxorder = 10,
                    w = ds$winterior,
                    wboundary = ds$wboundary)
-  expect_equal(smohess_sim, smohess_direct)
+  expect_equal(smohess_sim, smohess_hardcoded)
 })
 
 
@@ -177,12 +177,12 @@ test_that("cppadest() for ppi with minsq match itself and estimatorall1", {
      out_dir[!(names(out_sim) %in% c("counts", "SE"))],
      tolerance = 1E-3)
 
-  directestimate <- estimatorall1(m$sample, acut, w = vw$w)
+  hardcodedestimate <- estimatorall1(m$sample, acut, w = vw$w)
 
   expect_lt(out_dir$value,
-            smobj(tapes$smotape, directestimate$estimator1, m$sample, w = vw$w) + 1E-5 * abs(out_dir$value))
+            smobj(tapes$smotape, hardcodedestimate$estimator1, m$sample, w = vw$w) + 1E-5 * abs(out_dir$value))
 
-  expect_lt_v(abs(out_dir$par - directestimate$estimator1) / out_dir$SE, 1E-3) #proxy for optimisation flatness
+  expect_lt_v(abs(out_dir$par - hardcodedestimate$estimator1) / out_dir$SE, 1E-3) #proxy for optimisation flatness
   expect_lt_v(abs(out_dir$par - m$theta) / out_dir$SE, 3)
 })
 

@@ -59,9 +59,9 @@
 #' model <- ppi_egmodel(1000)
 #' estalr <- ppi(model$sample,
 #'               paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)),
-#'               trans = "alr", method = "hardcoded")
+#'               trans = "alr", method = "closed")
 #' estsqrt <- ppi(model$sample,
-#'               trans = "sqrt", method = "direct", divweight = "minsq")
+#'               trans = "sqrt", method = "closed", divweight = "minsq")
 #' @export
 ppi <- function(Y, paramvec = NULL,
                 pow = 1, trans, method = "closed", w = rep(1, nrow(Y)),

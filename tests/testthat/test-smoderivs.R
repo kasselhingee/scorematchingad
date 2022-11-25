@@ -12,18 +12,18 @@ test_that("Gradient of smo for ppi wrt u is CLOSE TO CORRECT for interior points
   testtheta <- toPPIparamvec(m$ALs + 1, m$bL + 1, m$beta0 + 1)
 
   # double check that smo values are equal
-  directsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
+  hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
   cppadsmoval <- pForward0(smoppi_u, m$sample[1, ], testtheta)
-  stopifnot(abs(directsmoval -cppadsmoval) < 1E-10)
+  stopifnot(abs(hardcodedsmoval -cppadsmoval) < 1E-10)
 
   # test gradients wrt u
   gradu_cppad <- pJacobian(smoppi_u, m$sample[1, ], testtheta)
   u <- m$sample[1, , drop = FALSE]
-  gradu_direct <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("u"))
+  gradu_hardcoded <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("u"))
   gradu_cppad_numerical1 <- numericDeriv(quote(pForward0(smoppi, testtheta, u)), c("u"))
   gradu_cppad_numerical2 <- numericDeriv(quote(pForward0(smoppi_u, u, testtheta)), c("u"))
-  expect_equal(gradu_cppad, attr(gradu_direct,"gradient"), tolerance = 1E-2, ignore_attr = TRUE)
-  expect_equal(attr(gradu_cppad_numerical1, "gradient"), attr(gradu_direct,"gradient"),
+  expect_equal(gradu_cppad, attr(gradu_hardcoded,"gradient"), tolerance = 1E-2, ignore_attr = TRUE)
+  expect_equal(attr(gradu_cppad_numerical1, "gradient"), attr(gradu_hardcoded,"gradient"),
                tolerance = 1E-2, ignore_attr = TRUE)
   expect_equal(attr(gradu_cppad_numerical1, "gradient"), gradu_cppad, tolerance = 1E-5, ignore_attr = TRUE)
 })
@@ -41,15 +41,15 @@ test_that("Gradient of smo for ppi wrt theta is correct for interior points", {
   testtheta <- toPPIparamvec(m$ALs + 1, m$bL + 1, m$beta0 + 1)
 
   # double check that smo values are equal
-  directsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
+  hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
   cppadsmoval <- pForward0(smoppi, testtheta, m$sample[1, ])
-  stopifnot(abs(directsmoval -cppadsmoval) < 1E-10)
+  stopifnot(abs(hardcodedsmoval -cppadsmoval) < 1E-10)
 
   # test gradients wrt theta
   gradt_cppad <- pJacobian(smoppi, testtheta, m$sample[1, ])
   u <- m$sample[1, , drop = FALSE]
-  gradt_direct <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("testcanntheta"))
-  gradt_components <- fromPPIparamvec(attr(gradt_direct, "gradient"), m$p)
+  gradt_hardcoded <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("testcanntheta"))
+  gradt_components <- fromPPIparamvec(attr(gradt_hardcoded, "gradient"), m$p)
   gradt_components$beta <- gradt_components$beta * 2 #to account for cannonical exponential form
   gradt_cppad_numerical <- numericDeriv(quote(pForward0(smoppi, testtheta, u)), c("testtheta"))
   expect_equal(gradt_cppad, do.call(toPPIparamvec, gradt_components), tolerance = 1E-5)
@@ -73,15 +73,15 @@ test_that("Gradient of smo approxcentre for ppi wrt theta is correct", {
   testtheta <- toPPIparamvec(m$ALs + 1, m$bL + 1, m$beta0 + 1)
 
   # double check that smo values are equal
-  directsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
+  hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
   cppadsmoval <- pTaylorApprox(smoppi_u, m$sample[1,], acentres[1,], testtheta, 100)
-  stopifnot(abs(directsmoval -cppadsmoval) < 1E-10)
+  stopifnot(abs(hardcodedsmoval -cppadsmoval) < 1E-10)
 
   # test gradients wrt theta
   gradt_cppad <- pJacobian(smoppi, testtheta, m$sample[1, ])
   u <- m$sample[1, , drop = FALSE]
-  gradt_direct <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("testcanntheta"))
-  gradt_components <- fromPPIparamvec(attr(gradt_direct, "gradient"), m$p)
+  gradt_hardcoded <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("testcanntheta"))
+  gradt_components <- fromPPIparamvec(attr(gradt_hardcoded, "gradient"), m$p)
   gradt_components$beta <- gradt_components$beta * 2 #to account for cannonical exponential form
   gradt_cppad_numerical_approx <- numericDeriv(quote(pTaylorApprox(smoppi_u, m$sample[1,], acentres[1,], testtheta, 100)),
                                                c("testtheta"))
@@ -94,20 +94,20 @@ test_that("Gradient of smo approxcentre for ppi wrt theta is correct", {
                tolerance = 1E-5, ignore_attr = TRUE)
 
   # check that Hessian is close too (and hopefully close to zero)
-  hesst_direct <- numDeriv::hessian(function(ctheta) {estimatorall1_smo(ctheta, u, acut)},
+  hesst_hardcoded <- numDeriv::hessian(function(ctheta) {estimatorall1_smo(ctheta, u, acut)},
                                     testcanntheta)
-  expect_equal(pHessian(smoppi, testtheta, acentres[1, ]), hesst_direct,
+  expect_equal(pHessian(smoppi, testtheta, acentres[1, ]), hesst_hardcoded,
                ignore_attr = TRUE, tolerance = 1E-1)
 
   # Hessian matches at acentre:
-  hesst_direct_acentre <- numDeriv::hessian(function(ctheta) {estimatorall1_smo(ctheta, acentres[1, , drop = FALSE], acut)},
+  hesst_hardcoded_acentre <- numDeriv::hessian(function(ctheta) {estimatorall1_smo(ctheta, acentres[1, , drop = FALSE], acut)},
                                     testcanntheta)
   # convert to usual beta
   betaindx <- (length(m$theta) - m$p + 1):length(m$theta)
-  hesst_direct_acentre[betaindx, ] <- hesst_direct_acentre[betaindx, ] * 2
-  hesst_direct_acentre[, betaindx] <- hesst_direct_acentre[, betaindx] * 2
+  hesst_hardcoded_acentre[betaindx, ] <- hesst_hardcoded_acentre[betaindx, ] * 2
+  hesst_hardcoded_acentre[, betaindx] <- hesst_hardcoded_acentre[, betaindx] * 2
 
-  expect_equal(pHessian(smoppi, testtheta, acentres[1, ]), hesst_direct_acentre,
+  expect_equal(pHessian(smoppi, testtheta, acentres[1, ]), hesst_hardcoded_acentre,
                ignore_attr = TRUE, tolerance = 1E-5)
 })
 
@@ -127,30 +127,30 @@ test_that("Gradient of smo approxcentre for ppi wrt u is close", {
   testtheta <- toPPIparamvec(m$ALs + 1, m$bL + 1, m$beta0 + 1)
 
   # double check that smo values are equal
-  directsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
+  hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
   cppadsmoval <- pTaylorApprox(smoppi_u, m$sample[1,], acentres[1,], testtheta, 100)
-  stopifnot(abs(directsmoval -cppadsmoval) < 1E-10)
+  stopifnot(abs(hardcodedsmoval -cppadsmoval) < 1E-10)
 
   # test gradients wrt u
   gradu_cppad <- pJacobian(smoppi_u, m$sample[1, ], testtheta)
   u <- m$sample[1, , drop = FALSE]
-  gradu_direct <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("u"))
+  gradu_hardcoded <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("u"))
 
   # check that gradient at boundary is close to the gradient at the approximation centre
-  expect_equal(pJacobian(smoppi_u, acentres[1, ], testtheta), attr(gradu_direct, "gradient"),
+  expect_equal(pJacobian(smoppi_u, acentres[1, ], testtheta), attr(gradu_hardcoded, "gradient"),
                tolerance = 1E-1, ignore_attr = TRUE)
 
 
   # check that gradient matches at approximation centre
   u <- acentres[1, , drop = FALSE]
-  gradu_direct_acentre <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("u"))
-  expect_equal(pJacobian(smoppi_u, acentres[1, ], testtheta), attr(gradu_direct_acentre, "gradient"),
+  gradu_hardcoded_acentre <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("u"))
+  expect_equal(pJacobian(smoppi_u, acentres[1, ], testtheta), attr(gradu_hardcoded_acentre, "gradient"),
                tolerance = 1E-3, ignore_attr = TRUE)
 
   # check that Hessian matches at approximation centre
-  hessu_direct_acentre <- numDeriv::hessian(function(u) estimatorall1_smo(testcanntheta, u, acut),
+  hessu_hardcoded_acentre <- numDeriv::hessian(function(u) estimatorall1_smo(testcanntheta, u, acut),
                                             acentres[1, , drop = FALSE])
-  expect_equal(pJacobian(smoppi_u, acentres[1, ], testtheta), attr(gradu_direct_acentre, "gradient"),
+  expect_equal(pJacobian(smoppi_u, acentres[1, ], testtheta), attr(gradu_hardcoded_acentre, "gradient"),
                tolerance = 1E-3, ignore_attr = TRUE)
 })
 

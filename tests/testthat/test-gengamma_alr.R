@@ -4,9 +4,9 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 3", {
 
   est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", divweight = "ones",
                          control = list(tol = 1E-10))
-  est_direct <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct")
+  est_hardcoded <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "hardcoded")
 
-  expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec)
+  expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec)
 })
 
 test_that("Direct estimate has low smgrad values", {
@@ -22,10 +22,10 @@ test_that("Direct estimate has low smgrad values", {
   usertheta = ppi_paramvec(p = ncol(dsample),
                            bL = 0,
                            betap = tail(theta, 1))
-  est_direct <- ppi(dsample, paramvec = usertheta, trans = "alr", method = "direct")
+  est_hardcoded <- ppi(dsample, paramvec = usertheta, trans = "alr", method = "hardcoded")
 
-  directvals <- ppi_cppad_values(dsample,
-         stheta = est_direct$est$paramvec,
+  hardcodedvals <- ppi_cppad_values(dsample,
+         stheta = est_hardcoded$est$paramvec,
          isfixed = t_u2i(usertheta),
          man = "Ralr",
          hsqfun = "ones", 
@@ -37,10 +37,10 @@ test_that("Direct estimate has low smgrad values", {
          hsqfun = "ones", 
          acut = 1)
 
-  expect_lt(directvals$obj, modelvals$obj) #because for any given sample the estimate would be better than the true value
+  expect_lt(hardcodedvals$obj, modelvals$obj) #because for any given sample the estimate would be better than the true value
 
-  expect_lt_v(abs(directvals$grad), abs(modelvals$grad)) #because the estimate will be better for any given sample
-  expect_lt_v(abs(directvals$grad), rep(1E-10, length(directvals$grad)))
+  expect_lt_v(abs(hardcodedvals$grad), abs(modelvals$grad)) #because the estimate will be better for any given sample
+  expect_lt_v(abs(hardcodedvals$grad), rep(1E-10, length(hardcodedvals$grad)))
 })
 
 test_that("ppi_alr_gengamma matches CppAD method for constant weight and data with zeros, p = 3", {
@@ -49,12 +49,12 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight and data wi
   dsample <- round(m$sample * 100)/100
   dsample[, 3] <- 1 - rowSums(dsample[, 1:2])
 
-  est_direct <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct")
+  est_hardcoded <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "hardcoded")
   est_cppad <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", divweight = "ones",
                          bdrythreshold = 1E-200,
                          control = list(tol = 1E-20))
 
-  expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec)
+  expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec)
 })
 
 test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 5", {
@@ -76,7 +76,7 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 5", {
   #expect that the SE are small relative to size of the coefficients
   expect_lt(median(abs(est_cppad$SE$paramvec/est_cppad$est$paramvec), na.rm = TRUE), 0.3)
 
-  est_direct <- ppi_alr_gengamma(prop, betap = beta[p], w = rep(1, nrow(prop)))
+  est_hardcoded <- ppi_alr_gengamma(prop, betap = beta[p], w = rep(1, nrow(prop)))
 
   # Get SE of this estimate using CppAD
   thetain <- ppi_paramvec(p, bL = bL, betap = beta[p])
@@ -84,19 +84,19 @@ test_that("ppi_alr_gengamma matches CppAD method for constant weight, p = 5", {
                         rep(1/p, p), thetain,
                         weightname = "ones",
                         acut = 1, verbose = FALSE)
-  est_direct_SE <- cppadSE(tapes$smotape, est_direct$est$paramvec[is.na(thetain)], prop)
-  expect_absdiff_lte_v(est_direct$est$paramvec[is.na(thetain)], toPPIparamvec(ALs, bL, beta)[is.na(thetain)],
-                       3 * est_direct_SE)
+  est_hardcoded_SE <- cppadSE(tapes$smotape, est_hardcoded$est$paramvec[is.na(thetain)], prop)
+  expect_absdiff_lte_v(est_hardcoded$est$paramvec[is.na(thetain)], toPPIparamvec(ALs, bL, beta)[is.na(thetain)],
+                       3 * est_hardcoded_SE)
 
-  # check that direct estimates are good according to smval and smvalgrad
-  expect_lt(sum(smobjgrad(tapes$smotape, est_direct$est$paramvec[is.na(thetain)], prop)^2), 1E-20)
-  expect_lt(smobj(tapes$smotape, est_direct$est$paramvec[is.na(thetain)], prop), est_cppad$info$smval)
+  # check that hardcoded estimates are good according to smval and smvalgrad
+  expect_lt(sum(smobjgrad(tapes$smotape, est_hardcoded$est$paramvec[is.na(thetain)], prop)^2), 1E-20)
+  expect_lt(smobj(tapes$smotape, est_hardcoded$est$paramvec[is.na(thetain)], prop), est_cppad$info$smval)
 
-  # check that estimates via cppad are close to direct
-  expect_absdiff_lte_v(est_direct$est$paramvec[is.na(thetain)], est_cppad$est$paramvec[is.na(thetain)],
-                       1.2 * est_direct_SE) #the smovals are quite flat in the ALs dimensions for this region!
+  # check that estimates via cppad are close to hardcoded
+  expect_absdiff_lte_v(est_hardcoded$est$paramvec[is.na(thetain)], est_cppad$est$paramvec[is.na(thetain)],
+                       1.2 * est_hardcoded_SE) #the smovals are quite flat in the ALs dimensions for this region!
   # and that the beta estimates are really close to each other
-  expect_equal(fromPPIparamvec(est_direct$est$paramvec)$beta, est_cppad$est$beta, tolerance = 1E-3)
+  expect_equal(fromPPIparamvec(est_hardcoded$est$paramvec)$beta, est_cppad$est$beta, tolerance = 1E-3)
 })
 
 
@@ -110,8 +110,8 @@ test_that("ppi_alr_gengamma matches for simulated weights", {
   newsample <- m$sample[ind, ]
 
   est_sim <- ppi_alr_gengamma(newsample, betap = m$beta0[3], w = rep(1, nrow(newsample)))
-  est_direct <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], w = weights)
-  expect_equal(est_direct$est$paramvec, est_sim$est$paramvec)
+  est_hardcoded <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], w = weights)
+  expect_equal(est_hardcoded$est$paramvec, est_sim$est$paramvec)
 })
 
 test_that("ppi_alr_gengamma() and cppad match for a randomly selected weight vector", {
@@ -123,9 +123,9 @@ test_that("ppi_alr_gengamma() and cppad match for a randomly selected weight vec
   est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "cppad", divweight = "ones",
                          w = w,
                          control = list(tol = 1E-10))
-  est_direct <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "direct", w = w)
+  est_hardcoded <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "hardcoded", w = w)
 
-  expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec)
+  expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec)
 })
 
 

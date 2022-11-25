@@ -54,7 +54,7 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
 
 test_that("alr and cppad estimator for this data set are consistent", {
   #check alr estimators too
-  est_alr <- ppi(Y = propreal, method = "direct",
+  est_alr <- ppi(Y = propreal, method = "hardcoded",
                  trans = "alr", 
                  paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))
 

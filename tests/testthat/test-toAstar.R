@@ -26,7 +26,7 @@ test_that("toAstar() works on an example matrix", {
 
   # check conversion
   samp <- c(0.007, 0.05, 1 - 0.007 - 0.05)
-  direct <- t(samp[-p]) %*% ALs %*% samp[-p] + t(bL) %*% samp[-p]
-  # expect_equal(direct, t(samp) %*% Astar %*% samp)
+  hardcoded <- t(samp[-p]) %*% ALs %*% samp[-p] + t(bL) %*% samp[-p]
+  # expect_equal(hardcoded, t(samp) %*% Astar %*% samp)
 })
 

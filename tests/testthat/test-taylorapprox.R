@@ -108,15 +108,15 @@ test_that("Taylor Approx of Grad SMO gets correct value on boundary of simplex",
   testtheta <- toPPIparamvec(m$ALs + 1, m$bL + 1, m$beta0 + 1)
   approxgrad <- pTaylorApprox(Jsmoppi_u, m$sample[1, ], acentres[1, ], testtheta, 10)
   u <- m$sample[1, , drop = FALSE]
-  gradt_direct <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("testcanntheta"))
-  gradt_components <- fromPPIparamvec(attr(gradt_direct, "gradient"), m$p)
+  gradt_hardcoded <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("testcanntheta"))
+  gradt_components <- fromPPIparamvec(attr(gradt_hardcoded, "gradient"), m$p)
   gradt_components$beta <- gradt_components$beta * 2 #to account for cannonical exponential form
   expect_equal(approxgrad, do.call(toPPIparamvec, gradt_components),
                tolerance = 1E-5, ignore_attr = TRUE)
 })
 
 
-test_that("Test ppi() against direct when there are boundary points, with and without weights", {
+test_that("Test ppi() against hardcoded when there are boundary points, with and without weights", {
   set.seed(123)
   m <- ppi_egmodel(100)
   #add some zeroes
@@ -131,19 +131,19 @@ test_that("Test ppi() against direct when there are boundary points, with and wi
   mean(apply(newsample, 1, min) == 0) #28% have a zero
 
   acut = 0.1
-  direct <- ppi(newsample, 
+  hardcoded <- ppi(newsample, 
                 paramvec = ppi_paramvec(p = ncol(newsample), betap = tail(m$beta0, 1)),
                 trans = "sqrt", divweight = "minsq", 
                 acut = acut)
 
   est <- ppi(newsample, ppi_paramvec(p = 3, betap = m$beta0[3]), trans = "sqrt", divweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
-  expect_equal(est$est$paramvec, direct$est$paramvec, tolerance = 1E-4)
+  expect_equal(est$est$paramvec, hardcoded$est$paramvec, tolerance = 1E-4)
 
   # with weights!!
   w <- runif(nrow(newsample))
 
-  direct <- ppi(newsample, 
+  hardcoded <- ppi(newsample, 
                 paramvec = ppi_paramvec(p = ncol(newsample), betap = tail(m$beta0, 1)),
                 trans = "sqrt", divweight = "minsq", 
                 acut = acut,
@@ -152,7 +152,7 @@ test_that("Test ppi() against direct when there are boundary points, with and wi
   est <- ppi(newsample, ppi_paramvec(p = 3, betap = m$beta0[3]), trans = "sqrt", divweight = "minsq", acut = acut, method = "cppad",
                    w = w,
                    control = list(tol = 1E-10))
-  expect_equal(est$est$paramvec, direct$est$paramvec, tolerance = 1E-4)
+  expect_equal(est$est$paramvec, hardcoded$est$paramvec, tolerance = 1E-4)
 
 })
 
@@ -182,7 +182,7 @@ test_that("Taylor approx of ppi() SE matches on the interior", {
   m <- ppi_egmodel(100)
 
   acut = 0.1
-  direct <- estimatorall1(m$sample, acut = acut, betap = m$beta0[3])
+  hardcoded <- estimatorall1(m$sample, acut = acut, betap = m$beta0[3])
 
   est_default <- ppi(m$sample, ppi_paramvec(p=3, betap = m$beta0[3]), trans = "sqrt", divweight = "minsq", acut = acut, method = "cppad",
                    control = list(tol = 1E-10))
@@ -210,11 +210,11 @@ test_that("ppi() operates when minimal points in the interior", {
   newsample <- rbind(newsample, m$sample[1:3, , drop = FALSE])
 
   acut = 0.1
-  direct <- estimator1(newsample, acut = acut, incb = 1, beta = m$beta0)
+  hardcoded <- estimator1(newsample, acut = acut, incb = 1, beta = m$beta0)
 
   est <- ppi(newsample, ppi_paramvec(betaL = m$beta0[1:2], betap = m$beta0[3]), trans = "sqrt", divweight = "minsq", acut = acut, method = "cppad",
                             control = list(tol = 1E-10))
-  expect_absdiff_lte_v(est$est$paramvec, direct$est$paramvec, 1E-1 * abs(direct$est$paramvec))
+  expect_absdiff_lte_v(est$est$paramvec, hardcoded$est$paramvec, 1E-1 * abs(hardcoded$est$paramvec))
 })
 
 test_that("Taylor approx of matches estimator1SE with data on the boundary", {
@@ -232,8 +232,8 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
   mean(apply(newsample, 1, min) == 0) #28% have a zero
 
   acut = 0.1
-  direct <- estimator1(newsample, acut = acut, incb = 1, beta = m$beta0, computeSE = TRUE)
-  directSE <- direct$SE$paramvec
+  hardcoded <- estimator1(newsample, acut = acut, incb = 1, beta = m$beta0, computeSE = TRUE)
+  hardcodedSE <- hardcoded$SE$paramvec
 
   intheta <- ppi_paramvec(3, betaL = m$beta0[1:2], betap = m$beta0[3])
 
@@ -258,10 +258,10 @@ test_that("Taylor approx of matches estimator1SE with data on the boundary", {
 
   #comparisons isolated from the Rcgmin optimiser
   SE <- cppadSE(
-    smotape, theta = direct$est$paramvec[1:(length(intheta) - m$p)], datasplit$interior,
+    smotape, theta = hardcoded$est$paramvec[1:(length(intheta) - m$p)], datasplit$interior,
     Jsmofun_u = Jsmofun_u,
     Hsmofun_u = Hsmofun_u,
     uboundary = datasplit$uboundary, boundaryapprox = datasplit$boundaryapprox,
     approxorder = 100)
-  expect_equal(SE, directSE[1:(length(intheta) - m$p)], tolerance = 1E-2)
+  expect_equal(SE, hardcodedSE[1:(length(intheta) - m$p)], tolerance = 1E-2)
 })

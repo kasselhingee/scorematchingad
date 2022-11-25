@@ -11,9 +11,9 @@ test_that("ppi iterative solve match estimator1 minsq with fixed beta for ppi_eg
             bdrythreshold = 0,
             trans = "sqrt", divweight = "minsq", acut = acut)
 
-  directestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta0)
+  hardcodedestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta0)
   
-  expect_absdiff_lte_v(out$est$paramvec, directestimate$est$paramvec, 0.0001 * out$SE$paramvec) #proxy for optimisation flatness
+  expect_absdiff_lte_v(out$est$paramvec, hardcodedestimate$est$paramvec, 0.0001 * out$SE$paramvec) #proxy for optimisation flatness
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 2 * out$SE$paramvec)
 })
 
@@ -42,8 +42,8 @@ test_that("Simulated weights for ppi with minsq match itself and estimatorall1",
      out_dir[!(names(out_sim) %in% c("info", "SE"))],
      tolerance = 1E-2)
 
-  directestimate <- estimatorall1(m$sample, acut = 0.01, w = vw$w)
-  expect_equal(directestimate$estimator1, out_sim$est$paramvec, tolerance = 1E-2, ignore_attr = TRUE)
+  hardcodedestimate <- estimatorall1(m$sample, acut = 0.01, w = vw$w)
+  expect_equal(hardcodedestimate$estimator1, out_sim$est$paramvec, tolerance = 1E-2, ignore_attr = TRUE)
 })
 
 test_that("Iterative solver works on microbiome data without outliers", {
@@ -66,7 +66,7 @@ test_that("Iterative solver works on microbiome data with outliers, alr", {
   list2env(ppi_microbiomedata_TCAP(), globalenv())
   
   #hardcoded estimate:
-  est_direct=ppi(Y = propreal,
+  est_hardcoded=ppi(Y = propreal,
          method = "hardcoded", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0))
 
@@ -78,5 +78,5 @@ system.time({est_cppad=ppi(Y = propreal,
 # the defaults for Rcgmin are meaning the estimate takes too long to converge!
 # from the default starting parameter vec it takes many more iterations than normal to get to converge to the correct result. In this case of default tolerance, then 43961 evaluations of the gradient.
 # With current tolerance of 1E-20*n, then 4559 seconds (1.3 hours), 81479 grad evaluations.
-expect_equal(est_direct$est$paramvec, est_cppad$est$paramvec, tolerance = 1E-3)
+expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec, tolerance = 1E-3)
 })
