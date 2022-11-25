@@ -1,0 +1,56 @@
+# Functions to make unit tests with microbiome data easier
+
+ppi_microbiomedata_prep1 <- function(){
+  data("microdata", package = "scorecompdir")
+  microdata <- microdata[!microdata$IndividualID %in% c(2079, 2280), ] #remove two outlying measurements
+  countdata=as.matrix(microdata[,12:31])
+
+  #sample size
+  n=92
+
+  #dimension
+  p=20
+
+  #calculate totals
+  tot=matrix(0,n,1)
+  for (j in 1:p)
+  {
+   tot=tot+countdata[,j]
+  }
+  tot=as.vector(tot)
+
+  #proportion data
+  prop=countdata
+  for (j in 1:n)
+  {
+    	prop[j,]=countdata[j,]/tot[j]
+  }
+
+  ####Reduce dimensions to p=5####
+
+
+  #calculate 5D dataset
+  comb=matrix(0,n,5)
+  comb[,1]=prop[,"TM7"]
+  comb[,2]=prop[,"Cyanobacteria/Chloroplast"]
+  comb[,3]=prop[,"Actinobacteria"]
+  comb[,4]=prop[,"Proteobacteria"]
+  comb[,5]=abs(1-comb[,1]-comb[,2]-comb[,4]-comb[,3])
+  propreal=comb
+
+  #dimension
+  p=5
+
+  #set beta (this is fixed here)
+  beta0=matrix(0,p,1)
+  beta0[1]=-0.8
+  beta0[2]=-0.85
+  beta0[3]=0
+  beta0[4]=-0.2
+  beta0[5]=0
+  return(list(
+    propreal = propreal,
+    beta0 = beta0,
+    p = p
+  ))
+}
