@@ -56,33 +56,22 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
                            rep(0.1, p), rep(0.1, p) * NA,
                            weightname = "minsq", acut = acut)
   ppitapes <- buildsmotape("sphere", "ppi",
-                           rep(0.1, p), theta * NA,
+                           rep(0.1, p), ppi_paramvec(AL = 0, bL=0, p = p),
                            weightname = "minsq", acut = acut)
 
   # it looks like the taped function above is not altering bL or beta
   # potentially the ordering of the theta values is wrong??
-  out <- cppadest(ppitapes$smotape, theta * 0 + 1, utabl, list(tol = 1E-10))
-  stopifnot(out$convergence == 0)
+  out <- cppad_closed(ppitapes$smotape, Y = utabl)
 
-  cppadest <- fromPPIparamvec(out$par, p)
-
-  expect_equal(pForward0(dirtapes$lltape, utabl[2, ], beta), pForward0(ppitapes$lltape, utabl[2, ], theta))
-  expect_equal(pJacobian(dirtapes$lltape, utabl[2, ], beta), pJacobian(ppitapes$lltape, utabl[2, ], theta))
-  expect_equal(pForward0(dirtapes$smotape, beta, utabl[2, ]), pForward0(ppitapes$smotape, theta, utabl[2, ]))
+  expect_equal(pForward0(dirtapes$lltape, utabl[2, ], beta), pForward0(ppitapes$lltape, utabl[2, ], beta))
+  expect_equal(pJacobian(dirtapes$lltape, utabl[2, ], beta), pJacobian(ppitapes$lltape, utabl[2, ], beta))
+  expect_equal(pForward0(dirtapes$smotape, beta, utabl[2, ]), pForward0(ppitapes$smotape, beta, utabl[2, ]))
 
   hardcodedestimate <- dir_sqrt_minimah(utabl, acut)
 
-  # there is a difference in hardcoded estimates because the hardcoded estimate smobj value is poorer:
-  expect_lt(out$value,
-             smobj(ppitapes$smotape, c(rep(0, length(theta) - p), hardcodedestimate), utabl) + 1E-3 * abs(out$value)) #larger tolerance some apriori information used
-  expect_lt(out$sqgradsize,
-               sum(smobjgrad(ppitapes$smotape, c(rep(0, length(theta) - p), hardcodedestimate), utabl)^2))
+  expect_equal(out$est, hardcodedestimate, ignore_attr = TRUE)
 
-  cppadSE <- fromPPIparamvec(out$SE, p)
-  expect_absdiff_lte_v(cppadest$beta[1:3], hardcodedestimate[1:3], cppadSE$beta[1:3])
-  expect_lt(abs(cppadest$beta - hardcodedestimate)[4] / cppadSE$beta[4], 3) #largest beta is hard to estimate well
-
-  expect_lt_v(abs(out$par - theta) / out$SE, 3)#assuming normally distributed with SE given by SE above
+  expect_lt_v(abs(out$est - beta) / out$SE, 3)#assuming normally distributed with SE given by SE above
 })
 
 test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmodel", {
@@ -97,16 +86,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
 
   hardcodedestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta0)
 
-  ppitapes <- buildsmotape("sphere", "ppi",
-                           rep(0.1, model$p), ppi_paramvec(model$p, beta = model$beta0),
-                           weightname = "minsq", acut = acut)
-
-  expect_equal(out$info$smval,
-               smobj(ppitapes$smotape, hardcodedestimate$est$paramvec[1:(length(model$theta)-3)], model$sample)) #failing now?
-  expect_equal(out$info$sqgradsize,
-               sum(smobjgrad(ppitapes$smotape, hardcodedestimate$est$paramvec[1:(length(model$theta)-3)], model$sample)^2))
-
-  expect_absdiff_lte_v(out$est$paramvec, hardcodedestimate$est$paramvec, 0.01 * out$SE$paramvec) #proxy for optimisation flatness
+  expect_equal(out$est$paramvec, hardcodedestimate$est$paramvec)
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 2 * out$SE$paramvec)
 })
 
@@ -120,18 +100,9 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmo
                    trans = "sqrt", divweight = "prodsq", acut = acut, 
                    control = list(tol = 1E-12))
 
-  ppitapes <- buildsmotape("sphere", "ppi",
-                           rep(0.1, model$p), ppi_paramvec(model$p, betaL = model$beta0[1:2], betap = model$beta0[3]),
-                           weightname = "prodsq", acut = acut)
-
   hardcodedestimate <- estimator2(model$sample, acut, incb = TRUE, beta0 = model$beta0)
 
-  expect_equal(out$info$smval,
-               smobj(ppitapes$smotape, hardcodedestimate$estimator2, model$sample))
-  expect_equal(out$info$sqgradsize,
-               sum(smobjgrad(ppitapes$smotape, hardcodedestimate$estimator2, model$sample)^2))
-
-  expect_absdiff_lte_v(out$est$paramvec, c(hardcodedestimate$estimator2, model$beta0), 0.01 * out$SE$paramvec) #proxy for optimisation flatness
+  expect_equal(out$est$paramvec, c(hardcodedestimate$estimator2, model$beta0)) 
 
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
@@ -159,19 +130,9 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
                    trans = "sqrt", divweight = "minsq", acut = acut,
                    control = list(tol = 1E-10))
 
-  ppitapes <- buildsmotape("sphere", "ppi",
-                           rep(0.1, p), ppi_paramvec(p),
-                           weightname = "minsq", acut = acut)
-
   hardcodedestimate <- estimatorall1(utabl, acut)
 
-  expect_equal(out$info$smval,
-               smobj(ppitapes$smotape, hardcodedestimate$estimator1, utabl),
-               tolerance = 1E-2)
-  expect_equal(out$info$sqgradsize,
-               sum(smobjgrad(ppitapes$smotape, hardcodedestimate$estimator1, utabl)^2))
-
-  expect_absdiff_lte_v(out$est$paramvec, hardcodedestimate$estimator1, out$SE$paramvec) #proxy for optimisation flatness
+  expect_equal(out$est$paramvec, hardcodedestimate$estimator1, ignore_attr = TRUE)
 
   expect_absdiff_lte_v(out$est$paramvec, theta, 3 * out$SE$paramvec)
 })
@@ -179,24 +140,16 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
 test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel", {
   set.seed(111)
   model <- ppi_egmodel(100, maxden = 4)
-
   acut = 0.1
-
-  psphere <- pmanifold("sphere")
-  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(model$theta)), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, model$p), 1:length(model$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
-
-  out <- cppadest(smoppi, model$theta * 0 + 1, model$sample, control = list(tol = 1E-12))
+  ppiest <- ppi(Y = model$sample, method = "closed",
+                trans = "sqrt", divweight = "minsq", acut = acut)
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   hardcodedestimate <- estimatorall1(model$sample, acut)
 
-  expect_lt(out$value,
-            smobj(smoppi, hardcodedestimate$estimator1, model$sample) + 1E-5 * abs(out$value))
+  expect_equal(ppiest$est$paramvec, hardcodedestimate$estimator1, ignore_attr = TRUE)
 
-  expect_lt_v(abs(out$par - hardcodedestimate$estimator1) / out$SE, 1) #proxy for optimisation flatness
-
-  expect_lt_v(abs(out$par - model$theta) / out$SE, 3)
+  expect_absdiff_lte_v(ppiest$est$paramvec, model$theta, 3 * ppiest$SE$paramvec)
 })
 
 test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed final beta", {
@@ -204,45 +157,33 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
   model <- ppi_egmodel(100, maxden = 4)
 
   acut = 0.1
-  psphere <- pmanifold("sphere")
-  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
-
-  out <- cppadest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
-               control = list(tol = 1E-10))
+  out <- ppi(Y = model$sample,
+             paramvec = ppi_paramvec(betap = tail(model$beta, 1), p = model$p),
+             trans = "sqrt", divweight = "minsq", acut = acut)
 
   # memoisation could be used to avoid calling the smobj function again for gradient computation
   hardcodedestimate <- estimatorall1(model$sample, acut, betap = model$beta0[model$p])
 
-  expect_lte(out$value,
-             smobj(smoppi, hardcodedestimate$estimator1, model$sample) + 1E-3 * abs(out$value))
+  expect_equal(out$est$paramvec, t_fu2t(hardcodedestimate$estimator1, ppi_paramvec(betap = tail(model$beta, 1), p = model$p)), ignore_attr = TRUE)
 
-  expect_lt_v(abs(out$par - hardcodedestimate$estimator1) / out$SE, 0.01) #proxy for optimisation flatness
-
-  expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
+  expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
 
 test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed final beta, large n", {
+  skip_on_cran()
   set.seed(123)
   model <- ppi_egmodel(100000, maxden = 4)
 
   acut = 0.1
-  psphere <- pmanifold("sphere")
-  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psphere, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  out <- ppi(Y = model$sample, method = "closed",
+             paramvec = ppi_paramvec(betap = tail(model$beta, 1), p = model$p),
+             trans = "sqrt", divweight = "minsq", acut = acut)
 
-  out <- cppadest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
-               control = list(tol = 1E-10, trace = 0)) #very slow at 10000
-
-  # memoisation could be used to avoid calling the smobj function again for gradient computation
   hardcodedestimate <- estimatorall1(model$sample, acut, betap = model$beta0[model$p])
 
-  expect_lte(out$value,
-             smobj(smoppi, hardcodedestimate$estimator1, model$sample) + 1E-3 * abs(out$value))
+  expect_equal(out$est$paramvec, t_fu2t(hardcodedestimate$estimator1, ppi_paramvec(betap = tail(model$beta, 1), p = model$p)) )
 
-  expect_lt_v(abs(out$par - hardcodedestimate$estimator1) / out$SE, 0.01) #proxy for optimisation flatness
-
-  expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
+  expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
 
 test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
@@ -250,14 +191,11 @@ test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   model <- ppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
-  psimplex <- pmanifold("simplex")
-  pppi <- ptapell(rep(0.1, model$p), model$theta, llname = "ppi", psimplex, fixedtheta = c(rep(FALSE, length(model$theta) - 1), TRUE), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, model$p), 1:(length(model$theta) - 1), pll = pppi, pman = psimplex, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  out <- ppi(Y = model$sample,
+             paramvec = ppi_paramvec(p = model$p, betap = tail(model$beta, 1)),
+             trans = "none", divweight = "minsq", acut = acut)
 
-  out <- cppadest(smoppi, model$theta[-length(model$theta)] * 0, model$sample,
-               control = list(tol = 1E-12))
-
-  expect_lt_v(abs(out$par - model$theta[-length(model$theta)]) / out$SE, 3)
+  expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
 
 test_that("ppi via cppad matches Score1 for p=5, particularly the order of the off diagonals in ALs", {
@@ -275,7 +213,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
                    method = "closed",
                          trans = "sqrt", acut = acut, divweight = "minsq",
                          control = list(tol = 1E-13))
-  expect_equal(est_cppad$est$paramvec, est_hardcoded$est$paramvec, tolerance = 1E-1,
+  expect_equal(est_cppad$est$paramvec, est_hardcoded$est$paramvec,
                ignore_attr = TRUE)
 
   #also it makes sense that the smo and gradient are v low at the hardcoded estimate
@@ -283,7 +221,6 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
                            weightname = "minsq", acut = acut)
   expect_lt(sum(smobjgrad(ppitapes$smotape, fromsmatrix(est_hardcoded$est$ALs), prop)^2), 1E-20)
-  expect_equal(smobj(ppitapes$smotape, fromsmatrix(est_hardcoded$est$ALs), prop), est_cppad$info$smval, tolerance = 1E-1)
 
   # check that rearrangement has large gradient
   expect_gt(sum(smobjgrad(ppitapes$smotape, fromsmatrix(est_hardcoded$est$ALs)[c(1:6, 8, 7, 9, 10)], prop)^2), 1E-2)
