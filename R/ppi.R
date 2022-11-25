@@ -64,7 +64,7 @@
 #'               trans = "sqrt", method = "direct", divweight = "minsq")
 #' @export
 ppi <- function(Y, paramvec = NULL,
-                pow = 1, trans, method = "direct", w = rep(1, nrow(Y)),
+                pow = 1, trans, method = "closed", w = rep(1, nrow(Y)),
                 divweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin(), paramvec_start = NULL#specific to cppad methods
                 ){
