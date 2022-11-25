@@ -62,7 +62,7 @@ test_that("Iterative solver works on microbiome data without outliers", {
 })
 
 test_that("Iterative solver works on microbiome data with outliers, alr", {
-  #skip("next calculation, the cppad estimate, takes hours")
+  skip("next calculation, the cppad estimate, takes hours")
   list2env(ppi_microbiomedata_TCAP(), globalenv())
   
   #hardcoded estimate:
@@ -70,13 +70,14 @@ test_that("Iterative solver works on microbiome data with outliers, alr", {
          method = "hardcoded", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0))
 
-system.time({est_cppad=ppi(Y = propreal,
+system.time({est_iterative=ppi(Y = propreal,
          method = "closed", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
          bdrythreshold = 1E-20, shiftsize = 1E-20,
          control = list(maxit = 1E5, tol = 1E-20 * 100))})
 # the defaults for Rcgmin are meaning the estimate takes too long to converge!
-# from the default starting parameter vec it takes many more iterations than normal to get to converge to the correct result. In this case of default tolerance, then 43961 evaluations of the gradient.
-# With current tolerance of 1E-20*n, then 4559 seconds (1.3 hours), 81479 grad evaluations.
-expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec, tolerance = 1E-3)
+# from the default starting parameter vec it takes many more iterations than normal to get to converge to the correct result.
+# With current tolerance of 1E-20*100, it took 4864 seconds (1.3+ hours) and 800000 grad evaluations, and still hadn't reached the tolerance.
+# however it close enough to to the hardcoded estimate
+expect_equal(est_hardcoded$est$paramvec, est_iterative$est$paramvec, tolerance = 1E-3)
 })
