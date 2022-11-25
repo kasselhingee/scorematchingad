@@ -9,21 +9,21 @@ test_that("WindamRobust() via ppi_robust() gives correct params on simulated dat
   m$sample <- rbind(m$sample, outlier1, outlier2)
 
   #check non-robust estimates, excluding the outliers
-  est_simple <- ppi(m$sample[1:1000, ], acut=0.1, method = "hardcoded", trans = "sqrt", divweight = "minsq")
+  est_simple <- ppi(m$sample[1:1000, ], acut=0.1, method = "closed", trans = "sqrt", divweight = "minsq")
   #get non-robust estimates with the outliers
-  est_simple_outlier <- ppi(m$sample, acut=0.1, method = "hardcoded", trans = "sqrt", divweight = "minsq")
+  est_simple_outlier <- ppi(m$sample, acut=0.1, method = "closed", trans = "sqrt", divweight = "minsq")
 
   #calculate robust estimates
   est <- ppi_robust(Y = m$sample, 
            cW = 0.1 * ppi_paramvec(m$p, AL = TRUE, bL = FALSE, beta = FALSE),
-           acut=0.1, method = "hardcoded", trans = "sqrt", divweight = "minsq")
+           acut=0.1, method = "closed", trans = "sqrt", divweight = "minsq")
 
   # variable c, expect estimates to be different
   cW <- ppi_paramvec(m$p, AL = matrix(c(0.1, 1E-3, 1E-3, 0.1), nrow = 2, ncol = 2),
                                  bL = 0, beta = 0)
   est_varcW <-  ppi_robust(Y = m$sample, 
            cW = cW,
-           acut=0.1, method = "hardcoded", trans = "sqrt", divweight = "minsq")
+           acut=0.1, method = "closed", trans = "sqrt", divweight = "minsq")
 
 
   expect_equal(est$est$paramvec, est_simple$est$paramvec, tolerance = 0.1, ignore_attr = TRUE)
@@ -52,7 +52,7 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   #calculate robust estimates
   cW=0.001
   est1 = ppi_robust(Y = prop, paramvec = ppi_paramvec(p=3, bL = 0, betap = 0),
-             method = "hardcoded", trans = "alr",
+             method = "closed", trans = "alr",
              cW = ppi_cW_auto(cW, prop))
   expect_equal(est1$est$ALs, ALs, tolerance = 1)
   expect_equal(est1$est$beta, beta, tolerance = 1E-1)
@@ -76,7 +76,7 @@ test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5
 
   #calculate robust estimates
   cW=0.1
-  est1=ppi_robust(Y = prop, paramvec = ppi_paramvec(bL = 0, betap = tail(beta, 1), p=5), cW = ppi_cW(cW, 1, 1, 1, 0, 0), trans = "alr", method = "hardcoded")
+  est1=ppi_robust(Y = prop, paramvec = ppi_paramvec(bL = 0, betap = tail(beta, 1), p=5), cW = ppi_cW(cW, 1, 1, 1, 0, 0), trans = "alr", method = "closed")
   expect_equal(est1$est$ALs, ALs, tolerance = 1E0)
   expect_equal(est1$est$beta, beta, tolerance = 1E-1)
 })
