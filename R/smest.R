@@ -98,7 +98,6 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
   # evaluating above functions at the start point
   stopifnot(is.finite(smoobj(theta)))
   stopifnot(all(is.finite(smograd(theta))))
-
   # now do the search 
   out <- Rcgmin::Rcgmin(par = theta,
                         fn = smoobj,
@@ -116,11 +115,14 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
   # return results as if averages, not sums were used
   out$value <- out$value / sum(w)
 
-  out$SE <- try({
-    sqrt(diag(sme_estvar(smotape, estimate = out$par, Y = Y, Yapproxcentres = Yapproxcentres, approxorder = approxorder)))
-  })
+  out$SE <- "Not calculated."
+  if (isTRUE(all(w[[1]] == w))){
+    out$SE <- sqrt(diag(sme_estvar(smotape, estimate = out$par, Y = Y, Yapproxcentres = Yapproxcentres, approxorder = approxorder)))
+  }
   gradatest <- smograd(out$par) / sum(w)
   out$sqgradsize <- sum(gradatest^2)
+  out$est <- out$par
+  out$par <- NULL
   return(out)
 }
 

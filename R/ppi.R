@@ -189,8 +189,9 @@ ppi <- function(Y, paramvec = NULL,
     Yapproxcentres[!isbdry, ] <- NA
     Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = shiftsize)
 
+    firstfit <- list()
     if (method == "iterative"){ 
-      optimum <- cppad_search(smotape = smotape,
+      rawout <- cppad_search(smotape = smotape,
                    theta = t_si2f(stheta, isfixed),
                    Y = Y,
                    Yapproxcentres = Yapproxcentres,
@@ -198,42 +199,30 @@ ppi <- function(Y, paramvec = NULL,
                    approxorder = approxorder,
                    control = control)
   
-      #process the theta and SE
-      thetaest <- t_sfi2u(optimum$par, stheta, isfixed)
-      SE <- t_sfi2u(optimum$SE, rep(0, length(stheta)), isfixed)
-                   
-      #refactor results to fit with ppi() standard output
-      firstfit <- list()
-      firstfit$est <- c(list(paramvec = thetaest),
-                        fromPPIparamvec(thetaest))
-      firstfit$SE <- c(list(paramvec = SE),
-                        fromPPIparamvec(SE))
-      firstfit$info <- optimum
-      firstfit$info$boundarypoints <- sum(isbdry)
-      firstfit$info$smval <- optimum$value
+      firstfit$info$smval <- rawout$value
       fitfun <- "iterative"
     }
     if (method == "closed"){
-      est <- cppad_closed(smotape = smotape,
+      rawout <- cppad_closed(smotape = smotape,
                    Y = Y,
                    Yapproxcentres = Yapproxcentres,
                    w = w,
                    approxorder = approxorder)
-
-      #process the theta and SE
-      thetaest <- t_sfi2u(est$est, stheta, isfixed)
-      SE <- t_sfi2u(est$SE, rep(0, length(stheta)), isfixed)
-                 
-      #refactor results to fit with ppi() standard output
-      firstfit <- list()
-      firstfit$est <- c(list(paramvec = thetaest),
-                        fromPPIparamvec(thetaest))
-      firstfit$SE <- c(list(paramvec = SE),
-                        fromPPIparamvec(SE))
-      firstfit$info <- est
-      firstfit$info$boundarypoints <- sum(isbdry)
       fitfun <- "closed"
     }
+    #process the theta and SE
+    thetaest <- t_sfi2u(rawout$est, stheta, isfixed)
+                   
+    #refactor results to fit with ppi() standard output
+    firstfit$est <- c(list(paramvec = thetaest),
+                      fromPPIparamvec(thetaest))
+    if (isa(rawout$SE, "numeric")){
+      SE <- t_sfi2u(rawout$SE, rep(0, length(stheta)), isfixed)
+      firstfit$SE <- c(list(paramvec = SE),
+                      fromPPIparamvec(SE))
+    } else {firstfit$SE <- rawout$SE}
+    firstfit$info <- rawout 
+    firstfit$info$boundarypoints <- sum(isbdry)
   }
 
   firstfit$info$method <- fitfun
