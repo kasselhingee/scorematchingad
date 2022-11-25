@@ -73,7 +73,7 @@ test_that("Robustness runs for hardcoded and cppad methods", {
 
   # cppad - the default takes a long time
   out <- ppi_robust(Y = m$sample,
-             acut=0.1, method = "cppad", trans = "sqrt", divweight = "minsq",
+             acut=0.1, method = "closed", trans = "sqrt", divweight = "minsq",
              control = list(tol = 1E-10, maxit = 100),
              fpcontrol = list(MaxIter = 100),
              cW = ppi_cW_auto(1E-2, m$sample))

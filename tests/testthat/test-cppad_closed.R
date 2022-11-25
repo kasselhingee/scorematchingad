@@ -19,7 +19,7 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
   totalgrad <- colSums(grads)
   expect_lt(sum(totalgrad^2), 1E-20)
 
-  numericalmin <- ppi(Y, paramvec = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)), trans = "alr", method = "cppad")
+  numericalmin <- ppi(Y, paramvec = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)), trans = "alr", method = "closed")
   expect_equal(numericalmin$est$paramvec, c(estobj$est, tail(mod$beta, 1)), ignore_attr = TRUE)
   expect_equal(numericalmin$SE$paramvec, c(estobj$SE, 0))
 })

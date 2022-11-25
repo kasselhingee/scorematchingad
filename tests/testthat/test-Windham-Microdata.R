@@ -19,7 +19,7 @@ expect_lt_v(hardcodedvals$grad, rep(1E-15, length(hardcodedvals$grad)))
 
 skip("next calculation, the cppad estimate, takes hours")
 system.time({est_cppad=ppi(Y = propreal,
-         method = "cppad", trans = "alr",
+         method = "closed", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
          bdrythreshold = 1E-20, shiftsize = 1E-20,
          control = list(maxit = 1E5, tol = 1E-20 * n))})

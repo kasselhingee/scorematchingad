@@ -60,7 +60,7 @@ test_that("alr and cppad estimator for this data set are consistent", {
 
   skip("next calculation, the cppad estimate, takes hours")
   stop("The number iterations required has not been checked - has taken multiple hours without finishing")
-  system.time({est_alr_cppad <- ppi(Y = propreal, method = "cppad",
+  system.time({est_alr_cppad <- ppi(Y = propreal, method = "closed",
                  trans = "alr", 
                  bdrythreshold = 1E-15, shiftsize = 1E-15,
                  approxorder = 10,

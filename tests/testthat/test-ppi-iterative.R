@@ -71,7 +71,7 @@ test_that("Iterative solver works on microbiome data with outliers, alr", {
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0))
 
 system.time({est_cppad=ppi(Y = propreal,
-         method = "cppad", trans = "alr",
+         method = "closed", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
          bdrythreshold = 1E-20, shiftsize = 1E-20,
          control = list(maxit = 1E5, tol = 1E-20 * 100))})
