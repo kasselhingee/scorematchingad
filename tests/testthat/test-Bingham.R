@@ -41,7 +41,7 @@ test_that("Bingham_full() optimiser works", {
   set.seed(123)
   sample <- rBingham(100, A)
   est <- Bingham_full(sample, control = list(tol = 1E-15))
-  expect_lt_v(abs(est$sminfo$par - theta), 3 * est$sminfo$SE)
+  expect_lt_v(abs(est$sminfo$est - theta), 3 * est$sminfo$SE)
   expect_lt(est$sminfo$sqgradsize, 1E-10)
 })
 
@@ -87,7 +87,7 @@ test_that("Bingham() works with highly skewed trace", {
   sample <- rBingham(1000, A)
 
   est <- Bingham(sample, method = "smfull", control = list(tol = 1E-15))
-  expect_lt_v(abs(est$sminfo$par - theta), 3 * est$sminfo$SE)
+  expect_lt_v(abs(est$sminfo$est - theta), 3 * est$sminfo$SE)
   expect_lt(est$sminfo$sqgradsize, 1E-10)
 
   estM <- Bingham(sample, method = "Mardia")

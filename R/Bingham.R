@@ -72,7 +72,7 @@ Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){
                            weightname = "ones")
   out <- cppadest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample, control = control)
   theta <- intheta
-  theta[is.na(intheta)] <- out$par
+  theta[is.na(intheta)] <- out$est
   tSE <- intheta * 0
   tSE[is.na(intheta)] <- out$SE
   A = Bingham_theta2Amat(theta)
@@ -106,7 +106,7 @@ Bingham_Mardia <- function(sample,  control = default_Rcgmin()){
 
   sm <- cppadest(tapes$smotape, seq(length.out = sum(is.na(intheta))), samplestd, control = control)
   theta <- intheta
-  theta[is.na(intheta)] <- sm$par
+  theta[is.na(intheta)] <- sm$est
   Astd <- Bingham_theta2Amat(theta)
   Lambda <- diag(Astd)
 
