@@ -44,7 +44,7 @@ cppadest <- function(smofun, theta, utabl, control = default_Rcgmin(), uboundary
 }
 
 # same parameters as cppad_closed
-#' @title Score Matching Estimator for Using Conjugate-Gradient Descent
+#' @title Iterative Score Matching Estimator Using Conjugate-Gradient Descent
 #' @description 
 #' Returns the vector when the gradient of the score matching objective is within tolerance of zero.
 #' Also estimates standard errors and covariance.

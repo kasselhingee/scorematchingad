@@ -5,13 +5,25 @@ set.seed(134)
 vw <- virtualweights(m$sample)
 acut = 0.1
 
-test_that("w = rep(1, nrow(Y)) is near the result as if w omitted", {
-  psphere <- pmanifold("sphere")
-  pppi <- ptapell(rep(0.1, m$p), m$theta, llname = "ppi", psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smoppi <- ptapesmo(rep(0.1, m$p), 1:length(m$theta), pll = pppi, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+test_that("cppad_closed() w = rep(1, nrow(Y)) is near the result as if w omitted", {
+  tapes <- buildsmotape("sphere", "ppi",
+                        utape = rep(1/p, m$p),
+                        usertheta = rep(NA, length(m$theta)),
+                        weightname = "minsq", acut = acut)
+  out_constant <- cppad_closed(tapes$smotape, m$sample, w = rep(1, nrow(m$sample)))
+  out_ommit <- cppad_closed(tapes$smotape, m$sample)
 
-  out_constant <- cppadest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12), w = rep(1, nrow(m$sample)))
-  out_ommit <- cppadest(smoppi, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12))
+  expect_equal(out_ommit$est, out_constant$est)
+  expect_equal(out_ommit$value, out_constant$value)
+})
+
+test_that("cppad_search() w = rep(1, nrow(Y)) is near the result as if w omitted", {
+  tapes <- buildsmotape("sphere", "ppi",
+                        utape = rep(1/p, m$p),
+                        usertheta = rep(NA, length(m$theta)),
+                        weightname = "minsq", acut = acut)
+  out_constant <- cppad_search(tapes$smotape, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12), w = rep(1, nrow(m$sample)))
+  out_ommit <- cppad_search(tapes$smotape, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12))
 
   expect_equal(out_ommit$est, out_constant$est)
   expect_equal(out_ommit$value, out_constant$value)
@@ -164,7 +176,7 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
 })
 
 
-test_that("cppadest() for ppi with minsq match itself and estimatorall1", {
+test_that("cppad_search() for ppi with minsq match itself and estimatorall1", {
   tapes <- buildsmotape("sphere", "ppi",
                utape = rep(1/m$p, m$p),
                usertheta = ppi_paramvec(m$p),

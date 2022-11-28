@@ -32,26 +32,6 @@ test_that("vMF objective, grad, hess calculations are repeatable", {
   expect_lt_v(apply(hesss, MARGIN = c(1,2), function(x){sum(range(x) * c(1, -1))}), rep(1E-10, p^2))
 })
 
-test_that("vMF cppadest is repeatable for fixed tape", {
-  set.seed(123)
-  p <- 3
-  k <- 3
-  m <- runif(p, min = -10, 10)
-  m <- m / sqrt(sum(m^2))
-  theta <- k*m
-  set.seed(12432)
-  sample <- movMF::rmovMF(1000, theta)
-  thetatape <- c(1, -1, 1)
-
-  p <- length(theta)
-  tapes <- buildsmotape("Snative", "vMF",
-                        rep(1, p)/sqrt(p), rep(NA, p),
-                        weightname = "ones",
-                        verbose = FALSE)
-  kests <- replicate(100, sqrt(sum(cppadest(tapes$smotape, thetatape, sample)$par^2)))
-  expect_lt(sum(range(kests) * c(1, -1)), 1E-10)
-})
-
 test_that("vMF different tape objects have same estimates", {
   set.seed(123)
   p <- 3
@@ -60,19 +40,22 @@ test_that("vMF different tape objects have same estimates", {
   m <- m / sqrt(sum(m^2))
   theta <- k*m
   set.seed(12432)
-  sample <- movMF::rmovMF(1000, theta)
+  Y <- movMF::rmovMF(1000, theta)
   thetatape <- c(1, -1, 1)
   p <- length(theta)
 
-  tapenest <- function(){
+  set.seed(65465)
+  utapes <- movMF::rmovMF(100, 0*theta)
+
+  tapenest <- function(utape){
     tapes <- buildsmotape("Snative", "vMF",
-                          rep(1, p)/sqrt(p), rep(NA, p),
+                          utape, rep(NA, p),
                           weightname = "ones",
                           verbose = FALSE)
-    sqrt(sum(cppadest(tapes$smotape, thetatape, sample)$par^2))
+    sqrt(sum(cppad_closed(tapes$smotape, Y)$est^2))
   }
-  kests <- replicate(100, tapenest())
-  expect_lt(sum(range(kests) * c(1, -1)), 1E-10)
+  kests <- apply(utapes, MARGIN = 1, tapenest, simplify = TRUE)
+  expect_true(all(kests[[1]] == kests))
 })
 
 test_that("Estimating repeated vMF estimation for the same data gives identical results, even when Rcgmin iterations are low", {
