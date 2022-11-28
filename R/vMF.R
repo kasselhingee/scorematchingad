@@ -99,12 +99,15 @@ vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w 
   out <- cppadest(tapes$smotape, t_si2f(starttheta, isfixed), sample, control = control, w=w)
   theta <- t_sfi2u(out$est, starttheta, isfixed)
 
-  SE <- t_sfi2u(out$SE, rep(0, length(starttheta)), isfixed)
+  if (isa(out$SE, "numeric")){
+    SE <- t_sfi2u(out$SE, rep(0, length(starttheta)), isfixed)
+    SE <- list(paramvec = SE)
+  } else {SE <- out$SE}
   return(list(
     est = list(paramvec = theta,
                k = sqrt(sum(theta^2)),
                m = theta / sqrt(sum(theta^2))),
-    SE = list(paramvec = SE),
+    SE = SE,
     info = out
   ))
 }
