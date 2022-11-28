@@ -92,11 +92,12 @@ vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w 
   stopifnot(length(starttheta) == p)
   stopifnot(length(starttheta) == length(isfixed))
 
-  tapes <- buildsmotape_internal("Snative", "vMF",
-                        rep(1, p)/sqrt(p), starttheta, isfixed,
+  tapes <- buildsmotape("Snative", "vMF",
+                        rep(1, p)/sqrt(p), 
+                        usertheta = t_si2u(starttheta, isfixed),
                         weightname = "ones",
                         verbose = FALSE)
-  out <- cppadest(tapes$smotape, t_si2f(starttheta, isfixed), sample, control = control, w=w)
+  out <- cppad_closed(tapes$smotape, Y = sample, w=w)
   theta <- t_sfi2u(out$est, starttheta, isfixed)
 
   if (isa(out$SE, "numeric")){
