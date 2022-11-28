@@ -104,7 +104,7 @@ Bingham_Mardia <- function(sample,  control = default_Rcgmin()){
                         rep(1, p) / sqrt(p), intheta,
                         weightname = "ones")
 
-  sm <- cppadest(tapes$smotape, seq(length.out = sum(is.na(intheta))), samplestd, control = control)
+  sm <- cppad_closed(tapes$smotape, Y = samplestd)
   theta <- intheta
   theta[is.na(intheta)] <- sm$est
   Astd <- Bingham_theta2Amat(theta)
