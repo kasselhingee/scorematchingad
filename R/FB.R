@@ -41,8 +41,7 @@ FB <- function(Y, km = NULL, A = NULL, control = default_Rcgmin()){
                weightname = "ones",
                verbose = FALSE)
 
-  sminfo <- cppadest(tapes$smotape, rep(0.1, sum(is.na(intheta))), Y,
-               control = control)
+  sminfo <- cppad_closed(tapes$smotape, Y)
   theta <- intheta
   theta[is.na(intheta)] <- sminfo$est
   thetamat <- FB_theta2mats(theta)

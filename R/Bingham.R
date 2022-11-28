@@ -70,7 +70,7 @@ Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){
   tapes <- buildsmotape("Snative", "Bingham",
                            utape, intheta,
                            weightname = "ones")
-  out <- cppadest(tapes$smotape, rep(0.1, sum(is.na(intheta))), sample, control = control)
+  out <- cppad_closed(tapes$smotape, Y = sample)
   theta <- intheta
   theta[is.na(intheta)] <- out$est
   tSE <- intheta * 0
