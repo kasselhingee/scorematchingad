@@ -97,7 +97,7 @@ vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w 
                         weightname = "ones",
                         verbose = FALSE)
   out <- cppadest(tapes$smotape, t_si2f(starttheta, isfixed), sample, control = control, w=w)
-  theta <- t_sfi2u(out$par, starttheta, isfixed)
+  theta <- t_sfi2u(out$est, starttheta, isfixed)
 
   SE <- t_sfi2u(out$SE, rep(0, length(starttheta)), isfixed)
   return(list(

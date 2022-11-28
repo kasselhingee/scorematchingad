@@ -11,8 +11,8 @@ test_that("von-Mises Fisher likelihood runs and fits", {
                         weightname = "ones",
                         verbose = FALSE)
   expect_equal(pForward0(tapes$lltape, sample[1, ], theta), sum(sample[1, ]  * theta)) ## very important to check a tape
-  out <- cppadest(tapes$smotape, thetatape, sample, control = list(tol = 1E-10))
-  expect_lt_v(abs(out$par - theta), 3 * out$SE)
+  out <- cppad_closed(tapes$smotape, Y = sample)
+  expect_absdiff_lte_v(out$est, theta, 3 * out$SE)
 })
 
 test_that("vMF_Mardia() function works for data centred off the north pole", {
