@@ -166,7 +166,7 @@ test_that("robust vMF() with concentration outliers: ok with full robust, better
 })
 
 
-test_that("controls of FixedPoint() and Rcgmin() are correctly passed", {
+test_that("controls of FixedPoint() are passed", {
   set.seed(123)
   p <- 3
   k <- 3
@@ -179,22 +179,9 @@ test_that("controls of FixedPoint() and Rcgmin() are correctly passed", {
   out_default <- vMF_robust(Y, cW = rep(0.1, ncol(Y)), method = "Mardia") #use this packages defaults this is pretty fussy!
 
   suppressWarnings(out1 <- vMF_robust(Y, cW = rep(0.1, ncol(Y)), method = "Mardia",
-             fpcontrol = list(MaxIter = 2), #Fixed point iterations of only 2
-             control = list(maxit = 1)))  #Rcgmin iterations of only 1 - warnings of non-convergence
+             fpcontrol = list(MaxIter = 2))) #Fixed point iterations of only 2
   expect_equal(out1$info$fpevals, 2)
   expect_error(expect_equal(out_default, out1))
-
-  # expect a different result when Rcgmin package defaults used
-  out2 <- vMF_robust(Y, cW = 0.1, method = "Mardia",
-           fpcontrol = list(MaxIter = 2))
-  expect_error(expect_equal(out1$est$paramvec, out2$est$paramvec))
-  expect_error(expect_equal(out_default$est$paramvec, out2$est$paramvec))
-
-  # expect a different result when FixedPoint() package defaults used
-  suppressWarnings(out3 <- vMF_robust(Y, cW = 0.1, method = "Mardia",
-              control = list(maxit = 1)))
-  expect_error(expect_equal(out1, out3))
-  expect_error(expect_equal(out_default, out3))
 })
 
 
