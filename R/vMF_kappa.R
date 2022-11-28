@@ -31,7 +31,7 @@ vMF_kappa <- function(Y, w = rep(1, nrow(Y)), paramvec_start = 10, control = def
                                    weightname = "ones",
                                    verbose = FALSE)
     sminfo <- cppadest(tapes$smotape, paramvec_start, Y, control = control, w = w)
-    k <- sminfo$par
+    k <- sminfo$est
     SE <- sminfo$SE
   return(list(
     k = k,
