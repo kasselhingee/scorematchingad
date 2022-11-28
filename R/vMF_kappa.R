@@ -24,13 +24,10 @@ vMF_kappa <- function(Y, w = rep(1, nrow(Y)), paramvec_start = 10, control = def
   # do estimate, where all but the first component of theta are fixed at zero
   # because kappa * e1 = (kappa, 0, 0, 0, ...)
     p <- ncol(Y)
-    tapes <- buildsmotape_internal("Snative", "vMF",
-                                   rep(1, p)/sqrt(p),
-                                   starttheta = c(paramvec_start, rep(0, p-1)),
-                                   isfixed = c(FALSE, rep(TRUE, p-1)),
-                                   weightname = "ones",
-                                   verbose = FALSE)
-    sminfo <- cppadest(tapes$smotape, paramvec_start, Y, control = control, w = w)
+    tapes <- buildsmotape("Snative", "vMF",
+                          utape = rep(1, p)/sqrt(p),
+                          usertheta = c(NA, rep(0, p-1)))
+    sminfo <- cppad_closed(tapes$smotape, Y, w = w)
     k <- sminfo$est
     SE <- sminfo$SE
   return(list(
