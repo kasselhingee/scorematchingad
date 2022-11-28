@@ -176,7 +176,7 @@ test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constan
 })
 
 
-test_that("cppad_search() for ppi with minsq match itself and estimatorall1", {
+test_that("cppad_search() for ppi with minsq matches itself and the closed estimate", {
   tapes <- buildsmotape("sphere", "ppi",
                utape = rep(1/m$p, m$p),
                usertheta = ppi_paramvec(m$p),
@@ -189,12 +189,11 @@ test_that("cppad_search() for ppi with minsq match itself and estimatorall1", {
      out_dir[!(names(out_sim) %in% c("counts", "SE"))],
      tolerance = 1E-3)
 
-  hardcodedestimate <- estimatorall1(m$sample, acut, w = vw$w)
+  out_closed <- cppad_closed(tapes$smotape, Y = m$sample, w = vw$w)
 
   expect_lt(out_dir$value,
-            smobj(tapes$smotape, hardcodedestimate$estimator1, m$sample, w = vw$w) + 1E-5 * abs(out_dir$value))
+            smobj(tapes$smotape, out_closed$est, m$sample, w = vw$w) + 1E-5 * abs(out_dir$value))
 
-  expect_lt_v(abs(out_dir$est - hardcodedestimate$estimator1) / out_dir$SE, 1E-3) #proxy for optimisation flatness
-  expect_lt_v(abs(out_dir$est - m$theta) / out_dir$SE, 3)
+  expect_equal(out_dir$est, out_closed$est, tolerance = 1E-4)
 })
 
