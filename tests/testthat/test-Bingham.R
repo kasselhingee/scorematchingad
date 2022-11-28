@@ -41,8 +41,7 @@ test_that("Bingham_full() optimiser works", {
   set.seed(123)
   sample <- rBingham(100, A)
   est <- Bingham_full(sample, control = list(tol = 1E-15))
-  expect_lt_v(abs(est$sminfo$est - theta), 3 * est$sminfo$SE)
-  expect_lt(est$sminfo$sqgradsize, 1E-10)
+  expect_absdiff_lte_v(est$sminfo$est, theta, 3 * est$sminfo$SE)
 })
 
 test_that("Bingham_Mardia() optimiser works", {
@@ -55,8 +54,7 @@ test_that("Bingham_Mardia() optimiser works", {
   sample <- rBingham(100, A)
   est <- Bingham_Mardia(sample)
   A_es <- eigen(A)
-  expect_lt_v(abs(est$Lambda - A_es$values)[-p], 3 * est$Lambda_SE[-p])
-  expect_lt(est$sminfo$sqgradsize, 1E-10)
+  expect_absdiff_lte_v(est$Lambda[-p], A_es$values[-p], 3 * est$Lambda_SE[-p])
 })
 
 test_that("Bingham() works", {
@@ -87,13 +85,11 @@ test_that("Bingham() works with highly skewed trace", {
   sample <- rBingham(1000, A)
 
   est <- Bingham(sample, method = "smfull", control = list(tol = 1E-15))
-  expect_lt_v(abs(est$sminfo$est - theta), 3 * est$sminfo$SE)
-  expect_lt(est$sminfo$sqgradsize, 1E-10)
+  expect_absdiff_lte_v(est$sminfo$est, theta, 3 * est$sminfo$SE)
 
   estM <- Bingham(sample, method = "Mardia")
   A_es <- eigen(A)
-  expect_lt_v(abs(estM$Lambda - A_es$values)[-p], 3 * estM$Lambda_SE[-p])
-  expect_lt(est$sminfo$sqgradsize, 1E-10)
+  expect_absdiff_lte_v(estM$Lambda[-p], A_es$values[-p], 3 * estM$Lambda_SE[-p])
 })
 
 test_that("Bingham_full() with various fixed elements works", {
