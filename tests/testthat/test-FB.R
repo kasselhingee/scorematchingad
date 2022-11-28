@@ -62,17 +62,15 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
   expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   # try out FB estimation
-  pman <- pmanifold("Snative")
   thetaFB <- FB_mats2theta(1E-10, c(1, 0, 0), A)
-  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(thetaFB)), llname = "FB", pman,
-                    fixedtheta = rep(FALSE, length(thetaFB)), verbose = FALSE)
-  smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(thetaFB)),
-                      lltape, pman, "ones", 1, verbose = FALSE)
-  est <- cppadest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
-               control = list(tol = 1E-10))
+  tapes <- buildsmotape("Snative",
+                        "FB",
+                        utape = sample[1, ],
+                        usertheta = rep(NA, length(thetaFB)))
+                        
+  est <- cppad_closed(tapes$smotape, Y=sample)
 
-  expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
-  # yay! it works, but oh man the estimates SEs are huge
+  expect_absdiff_lte_v(est$est, thetaFB, 3 * est$SE)
 })
 
 test_that("rfb() simulation for general symmetric matrices via Bingham() fitting", {
@@ -103,15 +101,14 @@ test_that("rfb() simulation for general symmetric matrices via Bingham() fitting
 
   # try out FB estimation
   thetaFB <- FB_mats2theta(1E-8, m, A)
-  pman <- pmanifold("Snative")
-  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(thetaFB)), llname = "FB", pman,
-                    fixedtheta = rep(FALSE, length(thetaFB)), verbose = FALSE)
-  smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(thetaFB)),
-                      lltape, pman, "ones", 1, verbose = FALSE)
-  est <- cppadest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
-               control = list(tol = 1E-10))
-  expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
-  # yay! it works, but oh man the estimates SEs are huge
+  tapes <- buildsmotape("Snative",
+                        "FB",
+                        utape = sample[1, ],
+                        usertheta = rep(NA, length(thetaFB)))
+                        
+  est <- cppad_closed(tapes$smotape, Y=sample)
+
+  expect_absdiff_lte_v(est$est, thetaFB, 3 * est$SE)
 })
 
 
@@ -129,22 +126,17 @@ test_that("rfb() simulation for general symmetric matrices fitting", {
   sample <- Directional::rfb(100000, thetamats$k, thetamats$m, -solve(B) %*% thetamats$A %*% B)
 
   #estimate
-  pman <- pmanifold("Snative")
-  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(theta)), llname = "FB", pman,
-                    fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
-  smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(theta)),
-                      lltape, pman, "ones", 1, verbose = FALSE)
-  est <- cppadest(smotape, seq.int(1, length.out = length(theta)), sample,
-               control = list(tol = 1E-10))
-  expect_lt_v(abs(est$par - theta), 3 * est$SE)
+  tapes <- buildsmotape("Snative",
+                        "FB",
+                        utape = sample[1, ],
+                        usertheta = rep(NA, length(theta)))
+                        
+  est <- cppad_closed(tapes$smotape, Y=sample)
+
+  expect_absdiff_lte_v(est$est, theta, 3 * est$SE)
   # whooo it is working! But sample huge and SEs are still huge - it is almost like the model is misspecified
   # lapply(FB_theta2mats(est$par), round, 2)
   # lapply(thetamats, round, 2)
-
-  expect_lt(est$value, smobj(smotape, theta, sample))
-  expect_lt(est$sqgradsize,
-            sum(smobjgrad(smotape, theta, sample)^2))
-  #smobjgrad(smotape, theta, sample) is strangely large for so many samples
 })
 
 
