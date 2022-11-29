@@ -43,10 +43,9 @@ cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y,
                                approxorder = approxorder)
 
   # weight parts
-  parts$offset <- parts$offset * w
-  parts$Hessian <- parts$Hessian * w
-  offset <- colSums(parts$offset)
-  Hess <- colSums(parts$Hessian)
+  partsT <- lapply(parts, wcolSums, w = w)
+  offset <- partsT$offset
+  Hess <- partsT$Hessian
   Hess <- matrix(Hess, ncol = sqrt(ncol(parts$Hessian)))
   invHess <- solve(Hess)
   root <- drop(-1 * invHess %*% offset)

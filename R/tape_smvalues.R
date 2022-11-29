@@ -37,3 +37,14 @@ tape_smvalues <- function(smotape, xmat, pmat, xcentres = NA * xmat, approxorder
 #'  + `grad` the gradient of the score matching objective
 #'  + `hess` the Hessian of the score matching objective
 
+#' @rdname tape_smvalues
+#' @param w Weights to apply to each row of `xmat` for computing the weighted sum. If `NULL` then each row is given a weight of `1`.
+tape_smvalues_wsum <- function(tape, xmat, pmat, w=NULL, xcentres = NA * xmat, approxorder = 10){
+  evals_l <- tape_smvalues(tape, xmat = xmat, pmat = pmat,
+                     xcentres = xcentres, approxorder = approxorder)
+  
+  # do weight checks afterwards so that eval results can be used to choose weights
+  out <- lapply(evals_l, wcolSums, w = w)
+  return(out)
+}
+

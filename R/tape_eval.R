@@ -48,13 +48,7 @@ tape_eval_wsum <- function(tape, xmat, pmat, w=NULL, xcentres = NA * xmat, appro
                      xcentres = xcentres, approxorder = approxorder)
   
   # do weight checks afterwards so that eval results can be used to choose weights
-  if (is.null(w)){
-    out <- colSums(evals)
-  } else {
-    stopifnot(length(w) == nrow(evals))
-    wevals <- evals*w
-    out <- colSums(wevals)
-  }
+  out <- wcolSums(evals, w)
   return(out)
 }
 
