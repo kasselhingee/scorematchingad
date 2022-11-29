@@ -6,7 +6,7 @@ test_that("Dirichlet with smo values and derivatives independent of tape", {
   fixedtheta = rep(FALSE, 3)
   acut = 0.1
 
-  psphere <- pmanifold("sphere")
+  psphere <- manifoldtransform("sphere")
 
   #Sphere
   pdir1 <- ptapell(u1, theta1, "dirichlet", psphere, fixedtheta = fixedtheta, verbose = FALSE)
@@ -41,7 +41,7 @@ test_that("Dirichlet with smo values and derivatives independent of tape", {
   expect_equal(pHessian(pdir1smo, thetaeval, ueval), pHessian(pdir2smo, thetaeval, ueval))
 
   #Simplex
-  psimplex <- pmanifold("simplex")
+  psimplex <- manifoldtransform("simplex")
   pdir1 <- ptapell(u1, theta1, "dirichlet", psimplex, fixedtheta = fixedtheta, verbose = FALSE)
   pdir2 <- ptapell(u2, theta2, "dirichlet", psimplex, fixedtheta = fixedtheta, verbose = FALSE)
   pdir1smo <- ptapesmo(u1, theta1, pdir1, psimplex, "minsq", acut = acut, verbose = FALSE)

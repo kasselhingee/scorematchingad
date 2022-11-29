@@ -1,7 +1,7 @@
 ## ppi() fitting tested with cppad_closed() tests
 
 test_that("testquadratictape passes on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
-  sqrtman <- pmanifold("sphere")
+  sqrtman <- manifoldtransform("sphere")
   ppitape <- tapell(llname = "ppi",
                     xtape = c(0.2, 0.3, 0.5),
                     usertheta = ppi_paramvec(p = 3), 
@@ -27,7 +27,7 @@ test_that("testquadratictape passes on PPI model with sqrt transformation, minsq
 
   # manual tests
 test_that("manual tests on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
-  sqrtman <- pmanifold("sphere")
+  sqrtman <- manifoldtransform("sphere")
   ppitape <- tapell(llname = "ppi",
                     xtape = c(0.2, 0.3, 0.5),
                     usertheta = ppi_paramvec(p = 3), 
@@ -62,7 +62,7 @@ test_that("manual tests on PPI model with sqrt transformation, minsq divergence 
 })
 
 test_that("ppi ll tape is fails the quadratic test", {
-  sqrtman <- pmanifold("sphere")
+  sqrtman <- manifoldtransform("sphere")
   ppitape <- tapell(llname = "ppi",
                     xtape = c(0.2, 0.3, 0.5),
                     usertheta = ppi_paramvec(p = 3), 

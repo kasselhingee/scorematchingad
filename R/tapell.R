@@ -1,5 +1,5 @@
 #' @title Tape a log-likelihood
-#' @param pmanifoldtransform An `Rcpp::XPtr` object pointing to a manifold and transformation to the manifold from the natural space of the log-likelihood. Generate `pmanifoldtransformation` with [`pmanifold()`].
+#' @param pmanifoldtransform An `Rcpp::XPtr` object pointing to a manifold and transformation to the manifold from the natural space of the log-likelihood. Generate `pmanifoldtransform` with [`manifoldtransform()`].
 #' @param llname The name of the log-likelihood function to tape
 #' @param xtape An example measurement value to use for creating the tape. In the natural manifold of the log-likelihood function. `xtape` will be converted to the manifold according to `manifoldname` before taping. 
 #' Please ensure that `xtape` is the interior of the manifold, and it is probably best if all components of `xtape` are non-zero when transformed form onto the manifold provided in `manifoldname`.
@@ -14,7 +14,7 @@
 #'  + `dyntape` The value of non-fixed elements of `usertheta` used for taping.
 #'  + `usertheta` The vector `usertheta`.
 #' @examples 
-#' sqrtman <- pmanifold("sphere")
+#' sqrtman <- manifoldtransform("sphere")
 #' ppitape <- tapell(llname = "ppi",
 #'                   xtape = c(0.2, 0.3, 0.5),
 #'                   usertheta = ppi_paramvec(p = 3), 

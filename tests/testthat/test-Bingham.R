@@ -9,7 +9,7 @@ test_that("taped Bingham log-likelihood gives correct values", {
   set.seed(123)
   sample <- rBingham(2, A)
 
-  pman <- pmanifold("Snative")
+  pman <- manifoldtransform("Snative")
   lltape <- ptapell(sample[2,], theta + 1, llname = "Bingham", pman,
                     fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
 

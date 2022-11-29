@@ -67,7 +67,7 @@ buildsmotape_internal <- function(manifoldname, llname,
     warning("The value of 'acut' is ignored for weightname == 'ones'")
   }
 
-  pman <- pmanifold(manifoldname)
+  pman <- manifoldtransform(manifoldname)
   lltape <- tapell(llname = llname,
                     xtape = utape,
                     usertheta = t_si2u(starttheta, isfixed), 

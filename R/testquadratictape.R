@@ -15,7 +15,7 @@
 #' If the results of the tests differ the returned value is `FALSE` and a message is printed indicating which test failed.
 #' @return `TRUE` or `FALSE`
 #' @examples
-#'  sqrtman <- pmanifold("sphere")
+#'  sqrtman <- manifoldtransform("sphere")
 #'  ppitape <- tapell(llname = "ppi",
 #'                    xtape = c(0.2, 0.3, 0.5),
 #'                    usertheta = ppi_paramvec(p = 3), 

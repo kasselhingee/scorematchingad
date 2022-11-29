@@ -172,7 +172,7 @@ ppi <- function(Y, paramvec = NULL,
     else {stheta <- t_us2s(usertheta, paramvec_start)}
     isfixed <- t_u2i(usertheta)
     # prepare tapes
-    pman <- pmanifold(man)
+    pman <- manifoldtransform(man)
     ppitape <- tapell(llname = "ppi",
                     xtape = rep(1/p, p),
                     usertheta = t_si2u(stheta, isfixed), 

@@ -3,7 +3,7 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
   mod <- ppi_egmodel(100)
   Y <- mod$sample
 
-  Ralr <- pmanifold("Ralr")
+  Ralr <- manifoldtransform("Ralr")
   ppitape <- tapell(llname = "ppi",
                   xtape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)), 
@@ -37,7 +37,7 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
   Yapproxcentres[!isbdry, ] <- NA 
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(dsample[isbdry, , drop = FALSE])
 
-  Ralr <- pmanifold("Ralr")
+  Ralr <- manifoldtransform("Ralr")
   ppitape <- tapell(llname = "ppi",
                   xtape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)), 

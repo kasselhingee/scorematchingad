@@ -8,7 +8,7 @@ test_that("ppi tape values do not effect ll values", {
   ueval <- matrix(c(0.4, 0.011, 1 - 0.4 - 0.011), nrow = 1)
   thetaeval <- model1$theta + 1
 
-  psphere <- pmanifold("sphere")
+  psphere <- manifoldtransform("sphere")
   pppi1 <- ptapell(u1, model1$theta, "ppi", psphere, fixedtheta = fixedtheta, verbose = FALSE)
   pppi2 <- ptapell(u0, model0$theta, "ppi", psphere, fixedtheta = fixedtheta, verbose = FALSE)
 
