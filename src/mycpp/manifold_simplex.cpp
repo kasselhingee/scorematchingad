@@ -40,28 +40,4 @@ struct simplex : public manifold<T> {
     bvx.setZero();
     return(bvx);
   }
-
-////////////////////APPROX HELPERS/////////////////////
-  //automatically choose approximation centre
-  Eigen::Matrix<T, Eigen::Dynamic, 1> taylorapprox_bdry(
-		  CppAD::ADFun<T> &f,
-		  const size_t order,
-		  const Eigen::Matrix<T, Eigen::Dynamic, 1> xbeta,
-		  double shiftsize=1E-5){
-     Eigen::Matrix<T, Eigen::Dynamic, 1> x(xbeta.size() / 2);
-     x << xbeta.block(0,0,x.size(), 1);
-     Eigen::Matrix<T, Eigen::Dynamic, 1> shiftdir(x.size());
-     shiftdir.setOnes();
-     shiftdir *= -1 * shiftsize;
-     shiftdir = Pmat_M(x) * shiftdir;
-
-     Eigen::Matrix<T, Eigen::Dynamic, 1> centre(xbeta.size());
-     centre = xbeta;
-     centre.block(0,0,x.size(), 1) << x + shiftdir;
-     Rcout << "Approximation centre is:" << shiftdir.transpose() << std::endl;
-     Eigen::Matrix<T, Eigen::Dynamic, 1> out(0);
-     out = taylorapprox(f, centre, order, xbeta);
-     return(out);
-  }
-
 };
