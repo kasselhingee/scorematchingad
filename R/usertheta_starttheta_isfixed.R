@@ -49,6 +49,14 @@ t_fu2t <- function(fitted, usertheta){
   return(theta)
 }
 
+#' @param theta A fully populated parameter vector.
+#' @describeIn t_u2i Convert a `usertheta` with a full theta into just the vector of fitted elements by keeping only the elements of `theta` that match `NA` values in `usertheta`.
+t_ut2f <- function(usertheta, theta){
+  isfixed <- t_u2i(usertheta)
+  out <- theta[!isfixed]
+  return(out)
+}
+
 #' @describeIn t_u2i Convert `fitted`, `starttheta` and `isfixed` to a `theta` by replacing any non-fixed elements with the fitted values.
 t_sfi2u <- function(fitted, starttheta, isfixed){
   stopifnot(length(starttheta) == length(isfixed))
