@@ -7,7 +7,7 @@
 #' The default for `Rcgmin()` is `list(tol = 1E-20)`, which means the optimisation won't end until the squared size of the gradient summed over all observations at the estimate parameter set is less than 1E-20.
 #' @export
 default_Rcgmin <- function(){
-  list(tol = 1E-15)
+  list(tol = 1E-15, checkgrad = TRUE)
 }
 #' @rdname default_Rcgmin 
 #' @export
