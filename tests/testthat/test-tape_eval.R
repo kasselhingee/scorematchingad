@@ -13,12 +13,15 @@ test_that("PPI ALR hardcoded estimate has low smgrad values", {
                            betap = tail(theta, 1))
   est_hardcoded <- ppi(dsample, paramvec = usertheta, trans = "alr", method = "hardcoded")
 
-  hardcodedvals <- ppi_cppad_values(dsample,
-         stheta = est_hardcoded$est$paramvec,
-         isfixed = t_u2i(usertheta),
-         man = "Ralr",
-         hsqfun = "ones", 
-         acut = 1)
+  ppi_smvalues(dsample, paramvec = usertheta, evalparam = est_hardcoded$est$paramvec, trans = "alr")
+
+  tapes <- buildsmotape("Ralr", "ppi",
+                utape = rep(1/mnongamma$p, mnongamma$p),
+                usertheta = usertheta)
+
+  hardcodedvals <- tape_smvalues(tapes$smotape, 
+         xmat = dsample,
+         pmat = t_ut2f(usertheta, est_hardcoded$est$paramvec))
   modelvals <- ppi_cppad_values(dsample,
          stheta = theta,
          isfixed = t_u2i(usertheta),

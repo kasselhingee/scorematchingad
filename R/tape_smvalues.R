@@ -21,9 +21,10 @@ tape_smvalues <- function(smotape, xmat, pmat, xcentres = NA * xmat, approxorder
   Hsmofun_u <- swapDynamic(Hsmofun, attr(smotape, "dyntape"), attr(smotape, "xtape"))
 
 
-  smovals <- tape_eval(smofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxcentres)
-  gradvals <- tape_eval(Jsmofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxcentres)
-  hessvals <- tape_eval(Hsmofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxcentres)
+  smovals <- tape_eval(smofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
+
+  gradvals <- tape_eval(Jsmofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
+  hessvals <- tape_eval(Hsmofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
 
   return(list(
     obj = smovals,

@@ -6,7 +6,7 @@
 #'  + `grad` the gradient of the score matching objective
 #'  + `hess` the Hessian of the score matching objective
 #' @export
-ppi_smvalues <- function(Y, paramvec,
+ppi_smvalues <- function(Y, paramvec, evalparam,
                 pow = 1, trans, method = "closed", w = rep(1, nrow(Y)),
                 divweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10 #specific to cppad methods
@@ -40,7 +40,7 @@ ppi_smvalues <- function(Y, paramvec,
   pman <- manifoldtransform(man)
   ppitape <- tapell(llname = "ppi",
                   xtape = rep(1/p, p),
-                  usertheta = paramvec, 
+                  usertheta = usertheta, 
                   pmanifoldtransform = pman)
   smotape <- tapesmo(lltape = ppitape,
                      pmanifoldtransform = pman,
@@ -54,11 +54,12 @@ ppi_smvalues <- function(Y, paramvec,
   Yapproxcentres[!isbdry, ] <- NA
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = shiftsize)
 
-  valgradhess <- tape_smvalues_wsum(smotape, xmat = Y, pmat = paramvec, 
-                            Yapproxcentres = Yapproxcentres,
+  valgradhess <- tape_smvalues_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, usertheta), 
+                            xcentres = Yapproxcentres,
                             w = w,
                             approxorder = approxorder)
-  quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
+  quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder, w = w)
+  quadparts_wsum <- lapply(quadparts, wcolSums, w = w)
 
-  return(out)
+  return(c(valgradhess,quadparts))
 }
