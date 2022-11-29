@@ -63,7 +63,7 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
     if (grepl("Initial point", out$message)){
       stop(paste(out$message, "Initial point was", paste(theta, collapse = " ")))
     } else {
-      stop(paste(out$message, "Perhaps smobj() generates a NaN?"))
+      stop(paste(out$message, "Perhaps tape_eval_wsum() generates a non-number?"))
     }
   }
   if (out$convergence != 0){warning("Optimisation did not converge.")}
