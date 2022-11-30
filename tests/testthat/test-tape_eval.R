@@ -28,7 +28,7 @@ test_that("PPI ALR hardcoded estimate has low smo and smgrad values and contant 
 })
 
 
-test_that("smobj() etc are more accurate than tape_eval()", {
+test_that("smobj() etc calculates the same as tape_eval()", {
   mnongamma <- ppi_egmodel(1)
   theta <- ppi_paramvec(beta = c(-0.95, -0.9, 0.5), AL = mnongamma$AL, bL = 0)
   set.seed(1234)
