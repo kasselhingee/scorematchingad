@@ -1,10 +1,12 @@
 #' @title Compute score matching objective value, gradient, and Hessian for a PPI Model
+#' @description Using similar arguments to [`ppi()`], compute values related to score matching. See [`tape_smvalues()`]. The gradient offset is also computed (see [`quadratic_parts()`]. 
 #' @inheritParams ppi
 #' @return
 #' A list of 
 #'  + `obj` the score matching objective value
 #'  + `grad` the gradient of the score matching objective
 #'  + `hess` the Hessian of the score matching objective
+#'  + `offset` gradient offset (see [`quadratic_parts()`])
 #' @export
 ppi_smvalues <- function(Y, paramvec, evalparam,
                 pow = 1, trans, method = "closed", w = rep(1, nrow(Y)),
@@ -40,7 +42,7 @@ ppi_smvalues <- function(Y, paramvec, evalparam,
   pman <- manifoldtransform(man)
   ppitape <- tapell(llname = "ppi",
                   xtape = rep(1/p, p),
-                  usertheta = usertheta, 
+                  usertheta = paramvec, 
                   pmanifoldtransform = pman)
   smotape <- tapesmo(lltape = ppitape,
                      pmanifoldtransform = pman,
@@ -54,12 +56,12 @@ ppi_smvalues <- function(Y, paramvec, evalparam,
   Yapproxcentres[!isbdry, ] <- NA
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = shiftsize)
 
-  valgradhess <- tape_smvalues_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, usertheta), 
+  valgradhess <- tape_smvalues_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
                             xcentres = Yapproxcentres,
                             w = w,
                             approxorder = approxorder)
-  quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder, w = w)
+  quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
   quadparts_wsum <- lapply(quadparts, wcolSums, w = w)
 
-  return(c(valgradhess,quadparts))
+  return(c(valgradhess, quadparts_wsum["offset"]))
 }
