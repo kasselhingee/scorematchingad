@@ -63,5 +63,11 @@ ppi_smvalues <- function(Y, paramvec, evalparam,
   quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
   quadparts_wsum <- lapply(quadparts, wcolSums, w = w)
 
-  return(c(valgradhess, quadparts_wsum["offset"]))
+  if (is.null(w)){
+    normaliser <- nrow(Y)
+  } else {
+  normaliser <- sum(w)
+  }
+  out <- lapply(c(valgradhess, quadparts_wsum["offset"]), function(x){x/normaliser})
+  return(out)
 }

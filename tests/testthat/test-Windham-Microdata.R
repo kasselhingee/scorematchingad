@@ -9,12 +9,10 @@ test_that("hardcoded alr estimator matches cppad calculations for Cyanobacteria/
 est_hardcoded=ppi(Y = propreal,
          method = "hardcoded", trans = "alr",
          paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0))
-  hardcodedvals <- ppi_cppad_values(propreal,
-         stheta = est_hardcoded$est$paramvec,
-         isfixed = t_u2i(ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0)),
-         man = "Ralr",
-         hsqfun = "ones",
-         acut = 1)
+  hardcodedvals <- ppi_smvalues(propreal, 
+                      paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+                      evalparam = est_hardcoded$est$paramvec,
+                      trans = "alr")
   expect_lt_v(hardcodedvals$grad, rep(1E-15, length(hardcodedvals$grad)))
 
   est_cppad=ppi(Y = propreal,
