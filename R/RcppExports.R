@@ -57,6 +57,8 @@ NULL
 #' @return The approximate value of the gradient, with respect to theta, of pfun
 NULL
 
+#' @noRd
+#' @title The approximate value of the gradient (wrt space 1) of recorded function
 #' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 #' @param value A vector in the domain of the taped function.
 #' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
@@ -76,6 +78,7 @@ NULL
 #' (the `i`th component may still depend on the value of the dynamic parameters (see 'Dynamic' in [https://coin-or.github.io/CppAD/doc/glossary.htm#Parameter]) ).
 NULL
 
+#' @noRd
 #' @title Generate manifold with transformation object
 #' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
 #' @return An RCpp::XPtr object pointing to the C++ manifold object
@@ -113,6 +116,7 @@ pJacobian <- function(pfun, value, theta) {
     .Call('_scorecompdir_pJacobian', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 
+#' @noRd
 #' @title Evaluate a CppAD tape
 #' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 #' @param x A vector in the domain of the taped function.
@@ -148,6 +152,7 @@ pTapeHessianSwap <- function(pfun, value, theta) {
     .Call('_scorecompdir_pTapeHessianSwap', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 
+#' @noRd
 #' @title Tape the Jacobian of CppAD Tape
 #' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 #' @param x A vector in the domain of the taped function.
@@ -167,6 +172,7 @@ pTapeJacobian <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pTapeJacobian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
+#' @noRd
 #' @title Tape the Hessian of a CppAD Tape
 #' @inheritParams pTapeJacobian
 #' @description Creates a tape of the Hessian of a function taped by CppAD.
@@ -189,6 +195,7 @@ pParameter <- function(pfun) {
     .Call('_scorecompdir_pParameter', PACKAGE = 'scorecompdir', pfun)
 }
 
+#' @noRd
 #' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 #' @inheritParams pTapeJacobian
 #' @description A quadratic function can be written as

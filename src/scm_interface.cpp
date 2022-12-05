@@ -11,6 +11,7 @@ using namespace Rcpp;
 
 ////////////// Create Pointers to Manifold Objects ///////////////
 //in R store a pointer to the ADFun object
+//' @noRd
 //' @title Generate manifold with transformation object
 //' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
 //' @return An RCpp::XPtr object pointing to the C++ manifold object
@@ -248,6 +249,7 @@ vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
   return(grad);
 }
 
+//' @noRd
 //' @title Evaluate a CppAD tape
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 //' @param x A vector in the domain of the taped function.
@@ -343,7 +345,8 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfu
   return(pout);
 }
 
-// @title The approximate value of the gradient (wrt space 1) of recorded function
+//' @noRd
+//' @title The approximate value of the gradient (wrt space 1) of recorded function
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 //' @param value A vector in the domain of the taped function.
 //' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
@@ -376,6 +379,7 @@ XPtr< CppAD::ADFun<double> >  pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun
   return(pout);
 }
 
+//' @noRd
 //' @title Tape the Jacobian of CppAD Tape
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 //' @param x A vector in the domain of the taped function.
@@ -420,6 +424,7 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun,
   return(pout);
 }
 
+//' @noRd
 //' @title Tape the Hessian of a CppAD Tape
 //' @inheritParams pTapeJacobian
 //' @description Creates a tape of the Hessian of a function taped by CppAD.
@@ -483,6 +488,7 @@ std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun){
   return(isparameter);
 }
 
+//' @noRd
 //' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 //' @inheritParams pTapeJacobian
 //' @description A quadratic function can be written as
