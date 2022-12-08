@@ -164,4 +164,5 @@ test_that("ppi_robust() matches specialist Windham_alrgengamma() for simple data
                     cW = ppi_cW(cW, 1, 1, 1, 0, 0),
                     method = "hardcoded")
 
+  expect_equal(est1, est2)
 })

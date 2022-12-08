@@ -74,7 +74,6 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramv
   # Correction of parameter preparation
   # use the WindhamCorrection(), the alternative is Scealy's original additive method in the draft paper
   if (!multiplicativecorrection){
-   message("Using the bias correction of Scealy et al 2023")
    if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #require constant cW (or zero) because I'm not sure what Scealy's correction method should be in the presence of a different tuning constants per value
      stop("Non-zero cW values vary, which is not supported by 'additive' correction of the parameter estimate.")
    }}
@@ -123,6 +122,9 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramv
       fitted <- t_si2f(estparamvec, isfixed)
       return(fitted)
   }
+
+  #try fpiterator once
+  tmp <- fpiterator(starttheta[!isfixed])
 
   rlang::warn("Using the FixedPoint package - should investigate alternatives",
               .frequency = "once",

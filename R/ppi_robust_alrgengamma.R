@@ -21,7 +21,6 @@ ppi_robust_alrgengamma <- function(Y, cW, ...){
                     trans = "alr",
                     ...,
                     multiplicativecorrection = FALSE)
-  out <- Windham_raw(Y, estimator, ldenfun, cW, ..., fpcontrol = fpcontrol, paramvec_start = paramvec_start, multiplicativecorrection = FALSE)
 
   #make results nicer and consistent with ppi()
   out <- list(
