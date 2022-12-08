@@ -143,3 +143,25 @@ test_that("Windham_assess_estimator works", {
   }, Y = Y, w = NULL, paramvec = NULL)
   expect_equal(assessment$estlocation, "[[1]]")
 })
+
+test_that("ppi_robust() matches specialist Windham_alrgengamma() for simple data with p = 5", {
+  set.seed(1222)
+  p = 5
+  ALs <- rsymmetricmatrix(p-1, -4, 4)
+  bL <- matrix(0, nrow = p-1)
+  beta <- c(-0.7, -0.8, -0.3, 0, 0)
+  set.seed(13456) #this seed generates samples that are representative-enough for estimatorlog_ratio() to give close estimates
+  prop <- rppi(100, beta, ALs, bL, maxden=4)
+  # prop %>% as_tibble() %>% tidyr::pivot_longer(everything()) %>% ggplot() + facet_wrap(vars(name)) + geom_freqpoly(aes(x=value))
+
+  #calculate robust estimates with ppi_robust()
+  cW=0.1
+  est1=ppi_robust(Y = prop, paramvec = ppi_paramvec(bL = 0, betap = tail(beta, 1), p=5), cW = ppi_cW(cW, 1, 1, 1, 0, 0), trans = "alr", method = "closed")
+
+  # use the specialist function
+  est2 = ppi_robust_alrgengamma(Y = prop,
+                    paramvec = ppi_paramvec(bL = 0, betap = tail(beta, 1), p=5),
+                    cW = ppi_cW(cW, 1, 1, 1, 0, 0),
+                    method = "hardcoded")
+
+})

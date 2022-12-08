@@ -35,6 +35,11 @@
 #' * `optim` information about the fixed point iterations and opimisation process. Including a slot `finalweights` for the weights in the final iteration.
 #' @export
 Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
+  out <- Windham_raw(Y, estimator, ldenfun, cW, ..., fpcontrol = fpcontrol, paramvec_start = paramvec_start, multiplicativecorrection = TRUE)
+  return(out)
+}
+
+Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL, multiplicativecorrection = TRUE){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)
   ellipsis::check_dots_used()
   # assuming estimator has arguments: Y, paramvec, w, and optionally paramvec_start.
@@ -67,8 +72,9 @@ Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_s
   if (any((cW * starttheta)[isfixed] != 0)){stop("Elements of cW corresponding to fixed non-zero parameters should be zero")}
 
   # Correction of parameter preparation
-  multiplicativecorrection = TRUE # use the WindhamCorrection(), the alternative is Scealy's original additive method in the draft paper
+  # use the WindhamCorrection(), the alternative is Scealy's original additive method in the draft paper
   if (!multiplicativecorrection){
+   message("Using the bias correction of Scealy et al 2023")
    if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #require constant cW (or zero) because I'm not sure what Scealy's correction method should be in the presence of a different tuning constants per value
      stop("Non-zero cW values vary, which is not supported by 'additive' correction of the parameter estimate.")
    }}
