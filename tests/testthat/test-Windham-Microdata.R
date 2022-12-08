@@ -84,6 +84,14 @@ est1c=ppi_robust(Y = propreal,
                 paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                 paramvec_start =  ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est)) 
   expect_equal(est1c$est$paramvec, est1$est$paramvec)
+
+# check specialist ppi_robust_alrgengamma() matches results too
+est1d=ppi_robust_alrgengamma(Y = propreal,
+                cW = cWvec,
+                method = "closed", 
+                paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+                paramvec_start =  ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est)) 
+  expect_equal(est1d$est$paramvec, est1$est$paramvec)
 })
 
 #### Test Second Data Set ####
@@ -168,5 +176,13 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
                    paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                    paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
   expect_equal(est1b$est$paramvec, est1$est$paramvec)
+
+  # check specialist ppi_robust_alrgengamma() matches results too
+  est1c=ppi_robust_alrgengamma(Y = propreal,
+                cW = ppi_cW(cW, TRUE, TRUE, TRUE, TRUE, FALSE),
+                method = "closed", 
+                paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+                paramvec_start =  ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est)) 
+  expect_equal(est1c$est$paramvec, est1$est$paramvec)
 })
 
