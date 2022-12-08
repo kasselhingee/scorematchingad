@@ -81,7 +81,7 @@ test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5
   expect_equal(est1$est$beta, beta, tolerance = 1E-1)
 })
 
-test_that("test_estimator works", {
+test_that("Windham_assess_estimator works", {
   set.seed(3121)
   Y <- matrix(runif(10*5), nrow = 10, ncol = 5)
   w <- NULL
