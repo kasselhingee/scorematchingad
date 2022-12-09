@@ -97,51 +97,8 @@ est1d=ppi_robust_alrgengamma(Y = propreal,
 #### Test Second Data Set ####
 
 test_that("robust ppi via alr estimator matches historical results on dataset with Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled", {
-  data("microdata", package = "scorecompdir")
-  countdata=as.matrix(microdata[,12:31])
 
-  #sample size
-  n=94
-
-  #dimension
-  p=20
-
-  #calculate totals
-  tot=matrix(0,n,1)
-  for (j in 1:p)
-  {
-    tot=tot+countdata[,j]
-  }
-  tot=as.vector(tot)
-
-  #proportion data
-  prop=countdata
-  for (j in 1:n)
-  {
-    prop[j,]=countdata[j,]/tot[j]
-  }
-
-  ##Reduce dimensions to p=5
-
-
-  #dimension
-  p=5
-
-  #calculate 5D dataset
-  comb=matrix(0,n,p)
-  comb[,1]=prop[,14]
-  comb[,2]=prop[,18]
-  comb[,3]=prop[,5]
-  comb[,4]=prop[,16]
-  for (j in 1:sum(p,-1))
-  {
-    comb[,p]=comb[,p]+comb[,j]
-  }
-  comb[,p]=1-comb[,p]
-
-  #save data
-  propreal=comb
-  proprealA=propreal
+  list2env(ppi_microbiomedata_SVCTP(), globalenv())
 
   ##Estimation
 
