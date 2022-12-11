@@ -34,7 +34,7 @@ test_that("ppi_alr_gengamma matches CppAD closed method for constant weight, p =
 
   est_cppad <- ppi(prop, ppi_paramvec(bL = bL, betap = beta[p]), trans = "alr", method = "closed", divweight = "ones",
                          bdrythreshold = 1E-20)
-  expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)
+  expect_absdiff_lte_v(est_cppad$est$AL, ALs, 3 * est_cppad$SE$AL)
   expect_absdiff_lte_v(est_cppad$est$beta, beta, 3 * est_cppad$SE$beta)
   #expect that the SE are small relative to size of the coefficients
   expect_lt(median(abs(est_cppad$SE$paramvec/est_cppad$est$paramvec), na.rm = TRUE), 0.3)

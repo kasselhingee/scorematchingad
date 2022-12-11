@@ -36,11 +36,11 @@ expect_ppi_str <- function(object, p){
 }
 
 correcteststr <- function(est, p){
-  correctestnames <- setequal(names(est), c("paramvec", "ALs", "bL", "beta"))
+  correctestnames <- setequal(names(est), c("paramvec", "AL", "bL", "beta"))
   correctestdims <- list()
   if (correctestnames){
     correctestdims$paramvec <- (length(est$paramvec) == ppithetalength(p))
-    correctestdims$ALs <- isTRUE(all(dim(est$ALs) == c(p-1, p-1)))
+    correctestdims$AL <- isTRUE(all(dim(est$AL) == c(p-1, p-1)))
     correctestdims$bL <- (length(est$bL) == p-1)
     correctestdims$beta <- (length(est$beta) == p)
   }

@@ -19,11 +19,11 @@ fromPPIparamvec <- function(theta, p = NULL){
   calcp <- ppiltheta2p(length(theta))
   if(!is.null(p)){stopifnot(p == calcp)}
   p <- calcp
-  ALs <- tosmatrix(theta[1:((p-1) + (p-1)*(p-2)/2)])
+  AL <- tosmatrix(theta[1:((p-1) + (p-1)*(p-2)/2)])
   bL <- theta[p - 1 + ((p-2) * (p-1)/2) + 1:(p-1)]
   beta <- theta[(p - 1 + ((p-2) * (p-1)/2) + (p-1) + 1):length(theta)]
   return(list(
-    ALs = ALs,
+    AL = AL,
     bL = bL,
     beta = beta
   ))

@@ -6,7 +6,7 @@ test_that("to then from PPI param vector returns the same params", {
   beta <- runif(p, -1, 0)
   paramvec <- toPPIparamvec(ALs,  bL, beta)
   params2 <- fromPPIparamvec(paramvec, p)
-  expect_equal(params2$ALs, ALs)
+  expect_equal(params2$AL, ALs)
   expect_equal(params2$bL, bL)
   expect_equal(params2$beta, beta)
 })
@@ -82,6 +82,6 @@ test_that("from PPI param vector order", {
     mat[ind[2,j],ind[1,j]]=vals[sum(j,sp)]
   }
 
-  expect_false(all(mat == paramats$ALs))
+  expect_false(all(mat == paramats$AL))
 
 })

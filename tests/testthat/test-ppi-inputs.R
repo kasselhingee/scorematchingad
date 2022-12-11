@@ -86,7 +86,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", betap = -0.5), trans = "sqrt", divweight = "minsq", acut = 0.1, method = "closed", control = list(tol = 1E-10))
   expect_lte_v(abs(out$est$paramvec - theta), 3 * out$SE$paramvec)
   expect_equal(out$est$beta[model$p], -0.5)
-  expect_equal(out$est$ALs[1, 2], 0)
+  expect_equal(out$est$AL[1, 2], 0)
 
   # try fixing AL to diagonal, bL to 0, betap = -0.5, on Ralr
   AL = diag(c(-100, -50))
@@ -97,7 +97,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", bL = 0, betap = -0.5), trans = "alr", divweight = "ones", method = "closed", control = list(tol = 1E-10))
   expect_lte_v(abs(out$est$paramvec - theta), 3 * out$SE$paramvec)
   expect_equal(out$est$beta[model$p], -0.5)
-  expect_equal(out$est$ALs[1, 2], 0)
+  expect_equal(out$est$AL[1, 2], 0)
 })
 
 test_that("ppi() uses paramvec_start}", {

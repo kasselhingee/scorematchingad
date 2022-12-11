@@ -35,6 +35,6 @@ test_that("full ppi estimates are within 3 SE of beta for difficult AL with larg
                          acut = 0.01,
                          bdrythreshold = 1E-20,
                          control = list(tol = 1E-10))
-  expect_absdiff_lte_v(est_cppad$est$ALs, ALs, 3 * est_cppad$SE$ALs)
+  expect_absdiff_lte_v(est_cppad$est$AL, ALs, 3 * est_cppad$SE$AL)
   expect_absdiff_lte_v(est_cppad$est$beta, beta, 3 * est_cppad$SE$beta)
 })

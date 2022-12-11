@@ -41,11 +41,11 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
 
   #estimated parameters
   thetamats <- fromPPIparamvec(estimator$est$paramvec)
-  ALs <- thetamats$ALs
+  AL <- thetamats$AL
   bL <- thetamats$bL
   dim(bL) <- c(length(bL), 1)
   #values in Table 4 in the article:
-  expect_snapshot_value(signif(ALs[upper.tri(ALs, diag = TRUE)], 8), style = "json2")
+  expect_snapshot_value(signif(AL[upper.tri(AL, diag = TRUE)], 8), style = "json2")
   expect_snapshot_value(signif(bL, 8), style = "json2")
   expect_snapshot_value(signif(estimate1/std1, 8), style = "json2")
 })
@@ -87,10 +87,10 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
 
   #estimated parameters
   thetamats <- fromPPIparamvec(estimator$est$paramvec)
-  ALs <- thetamats$ALs
+  AL <- thetamats$AL
 
   #values in Table 3 in the article:
-  expect_snapshot_value(signif(ALs[upper.tri(ALs, diag = TRUE)], 8), style = "json2")
+  expect_snapshot_value(signif(AL[upper.tri(AL, diag = TRUE)], 8), style = "json2")
   expect_snapshot_value(round(estimate1/std1, 8), style = "json2")
 
 })

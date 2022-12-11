@@ -63,7 +63,7 @@ est1=ppi_robust(Y = propreal,
                 paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                 paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
 #estimate of A_L:
-expect_snapshot_value(signif(est1$est$ALs,6), style = "json2")
+expect_snapshot_value(signif(est1$est$AL,6), style = "json2")
 #estimate of beta:
 expect_snapshot_value(signif(est1$est$beta,6), style = "json2")
 
