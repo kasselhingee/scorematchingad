@@ -56,7 +56,7 @@ rppi <- function(n, ..., paramvec = NULL, maxden = 4){
   if (is.null(paramvec)){
     paramvec <- ppi_paramvec(...)
   }
-  if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA")}
+  if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA. Did you forget to specify AL, bL or beta?")}
   parammats <- fromPPIparamvec(paramvec)
   beta <- parammats$beta
   AL <- parammats$ALs
