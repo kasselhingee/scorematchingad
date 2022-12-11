@@ -27,10 +27,10 @@ test_that("rppi() is fixed by set.seed()", {
   m <- ppi_egmodel(2)
 
   set.seed(3212)
-  Y1 <- rppi(100, beta = m$beta, m$AL, m$bL, maxden=4)
+  Y1 <- rppi(100, beta = m$beta, AL= m$AL, bL= m$bL, maxden=4)
 
   set.seed(3212)
-  Y2 <- rppi(100, beta = m$beta, m$AL, m$bL, maxden=4)
+  Y2 <- rppi(100, beta = m$beta, AL= m$AL, bL= m$bL, maxden=4)
 
   expect_equal(Y1, Y2)
 })
@@ -38,7 +38,7 @@ test_that("rppi() is fixed by set.seed()", {
 test_that("rppi() passed a paramvec works", {
 
   set.seed(3212)
-  Y1 <- rppi(100, m$beta, m$AL, m$bL, maxden=4)
+  Y1 <- rppi(100, beta= m$beta, AL= m$AL, bL = m$bL, maxden=4)
   
   set.seed(3212)
   Y2 <- rppi(100, paramvec = m$theta, maxden=4)
@@ -48,9 +48,9 @@ test_that("rppi() passed a paramvec works", {
 
 test_that("rppi() errors appropriately", {
 
-  expect_error(rppi(100, m$beta, m$AL, m$bL, paramvec = m$theta, maxden = 4))
-  expect_error(rppi(100, beta = c(m$beta, m$beta), m$AL, m$bL, maxden = 4))
-  expect_error(rppi(100, beta = m$beta, m$bL, maxden = 4))
+  expect_error(rppi(100, beta = m$beta, AL = m$AL, bL = m$bL, paramvec = m$theta, maxden = 4))
+  expect_error(rppi(100, beta = c(m$beta, m$beta), AL = m$AL, bL = m$bL, maxden = 4))
+  expect_error(rppi(100, beta = m$beta, bL = m$bL, maxden = 4))
 })
 
 test_that("dppi() produces -Inf results outside simplex", {
@@ -60,4 +60,7 @@ test_that("dppi() produces -Inf results outside simplex", {
   expect_equal(logdens, rep(-Inf, 3))
 })
 
-
+test_that("rppi() passed a zero value for bL works", {
+  set.seed(1)
+  expect_silent(rppi(1, AL = rsymmetricmatrix(5-1), beta = runif(5), bL = 0))
+})

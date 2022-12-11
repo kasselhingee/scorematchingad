@@ -8,7 +8,7 @@
 #' @param paramvec The PPI parameter vector, created easily using [ppi_paramvec()] and also returned by [ppi()].
 #' @param maxden This is the constant \eqn{log(C)} in \insertCite{@Appendix A.1.3 @scealy2022sc}{scorecompdir}.
 #' @return A matrix with `n` rows and `p` columns. Each row is an independent draw from the specified PPI distribution.
-#' @inherit ppi sections
+#' @inheritDotParams ppi_paramvec
 #' @details
 #' We recommend running `rppi()` a number of times to ensure the choice of `maxden` is good. `rppi()` will error when `maxden` is too low.
 #' 
@@ -32,14 +32,15 @@
 #' AL=-0.5*solve(SigA)
 #' bL=solve(SigA)%*%muL
 #'
-#' samp <- rppi(n,p,beta=beta,AL=AL,bL=bL,maxden4)
+#' samp <- rppi(n,beta=beta,AL=AL,bL=bL,maxden4)
 #' plot(ks::kde(samp[,-p]),
 #'  xlim = c(0, 1), ylim = c(0, 1))
 #' segments(0, 0, 0, 1)
 #' segments(0, 1, 1, 0)
 #' segments(1, 0, 0, 0)
 #' @export
-rppi <- function(n, beta = NULL, AL = NULL, bL = NULL, paramvec = NULL, maxden = 4){
+rppi <- function(n, ..., paramvec = NULL, maxden = 4){
+  ellipsis::check_dots_used()
   # a warning if maxden is high
   if (maxden > 10){
     rlang::warn(message = paste(sprintf("'maxden' of %0.2f is higher than 10.", maxden),
@@ -52,20 +53,19 @@ rppi <- function(n, beta = NULL, AL = NULL, bL = NULL, paramvec = NULL, maxden =
   }
 
   #process inputs
-  if (is.null(paramvec)){if (any(is.null(beta), is.null(AL), is.null(bL))){stop("If paramvec isn't supplied then beta, AL, and bL must be supplied")}}
-  else {
-    if (!all(is.null(beta), is.null(AL), is.null(bL))){stop("Providing a paramvec is incompatible with providing a beta, AL or bL.")}
-    if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA")}
-    parammats <- fromPPIparamvec(paramvec)
-    beta <- parammats$beta
-    AL <- parammats$ALs
-    bL <- parammats$bL
+  if (is.null(paramvec)){
+    paramvec <- ppi_paramvec(...)
   }
+  if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA")}
+  parammats <- fromPPIparamvec(paramvec)
+  beta <- parammats$beta
+  AL <- parammats$ALs
+  bL <- parammats$bL
   p <- length(beta)
 
   maxdenin <- maxden
   # first simulate starting with a block of Dirichlet samples of size n.
-  firstaccepted <- rppi_block(n,p,beta = beta,AL = AL,bL,maxden)
+  firstaccepted <- rppi_block(n,p,beta = beta,AL = AL,bL = bL,maxden)
   maxden <- firstaccepted$maxden
   samples <- firstaccepted$accepted
   propaccepted <- max(nrow(samples) / n, 1E-3)
