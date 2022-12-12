@@ -50,7 +50,7 @@ cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y,
   invHess <- tryCatch(solve(Hess),
                error = function(e) {
      if (grepl("system.*singular", e)){
-          stop(paste("Hessian not invertible.", e))
+          stop(paste("Hessian of the score-matching objective function is not invertible.", e))
         } else {stop(e)}
      })
   root <- drop(-1 * invHess %*% offset)
