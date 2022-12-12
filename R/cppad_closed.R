@@ -47,7 +47,12 @@ cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y,
   offset <- partsT$offset
   Hess <- partsT$Hessian
   Hess <- matrix(Hess, ncol = sqrt(ncol(parts$Hessian)))
-  invHess <- solve(Hess)
+  invHess <- tryCatch(solve(Hess),
+               error = function(e) {
+     if (grepl("system.*singular", e)){
+          stop(paste("Hessian not invertible.", e))
+        } else {stop(e)}
+     })
   root <- drop(-1 * invHess %*% offset)
 
   # compute SEs
