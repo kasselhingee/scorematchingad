@@ -1,3 +1,4 @@
+# OBSOLETE - JUST USED FOR TESTING
 # A function that gives the sm val, gradient and hessian for a given theta
 # arguments are the same as ppi_cppad()
 # stheta is the value that is used for evaluating, this value is also used for taping the cppad functions

@@ -204,6 +204,6 @@ test_that("FB() with many fixed elements leads to smaller smobjgrad", {
   intheta[8] <- NA
   tapes <- buildsmotape("Snative", "FB",
                         sample[1, ], intheta)
-  smograd <- smobjgrad(tapes$smotape, theta[is.na(intheta)], sample)
-  sum(smograd^2)
+  smvals <- tape_smvalues_wsum(tapes$smotape, sample, theta[is.na(intheta)])
+  sum(smvals$grad^2)
 })

@@ -1,5 +1,5 @@
 #' @noRd
-#' @title Compute value of score matching objective for multiple observations
+#' @title OBSOLETE: Compute value of score matching objective for multiple observations
 #' @description Computes the score matching objective given theta
 #' @param smofun A tape of the score matching objective calculation
 #' @param theta A parameter set

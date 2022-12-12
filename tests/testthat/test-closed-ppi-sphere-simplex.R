@@ -144,7 +144,6 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel", {
   ppiest <- ppi(Y = model$sample, method = "closed",
                 trans = "sqrt", divweight = "minsq", acut = acut)
 
-  # memoisation could be used to avoid calling the smobj function again for gradient computation
   hardcodedestimate <- estimatorall1(model$sample, acut)
 
   expect_equal(ppiest$est$paramvec, hardcodedestimate$estimator1, ignore_attr = TRUE)
@@ -161,7 +160,6 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
              paramvec = ppi_paramvec(betap = tail(model$beta, 1), p = model$p),
              trans = "sqrt", divweight = "minsq", acut = acut)
 
-  # memoisation could be used to avoid calling the smobj function again for gradient computation
   hardcodedestimate <- estimatorall1(model$sample, acut, betap = model$beta0[model$p])
 
   expect_equal(out$est$paramvec, t_fu2t(hardcodedestimate$estimator1, ppi_paramvec(betap = tail(model$beta, 1), p = model$p)), ignore_attr = TRUE)
@@ -220,9 +218,10 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   ppitapes <- buildsmotape("sphere", "ppi",
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
                            weightname = "minsq", acut = acut)
-  expect_lt(sum(smobjgrad(ppitapes$smotape, fromsmatrix(est_hardcoded$est$AL), prop)^2), 1E-20)
+  smvals <- tape_smvalues_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL))
+  expect_lt(sum(smvals$grad^2), 1E-20)
 
   # check that rearrangement has large gradient
-  expect_gt(sum(smobjgrad(ppitapes$smotape, fromsmatrix(est_hardcoded$est$AL)[c(1:6, 8, 7, 9, 10)], prop)^2), 1E-2)
-
+  smvals <- tape_smvalues_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL)[c(1:6, 8, 7, 9, 10)])
+  expect_gt(sum(smvals$grad^2), 1E-2)
 })

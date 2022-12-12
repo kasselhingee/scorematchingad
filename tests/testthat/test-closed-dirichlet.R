@@ -99,6 +99,7 @@ test_that("Simplex calculations are historically consistent", {
   set.seed(134)
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
-  expect_snapshot_value(smobj(tapes$smotape, beta + 0.5, utabl), style = "json2", tolerance = 1E-5)
-  expect_snapshot_value(smobjgrad(tapes$smotape, beta + 0.5, utabl), style = "json2", tolerance = 1E-5)
+  smvals <- tape_smvalues_wsum(tapes$smotape, utabl, beta+0.5)
+  expect_snapshot_value(smvals$obj/n, style = "json2", tolerance = 1E-5)
+  expect_snapshot_value(smvals$grad/n, style = "json2", tolerance = 1E-5)
 })

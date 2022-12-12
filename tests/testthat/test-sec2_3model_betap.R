@@ -40,7 +40,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   expect_absdiff_lte_v(estimate1all, theta, 3 * SE)
 
   # compare to ppi via cppad
-  expect_lt(sum(smobjgrad(tapes$smotape, estimate1all, samp3)^2), 1E-14)
+  expect_lt(tape_smvalues_wsum(tapes$smotape, samp3, estimate1all)^2), 1E-14)
   est2 <- ppi(samp3, trans = "sqrt", divweight = "minsq", acut = acut, bdrythreshold = 1E-20, control = list(tol = 1E-12), method = "closed")
   expect_equal(est2$est$paramvec, drop(estimate1all), tolerance = 1E-2) #within 1% of each other roughly
   expect_absdiff_lte_v(drop(estimate1all), est2$est$paramvec, 2*est2$SE$paramvec)
