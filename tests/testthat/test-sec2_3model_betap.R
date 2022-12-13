@@ -35,7 +35,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
-  SE <- cppadSE(tapes$smotape, estimate1all, samp3)
+  SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
 
   expect_absdiff_lte_v(estimate1all, theta, 3 * SE)
 
@@ -73,7 +73,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
-  SE <- cppadSE(tapes$smotape, estimate1all, samp3)
+  SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
 
   #3*SE bounds
   expect_absdiff_lte_v(estimate1all, theta[is.na(intheta)], 3 * SE)
@@ -105,7 +105,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
-  SE <- cppadSE(tapes$smotape, estimate1all, samp3)
+  SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
 
   #3*SE bounds
   expect_absdiff_lte_v(estimate1all, theta[is.na(intheta)], 3 * SE)

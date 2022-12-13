@@ -27,9 +27,9 @@ ppi_cppad_values <- function(prop, stheta, isfixed,
 
   eginteriorpt <- rep(1/p, p)
   theta_for_taping <- t_si2f(stheta, tapes$info$isfixed)
-  Jsmofun <- pTapeJacobian(smotape, theta_for_taping, eginteriorpt)
+  Jsmofun <- pTapeJacobian(tapes$smotape, theta_for_taping, eginteriorpt)
   Hsmofun <- pTapeJacobian(Jsmofun, theta_for_taping, eginteriorpt)
-  smofun_u <- swapDynamic(smotape, eginteriorpt, theta_for_taping)
+  smofun_u <- swapDynamic(tapes$smotape, eginteriorpt, theta_for_taping)
   Jsmofun_u <- swapDynamic(Jsmofun, eginteriorpt, theta_for_taping)
   Hsmofun_u <- swapDynamic(Hsmofun, eginteriorpt, theta_for_taping)
 
