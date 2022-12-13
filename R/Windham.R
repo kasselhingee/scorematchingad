@@ -126,11 +126,11 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramv
   #try fpiterator once
   tmp <- fpiterator(starttheta[!isfixed])
 
-  rlang::warn("Using the FixedPoint package - should investigate alternatives",
-              .frequency = "once",
-              .frequency_id = "FixedPoint_package")
+  # do the main computation
   est <- fp(Function = fpiterator, Inputs = starttheta[!isfixed],
                     control = fpcontrol)
+
+  # process results
   nevals <- ncol(est$Inputs)
   theta <- starttheta
   theta[!isfixed] <- est$FixedPoint
