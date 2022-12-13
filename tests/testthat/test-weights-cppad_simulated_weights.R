@@ -29,25 +29,6 @@ test_that("cppad_search() w = rep(1, nrow(Y)) is near the result as if w omitted
   expect_equal(out_ommit$value, out_constant$value)
 })
 
-test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constant weights", {
-  intheta <- ppi_paramvec(m$p)
-  tapes <- buildsmotape("sphere", "ppi",
-                        m$sample[1, ], intheta,
-                        weightname = "minsq",
-                        acut = acut)
-  smo_sim <- smobj(tapes$smotape, m$theta, vw$newY)
-  smo_hardcoded <- smobj(tapes$smotape, m$theta, m$sample, w=vw$w)
-  expect_equal(smo_sim, smo_hardcoded)
-
-  smograd_sim <- smobjgrad(tapes$smotape, m$theta, vw$newY)
-  smograd_hardcoded <- smobjgrad(tapes$smotape, m$theta, m$sample, w=vw$w)
-  expect_equal(smograd_sim, smograd_hardcoded)
-
-  smohess_sim <- smobjhess(tapes$smotape, m$theta, vw$newY)
-  smohess_hardcoded <- smobjhess(tapes$smotape, m$theta, m$sample, w=vw$w)
-  expect_equal(smohess_sim, smohess_hardcoded)
-})
-
 test_that("tape_eval_wsum() matches for simulated weights and constant weights", {
   intheta <- ppi_paramvec(m$p)
   tapes <- buildsmotape("sphere", "ppi",
@@ -97,86 +78,7 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights w
   expect_equal(smo_sim, smo_hardcoded)
 })
 
-test_that("smobj, smobjgrad, smobjhess matches for simulated weights and constant weights with boundary data", {
-  intheta <- ppi_paramvec(m$p)
-
-  ds <- simplex_boundarysplit(m$sample, bdrythreshold = 1E-2, shiftsize = 1E-5, w = vw$w)
-  nds <- simplex_boundarysplit(vw$newY, bdrythreshold = 1E-2, shiftsize = 1E-5)
-
-  tapes <- buildsmotape("sphere", "ppi",
-                        m$sample[1, ], intheta,
-                        weightname = "minsq",
-                        acut = acut)
-
-  #extra tapes for approximation
-  smofun_u <- swapDynamic(tapes$smotape, m$sample[1, ], m$theta) #don't use a boundary point here!
-  Jsmofun_u <- pTapeJacobianSwap(tapes$smotape, m$theta, m$sample[1, ])
-  Hsmofun_u <- pTapeHessianSwap(tapes$smotape, m$theta, m$sample[1, ])
-
-
-  smo_sim <- smobj(tapes$smotape, 
-                   theta = m$theta, 
-                   utabl = nds$interior, 
-                   smofun_u = smofun_u,
-                   uboundary = nds$uboundary,
-                   boundaryapprox = nds$boundaryapprox,
-                   approxorder = 10,
-                   w = nds$winterior,
-                   wboundary = nds$wboundary)
-  smo_hardcoded <- smobj(tapes$smotape, 
-                   theta = m$theta, 
-                   utabl = ds$interior, 
-                   smofun_u = smofun_u,
-                   uboundary = ds$uboundary,
-                   boundaryapprox = ds$boundaryapprox,
-                   approxorder = 10,
-                   w = ds$winterior,
-                   wboundary = ds$wboundary)
-  expect_equal(smo_sim, smo_hardcoded)
-
-  smograd_sim <- smobjgrad(tapes$smotape, 
-                   theta = m$theta, 
-                   utabl = nds$interior, 
-                   Jsmofun_u = Jsmofun_u,
-                   uboundary = nds$uboundary,
-                   boundaryapprox = nds$boundaryapprox,
-                   approxorder = 10,
-                   w = nds$winterior,
-                   wboundary = nds$wboundary)
-  smograd_hardcoded <- smobjgrad(tapes$smotape, 
-                   theta = m$theta, 
-                   utabl = ds$interior, 
-                   Jsmofun_u = Jsmofun_u,
-                   uboundary = ds$uboundary,
-                   boundaryapprox = ds$boundaryapprox,
-                   approxorder = 10,
-                   w = ds$winterior,
-                   wboundary = ds$wboundary)
-  expect_equal(smograd_sim, smograd_hardcoded)
-
-  smohess_sim <- smobjhess(tapes$smotape, 
-                   theta = m$theta, 
-                   utabl = nds$interior, 
-                   Hsmofun_u = Hsmofun_u,
-                   uboundary = nds$uboundary,
-                   boundaryapprox = nds$boundaryapprox,
-                   approxorder = 10,
-                   w = nds$winterior,
-                   wboundary = nds$wboundary)
-  smohess_hardcoded <- smobjhess(tapes$smotape, 
-                   theta = m$theta, 
-                   utabl = ds$interior, 
-                   Hsmofun_u = Hsmofun_u,
-                   uboundary = ds$uboundary,
-                   boundaryapprox = ds$boundaryapprox,
-                   approxorder = 10,
-                   w = ds$winterior,
-                   wboundary = ds$wboundary)
-  expect_equal(smohess_sim, smohess_hardcoded)
-})
-
-
-test_that("cppad_search() for ppi with minsq matches itself and the closed estimate", {
+test_that("cppad_search() for ppi with minsq matches itself", {
   tapes <- buildsmotape("sphere", "ppi",
                utape = rep(1/m$p, m$p),
                usertheta = ppi_paramvec(m$p),
@@ -189,11 +91,7 @@ test_that("cppad_search() for ppi with minsq matches itself and the closed estim
      out_dir[!(names(out_sim) %in% c("counts", "SE"))],
      tolerance = 1E-3)
 
-  out_closed <- cppad_closed(tapes$smotape, Y = m$sample, w = vw$w)
-
-  expect_lt(out_dir$value,
-            smobj(tapes$smotape, out_closed$est, m$sample, w = vw$w) + 1E-5 * abs(out_dir$value))
-
-  expect_equal(out_dir$est, out_closed$est, tolerance = 1E-4)
+  expect_equal(out_dir[c("est", "value", "sqgradsize")], out_sim[c("est", "value", "sqgradsize")], tolerance = 1E-4)
 })
+
 
