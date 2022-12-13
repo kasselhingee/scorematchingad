@@ -72,13 +72,12 @@ int testmanifold(XPtr< manifold<a1type> > pman, veca1 u_ad){
   return(0);
 }
 
-
-// @title Apply to `toM` function of a manifold object
+//' @noRd
+//' @title Apply to `toM` function of a manifold object
 //' @description Apply the `toM` function of a manifold object.
 //' @param pman An XPtr to a manifold object. Created by `pmanifold()`.
 //' @param u A vector to be transformed to the manifold via `toM`.
 //' @return A vector on the manifold.
-// @export
 // [[Rcpp::export]]
 veca1 ptoM(XPtr< manifold<a1type> > pman, veca1 u_ad){
   veca1 z_ad(u_ad.size());
@@ -88,14 +87,14 @@ veca1 ptoM(XPtr< manifold<a1type> > pman, veca1 u_ad){
 
 
 //in R store a pointer to the ADFun object
-// @title The score matching objective calculator.
+//' @noRd
+//' @title The score matching objective calculator.
 //' @param xbetain a concatenated vector of sqrt(x) and beta
 //' @param n The dimension of x.
 //' @param manifoldname The name of the manifold to transform to
 //' @param weightname The name of the weight function to use
 //' @param acut The constraint a_c in the weight function
 //' @return An RCpp::XPtr object pointing to the ADFun
-// @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
                                       veca1 theta_ad,
@@ -229,13 +228,12 @@ XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, veca
 }
 
 
-//for testing
-// @title The Jacobian of recorded function
-//' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-//' @param u A vector in the simplex.
-//' @param beta a vector of the dynamic parameters
+//' @title Evaluate the Jacobian of a tape
+//' @param pfun Rcpp::XPtr to an ADFun
+//' @param x A vector in the domain of the taped function.
+//' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
 //' @return The Jacobian of pfun
-// @export
+//' @export
 // [[Rcpp::export]]
 vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
   //check inputs and tape match
@@ -249,11 +247,10 @@ vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
   return(grad);
 }
 
-//' @noRd
 //' @title Evaluate a CppAD tape
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 //' @param x A vector in the domain of the taped function.
-//' @param dynparam a vector of the dynamic parameters
+//' @param dynparam a vector of the dynamic parameters.
 //' @return The value of `pfun` evaluated at `x` with parameters `dynparam`.
 //' @export
 // [[Rcpp::export]]
@@ -269,12 +266,12 @@ vecd pForward0(XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam){
   return(out);
 }
 
-// @title The Hessian of recorded function
+//' @noRd
+//' @title OBSOLETE: The Hessian of recorded function. Used only in smobj.R
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 //' @param u A vector in the simplex.
 //' @param beta a vector of the dynamic parameters
 //' @return The Hessian of pfun
-// @export
 // [[Rcpp::export]]
 vecd pHessian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
   //check inputs and tape match
@@ -311,75 +308,6 @@ vecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
   return(out);
 }
 
-// @title The approximate value of the gradient (wrt space 1) of recorded function
-//' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
-//' @param value A vector in the domain of the taped function.
-//' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
-//' this vector forms the centre of the Taylor approximation
-//' @param theta a vector of the dynamic parameters
-//' @param order The order of Taylor expansion to use.
-//' @description Taylor expansion in the `theta` dimensions, to approximate the gradient wrt the `value` dimensions.
-//' @return The approximate value of the gradient, with respect to theta, of pfun
-// @export
-// [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> >  pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfun,
-                    veca1 value, veca1 theta){
-
-  //convert taped object to higher order
-  CppAD::ADFun<a1type, double> pfunhigher;
-  pfunhigher = pfun->base2ad();
-
-  //first tape the Jacobian of pfun but with the theta becoming the independent variables
-  CppAD::Independent(theta, value);  //for this tape, theta must be altered using new_dynamic
-  pfunhigher.new_dynamic(theta);
-  veca1 grad(value.size());
-  grad = pfunhigher.Jacobian(value);
-
-  //end taping
-  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  out->Dependent(theta, grad);
-  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
-  out->check_for_nan(false);
-
-  XPtr< CppAD::ADFun<double> > pout(out, true);
-  return(pout);
-}
-
-//' @noRd
-//' @title The approximate value of the gradient (wrt space 1) of recorded function
-//' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
-//' @param value A vector in the domain of the taped function.
-//' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
-//' this vector forms the centre of the Taylor approximation
-//' @param theta a vector of the dynamic parameters
-//' @param order The order of Taylor expansion to use.
-//' @description Taylor expansion in the `theta` dimensions, to approximate the gradient wrt the `value` dimensions.
-//' @return The approximate value of the gradient, with respect to theta, of pfun
-// @export
-// [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> >  pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun,
-                                                veca1 value, veca1 theta){
-  //convert taped object to higher order
-  CppAD::ADFun<a1type, double> pfunhigher;
-  pfunhigher = pfun->base2ad();
-
-  //first tape the Jacobian of pfun but with the theta becoming the independent variables
-  CppAD::Independent(theta, value);  //for this tape, theta must be altered using new_dynamic
-  pfunhigher.new_dynamic(theta);
-  veca1 hess(value.size() * value.size());
-  hess = pfunhigher.Hessian(value, 0);
-
-  //end taping
-  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  out->Dependent(theta, hess);
-  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
-  out->check_for_nan(false);
-
-  XPtr< CppAD::ADFun<double> > pout(out, true);
-  return(pout);
-}
-
-//' @noRd
 //' @title Tape the Jacobian of CppAD Tape
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 //' @param x A vector in the domain of the taped function.
@@ -424,7 +352,6 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun,
   return(pout);
 }
 
-//' @noRd
 //' @title Tape the Hessian of a CppAD Tape
 //' @inheritParams pTapeJacobian
 //' @description Creates a tape of the Hessian of a function taped by CppAD.
@@ -488,7 +415,6 @@ std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun){
   return(isparameter);
 }
 
-//' @noRd
 //' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 //' @inheritParams pTapeJacobian
 //' @description A quadratic function can be written as
