@@ -1,5 +1,5 @@
 test_that("cppad_search gives similar result to cppad_closed", {
-  m <- ppi_egmodel(1000, maxden = 4)
+  m <- ppi_egmodel(100, maxden = 4)
   tapes <- buildsmotape("sphere", "ppi",
                         utape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),
@@ -11,12 +11,12 @@ test_that("cppad_search gives similar result to cppad_closed", {
 })
 
 test_that("cppad_search with weights gives similar result to cppad_closed", {
-  m <- ppi_egmodel(1000, maxden = 4)
+  m <- ppi_egmodel(100, maxden = 4)
   tapes <- buildsmotape("sphere", "ppi",
                         utape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),
                         weightname = "minsq", acut = 0.1)
-  w <- runif(1000)
+  w <- runif(100)
   estsearch <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 1000), w = w)
   estclosed <- cppad_closed(tapes$smotape, m$sample, w = w)
   expect_equal(estsearch$est, estclosed$est, tolerance = 1E-3)
