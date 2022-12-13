@@ -56,8 +56,8 @@ cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y,
   root <- drop(-1 * invHess %*% offset)
 
   # compute SEs
-  SE <- NA
-  covar <- NA
+  SE <- "Not calculated."
+  covar <- "Not calculated."
   if (all(w[[1]] == w)){
     covar <- cppad_closed_estvar(Y, root, parts$offset, parts$Hess)
     SE <- sqrt(diag(covar))
