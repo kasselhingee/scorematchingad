@@ -5,7 +5,6 @@ Authors@R:
     c(person(given = "Kassel Liam", family = "Hingee", email = "kassel.hingee@anu.edu.au", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9894-2407")),
     person("Janice", "Scealy", role = c("aut")),
     person("Bradley M.", "Bell", role = c("cph")),
-    person("Gael", "Guennebaud", role = c("cph")),
     person("Ngunnawal Country", role = c("ctb")),
     person("Ngambri Country", role = c("ctb"))
     )
