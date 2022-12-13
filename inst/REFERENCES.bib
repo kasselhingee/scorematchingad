@@ -10,8 +10,7 @@
   url = {http://jmlr.org/papers/v6/hyvarinen05a.html},
   urldate = {2022-02-10},
   abstract = {One often wants to estimate statistical models where the probability density function is known only up to a multiplicative normalization constant. Typically, one then has to resort to Markov Chain Monte Carlo methods, or approximations of the normalization constant. Here, we propose that such models can be estimated by minimizing the expected squared distance between the gradient of the log-density given by the model and the gradient of the log-density of the observed data.  While the estimation of the gradient of log-density function is, in principle, a very difficult non-parametric problem, we prove a surprising result that gives a simple formula for this objective function. The density function of the observed data does not appear in this formula, which simplifies to a sample average of a sum of some derivatives of the log-density given by the model.  The validity of the method is demonstrated on multivariate Gaussian and independent component analysis models, and by estimating an overcomplete filter set for natural image data.},
-  keywords = {October2022report},
-  file = {/home/kassel/Zotero/storage/X7WDNHVY/Hyvärinen - 2005 - Estimation of Non-Normalized Statistical Models by.pdf}
+  keywords = {October2022report}
 }
 
 @article{hyvarinen2007ex,
@@ -29,8 +28,7 @@
   urldate = {2022-02-16},
   abstract = {Many probabilistic models are only defined up to a normalization constant. This makes maximum likelihood estimation of the model parameters very difficult. Typically, one then has to resort to Markov Chain Monte Carlo methods, or approximations of the normalization constant. Previously, a method called score matching was proposed for computationally efficient yet (locally) consistent estimation of such models. The basic form of score matching is valid, however, only for models which define a differentiable probability density function over Rn. Therefore, some extensions of the framework are proposed. First, a related method for binary variables is proposed. Second, it is shown how to estimate non-normalized models defined in the non-negative real domain, i.e. R+n. As a further result, it is shown that the score matching estimator can be obtained in closed form for some exponential families.},
   langid = {english},
-  keywords = {October2022report},
-  file = {/home/kassel/Zotero/storage/5FLUC66F/Hyvärinen - 2007 - Some extensions of score matching.pdf;/home/kassel/Zotero/storage/8FX2D6DH/S0167947306003264.html}
+  keywords = {October2022report}
 }
 
 @techreport{liu2021es,
@@ -46,8 +44,7 @@
   urldate = {2022-02-16},
   abstract = {Truncated densities are probability density functions defined on truncated domains. They share the same parametric form with their non-truncated counterparts up to a normalizing constant. Since the computation of their normalizing constants is usually infeasible, Maximum Likelihood Estimation cannot be easily applied to estimate truncated density models. Score Matching (SM) is a powerful tool for fitting parameters using only unnormalized models. However, it cannot be directly applied here as boundary conditions used to derive a tractable SM objective are not satisfied by truncated densities. In this paper, we study parameter estimation for truncated probability densities using SM. The estimator minimizes a weighted Fisher divergence. The weight function is simply the shortest distance from the data point to the boundary of the domain. We show this choice of weight function naturally arises from minimizing the Stein discrepancy as well as upperbounding the finite-sample statistical estimation error. The usefulness of our method is demonstrated by numerical experiments and a Chicago crime dataset. We also show that proposed density estimation can correct the outlier-trimming bias caused by aggressive outlier detection methods.},
   archiveprefix = {arXiv},
-  keywords = {October2022report},
-  file = {/home/kassel/Zotero/storage/K5PNL7U4/Liu et al. - 2021 - Estimating Density Models with Truncation Boundari.pdf;/home/kassel/Zotero/storage/IK94T8ZL/1910.html}
+  keywords = {October2022report}
 }
 
 @book{mardia2000di,
@@ -74,8 +71,7 @@
   urldate = {2022-02-16},
   abstract = {One of the major problems for maximum likelihood estimation in the well-established directional models is that the normalising constants can be difficult to evaluate. A new general method of "score matching estimation" is presented here on a compact oriented Riemannian manifold. Important applications include von Mises-Fisher, Bingham and joint models on the sphere and related spaces. The estimator is consistent and asymptotically normally distributed under mild regularity conditions. Further, it is easy to compute as a solution of a linear set of equations and requires no knowledge of the normalizing constant. Several examples are given, both analytic and numerical, to demonstrate its good performance.},
   archiveprefix = {arXiv},
-  keywords = {October2022report},
-  file = {/home/kassel/Zotero/storage/SAIDJUPE/Mardia et al. - 2016 - Score matching estimators for directional distribu.pdf;/home/kassel/Zotero/storage/ZABPMMDA/1604.html}
+  keywords = {October2022report}
 }
 
 @inproceedings{mardia2018ne,
@@ -87,8 +83,7 @@
   pages = {724--729},
   doi = {10.23919/ICIF.2018.8455640},
   abstract = {One of the major stumbling blocks in the use of standard directional distributions is difficulty in implementing the well-established maximum likelihood estimation method. The root of the problem is that their normalizing constants are complicated. To circumvent this problem, sometimes a member from a non-exponential family is used and then a relevant member from the exponential family is matched. These alternative distributions have simple moment estimators though the matching can be somewhat arbitrary. Firstly, we resolve the estimation problem by introducing the score matching estimators for directional distributions. Secondly, we resolve the matching problem optimally by introducing the score matching approximation. We give some insight into these proposals through the basic directional distributions, though the results are optimal and universally applicable for distributions on compact manifolds.},
-  keywords = {October2022report},
-  file = {/home/kassel/Zotero/storage/9Z8JP6A7/Mardia - 2018 - A New Estimation Methodology for Standard Directio.pdf;/home/kassel/Zotero/storage/J4CV4V6J/8455640.html}
+  keywords = {October2022report}
 }
 
 @techreport{scealy2022ro,
@@ -117,8 +112,7 @@
   urldate = {2022-01-25},
   abstract = {Compositional data are challenging to analyse due to the non-negativity and sum-to-one constraints on the sample space. With real data it is often the case that many of the compositional components are highly right-skewed, with large numbers of zeros. Major limitations of currently available models for compositional data include one or more of the following: insufficient flexibility in terms of distributional shape; difficulty in accommodating zeros in the data in estimation; and lack of computational viability in moderate to high dimensions. In this article we propose a new model, the polynomially-tilted pairwise interaction (PPI) model, for analysing compositional data. Maximum likelihood estimation is difficult for the PPI model. Instead, we propose novel score matching estimators, which entails extending the score matching approach to Riemannian manifolds with boundary. These new estimators are available in closed form and simulation studies show that they perform well in practice. As our main application we analyse real microbiome count data with fixed totals using a multinomial latent variable model with a PPI model for the latent variable distribution. We prove that, under certain conditions, the new score matching estimators are consistent for the parameters in the new multinomial latent variable model.},
   keywords = {October2022report},
-  annotation = {\_eprint: https://doi.org/10.1080/01621459.2021.2016422},
-  file = {/home/kassel/Zotero/storage/6TXDND5F/jasa_supp.zip;/home/kassel/Zotero/storage/PIUHFQTN/Scealy and Wood - 2022 - Score matching for compositional distributions.pdf;/home/kassel/Zotero/storage/L27AHUKG/01621459.2021.html}
+  annotation = {\_eprint: https://doi.org/10.1080/01621459.2021.2016422}
 }
 
 @article{windham1995ro,
@@ -134,8 +128,7 @@
   url = {http://www.jstor.org/stable/2346159},
   urldate = {2022-05-04},
   abstract = {A robust method for fitting a model from a parametric family is fundamental to effective statistical analysis. A procedure is given for robustifying any model fitting process by using weights from the family from which the model is to be chosen. The weighting reduces the influence of information that is not compatible with the model family, while maintaining the basic structure of a familiar model fitting process. The procedure produces a parametric family of model fitting functions. The value of the parameter determines the degree to which the weighting influences the robustified model fit. A mechanism for determining an appropriate value for the parameter is described.},
-  keywords = {October2022report,robust},
-  file = {/home/kassel/Zotero/storage/GJD2DIR2/Windham - 1995 - Robustifying Model Fitting.pdf}
+  keywords = {October2022report,robust}
 }
 
 @article{yu2019ge,
@@ -150,8 +143,7 @@
   url = {http://jmlr.org/papers/v20/18-278.html},
   urldate = {2022-02-16},
   abstract = {A common challenge in estimating parameters of probability density functions is the intractability of the normalizing constant. While in such cases maximum likelihood estimation may be implemented using numerical integration, the approach becomes computationally intensive. The score matching method of Hyv\"arinen (2005) avoids direct calculation of the normalizing constant and yields closed-form estimates for exponential families of continuous distributions over \$\textbackslash mathbb\{R\}\^m\$. Hyv\"arinen (2007) extended the approach to distributions supported on the non-negative orthant, \$\textbackslash mathbb\{R\}\_+\^m\$. In this paper, we give a generalized form of score matching for non-negative data that improves estimation efficiency. As an example, we consider a general class of pairwise interaction models. Addressing an overlooked inexistence problem, we generalize the regularized score matching method of Lin et al. (2016) and improve its theoretical guarantees for non-negative Gaussian graphical models.},
-  keywords = {October2022report},
-  file = {/home/kassel/Zotero/storage/BRITQ2RC/Yu et al. - 2019 - Generalized Score Matching for Non-Negative Data.pdf}
+  keywords = {October2022report}
 }
 
 @article{yu2020ge,
@@ -167,7 +159,6 @@
   urldate = {2022-02-16},
   abstract = {Estimation of density functions supported on general domains arises when the data is naturally restricted to a proper subset of the real space. This problem is complicated by typically intractable normalizing constants. Score matching provides a powerful tool for estimating densities with such intractable normalizing constants, but as originally proposed is limited to densities on \$\textbackslash mathbb\{R\}\^m\$ and \$\textbackslash mathbb\{R\}\_+\^m\$. In this paper, we offer a natural generalization of score matching that accommodates densities supported on a very general class of domains. We apply the framework to truncated graphical and pairwise interaction models, and provide theoretical guarantees for the resulting estimators. We also generalize a recently proposed method from bounded to unbounded domains, and empirically demonstrate the advantages of our method.},
   archiveprefix = {arXiv},
-  keywords = {October2022report},
-  file = {/home/kassel/Zotero/storage/C3SP5PPT/Yu et al. - 2020 - Generalized Score Matching for General Domains.pdf;/home/kassel/Zotero/storage/GP8XH8QV/2009.html}
+  keywords = {October2022report}
 }
 

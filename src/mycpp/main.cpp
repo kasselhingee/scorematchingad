@@ -1,5 +1,3 @@
-//R CMD LINK g++ -I/usr/share/R/include -I../inst/include -I/home/kassel/R/x86_64-pc-linux-gnu-library/4.0/Rcpp/include -Wl,--export-dynamic -fopenmp -Wl,-Bsymbolic-functions -Wl,-z,relro -L/usr/lib/R/lib -lR -lpcre2-8 -llzma -lbz2 -lz -lrt -ldl -lm -licuuc -licui18n  mycpp/main.cpp -o klhexec
-
 # include "scm.cpp"
 
 int main(int argc, char** argv)
