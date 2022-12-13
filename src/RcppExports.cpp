@@ -147,32 +147,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pTapeJacobianSwap
-XPtr< CppAD::ADFun<double> > pTapeJacobianSwap(XPtr< CppAD::ADFun<double> > pfun, veca1 value, veca1 theta);
-RcppExport SEXP _scorecompdir_pTapeJacobianSwap(SEXP pfunSEXP, SEXP valueSEXP, SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type value(valueSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(pTapeJacobianSwap(pfun, value, theta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// pTapeHessianSwap
-XPtr< CppAD::ADFun<double> > pTapeHessianSwap(XPtr< CppAD::ADFun<double> > pfun, veca1 value, veca1 theta);
-RcppExport SEXP _scorecompdir_pTapeHessianSwap(SEXP pfunSEXP, SEXP valueSEXP, SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type value(valueSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(pTapeHessianSwap(pfun, value, theta));
-    return rcpp_result_gen;
-END_RCPP
-}
 // pTapeJacobian
 XPtr< CppAD::ADFun<double> > pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun, veca1 x, veca1 dynparam);
 RcppExport SEXP _scorecompdir_pTapeJacobian(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
@@ -237,8 +211,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_pForward0", (DL_FUNC) &_scorecompdir_pForward0, 3},
     {"_scorecompdir_pHessian", (DL_FUNC) &_scorecompdir_pHessian, 3},
     {"_scorecompdir_pTaylorApprox", (DL_FUNC) &_scorecompdir_pTaylorApprox, 5},
-    {"_scorecompdir_pTapeJacobianSwap", (DL_FUNC) &_scorecompdir_pTapeJacobianSwap, 3},
-    {"_scorecompdir_pTapeHessianSwap", (DL_FUNC) &_scorecompdir_pTapeHessianSwap, 3},
     {"_scorecompdir_pTapeJacobian", (DL_FUNC) &_scorecompdir_pTapeJacobian, 3},
     {"_scorecompdir_pTapeHessian", (DL_FUNC) &_scorecompdir_pTapeHessian, 3},
     {"_scorecompdir_pParameter", (DL_FUNC) &_scorecompdir_pParameter, 1},

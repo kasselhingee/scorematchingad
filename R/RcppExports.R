@@ -8,20 +8,6 @@
 #' @return An integer. 0 if the testable parts pass.
 NULL
 
-#' @description Apply the `toM` function of a manifold object.
-#' @param pman An XPtr to a manifold object. Created by `pmanifold()`.
-#' @param u A vector to be transformed to the manifold via `toM`.
-#' @return A vector on the manifold.
-NULL
-
-#' @param xbetain a concatenated vector of sqrt(x) and beta
-#' @param n The dimension of x.
-#' @param manifoldname The name of the manifold to transform to
-#' @param weightname The name of the weight function to use
-#' @param acut The constraint a_c in the weight function
-#' @return An RCpp::XPtr object pointing to the ADFun
-NULL
-
 #' @param p dimension of measurements
 #' @param bd dimension of the parameter vector
 #' @param llname name of the likelihood function
@@ -33,40 +19,6 @@ NULL
 #' @param newvalue The value (in the sense after the switch has occured) at which to tape the ADFun
 #' @param newdynparam The value of the now dynamic parameters at which to tape the ADFun
 #' @return A pointer to an ADFun
-NULL
-
-#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-#' @param u A vector in the simplex.
-#' @param beta a vector of the dynamic parameters
-#' @return The Jacobian of pfun
-NULL
-
-#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-#' @param u A vector in the simplex.
-#' @param beta a vector of the dynamic parameters
-#' @return The Hessian of pfun
-NULL
-
-#' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
-#' @param value A vector in the domain of the taped function.
-#' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
-#' this vector forms the centre of the Taylor approximation
-#' @param theta a vector of the dynamic parameters
-#' @param order The order of Taylor expansion to use.
-#' @description Taylor expansion in the `theta` dimensions, to approximate the gradient wrt the `value` dimensions.
-#' @return The approximate value of the gradient, with respect to theta, of pfun
-NULL
-
-#' @noRd
-#' @title The approximate value of the gradient (wrt space 1) of recorded function
-#' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
-#' @param value A vector in the domain of the taped function.
-#' @param thetacentre A vector in the space of the dynamic parameters of the recorded function
-#' this vector forms the centre of the Taylor approximation
-#' @param theta a vector of the dynamic parameters
-#' @param order The order of Taylor expansion to use.
-#' @description Taylor expansion in the `theta` dimensions, to approximate the gradient wrt the `value` dimensions.
-#' @return The approximate value of the gradient, with respect to theta, of pfun
 NULL
 
 #' @title Indicate Constant Components of Range
@@ -96,10 +48,24 @@ testmanifold <- function(pman, u_ad) {
     .Call('_scorecompdir_testmanifold', PACKAGE = 'scorecompdir', pman, u_ad)
 }
 
+#' @noRd
+#' @title Apply to `toM` function of a manifold object
+#' @description Apply the `toM` function of a manifold object.
+#' @param pman An XPtr to a manifold object. Created by `pmanifold()`.
+#' @param u A vector to be transformed to the manifold via `toM`.
+#' @return A vector on the manifold.
 ptoM <- function(pman, u_ad) {
     .Call('_scorecompdir_ptoM', PACKAGE = 'scorecompdir', pman, u_ad)
 }
 
+#' @noRd
+#' @title The score matching objective calculator.
+#' @param xbetain a concatenated vector of sqrt(x) and beta
+#' @param n The dimension of x.
+#' @param manifoldname The name of the manifold to transform to
+#' @param weightname The name of the weight function to use
+#' @param acut The constraint a_c in the weight function
+#' @return An RCpp::XPtr object pointing to the ADFun
 ptapesmo <- function(u_ad, theta_ad, pll, pman, weightname, acut, verbose) {
     .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, pman, weightname, acut, verbose)
 }
@@ -112,21 +78,32 @@ swapDynamic <- function(pfun, newvalue, newdynparam) {
     .Call('_scorecompdir_swapDynamic', PACKAGE = 'scorecompdir', pfun, newvalue, newdynparam)
 }
 
+#' @title Evaluate the Jacobian of a tape
+#' @param pfun Rcpp::XPtr to an ADFun
+#' @param x A vector in the domain of the taped function.
+#' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
+#' @return The Jacobian of pfun
+#' @export
 pJacobian <- function(pfun, value, theta) {
     .Call('_scorecompdir_pJacobian', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 
-#' @noRd
 #' @title Evaluate a CppAD tape
 #' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 #' @param x A vector in the domain of the taped function.
-#' @param dynparam a vector of the dynamic parameters
+#' @param dynparam a vector of the dynamic parameters.
 #' @return The value of `pfun` evaluated at `x` with parameters `dynparam`.
 #' @export
 pForward0 <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pForward0', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
+#' @noRd
+#' @title OBSOLETE: The Hessian of recorded function. Used only in smobj.R
+#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
+#' @param u A vector in the simplex.
+#' @param beta a vector of the dynamic parameters
+#' @return The Hessian of pfun
 pHessian <- function(pfun, value, theta) {
     .Call('_scorecompdir_pHessian', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
@@ -144,15 +121,6 @@ pTaylorApprox <- function(pfun, u, centre, dynparam, order) {
     .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, u, centre, dynparam, order)
 }
 
-pTapeJacobianSwap <- function(pfun, value, theta) {
-    .Call('_scorecompdir_pTapeJacobianSwap', PACKAGE = 'scorecompdir', pfun, value, theta)
-}
-
-pTapeHessianSwap <- function(pfun, value, theta) {
-    .Call('_scorecompdir_pTapeHessianSwap', PACKAGE = 'scorecompdir', pfun, value, theta)
-}
-
-#' @noRd
 #' @title Tape the Jacobian of CppAD Tape
 #' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 #' @param x A vector in the domain of the taped function.
@@ -172,7 +140,6 @@ pTapeJacobian <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pTapeJacobian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
-#' @noRd
 #' @title Tape the Hessian of a CppAD Tape
 #' @inheritParams pTapeJacobian
 #' @description Creates a tape of the Hessian of a function taped by CppAD.
@@ -195,7 +162,6 @@ pParameter <- function(pfun) {
     .Call('_scorecompdir_pParameter', PACKAGE = 'scorecompdir', pfun)
 }
 
-#' @noRd
 #' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 #' @inheritParams pTapeJacobian
 #' @description A quadratic function can be written as
