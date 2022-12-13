@@ -64,23 +64,9 @@ ppi_cppad_values <- function(prop, stheta, isfixed,
         wboundary = datasplit$wboundary
         )
   
-  SE <- try({
-    cppadSE(
-      tapes$smotape, 
-      theta = t_si2f(stheta, tapes$info$isfixed), 
-      utabl = datasplit$interior,
-      Jsmofun_u = Jsmofun_u,
-      Hsmofun_u = Hsmofun_u,
-      uboundary = datasplit$uboundary,
-      boundaryapprox = datasplit$boundaryapprox,
-      approxorder = approxorder,
-      w = datasplit$winterior,
-      wboundary = datasplit$wboundary
-      )})
-
   return(list(obj = objval,
               grad = gradval,
-              hess = hessval,
-              SE = SE))
+              hess = hessval
+              ))
 }
 
