@@ -57,7 +57,7 @@ rppi <- function(n, ..., paramvec = NULL, maxden = 4){
     paramvec <- ppi_paramvec(...)
   }
   if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA. Did you forget to specify AL, bL or beta?")}
-  parammats <- fromPPIparamvec(paramvec)
+  parammats <- ppi_parammats(paramvec)
   beta <- parammats$beta
   AL <- parammats$AL
   bL <- parammats$bL
@@ -148,7 +148,7 @@ dppi <- function(Y, AL = NULL,bL = NULL, beta = NULL, paramvec = NULL){
   else {
     if (!all(is.null(beta), is.null(AL), is.null(bL))){stop("Providing a paramvec is incompatible with providing a beta, AL or bL.")}
     if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA")}
-    parammats <- fromPPIparamvec(paramvec)
+    parammats <- ppi_parammats(paramvec)
     beta <- parammats$beta
     AL <- parammats$AL
     bL <- parammats$bL

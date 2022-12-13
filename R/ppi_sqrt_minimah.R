@@ -31,7 +31,7 @@ ppi_usertheta_estimator1_compatible_zerob <- function(usertheta){
   isfixed <- t_u2i(usertheta)
   if (!all(d_isfixed == isfixed)){return(FALSE)}
 
-  mats <- fromPPIparamvec(usertheta)
+  mats <- ppi_parammats(usertheta)
   if (!all(mats$bL == 0)){return(FALSE)}
   else {return(TRUE)}
 }
@@ -128,13 +128,13 @@ estimator1 <- function(Y,acut,incb, beta, w=rep(1, nrow(Y)), computeSE = FALSE)
             } else {
               SE <- c(SE, rep(0, p-1), 0*beta) 
             }
-            SE <- c(list(paramvec = SE), fromPPIparamvec(SE))
+            SE <- c(list(paramvec = SE), ppi_parammats(SE))
           }
         } else {
           SE <- "Not calculated."
         }
 
-	return(list(est = c(list(paramvec=theta), fromPPIparamvec(theta)),
+	return(list(est = c(list(paramvec=theta), ppi_parammats(theta)),
                     SE = SE,
                     info = list(W=W_est)))
 }

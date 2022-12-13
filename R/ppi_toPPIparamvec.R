@@ -13,22 +13,6 @@ toPPIcannparam <- function(ALs, bL, beta, manifold = "sphere"){
   return(out)
 }
 
-# @describeIn toPPIparamvec Reverse of `toPPIparamvec()`.
-# @export
-fromPPIparamvec <- function(theta, p = NULL){
-  calcp <- ppiltheta2p(length(theta))
-  if(!is.null(p)){stopifnot(p == calcp)}
-  p <- calcp
-  AL <- tosmatrix(theta[1:((p-1) + (p-1)*(p-2)/2)])
-  bL <- theta[p - 1 + ((p-2) * (p-1)/2) + 1:(p-1)]
-  beta <- theta[(p - 1 + ((p-2) * (p-1)/2) + (p-1) + 1):length(theta)]
-  return(list(
-    AL = AL,
-    bL = bL,
-    beta = beta
-  ))
-}
-
 # returns the length of the theta vector for given dimension p
 ppithetalength <- function(p){
   p + #the beta

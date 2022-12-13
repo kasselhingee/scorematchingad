@@ -194,7 +194,7 @@ ppi_sqrt_minimah_full <- function(Y, acut, betap, w){
   if (!is.null(betap)){paramvec <- c(paramvec, betap)}
   fit <- list()
   fit$est <- c(list(paramvec = paramvec),
-               fromPPIparamvec(paramvec))
+               ppi_parammats(paramvec))
   fit$SE <- "Not calculated."
   return(fit)
 }

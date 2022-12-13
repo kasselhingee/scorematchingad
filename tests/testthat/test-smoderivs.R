@@ -49,7 +49,7 @@ test_that("Gradient of smo for ppi wrt theta is correct for interior points", {
   gradt_cppad <- pJacobian(smoppi, testtheta, m$sample[1, ])
   u <- m$sample[1, , drop = FALSE]
   gradt_hardcoded <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("testcanntheta"))
-  gradt_components <- fromPPIparamvec(attr(gradt_hardcoded, "gradient"), m$p)
+  gradt_components <- ppi_parammats(attr(gradt_hardcoded, "gradient"))
   gradt_components$beta <- gradt_components$beta * 2 #to account for cannonical exponential form
   gradt_cppad_numerical <- numericDeriv(quote(pForward0(smoppi, testtheta, u)), c("testtheta"))
   expect_equal(gradt_cppad, do.call(toPPIparamvec, gradt_components), tolerance = 1E-5)
@@ -81,7 +81,7 @@ test_that("Gradient of smo approxcentre for ppi wrt theta is correct", {
   gradt_cppad <- pJacobian(smoppi, testtheta, m$sample[1, ])
   u <- m$sample[1, , drop = FALSE]
   gradt_hardcoded <- numericDeriv(quote(estimatorall1_smo(testcanntheta, u, acut)), c("testcanntheta"))
-  gradt_components <- fromPPIparamvec(attr(gradt_hardcoded, "gradient"), m$p)
+  gradt_components <- ppi_parammats(attr(gradt_hardcoded, "gradient"))
   gradt_components$beta <- gradt_components$beta * 2 #to account for cannonical exponential form
   gradt_cppad_numerical_approx <- numericDeriv(quote(pTaylorApprox(smoppi_u, m$sample[1,], acentres[1,], testtheta, 100)),
                                                c("testtheta"))

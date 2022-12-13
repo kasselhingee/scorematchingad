@@ -141,7 +141,7 @@ ppi_alr_gengamma <- function(Y,betap,w)
               rep(0,sp), #bL
               ppi[p-1 + (p-2)*(p-1)/2 + seq(1, sp)], #betaL
               betap)
-	return(list(est = c(list(paramvec = ppiAll), fromPPIparamvec(ppiAll)),
+	return(list(est = c(list(paramvec = ppiAll), ppi_parammats(ppiAll)),
                     SE = "Not calculated.",
                     info = list(W=W,d=d)))
 
@@ -149,9 +149,9 @@ ppi_alr_gengamma <- function(Y,betap,w)
 }
 
 usertheta_ppi_alr_gengamma_compatible <- function(usertheta){
-  if (is.na(tail(fromPPIparamvec(usertheta)$beta, 1))){return(FALSE)}
+  if (is.na(tail(ppi_parammats(usertheta)$beta, 1))){return(FALSE)}
   p <- ppiltheta2p(length(usertheta))
-  d_utheta <- ppi_paramvec(p, bL = 0, betap = tail(fromPPIparamvec(usertheta)$beta, 1))
+  d_utheta <- ppi_paramvec(p, bL = 0, betap = tail(ppi_parammats(usertheta)$beta, 1))
   if (isTRUE(all((d_utheta == usertheta)[!is.na(d_utheta)])) &&
       all(is.na(usertheta[is.na(d_utheta)])) ){return(TRUE)}
   else (return(FALSE))

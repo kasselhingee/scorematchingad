@@ -126,10 +126,10 @@ ppi_sqrt_prodh_zerob <- function(Y, acut, beta, w){
                              bL = 0,
                              beta = beta)
   ))
-  fit$est <- c(fit$est, fromPPIparamvec(fit$est$paramvec))
+  fit$est <- c(fit$est, ppi_parammats(fit$est$paramvec))
   fit$SE <- list(paramvec = ppi_paramvec(AL = tosmatrix(rawSE),
                                               bL = 0, beta = 0))
-  fit$SE <- c(fit$SE, fromPPIparamvec(fit$SE$paramvec))
+  fit$SE <- c(fit$SE, ppi_parammats(fit$SE$paramvec))
   return(fit)
 }
 
@@ -147,10 +147,10 @@ ppi_sqrt_prodh <- function(Y, acut, beta, w){
   estparamvec <- c(rawout$estimator2, beta)
   fit <- list()
   fit$est <- c(list(paramvec = estparamvec),
-               fromPPIparamvec(estparamvec))
+               ppi_parammats(estparamvec))
   SEparamvec <- c(rawSE, 0 * beta)
   fit$SE <- c(list(paramvec = SEparamvec),
-                 fromPPIparamvec(SEparamvec))
-  fit$SE <- c(fit$SE, fromPPIparamvec(fit$SE$paramvec))
+                 ppi_parammats(SEparamvec))
+  fit$SE <- c(fit$SE, ppi_parammats(fit$SE$paramvec))
   return(fit)
 }

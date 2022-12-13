@@ -40,7 +40,7 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
   expect_snapshot_value(signif(std1, 8), style = "json2")
 
   #estimated parameters
-  thetamats <- fromPPIparamvec(estimator$est$paramvec)
+  thetamats <- ppi_parammats(estimator$est$paramvec)
   AL <- thetamats$AL
   bL <- thetamats$bL
   dim(bL) <- c(length(bL), 1)
@@ -86,7 +86,7 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
   std1 <- std1[ordindx][1:(length(estimate1))] #rearrange to combn ordering for historical comparison
 
   #estimated parameters
-  thetamats <- fromPPIparamvec(estimator$est$paramvec)
+  thetamats <- ppi_parammats(estimator$est$paramvec)
   AL <- thetamats$AL
 
   #values in Table 3 in the article:

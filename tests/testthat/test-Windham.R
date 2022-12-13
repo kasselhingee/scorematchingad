@@ -46,8 +46,8 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
 
   #check non-robust estimates
   est_unload <- ppi_alr_gengamma(prop, betap = beta[p], w = rep(1, nrow(prop)))
-  # fromPPIparamvec(est_unload$ppi, p)$ALs #fairly terrible at the AL
-  # fromPPIparamvec(est_unload$ppi, p)$beta #pretty good at beta
+  # ppi_parammats(est_unload$ppi)$ALs #fairly terrible at the AL
+  # ppi_parammats(est_unload$ppi)$beta #pretty good at beta
 
   #calculate robust estimates
   cW=0.001

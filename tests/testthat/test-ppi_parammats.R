@@ -5,7 +5,7 @@ test_that("to then from PPI param vector returns the same params", {
   bL <- runif(p-1)
   beta <- runif(p, -1, 0)
   paramvec <- toPPIparamvec(ALs,  bL, beta)
-  params2 <- fromPPIparamvec(paramvec, p)
+  params2 <- ppi_parammats(paramvec)
   expect_equal(params2$AL, ALs)
   expect_equal(params2$bL, bL)
   expect_equal(params2$beta, beta)
@@ -23,7 +23,7 @@ test_that("ppiltheta2p() matches other operations", {
 })
 
 test_that("indexcombinations() for vectorising matrices matches toPPI, fromPPI, and upper.tri()", {
-  #skip("indexcombinations() not yet trying match to/fromPPIparamvec and upper.tri() - see reordering test below")
+  #skip("indexcombinations() not yet trying match to/ppi_parammats and upper.tri() - see reordering test below")
   p = 5
   Amat <- matrix(NA, nrow = p-1, ncol = p-1)
   diag(Amat) <- seq(1, p-1)
@@ -63,7 +63,7 @@ test_that("from PPI param vector order", {
   p = 5
   bL <- runif(p-1)
   beta <- runif(p, -1, 0)
-  paramats <- fromPPIparamvec(c(seq(1:((p-1) + (p-1) * (p-2)/2)), bL, beta), p)
+  paramats <- ppi_parammats(c(seq(1:((p-1) + (p-1) * (p-2)/2)), bL, beta))
 
   #alternative
   sp <- p-1

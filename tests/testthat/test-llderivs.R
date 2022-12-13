@@ -49,7 +49,7 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
 
   #gradiant
   ppill_r_swap <- function(theta, u){
-    pars <- fromPPIparamvec(theta, length(u))
+    pars <- ppi_parammats(theta)
     ppill_r(u, pars$beta, pars$AL, pars$bL)
   }
   numderiv <- numericDeriv(quote(ppill_r_swap(theta, u)), c("theta"))
@@ -87,7 +87,7 @@ test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estima
 
   #gradiant
   ppill_r_S_swap <- function(theta, z){
-    pars <- fromPPIparamvec(theta, length(z))
+    pars <- ppi_parammats(theta)
     ppill_r_S(z, pars$beta, pars$AL, pars$bL)
   }
   numderiv <- numericDeriv(quote(ppill_r_S_swap(theta, u)), c("theta"))

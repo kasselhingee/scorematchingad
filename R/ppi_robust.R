@@ -19,7 +19,7 @@ ppi_robust <- function(Y, cW, ...){
 
   #make results nicer and consistent with ppi()
   out <- list(
-    est = c(list(paramvec = est$theta), fromPPIparamvec(est$theta)),
+    est = c(list(paramvec = est$theta), ppi_parammats(est$theta)),
     SE = "Not calculated.",
     info = est$optim
   )
