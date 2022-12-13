@@ -2,7 +2,7 @@
 #' @description
 #' Performs the Windham robustification algorithm exactly as described in \insertCite{scealy2023ro;textual}{scorecompdir} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This method gives the same results as the more general implementation in [`Windham()`].
 #' @inheritParams ppi_robust
-#' @inheritSection ppi_robust return
+#' @inherit ppi_robust return
 #' @param ... Passed to a special version of [`Windham()`] and on to [`ppi()`]. The argument `fpcontrol` is not allowed as this is hardcoded into `ppi_robust_alrgengamma()`.
 #' @details
 #' This method must fit a PPI model via additive-log ratio transform with \eqn{b_L=0} fixed and the final element of \eqn{\beta} fixed.

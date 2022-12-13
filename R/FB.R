@@ -61,6 +61,7 @@ FB <- function(Y, km = NULL, A = NULL, control = default_Rcgmin()){
 #'  * `info` a variety of information about the estimation process and results.
 
 # non-normalised density function
+#' @noRd
 qdFB <- function(u, k, m, A){
   exp(u %*% A %*% u + k * m %*% u)
 }

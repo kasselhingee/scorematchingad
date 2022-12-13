@@ -9,6 +9,7 @@ t_u2i <- function(usertheta){
 }
 
 
+#' @noRd
 #' @param filler A function that generates start for theta. Must take a single argument, `n` the number for values to generate.
 #' @describeIn t_u2i Convert `usertheta` to a `starttheta` by filling in the `NA` elements.
 t_u2s <- function(usertheta, filler = function(n){seq(length.out = n)}){
@@ -18,11 +19,14 @@ t_u2s <- function(usertheta, filler = function(n){seq(length.out = n)}){
   return(starttheta)
 }
 
+
+#' @noRd
 #' @describeIn t_u2i Convert `usertheta` to a `starttheta` by filling in the `NA` elements with numbers between 0 and 1 from `runif()`.
 t_u2s_runif <- function(usertheta){
   t_u2s(usertheta, filler = runif)
 }
 
+#' @noRd
 #' @param c A constant
 #' @describeIn t_u2i Convert `usertheta` to a `starttheta` by filling in the `NA` elements with numbers between 0 and 1 from `runif()`.
 t_u2s_const <- function(usertheta, c){
@@ -30,6 +34,7 @@ t_u2s_const <- function(usertheta, c){
 }
 
 
+#' @noRd
 #' @describeIn t_u2i Convert `starttheta` and `isfixed` back to a `usertheta` by replacing any non-fixed elements with `NA`.
 t_si2u <- function(starttheta, isfixed){
   stopifnot(all(isfixed %in% c(TRUE, FALSE)))
@@ -39,6 +44,7 @@ t_si2u <- function(starttheta, isfixed){
   return(usertheta)
 }
 
+#' @noRd
 #' @param fitted Only the fitted elements of `theta`. Must be the same number as `NA` values in `usertheta` or `FALSE` in `isfixed`.
 #' @describeIn t_u2i Convert fitted values and `usertheta` to a `starttheta` by replacing any non-fixed elements with the fitted values.
 t_fu2t <- function(fitted, usertheta){
@@ -49,6 +55,7 @@ t_fu2t <- function(fitted, usertheta){
   return(theta)
 }
 
+#' @noRd
 #' @param theta A fully populated parameter vector.
 #' @describeIn t_u2i Convert a `usertheta` with a full theta into just the vector of fitted elements by keeping only the elements of `theta` that match `NA` values in `usertheta`.
 t_ut2f <- function(usertheta, theta){
@@ -57,6 +64,7 @@ t_ut2f <- function(usertheta, theta){
   return(out)
 }
 
+#' @noRd
 #' @describeIn t_u2i Convert `fitted`, `starttheta` and `isfixed` to a `theta` by replacing any non-fixed elements with the fitted values.
 t_sfi2u <- function(fitted, starttheta, isfixed){
   stopifnot(length(starttheta) == length(isfixed))
@@ -65,6 +73,7 @@ t_sfi2u <- function(fitted, starttheta, isfixed){
   return(theta)
 }
 
+#' @noRd
 #' @describeIn t_u2i Convert `starttheta` into a vector of the just the elements to be fitted.
 t_si2f <- function(starttheta, isfixed){
   stopifnot(length(starttheta) == length(isfixed))
@@ -72,6 +81,7 @@ t_si2f <- function(starttheta, isfixed){
   return(starttheta[!isfixed])
 }
 
+#' @noRd
 #' @describeIn t_u2i Safely join a usertheta with a user-defined starttheta (which may have NA values) to create a full starttheta
 t_us2s <- function(usertheta, starttheta){
   if (is.null(starttheta)){return(NULL)}

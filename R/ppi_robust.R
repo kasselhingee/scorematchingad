@@ -5,6 +5,10 @@
 #' @param cW A vector of robustness tuning constants. Easy to build using [`ppi_cW()`] and [`ppi_cW_auto()`]. See [`Windham()`] for more details on `cW`.
 #' @param ... Passed to [`Windham()`] then to [`ppi()`].
 #' @family Windham functions
+#' @return A list:
+#'  * `est` The estimated parameters as vector form (`paramvec`) and as `AL`, `bL` and `beta`.
+#'  * `SE` "Not calculated." Returned for consistency with other estimators.
+#'  * `info` Information returned in the `optim` slot of [`Windham()`]. Includes the final weights in `finalweights`.
 #' @export
 ppi_robust <- function(Y, cW, ...){
   ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
