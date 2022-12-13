@@ -15,7 +15,7 @@ test_that("cppad_search with weights gives similar result to cppad_closed", {
   expect_equal(estsearch$SE, estclosed$SE)
 })
 
-test_that("cppad_search output value matches tape_smvalues result". {
+test_that("cppad_search output value matches tape_smvalues result", {
   set.seed(1234)
   m <- ppi_egmodel(1000, maxden = 4)
 
