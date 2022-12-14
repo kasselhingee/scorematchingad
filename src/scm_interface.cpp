@@ -108,17 +108,15 @@ XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
   //choose weight function
   a1type (*h2fun)(const veca1 &, const double &) = nullptr;
   if (weightname.compare("prodsq") == 0){
-    h2fun = prodsq;
+    h2fun = divweight::prodsq;
   }
   if (weightname.compare("minsq") == 0){
-    h2fun = minsq;
+    h2fun = divweight::minsq;
   }
   if (weightname.compare("ones") == 0){
-    h2fun = oneweights;
+    h2fun = divweight::oneweights;
   }
-  if (weightname.compare("prod1") == 0){
-    h2fun = hprod;
-  }
+
   //check weight function
   if (h2fun == nullptr){
     throw std::invalid_argument("Matching weight function not found");

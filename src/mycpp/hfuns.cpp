@@ -1,3 +1,11 @@
+#ifndef mycpp_hfuns
+#define mycpp_hfuns
+
+# include <RcppEigen.h>
+# include <cppad/cppad.hpp> //for CondExpLe and similar below
+
+namespace divweight { //namespace for divergence weight functions
+
   //////////////////////////////////////////
   // weight function and grad(h^2) functions
 
@@ -34,14 +42,6 @@
   }
 
 
-  //hprod  - doesn't work mathematically - could be removed
-  template <class Type>
-  Type hprod(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
-    Type prd;
-    prd = x.array().prod();
-    //constraint
-    Type acutb(acut);
-    Type out = CppAD::CondExpLe(prd, acutb, prd, acutb);
-    return(out);
-  }
+} // namespace for divergence weight functions
 
+#endif
