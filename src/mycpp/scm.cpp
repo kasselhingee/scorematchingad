@@ -3,7 +3,7 @@
 # include "mantrans.hpp"
 # include "divweights.hpp"
 # include "likelihoods.hpp"
-# include "PrintFor.cpp"
+# include "PrintFor.hpp"
 
 // define a function that tapes a log likelihood
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold

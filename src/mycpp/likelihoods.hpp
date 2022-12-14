@@ -4,7 +4,7 @@
 
 #include "dirichlet.hpp"
 #include "ppi.hpp"
-#include "vMF.cpp"
+#include "vMF.hpp"
 
 #endif
 

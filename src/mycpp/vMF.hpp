@@ -1,6 +1,9 @@
-# include "PrintFor.cpp"
+#ifndef mycpp_vMF
+#define mycpp_vMF
 
-namespace { // begin the empty namespace
+# include "PrintFor.hpp"
+
+namespace ll {
 
   template <class T>
   T ll_vMF(const Eigen::Matrix<T, Eigen::Dynamic, 1> &u,
@@ -179,3 +182,5 @@ namespace { // begin the empty namespace
   }
 
 }
+
+#endif

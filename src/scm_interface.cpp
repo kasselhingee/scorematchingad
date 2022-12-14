@@ -158,16 +158,16 @@ XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M man
     ll = ll::ll_ppi;
   }
   if (llname.compare("vMF") == 0){
-    ll = ll_vMF;
+    ll = ll::ll_vMF;
   }
   if (llname.compare("Bingham") == 0){
-    ll = ll_Bingham;
+    ll = ll::ll_Bingham;
   }
   if (llname.compare("FB") == 0){
-    ll = ll_FB;
+    ll = ll::ll_FB;
   }
   if (llname.compare("Rivest") == 0){
-    ll = ll_Rivest;
+    ll = ll::ll_Rivest;
   }
   //check ll function
   if (ll == nullptr){
