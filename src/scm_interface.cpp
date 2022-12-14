@@ -67,19 +67,6 @@ vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
 }
 
 
-vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
-                     vecd u, vecd centre,
-                     vecd dynparam, size_t order){
-  vecd out(pfun->Range());
-  pfun->new_dynamic(dynparam);
-  out = taylorapprox(*pfun,
-                     centre,
-                     order,
-                     u);
-
-  return(out);
-}
-
 Rcpp::XPtr< CppAD::ADFun<double> >  pTapeJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam){
   // x and dynparam must have elements of a1type so that taping can proceed
