@@ -1,6 +1,9 @@
 #ifndef PrintForIncluded_cpp
 #define PrintForIncluded_cpp
 
+#include <RcppEigen.h>
+#include <cppad/cppad.hpp>
+
 template <class T> //T must be something CppAD::PrintFor can print
 void PrintForVec(const char* before, const T & printvec){
   CppAD::PrintFor(before, printvec[0]);
