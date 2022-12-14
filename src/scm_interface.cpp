@@ -1,9 +1,5 @@
-//for content that is Rcpp specific
-#include <RcppEigen.h>
-// [[Rcpp::depends(RcppEigen)]]
-
-using namespace Rcpp;
 #include "scm_interface.hpp"
+using namespace Rcpp;
 
 XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   manifold<a1type> * out;  //returning a pointer

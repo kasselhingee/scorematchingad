@@ -3,6 +3,9 @@
 
 # include "scorecompdir_types.h"
 # include <cppad/cppad.hpp>
+# include "tapedivweight.hpp"
+# include "mycpp/mantrans.hpp"
+# include "mycpp/PrintFor.hpp"
 
 CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement for taping
                              veca1 theta, //a vector of parameters for taping

@@ -1,8 +1,4 @@
-# include "scorecompdir_types.h"
 # include "tapesmo.hpp"
-# include "tapedivweight.hpp"
-# include "mycpp/mantrans.hpp"
-# include "mycpp/PrintFor.hpp"
 
 using namespace Rcpp;
 
