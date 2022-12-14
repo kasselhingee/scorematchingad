@@ -1,4 +1,8 @@
+#ifndef mycpp_manifold_Snative
+#define mycpp_manifold_Snative
+
 // code for various tools for the sphere, without transformation required
+namespace mantran {
 template <typename Type>
 struct Snative : public manifold<Type> {
   ~Snative(){};
@@ -43,3 +47,5 @@ struct Snative : public manifold<Type> {
   }
 
 };
+}
+#endif
