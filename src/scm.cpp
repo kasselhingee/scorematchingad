@@ -1,3 +1,4 @@
+# include "scm.hpp"
 # include "scorecompdir_types.h"
 # include "mycpp/approx.hpp"
 # include "mycpp/mantrans.hpp"
@@ -117,3 +118,4 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     smofun.check_for_nan(false); //no error if some of the results of the Jacobian are nan.
     return(smofun);
 }
+

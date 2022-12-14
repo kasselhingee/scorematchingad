@@ -7,7 +7,11 @@
 
 using namespace Rcpp;
 #include "tapell.hpp"
-#include "scm.cpp"
+#include "scm.hpp"
+#include "mycpp/mantrans.hpp"
+#include "mycpp/divweights.hpp"
+#include "mycpp/likelihoods.hpp"
+#include "mycpp/approx.hpp"
 #include "mycpp/wrapas.cpp"
 
 ////////////// Create Pointers to Manifold Objects ///////////////
