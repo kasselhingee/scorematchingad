@@ -27,11 +27,11 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   if (manifoldname.compare("sphere") == 0){
     out = new Spos<a1type>();
   } else if (manifoldname.compare("simplex") == 0){
-    out = new simplex<a1type>();
+    out = new mantran::simplex<a1type>();
   } else if (manifoldname.compare("Ralr") == 0){
     out = new mantran::Ralr<a1type>();
   } else if (manifoldname.compare("Snative") == 0){
-    out = new Snative<a1type>();
+    out = new Snative<amantrans.hpp1type>();
   } else {
     stop("Manifold not found");
   }

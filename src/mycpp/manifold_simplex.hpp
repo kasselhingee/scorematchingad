@@ -1,3 +1,6 @@
+#ifndef mycpp_manifold_simplex
+#define mycpp_manifold_simplex
+namespace mantran {
 template <typename T>
 struct simplex : public manifold<T> {
   ~simplex(){};
@@ -41,3 +44,5 @@ struct simplex : public manifold<T> {
     return(bvx);
   }
 };
+}
+#endif
