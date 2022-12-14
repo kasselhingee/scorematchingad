@@ -154,10 +154,10 @@ XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M man
   //choose ll function
   a1type (*ll)(const veca1 &, const veca1 &) = nullptr;
   if (llname.compare("dirichlet") == 0){
-    ll = ll_dirichlet;
+    ll = ll::ll_dirichlet;
   }
   if (llname.compare("ppi") == 0){
-    ll = ll_ppi;
+    ll = ll::ll_ppi;
   }
   if (llname.compare("vMF") == 0){
     ll = ll_vMF;
