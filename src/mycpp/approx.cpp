@@ -1,3 +1,5 @@
+#include <RcppEigen.h>
+#include <cppad/cppad.hpp> // the CppAD package
   template <class Type>
   Eigen::Matrix<Type, Eigen::Dynamic, 1> taylorapprox(
 		  CppAD::ADFun<Type> &f,  //a tape with independent values that are points on the manifold (not the parameters)
