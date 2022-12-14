@@ -2,6 +2,7 @@
 #define mycpp_manifold_Snative
 
 // code for various tools for the sphere, without transformation required
+#include <RcppEigen.h>
 namespace mantran {
 template <typename Type>
 struct Snative : public manifold<Type> {

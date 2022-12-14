@@ -1,5 +1,6 @@
 #ifndef mycpp_manifold_simplex
 #define mycpp_manifold_simplex
+#include <RcppEigen.h>
 namespace mantran {
 template <typename T>
 struct simplex : public manifold<T> {

@@ -1,6 +1,7 @@
 #ifndef mycpp_manifold_Spos
 #define mycpp_manifold_Spos
 // code for various tools for the positive quadrant of the sphere
+#include <RcppEigen.h>
 namespace mantran {
 template <typename Type>
 struct Spos : public manifold<Type> {
@@ -9,9 +10,6 @@ struct Spos : public manifold<Type> {
 
   Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
-     // for (int i=0; i<x.size(); i++){
-     //   out[i] = CppAD::sqrt(x[i]);
-     // }
      out = x.cwiseSqrt();
      return(out);
   }
