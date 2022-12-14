@@ -99,3 +99,41 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     return(smofun);
 }
 
+
+XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
+                                      veca1 theta_ad,
+                                      XPtr< CppAD::ADFun<double> > pll,
+                                      XPtr< manifold<a1type> > pman,
+                                      std::string weightname,
+                                      const double acut,
+                                      bool verbose){
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+
+  //choose weight function
+  a1type (*h2fun)(const veca1 &, const double &) = nullptr;
+  if (weightname.compare("prodsq") == 0){
+    h2fun = divweight::prodsq;
+  }
+  if (weightname.compare("minsq") == 0){
+    h2fun = divweight::minsq;
+  }
+  if (weightname.compare("ones") == 0){
+    h2fun = divweight::oneweights;
+  }
+
+  //check weight function
+  if (h2fun == nullptr){
+    throw std::invalid_argument("Matching weight function not found");
+  }
+
+  *out = tapesmo(u_ad,
+                 theta_ad,
+                 *pll,
+                 *pman,
+                 h2fun,
+                 acut,
+                 verbose);
+
+  XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}

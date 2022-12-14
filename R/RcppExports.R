@@ -37,18 +37,6 @@ ptoM <- function(pman, u_ad) {
 }
 
 #' @noRd
-#' @title The score matching objective calculator.
-#' @param xbetain a concatenated vector of sqrt(x) and beta
-#' @param n The dimension of x.
-#' @param manifoldname The name of the manifold to transform to
-#' @param weightname The name of the weight function to use
-#' @param acut The constraint a_c in the weight function
-#' @return An RCpp::XPtr object pointing to the ADFun
-ptapesmo <- function(u_ad, theta_ad, pll, pman, weightname, acut, verbose) {
-    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, pman, weightname, acut, verbose)
-}
-
-#' @noRd
 #' @title Tape of a log-likelihood calculation
 #' @param p dimension of measurements
 #' @param bd dimension of the parameter vector
@@ -183,5 +171,17 @@ pParameter <- function(pfun) {
 #' @export
 pTapeGradOffset <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pTapeGradOffset', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+}
+
+#' @noRd
+#' @title The score matching objective calculator.
+#' @param xbetain a concatenated vector of sqrt(x) and beta
+#' @param n The dimension of x.
+#' @param manifoldname The name of the manifold to transform to
+#' @param weightname The name of the weight function to use
+#' @param acut The constraint a_c in the weight function
+#' @return An RCpp::XPtr object pointing to the ADFun
+ptapesmo <- function(u_ad, theta_ad, pll, pman, weightname, acut, verbose) {
+    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, pman, weightname, acut, verbose)
 }
 

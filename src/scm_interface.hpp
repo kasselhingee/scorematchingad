@@ -48,24 +48,6 @@ int testmanifold(XPtr< manifold<a1type> > pman, veca1 u_ad);
 // [[Rcpp::export]]
 veca1 ptoM(XPtr< manifold<a1type> > pman, veca1 u_ad);
 
-//in R store a pointer to the ADFun object
-//' @noRd
-//' @title The score matching objective calculator.
-//' @param xbetain a concatenated vector of sqrt(x) and beta
-//' @param n The dimension of x.
-//' @param manifoldname The name of the manifold to transform to
-//' @param weightname The name of the weight function to use
-//' @param acut The constraint a_c in the weight function
-//' @return An RCpp::XPtr object pointing to the ADFun
-// [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
-                                      veca1 theta_ad,
-                                      XPtr< CppAD::ADFun<double> > pll,
-                                      XPtr< manifold<a1type> > pman,
-                                      std::string weightname,
-                                      const double acut,
-                                      bool verbose);
-
 //' @noRd
 //' @title Tape of a log-likelihood calculation
 //' @param p dimension of measurements
