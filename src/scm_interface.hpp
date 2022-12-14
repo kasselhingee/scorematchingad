@@ -12,7 +12,7 @@ using namespace Rcpp;
 #include "mycpp/divweights.hpp"
 #include "mycpp/likelihoods.hpp"
 #include "mycpp/approx.hpp"
-#include "mycpp/wrapas.cpp"
+#include "mycpp/wrapas.hpp"
 
 ////////////// Create Pointers to Manifold Objects ///////////////
 //in R store a pointer to the ADFun object
