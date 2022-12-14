@@ -5,8 +5,8 @@
 #include <RcppEigen.h>
 // [[Rcpp::depends(RcppEigen)]]
 
-#include "mycpp/scm.cpp"
 using namespace Rcpp;
+#include "mycpp/scm.cpp"
 #include "mycpp/wrapas.cpp"
 
 ////////////// Create Pointers to Manifold Objects ///////////////
