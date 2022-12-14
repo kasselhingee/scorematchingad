@@ -5,11 +5,6 @@
 #include <RcppEigen.h>
 // [[Rcpp::depends(RcppEigen)]]
 
-#include "tapell.hpp"
-#include "tapesmo.hpp"
-#include "mycpp/mantrans.hpp"
-#include "mycpp/divweights.hpp"
-#include "mycpp/likelihoods.hpp"
 #include "mycpp/wrapas.hpp"
 
 //' @title Switch Dynamic and Independent Values of a Tape
