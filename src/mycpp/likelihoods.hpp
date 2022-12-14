@@ -2,7 +2,7 @@
 #define mycpp_likelihoods
 // include all the likelihood files
 
-#include "dirichlet.cpp"
+#include "dirichlet.hpp"
 #include "ppi.hpp"
 #include "vMF.cpp"
 
