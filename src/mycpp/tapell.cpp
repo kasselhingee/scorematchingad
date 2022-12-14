@@ -5,6 +5,7 @@
 # include "likelihoods.hpp"
 # include "PrintFor.hpp"
 
+using namespace Rcpp;
 
 // define a function that tapes a log likelihood
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
