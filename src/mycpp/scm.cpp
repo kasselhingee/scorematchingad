@@ -4,7 +4,7 @@
 # include "manifold_simplex.cpp"
 # include "manifold_alr.cpp"
 # include "manifold_Snative.cpp"
-# include "hfuns.cpp"
+# include "divweights.hpp"
 # include "likelihoods.hpp"
 # include "PrintFor.cpp"
 
