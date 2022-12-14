@@ -5,7 +5,6 @@
 #include <RcppEigen.h>
 // [[Rcpp::depends(RcppEigen)]]
 
-using namespace Rcpp;
 #include "tapell.hpp"
 #include "tapesmo.hpp"
 #include "mycpp/mantrans.hpp"
@@ -13,55 +12,6 @@ using namespace Rcpp;
 #include "mycpp/likelihoods.hpp"
 #include "mycpp/approx.hpp"
 #include "mycpp/wrapas.hpp"
-
-////////////// Create Pointers to Manifold Objects ///////////////
-//in R store a pointer to the ADFun object
-//' @noRd
-//' @title Generate manifold with transformation object
-//' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
-//' @return An RCpp::XPtr object pointing to the C++ manifold object
-//' @details
-//'  + "sphere" for square-root transformation from the simplex to the positive orthant of the sphere
-//'  + "simplex" for the simplex without any transformation.
-//'  + "Ralr" for the additive log-ratio transformation from the simplex to Euclidean space, using the final component of vectors in the denominator of the ratio.
-//'  + "Snative" for the sphere without any transformation
-//' @export
-// [[Rcpp::export]]
-XPtr< manifold<a1type> > pmanifold(std::string manifoldname);
-
-//' @noRd
-//' @title Test a manifold object
-//' @description A lightweight test of a manifold object.
-//' Its main benefit is to force compilation of templated functions for the manifold,
-//' and to print results to standard output.
-//' @param pman An XPtr to a manifold object. Created by `pmanifold()`
-//' @return An integer. 0 if the testable parts pass.
-// [[Rcpp::export]]
-int testmanifold(XPtr< manifold<a1type> > pman, veca1 u_ad);
-
-//' @noRd
-//' @title Apply to `toM` function of a manifold object
-//' @description Apply the `toM` function of a manifold object.
-//' @param pman An XPtr to a manifold object. Created by `pmanifold()`.
-//' @param u A vector to be transformed to the manifold via `toM`.
-//' @return A vector on the manifold.
-// [[Rcpp::export]]
-veca1 ptoM(XPtr< manifold<a1type> > pman, veca1 u_ad);
-
-//' @noRd
-//' @title Tape of a log-likelihood calculation
-//' @param p dimension of measurements
-//' @param bd dimension of the parameter vector
-//' @param llname name of the likelihood function
-//' @return An RCpp::XPtr object pointing to the ADFun
-// [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M manifold
-                                     veca1 theta_ad,
-                                     std::string llname,
-                                     XPtr< manifold<a1type> > pman,
-                                     Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
-                                     bool verbose
-                                     );
 
 //' @title Switch Dynamic and Independent Values of a Tape
 //' @description Convert an ADFun so that the independent values become dynamic parameters
@@ -71,7 +21,7 @@ XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M man
 //' @return A pointer to an ADFun
 //' @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
+Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
 
 //' @title Evaluate the Jacobian of a tape
 //' @param pfun Rcpp::XPtr to an ADFun
@@ -80,7 +30,7 @@ XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, veca
 //' @return The Jacobian of pfun
 //' @export
 // [[Rcpp::export]]
-vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
+vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
 
 //' @title Evaluate a CppAD tape
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
@@ -89,7 +39,7 @@ vecd pJacobian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
 //' @return The value of `pfun` evaluated at `x` with parameters `dynparam`.
 //' @export
 // [[Rcpp::export]]
-vecd pForward0(XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
+vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
 //' @noRd
 //' @title OBSOLETE: The Hessian of recorded function. Used only in smobj.R
@@ -98,7 +48,7 @@ vecd pForward0(XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 //' @param beta a vector of the dynamic parameters
 //' @return The Hessian of pfun
 // [[Rcpp::export]]
-vecd pHessian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
+vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
 
 //' @title The value of a recorded function approximated by Taylor expansion
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
@@ -110,7 +60,7 @@ vecd pHessian(XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
 //' @return The approximate value of pfun
 //' @export
 // [[Rcpp::export]]
-vecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
+vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                      vecd u, vecd centre,
                      vecd dynparam, size_t order);
 
@@ -130,7 +80,7 @@ vecd pTaylorApprox(XPtr< CppAD::ADFun<double> > pfun,
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 //' @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> >  pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun,
+Rcpp::XPtr< CppAD::ADFun<double> >  pTapeJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam);
 
 //' @title Tape the Hessian of a CppAD Tape
@@ -147,7 +97,7 @@ XPtr< CppAD::ADFun<double> >  pTapeJacobian(XPtr< CppAD::ADFun<double> > pfun,
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 //' @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> >  pTapeHessian(XPtr< CppAD::ADFun<double> > pfun,
+Rcpp::XPtr< CppAD::ADFun<double> >  pTapeHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam);
 
 //' @title Indicate Constant Components of Range
@@ -159,7 +109,7 @@ XPtr< CppAD::ADFun<double> >  pTapeHessian(XPtr< CppAD::ADFun<double> > pfun,
 //' (the `i`th component may still depend on the value of the dynamic parameters (see 'Dynamic' in [https://coin-or.github.io/CppAD/doc/glossary.htm#Parameter]) ).
 //' @export
 // [[Rcpp::export]]
-std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun);
+std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
 // According to the help, applying Variable(u) to each return value would be false if u depends on the dynamic parameters and does not depend on the independent variable vector.
 
 //' @title Tape the Gradient Offset of a Quadratic CppAD Tape
@@ -184,7 +134,7 @@ std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun);
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object. The independent argument to the function are the dynamic parameters of `pfun`.
 //' @export
 // [[Rcpp::export]]
-XPtr< CppAD::ADFun<double> >  pTapeGradOffset(XPtr< CppAD::ADFun<double> > pfun,
+Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam);
 
 

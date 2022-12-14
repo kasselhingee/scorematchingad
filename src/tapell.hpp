@@ -2,6 +2,7 @@
 #define mycpp_tapell
 
 # include <RcppEigen.h>
+# include <Rcpp.h>
 # include "scorecompdir_types.h"
 
 // declare a function that tapes a log likelihood
@@ -12,5 +13,20 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                                Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
                                bool verbose
                                );
+
+//' @noRd
+//' @title Tape of a log-likelihood calculation
+//' @param p dimension of measurements
+//' @param bd dimension of the parameter vector
+//' @param llname name of the likelihood function
+//' @return An RCpp::XPtr object pointing to the ADFun
+// [[Rcpp::export]]
+Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M manifold
+                                     veca1 theta_ad,
+                                     std::string llname,
+                                     Rcpp::XPtr< manifold<a1type> > pman,
+                                     Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
+                                     bool verbose
+                                     );
 
 #endif
