@@ -1,5 +1,5 @@
 # include "../scorecompdir_types.h"
-# include "approx.cpp"
+# include "approx.hpp"
 # include "sm_possphere.cpp"
 # include "manifold_simplex.cpp"
 # include "manifold_alr.cpp"
