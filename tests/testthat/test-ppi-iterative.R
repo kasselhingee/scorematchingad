@@ -83,6 +83,7 @@ expect_equal(est_hardcoded$est$paramvec, est_iterative$est$paramvec, tolerance =
 })
 
 test_that("cppad_search gives similar result to cppad_closed", {
+  set.seed(354)
   m <- ppi_egmodel(100, maxden = 4)
   tapes <- buildsmotape("sphere", "ppi",
                         utape = rep(1/m$p, m$p),
