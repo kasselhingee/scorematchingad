@@ -1,3 +1,5 @@
+# ifndef mycpp_approx
+# define mycpp_approx
 #include <RcppEigen.h>
 #include <cppad/cppad.hpp> // the CppAD package
   template <class Type>
@@ -26,3 +28,5 @@
     }
     return(out);
   }
+
+# endif
