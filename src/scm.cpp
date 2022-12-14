@@ -1,9 +1,9 @@
-# include "../scorecompdir_types.h"
-# include "approx.hpp"
-# include "mantrans.hpp"
-# include "divweights.hpp"
-# include "likelihoods.hpp"
-# include "PrintFor.hpp"
+# include "scorecompdir_types.h"
+# include "mycpp/approx.hpp"
+# include "mycpp/mantrans.hpp"
+# include "mycpp/divweights.hpp"
+# include "mycpp/likelihoods.hpp"
+# include "mycpp/PrintFor.hpp"
 
 using namespace Rcpp;
 

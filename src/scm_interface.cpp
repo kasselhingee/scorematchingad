@@ -7,7 +7,7 @@
 
 using namespace Rcpp;
 #include "tapell.hpp"
-#include "mycpp/scm.cpp"
+#include "scm.cpp"
 #include "mycpp/wrapas.cpp"
 
 ////////////// Create Pointers to Manifold Objects ///////////////
