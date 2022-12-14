@@ -1,4 +1,7 @@
+#ifndef mycpp_manifold_Spos
+#define mycpp_manifold_Spos
 // code for various tools for the positive quadrant of the sphere
+namespace mantran {
 template <typename Type>
 struct Spos : public manifold<Type> {
   ~Spos(){};
@@ -47,31 +50,6 @@ struct Spos : public manifold<Type> {
   }
 
 
-////////////////////APPROX HELPERS/////////////////////
-  // function that returns whether point is close to boundary or not, for this particular manifold
-  bool close2bdry(const Eigen::Matrix<double, Eigen::Dynamic, 1> x, double threshold){
-    double minval;
-    minval = x.array().abs().minCoeff(); //this is not quite the distance on the manifold, but close enough
-    bool out;
-    if (minval < threshold){
-      out = true;
-    } else {
-      out = false;
-    }
-    return(out);
-  }
-
-  //function that produces a new location given a location too close to boundary
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> approxcentre(const Eigen::Matrix<Type, Eigen::Dynamic, 1> x,
-                                                      const double shiftsize=1E-5) {
-    Eigen::Matrix<Type, Eigen::Dynamic, 1> shiftdir(x.size());
-    shiftdir.setOnes();
-    shiftdir *= -1 * shiftsize;
-    shiftdir = Pmat_S(x) * shiftdir; //shift in tangent to manifold at x
-
-    Eigen::Matrix<Type, Eigen::Dynamic, 1> centre(x.size());
-    centre = x + shiftdir;
-    centre = centre / (centre.array().square().sum().sqrt()); //project onto the manifold by normalising
-    return(centre);
-  }
 };
+}
+#endif
