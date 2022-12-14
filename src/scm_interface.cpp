@@ -6,6 +6,7 @@
 // [[Rcpp::depends(RcppEigen)]]
 
 using namespace Rcpp;
+#include "mycpp/tapell.hpp"
 #include "mycpp/scm.cpp"
 #include "mycpp/wrapas.cpp"
 
