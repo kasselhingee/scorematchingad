@@ -40,13 +40,13 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   return(pout);
 }
 
-// @title Test a manifold object
+//' @noRd
+//' @title Test a manifold object
 //' @description A lightweight test of a manifold object.
 //' Its main benefit is to force compilation of templated functions for the manifold,
 //' and to print results to standard output.
 //' @param pman An XPtr to a manifold object. Created by `pmanifold()`
 //' @return An integer. 0 if the testable parts pass.
-// @export
 // [[Rcpp::export]]
 int testmanifold(XPtr< manifold<a1type> > pman, veca1 u_ad){
   Rcout << "Starting tests" << std::endl;
@@ -136,12 +136,12 @@ XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
   return(pout);
 }
 
-// @title Tape of a log-likelihood calculation
+//' @noRd
+//' @title Tape of a log-likelihood calculation
 //' @param p dimension of measurements
 //' @param bd dimension of the parameter vector
 //' @param llname name of the likelihood function
 //' @return An RCpp::XPtr object pointing to the ADFun
-// @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
@@ -189,14 +189,13 @@ XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M man
   return(pout);
 }
 
-//for testing
-// @title Switch Dynamic and pure Independent values
+//' @title Switch Dynamic and Independent Values of a Tape
 //' @description Convert an ADFun so that the independent values become dynamic parameters
 //' and the dynamic parameters become independent values
-//' @param newvalue The value (in the sense after the switch has occured) at which to tape the ADFun
-//' @param newdynparam The value of the now dynamic parameters at which to tape the ADFun
+//' @param newvalue The independent value (in the sense after the switch has occurred) at which to tape the ADFun
+//' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
 //' @return A pointer to an ADFun
-// @export
+//' @export
 // [[Rcpp::export]]
 XPtr< CppAD::ADFun<double> > swapDynamic(XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam){
   //check inputs and tape match
@@ -398,13 +397,12 @@ XPtr< CppAD::ADFun<double> >  pTapeHessian(XPtr< CppAD::ADFun<double> > pfun,
 }
 
 //' @title Indicate Constant Components of Range
-//' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the `x` arguments.
+//' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the independent values.
 //' @param pfun A CppAD tape.
 //' @param dynparam A set of dynamic parameters for `pfun`.
 //' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
-//' @details The `CppAD` function `Parameter(i)` [https://coin-or.github.io/CppAD/doc/fun_property.htm] returns `TRUE` when the `i`th component of the range does not depend on the value of the `x` argument
+//' @details The `CppAD` function `Parameter(i)` [https://coin-or.github.io/CppAD/doc/fun_property.htm] returns `TRUE` when the `i`th component of the range does not depend on the independent value
 //' (the `i`th component may still depend on the value of the dynamic parameters (see 'Dynamic' in [https://coin-or.github.io/CppAD/doc/glossary.htm#Parameter]) ).
-// According to the help, applying Variable(u) to each return value would be false if u depends on the dynamic parameters and does not depend on the independent variable vector.
 //' @export
 // [[Rcpp::export]]
 std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun){
@@ -414,6 +412,7 @@ std::vector<bool> pParameter(XPtr< CppAD::ADFun<double> > pfun){
   }
   return(isparameter);
 }
+// According to the help, applying Variable(u) to each return value would be false if u depends on the dynamic parameters and does not depend on the independent variable vector.
 
 //' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 //' @inheritParams pTapeJacobian
