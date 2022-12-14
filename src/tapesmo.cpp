@@ -1,10 +1,7 @@
-# include "scm.hpp"
 # include "scorecompdir_types.h"
+# include "tapesmo.hpp"
 # include "tapedivweight.hpp"
-# include "mycpp/approx.hpp"
 # include "mycpp/mantrans.hpp"
-# include "mycpp/divweights.hpp"
-# include "mycpp/likelihoods.hpp"
 # include "mycpp/PrintFor.hpp"
 
 using namespace Rcpp;

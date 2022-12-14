@@ -1,12 +1,8 @@
-#ifndef scm
-#define scm
+#ifndef tapesmo_h
+#define tapesmo_h
 
 # include "scorecompdir_types.h"
 # include <cppad/cppad.hpp>
-
-CppAD::ADFun<double> tapeh2(veca1 z,
-                            a1type (*h2fun)(const veca1 &, const double &),
-                            const double & acut);
 
 CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement for taping
                              veca1 theta, //a vector of parameters for taping

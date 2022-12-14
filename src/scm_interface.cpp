@@ -7,7 +7,7 @@
 
 using namespace Rcpp;
 #include "tapell.hpp"
-#include "scm.hpp"
+#include "tapesmo.hpp"
 #include "mycpp/mantrans.hpp"
 #include "mycpp/divweights.hpp"
 #include "mycpp/likelihoods.hpp"
