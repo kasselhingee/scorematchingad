@@ -1,5 +1,4 @@
 # include "tapedivweight.hpp"
-# include "mycpp/divweights.hpp"
 
 using namespace Rcpp;
 
