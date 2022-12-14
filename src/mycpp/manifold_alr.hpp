@@ -1,4 +1,7 @@
+#ifndef mycpp_manifold_Ralr
+#define mycpp_manifold_Ralr
 // code for various tools for the additive log ratio transform
+namespace mantran {//names space for manifold-transformation pair (triplets}
 template <typename Type>
 struct Ralr : public manifold<Type> {
   ~Ralr(){};
@@ -45,3 +48,6 @@ struct Ralr : public manifold<Type> {
     return(bvx);
   }
 };
+}//namesspace mantran for manifold-transformation pair (triplets}
+
+#endif

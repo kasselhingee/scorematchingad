@@ -29,7 +29,7 @@ XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   } else if (manifoldname.compare("simplex") == 0){
     out = new simplex<a1type>();
   } else if (manifoldname.compare("Ralr") == 0){
-    out = new Ralr<a1type>();
+    out = new mantran::Ralr<a1type>();
   } else if (manifoldname.compare("Snative") == 0){
     out = new Snative<a1type>();
   } else {
