@@ -1,6 +1,8 @@
 # ifndef CPPAD_INTERFACE
 # define CPPAD_INTERFACE
 
+// things for manipulating and evaluating CppAD::ADFun objects from R
+
 //for content that is Rcpp specific
 #include "scorecompdir_types.h"
 #include "mycpp/wrapas.hpp"  //needed because converting veca1 from R
