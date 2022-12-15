@@ -10,6 +10,8 @@ Rcpp::XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
     out = new mantran::Ralr<a1type>();
   } else if (manifoldname.compare("Snative") == 0){
     out = new mantran::Snative<a1type>();
+  } else if (manifoldname.compare("Hclr") == 0){
+    out = new mantran::Hclr<a1type>();
   } else {
     Rcpp::stop("Manifold not found");
   }
