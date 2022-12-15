@@ -1,7 +1,5 @@
 # include "tapesmo.hpp"
 
-using namespace Rcpp;
-
 // function that tapes the score-matching objective
 CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement for taping
                              veca1 theta, //a vector of parameters for taping
@@ -24,8 +22,8 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
 
     //check inputs and ll tape match
-    if (lltape.Domain() != (unsigned)z.size()){stop("Dimension of z (the input measurement on the manifold) is %i, which does not match domain size of log likelihood function of %i.", z.size(), lltape.Domain());}
-    if (lltape.size_dyn_ind() != theta.size()){stop("Size of parameter vector theta (=%i) does not match parameter size of log likelihood function (=%i).", theta.size(), lltape.size_dyn_ind());}
+    if (lltape.Domain() != (unsigned)z.size()){Rcpp::stop("Dimension of z (the input measurement on the manifold) is %i, which does not match domain size of log likelihood function of %i.", z.size(), lltape.Domain());}
+    if (lltape.size_dyn_ind() != theta.size()){Rcpp::stop("Size of parameter vector theta (=%i) does not match parameter size of log likelihood function (=%i).", theta.size(), lltape.size_dyn_ind());}
 
     // make ll tape higher order (i.e. as if it was taped using a2type instead of a1type)
     CppAD::ADFun<a1type, double> lltapehigher;
@@ -100,10 +98,10 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
 }
 
 
-XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
+Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
                                       veca1 theta_ad,
-                                      XPtr< CppAD::ADFun<double> > pll,
-                                      XPtr< manifold<a1type> > pman,
+                                      Rcpp::XPtr< CppAD::ADFun<double> > pll,
+                                      Rcpp::XPtr< manifold<a1type> > pman,
                                       std::string weightname,
                                       const double acut,
                                       bool verbose){
@@ -134,6 +132,6 @@ XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
                  acut,
                  verbose);
 
-  XPtr< CppAD::ADFun<double> > pout(out, true);
+  Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }

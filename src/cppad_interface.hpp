@@ -3,9 +3,7 @@
 
 //for content that is Rcpp specific
 #include "scorecompdir_types.h"
-#include "mycpp/wrapas.hpp"
-#include <RcppEigen.h>
-// [[Rcpp::depends(RcppEigen)]]
+#include "mycpp/wrapas.hpp"  //needed because converting veca1 from R
 
 //' @title Switch Dynamic and Independent Values of a Tape
 //' @description Convert an ADFun so that the independent values become dynamic parameters
