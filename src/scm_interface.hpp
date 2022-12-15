@@ -2,6 +2,8 @@
 # define SCM_INTERFACE
 
 //for content that is Rcpp specific
+#include "scorecompdir_types.h"
+#include "mycpp/wrapas.hpp"
 #include <RcppEigen.h>
 // [[Rcpp::depends(RcppEigen)]]
 

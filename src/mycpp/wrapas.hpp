@@ -1,6 +1,10 @@
 # ifndef MYCPP_WRAPAS
 # define MYCPP_WRAPAS
 
+# include "../scorecompdir_types.h"
+# include <Rcpp.h>
+# include <cppad/cppad.hpp>
+
 // definitions for Rcpp::wrap and Rcpp::as for various data types
 namespace Rcpp {
   // from an SEXP to an eigen vector if a1type
