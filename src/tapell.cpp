@@ -1,11 +1,4 @@
-# include <RcppEigen.h>
 # include "tapell.hpp"
-# include "scorecompdir_types.h"
-# include "mycpp/mantrans.hpp"
-# include "mycpp/likelihoods.hpp"
-# include "mycpp/PrintFor.hpp"
-
-using namespace Rcpp;
 
 // define a function that tapes a log likelihood
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
@@ -16,7 +9,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                                bool verbose
                                ){
   if (theta.size() != fixedtheta.size()){
-    stop("theta and fixedtheta must have the same length");
+    Rcpp::stop("theta and fixedtheta must have the same length");
   }
 
   //separate fixed and variable theta
@@ -35,27 +28,27 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   }
 
   if (verbose){
-    Rcout << "Fixing according to pattern: " << std::endl;
+    Rcpp::Rcout << "Fixing according to pattern: " << std::endl;
     for (long int i=0;i<fixedtheta.size();i++){
-      Rcout << " " << fixedtheta[i];
+      Rcpp::Rcout << " " << fixedtheta[i];
     }
-    Rcout << std::endl;
+    Rcpp::Rcout << std::endl;
 
-    Rcout << "Fixed theta is:";
+    Rcpp::Rcout << "Fixed theta is:";
     if (thetafxd.size() == 0){
-      Rcout << " none" << std::endl;
+      Rcpp::Rcout << " none" << std::endl;
     } else {
       for (long int i=0;i<thetafxd.size();i++){
-        Rcout << " " << thetafxd[i];
+        Rcpp::Rcout << " " << thetafxd[i];
       }
-      Rcout << std::endl;
+      Rcpp::Rcout << std::endl;
     }
   }
 
   //tape relationship between x and log-likelihood
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
-    Rcout << "thetavar is: " << thetavar.transpose() << std::endl;
+    Rcpp::Rcout << "thetavar is: " << thetavar.transpose() << std::endl;
     PrintForVec("\n thetavar is: ", thetavar);
   }
 
@@ -71,7 +64,7 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
     }
   }
   if (verbose){
-    Rcout << "thetarecom is: " << thetarecom.transpose() << std::endl;
+    Rcpp::Rcout << "thetarecom is: " << thetarecom.transpose() << std::endl;
     PrintForVec("\n thetarecom is: ", thetarecom);
   }
 
@@ -87,18 +80,18 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
   if (verbose){
-    Rcout << "tape has " << tape.size_dyn_ind() << " independent dynamic parameters" << std::endl;
-    Rcout << "tape requires vectors of length " << tape.Domain() << std::endl;
-    Rcout << "tape returns vectors of length " << tape.Range() << std::endl;
+    Rcpp::Rcout << "tape has " << tape.size_dyn_ind() << " independent dynamic parameters" << std::endl;
+    Rcpp::Rcout << "tape requires vectors of length " << tape.Domain() << std::endl;
+    Rcpp::Rcout << "tape returns vectors of length " << tape.Range() << std::endl;
   }
   return(tape);
 }
 
 
-XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M manifold
+Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
                                      std::string llname,
-                                     XPtr< manifold<a1type> > pman,
+                                     Rcpp::XPtr< manifold<a1type> > pman,
                                      Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
                                      bool verbose
                                      ){
@@ -137,6 +130,6 @@ XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M man
                 fixedtheta,
                 verbose);
 
-  XPtr< CppAD::ADFun<double> > pout(out, true);
+  Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }

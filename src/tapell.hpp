@@ -1,9 +1,12 @@
-#ifndef mycpp_tapell
-#define mycpp_tapell
+#ifndef tapell_h
+#define tapell_h
 
 # include <RcppEigen.h>
 # include <Rcpp.h>
+# include <cppad/cppad.hpp>
 # include "scorecompdir_types.h"
+# include "mycpp/likelihoods.hpp"
+# include "mycpp/PrintFor.hpp"
 
 // declare a function that tapes a log likelihood
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold

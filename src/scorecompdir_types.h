@@ -1,12 +1,15 @@
 # ifndef scorecompdir_TYPES
 # define scorecompdir_TYPES
 
-# include <RcppCommon.h>
+# include <RcppCommon.h> //don't use Rcpp.h until after the wraps and as declaration at the end of this file
 # include <iostream>        // standard input/output
 # include <vector>          // standard vector
 # include <cppad/example/cppad_eigen.hpp>  //load eigen
 # include <cppad/cppad.hpp> // the CppAD package
 # include <cppad/utility/index_sort.hpp> //for index sorting - for Rivest model
+
+// [[Rcpp::depends(RcppEigen)]] //include RcppEigen here so that Eigen:: below makes sense
+#include <RcppEigen.h>
 
 typedef std::vector<double> svecd;
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vecd; //a vector of double values
