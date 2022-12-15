@@ -28,3 +28,9 @@ test_that("Snative manifold object passes lightweight standard tests", {
   expect_equal(out, 0)
 })
 
+test_that("Hclr manifold passes lightweight standard tests",{
+  pman <- manifoldtransform("Hclr")
+  u <- c(0.1, 0.2, 1 - 0.3)
+  out <- testmanifold(pman, u)
+  expect_equal(out, 0)
+})
