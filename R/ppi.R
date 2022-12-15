@@ -81,9 +81,10 @@ ppi <- function(Y, paramvec = NULL,
   }
 
   stopifnot(pow == 1)
-  stopifnot(trans %in% c("alr", "sqrt", "none"))
+  stopifnot(trans %in% c("alr", "sqrt", "clr", "none"))
   man <- switch(trans,
            alr = "Ralr",
+           clr = "Hclr",
            sqrt = "sphere",
            none = "simplex")
   if (!(man %in% c("simplex", "sphere"))){
