@@ -35,7 +35,6 @@ int testmanifold(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad){
   }
 
   // Run the other elements
-  Rcpp::Rcout << " logdetJ_fromM at toM(u): " << pman->logdetJfromM(z_ad) << std::endl;
   Rcpp::Rcout << " Pmat at toM(u): " << std::endl << pman->Pmatfun(z_ad) << std::endl;
   for (long int d=0; d<u_ad.size(); d++){
     Rcpp::Rcout << " dPmat at toM(u) in dimension " << d <<":" << std::endl << pman->dPmatfun(z_ad, d) << std::endl;

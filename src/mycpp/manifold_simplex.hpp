@@ -19,12 +19,6 @@ struct simplex : public manifold<T> {
     return(out);
   }
 
-  T logdetJfromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &z) override {
-    T out;
-    out = 0.;
-    return(out);
-  }
-
 
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
   Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x) override {
