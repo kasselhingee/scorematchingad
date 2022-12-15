@@ -42,19 +42,6 @@ pHessian <- function(pfun, value, theta) {
     .Call('_scorecompdir_pHessian', PACKAGE = 'scorecompdir', pfun, value, theta)
 }
 
-#' @title The value of a recorded function approximated by Taylor expansion
-#' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
-#' @param u A vector in the domain of the taped function.
-#' @param centre A vector in the domain of the taped function to approximate the value at `u` from.
-#' @param dynparam a vector of the dynamic parameters
-#' @param order The order of Taylor expansion to use.
-#' @description Approximates the value of a `CppAD` tape at `u` using a Taylor approximation at `centre`. The dynamic parameters of the tape are set by `dynparam`.
-#' @return The approximate value of pfun
-#' @export
-pTaylorApprox <- function(pfun, u, centre, dynparam, order) {
-    .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, u, centre, dynparam, order)
-}
-
 #' @title Tape the Jacobian of CppAD Tape
 #' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 #' @param x A vector in the domain of the taped function.
@@ -183,5 +170,18 @@ testmanifold <- function(pman, u_ad) {
 #' @return A vector on the manifold.
 ptoM <- function(pman, u_ad) {
     .Call('_scorecompdir_ptoM', PACKAGE = 'scorecompdir', pman, u_ad)
+}
+
+#' @title The value of a recorded function approximated by Taylor expansion
+#' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
+#' @param u A vector in the domain of the taped function.
+#' @param centre A vector in the domain of the taped function to approximate the value at `u` from.
+#' @param dynparam a vector of the dynamic parameters
+#' @param order The order of Taylor expansion to use.
+#' @description Approximates the value of a `CppAD` tape at `u` using a Taylor approximation at `centre`. The dynamic parameters of the tape are set by `dynparam`.
+#' @return The approximate value of pfun
+#' @export
+pTaylorApprox <- function(pfun, u, centre, dynparam, order) {
+    .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, u, centre, dynparam, order)
 }
 
