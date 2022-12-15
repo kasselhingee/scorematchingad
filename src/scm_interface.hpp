@@ -5,8 +5,6 @@
 #include <RcppEigen.h>
 // [[Rcpp::depends(RcppEigen)]]
 
-#include "mycpp/wrapas.hpp"
-
 //' @title Switch Dynamic and Independent Values of a Tape
 //' @description Convert an ADFun so that the independent values become dynamic parameters
 //' and the dynamic parameters become independent values
