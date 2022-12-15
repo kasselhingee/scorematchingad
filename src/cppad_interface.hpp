@@ -1,5 +1,5 @@
-# ifndef SCM_INTERFACE
-# define SCM_INTERFACE
+# ifndef CPPAD_INTERFACE
+# define CPPAD_INTERFACE
 
 //for content that is Rcpp specific
 #include "scorecompdir_types.h"
