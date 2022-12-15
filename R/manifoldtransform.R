@@ -8,9 +8,10 @@
 #'  + "simplex" for the simplex without any transformation.
 #'  + "Ralr" for the additive log-ratio transformation from the simplex to Euclidean space, using the final component of vectors in the denominator of the ratio.
 #'  + "Snative" for the sphere without any transformation
+#' @examples
+#' manifoldtransform("Ralr")
 #' @export
 manifoldtransform <- function(name){
   out <- pmanifold(name)
-  attr(out, "name") <- name
   return(out)
 }

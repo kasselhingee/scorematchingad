@@ -15,6 +15,7 @@ Rcpp::XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   }
 
   Rcpp::XPtr< manifold<a1type> > pout(out, true);
+  pout.attr("name") = manifoldname;
   return(pout);
 }
 
