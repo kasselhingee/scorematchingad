@@ -10,8 +10,7 @@ test_that("Fitting ppi via clr transform with fixed beta gets close to true valu
   expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
 })
 
-
-test_that("Hess + Offset match gradient for Hclr", {
+test_that("tapefromM evaluates, derivative and Jacobian match R-computed versions", {
   set.seed(1245)
   mod <- ppi_egmodel(100)
   Y <- mod$sample
@@ -19,10 +18,13 @@ test_that("Hess + Offset match gradient for Hclr", {
 
   Hclr <- manifoldtransform("Hclr")
 
+  # check evaluation
   clrY <- log(Y) - rowSums(log(Y))/3
   tapefromM <- ptapefromM(clrY[1, ], Hclr)
   vals <- tape_eval(tapefromM, clrY, matrix(nrow = nrow(Y), ncol = 0))
-  expect_equal(rowSums(vals), rep(1, nrow(Y)))
+  expect_equal(vals, Y)
+
+  # check Jacobian
   fromMJ <- t(apply(clrY, MARGIN = 1, function(x){pJacobian(tapefromM, x, matrix(nrow = 0, ncol = 0))}))
 
   # numerical Jacobian
@@ -31,14 +33,29 @@ test_that("Hess + Offset match gradient for Hclr", {
     J <- numericDeriv(quote(pForward0(tapefromM, b , matrix(nrow = 0, ncol = 0))), "b")
     return(as.vector(attr(J, "gradient")))
 }))
-
   expect_equal(fromMJ, fromMJnum, tolerance = 1E-4)
 
-  detJs <- apply(fromMJ, MARGIN = 1, function(J){
+  detJ <- apply(fromMJ, MARGIN = 1, function(J){
     Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
     return(determinant(Jmat, logarithm = TRUE)$modulus)
   })
-  # there is a zero! These determinants are surprisingly small to me.
+  # there is a zero! These determinants are surprisingly small to me. Maybe this is because fromM maps nearby points off the plane onto the simplex too. That means given vector v = (1,1,1,1...,1), then J.(cv)=0.
+
+  detJnum <- apply(fromMJnum, MARGIN = 1, function(J){
+    Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
+    return(determinant(Jmat, logarithm = TRUE)$modulus)
+  })
+  # these are small too, but 20x less tiny than detJ
+  expect_equal(detJ, detJnum)
+})
+
+test_that("Hess + Offset match gradient for Hclr", {
+  set.seed(1245)
+  mod <- ppi_egmodel(100)
+  Y <- mod$sample
+  Y <- rbind(Y, rep(1/3, 3))
+
+  Hclr <- manifoldtransform("Hclr")
 
   ppitape <- tapell(llname = "ppi",
                   xtape = c(0.2, 0.3, 0.5),
