@@ -115,6 +115,10 @@ pTapeGradOffset <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pTapeGradOffset', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
+ptapefromM <- function(z, pman) {
+    .Call('_scorecompdir_ptapefromM', PACKAGE = 'scorecompdir', z, pman)
+}
+
 #' @noRd
 #' @title Tape of a log-likelihood calculation
 #' @param p dimension of measurements

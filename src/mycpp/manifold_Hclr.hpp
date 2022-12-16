@@ -12,7 +12,7 @@ struct Hclr : public manifold<Type> {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
      out = x.array().log(); //log all elements of x
      Eigen::Matrix<Type, 1, 1> sumlog; //use a matrix so that -= is a known operation
-     sumlog << out.sum(); //sum logged values - mean would work just as well, but sum has fewer operations (except maybe when dimensions are very large?)
+     sumlog << out.mean(); //sum logged values - mean would work just as well, but sum has fewer operations (except maybe when dimensions are very large?)
      out -= sumlog; //take the sumlog away from each element
      return(out);
   }

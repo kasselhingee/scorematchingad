@@ -114,6 +114,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ptapefromM
+Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z, Rcpp::XPtr<manifold<a1type> > pman);
+RcppExport SEXP _scorecompdir_ptapefromM(SEXP zSEXP, SEXP pmanSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< veca1 >::type z(zSEXP);
+    Rcpp::traits::input_parameter< Rcpp::XPtr<manifold<a1type> > >::type pman(pmanSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapefromM(z, pman));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ptapell
 Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, veca1 theta_ad, std::string llname, Rcpp::XPtr< manifold<a1type> > pman, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
 RcppExport SEXP _scorecompdir_ptapell(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
@@ -207,6 +219,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_pTapeHessian", (DL_FUNC) &_scorecompdir_pTapeHessian, 3},
     {"_scorecompdir_pParameter", (DL_FUNC) &_scorecompdir_pParameter, 1},
     {"_scorecompdir_pTapeGradOffset", (DL_FUNC) &_scorecompdir_pTapeGradOffset, 3},
+    {"_scorecompdir_ptapefromM", (DL_FUNC) &_scorecompdir_ptapefromM, 2},
     {"_scorecompdir_ptapell", (DL_FUNC) &_scorecompdir_ptapell, 6},
     {"_scorecompdir_ptapesmo", (DL_FUNC) &_scorecompdir_ptapesmo, 7},
     {"_scorecompdir_pmanifold", (DL_FUNC) &_scorecompdir_pmanifold, 1},

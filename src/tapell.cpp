@@ -171,3 +171,13 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the
 
 
 
+// for calculating the determinant of the transform to a manifold
+// [[Rcpp::export]]
+Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z,
+                               Rcpp::XPtr<manifold<a1type> > pman){
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  *out = tapefromM(z, pman.checked_get());
+
+  Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}
