@@ -140,6 +140,10 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramv
   weight_vec <- Windham_weights(ldenfun = ldenfun, Y = Y,
                                 theta = thetaprevious, cW)
 
+  if (any(weight_vec < 1E-50 / nrow(Y))){
+    warning("Some weights are extremely small (smaller than 1E-50 / nrow(Y)), so fixed point search may have gone in an extreme direction.")
+  }
+
   return(list(theta = theta,
            optim = list(FixedPoint = est$FixedPoint,
                         fpevals = est$fpevals,
