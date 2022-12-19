@@ -1,13 +1,14 @@
 test_that("Fitting ppi via clr transform with fixed beta gets close to true values and other estimators", {
   skip_on_cran()
   set.seed(1234)
-  model <- ppi_egmodel(1000, maxden = 4)
+  model <- ppi_egmodel(100000, maxden = 4)
 
   out <- ppi(Y = model$sample,
              paramvec = ppi_paramvec(beta = model$beta),
              trans = "clr")
   expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
   # but the estimate is wrong by 10 orders of magnitude
+  expect_lt(max(abs(out$SE$paramvec), na.rm = TRUE), 20)
 
 
   out2 <- ppi(Y = model$sample,
@@ -17,6 +18,8 @@ test_that("Fitting ppi via clr transform with fixed beta gets close to true valu
 
   expect_absdiff_lte_v(out$est$paramvec, out2$est$paramvec, out2$SE$paramvec * 3)
 })
+
+
 test_that("Fitting ppi via clr transform with unfixed beta gets close to true values", {
   skip_on_cran()
   set.seed(1234)
