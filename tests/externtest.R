@@ -1,4 +1,4 @@
-#devtools::install(upgrade = "never")
+devtools::install(upgrade = "never")
 Sys.setenv(NOT_CRAN = "true")
-testthat::test_dir("./tests/testthat/", load_package = "installed", package = "scorecompdir", filter = "cppad_closed")
+testthat::test_dir("./tests/testthat/", load_package = "installed", package = "scorecompdir")
 
