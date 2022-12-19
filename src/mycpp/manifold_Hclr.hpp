@@ -21,9 +21,15 @@ struct Hclr : public manifold<Type> {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
      out = x.array().exp(); //exp all elements of x
      Type sumexp = out.sum(); 
-  
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out2(x.size());
      out2 = out / sumexp; //normalise by sum
+     
+     //make fromM non-generate in enclosing R^p space by adding a vector perpendicular to the space
+     Eigen::Matrix<Type, Eigen::Dynamic, 1> unitones(x.size());
+     unitones.setConstant(1.0).normalize();
+     out2 += unitones * (unitones.transpose() * x);
+
+
      return(out2);
   }
 
