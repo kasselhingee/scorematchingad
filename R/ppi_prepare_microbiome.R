@@ -42,6 +42,7 @@ ppi_microbiomedata_cleaned_TCAP <- function(){
   comb[,4]=prop[,"Proteobacteria"]
   comb[,5]=abs(1-comb[,1]-comb[,2]-comb[,4]-comb[,3])
   propreal=comb
+  colnames(propreal) <- c("TM7", "Cyanobacteria/Chloroplast", "Actinobacteria", "Proteobacteria", "pool")
 
   #dimension
   p=5
@@ -98,6 +99,7 @@ ppi_microbiomedata_TCAP <- function(){
   comb[,4]=prop[,"Proteobacteria"]
   comb[,5]=abs(1-comb[,1]-comb[,2]-comb[,4]-comb[,3])
   propreal=comb
+  colnames(propreal) <- c("TM7", "Cyanobacteria/Chloroplast", "Actinobacteria", "Proteobacteria", "pool")
   
   
   #dimension
@@ -145,15 +147,16 @@ ppi_microbiomedata_SVCTP <- function(){
 
   #calculate 5D dataset
   comb=matrix(0,n,p)
-  comb[,1]=prop[,14]
-  comb[,2]=prop[,18]
-  comb[,3]=prop[,5]
-  comb[,4]=prop[,16]
+  comb[,1]=prop[,"Spirochaetes"]
+  comb[,2]=prop[,"Verrucomicrobia"]
+  comb[,3]=prop[,"Cyanobacteria/Chloroplast"]
+  comb[,4]=prop[,"TM7"]
   for (j in 1:sum(p,-1))
   {
     comb[,p]=comb[,p]+comb[,j]
   }
   comb[,p]=1-comb[,p]
+  colnames(propreal) <- c("Spirochaetes", "Verrucomicrobia", "Cyanobacteria/Chloroplast", "TM7")
 
   #save data
   propreal=comb
