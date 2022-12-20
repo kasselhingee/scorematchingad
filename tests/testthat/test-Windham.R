@@ -164,7 +164,5 @@ test_that("ppi_robust() matches specialist Windham_alrgengamma() for simple data
                     cW = ppi_cW(cW, 1, 1, 1, 0, 0),
                     method = "hardcoded")
 
-  est1$info$fpevals <- NULL
-  est2$info$fpevals <- NULL
-  expect_equal(est1, est2, tolerance = 1E-5)
+  expect_equal(est1$est, est2$est, tolerance = 1E-5)
 })
