@@ -156,7 +156,7 @@ ppi_microbiomedata_SVCTP <- function(){
     comb[,p]=comb[,p]+comb[,j]
   }
   comb[,p]=1-comb[,p]
-  colnames(propreal) <- c("Spirochaetes", "Verrucomicrobia", "Cyanobacteria/Chloroplast", "TM7")
+  colnames(propreal) <- c("Spirochaetes", "Verrucomicrobia", "Cyanobacteria/Chloroplast", "TM7", "pool")
 
   #save data
   propreal=comb
