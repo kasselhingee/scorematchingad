@@ -141,7 +141,7 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramv
                                 theta = thetaprevious, cW)
 
   if (mean(weight_vec < 1E-10 / nrow(Y)) > 0.1){
-    warning("More than 10% of weights are extremely small (smaller than 1E-10 / nrow(Y)), so fixed point search may have gone in an extreme direction.")
+    warning("More than 10% of weights are extremely small (smaller than 1E-10 / nrow(Y)) and are being treated like outliers. The fixed point search may have gone in an extreme direction. Are there too many parameters in the model?")
   }
 
   return(list(theta = theta,
