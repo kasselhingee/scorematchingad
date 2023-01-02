@@ -33,8 +33,7 @@ test_that("estimator1 and SE is historically correct with b_L included (article 
 
   #standard errors
   std1= estimator$SE$paramvec
-  #rearrange back to combn ordering
-  std1 <- std1[ordindx][1:(length(std1) - p)]
+  std1 <- std1[1:(length(std1) - p)]
   expect_snapshot_value(signif(std1, 8), style = "json2")
 
   #estimated parameters
@@ -80,7 +79,7 @@ test_that("estimator1 and SE is historically correct with b_L ommitted (article 
 
   #standard errors
   std1= estimator$SE$paramvec
-  std1 <- std1[ordindx][1:(length(estimate1))] #rearrange to combn ordering for historical comparison
+  std1 <- std1[1:(length(estimate1))] #rearrange to combn ordering for historical comparison
 
   #estimated parameters
   thetamats <- ppi_parammats(estimator$est$paramvec)
