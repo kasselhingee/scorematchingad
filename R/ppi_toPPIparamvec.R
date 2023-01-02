@@ -1,5 +1,5 @@
 # @title To or From vector form of parameters for PPI
-# @export
+# purely for testing hardcoded ppi estimators - returns canonical parameters
 toPPIcannparam <- function(ALs, bL, beta, manifold = "sphere"){
   if (manifold == "sphere"){out <- ppi_paramvec(AL = ALs, bL = bL, beta = 1 + 2 * beta)}
   else if (manifold == "simplex"){out <- ppi_paramvec(AL = ALs, bL = bL, beta = beta)}
@@ -25,20 +25,3 @@ ppiltheta2p <- function(ltheta){#ltheta is length of theta
   return(p)
 }
 
-combparam2uppertriorder <- function(ltheta){
-  p <- ppiltheta2p(ltheta)
-  #order of AL part
-  inthetaorder <- combparam2uppertriorder_matrix(p-1 + (p-1)*(p-2)/2)
-  # add rest of theta
-  inthetaorder <- c(inthetaorder,
-                    seq.int(max(inthetaorder) + 1, length.out = p - 1 + p))
-  stopifnot(length(inthetaorder) == ltheta) #check that length produced is correct
-  stopifnot(all(inthetaorder[inthetaorder] == seq(1, length.out = ltheta))) #check that ordering index is correct
-  return(inthetaorder)
-}
-
-
-combparam2uppertriparam <- function(theta){
-  inthetaorder <- combparam2uppertriorder(length(theta))
-  return(theta[inthetaorder])
-}

@@ -44,20 +44,6 @@ test_that("indexcombinations() for vectorising matrices matches ppi_paramvec and
   expect_equal(ppiparam, indexcombparam)
 })
 
-test_that("reordering of comb matrix vector to match ppi_paramvec", {
-  p = 5
-  Amat <- matrix(NA, nrow = p-1, ncol = p-1)
-  diag(Amat) <- seq(1, p-1)
-  Amat[upper.tri(Amat)] <- (1:sum(upper.tri(Amat))) + p -1
-  Amat[lower.tri(Amat)] <- t(Amat)[lower.tri(Amat)]
-
-  indexcombparam <- c(diag(Amat),
-                      Amat[t(utils::combn(1:(p-1), 2))], #each column is the own dimension, each row single element to extract
-                      rep(0, p + p -1))
-
-  expect_equal(combparam2uppertriparam(indexcombparam), ppi_paramvec(AL=Amat, bL=rep(0, p-1), beta=rep(0, p)))
-})
-
 test_that("from PPI param vector order", {
   set.seed(124)
   p = 5
