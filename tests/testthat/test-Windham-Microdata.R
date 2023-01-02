@@ -177,19 +177,13 @@ test_that("A simulate then estimate of TCAP errors appropriately", {
   # convert latent variables to multinomial values
   mnprop <- t(apply(samp, MARGIN = 1, FUN = function(probs){rmultinom(1, 2000, prob = probs)}, simplify = TRUE)/2000)
 
+  options("show.error.messages" = FALSE)
 
-  est2=ppi_robust_alrgengamma(Y = mnprop,
+  expect_warning({est2=ppi_robust_alrgengamma(Y = mnprop,
                   cW = cWvec,
                   method = "closed",
                   paramvec = ppi_paramvec(p=p, bL = 0, betap = 0),
-                  paramvec_start =  est1$est$paramvec)
-
-  utheta <- ppi_paramvec(p=p, bL = 0, betap = 0)
-  t_u2s_runif(utheta)
-  est3=ppi_robust_alrgengamma(Y = mnprop,
-                  cW = cWvec,
-                  method = "closed",
-                  paramvec_start =  t_u2s_runif(utheta),
-                  paramvec = ppi_paramvec(p=p, bL = 0, betap = 0))
-  hist(est3$info$finalweights)
+                  paramvec_start =  est1$est$paramvec)},
+                  "extremely small")
 })
+
