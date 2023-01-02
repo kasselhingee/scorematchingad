@@ -1,10 +1,10 @@
 # same parameters as cppad_closed
 #' @title Iterative Score Matching Estimator Using Conjugate-Gradient Descent
 #' @description 
-#' Returns the vector when the gradient of the score matching objective is within tolerance of zero.
+#' Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching objective is within tolerance of zero.
 #' Also estimates standard errors and covariance.
-#' Useful when the score matching objective function is not of quadratic form.
-#' For score matching objective functions that are quadratic [`cppad_closed()`] will be usually be more accurate and faster.
+#' Useful when the score matching objective function is not of quadratic form;
+#' for score matching objective functions that are quadratic [`cppad_closed()`] will be usually be more accurate and faster.
 #' @param Yapproxcentres A matrix of Taylor approximation centres for rows of Y that require approximation. `NA` for rows that do not require approximation.
 #' @param smotape A tape of a score matching objective function.
 #' The `smotape`'s independent variables are assumed to be the model parameters to fit

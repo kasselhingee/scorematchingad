@@ -11,7 +11,7 @@
 #' @details
 #' The Bingham distribution , which has a density proportional to
 #' \deqn{\exp(z^T A z),}
-#' where \eqn{A} is a symmetric matrix and the trace (sum of the diagonals) of \eqn{A} zero for identifiability \insertCite{@p181, @mardia2000di}{scorecompdir}.
+#' where \eqn{A} is a symmetric matrix and the trace (sum of the diagonals) of \eqn{A} is zero for identifiability \insertCite{@p181, @mardia2000di}{scorecompdir}.
 #'
 #' The function `Bingham()` calculates the final diagonal element of \eqn{A} from the sum of the other diagonal elements to ensure that the trace of \eqn{A} is zero. All other elements of \eqn{A} are estimated using score matching.
 #'
