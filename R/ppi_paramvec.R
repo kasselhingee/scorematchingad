@@ -122,6 +122,7 @@ ppi_paramvec <- function(p = NULL, AL = NULL, bL = NULL, Astar = NULL, beta = NU
 
   # combine above preparation into a vector, NA values to be estimated
   beta = c(betaLprep, betapprep)
-  theta <- toPPIparamvec(ALprep, bLprep, beta)
+  stopifnot(isSymmetric.matrix(ALprep))
+  theta <- c(fromsmatrix(ALprep), bLprep, beta)
   return(theta)
 }

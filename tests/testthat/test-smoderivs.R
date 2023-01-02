@@ -9,7 +9,7 @@ test_that("Gradient of smo for ppi wrt u is CLOSE TO CORRECT for interior points
   smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta0 + 1)
-  testtheta <- toPPIparamvec(m$AL + 1, m$bL + 1, m$beta0 + 1)
+  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta0 + 1)
 
   # double check that smo values are equal
   hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
@@ -38,7 +38,7 @@ test_that("Gradient of smo for ppi wrt theta is correct for interior points", {
   smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function #this line fails when testing after devtools::load_all()
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta0 + 1)
-  testtheta <- toPPIparamvec(m$AL + 1, m$bL + 1, m$beta0 + 1)
+  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta0 + 1)
 
   # double check that smo values are equal
   hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
@@ -52,8 +52,8 @@ test_that("Gradient of smo for ppi wrt theta is correct for interior points", {
   gradt_components <- ppi_parammats(attr(gradt_hardcoded, "gradient"))
   gradt_components$beta <- gradt_components$beta * 2 #to account for cannonical exponential form
   gradt_cppad_numerical <- numericDeriv(quote(pForward0(smoppi, testtheta, u)), c("testtheta"))
-  expect_equal(gradt_cppad, do.call(toPPIparamvec, gradt_components), tolerance = 1E-5)
-  expect_equal(attr(gradt_cppad_numerical, "gradient"), do.call(toPPIparamvec, gradt_components),
+  expect_equal(gradt_cppad, do.call(ppi_paramvec, gradt_components), tolerance = 1E-5)
+  expect_equal(attr(gradt_cppad_numerical, "gradient"), do.call(ppi_paramvec, gradt_components),
                tolerance = 1E-5, ignore_attr = TRUE)
 })
 
@@ -70,7 +70,7 @@ test_that("Gradient of smo approxcentre for ppi wrt theta is correct", {
   smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta0 + 1)
-  testtheta <- toPPIparamvec(m$AL + 1, m$bL + 1, m$beta0 + 1)
+  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta0 + 1)
 
   # double check that smo values are equal
   hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
@@ -85,12 +85,12 @@ test_that("Gradient of smo approxcentre for ppi wrt theta is correct", {
   gradt_components$beta <- gradt_components$beta * 2 #to account for cannonical exponential form
   gradt_cppad_numerical_approx <- numericDeriv(quote(pTaylorApprox(smoppi_u, m$sample[1,], acentres[1,], testtheta, 100)),
                                                c("testtheta"))
-  expect_false(isTRUE(all.equal(gradt_cppad, do.call(toPPIparamvec, gradt_components), tolerance = 1E-5))) #fails dtheta at boundary is 0 according to CppAD, this is wrong!!
-  expect_equal(attr(gradt_cppad_numerical_approx, "gradient"), do.call(toPPIparamvec, gradt_components),
+  expect_false(isTRUE(all.equal(gradt_cppad, do.call(ppi_paramvec, gradt_components), tolerance = 1E-5))) #fails dtheta at boundary is 0 according to CppAD, this is wrong!!
+  expect_equal(attr(gradt_cppad_numerical_approx, "gradient"), do.call(ppi_paramvec, gradt_components),
                tolerance = 1E-5, ignore_attr = TRUE)
 
   # check that gradient is close at the approximation centre
-  expect_equal(pJacobian(smoppi, testtheta, acentres[1, ]), do.call(toPPIparamvec, gradt_components),
+  expect_equal(pJacobian(smoppi, testtheta, acentres[1, ]), do.call(ppi_paramvec, gradt_components),
                tolerance = 1E-5, ignore_attr = TRUE)
 
   # check that Hessian is close too (and hopefully close to zero)
@@ -124,7 +124,7 @@ test_that("Gradient of smo approxcentre for ppi wrt u is close", {
   smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta0 + 1)
-  testtheta <- toPPIparamvec(m$AL + 1, m$bL + 1, m$beta0 + 1)
+  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta0 + 1)
 
   # double check that smo values are equal
   hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)

@@ -57,8 +57,8 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   expect_equal(est1$est$AL, ALs, tolerance = 1)
   expect_equal(est1$est$beta, beta, tolerance = 1E-1)
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
-  rmse(toPPIparamvec(ALs, bL, beta), est1$est$paramvec)
-  rmse(toPPIparamvec(ALs, bL, beta), est_unload$est$paramvec)
+  rmse(ppi_paramvec(AL=ALs, bL=bL, beta=beta), est1$est$paramvec)
+  rmse(ppi_paramvec(AL=ALs, bL=bL, beta=beta), est_unload$est$paramvec)
 
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
   expect_gt(rmse(beta, est_unload$est$beta), rmse(beta, est1$est$beta))

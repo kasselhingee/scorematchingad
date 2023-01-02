@@ -1,14 +1,8 @@
 # @title To or From vector form of parameters for PPI
 # @export
-toPPIparamvec <- function(ALs, bL, beta){
-  stopifnot(isSymmetric.matrix(ALs))
-  theta <- c(fromsmatrix(ALs), bL, beta)
-  return(theta)
-}
-
 toPPIcannparam <- function(ALs, bL, beta, manifold = "sphere"){
-  if (manifold == "sphere"){out <- toPPIparamvec(ALs, bL, 1 + 2 * beta)}
-  else if (manifold == "simplex"){out <- toPPIparamvec(ALs, bL, beta)}
+  if (manifold == "sphere"){out <- ppi_paramvec(AL = ALs, bL = bL, beta = 1 + 2 * beta)}
+  else if (manifold == "simplex"){out <- ppi_paramvec(AL = ALs, bL = bL, beta = beta)}
   else {stop("manifold not supported")}
   return(out)
 }

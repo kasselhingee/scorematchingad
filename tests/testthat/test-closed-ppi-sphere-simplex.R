@@ -23,7 +23,7 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
   p = length(beta)
   ALs = matrix(0, nrow = p-1, ncol = p-1)
   bL = matrix(0, nrow = p-1, ncol = 1)
-  theta = toPPIparamvec(ALs, bL, beta)
+  theta = ppi_paramvec(AL=ALs, bL=bL, beta=beta)
 
   utabl <- rppi(10,beta=beta,AL=ALs,bL=bL,maxden=4)
 
@@ -46,7 +46,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   p = length(beta)
   ALs = matrix(0, nrow = p-1, ncol = p-1)
   bL = matrix(0, nrow = p-1, ncol = 1)
-  theta = toPPIparamvec(ALs, bL, beta)
+  theta = ppi_paramvec(AL=ALs, bL=bL, beta=beta)
 
   set.seed(1234)
   utabl <- rppi(100,beta=beta,AL=ALs,bL=bL,maxden=4)
@@ -119,7 +119,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
   ALs[1, 2] <- 1
   ALs[2, 1] <- 1
   bL = matrix(0, nrow = p-1, ncol = 1)
-  theta <- toPPIparamvec(ALs, bL, beta)
+  theta <- ppi_paramvec(AL=ALs, bL=bL, beta=beta)
 
   set.seed(13418)
   utabl <- rppi(n,beta=beta,AL=ALs,bL=bL,maxden=4)
