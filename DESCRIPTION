@@ -21,6 +21,7 @@ Suggests:
     movMF,
     MASS,
     mclust,
+    knitr, rmarkdown,
     numDeriv
 Depends: 
     R (>= 3.5.0)
@@ -40,3 +41,5 @@ Imports:
 RdMacros: Rdpack
 LinkingTo: Rcpp, RcppEigen
 Config/testthat/edition: 3
+VignetteBuilder: knitr
+

@@ -1,0 +1,45 @@
+---
+title: "Introduction to Score Matching"
+author: "Kassel Hingee"
+date: "02 Jan 2023"
+output:  pdf_document
+vignette: >
+  %\VignetteIndexEntry{Introduction to Score Matching}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: '`r system.file("REFERENCES.bib", package="scorecompdir")`'
+---
+
+This package includes score matching estimators for particular distributions and a general capacity to implement additional score matching estimators.
+Score matching is a popular estimation technique when normalising constants for the proposed model are difficult to calculate or compute.
+Score matching was first developed by @hyvarinen2005es and was further developed for subsets of Euclidean space [@hyvarinen2007ex;@yu2019ge;@yu2020ge;@liu2021es], Riemannian manifolds [@mardia2016sc;@mardia2018ne],
+ and Riemannian manifolds with boundary [@scealy2022sc].
+In the most general form (Riemannian manifolds with boundary) score matching minimises the weighted Hyvarinen divergence [Equation 7, @scealy2022sc] 
+$$\phi(f, f_0) =  \frac{1}{2} \int_M f_0(z)h(z)^2 \left\lVert P(z)\Big(\nabla_z \log(f) - \nabla_z \log(f_0)\Big)\right\rVert^2 dM(z),$$
+ where
+
+ + $M$ is the manifold, isometrically embedded in Euclidean space, and $dM(z)$ is the unnormalised uniform measure on $M$.
+ + $P(z)$ is the matrix that projects points onto the tangent space of the manifold at $z$.
+ + $f_0$ is the *true* density of the data-generating process, defined with respect to $dM(z)$.
+ + $f$ is the density of a posited model, again defined with respect to $dM(z)$.
+ + $h(z)$ is a function, termed the *divergence weight function*, that is zero on the boundary of $M$ [Section 3.2, @scealy2022sc].
+ + $\nabla_z$ is the Euclidean gradient operator.
+ + $\lVert \cdot \rVert$ is the Euclidean norm.
+ 
+ Note that, because $P(z)$ is the projection matrix, $\left\lVert P(z)\Big(\nabla_z \log(f) - \nabla_z \log(f_0)\Big)\right\rVert^2$ is the natural inner product of the gradient of the log ratio of $f$ and $f_0$.
+
+ When the density functions $f$ and $f_0$ are smooth and positive inside $M$,
+ and the divergence weight function is smooth or of particular forms for specific manifolds [Section 3.2, @scealy2022sc],
+ then minimising the weighted Hyvarinen divergence $\phi(f, f_0)$ is equivalent to minimising [Theorem 1 @scealy2022sc]
+  $$\psi(f, f_0) = \frac{1}{2} \int f_0(z)\big(A(z_i) + B(z_i) + C(z_i)\big)dM(z),$$
+ where 
+ $$A(z_i) = \left(\nabla_z \log(f)\right)^T P(z) \left(\nabla_z \log(f)\right),$$
+ $$B(z_i) = h(z)^2\Delta_z\log(f),$$
+ $$C(z_i) = \left(\nabla_z h(z)^2)\right)^T P(z) \left(\nabla_z \log(f)\right).$$
+ When $n$ iid observations from $f_0$ are available, the integration in $\psi(f, f_0)$ can be approximated by an average over the observations, 
+  $$\psi(f, f_0) \approx \hat\psi(f, f_0) = \frac{1}{2n} \sum_{i = 1}^n A(z_i) + B(z_i) + C(z_i).$$
+ The *score matching estimator* minimises $\hat\psi(f, f_0)$.
+
+
+# References
+

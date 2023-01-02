@@ -6,3 +6,5 @@ tests/test.sh
 tests/externtest.R
 tests/prepinteractivetesting.R
 
+^doc$
+^Meta$
