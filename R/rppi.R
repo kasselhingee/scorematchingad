@@ -7,6 +7,7 @@
 #' @param bL The \eqn{b_L} parameter vector
 #' @param paramvec The PPI parameter vector, created easily using [ppi_paramvec()] and also returned by [ppi()].
 #' @param maxden This is the constant \eqn{log(C)} in \insertCite{@Appendix A.1.3 @scealy2022sc}{scorecompdir}.
+#' @param maxmemorysize Advanced use. The maximum size, in bytes, for matrices containing simulated Dirchlet samples. The default of `1E5` corresponds to 100 mega bytes.
 #' @return A matrix with `n` rows and `p` columns. Each row is an independent draw from the specified PPI distribution.
 #' @inheritDotParams ppi_paramvec
 #' @details
@@ -14,7 +15,11 @@
 #' 
 #' The simulation uses a rejection-sampling algorithm with Dirichlet proposal \insertCite{@Appendix A.1.3 @scealy2022sc}{scorecompdir}.
 #' Initially `n` Dirichlet proposals are generated. After rejection there are fewer samples remaining, say \eqn{n^*}{n*}.
-#' The ratio \eqn{n^*/n}{n*/n} is used to guess the number of new Dirichlet proposals to generate until `n` samples of the PPI model are reached.
+#' The ratio \eqn{n^*/n}{n*/n} is used to guess the number of new Dirichlet proposals to generate until `n` samples of the PPI model are reached. 
+#'
+#' Advanced use: The number of new Dirichlet proposals created for each of these subsequent simulations is limited so that the matrices storing the Dirchlet proposals are always smaller than `maxmemorysize` bytes (give or take a few bytes for wrapping), which reduces the use of virtual RAM. 
+#' Choose `maxmemorysize` to be such that `maxmemorysize` bytes are reliably contiguously available in RAM for your computer; the larger the better.
+#' The default of 100 mega bytes is a wild guess at such a value.
 #' @examples
 #' n=1000
 #' p=3
@@ -39,7 +44,7 @@
 #' segments(0, 1, 1, 0)
 #' segments(1, 0, 0, 0)
 #' @export
-rppi <- function(n, ..., paramvec = NULL, maxden = 4){
+rppi <- function(n, ..., paramvec = NULL, maxden = 4, maxmemorysize = 1E5){
   ellipsis::check_dots_used()
   # a warning if maxden is high
   if (maxden > 10){
@@ -71,7 +76,8 @@ rppi <- function(n, ..., paramvec = NULL, maxden = 4){
   propaccepted <- max(nrow(samples) / n, 1E-3)
   # based on the number of samples that came out, simulate the remaining
   while (nrow(samples) < n){
-    newsamples <- rppi_block(ceiling((n - nrow(samples)) * 1/propaccepted),p,beta,AL,bL,maxden)
+    blocksize <- min(ceiling((n - nrow(samples))/propaccepted), floor(maxmemorysize/(p*8))) #choose so that the matrices of Dirichlet samples never get bigger than maxmemorysize bytes
+    newsamples <- rppi_block(blocksize,p,beta,AL,bL,maxden)
     maxden <- newsamples$maxden
     samples <- rbind(samples, newsamples$accepted)
     # continue until n or more samples accepted
