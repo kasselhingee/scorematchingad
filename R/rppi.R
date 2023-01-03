@@ -69,26 +69,32 @@ rppi <- function(n, ..., paramvec = NULL, maxden = 4, maxmemorysize = 1E5){
   p <- length(beta)
 
   maxdenin <- maxden
-  # first simulate starting with a block of Dirichlet samples of size n.
-  firstaccepted <- rppi_block(n,p,beta = beta,AL = AL,bL = bL,maxden)
-  maxden <- firstaccepted$maxden
-  samples <- firstaccepted$accepted
-  propaccepted <- max(nrow(samples) / n, 1E-3)
-  # based on the number of samples that came out, simulate the remaining
-  while (nrow(samples) < n){
-    blocksize <- min(ceiling((n - nrow(samples))/propaccepted), floor(maxmemorysize/(p*8))) #choose so that the matrices of Dirichlet samples never get bigger than maxmemorysize bytes
+  propaccepted <- 1 #start at 100 acceptance rate
+  samples <- matrix(NA_real_, nrow = n, ncol = p) #create empty sample matrix
+  nsamples <- 0
+  nproposals <- 0
+  maxden <- maxdenin
+  maxblockrows <- floor(maxmemorysize/(p*8))
+  stopifnot(maxblockrows > 1)
+  while (nsamples < n){
+    blocksize <- min(ceiling((n - nsamples)/propaccepted), maxblockrows) #choose so that the matrices of Dirichlet samples never get bigger than maxmemorysize bytes
     newsamples <- rppi_block(blocksize,p,beta,AL,bL,maxden)
     maxden <- newsamples$maxden
-    samples <- rbind(samples, newsamples$accepted)
+    nproposals <- nproposals + blocksize
+    propaccepted <- (nsamples + nrow(newsamples$accepted))/nproposals
+    if (nrow(newsamples$accepted)>0){
+      newsampleskept <- newsamples$accepted[1:min(nrow(newsamples$accepted), n-nsamples), , drop = FALSE] #keep up to the n requested samples
+      samples[nsamples+(1:nrow(newsampleskept)), ] <- newsampleskept
+      nsamples <- nsamples + nrow(newsampleskept)
+    }
     # continue until n or more samples accepted
-  }
+  } 
 
   #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
   #a few times to check that it is an appropriate upper bound.
   if (maxden > maxdenin){stop(sprintf("Input maxden (i.e. the log(C) maximum) was %0.2f, but sampler suggests higher than %0.2f is required.", maxdenin, maxden))}
 
-
-  samples <- samples[1:n, ] # remove extra samples
+  stopifnot(all(is.finite(samples)))
 
   return(samples)
 }
