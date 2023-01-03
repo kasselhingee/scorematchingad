@@ -52,9 +52,7 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -A)
   est <- Bingham_full(sample)
 
-  m <- c(1, 0, 0)
-  B <- Directional::rotation(c(0, 1, 0), m)
-  rotatedA <- B %*% A %*% solve(B) #rotate A so that size of diagonal is increasing
+  rotatedA <- vec2northpole(c(0,1,0)) %*% A %*% solve(vec2northpole(c(0,1,0))) #rotate A so that size of diagonal is increasing
   expect_lt_v(abs(est$A - rotatedA)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -rotatedA)
@@ -62,12 +60,13 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
   expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   # try out FB estimation
+  pman <- pmanifold("Snative")
   thetaFB <- FB_mats2theta(1E-10, c(1, 0, 0), A)
   tapes <- buildsmotape("Snative",
                         "FB",
                         utape = sample[1, ],
                         usertheta = rep(NA, length(thetaFB)))
-                        
+
   est <- cppad_closed(tapes$smotape, Y=sample)
 
   expect_absdiff_lte_v(est$est, thetaFB, 3 * est$SE)
@@ -113,7 +112,6 @@ test_that("rfb() simulation for general symmetric matrices via Bingham() fitting
 
 
 test_that("rfb() simulation for general symmetric matrices fitting", {
-  skip_on_cran() #rfb() tested when fitting tested
   p <- 3
   set.seed(111)
   theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
