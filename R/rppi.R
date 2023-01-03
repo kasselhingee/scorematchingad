@@ -17,9 +17,8 @@
 #' Initially `n` Dirichlet proposals are generated. After rejection there are fewer samples remaining, say \eqn{n^*}{n*}.
 #' The ratio \eqn{n^*/n}{n*/n} is used to guess the number of new Dirichlet proposals to generate until `n` samples of the PPI model are reached. 
 #'
-#' Advanced use: The number of new Dirichlet proposals created for each of these subsequent simulations is limited so that the matrices storing the Dirchlet proposals are always smaller than `maxmemorysize` bytes (give or take a few bytes for wrapping), which reduces the use of virtual RAM. 
-#' Choose `maxmemorysize` to be such that `maxmemorysize` bytes are reliably contiguously available in RAM for your computer; the larger the better.
-#' The default of 100 mega bytes is a wild guess at such a value.
+#' Advanced use: The number of Dirichlet proposals created at a time is limited such that the matrices storing the Dirchlet proposals are always smaller than `maxmemorysize` bytes (give or take a few bytes for wrapping), which reduces the use of virtual RAM. 
+#' Larger `maxmemorysize` leads to faster simulation so long as `maxmemorysize` bytes are reliably contiguously available in RAM.
 #' @examples
 #' n=1000
 #' p=3
