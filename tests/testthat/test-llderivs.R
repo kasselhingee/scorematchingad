@@ -1,7 +1,7 @@
 set.seed(1234) #chosen so that u is far from boundary - needed for numericDeriv::Hessian
 m = ppi_egmodel_p4(1, 8)
 p = m$p
-u = m$sample
+u = as.vector(m$sample)
 AL = m$AL
 bL = m$bL
 beta0 = m$beta0
