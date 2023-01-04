@@ -7,6 +7,7 @@
 #' Rmat <- vec2northpole(u)
 #' Rmat %*% u
 vec2northpole <- function(vec){
+  warning("This function is obsolete")
   vec <- vec / sqrt(sum(vec^2))
   p <- length(vec)
   return(rotationmatrix(c(1, rep(0, p-1)), vec))

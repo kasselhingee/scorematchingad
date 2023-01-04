@@ -20,8 +20,8 @@ vMF_stdY <- function(Y, m = NULL, w = NULL){
   if(is.null(m)){
     m <- vMF_m(Y, w = w)
   }
-  Rtrans <- vec2northpole(m)
-  out <- Y %*% t(Rtrans)
+  Rmat <- rotationmatrix(c(1, rep(0, ncol(Y)-1)), m)
+  out <- Y %*% t(Rmat)
   return(out)
 }
 
