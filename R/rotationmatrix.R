@@ -1,8 +1,7 @@
 #' @title Create a rotation matrix in general dimensions
 #' @param vec A unit vector
-#' @author Janice Scealy
 #' @author Kassel Hingee
-#' @return Returns a matrix that rotates the unit vector in direction `vec` to the unit vector c(1, 0, ... 0)
+#' @description Returns a matrix that rotates the unit vector in direction `vec` to the unit vector c(1, 0, ... 0) using [`rotationmatrix()`].
 #' @examples
 #' u <- c(1, 2, 3, 4, 5, 6)
 #' Rmat <- vec2northpole(u)
@@ -10,16 +9,9 @@
 vec2northpole <- function(vec){
   vec <- vec / sqrt(sum(vec^2))
   p <- length(vec)
-  # from Janice Scealy
-  H=diag(1,p)
-  H[,1]=t(t(vec))
-  H[1,]=t(vec)
-  vec_L=t(t(vec[2:p]))
-  H[2:p,2:p]=(1/(1+H[1,1]))*vec_L%*%t(vec_L)-diag(1,sum(p,-1))
-  return(solve(H))
+  return(rotationmatrix(c(1, rep(0, p-1)), vec))
 }
 
-# for oppositely-directed vectors, rotate everything so the first is the northpole, rotate pi wrt to the 2nd basis vector, undo the first rotation
 #' @title Rotation Matrix From Two Vectors
 #' @description Creates a rotation matrix that rotates between two vectors. The matrix was specified by \insertCite{@Section 3.2.1, @amaral2007pi; textual}, and is such that any vector perpendicular to the two vectors is unchanged (except when the two vectors are in exactly opposite directions).
 #' @param a The vector to rotate `b` to.
@@ -29,7 +21,7 @@ vec2northpole <- function(vec){
 #' In the extremely rare situation that `b` = -`a`, the \insertCite{amaral2007pi; textual} method does not apply. Instead `rotationmatrix`, rotates `b` to the south pole, applies a rotation of `pi` about the second basis vector and reverses the first rotation.
 
 #' The same method, without the case of `b = -a` is also implemented in [`Directional::rotation()`].
-#' @references
+#' @references \insertAllCited()
 #' @examples
 #' a <- c(1,2,3,4,5)
 #' b <- c(0,3,4,1,2)
