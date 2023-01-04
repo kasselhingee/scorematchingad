@@ -30,6 +30,7 @@ vec2northpole <- function(vec){
 rotationmatrix <- function(a, b){
   stopifnot(is.vector(a))
   stopifnot(is.vector(b))
+  stopifnot(length(a) == length(b))
   a <- a/sqrt(a %*% a)[[1]]
   b <- b/sqrt(b %*% b)[[1]]
   if (all(a == -b)){
