@@ -52,7 +52,8 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -A)
   est <- Bingham_full(sample)
 
-  rotatedA <- vec2northpole(c(0,1,0)) %*% A %*% solve(vec2northpole(c(0,1,0))) #rotate A so that size of diagonal is increasing
+  v010tonth <- rotationmatrix(c(1, rep(0, p-1)), c(0, 1, 0))
+  rotatedA <- v010tonth %*% A %*% solve(v010tonth) #rotate A so that size of diagonal is increasing
   expect_lt_v(abs(est$A - rotatedA)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -rotatedA)
