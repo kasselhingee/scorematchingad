@@ -1,19 +1,19 @@
 #' @title Score Matching Estimator for Quadratic-Form Score-Matching Objective Functions
 #' @description 
-#' Returns the vector when the gradient of the score matching objective is zero for any quadratic-form tape.
-#' Many score matching estimators have score matching objective function with a quadratic form.
+#' For a `CppAD` tape of a quadratic-form score matching objective function, calculates the vector of parameters such that the gradient of the score matching objective is zero.
 #' Also estimates standard errors and covariance.
+#' Many score matching estimators have an objective function that has a quadratic form.
 #' @param Yapproxcentres A matrix of Taylor approximation centres for rows of Y that require approximation. `NA` for rows that do not require approximation.
-#' @param smotape A tape of a score matching objective function that has *quadratic form*. Test for quadratic form using [`testquadratictape()`].
+#' @param smotape A `CppAD` tape of a score matching objective function that has *quadratic form*. Test for quadratic form using [`testquadratictape()`].
 #' The `smotape`'s independent variables are assumed to be the model parameters to fit
 #' and the `smotape`'s dynamic parameter is a (multivariate) measurement.
 #' @param Y A matrix of multivariate observations. Each row is an observation.
 #' @param w Weights for each observation.
 #' @param approxorder The order of Taylor approximation to use.
 #' @details
-#' When the score matching function is of quadratic form, then gradient is zero at \eqn{H^{-1}b}{solve(H) %*% b},
+#' When the score matching function is of quadratic form, then the gradient is zero at \eqn{H^{-1}b}{solve(H) %*% b},
 #' where \eqn{H} is the average of the Hessian of the score matching function evaluated at each measurement and 
-#' \eqn{b} is the average of gradient offset (see [`quadratictape_parts()`]) evaluated at each measurement. 
+#' \eqn{b} is the average of the gradient offset (see [`quadratictape_parts()`]) evaluated at each measurement. 
 #' Both the Hessian and the gradient offset are constant with respect to the model parameters for quadratic-form score matching equations.
 #'
 #' Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (*would like a good reference for this here*).
@@ -31,6 +31,7 @@
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
+#' @family {General score matching}
 #' @export
 cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y, 
                          w = rep(1, nrow(Y)),

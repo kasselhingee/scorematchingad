@@ -4,7 +4,7 @@ test_that("to then from PPI param vector returns the same params", {
   ALs <- rsymmetricmatrix(p-1, 0, 10)
   bL <- runif(p-1)
   beta <- runif(p, -1, 0)
-  paramvec <- toPPIparamvec(ALs,  bL, beta)
+  paramvec <- ppi_paramvec(AL = ALs,  bL=bL, beta=beta)
   params2 <- ppi_parammats(paramvec)
   expect_equal(params2$AL, ALs)
   expect_equal(params2$bL, bL)
@@ -19,10 +19,10 @@ test_that("ppiltheta2p() matches other operations", {
   ALs <- rsymmetricmatrix(p-1, 0, 10)
   bL <- runif(p-1)
   beta <- runif(p, -1, 0)
-  expect_equal(ppiltheta2p(length(toPPIparamvec(ALs, bL, beta))), p)
+  expect_equal(ppiltheta2p(length(ppi_paramvec(AL=ALs, bL=bL, beta=beta))), p)
 })
 
-test_that("indexcombinations() for vectorising matrices matches toPPI, fromPPI, and upper.tri()", {
+test_that("indexcombinations() for vectorising matrices matches ppi_paramvec and upper.tri()", {
   #skip("indexcombinations() not yet trying match to/ppi_parammats and upper.tri() - see reordering test below")
   p = 5
   Amat <- matrix(NA, nrow = p-1, ncol = p-1)
@@ -37,25 +37,11 @@ test_that("indexcombinations() for vectorising matrices matches toPPI, fromPPI, 
                ignore_attr = TRUE)
 
   #vs toPPI
-  ppiparam <- toPPIparamvec(Amat, rep(0, p-1), rep(0, p))
+  ppiparam <- ppi_paramvec(AL=Amat, bL=rep(0, p-1), beta=rep(0, p))
   indexcombparam <- c(diag(Amat),
   Amat[t(indinfo$ind)], #each column is the own dimension, each row single element to extract
   rep(0, p + p -1))
   expect_equal(ppiparam, indexcombparam)
-})
-
-test_that("reordering of comb matrix vector to match toPPIparamvec", {
-  p = 5
-  Amat <- matrix(NA, nrow = p-1, ncol = p-1)
-  diag(Amat) <- seq(1, p-1)
-  Amat[upper.tri(Amat)] <- (1:sum(upper.tri(Amat))) + p -1
-  Amat[lower.tri(Amat)] <- t(Amat)[lower.tri(Amat)]
-
-  indexcombparam <- c(diag(Amat),
-                      Amat[t(utils::combn(1:(p-1), 2))], #each column is the own dimension, each row single element to extract
-                      rep(0, p + p -1))
-
-  expect_equal(combparam2uppertriparam(indexcombparam), toPPIparamvec(Amat, rep(0, p-1), rep(0, p)))
 })
 
 test_that("from PPI param vector order", {

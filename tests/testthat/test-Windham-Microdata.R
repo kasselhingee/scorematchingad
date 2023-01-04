@@ -143,3 +143,48 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
   expect_equal(est1c$est$paramvec, est1$est$paramvec, tolerance = 1E-3)
 })
 
+
+test_that("A simulate then estimate of TCAP errors appropriately", {
+  list2env(ppi_microbiomedata_TCAP(), globalenv())
+  #initial values for robust estimators
+  ALs=matrix(0,p-1,p-1)
+  bL=matrix(0,p-1,1)
+  ALs[1,1]= -127480.0929
+  ALs[1,2]= 14068.39057
+  ALs[1,3]= 1782.261826
+  ALs[1,4]=  -240.076568
+  ALs[2,2]= -8191.17253
+  ALs[2,3]=  -8.002680
+  ALs[2,4]= 374.693979
+  ALs[3,3]= -46.638659
+  ALs[3,4]= 9.027633
+  ALs[4,4]= -39.208915
+  ALs[lower.tri(ALs)] <- t(ALs)[lower.tri(ALs)]
+  beta0 <- c(-0.80,-0.85,0,-0.2,0)
+
+  #calculate robust estimates
+  cW=0.7
+  cWvec <- ppi_cW(cW, TRUE, TRUE, FALSE, FALSE, FALSE)
+  est1=ppi_robust_alrgengamma(Y = propreal,
+                cW = cWvec,
+                method = "hardcoded",
+                paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
+                paramvec_start = ppi_paramvec(AL = ALs, bL = bL, beta = beta0))
+
+  #simulate from estimate
+  set.seed(345)
+  message("This test will fail because rppi simulates differently now")
+  samp <- rppi(n = nrow(propreal), paramvec = est1$est$paramvec, maxden = 0)
+  # convert latent variables to multinomial values
+  mnprop <- t(apply(samp, MARGIN = 1, FUN = function(probs){rmultinom(1, 2000, prob = probs)}, simplify = TRUE)/2000)
+
+  options("show.error.messages" = FALSE)
+
+  expect_warning({est2=ppi_robust_alrgengamma(Y = mnprop,
+                  cW = cWvec,
+                  method = "closed",
+                  paramvec = ppi_paramvec(p=p, bL = 0, betap = 0),
+                  paramvec_start =  est1$est$paramvec)},
+                  "extremely small")
+})
+

@@ -57,8 +57,8 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   expect_equal(est1$est$AL, ALs, tolerance = 1)
   expect_equal(est1$est$beta, beta, tolerance = 1E-1)
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
-  rmse(toPPIparamvec(ALs, bL, beta), est1$est$paramvec)
-  rmse(toPPIparamvec(ALs, bL, beta), est_unload$est$paramvec)
+  rmse(ppi_paramvec(AL=ALs, bL=bL, beta=beta), est1$est$paramvec)
+  rmse(ppi_paramvec(AL=ALs, bL=bL, beta=beta), est_unload$est$paramvec)
 
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
   expect_gt(rmse(beta, est_unload$est$beta), rmse(beta, est1$est$beta))
@@ -164,7 +164,5 @@ test_that("ppi_robust() matches specialist Windham_alrgengamma() for simple data
                     cW = ppi_cW(cW, 1, 1, 1, 0, 0),
                     method = "hardcoded")
 
-  est1$info$fpevals <- NULL
-  est2$info$fpevals <- NULL
-  expect_equal(est1, est2, tolerance = 1E-5)
+  expect_equal(est1$est, est2$est, tolerance = 1E-5)
 })
