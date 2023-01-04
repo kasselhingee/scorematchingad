@@ -108,3 +108,13 @@ test_that("Rotation matrix matches Directional::rotation", {
   expect_equal(sqrt(sum((RmatB %*% utest)^2)), sqrt(sum(utest^2)))
   expect_equal(RmatB %*% utest, Rmat %*% utest)
 })
+
+test_that("Rotation matrix rotates opposite direction to one", {
+  u <- c(0, 2, 0, 0, 0, 0)
+  uend <- c(0, -1, 0, 0, 0, 0)
+  Rmat1 <- vec2northpole(u)
+  Rmat2 <- vec2northpole(uend)
+  Rmat <- solve(Rmat2) %*% Rmat1
+
+  expect_equal(uend * 2, Rmat %*% u, ignore_attr = TRUE) #because size of u == size of uend
+})
