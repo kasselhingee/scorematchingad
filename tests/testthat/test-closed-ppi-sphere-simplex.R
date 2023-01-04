@@ -169,7 +169,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
 
 test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed final beta, large n", {
   skip_on_cran()
-  set.seed(123)
+  set.seed(124)
   model <- ppi_egmodel(100000, maxden = 4)
 
   acut = 0.1
