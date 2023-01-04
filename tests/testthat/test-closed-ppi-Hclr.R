@@ -1,3 +1,50 @@
+test_that("Fitting Dirichlet via clr transform gets close to true values and other estimators", {
+  skip_on_cran()
+  set.seed(1234)
+  beta0 <- c(-0.5, -0.1, -0.8)
+  Y <- MCMCpack::rdirichlet(1000, beta0+1)
+ 
+  library(ggtern)
+  library(ggplot2)
+  library(dplyr)
+  colnames(Y) <- c("x", "y", "z")
+  Y %>%
+   as.data.frame() %>%
+   ggplot() +
+   coord_tern() +
+   #geom_density_tern(aes(x = x, y = y, z = z)) +
+   geom_point(aes(x = x, y = y, z=z))
+
+  clr <- function(Y){
+    logY <- log(Y)
+    lgeommean <- rowSums(logY)/3
+    return(logY - lgeommean)
+  }
+  clr(Y) %>%
+   as.data.frame() %>%
+   ggplot() +
+   geom_point(aes(x = x, y = y))
+
+  
+  out <- ppi(Y = Y,
+             paramvec = ppi_paramvec(p = 3, AL=0, bL = 0),
+             trans = "clr")
+  expect_absdiff_lte_v(out$est$beta, beta0, out$SE$beta * 3)
+  # but the estimate is wrong by 10 orders of magnitude
+  expect_lt(max(abs(out$SE$beta), na.rm = TRUE), 20)
+
+  # vs method of moments from JASA paper supplementary
+  dirichmom <- function(X) {
+    # Method of Moments estimates of the Dirichlet Distribution
+    temp <- dim(X); n <- temp[1]; m <- temp[2]
+    # X <- cbind(X,matrix(1-apply(X,1,sum)))
+    mom <- apply(X,2,mean)*(mean(X[,1])-mean(X[,1]^2))/(mean(X[,1]^2) - ((mean(X[,1]))^2))
+    return(matrix(mom))
+  }
+  dirichmom(Y)-1 #this is very accurate! :)
+
+})
+
 test_that("Fitting ppi via clr transform with fixed beta gets close to true values and other estimators", {
   skip_on_cran()
   set.seed(1234)
