@@ -24,6 +24,14 @@ struct Ralr : public manifold<Type> {
      return(out);
   }
 
+  Type logdetJfromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z) override {
+    Eigen::Matrix<Type, Eigen::Dynamic, 1> u(z.size() + 1);
+    u = fromM(z);
+    Type out;
+    out = u.array().log().sum();
+    return(out);
+  }
+
 
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
   Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmatfun(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
