@@ -1,8 +1,19 @@
-  clr <- function(Y){
-    logY <- log(Y)
-    lgeommean <- rowSums(logY)/3
-    return(logY - lgeommean)
-  }
+clr <- function(Y){
+  logY <- log(Y)
+  lgeommean <- rowSums(logY)/3
+  return(logY - lgeommean)
+}
+clrinv <- function(Z){
+  expZ <- exp(Z)
+  return(expZ/rowSums(expZ))
+}
+
+JfromM <- function(z){
+  u <- as.vector(clrinv(matrix(z, nrow = 1)))
+  ump <- head(u, length(u)-1)
+  Jacobian <- diag(ump) + ump%o%(tail(u, 1)- ump)
+  return(Jacobian)
+}
 
 
 test_that("Fitting Dirichlet via clr transform gets close to true values and other estimators", {
@@ -126,6 +137,13 @@ test_that("tapefromM evaluates, derivative and Jacobian match R-computed version
     return(det(Jmat))
   })
   expect_equal(detJ, detJnum, tolerance = 1E-4)
+
+  fromMJ_Ranal <- t(apply(clrY, MARGIN = 1, JfromM))
+  detJ_Ranal <- apply(fromMJ_Ranal, MARGIN = 1, function(J){
+    Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
+    return(det(Jmat))
+  })
+  expect_equal(detJ, detJ_Ranal)
 })
 
 test_that("Hess + Offset match gradient for Hclr", {
