@@ -33,7 +33,8 @@ struct Hclr : public manifold<Type> {
     Eigen::Matrix<Type, Eigen::Dynamic, 1> unotp(u.size() - 1);
     unotp = u.head(u.size() - 1);
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> jac(u.size() - 1, u.size() - 1);
-    jac = unotp.asDiagonal() + unotp * (u.tail(1) - unotp.transpose());
+    jac = unotp * (u.tail(1) - unotp.transpose());
+    jac += unotp.asDiagonal();
     Type out;
     out = CppAD::log(jac.determinant());
     return(out);
