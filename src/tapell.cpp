@@ -1,21 +1,5 @@
 # include "tapell.hpp"
 
-// for calculating the determinant of the transform to a manifold
-CppAD::ADFun<double> tapefromM(veca1 z,
-                               manifold<a1type> *pman){
-  //tape relationship between z and h2
-  CppAD::Independent(z);
-  // range space vector
-  veca1 y(0); // vector of ranges space variables - length to be set by from(z);
-  y = pman->fromM(z);
-  CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
-  tape.Dependent(z, y);
-  tape.optimize(); //remove some of the extra variables that were used for recording the ADFun, but aren't needed anymore (hopefully very good when logdetJ is constant.
-  return(tape);
-}
-
-
-
 // define a function that tapes a log likelihood
 CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
                             veca1 theta, //theta parameter
@@ -61,13 +45,6 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
     }
   }
 
-  //prepare fromM tape for logdetJfromM later
-  CppAD::ADFun<a1type, double> fromMtape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
-  fromMtape = tapefromM(z, pman).base2ad(); //convert to a function of a1type rather than double
-  if(fromMtape.Domain() != z.size()){Rcpp::stop("fromMtape domain size does not match input z size: %i != %i", fromMtape.Domain(), z.size());}
-
-
-
   //tape relationship between x and log-likelihood
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
@@ -94,26 +71,14 @@ CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
   // range space vector
   veca1 y(1); // vector of ranges space variables
   veca1 u(0); //0 here because size dictated by fromM
-  u = fromMtape.Forward(0, z);
+  u = pman->fromM(z);
   y.setZero();
   y[0] += llf(u, thetarecom);
 
   //get log determinant of fromM
-  mata1 jacmat(z.size() * u.size(), 1);
-  jacmat = fromMtape.Jacobian(z);
-  jacmat.resize(z.size(), u.size()); //first row is: du1/dz1, du2/dz1, du3/dz1. Second row is du1/dz2, du2/dz2, du3/dz2
-  veca1 logdet(1);
-  logdet[0] = CppAD::log(jacmat.determinant());
-  y[0] += logdet[0];
-  if (verbose){
-    PrintForVec("\n z is: ", z);
-    PrintForVec("\n fromM(z) is: ", u.transpose());
-    PrintForMatrix("\n jacmat is: ", jacmat);
-    PrintForVec("\n jacmat logdeterminant is: ", logdet);
-  }
+  y[0] += pman->logdetJfromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
-  tape.optimize(); //remove some of the extra variables that were used for recording the ADFun, but aren't needed anymore.
   if (verbose){
     Rcpp::Rcout << "tape has " << tape.size_dyn_ind() << " independent dynamic parameters" << std::endl;
     Rcpp::Rcout << "tape requires vectors of length " << tape.Domain() << std::endl;
@@ -156,6 +121,7 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the
     throw std::invalid_argument("Matching ll function not found");
   }
 
+
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   *out = tapell(z_ad,
                 theta_ad,
@@ -163,20 +129,6 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the
                 pman.checked_get(),
                 fixedtheta,
                 verbose);
-
-  Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
-  return(pout);
-}
-
-
-
-
-// for calculating the determinant of the transform to a manifold
-// [[Rcpp::export]]
-Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z,
-                               Rcpp::XPtr<manifold<a1type> > pman){
-  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapefromM(z, pman.checked_get());
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
