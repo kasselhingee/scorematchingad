@@ -1,3 +1,10 @@
+  clr <- function(Y){
+    logY <- log(Y)
+    lgeommean <- rowSums(logY)/3
+    return(logY - lgeommean)
+  }
+
+
 test_that("Fitting Dirichlet via clr transform gets close to true values and other estimators", {
   skip_on_cran()
   set.seed(1234)
@@ -15,11 +22,6 @@ test_that("Fitting Dirichlet via clr transform gets close to true values and oth
    #geom_density_tern(aes(x = x, y = y, z = z)) +
    geom_point(aes(x = x, y = y, z=z))
 
-  clr <- function(Y){
-    logY <- log(Y)
-    lgeommean <- rowSums(logY)/3
-    return(logY - lgeommean)
-  }
   clr(Y) %>%
    as.data.frame() %>%
    ggplot() +
@@ -42,6 +44,11 @@ test_that("Fitting Dirichlet via clr transform gets close to true values and oth
     return(matrix(mom))
   }
   dirichmom(Y)-1 #this is very accurate! :)
+
+  out <- ppi(Y = Y,
+             paramvec = ppi_paramvec(p = 3, AL=0, bL = 0, betap = tail(beta0, 1)),
+             trans = "clr")
+
 
 })
 
@@ -87,7 +94,9 @@ test_that("tapefromM evaluates, derivative and Jacobian match R-computed version
   Hclr <- manifoldtransform("Hclr")
 
   # check evaluation
-  clrY <- log(Y) - rowSums(log(Y))/3
+  clrY <- clr(Y)
+  expect_equal(clrY, t(apply(Y, MARGIN = 1, function(u){ptoM(Hclr, u)})))
+
   tapefromM <- ptapefromM(clrY[1, ], Hclr)
   vals <- tape_eval(tapefromM, clrY, matrix(nrow = nrow(Y), ncol = 0))
   expect_equal(vals, Y)
