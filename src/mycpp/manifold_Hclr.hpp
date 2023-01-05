@@ -18,7 +18,7 @@ struct Hclr : public manifold<Type> {
      //make toM non-generate in enclosing R^p space by adding a vector perpendicular to the space
      Eigen::Matrix<Type, Eigen::Dynamic, 1> unitones(x.size());
      unitones.setConstant(1.0).normalize();
-     out += unitones * (unitones.transpose() * x);
+     out += unitones * (unitones.transpose() * x - 1/sqrt(x.size()));
      return(out);
   }
 
