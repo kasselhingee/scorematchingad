@@ -55,4 +55,16 @@ vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                      vecd u, vecd centre,
                      vecd dynparam, size_t order);
 
+// A function that creates a tape of fromM
+CppAD::ADFun<double> tapefromM(veca1 z,
+                               manifold<a1type> *pman);
+
+// And its version for R
+// for calculating the determinant of the transform to a manifold
+// [[Rcpp::export]]
+Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z,
+                               Rcpp::XPtr<manifold<a1type> > pman);
+
+
+
 #endif

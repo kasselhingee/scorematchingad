@@ -115,6 +115,19 @@ pTapeGradOffset <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pTapeGradOffset', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
+#' @title Tape the log of Jacobian determinant of a CppAD Tape
+#' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
+#' @param x A vector in the domain of the taped function.
+#' @param dynparam a vector of the dynamic parameters
+#' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
+#' The `x` vector is used as the value to conduct the taping.
+#' @details
+#' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+#' @export
+ptapelogdetJ <- function(pfun, x, dynparam) {
+    .Call('_scorecompdir_ptapelogdetJ', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+}
+
 #' @noRd
 #' @title Tape of a log-likelihood calculation
 #' @param p dimension of measurements
@@ -183,5 +196,9 @@ ptoM <- function(pman, u_ad) {
 #' @export
 pTaylorApprox <- function(pfun, u, centre, dynparam, order) {
     .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, u, centre, dynparam, order)
+}
+
+ptapefromM <- function(z, pman) {
+    .Call('_scorecompdir_ptapefromM', PACKAGE = 'scorecompdir', z, pman)
 }
 
