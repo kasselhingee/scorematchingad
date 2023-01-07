@@ -20,7 +20,7 @@ test_that("Fitting Dirichlet via clr transform gets close to true values and oth
   skip_on_cran()
   set.seed(1234)
   beta0 <- c(-0.5, -0.1, -0.8)
-  Y <- MCMCpack::rdirichlet(1000, beta0+1)
+  Y <- MCMCpack::rdirichlet(10000, beta0+1)
  
   library(ggtern)
   library(ggplot2)
@@ -56,9 +56,9 @@ test_that("Fitting Dirichlet via clr transform gets close to true values and oth
   }
   dirichmom(Y)-1 #this is very accurate! :)
 
-  out <- ppi(Y = Y,
-             paramvec = ppi_paramvec(p = 3, AL=0, bL = 0, betap = tail(beta0, 1)),
-             trans = "clr")
+  out2 <- ppi(Y = Y,
+             paramvec = ppi_paramvec(p = 3, AL=0, bL = 0),
+             trans = "sqrt", divweight = "minsq", acut = 0.01)
 
 
 })
@@ -131,6 +131,9 @@ test_that("tapefromM evaluates, derivative and Jacobian match R-computed version
     Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
     return(det(Jmat))
   })
+  detJfromMtape <- ptapelogdetJ(tapefromM, clrY[1,], vector(mode = "numeric", length = 0))
+  ldetJ_cppad <- tape_eval(detJfromMtape, clrY, matrix(nrow = nrow(Y), ncol = 0))
+  expect_equal(ldetJ_cppad, log(detJ), ignore_attr = TRUE)
 
   detJnum <- apply(fromMJnum, MARGIN = 1, function(J){
     Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
