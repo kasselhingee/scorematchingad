@@ -30,13 +30,8 @@ struct Hclr : public manifold<Type> {
   Type logdetJfromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z) override {
     Eigen::Matrix<Type, Eigen::Dynamic, 1> u(z.size());
     u = fromM(z);
-    Eigen::Matrix<Type, Eigen::Dynamic, 1> unotp(u.size() - 1);
-    unotp = u.head(u.size() - 1);
-    Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> jac(u.size() - 1, u.size() - 1);
-    jac = unotp * (u.tail(1) - unotp.transpose());
-    jac += unotp.asDiagonal();
-    Type out;
-    out = CppAD::log(CppAD::abs(jac.determinant()));
+    Type out; //use a matrix so that -= is a known operation
+    out = u.array().log().sum() + log(u.size());
     return(out);
   }
   //could us Sylvester's determinant theorem for direct value
