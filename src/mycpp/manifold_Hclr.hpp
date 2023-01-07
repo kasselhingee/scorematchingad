@@ -36,9 +36,11 @@ struct Hclr : public manifold<Type> {
     jac = unotp * (u.tail(1) - unotp.transpose());
     jac += unotp.asDiagonal();
     Type out;
-    out = CppAD::log(jac.determinant());
+    out = CppAD::log(CppAD::abs(jac.determinant()));
     return(out);
   }
+  //could us Sylvester's determinant theorem for direct value
+  // or matrix determinant lemma according to Wikipedia
 
 
   //Pmat is the same as for simplex (both planes with normal of (1,1,1,....1)
