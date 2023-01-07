@@ -190,7 +190,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  ptapelogdetJ(Rcpp::XPtr< CppAD::ADFun<double
   jacmat = pfunhigher.Jacobian(x);
   jacmat.resize(pfunhigher.Domain(), pfunhigher.Range()); //first row is: du1/dz1, du2/dz1, du3/dz1. Second row is du1/dz2, du2/dz2, du3/dz2
   veca1 logdet(1);
-  logdet[0] = CppAD::log(jacmat.determinant());
+  logdet[0] = CppAD::log(CppAD::abs(jacmat.determinant()));
 
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
