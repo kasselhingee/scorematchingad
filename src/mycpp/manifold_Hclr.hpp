@@ -15,6 +15,11 @@ struct Hclr : public manifold<Type> {
      Eigen::Matrix<Type, 1, 1> sumlog; //use a matrix so that -= is a known operation
      sumlog << out.mean(); //sum logged values - mean would work just as well, but sum has fewer operations (except maybe when dimensions are very large?)
      out -= sumlog; //take the sumlog away from each element
+     
+     //make toM non-generate in enclosing R^p space by adding a vector perpendicular to the space
+     Eigen::Matrix<Type, Eigen::Dynamic, 1> unitones(x.size());
+     unitones.setConstant(1.0).normalize();
+     out += unitones * (unitones.transpose() * x - 1/sqrt(x.size()));
      return(out);
   }
 
@@ -24,6 +29,13 @@ struct Hclr : public manifold<Type> {
      Type sumexp = out.sum(); 
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out2(x.size());
      out2 = out / sumexp; //normalise by sum
+     
+     //make fromM non-degenerate in enclosing R^p space by adding a vector perpendicular to the space
+     Eigen::Matrix<Type, Eigen::Dynamic, 1> unitones(x.size());
+     unitones.setConstant(1.0).normalize();
+     out2 += unitones * (unitones.transpose() * x);
+
+
      return(out2);
   }
   
