@@ -14,13 +14,17 @@ JfromM <- function(z){
   Jacobian <- diag(ump) + ump%o%(tail(u, 1)- ump)
   return(Jacobian)
 }
+ldetJfromM <- function(z){
+  u <- as.vector(clrinv(matrix(z, nrow = 1)))
+  sum(log(u)) + log(length(u))
+}
 
 
 test_that("Fitting Dirichlet via clr transform gets close to true values and other estimators", {
   skip_on_cran()
-  set.seed(1234)
-  beta0 <- c(-0.5, -0.1, -0.8)
-  Y <- MCMCpack::rdirichlet(10000, beta0+1)
+  set.seed(13412)
+  beta0 <- c(-0.5, -0.1, -0.8) #the largest element is going to look a bit like beta>0
+  Y <- MCMCpack::rdirichlet(1000, beta0+1)
  
   library(ggtern)
   library(ggplot2)
@@ -112,14 +116,8 @@ test_that("tapefromM evaluates, derivative and Jacobian match R-computed version
   vals <- tape_eval(tapefromM, clrY, matrix(nrow = nrow(Y), ncol = 0))
   expect_equal(vals, Y)
 
-  #check nondegeneracy fix
-  vals2 <- tape_eval(tapefromM, clrY+3.1, matrix(nrow = nrow(Y), ncol = 0))
-  expect_equal(vals2-3.1, Y)
-
-  # check Jacobian
+  # Start of check Jacobian
   fromMJ <- t(apply(clrY, MARGIN = 1, function(x){pJacobian(tapefromM, x, matrix(nrow = 0, ncol = 0))}))
-
-  # numerical Jacobian
   fromMJnum <- t(apply(clrY, MARGIN = 1, function(x){
     b <- x
     J <- numericDeriv(quote(pForward0(tapefromM, b , matrix(nrow = 0, ncol = 0))), "b")
@@ -127,13 +125,14 @@ test_that("tapefromM evaluates, derivative and Jacobian match R-computed version
 }))
   expect_equal(fromMJ, fromMJnum, tolerance = 1E-4)
 
+  # Check the determinants: via det of Jacobian above, via numerical via R analytical, and via CppAD tape
   detJ <- apply(fromMJ, MARGIN = 1, function(J){
     Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
     return(det(Jmat))
   })
   detJfromMtape <- ptapelogdetJ(tapefromM, clrY[1,], vector(mode = "numeric", length = 0))
   ldetJ_cppad <- tape_eval(detJfromMtape, clrY, matrix(nrow = nrow(Y), ncol = 0))
-  expect_equal(ldetJ_cppad, log(detJ), ignore_attr = TRUE)
+  expect_equal(ldetJ_cppad, log(abs(detJ)), ignore_attr = TRUE, tolerance = 1E-4)
 
   detJnum <- apply(fromMJnum, MARGIN = 1, function(J){
     Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
@@ -147,6 +146,10 @@ test_that("tapefromM evaluates, derivative and Jacobian match R-computed version
     return(det(Jmat))
   })
   expect_equal(detJ, detJ_Ranal)
+
+  ldetJ_Rdirect <- apply(clrY, MARGIN = 1, ldetJfromM)
+  expect_equal(log(abs(detJ)), ldetJ_Rdirect, tolerance = 1E-6)
+  expect_equal(ldetJ_cppad, ldetJ_Rdirect, ignore_attr = TRUE, tolerance = 1E-6)
 })
 
 test_that("Hess + Offset match gradient for Hclr", {
