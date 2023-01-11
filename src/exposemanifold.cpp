@@ -21,9 +21,13 @@ manifold<a1type> * newmanifold(const std::string &manifoldname){
   return(out);
 }
 
+typedef manifold<a1type> manifold_a1type;
+
 RCPP_MODULE(manif) {
-  Rcpp::class_< manifold<a1type> >("manifold")
+  Rcpp::class_< manifold_a1type >("manifold")
       .factory<const std::string &>(newmanifold)
-      .method("toM", &manifold<a1type>::toM);
+      .method("toM", &manifold_a1type::toM);
 
 }
+
+
