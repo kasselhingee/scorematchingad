@@ -27,8 +27,8 @@ RCPP_MODULE(manifolds) {
   Rcpp::class_< manifold_a1type >("mantranobj")
       .factory<const std::string &>(newmantran)
       .method("toM", &manifold_a1type::toM)
-      //.method("fromM", &manifold_a1type::fromM)
-      //.method("logdetJfromM", &manifold_a1type::logdetJfromM)
+      .method("fromM", &manifold_a1type::fromM)
+      .method("logdetJfromM", &manifold_a1type::logdetJfromM)
       //.method("Pmatfun", &manifold_a1type::Pmatfun)
       //.method("dPmatfun", &manifold_a1type::dPmatfun)
   ;

@@ -51,7 +51,7 @@ namespace Rcpp {
         out(j, i) = CppAD::Value(inmat(j, i));
       }
     }
-    return(Rcpp::wrap(out)); //returns SEXP
+    return(Rcpp::wrap<matd>(out)); //returns SEXP
   } 
 
 }
