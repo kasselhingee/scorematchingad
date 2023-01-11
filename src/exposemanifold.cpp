@@ -4,7 +4,7 @@
 using namespace Rcpp;
 
 // manifold object 'factory'
-manifold<a1type> * newmanifold(const std::string &manifoldname){
+manifold<a1type> * newmantran(const std::string &manifoldname){
   manifold<a1type> * out;  //returning a pointer
   if (manifoldname.compare("sphere") == 0){
     out = new mantran::Spos<a1type>();
@@ -23,11 +23,15 @@ manifold<a1type> * newmanifold(const std::string &manifoldname){
 
 typedef manifold<a1type> manifold_a1type;
 
-RCPP_MODULE(manif) {
-  Rcpp::class_< manifold_a1type >("manifold")
-      .factory<const std::string &>(newmanifold)
-      .method("toM", &manifold_a1type::toM);
-
+RCPP_MODULE(manifolds) {
+  Rcpp::class_< manifold_a1type >("mantranobj")
+      .factory<const std::string &>(newmantran)
+      .method("toM", &manifold_a1type::toM)
+      //.method("fromM", &manifold_a1type::fromM)
+      //.method("logdetJfromM", &manifold_a1type::logdetJfromM)
+      //.method("Pmatfun", &manifold_a1type::Pmatfun)
+      //.method("dPmatfun", &manifold_a1type::dPmatfun)
+  ;
 }
 
 
