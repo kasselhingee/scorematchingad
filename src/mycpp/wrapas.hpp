@@ -47,12 +47,12 @@ namespace Rcpp {
 
   // from an SEXP to an eigen matrix of a1type
   template <> mata1 as( SEXP inmat) {
-    matd inemat;
-    inemat = Rcpp::as<matd>(inmat);
-    mata1 out(inemat.rows(), inemat.cols());
+    Rcpp::NumericMatrix inmat2;
+    inmat2 = Rcpp::as<Rcpp::NumericMatrix>(inmat);
+    mata1 out(inmat2.rows(), inmat2.cols());
     for (long int i = 0; i<out.cols(); i++){
       for (long int j = 0; j<out.rows(); j++){
-        out(j, i) = inemat(j, i);
+        out(j, i) = inmat2(j, i);
       }
     }
     return(out);
@@ -60,13 +60,13 @@ namespace Rcpp {
 
   // eigen matrix of a1type to SEXP
   template <> SEXP wrap(const mata1 &inmat){
-    matd out(inmat.rows(), inmat.cols());
+    Rcpp::NumericMatrix out(inmat.rows(), inmat.cols());
     for (long int i = 0; i<out.cols(); i++){
       for (long int j = 0; j<out.rows(); j++){
-        out(j, i) = CppAD::Value(inmat(j, i));
+        out[j + i*out.rows()] = CppAD::Value(inmat(j, i));
       }
     }
-    return(Rcpp::wrap<matd>(out)); //returns SEXP
+    return(Rcpp::wrap(out)); //returns SEXP
   } 
 
 }
