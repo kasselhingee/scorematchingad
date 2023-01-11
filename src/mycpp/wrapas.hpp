@@ -2,7 +2,6 @@
 # define MYCPP_WRAPAS
 
 # include "../scorecompdir_types.h"
-# include <RcppEigen.h> //for Rcpp::as to Eigen entities
 # include <Rcpp.h>
 # include <cppad/cppad.hpp>
 
@@ -24,18 +23,17 @@ namespace Rcpp {
 
   // from an SEXP to an eigen vector if a1type
   template <> veca1 as( SEXP invec) {
-    vecd inevec;
-    inevec = Rcpp::as<vecd>(invec);
-    veca1 out(inevec.size());
+    Rcpp::NumericVector insvec(invec);
+    veca1 out(insvec.size());
     for (long int i = 0; i<out.size(); i++){
-      out[i] = inevec[i];
+      out[i] = insvec[i];
     }
     return(out);
   }
 
   // eigen vector of a1type to SEXP
   template <> SEXP wrap(const veca1 &invec){
-    vecd out(invec.size());
+    Rcpp::NumericVector out(invec.size);
     for (long int i=0; i<out.size(); i++){
       out[i] = CppAD::Value(invec[i]);
     }
