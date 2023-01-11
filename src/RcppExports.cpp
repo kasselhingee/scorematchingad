@@ -198,6 +198,8 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _rcpp_module_boot_manif();
+
 static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_swapDynamic", (DL_FUNC) &_scorecompdir_swapDynamic, 3},
     {"_scorecompdir_pJacobian", (DL_FUNC) &_scorecompdir_pJacobian, 3},
@@ -213,6 +215,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_testmanifold", (DL_FUNC) &_scorecompdir_testmanifold, 2},
     {"_scorecompdir_ptoM", (DL_FUNC) &_scorecompdir_ptoM, 2},
     {"_scorecompdir_pTaylorApprox", (DL_FUNC) &_scorecompdir_pTaylorApprox, 5},
+    {"_rcpp_module_boot_manif", (DL_FUNC) &_rcpp_module_boot_manif, 0},
     {NULL, NULL, 0}
 };
 
