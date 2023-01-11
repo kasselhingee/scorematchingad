@@ -8,6 +8,11 @@ struct Ralr : public manifold<Type> {
   ~Ralr(){};
   Ralr(){};
 
+  std::string name() const {
+    std::string out = "Ralr";
+    return(out);
+  }
+
   Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size() - 1);
      out = x.block(0,0,x.size() - 1, 1) / x[x.size() - 1];

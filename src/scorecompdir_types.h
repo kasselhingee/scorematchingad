@@ -30,6 +30,10 @@ struct manifold { //exactly like a class, but with default public members https:
   virtual T logdetJfromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &) = 0; //determinant of Jacobian of the tranformation - for correcting the likelihood function as it is a density
   //for taping will need to pass copies - so that the coefficients of the tape are not updated by other calls part way through
   virtual ~manifold(){}; //destructor
+  std::string name() const { //function giving the manifold-transform name
+    std::string out = "NA";
+    return(out);
+  };
   manifold(){};
 };
 

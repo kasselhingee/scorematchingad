@@ -21,11 +21,17 @@ manifold<a1type> * newmantran(const std::string &manifoldname){
   return(out);
 }
 
+manifold<a1type> * newmantran(const manifold<a1type> &inmantran){
+  manifold<a1type> * out = newmantran(inmantran.name());
+  return(out);
+}
+
 typedef manifold<a1type> manifold_a1type;
 
 RCPP_MODULE(manifolds) {
   Rcpp::class_< manifold_a1type >("mantran_ad")
       .factory<const std::string &>(newmantran)
+      //.factory<const manifold_a1type &>(newmantran)
       .method("toM", &manifold_a1type::toM, "transform a vector to the manifold")
       .method("fromM", &manifold_a1type::fromM, "reverse of toM()")
       .method("logdetJfromM", &manifold_a1type::logdetJfromM, "compute the log of the determinant of the Jacobian of fromM()")
@@ -34,4 +40,4 @@ RCPP_MODULE(manifolds) {
   ;
 }
 
-
+//adadsafRCPP_EXPOSED_CLASS_NODECL(manifold_a1type) //so that Rcpp knows how to wrap and unwrap
