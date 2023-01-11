@@ -8,12 +8,6 @@ clrinv <- function(Z){
   return(expZ/rowSums(expZ))
 }
 
-JfromM <- function(z){
-  u <- as.vector(clrinv(matrix(z, nrow = 1)))
-  ump <- head(u, length(u)-1)
-  Jacobian <- diag(ump) + ump%o%(tail(u, 1)- ump)
-  return(Jacobian)
-}
 ldetJfromM <- function(z){
   u <- as.vector(clrinv(matrix(z, nrow = 1)))
   sum(log(u)) + log(length(u))
@@ -23,8 +17,12 @@ ldetJfromM <- function(z){
 test_that("Fitting Dirichlet via clr transform gets close to true values and other estimators", {
   skip_on_cran()
   set.seed(13412)
-  beta0 <- c(-0.5, -0.1, -0.8) #the largest element is going to look a bit like beta>0
-  Y <- MCMCpack::rdirichlet(1000, beta0+1)
+  beta0 <- c(-0.5, 0, -0.8) #the largest element is going to look a bit like beta>0
+  Y <- MCMCpack::rdirichlet(10000, beta0+1)
+  out <- ppi(Y = Y,
+             paramvec = ppi_paramvec(p = 3, AL=0, bL = 0),
+             trans = "clr", bdrythreshold = 0)
+  out$est$beta
  
   library(ggtern)
   library(ggplot2)
@@ -32,10 +30,10 @@ test_that("Fitting Dirichlet via clr transform gets close to true values and oth
   colnames(Y) <- c("x", "y", "z")
   Y %>%
    as.data.frame() %>%
-   ggplot() +
+   ggplot(aes(x=x, y = y, z = z)) +
    coord_tern() +
-   #geom_density_tern(aes(x = x, y = y, z = z)) +
-   geom_point(aes(x = x, y = y, z=z))
+   geom_density_tern(bdl = 0.1, bdl.val = NA) +
+   geom_point(shape = "+")
 
   clr(Y) %>%
    as.data.frame() %>%
@@ -43,9 +41,6 @@ test_that("Fitting Dirichlet via clr transform gets close to true values and oth
    geom_point(aes(x = x, y = y))
 
   
-  out <- ppi(Y = Y,
-             paramvec = ppi_paramvec(p = 3, AL=0, bL = 0),
-             trans = "clr")
   expect_absdiff_lte_v(out$est$beta, beta0, out$SE$beta * 3)
   # but the estimate is wrong by 10 orders of magnitude
   expect_lt(max(abs(out$SE$beta), na.rm = TRUE), 20)
@@ -64,6 +59,7 @@ test_that("Fitting Dirichlet via clr transform gets close to true values and oth
              paramvec = ppi_paramvec(p = 3, AL=0, bL = 0),
              trans = "sqrt", divweight = "minsq", acut = 0.01)
 
+  out2$est$beta
 
 })
 
@@ -100,7 +96,7 @@ test_that("Fitting ppi via clr transform with unfixed beta gets close to true va
   expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
 })
 
-test_that("tapefromM evaluates, derivative and Jacobian match R-computed versions", {
+test_that("tapefromM and toM matches R-computed versions", {
   set.seed(1245)
   mod <- ppi_egmodel(100)
   Y <- mod$sample
@@ -115,6 +111,15 @@ test_that("tapefromM evaluates, derivative and Jacobian match R-computed version
   tapefromM <- ptapefromM(clrY[1, ], Hclr)
   vals <- tape_eval(tapefromM, clrY, matrix(nrow = nrow(Y), ncol = 0))
   expect_equal(vals, Y)
+})
+
+test_that("tapefromM Jacobian and taped logdetJfromM match R-computed versions", {
+  set.seed(1245)
+  mod <- ppi_egmodel(100)
+  Y <- mod$sample
+  Y <- rbind(Y, rep(1/3, 3))
+
+  Hclr <- manifoldtransform("Hclr")
 
   # Start of check Jacobian
   fromMJ <- t(apply(clrY, MARGIN = 1, function(x){pJacobian(tapefromM, x, matrix(nrow = 0, ncol = 0))}))
@@ -123,30 +128,21 @@ test_that("tapefromM evaluates, derivative and Jacobian match R-computed version
     J <- numericDeriv(quote(pForward0(tapefromM, b , matrix(nrow = 0, ncol = 0))), "b")
     return(as.vector(attr(J, "gradient")))
 }))
-  expect_equal(fromMJ, fromMJnum, tolerance = 1E-4)
+  expect_equal(fromMJ, fromMJnum, tolerance = 1E-6)
+
 
   # Check the determinants: via det of Jacobian above, via numerical via R analytical, and via CppAD tape
+  # determinant calculated from taped Jacobian
   detJ <- apply(fromMJ, MARGIN = 1, function(J){
     Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
     return(det(Jmat))
   })
   detJfromMtape <- ptapelogdetJ(tapefromM, clrY[1,], vector(mode = "numeric", length = 0))
+  # log determinant evaluation via tape
   ldetJ_cppad <- tape_eval(detJfromMtape, clrY, matrix(nrow = nrow(Y), ncol = 0))
-  expect_equal(ldetJ_cppad, log(abs(detJ)), ignore_attr = TRUE, tolerance = 1E-4)
+  expect_equal(ldetJ_cppad, log(abs(detJ)), ignore_attr = TRUE, tolerance = 1E-7)
 
-  detJnum <- apply(fromMJnum, MARGIN = 1, function(J){
-    Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
-    return(det(Jmat))
-  })
-  expect_equal(detJ, detJnum, tolerance = 1E-4)
-
-  fromMJ_Ranal <- t(apply(clrY, MARGIN = 1, JfromM))
-  detJ_Ranal <- apply(fromMJ_Ranal, MARGIN = 1, function(J){
-    Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
-    return(det(Jmat))
-  })
-  expect_equal(detJ, detJ_Ranal)
-
+  # analytic determinant
   ldetJ_Rdirect <- apply(clrY, MARGIN = 1, ldetJfromM)
   expect_equal(log(abs(detJ)), ldetJ_Rdirect, tolerance = 1E-6)
   expect_equal(ldetJ_cppad, ldetJ_Rdirect, ignore_attr = TRUE, tolerance = 1E-6)
