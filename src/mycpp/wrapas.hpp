@@ -8,6 +8,21 @@
 
 // definitions for Rcpp::wrap and Rcpp::as for various data types
 namespace Rcpp {
+  // from an SEXP to a a1type
+  template <> a1type as( SEXP inval) {
+    double cppval;
+    cppval = Rcpp::as<double>(inval);
+    a1type out(cppval);
+    return(out);
+  }
+
+  // a1type to SEXP
+  template <> SEXP wrap(const a1type &inval){
+    double cppval;
+    cppval = CppAD::Value(inval);
+    return(Rcpp::wrap(cppval)); //returns SEXP
+  } 
+
   // from an SEXP to an eigen vector if a1type
   template <> veca1 as( SEXP invec) {
     vecd inevec;
