@@ -18,8 +18,7 @@ namespace Rcpp {
 
   // a1type to SEXP
   template <> SEXP wrap(const a1type &inval){
-    double cppval;
-    cppval = CppAD::Value(inval);
+    double cppval(CppAD::Value(inval));
     return(Rcpp::wrap(cppval)); //returns SEXP
   } 
 
