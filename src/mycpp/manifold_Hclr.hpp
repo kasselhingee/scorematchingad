@@ -43,7 +43,7 @@ struct Hclr : public manifold<Type> {
     Eigen::Matrix<Type, Eigen::Dynamic, 1> u(z.size());
     u = fromM(z);
     Type out; //use a matrix so that -= is a known operation
-    out = u.array().log().sum();
+    out = u.array().log().sum() + log(u.size());
     return(out);
   }
   //could us Sylvester's determinant theorem for direct value
