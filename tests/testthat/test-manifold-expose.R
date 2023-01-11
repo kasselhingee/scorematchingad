@@ -1,7 +1,7 @@
 test_that("Manifold objects can be created, and member functions run", {
   mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
-  mantranobj <- mod$mantranobj
-  Ralr <- new(mantranobj, "Ralr")
+  obj <- mod$mantran_ad
+  Ralr <- new(obj, "Ralr")
   expect_s4_class(Ralr, "Rcpp_mantran_ad")
   u <- c(0.1, 0.3, 0.6)
   z <- Ralr$toM(u)
