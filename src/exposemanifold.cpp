@@ -1,7 +1,3 @@
-#include "scorecompdir_types.h"
-#include "mycpp/mantrans.hpp"
-#include <Rcpp.h>
-using namespace Rcpp;
 # include "exposemanifold.hpp"
 
 // manifold object 'factory'
