@@ -12,6 +12,9 @@
 #' manifoldtransform("Ralr")
 #' @export
 manifoldtransform <- function(name){
-  out <- pmanifold(name)
+  mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+  obj <- mod$mantran_ad
+  obj2 <- new(obj, name)
+  out <- obj2$XPtr()
   return(out)
 }
