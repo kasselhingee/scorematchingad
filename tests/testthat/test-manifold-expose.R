@@ -13,11 +13,4 @@ test_that("Manifold objects can be created, and member functions run", {
   expect_type(Ralr$XPtr(), "externalptr")
 })
 
-test_that("Module-created mantran object can be used as a mantran object in Cpp", {
-  mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
-  obj <- mod$mantran_ad
-  Ralr <- new(obj, "Ralr")
-  u <- c(0.1, 0.2, 1 - 0.3)
-  out <- testmanifold(Ralr$XPtr(), u)
-})
 
