@@ -26,7 +26,6 @@ manifold<a1type> * newmantran(const manifold<a1type> &inmantran){
   return(out);
 }
 
-typedef manifold<a1type> manifold_a1type;
 
 RCPP_MODULE(manifolds) {
   Rcpp::class_< manifold_a1type >("mantran_ad")
@@ -37,6 +36,7 @@ RCPP_MODULE(manifolds) {
       .method("logdetJfromM", &manifold_a1type::logdetJfromM, "compute the log of the determinant of the Jacobian of fromM()")
       .method("Pmatfun", &manifold_a1type::Pmatfun, "Pmatfun(z) returns the matrix that orthogonally projects onto the manifold's tangent space at z")
       .method("dPmatfun", &manifold_a1type::dPmatfun, "dPmatfun(z, i) returns the element-wise derivative of Pmatfun() at location z with respect to the ith dimension")
+      .method("XPtr", &manifold_a1type::XPtr)
   ;
 }
 
