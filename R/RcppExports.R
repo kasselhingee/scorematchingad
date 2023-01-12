@@ -116,28 +116,6 @@ pTapeGradOffset <- function(pfun, x, dynparam) {
 }
 
 #' @noRd
-#' @title Tape of a log-likelihood calculation
-#' @param p dimension of measurements
-#' @param bd dimension of the parameter vector
-#' @param llname name of the likelihood function
-#' @return An RCpp::XPtr object pointing to the ADFun
-ptapell <- function(z_ad, theta_ad, llname, pman, fixedtheta, verbose) {
-    .Call('_scorecompdir_ptapell', PACKAGE = 'scorecompdir', z_ad, theta_ad, llname, pman, fixedtheta, verbose)
-}
-
-#' @noRd
-#' @title The score matching objective calculator.
-#' @param xbetain a concatenated vector of sqrt(x) and beta
-#' @param n The dimension of x.
-#' @param manifoldname The name of the manifold to transform to
-#' @param weightname The name of the weight function to use
-#' @param acut The constraint a_c in the weight function
-#' @return An RCpp::XPtr object pointing to the ADFun
-ptapesmo <- function(u_ad, theta_ad, pll, pman, weightname, acut, verbose) {
-    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, pman, weightname, acut, verbose)
-}
-
-#' @noRd
 #' @title Generate manifold with transformation object
 #' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
 #' @return An RCpp::XPtr object pointing to the C++ manifold object
@@ -160,6 +138,28 @@ pmanifold <- function(manifoldname) {
 #' @return An integer. 0 if the testable parts pass.
 testmanifold <- function(pman, u_ad) {
     .Call('_scorecompdir_testmanifold', PACKAGE = 'scorecompdir', pman, u_ad)
+}
+
+#' @noRd
+#' @title Tape of a log-likelihood calculation
+#' @param p dimension of measurements
+#' @param bd dimension of the parameter vector
+#' @param llname name of the likelihood function
+#' @return An RCpp::XPtr object pointing to the ADFun
+ptapell <- function(z_ad, theta_ad, llname, pman, fixedtheta, verbose) {
+    .Call('_scorecompdir_ptapell', PACKAGE = 'scorecompdir', z_ad, theta_ad, llname, pman, fixedtheta, verbose)
+}
+
+#' @noRd
+#' @title The score matching objective calculator.
+#' @param xbetain a concatenated vector of sqrt(x) and beta
+#' @param n The dimension of x.
+#' @param manifoldname The name of the manifold to transform to
+#' @param weightname The name of the weight function to use
+#' @param acut The constraint a_c in the weight function
+#' @return An RCpp::XPtr object pointing to the ADFun
+ptapesmo <- function(u_ad, theta_ad, pll, pman, weightname, acut, verbose) {
+    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, pman, weightname, acut, verbose)
 }
 
 #' @noRd
