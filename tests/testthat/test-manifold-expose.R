@@ -10,6 +10,7 @@ test_that("Manifold objects can be created, and member functions run", {
   expect_equal(dim(Ralr$Pmatfun(z)), c(2,2))
   expect_type(Ralr$Pmatfun(z), "double")
   expect_equal(dim(Ralr$dPmatfun(z, 1)), c(2,2))
+  expect_type(Ralr$XPtr(), "externalptr")
 })
 
 test_that("Module-created mantran object can be used as a mantran object in Cpp", {
@@ -17,6 +18,6 @@ test_that("Module-created mantran object can be used as a mantran object in Cpp"
   obj <- mod$mantran_ad
   Ralr <- new(obj, "Ralr")
   u <- c(0.1, 0.2, 1 - 0.3)
-  out <- testmanifold(Ralr, u)
+  out <- testmanifold(Ralr$XPtr(), u)
 })
 
