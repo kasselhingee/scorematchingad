@@ -37,7 +37,7 @@ struct manifold { //exactly like a class, but with default public members https:
   Rcpp::XPtr< manifold<T> > XPtr(){
     manifold<T> * out = this;
     Rcpp::XPtr< manifold<T> > pout(out, true);
-    pout.attr("name") = this.name();
+    pout.attr("name") = name();
     return(pout);
   };
   manifold(){};
