@@ -74,3 +74,29 @@ test_that("Snative manifold object passes lightweight standard tests", {
   expect_equal(out, 0)
 })
 
+test_that("Snative manifold object matches analytic results", {
+  sphere <- new(obj, "Snative")
+  u <- runif(3)
+  u <- u/sqrt(sum(u^2))
+  expect_equal(u, sphere$toM(u))
+  expect_equal(sphere$fromM(u), u)
+  z <- u
+  Pmatz <- sphere$Pmatfun(z)
+  expect_equal(t(z) %*% Pmatz %*% (3*z), 0, ignore_attr = TRUE)
+  expect_equal(t(z) %*% Pmatz %*% runif(3), 0, ignore_attr = TRUE)
+  
+  #check determinant using integration over a unitcube
+  integrand <- function(zmat){#each column is a measurement
+    xmat <- apply(zmat, MARGIN = 2, sphere$fromM)
+    inunitcube <- (colSums(xmat < 0) == 0) * (colSums(xmat > 1) == 0)
+    Jdets <- exp(apply(zmat, MARGIN = 2, sphere$logdetJfromM))
+    return(matrix(Jdets * inunitcube, nrow = 1))
+  } 
+  volumeviaM <- cubature::hcubature(
+    f = integrand,
+    lowerLimit = c(0, 0),
+    upperLimit = c(1, 1),
+    vectorInterface = TRUE,
+    fDim = 1)
+  expect_equal(volumeviaM$integral, 1, tolerance = 1E-5)
+})
