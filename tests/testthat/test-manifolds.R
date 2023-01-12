@@ -18,35 +18,20 @@ test_that("Sphere manifold object matches analytic results", {
   Pmatz <- sphere$Pmatfun(z)
   expect_equal(t(z) %*% Pmatz %*% runif(3), 0)
   
-  #check determinant using integration
-  simplexindicator <- function(unpmat){ #different to usual: each column is a measurement
-    out <- (colSums(unpmat >= 0) > 0) *
-      (colSums(unpmat) <= 1)
-    # final u element is implicitly within bounds now
-    return(matrix(out, nrow = 1))
-  }
-  volume <- cubature::hcubature(
-    f = simplexindicator,
-    lowerLimit = c(0, 0),
-    upperLimit = c(1, 1),
-    vectorInterface = TRUE,
-    fDim = 1)
-
-  sphereintegrand <- function(znpmat){
-    zmat <- rbind(znpmat, sqrt(pmax(1 - colSums(znpmat^2), 0)))
-    mapstosimplex <- simplexindicator(apply(zmat, MARGIN = 2, simplex$fromM)[1:2,])
+  #check determinant using integration over a unitcube
+  integrand <- function(zmat){#each column is a measurement
+    xmat <- apply(zmat, MARGIN = 2, sphere$fromM)
+    inunitcube <- (colSums(xmat < 0) == 0) * (colSums(xmat > 1) == 0)
     Jdets <- exp(apply(zmat, MARGIN = 2, sphere$logdetJfromM))
-    return(Jdets * mapstosimplex)
+    return(matrix(Jdets * inunitcube, nrow = 1))
   } 
-  volumeviasphere <- cubature::hcubature(
-    f = sphereintegrand,
+  volumeviaM <- cubature::hcubature(
+    f = integrand,
     lowerLimit = c(0, 0),
     upperLimit = c(1, 1),
     vectorInterface = TRUE,
     fDim = 1)
-  
-
-  warning("No analytical check for dPmatfun")
+  expect_equal(volumeviaM$integral, 1, tolerance = 1E-5)
 })
 
 test_that("Simplex manifold object matches analytic results", {
