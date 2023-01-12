@@ -40,4 +40,4 @@ RCPP_MODULE(manifolds) {
   ;
 }
 
-//adadsafRCPP_EXPOSED_CLASS_NODECL(manifold_a1type) //so that Rcpp knows how to wrap and unwrap
+RCPP_EXPOSED_CLASS_NODECL(manifold_a1type) //so that Rcpp knows how to wrap and unwrap
