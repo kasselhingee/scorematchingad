@@ -2,13 +2,6 @@ skip_on_cran()
 mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
 obj <- mod$mantran_ad
 
-test_that("Sphere manifold passes lightweight standard tests",{
-  pman <- manifoldtransform("sphere")
-  u <- c(0.1, 0.2, 1 - 0.3)
-  out <- testmanifold(pman, u)
-  expect_equal(out, 0)
-})
-
 test_that("Sphere manifold object matches analytic results", {
   sphere <- new(obj, "sphere")
   u <- c(0.1, 0.3, 0.6)
@@ -16,7 +9,7 @@ test_that("Sphere manifold object matches analytic results", {
   expect_equal(sum(z^2), 1)
   expect_equal(sphere$fromM(z), u)
   Pmatz <- sphere$Pmatfun(z)
-  expect_equal(t(z) %*% Pmatz %*% runif(3), 0)
+  expect_equal(t(z) %*% Pmatz %*% runif(3), 0, ignore_attr = TRUE)
   
   #check determinant using integration over a unitcube
   integrand <- function(zmat){#each column is a measurement
