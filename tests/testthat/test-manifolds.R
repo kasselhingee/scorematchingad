@@ -43,11 +43,27 @@ test_that("Simplex manifold object matches analytic results", {
   expect_equal(simplex$dPmatfun(u, 2), matrix(0, nrow = 3, ncol = 3))
 })
 
-test_that("Ralr manifold passes lightweight standard tests",{
-  pman <- manifoldtransform("Ralr")
-  u <- c(0.1, 0.2, 1 - 0.3)
-  out <- testmanifold(pman, u)
-  expect_equal(out, 0)
+test_that("Ralr manifold object matches analytic results",{
+  Ralr <- new(obj, "Ralr")
+  u <- c(0.1, 0.3, 0.6)
+  z <- Ralr$toM(u)
+  expect_length(z, 2)
+  expect_equal(Ralr$fromM(z), u)
+  expect_equal(Ralr$Pmatfun(z), diag(rep(1, 2)))
+  expect_equal(Ralr$dPmatfun(z, 2), matrix(0, nrow = 2, ncol = 2))
+
+  # check determinant
+  integrand <- function(zmat){#each column is a measurement
+    Jdets <- exp(apply(zmat, MARGIN = 2, Ralr$logdetJfromM))
+    return(matrix(Jdets, nrow = 1))
+  } 
+  volume <- cubature::hcubature(
+    f = integrand,
+    lowerLimit = c(-1, -1) * 1E2,
+    upperLimit = c(1, 1) * 1E2,
+    vectorInterface = TRUE,
+    fDim = 1)
+  expect_equal(volume$integral, 0.5, tolerance = 1E-3) #0.5 seems to be the area of simplex under local coordinates (got 0.5 from integrating the simplex against local coordinates (e1, e2))
 })
 
 test_that("Snative manifold object passes lightweight standard tests", {
