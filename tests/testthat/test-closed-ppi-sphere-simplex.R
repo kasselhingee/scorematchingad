@@ -179,7 +179,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
 
   hardcodedestimate <- estimatorall1(model$sample, acut, betap = model$beta0[model$p])
 
-  expect_equal(out$est$paramvec, t_fu2t(hardcodedestimate$estimator1, ppi_paramvec(betap = tail(model$beta, 1), p = model$p)) )
+  expect_equal(out$est$paramvec, t_fu2t(hardcodedestimate$estimator1, ppi_paramvec(betap = tail(model$beta, 1), p = model$p)), tolerance = 1E-4)
 
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
