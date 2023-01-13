@@ -24,6 +24,11 @@ test_that("Sphere manifold object matches analytic results", {
     vectorInterface = TRUE,
     fDim = 1)
   expect_equal(volumeviaM$integral, 1, tolerance = 1E-5)
+  
+  #check of first dPmatfun for first component
+  z1 <- z[1]
+  numgrad <- numericDeriv(quote(sphere$Pmatfun(c(z1, z[2:3]))), theta = "z1")
+  expect_equal(drop(attr(numgrad, "gradient")), sphere$dPmatfun(z, 0))
 })
 
 test_that("Simplex manifold object matches analytic results", {
@@ -78,6 +83,10 @@ test_that("Snative manifold object matches analytic results", {
   
   # determinant should be 1
   expect_equal(sphere$logdetJfromM(u), log(1))
+
+  #check of first dPmatfun for first component
+  z1 <- z[1]
+  numgrad <- numericDeriv(quote(sphere$Pmatfun(c(z1, z[2:3]))), theta = "z1")
+  expect_equal(drop(attr(numgrad, "gradient")), sphere$dPmatfun(z, 0))
 })
 
-warning("No tests of the dPmatfuns")
