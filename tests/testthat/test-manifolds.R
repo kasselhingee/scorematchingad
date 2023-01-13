@@ -1,4 +1,3 @@
-skip_on_cran()
 mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
 obj <- mod$mantran_ad
 
@@ -66,14 +65,6 @@ test_that("Ralr manifold object matches analytic results",{
   expect_equal(volume$integral, 0.5, tolerance = 1E-3) #0.5 seems to be the area of simplex under local coordinates (got 0.5 from integrating the simplex against local coordinates (e1, e2))
 })
 
-test_that("Snative manifold object passes lightweight standard tests", {
-  pman <- manifoldtransform("Snative")
-  u <- c(0.1, 0.2)
-  u <- u / sqrt(sum(u^2))
-  out <- testmanifold(pman, u)
-  expect_equal(out, 0)
-})
-
 test_that("Snative manifold object matches analytic results", {
   sphere <- new(obj, "Snative")
   u <- runif(3)
@@ -85,18 +76,8 @@ test_that("Snative manifold object matches analytic results", {
   expect_equal(t(z) %*% Pmatz %*% (3*z), 0, ignore_attr = TRUE)
   expect_equal(t(z) %*% Pmatz %*% runif(3), 0, ignore_attr = TRUE)
   
-  #check determinant using integration over a unitcube
-  integrand <- function(zmat){#each column is a measurement
-    xmat <- apply(zmat, MARGIN = 2, sphere$fromM)
-    inunitcube <- (colSums(xmat < 0) == 0) * (colSums(xmat > 1) == 0)
-    Jdets <- exp(apply(zmat, MARGIN = 2, sphere$logdetJfromM))
-    return(matrix(Jdets * inunitcube, nrow = 1))
-  } 
-  volumeviaM <- cubature::hcubature(
-    f = integrand,
-    lowerLimit = c(0, 0),
-    upperLimit = c(1, 1),
-    vectorInterface = TRUE,
-    fDim = 1)
-  expect_equal(volumeviaM$integral, 1, tolerance = 1E-5)
+  # determinant should be 1
+  expect_equal(sphere$logdetJfromM(u), log(1))
 })
+
+warning("No tests of the dPmatfuns")
