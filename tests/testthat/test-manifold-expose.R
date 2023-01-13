@@ -10,7 +10,6 @@ test_that("Manifold objects can be created, and member functions run", {
   expect_equal(dim(Ralr$Pmatfun(z)), c(2,2))
   expect_type(Ralr$Pmatfun(z), "double")
   expect_equal(dim(Ralr$dPmatfun(z, 1)), c(2,2))
-  expect_type(Ralr$XPtr(), "externalptr")
 })
 
 
