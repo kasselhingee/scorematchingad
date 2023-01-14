@@ -104,9 +104,35 @@ test_that("Snative manifold object matches analytic results", {
   expect_equal(drop(attr(numgrad, "gradient")), sphere$dPmatfun(z, 0))
 })
 
-test_that("Hclr manifold passes lightweight standard tests",{
+test_that("Hclr manifold passes analytic tests",{
+clr <- function(Y){
+  logY <- log(Y)
+  lgeommean <- rowSums(logY)/3
+  return(logY - lgeommean)
+}
+clrinv <- function(Z){
+  expZ <- exp(Z)
+  return(expZ/rowSums(expZ))
+}
+
+ldetJfromM <- function(z){
+  u <- as.vector(clrinv(matrix(z, nrow = 1)))
+  sum(log(u)) + log(length(u))
+}
+
+  Hclr <- new(obj, "Hclr")
+  u <- c(0.1, 0.3, 0.6)
+  z <- Hclr$toM(u)
+  expect_equal(z, clr(matrix(u, nrow = 1)))
+  expect_equal(rep(1, 3) %*% z, 0, ignore_attr = TRUE)
+  expect_equal(Hclr$fromM(z), u)
+  
+
   pman <- manifoldtransform("Hclr")
   u <- c(0.1, 0.2, 1 - 0.3)
   out <- testmanifold(pman, u)
   expect_equal(out, 0)
 })
+
+
+
