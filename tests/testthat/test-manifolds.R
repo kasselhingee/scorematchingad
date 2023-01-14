@@ -123,15 +123,16 @@ ldetJfromM <- function(z){
   Hclr <- new(obj, "Hclr")
   u <- c(0.1, 0.3, 0.6)
   z <- Hclr$toM(u)
-  expect_equal(z, clr(matrix(u, nrow = 1)))
+  expect_equal(z, clr(matrix(u, nrow = 1)), ignore_attr = TRUE)
   expect_equal(rep(1, 3) %*% z, 0, ignore_attr = TRUE)
   expect_equal(Hclr$fromM(z), u)
+
+  # test determinant
+  expect_equal(ldetJfromM(matrix(z, nrow = 1)), Hclr$logdetJfromM(z))
+
+  # by integration
   
 
-  pman <- manifoldtransform("Hclr")
-  u <- c(0.1, 0.2, 1 - 0.3)
-  out <- testmanifold(pman, u)
-  expect_equal(out, 0)
 })
 
 

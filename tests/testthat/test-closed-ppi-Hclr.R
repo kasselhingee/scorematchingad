@@ -96,22 +96,6 @@ test_that("Fitting ppi via clr transform with unfixed beta gets close to true va
   expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
 })
 
-test_that("tapefromM and toM matches R-computed versions", {
-  set.seed(1245)
-  mod <- ppi_egmodel(100)
-  Y <- mod$sample
-  Y <- rbind(Y, rep(1/3, 3))
-
-  Hclr <- manifoldtransform("Hclr")
-
-  # check evaluation
-  clrY <- clr(Y)
-  expect_equal(clrY, t(apply(Y, MARGIN = 1, function(u){ptoM(Hclr, u)})))
-
-  tapefromM <- ptapefromM(clrY[1, ], Hclr)
-  vals <- tape_eval(tapefromM, clrY, matrix(nrow = nrow(Y), ncol = 0))
-  expect_equal(vals, Y)
-})
 
 test_that("tapefromM Jacobian and taped logdetJfromM match R-computed versions", {
   set.seed(1245)
