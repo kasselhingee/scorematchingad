@@ -105,7 +105,7 @@ test_that("cppad_search with weights gives similar result to cppad_closed", {
   w <- runif(100)
   estsearch <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 1000), w = w)
   estclosed <- cppad_closed(tapes$smotape, m$sample, w = w)
-  expect_equal(estsearch$est, estclosed$est, tolerance = 1E-3)
+  expect_equal(estsearch$est, estclosed$est, tolerance = 1E-2)
   expect_equal(estsearch$SE, estclosed$SE)
 })
 

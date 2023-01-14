@@ -57,11 +57,8 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
   expect_equal(est1$est$AL, ALs, tolerance = 1)
   expect_equal(est1$est$beta, beta, tolerance = 1E-1)
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
-  rmse(ppi_paramvec(AL=ALs, bL=bL, beta=beta), est1$est$paramvec)
-  rmse(ppi_paramvec(AL=ALs, bL=bL, beta=beta), est_unload$est$paramvec)
-
-  rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
-  expect_gt(rmse(beta, est_unload$est$beta), rmse(beta, est1$est$beta))
+  # expect the non-robust estimate to be equal or poorer in accuracy:
+  expect_gt(rmse(beta, est_unload$est$beta) + 1E-6, rmse(beta, est1$est$beta))
 })
 
 test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5", {
@@ -71,7 +68,7 @@ test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5
   bL <- matrix(0, nrow = p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
   set.seed(13456) #this seed generates samples that are representative-enough for estimatorlog_ratio() to give close estimates
-  prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=4)
+  prop <- rppi(10000, beta=beta, AL=ALs, bL=bL, maxden=4)
   # prop %>% as_tibble() %>% tidyr::pivot_longer(everything()) %>% ggplot() + facet_wrap(vars(name)) + geom_freqpoly(aes(x=value))
 
   #calculate robust estimates
