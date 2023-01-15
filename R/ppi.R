@@ -87,7 +87,9 @@ ppi <- function(Y, paramvec = NULL,
            clr = "Hclr",
            sqrt = "sphere",
            none = "simplex")
-  if (!(man %in% c("simplex", "sphere"))){
+  if (man %in% c("simplex", "sphere")){
+    if (divweight == "ones"){stop("Manifold supplied has a boundary - set divweight to something that isn't 'ones'")}
+  } else {
     if (divweight != "ones"){warning("Manifold supplied has no boundary. Setting divweight to 'ones'.")}
   }
   if (divweight == "ones"){
