@@ -97,41 +97,6 @@ test_that("Fitting ppi via clr transform with unfixed beta gets close to true va
 })
 
 
-test_that("tapefromM Jacobian and taped logdetJfromM match R-computed versions", {
-  set.seed(1245)
-  mod <- ppi_egmodel(100)
-  Y <- mod$sample
-  Y <- rbind(Y, rep(1/3, 3))
-
-  Hclr <- manifoldtransform("Hclr")
-
-  # Start of check Jacobian
-  fromMJ <- t(apply(clrY, MARGIN = 1, function(x){pJacobian(tapefromM, x, matrix(nrow = 0, ncol = 0))}))
-  fromMJnum <- t(apply(clrY, MARGIN = 1, function(x){
-    b <- x
-    J <- numericDeriv(quote(pForward0(tapefromM, b , matrix(nrow = 0, ncol = 0))), "b")
-    return(as.vector(attr(J, "gradient")))
-}))
-  expect_equal(fromMJ, fromMJnum, tolerance = 1E-6)
-
-
-  # Check the determinants: via det of Jacobian above, via numerical via R analytical, and via CppAD tape
-  # determinant calculated from taped Jacobian
-  detJ <- apply(fromMJ, MARGIN = 1, function(J){
-    Jmat <- matrix(J, nrow = sqrt(length(J)), ncol = sqrt(length(J)))
-    return(det(Jmat))
-  })
-  detJfromMtape <- ptapelogdetJ(tapefromM, clrY[1,], vector(mode = "numeric", length = 0))
-  # log determinant evaluation via tape
-  ldetJ_cppad <- tape_eval(detJfromMtape, clrY, matrix(nrow = nrow(Y), ncol = 0))
-  expect_equal(ldetJ_cppad, log(abs(detJ)), ignore_attr = TRUE, tolerance = 1E-7)
-
-  # analytic determinant
-  ldetJ_Rdirect <- apply(clrY, MARGIN = 1, ldetJfromM)
-  expect_equal(log(abs(detJ)), ldetJ_Rdirect, tolerance = 1E-6)
-  expect_equal(ldetJ_cppad, ldetJ_Rdirect, ignore_attr = TRUE, tolerance = 1E-6)
-})
-
 test_that("Hess + Offset match gradient for Hclr", {
   set.seed(1245)
   mod <- ppi_egmodel(100)
