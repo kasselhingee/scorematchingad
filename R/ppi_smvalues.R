@@ -26,7 +26,7 @@ ppi_smvalues <- function(Y, paramvec, evalparam,
   }
 
   stopifnot(pow == 1)
-  stopifnot(trans %in% c("alr", "sqrt", "none"))
+  stopifnot(trans %in% c("alr", "sqrt", "clr", "none"))
   man <- switch(trans,
            alr = "Ralr",
            clr = "Hclr",
@@ -39,7 +39,7 @@ ppi_smvalues <- function(Y, paramvec, evalparam,
     if (!is.null(acut)){warning("The value of 'acut' is ignored for divweight == 'ones'")}
     acut <- 1 #set just for passing to CppAD
   }
-  if ((man == "Hclr") && (bdrythreshold < 1E-5){
+  if ((man == "Hclr") && (bdrythreshold < 1E-5)){
     warning("We recommend a high bdrythreshold of 1E-5 for fitting with the clr transform")
   }
 

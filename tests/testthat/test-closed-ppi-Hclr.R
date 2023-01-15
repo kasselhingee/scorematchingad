@@ -50,9 +50,9 @@ test_that("Fitting Dirichlet with no bdrythreshold fails for high concentrations
   set.seed(13415)
   beta0 <- c(-0.7, -0.1, 0) #the largest element is going to look a bit like beta>0 
   Y <- MCMCpack::rdirichlet(10000, beta0+1)
-  out <- ppi(Y = Y,
+  suppressWarnings({out <- ppi(Y = Y,
              paramvec = ppi_paramvec(p = 3, AL=0, bL = 0, betap = tail(beta0, 1)),           
-             trans = "clr", bdrythreshold = 0)
+             trans = "clr", bdrythreshold = 0)})
 
   # estimate is very poor
   expect_gt(max(abs(dirichmom(Y) - out$est$beta)), 0.9)
@@ -69,9 +69,9 @@ test_that("Fitting Dirichlet with no bdrythreshold fails for high concentrations
   set.seed(1341)
   beta0 <- c(-0.8, -0.1, 0) #the largest element is going to look a bit like beta>0 
   Y <- MCMCpack::rdirichlet(10000, beta0+1)
-  expect_error({out <- ppi(Y = Y,
+  expect_error(suppressWarnings({out <- ppi(Y = Y,
              paramvec = ppi_paramvec(p = 3, AL=0, bL = 0, betap = tail(beta0, 1)),
-             trans = "clr", bdrythreshold = 0)})
+             trans = "clr", bdrythreshold = 0)}))
  
   out <- ppi(Y = Y,
              paramvec = ppi_paramvec(p = 3, AL=0, bL = 0, betap = tail(beta0, 1)),
