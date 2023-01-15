@@ -5,7 +5,7 @@ test_that("ppi() warns when bdrythreshold too low", {
 
   expect_warning(ppi(Y = model$sample, trans = "clr", bdrythreshold = 1E-10),
                  "bdrythreshold")
-  expect_warning(ppi_smvalues(Y = model$sample, trans = "clr", bdrythreshold = 1E-10),
+  expect_warning(ppi_smvalues(Y = model$sample, evalparam = model$theta, trans = "clr", bdrythreshold = 1E-10),
                  "bdrythreshold")
 })
 

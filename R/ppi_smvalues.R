@@ -8,7 +8,7 @@
 #'  + `hess` the Hessian of the score matching objective
 #'  + `offset` gradient offset (see [`quadratic_parts()`])
 #' @export
-ppi_smvalues <- function(Y, paramvec, evalparam,
+ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
                 pow = 1, trans, method = "closed", w = rep(1, nrow(Y)),
                 divweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10 #specific to cppad methods
@@ -43,6 +43,7 @@ ppi_smvalues <- function(Y, paramvec, evalparam,
     warning("We recommend a high bdrythreshold of 1E-5 for fitting with the clr transform")
   }
 
+  if (is.null(paramvec)){paramvec <- rep(NA, ppithetalength(ncol(Y)))}
 
 
   pman <- manifoldtransform(man)
