@@ -130,9 +130,26 @@ ldetJfromM <- function(z){
   # test determinant
   expect_equal(ldetJfromM(matrix(z, nrow = 1)), Hclr$logdetJfromM(z))
 
-  # by integration
-  
+  # by integration check determinant
+  integrand <- function(znpmat){#each column is a measurement
+    zmat = rbind(znpmat, 0-colSums(znpmat))
+    Jdets <- exp(apply(zmat, MARGIN = 2, Hclr$logdetJfromM))
+    return(matrix(Jdets, nrow = 1))
+  } 
+  volume <- cubature::hcubature(
+    f = integrand,
+    lowerLimit = c(-1, -1) * 1E1,
+    upperLimit = c(1, 1) * 1E1,
+    vectorInterface = TRUE,
+    fDim = 1)
+  expect_equal(volume$integral, 0.5, tolerance = 1E-3) #0.5 seems to be the area of simplex under local coordinates (got 0.5 from integrating the simplex against local coordinates (e1, e2))
+  # check projection matrix
+  set.seed(1342)
+  x <- runif(3)
+  x2 <- Hclr$Pmatfun(z) %*% x
+  expect_equal(t(x2) %*% rep(1, 3), 0, ignore_attr = TRUE)
 
+  expect_equal(Hclr$dPmatfun(u, 2), matrix(0, nrow = 3, ncol = 3))
 })
 
 
