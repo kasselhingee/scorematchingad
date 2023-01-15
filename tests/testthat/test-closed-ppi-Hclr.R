@@ -1,10 +1,43 @@
-clr <- function(Y){
-  logY <- log(Y)
-  lgeommean <- rowSums(logY)/3
-  return(logY - lgeommean)
-}
 
-  # vs method of moments from JASA paper supplementary
+test_that("ppi() warns when bdrythreshold too low", {
+  set.seed(12345)
+  model <- ppi_egmodel(100, maxden = 4)
+
+  expect_warning(ppi(Y = model$sample, trans = "clr", bdrythreshold = 1E-10),
+                 "bdrythreshold")
+  expect_warning(ppi_smvalues(Y = model$sample, trans = "clr", bdrythreshold = 1E-10),
+                 "bdrythreshold")
+})
+
+test_that("Fitting ppi via clr transform gets close estimates via sqrt", {
+  set.seed(1234)
+  model <- ppi_egmodel(100, maxden = 4)
+
+  out <- ppi(Y = model$sample,
+             paramvec = ppi_paramvec(p = 3, betap = -0.5),
+             trans = "clr", bdrythreshold = 1E-5)
+  expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
+  out2 <- ppi(Y = model$sample,
+             paramvec = ppi_paramvec(p = 3, betap = -0.5),
+             trans = "sqrt", acut = 0.01, divweight = "minsq")
+  expect_absdiff_lte_v(out$est$paramvec, out2$est$paramvec, 
+       out$SE$paramvec * c(1, 0.1, 0.5, 1, 0.1, 1, 1, 1))
+})
+
+
+test_that("Fitting ppi all parameters via clr transform can get close to true values for positive-looking beta", {
+  skip_on_cran()
+  set.seed(12345)
+  model <- ppi_egmodel(10000, maxden = 4)
+
+  out <- ppi(Y = model$sample,
+             trans = "clr", bdrythreshold = 1E-5)
+
+  expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
+  # and that the SE are small
+  expect_lt(max(abs(out$SE$paramvec), na.rm = TRUE), 20)
+})
+  # method of moments from JASA paper supplementary
   dirichmom <- function(X) {
     # Method of Moments estimates of the Dirichlet Distribution
     temp <- dim(X); n <- temp[1]; m <- temp[2]
@@ -13,36 +46,7 @@ clr <- function(Y){
     return(mom - 1)
   }
 
-test_that("ppi() warns when bdrythreshold too low", {
-  set.seed(12345)
-  model <- ppi_egmodel(100, maxden = 4)
-
-  expect_warning(ppi(Y = model$sample, trans = "clr", bdrythreshold = 1E-10),
-                 "bdrythreshold")
-})
-
-test_that("Fitting Dirichlet via clr transform with fixed betap gets close to true values and other estimators for low concentrations", {
-  skip_on_cran()
-  set.seed(13412)
-  beta0 <- c(-0.5, -0.1, 0) #the largest element is going to look a bit like beta>0
-  Y <- MCMCpack::rdirichlet(10000, beta0+1)
-  out <- ppi(Y = Y,
-             paramvec = ppi_paramvec(p = 3, AL=0, bL = 0, betap = tail(beta0, 1)),
-             trans = "clr", bdrythreshold = 0)
-  
-  expect_absdiff_lte_v(out$est$beta, beta0, out$SE$beta * 3)
-  expect_lt(max(abs(out$SE$beta), na.rm = TRUE), 1)
-
-  expect_equal(dirichmom(Y), out$est$beta, tolerance = 0.1)
-  out2 <- ppi(Y = Y,
-             paramvec = ppi_paramvec(p = 3, AL=0, bL = 0),
-             trans = "sqrt", divweight = "minsq", acut = 0.01)
-
-  out2$est$beta
-})
-
-test_that("Fitting Dirichlet via clr transform with fixed betap fails for high concentrations", {
-  skip_on_cran()
+test_that("Fitting Dirichlet with no bdrythreshold fails for high concentrations", {
   set.seed(13415)
   beta0 <- c(-0.7, -0.1, 0) #the largest element is going to look a bit like beta>0 
   Y <- MCMCpack::rdirichlet(10000, beta0+1)
@@ -75,14 +79,13 @@ test_that("Fitting Dirichlet via clr transform with fixed betap fails for high c
 })
 
 
-test_that("Fitting Dirichlet via clr transform gets close to true values and other estimators", {
-  skip_on_cran()
+test_that("Fitting Dirichlet with proper bdrythreshold gets close to true values and other estimators for high concentrations", {
   set.seed(13412)
   beta0 <- c(-0.5, 0, -0.8) #the largest element is going to look a bit like beta>0
   Y <- MCMCpack::rdirichlet(10000, beta0+1)
   out <- ppi(Y = Y,
              paramvec = ppi_paramvec(p = 3, AL=0, bL = 0),
-             trans = "clr", bdrythreshold = 1E-6)
+             trans = "clr", bdrythreshold = 1E-5)
   out$est$beta
  
   expect_absdiff_lte_v(out$est$beta, beta0, out$SE$beta * 3)
@@ -90,33 +93,6 @@ test_that("Fitting Dirichlet via clr transform gets close to true values and oth
 
   # and result close to dirichlet moment estimator
   expect_absdiff_lte_v(out$est$beta, dirichmom(Y), c(0.01, 0.02, 0.01))
-})
-
-test_that("Fitting ppi via clr transform with fixed beta gets close to true values", {
-  skip_on_cran()
-  set.seed(1234)
-  model <- ppi_egmodel(100000, maxden = 4)
-
-  out <- ppi(Y = model$sample,
-             paramvec = ppi_paramvec(beta = model$beta),
-             trans = "clr")
-  expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
-  # and that the SE are small
-  expect_lt(max(abs(out$SE$paramvec), na.rm = TRUE), 20)
-})
-
-
-test_that("Fitting ppi all parameters via clr transform can get close to true values", {
-  skip_on_cran()
-  set.seed(12345)
-  model <- ppi_egmodel(10000, maxden = 4)
-
-  out <- ppi(Y = model$sample,
-             trans = "clr", bdrythreshold = 1E-5)
-
-  expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
-  # and that the SE are small
-  expect_lt(max(abs(out$SE$paramvec), na.rm = TRUE), 20)
 })
 
 
