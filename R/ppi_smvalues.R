@@ -29,6 +29,7 @@ ppi_smvalues <- function(Y, paramvec, evalparam,
   stopifnot(trans %in% c("alr", "sqrt", "none"))
   man <- switch(trans,
            alr = "Ralr",
+           clr = "Hclr",
            sqrt = "sphere",
            none = "simplex")
   if (!(man %in% c("simplex", "sphere"))){
