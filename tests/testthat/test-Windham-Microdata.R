@@ -172,8 +172,7 @@ test_that("A simulate then estimate of TCAP errors appropriately", {
                 paramvec_start = ppi_paramvec(AL = ALs, bL = bL, beta = beta0))
 
   #simulate from estimate
-  set.seed(345)
-  message("This test will fail because rppi simulates differently now")
+  set.seed(129)
   samp <- rppi(n = nrow(propreal), paramvec = est1$est$paramvec, maxden = 0)
   # convert latent variables to multinomial values
   mnprop <- t(apply(samp, MARGIN = 1, FUN = function(probs){rmultinom(1, 2000, prob = probs)}, simplify = TRUE)/2000)
