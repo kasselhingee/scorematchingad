@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Simulate from the Rivest model
 #' @description This function uses `Directional::rfb()` to simulate from the Rivest model.
 #' The direction of the Fisher compenent is chosen based on the magnitude of the eigenvalues using an index.

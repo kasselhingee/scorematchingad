@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Simulate from a Fisher-Bingham distribution on the sphere
 #' @description Applies a rotation transformation to the matrix `A` then runs `Directional::rfb()`.
 #' I am not sure why this transformation is required - but estimators only work when it is applied.

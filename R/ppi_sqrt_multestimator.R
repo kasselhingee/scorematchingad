@@ -1,15 +1,15 @@
-#' @importFrom Rdpack reprompt
 #' @title A PPI score-matching Marginal Moment Matching estimator derived from moments of the Multinomial distribution (dimension=3 only)
-#' @description Calculates the \insertCite{scealy2022sc;textual}{cdabyppi} ScoreMult estimator and assumes \eqn{\beta=\beta_0}{beta=beta0} is the same for each category (component).
+#' @description Computes a marginal moment matching estimator \insertCite{@Section 6.2, @scealy2022sc}{scorecompdir}, which assumes \eqn{\beta} is a vector with the same value in each element, and \eqn{b_L = 0}.
 #' @details
-#' Note: Currently only \eqn{A_L} is estimated. \eqn{\beta=\beta_0} is fixed and not estimated. \eqn{b_L} is fixed at zero.
-#' See Section 6.2 and A.8 of \insertCite{scealy2022sc}{cdabyppi}.
-#' The weight function in the score matching objective is the unthresholded product weight function
-#' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2).}
-#' @param x Count data (n by 3 matrix)
+#' Only \eqn{A_L} is estimated. \eqn{\beta=\beta_0} is fixed and not estimated. \eqn{b_L} is fixed at zero.
+#' See \insertCite{@Section 6.2 and A.8 of @scealy2022sc}{scorecompdir}.
+#' The divergence weight function in the score matching objective is the unthresholded product weight function
+#' \deqn{h(z)^2 = \min\left(\prod_{j=1}^{p} z_j^2, a_c^2\right).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2).}
+#' @param Y Count data, each row is a multivariate observation.
 #' @param ni The total for each sample (sum across rows)
 #' @param beta0 \eqn{\beta=\beta_0}{beta=beta0} is the same for each category.
-#' @return A vector of estimates for \eqn{A_L} entries (diagonal and off diagonal)
+#' @param w Weights for each observation. Useful for weighted estimation in [`Windham()`].
+#' @return A vector of estimates for \eqn{A_L} entries (diagonal and off diagonal).
 #' @references
 #' \insertAllCited{}
 #' @export

@@ -2,7 +2,7 @@
 # edited from 'modelA.R' in the original code
 
 #### Setup ####
-list2env(sec2_3model(1), globalenv())
+list2env(ppi_egmodel(1), globalenv())
 theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL)
 
 
@@ -16,17 +16,9 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
 
   #simulate sample from PPI model
   set.seed(321)
-  samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
-  samp3=samp1$samp3
-  theta <- cdabyppi:::ppi_cppad_thetaprocessor(p,
+  samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
+  theta <- ppi_paramvec(p,
               AL = ALs, bL = drop(bL), beta = drop(beta0))
-
-  #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
-  #a few times to check that it is an appropriate upper bound.
-  # 4 seems to be pretty good (I've run the above rppi many times).
-  # I.e. the simulation result doesn't suggest changing maxden=4
-  stopifnot(samp1$maxden <= 4)
-  maxden <- 4
 
   ####Score1ac estimator##
 
@@ -34,23 +26,24 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   acut=1.6e-02
 
   #calculate scoring estimate for full model
-  estimator=cdabyppi:::estimatorall1(samp3,acut, betap = NULL)
+  estimator=estimatorall1(samp3,acut, betap = NULL)
   estimate1all=estimator$estimator1
 
   # Get SE from CppAD methods
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(p)
+  intheta <- ppi_paramvec(p)
   tapes <- buildsmotape("sphere", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
-  SE <- smestSE(tapes$smotape, estimate1all, samp3)
+  SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
 
   expect_absdiff_lte_v(estimate1all, theta, 3 * SE)
 
   # compare to ppi via cppad
-  expect_lt(sum(smobjgrad(tapes$smotape, estimate1all, samp3)^2), 1E-14)
-  est2 <- ppi(samp3, trans = "sqrt", bdryweight = "minsq", acut = acut, bdrythreshold = 1E-20, control = list(tol = 1E-20), method = "cppad")
-  expect_equal(est2$est$theta, drop(estimate1all), tolerance = 1E-2) #within 1% of each other roughly
+  expect_lt(sum(tape_smvalues_wsum(tapes$smotape, samp3, drop(estimate1all))$grad^2), 1E-14)
+  est2 <- ppi(samp3, trans = "sqrt", divweight = "minsq", acut = acut, bdrythreshold = 1E-20, control = list(tol = 1E-12), method = "closed")
+  expect_equal(est2$est$paramvec, drop(estimate1all), tolerance = 1E-2) #within 1% of each other roughly
+  expect_absdiff_lte_v(drop(estimate1all), est2$est$paramvec, 2*est2$SE$paramvec)
 })
 
 test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger than -0.5", {
@@ -58,16 +51,12 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   n=100
   beta0=matrix(-0.8,p,1)
   beta0[p] = 5
-  theta <- cdabyppi:::ppi_cppad_thetaprocessor(p,
+  theta <- ppi_paramvec(p,
                                                AL = ALs, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
   set.seed(124)
-  samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
-  samp3=samp1$samp3
-
-  stopifnot(samp1$maxden <= 4)
-  maxden <- 4
+  samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
 
   ####Score1ac estimator##
 
@@ -75,16 +64,16 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   acut=1.6e-02
 
   #calculate scoring estimate for full model, beta[p] correctly fixed
-  estimator=cdabyppi:::estimatorall1(samp3,acut, betap = beta0[p])
+  estimator=estimatorall1(samp3,acut, betap = beta0[p])
   estimate1all=estimator$estimator1
 
   # SE from cppad
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(p, betap = beta0[p])
+  intheta <- ppi_paramvec(p, betap = beta0[p])
   tapes <- buildsmotape("sphere", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
-  SE <- smestSE(tapes$smotape, estimate1all, samp3)
+  SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
 
   #3*SE bounds
   expect_absdiff_lte_v(estimate1all, theta[is.na(intheta)], 3 * SE)
@@ -95,15 +84,11 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   n=100
   beta0=matrix(-0.8,p,1)
   beta0[p]= 5
-  theta <- cdabyppi:::ppi_cppad_thetaprocessor(p,
+  theta <- ppi_paramvec(p,
                                                AL = ALs, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
-  samp1=cdabyppi:::rppi(n,p,beta0,ALs,bL,4)
-  samp3=samp1$samp3
-
-  stopifnot(samp1$maxden <= 4)
-  maxden <- 4
+  samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
 
   ####Score1ac estimator##
 
@@ -111,16 +96,16 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   acut=1.6e-02
 
   #calculate scoring estimate for full model, beta[p] correctly fixed
-  estimator=cdabyppi:::estimatorall1(samp3,acut, betap = -0.5)
+  estimator=estimatorall1(samp3,acut, betap = -0.5)
   estimate1all=estimator$estimator1
 
   # SE from cppad
-  intheta <- cdabyppi:::ppi_cppad_thetaprocessor(p, betap = -0.5)
+  intheta <- ppi_paramvec(p, betap = -0.5)
   tapes <- buildsmotape("sphere", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
-  SE <- smestSE(tapes$smotape, estimate1all, samp3)
+  SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
 
   #3*SE bounds
   expect_absdiff_lte_v(estimate1all, theta[is.na(intheta)], 3 * SE)

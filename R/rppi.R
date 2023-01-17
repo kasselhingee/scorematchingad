@@ -1,18 +1,24 @@
 #' @title Generate random observations from the PPI model
 #' @description Given parameters of the PPI model, generates independent samples.
 #' @param n Sample size
-#' @param p Dimension (number of components)
-#' @param beta0 The \eqn{\beta_0}{beta0} shape parameter vector
-#' @param ALs The \eqn{A_L} parameter matrix
+#' @param p Number of components
+#' @param beta The \eqn{\beta}{beta} shape parameter vector
+#' @param AL The \eqn{A_L} parameter matrix
 #' @param bL The \eqn{b_L} parameter vector
-#' @param maxden This is the constant \eqn{log(C)} in (Scealy and Wood, 2021; Appendix A.1.1)
-#' @return A list. The first element is the sample in the form of a matrix with `n` rows and `p` columns.
-#' The second element is the maxden updated based on whether the sample exceeds the input maxden.
+#' @param paramvec The PPI parameter vector, created easily using [ppi_paramvec()] and also returned by [ppi()].
+#' @param maxden This is the constant \eqn{log(C)} in \insertCite{@Appendix A.1.3 @scealy2022sc}{scorecompdir}.
+#' @param maxmemorysize Advanced use. The maximum size, in bytes, for matrices containing simulated Dirchlet samples. The default of `1E5` corresponds to 100 mega bytes.
+#' @return A matrix with `n` rows and `p` columns. Each row is an independent draw from the specified PPI distribution.
+#' @inheritDotParams ppi_paramvec
 #' @details
-#' \eqn{A_L} controls the covariance between components.
-#' \eqn{b_L} controls the location of the distribution within the simplex
-#' \eqn{\beta_0[i]}{beta0[i]} controls the shap of the density when the ith component is close to zero.
-#' If \eqn{b_L} is such that the ith component is typically far from zero, then \eqn{\beta_0[i]}{beta0[i]} will have negligible effect.
+#' We recommend running `rppi()` a number of times to ensure the choice of `maxden` is good. `rppi()` will error when `maxden` is too low.
+#' 
+#' The simulation uses a rejection-sampling algorithm with Dirichlet proposal \insertCite{@Appendix A.1.3 @scealy2022sc}{scorecompdir}.
+#' Initially `n` Dirichlet proposals are generated. After rejection there are fewer samples remaining, say \eqn{n^*}{n*}.
+#' The ratio \eqn{n^*/n}{n*/n} is used to guess the number of new Dirichlet proposals to generate until `n` samples of the PPI model are reached. 
+#'
+#' Advanced use: The number of Dirichlet proposals created at a time is limited such that the matrices storing the Dirchlet proposals are always smaller than `maxmemorysize` bytes (give or take a few bytes for wrapping), which reduces the use of virtual RAM. 
+#' Larger `maxmemorysize` leads to faster simulation so long as `maxmemorysize` bytes are reliably contiguously available in RAM.
 #' @examples
 #' n=1000
 #' p=3
@@ -27,19 +33,18 @@
 #' cor=0.5
 #' SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
 #' SigA[2,1]=SigA[1,2]
-#' ALs=-0.5*solve(SigA)
+#' AL=-0.5*solve(SigA)
 #' bL=solve(SigA)%*%muL
 #'
-#' samp <- rppi(n,p,beta0,ALs,bL,4)
-#' plot(ks::kde(samp$samp3[,-p]),
+#' samp <- rppi(n,beta=beta,AL=AL,bL=bL,maxden4)
+#' plot(ks::kde(samp[,-p]),
 #'  xlim = c(0, 1), ylim = c(0, 1))
 #' segments(0, 0, 0, 1)
 #' segments(0, 1, 1, 0)
 #' segments(1, 0, 0, 0)
-#'
-#' qldppi(samp$samp3, beta0, ALs, bL)
 #' @export
-rppi <- function(n,p,beta0,ALs,bL,maxden){
+rppi <- function(n, ..., paramvec = NULL, maxden = 4, maxmemorysize = 1E5){
+  ellipsis::check_dots_used()
   # a warning if maxden is high
   if (maxden > 10){
     rlang::warn(message = paste(sprintf("'maxden' of %0.2f is higher than 10.", maxden),
@@ -51,36 +56,54 @@ rppi <- function(n,p,beta0,ALs,bL,maxden){
                 .frequency_id = "highmaxden")
   }
 
-  maxdenin <- maxden
-  # first simulate starting with a block of Dirichlet samples of size n.
-  firstaccepted <- rppi_block(n,p,beta0,ALs,bL,maxden)
-  maxden <- firstaccepted$maxden
-  samples <- firstaccepted$accepted
-  propaccepted <- max(nrow(samples) / n, 1E-3)
-  # based on the number of samples that came out, simulate the remaining
-  while (nrow(samples) < n){
-    newsamples <- rppi_block(ceiling((n - nrow(samples)) * 1/propaccepted),p,beta0,ALs,bL,maxden)
-    maxden <- newsamples$maxden
-    samples <- rbind(samples, newsamples$accepted)
-    # continue until n or more samples accepted
+  #process inputs
+  if (is.null(paramvec)){
+    paramvec <- ppi_paramvec(...)
   }
+  if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA. Did you forget to specify AL, bL or beta?")}
+  parammats <- ppi_parammats(paramvec)
+  beta <- parammats$beta
+  AL <- parammats$AL
+  bL <- parammats$bL
+  p <- length(beta)
+
+  maxdenin <- maxden
+  propaccepted <- 1 #start at 100 acceptance rate
+  samples <- matrix(NA_real_, nrow = n, ncol = p) #create empty sample matrix
+  nsamples <- 0
+  nproposals <- 0
+  maxden <- maxdenin
+  maxblockrows <- floor(maxmemorysize/(p*8))
+  stopifnot(maxblockrows > 1)
+  while (nsamples < n){
+    blocksize <- min(ceiling((n - nsamples)/propaccepted), maxblockrows) #choose so that the matrices of Dirichlet samples never get bigger than maxmemorysize bytes
+    newsamples <- rppi_block(blocksize,p,beta,AL,bL,maxden)
+    maxden <- newsamples$maxden
+    nproposals <- nproposals + blocksize
+    propaccepted <- (nsamples + nrow(newsamples$accepted))/nproposals
+    if (nrow(newsamples$accepted)>0){
+      newsampleskept <- newsamples$accepted[1:min(nrow(newsamples$accepted), n-nsamples), , drop = FALSE] #keep up to the n requested samples
+      samples[nsamples+(1:nrow(newsampleskept)), ] <- newsampleskept
+      nsamples <- nsamples + nrow(newsampleskept)
+    }
+    # continue until n or more samples accepted
+  } 
 
   #maxden is the constant log(C) in Appendix A.1.3. Need to run the sampler
   #a few times to check that it is an appropriate upper bound.
   if (maxden > maxdenin){stop(sprintf("Input maxden (i.e. the log(C) maximum) was %0.2f, but sampler suggests higher than %0.2f is required.", maxdenin, maxden))}
 
+  stopifnot(all(is.finite(samples)))
 
-  samples <- samples[1:n, ] # remove extra samples
-
-  return(list(samp3=samples,maxden=maxden))
+  return(samples)
 }
 
 
 # simulates samples one at a time
-rppi_singly <- function(n,p,beta0,ALs,bL,maxden)
+rppi_singly <- function(n,p,beta,AL,bL,maxden)
 {
 
-	alpha=beta0+1
+	alpha=beta+1
 	coun=0
 	samp1=matrix(0,1,p)
 	count2=0
@@ -92,7 +115,7 @@ rppi_singly <- function(n,p,beta0,ALs,bL,maxden)
 		u=stats::runif(1,0,1)
 		Uni_nop <- Uni[1:(p-1)]
 		tUni_nop <- t(Uni[1:(p-1)])
-    num <- ppi_uAstaru(matrix(Uni_nop, nrow = 1), ALs, bL) - maxden #uT * ALs * u + t(bL) * u - maxden
+    num <- ppi_uAstaru(matrix(Uni_nop, nrow = 1), AL, bL) - maxden #uT * AL * u + t(bL) * u - maxden
 		if (num > 0){maxden=num+maxden}
 		#print(maxden)
 		if (u < exp(num)){samp1=rbind(samp1,Uni);coun=coun+1}
@@ -106,10 +129,10 @@ rppi_singly <- function(n,p,beta0,ALs,bL,maxden)
 
 
 # try generating samples without a 'while' loop
-rppi_block <- function(n,p,beta0,ALs,bL,maxden){
-  Uni <- MCMCpack::rdirichlet(n, beta0+1)
+rppi_block <- function(n,p,beta,AL,bL,maxden){
+  Uni <- MCMCpack::rdirichlet(n, beta+1)
   Uni_nop <- Uni[, -p]
-  nums <- ppi_uAstaru(Uni_nop, ALs, bL) - maxden #uT * ALs * u + t(bL) * u - maxden
+  nums <- ppi_uAstaru(Uni_nop, AL, bL) - maxden #uT * AL * u + t(bL) * u - maxden
 
   # update maxdens
   max_num <- max(nums)
@@ -122,22 +145,45 @@ rppi_block <- function(n,p,beta0,ALs,bL,maxden){
   return(list(accepted = accepted, maxden = maxden))
 }
 
-#' @describeIn rppi Compute the logarithm of the improper density for the PPI model for the given matrix of measurements `prop`.
-#' @param `prop` A matrix of measurements.
+#' @title Improper Log-Density of the PPI Model
+#' @description Compute the __natural logarithm__ of the improper density for the PPI model for the given matrix of measurements `Y`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
+#' @param Y A matrix of measurements.
+#' @inheritParams rppi
+#' @details The value calculated by `dppi` is
+#' \deqn{z_L^TA_Lz_L + b_L^Tz_L + \beta^T \log(z),}
+#' where \eqn{z} is the multivariate observation, and \eqn{z_L} ommits the final element of \eqn{z}.
 #' @export
-qldppi <- function(prop,beta0,ALs,bL){
-  p <- ncol(prop)
-  sp <- p - 1
+dppi <- function(Y, AL = NULL,bL = NULL, beta = NULL, paramvec = NULL){
+  #process inputs
+  if (is.null(paramvec)){if (any(is.null(beta), is.null(AL), is.null(bL))){stop("If paramvec isn't supplied then beta, AL, and bL must be supplied")}}
+  else {
+    if (!all(is.null(beta), is.null(AL), is.null(bL))){stop("Providing a paramvec is incompatible with providing a beta, AL or bL.")}
+    if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA")}
+    parammats <- ppi_parammats(paramvec)
+    beta <- parammats$beta
+    AL <- parammats$AL
+    bL <- parammats$bL
+  }
+
+  p <- ncol(Y)
   if (!("matrix" %in% class(bL))){bL <- as.matrix(bL, ncol = 1)}
   stopifnot(isTRUE(ncol(bL) == 1))
-  uAstaru <- ppi_uAstaru(prop[,-p, drop = FALSE], ALs, bL) #result is a vector
-  if (all(beta0 == 0)){return(as.vector(uAstaru))} #skip the computation below when beta0 is zero
-  if (!("matrix" %in% class(beta0))){beta0 <- as.matrix(beta0, ncol = 1)}
-  logprop <- log(prop)
+
+  uAstaru <- ppi_uAstaru(Y[,-p, drop = FALSE], AL, bL) #result is a vector
+  if (all(beta == 0)){return(as.vector(uAstaru))} #skip the computation below when beta0 is zero
+
+  if (!("matrix" %in% class(beta))){beta <- as.matrix(beta, ncol = 1)}
+  logprop <- log(Y)
   # define u^0 as 1 when u goes to -Inf
-  logprop[, beta0 == 0] <- 0
-  logdirichlet <- logprop %*% beta0
-  return(as.vector(uAstaru + logdirichlet))
+  logprop[, beta == 0] <- 0
+  logdirichlet <- logprop %*% beta
+  logdensity <- as.vector(uAstaru + logdirichlet)
+
+  # set points outside the simplex to 0
+  negatives <- rowSums(Y < 0) > 0
+  sumisnt1 <- abs(rowSums(Y) -1) > 1E-15
+  logdensity[negatives|sumisnt1] <- -Inf
+  return(logdensity)
 }
 
 # below is function for uT * ALs * u + t(bL) * u

@@ -1,161 +1,124 @@
-#' @title Score matching estimate for the von-Mises Fisher distribution
-#' @param sample Samples from the vMF distribution in cartesian Rd coordinates. Each row is a measurement.
-#' @param km Optional for the `smfull` method. A vector of same length as the dimension, representing the elements of the concentraction * Fisher direction vector.
-#' If supplied, the non-NA elements are fixed.
-#' @param control Control parameters passed to `Rcgmin::Rcgmin()` and eventually `FixedPoint::FixedPoint()`
-#' @param method Either `Mardia` for the hybrid score matching estimate from Mardia et al 2016
-#'  or `smfull` for a full score matching estimate.
-#'  `Mardia_robustsm` will apply robust score matching to only the `kappa` component of the Mardia estimator.
-#' @param w An optional vector of weights for each measurement in `sample`
-#' @param cW Optional. If supplied then robust estimation using the Windham weights method is applied, and the value of `cW` is the robustness tuning constant.
+#' @title Score matching estimator for the von-Mises Fisher distribution
+#' @description
+#' We recommend using [`movMF::movMF()`] over the function here, `vMF()`, for estimating the von Mises Fisher distribution. 
+#' 
+#' \insertCite{mardia2016sc;textual}{scorecompdir} suggest score matching for the von Mises Fisher distribution to avoid the difficult-to-compute normalising constant of the von Mises Fisher distributions.
+#' \insertCite{mardia2016sc;textual}{scorecompdir} suggested both full score matching and a hybrid estimator, where by the mean direction is estimated via the maximum-likelihood approach and the concentration is estimated via score matching.
+#' However, \insertCite{mardia2016sc;textual}{scorecompdir} found, that these score matching estimators were not as a efficient as the maximum likelihood estimators (e.g. [`movMF::movMF()`] ) on the circle.
+#' Some of our own experiments suggest this is also the case for higher dimensions, despite the more complex approximations required for the maximum likelihood estimators.
+
+#' @section von Mises Fisher Model: 
+#' The von Mises Fisher density is proportional to
+#' \deqn{\exp(\kappa \mu^T z),}
+#' where \eqn{z} is on a unit sphere,
+#' \eqn{\kappa} is termed the *concentration*,
+#' and \eqn{\mu} is the *mean direction vector*.
+#' The effect of the \eqn{\mu} and \eqn{\kappa} can be decoupled in a sense \insertCite{@p169, @mardia2000di}{scorecompdir}, allowing for estimating \eqn{\mu} and \eqn{\kappa} separately.
+#'
+
+#' @details
+#' The method "smfull" uses score matching to estimate the vector \eqn{\kappa \mu}.
+#' The method "Mardia" uses [`vMF_stdY()`] and [`vMF_kappa()`] to estimate \eqn{\kappa} and \eqn{\mu} seperately.
+#' @param Y A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.
+#' @param paramvec `smfull` method only: Optional. A vector of same length as the dimension, representing the elements of the vector \eqn{\kappa \mu}. 
+#' If supplied, the non-NA elements are fixed. It is easy to generate `paramvec` using [`vMF_paramvec()`].
+#' @param control Control parameters passed to [`Rcgmin::Rcgmin()`].
+#' @param method Either "Mardia" for the hybrid score matching estimator from \insertCite{@mardia2016sc}{scorecompdir}.
+#'  or "smfull" for the full score matching estimator.
+#' @param w An optional vector of weights for each measurement in `Y`
+#' @references
+#' \insertAllCited{}
+#' @family Mardia hybrid estimators
 #' @examples
-#' sample <- Directional::rvmf(100, c(1, -1) / sqrt(2), 3)
-#' vMF(sample, method = "smfull")
-#' vMF(sample, method = "Mardia")
+#' set.seed(12342)
+#' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+#' movMF::movMF(Y, 1) #maximum likelihood estimate
+#' vMF(Y, method = "smfull")
+#' vMF(Y, method = "Mardia")
+#' @return
+#' A list of `est`, `SE` and `info`.
+#'  * `est` contains the estimates in vector form, `paramvec`, and with user friendly names `k` and `m`.
+#'  * `SE` contains estimates of the standard errors if computed.
+#'  * `info` contains a variety of information about the model fitting procedure and results.
 #' @export
-vMF <- function(sample, km = NULL, method = "smfull", control = c(default_Rcgmin(), default_FixedPoint()), w = rep(1, nrow(sample)), cW = NULL){
+vMF <- function(Y, paramvec = NULL, method = "smfull", control = default_Rcgmin(), w = rep(1, nrow(Y)), paramvec_start = NULL){
   firstfit <- NULL
-  controls <- splitcontrol(control)
   if (method == "smfull"){
-    if (is.null(km)){
-      km <- rep(NA, ncol(sample))
+    if (is.null(paramvec)){
+      paramvec <- rep(NA, ncol(Y))
     }
-    starttheta <- t_u2s_const(km, 0.1)
-    isfixed <- t_u2i(km)
-    firstfit <- vMF_full(sample, starttheta, isfixed, control = controls$Rcgmin, w=w)
+    if (is.null(paramvec_start)){ starttheta <- t_u2s_const(paramvec, 0.1) }
+    else {starttheta <- t_us2s(paramvec, paramvec_start) }
+    isfixed <- t_u2i(paramvec)
+    firstfit <- vMF_full(Y, starttheta = starttheta, isfixed, control = control, w=w)
   }
-  if (method %in% c("Mardia", "Mardia_robustsm")){
-    if (method == "Mardia_robustsm"){stopifnot(!is.null(cW))} #for robust score matching, need to use  cW
-    stopifnot(is.null(km))
-    firstfit <- vMF_Mardia(sample, startk = 10, control = controls$Rcgmin, w=w)
-    isfixed <- rep(FALSE, ncol(sample)) #for Windham robust estimation, if it is used
+  if (method %in% c("Mardia")){
+    if (!is.null(paramvec)){if (any(!is.na(paramvec))){stop("Mardia estimator cannot fix any elements of paramvec")}}
+    if (is.null(paramvec_start)){ startk <- 10 }
+    else {startk <- sqrt(sum(paramvec_start^2))}
+    firstfit <- vMF_Mardia(Y, startk = startk, control = control, w=w)
+    isfixed <- rep(FALSE, ncol(Y)) #for Windham robust estimation, if it is used
   }
   if (is.null(firstfit)){stop(sprintf("Method '%s' is not valid", method))}
 
-  if(is.null(cW)){return(firstfit)}
-
-  ###### Extra stuff for robust fit with Windham weights
-  inWW <- rep(TRUE, ncol(sample))
-  ldenfun <- function(sample, theta){ #here theta is km
-    k <- sqrt(sum(theta^2))
-    m <- theta/k
-    return(drop(Directional::dvmf(sample, k, m, logden = TRUE)))
-  }
-
-  if (method == "smfull"){
-    estimator <- function(Y, starttheta, isfixed, w){
-      km <- rep(NA, ncol(Y))
-      km[isfixed] <- starttheta[isfixed]
-      out <- vMF_full(Y, starttheta, isfixed,
-                      control = controls$Rcgmin, w=w)
-      return(out$km)
-    }
-  } else if (method == "Mardia"){
-    estimator <- function(Y, starttheta, isfixed, w){
-      startk <- sqrt(sum(starttheta^2))
-      out <- vMF_Mardia(Y, startk, control = controls$Rcgmin, w=w)
-      return(out$km)
-    }
-  } else if (method == "Mardia_robustsm"){
-    sample <- vMF_stdY(sample, firstfit$m) #standardise sample
-    estimator <- function(Y, starttheta, isfixed, w){
-      startk <- sqrt(sum(starttheta^2))
-      m <- starttheta/startk
-      out <- vMF_kappa(Y, startk, control = controls$Rcgmin, w=w)
-      return(m * out$k)
-    }
-  }
-  if (is.null(estimator)){stop(sprintf("Method '%s' is not valid", method))}
-
-  est <- windham_raw(prop = sample,
-                     cW = cW,
-                     ldenfun = ldenfun,
-                     estimatorfun = estimator,
-                     starttheta = firstfit$km,
-                     isfixed = isfixed,
-                     inWW = inWW,
-                     originalcorrectionmethod = TRUE,
-                     fpcontrol = controls$fp)
-  est$km <- est$theta
-  est$theta <- NULL
-  est$k <- sqrt(sum(est$km^2))
-  est$m <- est$km/est$k
-  return(est)
+  return(firstfit)
 }
 
-vMF_stdY <- function(Y, m = NULL, w = NULL){
-  if(is.null(m)){
-    m <- apply(Y, MARGIN = 2, weighted.mean, w)
-    m <- mu/sqrt(sum(m^2))
-  }
-  Rtrans <- Directional::rotation(m, c(1, rep(0, length(m) - 1)))
-  out <- Y %*% t(Rtrans)
-  return(out)
-}
 
 #for vMF_Mardia startk must be the value of the k parameter
 vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin(), w = rep(1, nrow(sample))){
   stopifnot(length(startk) == 1)
   stopifnot(length(isfixed) == 1)
-  mu <- apply(sample, MARGIN = 2, weighted.mean, w)
-  mu <- mu/sqrt(sum(mu^2))
-  samplestd <- vMF_stdY(sample, m = mu)
+  stopifnot(!isfixed)
+  mu <- vMF_m(sample, w = w)
+  samplestd <- vMF_stdY(sample, m = mu, w = w)
   # check: mustd <- colMeans(samplestd); mustd <- mustd / sqrt(sum(mustd^2))
-  kappainfo <- vMF_kappa(samplestd, startk, isfixed = isfixed, control = control, w = w)
+  kappaest <- vMF_kappa(Y = samplestd, w = w, paramvec_start = startk, 
+                        control = control)
   return(list(
-    k = kappainfo$k,
-    m = mu,
-    km =  kappainfo$k * mu,
-    SE = list(k = kappainfo$SE),
-    sminfo = kappainfo
+    est = list(paramvec = kappaest$k * mu,
+               k = kappaest$k,
+               m = mu),
+    SE = list(paramvec = "Not calculated.",
+              k = kappaest$SE,
+              m = "Not calculated."),
+    info = kappaest
   ))
 }
 
-# this function assumes a standardised data set with mean direction equal to the northpole
-vMF_kappa <- function(Y, startk, isfixed = FALSE, control = default_Rcgmin(), w = rep(1, nrow(Y))){
-  # do estimate, where all but the first component of theta are fixed at zero
-  # because kappa * e1 = (kappa, 0, 0, 0, ...)
-  if (!isfixed){ #as if k isn't supplied
-    p <- ncol(Y)
-    tapes <- buildsmotape_internal("Snative", "vMF",
-                                   rep(1, p)/sqrt(p), 
-                                   starttheta = c(startk, rep(0, p-1)), 
-                                   isfixed = c(FALSE, rep(TRUE, p-1)),
-                                   weightname = "ones",
-                                   verbose = FALSE)
-    sminfo <- smest(tapes$smotape, startk, Y, control = control, w = w)
-    k <- sminfo$par
-    SE <- sminfo$SE
-  } else {
-    sminfo <- NULL
-    k <- startk
-    SE <- 0
-  }
-  return(list(
-    k = k,
-    SE = SE,
-    sminfo = sminfo
-  ))
-}
 
 vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w = NULL){
   p <- ncol(sample)
   stopifnot(length(starttheta) == p)
   stopifnot(length(starttheta) == length(isfixed))
 
-  tapes <- buildsmotape_internal("Snative", "vMF",
-                        rep(1, p)/sqrt(p), starttheta, isfixed,
+  tapes <- buildsmotape("Snative", "vMF",
+                        rep(1, p)/sqrt(p), 
+                        usertheta = t_si2u(starttheta, isfixed),
                         weightname = "ones",
                         verbose = FALSE)
-  out <- smest(tapes$smotape, t_si2f(starttheta, isfixed), sample, control = control, w=w)
-  theta <- t_sfi2u(out$par, starttheta, isfixed)
+  out <- cppad_closed(tapes$smotape, Y = sample, w=w)
+  theta <- t_sfi2u(out$est, starttheta, isfixed)
 
-  SE <- t_sfi2u(out$SE, rep(0, length(starttheta)), isfixed)
+  if (isa(out$SE, "numeric")){
+    SE <- t_sfi2u(out$SE, rep(0, length(starttheta)), isfixed)
+    SE <- list(paramvec = SE)
+  } else {SE <- out$SE}
   return(list(
-    km = theta,
-    k = sqrt(sum(theta^2)),
-    m = theta / sqrt(sum(theta^2)),
-    SE = list(km = SE),
-    sminfo = out
+    est = list(paramvec = theta,
+               k = sqrt(sum(theta^2)),
+               m = theta / sqrt(sum(theta^2))),
+    SE = SE,
+    info = out
   ))
+}
+
+vMF_paramvec <- function(m, k){
+  return(k*m)
+}
+
+vMF_fromparamvec <- function(paramvec){
+  k <- sqrt(sum(paramvec^2))
+  m <- paramvec / k
+  return(list(m = m, k = k))
 }

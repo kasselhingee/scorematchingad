@@ -23,7 +23,7 @@ test_that("simplex_isboundary() works on a single measurement", {
 })
 
 test_that("simplex_boundaryshift gives results equal to shiftsize", {
-  centres <- simplex_boundaryshift(utabl, shiftsize = 1E-5)
+  centres <- simplex_boundaryshift(Y = utabl, shiftsize = 1E-5)
   expect_equal(sqrt(rowSums((centres - utabl)^2)), rep(1E-5, nrow(utabl)))
 })
 

@@ -11,7 +11,6 @@
 estimator2SE <- function(prop,acut,estimate2,W_est,incb, beta0, w=rep(1, nrow(prop)))
 {
 
-
   n=nrow(prop)
   p=ncol(prop)
 

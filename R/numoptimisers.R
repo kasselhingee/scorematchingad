@@ -1,26 +1,27 @@
 # Wrappers for numerical optimisers and related info
 #' @title Default control parameters for numerical optimisers
-#' @description This package uses `Rcgmin()` in many of the score matching estimates and
+#' @description This package uses [`Rcgmin::Rcgmin()`] in many of the score matching estimates and
 #' `default_Rcgmin()` returns the default control values used throughout the package.
+#' Windham robustness (see [`Windham()`]) uses [`FixedPoint::FixedPoint()`] for a fixed point search, with default control parameters given by `default_FixedPoint()`.
 #' @details
-#' The default for `Rcgmin()` is `list(tol = 1E-20)`, which means the optimisation won't end until the squared size of the gradient at the estimate is less than 1E-20.
+#' The default for `Rcgmin()` is `list(tol = 1E-20)`, which means the optimisation won't end until the squared size of the gradient summed over all observations at the estimate parameter set is less than 1E-20.
 #' @export
 default_Rcgmin <- function(){
-  list(tol = 1E-20)
+  list(tol = 1E-15, checkgrad = TRUE)
 }
-#' @describeIn default_Rcgmin Default control parameters for `FixedPoint()`, used in robust estimation.
+#' @rdname default_Rcgmin 
 #' @export
 default_FixedPoint <- function(){
-  list(Method = "VEA", ConvergenceMetricThreshold = 1E-10)
+  list(Method = "Simple", ConvergenceMetricThreshold = 1E-10)
 }
 
 
 #### Fixed Point Iteration ####
 fp <- function(...){
   args = list(...)
-  if (is.null(args$control)){args$control <- default_FixedPoint()} #default control
   args <- c(args, args$control) #put control arguments into the highest level of the list
   args2 <- args[names(args) %in% formalArgs(FixedPoint::FixedPoint), drop = FALSE]
+  args2 <- c(args2, default_FixedPoint()[setdiff(names(default_FixedPoint()), names(args2))]) #this line adds any of the missing default controls to args2
   do.call(FixedPoint::FixedPoint, args2)
 }
 

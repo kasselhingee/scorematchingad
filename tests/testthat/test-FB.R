@@ -23,7 +23,7 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
   sample <- sample / sqrt(rowSums(sample^2))
   stopifnot(all(abs(sqrt(rowSums(sample^2)) - 1) < 1E-5))
 
-  pman <- pmanifold("Snative")
+  pman <- manifoldtransform("Snative")
   lltape <- ptapell(sample[1,], seq.int(1, length.out = length(theta)), llname = "FB", pman,
                     fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
 
@@ -52,27 +52,25 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -A)
   est <- Bingham_full(sample)
 
-  m <- c(1, 0, 0)
-  B <- Directional::rotation(c(0, 1, 0), m)
-  rotatedA <- B %*% A %*% solve(B) #rotate A so that size of diagonal is increasing
-  cdabyppi:::expect_lt_v(abs(est$A - rotatedA)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
+  v010tonth <- rotationmatrix(c(1, rep(0, p-1)), c(0, 1, 0))
+  rotatedA <- v010tonth %*% A %*% solve(v010tonth) #rotate A so that size of diagonal is increasing
+  expect_lt_v(abs(est$A - rotatedA)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -rotatedA)
-  est <- Bingham_full(sample)
-  cdabyppi:::expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
+  est <- Bingham_full(sample, control = list(tol = 1E-15))
+  expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   # try out FB estimation
   pman <- pmanifold("Snative")
   thetaFB <- FB_mats2theta(1E-10, c(1, 0, 0), A)
-  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(thetaFB)), llname = "FB", pman,
-                    fixedtheta = rep(FALSE, length(thetaFB)), verbose = FALSE)
-  smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(thetaFB)),
-                      lltape, pman, "ones", 1, verbose = FALSE)
-  est <- smest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
-               control = list(tol = 1E-10))
+  tapes <- buildsmotape("Snative",
+                        "FB",
+                        utape = sample[1, ],
+                        usertheta = rep(NA, length(thetaFB)))
 
-  cdabyppi:::expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
-  # yay! it works, but oh man the estimates SEs are huge
+  est <- cppad_closed(tapes$smotape, Y=sample)
+
+  expect_absdiff_lte_v(est$est, thetaFB, 3 * est$SE)
 })
 
 test_that("rfb() simulation for general symmetric matrices via Bingham() fitting", {
@@ -97,26 +95,24 @@ test_that("rfb() simulation for general symmetric matrices via Bingham() fitting
   #results have the same eigen values
   expect_equal(estA_es$values, A_es$values, tolerance = 0.5)
   #matrix values match
-  cdabyppi:::expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
+  expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
 
   # note that parameter estimates have suprisingly large margin given that there is 1000 samples
 
   # try out FB estimation
   thetaFB <- FB_mats2theta(1E-8, m, A)
-  pman <- pmanifold("Snative")
-  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(thetaFB)), llname = "FB", pman,
-                    fixedtheta = rep(FALSE, length(thetaFB)), verbose = FALSE)
-  smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(thetaFB)),
-                      lltape, pman, "ones", 1, verbose = FALSE)
-  est <- smest(smotape, seq.int(1, length.out = length(thetaFB)), sample,
-               control = list(tol = 1E-10))
-  cdabyppi:::expect_lt_v(abs(est$par - thetaFB), 3 * est$SE)
-  # yay! it works, but oh man the estimates SEs are huge
+  tapes <- buildsmotape("Snative",
+                        "FB",
+                        utape = sample[1, ],
+                        usertheta = rep(NA, length(thetaFB)))
+                        
+  est <- cppad_closed(tapes$smotape, Y=sample)
+
+  expect_absdiff_lte_v(est$est, thetaFB, 3 * est$SE)
 })
 
 
 test_that("rfb() simulation for general symmetric matrices fitting", {
-  skip_on_cran() #rfb() tested when fitting tested
   p <- 3
   set.seed(111)
   theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
@@ -129,22 +125,17 @@ test_that("rfb() simulation for general symmetric matrices fitting", {
   sample <- Directional::rfb(100000, thetamats$k, thetamats$m, -solve(B) %*% thetamats$A %*% B)
 
   #estimate
-  pman <- pmanifold("Snative")
-  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(theta)), llname = "FB", pman,
-                    fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
-  smotape <- ptapesmo(sample[1,], seq.int(1, length.out = length(theta)),
-                      lltape, pman, "ones", 1, verbose = FALSE)
-  est <- smest(smotape, seq.int(1, length.out = length(theta)), sample,
-               control = list(tol = 1E-10))
-  cdabyppi:::expect_lt_v(abs(est$par - theta), 3 * est$SE)
+  tapes <- buildsmotape("Snative",
+                        "FB",
+                        utape = sample[1, ],
+                        usertheta = rep(NA, length(theta)))
+                        
+  est <- cppad_closed(tapes$smotape, Y=sample)
+
+  expect_absdiff_lte_v(est$est, theta, 3 * est$SE)
   # whooo it is working! But sample huge and SEs are still huge - it is almost like the model is misspecified
   # lapply(FB_theta2mats(est$par), round, 2)
   # lapply(thetamats, round, 2)
-
-  expect_lt(est$value, smobj(smotape, theta, sample))
-  expect_lt(est$sqgradsize,
-            sum(smobjgrad(smotape, theta, sample)^2))
-  #smobjgrad(smotape, theta, sample) is strangely large for so many samples
 })
 
 
@@ -160,8 +151,8 @@ test_that("FB() fits for p = 3", {
   sample <- rFB(10000, thetamats$k, thetamats$m, thetamats$A)
 
   #Fit
-  est <- FB(sample, control = list(tol = 1E-10))
-  cdabyppi:::expect_lt_v(abs(est$sminfo$par - theta), 3 * est$sminfo$SE)
+  estobj <- FB(sample, control = list(tol = 1E-10))
+  expect_lt_v(abs(estobj$est$paramvec - theta), 3 * estobj$SE$paramvec)
 })
 
 test_that("FB() fits with various fixed elements", {
@@ -177,10 +168,10 @@ test_that("FB() fits with various fixed elements", {
   #a fixed A element
   inA <- matrix(NA, nrow = p, ncol = p)
   inA[p, 1] <- inA[1, p] <- thetamats$A[1, p]
-  est <- FB(sample, A = inA, control = list(tol = 1E-15))
-  cdabyppi:::expect_lte_v(abs(est$A - thetamats$A)[-(p*p)], 3 * est$SE$A[-(p*p)])
-  expect_equal(est$A[!is.na(inA)], thetamats$A[!is.na(inA)])
-  expect_equal(est$SE$A[!is.na(inA)], 0 * thetamats$A[!is.na(inA)])
+  estobj <- FB(sample, A = inA, control = list(tol = 1E-12))
+  expect_lte_v(abs(estobj$est$A - thetamats$A)[-(p*p)], 3 * estobj$SE$A[-(p*p)])
+  expect_equal(estobj$est$A[!is.na(inA)], thetamats$A[!is.na(inA)])
+  expect_equal(estobj$SE$A[!is.na(inA)], 0 * thetamats$A[!is.na(inA)])
 
   #fixed final diagonal element should error
   inA <- matrix(NA, nrow = p, ncol = p)
@@ -190,10 +181,10 @@ test_that("FB() fits with various fixed elements", {
   # a fixed Fisher element
   inkm <- rep(NA, p)
   inkm[p] <- thetamats$m[p] * thetamats$k
-  est <- FB(sample, km = inkm, control = list(tol = 1E-15))
-  cdabyppi:::expect_lte_v(abs(est$km - thetamats$km), 3 * est$SE$km + 1E-10)
-  expect_equal(est$km[!is.na(inkm)], thetamats$km[!is.na(inkm)])
-  expect_equal(est$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
+  estobj <- FB(sample, km = inkm, control = list(tol = 1E-12))
+  expect_lte_v(abs(estobj$est$km - thetamats$km), 3 * estobj$SE$km + 1E-10)
+  expect_equal(estobj$est$km[!is.na(inkm)], thetamats$km[!is.na(inkm)])
+  expect_equal(estobj$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
 })
 
 test_that("FB() with many fixed elements leads to smaller smobjgrad", {
@@ -212,6 +203,6 @@ test_that("FB() with many fixed elements leads to smaller smobjgrad", {
   intheta[8] <- NA
   tapes <- buildsmotape("Snative", "FB",
                         sample[1, ], intheta)
-  smograd <- smobjgrad(tapes$smotape, theta[is.na(intheta)], sample)
-  sum(smograd^2)
+  smvals <- tape_smvalues_wsum(tapes$smotape, sample, theta[is.na(intheta)])
+  sum(smvals$grad^2)
 })

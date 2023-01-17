@@ -100,5 +100,57 @@ estimator2 <- function(prop,acut,incb, beta0, w = rep(1, nrow(prop)))
 	#scoring estimator
 	quartic_sphere=solve(W[1:num1,1:num1])%*%t(t(d[1:num1]))
 
-	return(list(estimator2=quartic_sphere,W_est=W_est))
+        #convert to PPI param vec
+        if (incb==1){
+          theta <- c(quartic_sphere, beta0)
+        } else {
+          theta <- c(quartic_sphere, rep(0, p-1), beta0)
+        }
+	return(list(estimator2=quartic_sphere,W_est=W_est, theta = theta))
+}
+
+# cleaner PPI interface for estimator2
+ppi_sqrt_prodh_zerob <- function(Y, acut, beta, w){
+  rawout <- estimator2(Y,acut = acut,incb = 0,
+                       beta0 = beta,
+                       w= w)
+  rawSE <- estimator2SE(prop = Y, acut = acut,
+                        estimate2 = rawout$estimator2,
+                        W_est = rawout$W_est,
+                        incb = 0,
+                        beta0 = beta,
+                        w = w
+  )
+  fit <- list(est = list(
+    paramvec = ppi_paramvec(AL = tosmatrix(rawout$estimator2),
+                             bL = 0,
+                             beta = beta)
+  ))
+  fit$est <- c(fit$est, ppi_parammats(fit$est$paramvec))
+  fit$SE <- list(paramvec = ppi_paramvec(AL = tosmatrix(rawSE),
+                                              bL = 0, beta = 0))
+  fit$SE <- c(fit$SE, ppi_parammats(fit$SE$paramvec))
+  return(fit)
+}
+
+ppi_sqrt_prodh <- function(Y, acut, beta, w){
+  rawout <- estimator2(Y,acut = acut,incb = 1,
+                       beta0 = beta,
+                       w= w)
+  rawSE <- estimator2SE(prop = Y, acut = acut,
+                        estimate2 = rawout$estimator2,
+                        W_est = rawout$W_est,
+                        incb = 1,
+                        beta0 = beta,
+                        w = w
+  )
+  estparamvec <- c(rawout$estimator2, beta)
+  fit <- list()
+  fit$est <- c(list(paramvec = estparamvec),
+               ppi_parammats(estparamvec))
+  SEparamvec <- c(rawSE, 0 * beta)
+  fit$SE <- c(list(paramvec = SEparamvec),
+                 ppi_parammats(SEparamvec))
+  fit$SE <- c(fit$SE, ppi_parammats(fit$SE$paramvec))
+  return(fit)
 }

@@ -1,3 +1,4 @@
+#' @noRd
 #' @description Calculated d(2)A for when the weight function h is a minimum version
 calcd2A_minimah <- function(sp, n, z, ind, qind, indh, w = rep(1, nrow(z))){
 	dv_A=matrix(0,n,sp)

@@ -1,34 +1,45 @@
-Package: cdabyppi
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.0005
+Package: scorecompdir
+Title: DRAFT Score-Matching for Directional and Compositional Data
+Version: 0.0.0.0035
 Authors@R: 
     c(person(given = "Kassel Liam", family = "Hingee", email = "kassel.hingee@anu.edu.au", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9894-2407")),
     person("Janice", "Scealy", role = c("aut")),
-    person("Bradley M.", "Bell", role = c("cph")))
-Description: What the package does (one paragraph).
+    person("Bradley M.", "Bell", role = c("cph")),
+    person("Ngunnawal Country", role = c("ctb")),
+    person("Ngambri Country", role = c("ctb"))
+    )
+Description: Score matching is a useful estimation technique when the normalising constant for a probability distribution is difficult to compute. This package includes methods for the flexible Polynomially-Tilted Pairwise Interaction (PPI) model for compositional data. These methods can perform well when there are zeros, even many zeros (Scealy and Wood, 2022). The package also includes hybrid estimators for directional distributions proposed by Mardia, Kent and Laha (2016). Tools for implementing additional score-matching estimators using CppAD for algorithmic differentiation are also included.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Suggests: 
     testthat,
     tibble,
     ks,
     movMF,
-    numDeriv,
-    rlang
+    MASS,
+    mclust,
+    knitr, rmarkdown,
+    numDeriv
 Depends: 
     R (>= 3.5.0)
 Imports:
     MCMCpack,
-    Rcpp (>= 0.10.2),
+    Rcpp (>= 1.0.9),
+    RcppEigen (>= 0.3.3.7),
     Rcgmin,
-    MASS,
     FixedPoint,
     Directional,
-    mclust,
-    Rdpack
+    Rdpack,
+    methods,
+    stats,
+    utils,
+    rlang,
+    ellipsis
 RdMacros: Rdpack
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppEigen
 Config/testthat/edition: 3
+VignetteBuilder: knitr
+

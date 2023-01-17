@@ -1,3 +1,4 @@
+#' @noRd
 #' @param p The number of dimensions
 #' @param z The square root of the data values
 #' @param h A single column matrix of weights for each row of data
