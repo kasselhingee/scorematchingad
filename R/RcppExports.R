@@ -153,6 +153,10 @@ testmanifold <- function(pman, u_ad) {
     .Call('_scorecompdir_testmanifold', PACKAGE = 'scorecompdir', pman, u_ad)
 }
 
+printgraph <- function(pfun) {
+    invisible(.Call('_scorecompdir_printgraph', PACKAGE = 'scorecompdir', pfun))
+}
+
 #' @noRd
 #' @title Tape of a log-likelihood calculation
 #' @param p dimension of measurements

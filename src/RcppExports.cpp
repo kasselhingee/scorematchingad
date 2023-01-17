@@ -150,6 +150,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// printgraph
+void printgraph(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
+RcppExport SEXP _scorecompdir_printgraph(SEXP pfunSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    printgraph(pfun);
+    return R_NilValue;
+END_RCPP
+}
 // ptapell
 Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, veca1 theta_ad, std::string llname, Rcpp::XPtr< manifold<a1type> > pman, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
 RcppExport SEXP _scorecompdir_ptapell(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
@@ -237,6 +247,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_ptapelogdetJ", (DL_FUNC) &_scorecompdir_ptapelogdetJ, 3},
     {"_scorecompdir_pmanifold", (DL_FUNC) &_scorecompdir_pmanifold, 1},
     {"_scorecompdir_testmanifold", (DL_FUNC) &_scorecompdir_testmanifold, 2},
+    {"_scorecompdir_printgraph", (DL_FUNC) &_scorecompdir_printgraph, 1},
     {"_scorecompdir_ptapell", (DL_FUNC) &_scorecompdir_ptapell, 6},
     {"_scorecompdir_ptapesmo", (DL_FUNC) &_scorecompdir_ptapesmo, 7},
     {"_scorecompdir_ptoM", (DL_FUNC) &_scorecompdir_ptoM, 2},
