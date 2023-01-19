@@ -222,3 +222,17 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
   expect_equal(smoorig2-smopoly2, constant)
 })
 
+
+test_that("printgraph() runs", {
+  set.seed(1245)
+  beta0 <- c(-0.7, -0.1, -0.5, -0.1, -0.6) 
+  Y <- MCMCpack::rdirichlet(10, beta0+1)
+  tapes <- buildsmotape("Hclr", "ppi", utape = Y[1, ], 
+                        usertheta = ppi_paramvec(p = 5))
+
+  expect_snapshot(printgraph(tapes$smotape))
+  Jtape <- pTapeJacobian(tapes$smotape, ppi_paramvec(AL = 0, bL = 0, beta = beta0), Y[1, ])
+  expect_snapshot(printgraph(Jtape))
+  Htape <- pTapeHessian(tapes$smotape, ppi_paramvec(AL = 0, bL = 0, beta = beta0), Y[1, ])
+  expect_snapshot(printgraph(Htape))
+})
