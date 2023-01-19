@@ -4,7 +4,7 @@ This package as a whole is licensed under GPL (>=3), provided at the end of this
 COPYRIGHT HOLDERS: Kassel Liam Hingee, Janice Scealy, and Bradley M. Bell. The source code for this package is available at https://github.com/kasselhingee/scorecompdir.
 
 
-CppAD is distributed under the terms of the Eclipse Public License Version 2.0 (in inst/include/CppAD_LICENSE). The CppAD Source Code may also be made available under the following Secondary License when the conditions for such availability set forth in the Eclipse Public License, Version 2.0 are satisfied: GNU General Public License, Version 2.0 or later. The copyright for CppAD is held by Bradley M. Bell (Copyright (C) 2003-18). The CppAD source code is available at https://github.com/coin-or/CppAD.git .
+CppAD is distributed under the terms of the Eclipse Public License Version 2.0 (in inst/include/CppAD_LICENSE). In this package the `include/cppad` directory of CppAD source code is included in `inst/include/cppad/`. The file `cppad_lib/cpp_graph_op.cpp` is stored separately at `srs/cpp_graph_op.cpp`. The CppAD Source Code may also be made available under the following Secondary License when the conditions for such availability set forth in the Eclipse Public License, Version 2.0 are satisfied: GNU General Public License, Version 2.0 or later. The copyright for CppAD is held by Bradley M. Bell (Copyright (C) 2003-18). The CppAD source code is available at https://github.com/coin-or/CppAD.git .
 
 
 GNU General Public License
