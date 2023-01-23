@@ -22,6 +22,7 @@ Suggests:
     MASS,
     mclust,
     knitr, rmarkdown,
+	cubature,
     numDeriv
 Depends: 
     R (>= 3.5.0)
