@@ -61,7 +61,8 @@
 #'               paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)),
 #'               trans = "alr", method = "closed")
 #' estsqrt <- ppi(model$sample,
-#'               trans = "sqrt", method = "closed", divweight = "minsq")
+#'               trans = "sqrt", method = "closed",
+#'               divweight = "minsq", acut = 0.1)
 #' @export
 ppi <- function(Y, paramvec = NULL,
                 pow = 1, trans, method = "closed", w = rep(1, nrow(Y)),
