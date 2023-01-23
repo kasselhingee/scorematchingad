@@ -13,9 +13,9 @@ src/CppAD/external/eigen.git/build
 src/CppAD/external/
 src/CppAD/.coin-or/
 
-
+man/
 cdabyppi_0.0.0.9000.tar.gz
-src/cdabyppi.dll
+src/*.dll
 
 *todo.*
 
