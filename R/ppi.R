@@ -97,6 +97,7 @@ ppi <- function(Y, paramvec = NULL,
     if (!is.null(acut)){warning("The value of 'acut' is ignored for divweight == 'ones'")}
     acut <- 1 #set just for passing to CppAD
   }
+  if (man == "Hclr"){warning("Our estimation via clr transform appears sensitive to choice of bdrythreshold and possibly approxorder. Please try a few different settings")}
   if ((man == "Hclr") && (bdrythreshold < 1E-5)){
     warning("We recommend a high bdrythreshold of 1E-5 for fitting with the clr transform")
   }
