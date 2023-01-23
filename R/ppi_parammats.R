@@ -8,7 +8,7 @@
 #' @param paramvec A PPI parameter vector, typically created by [`ppi_paramvec()`] or as an output of [`ppi()`].
 #' @return A named list of \eqn{A_L}, \eqn{b_L}, and \eqn{\beta}.
 #' @examples
-#' vec <- ppi_paramvec(AL = rsymmetricmatrix(4), beta = c(-0.8, -0.7, 0))
+#' vec <- ppi_paramvec(AL = rsymmetricmatrix(3), beta = c(-0.8, -0.7, 0))
 #' ppi_parammats(vec)
 #' @export
 ppi_parammats <- function(paramvec){
