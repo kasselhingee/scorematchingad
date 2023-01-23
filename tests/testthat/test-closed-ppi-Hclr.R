@@ -121,69 +121,6 @@ test_that("Hess + Offset match gradient for Hclr in interior", {
   expect_equal(gradorig, gradpoly, tolerance = 1E-5)
 })
 
-test_that("Taylor approximations accuracy study", {
-  set.seed(1245)
-  mod <- ppi_egmodel(1000)
-  Y <- mod$sample
-  tapes <- buildsmotape("Hclr", "ppi", utape = c(0.2, 0.3, 0.5), 
-                        usertheta = ppi_paramvec(p = 3))
-
-  # find boundary points 
-  isbdry <- simplex_isboundary(Y, 1E-3)
-  Yapproxcentres <- Y
-  Yapproxcentres[!isbdry, ] <- NA
-  Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = 1E-5)
-
-  approxedvals <- tape_smvalues(tapes$smotape, Y, mod$theta, xcentres = Yapproxcentres, approxorder = 10)
-  naivevals <- tape_smvalues(tapes$smotape, Y, mod$theta)
-
-  #compute distance to boundary
-  bdrydist <- apply(Y, MARGIN = 1, min)
-  bdrycomponent <- apply(Y, MARGIN = 1, which.min)
-
-  # look at obj values
-  library(dplyr)
-  library(ggplot2)
-  data.frame(naive = naivevals$obj,
-             approxed = approxedvals$obj,
-             bdrydist = bdrydist) %>%
-    ggplot(aes(x = bdrydist, y = abs(naive - approxed))) +
-    geom_point() +
-    scale_x_log10() +
-    scale_y_log10() + 
-    geom_smooth(method = "lm", se = FALSE)
-  # result is straight in log-log (i.e. power law)
-  fit <- lm(log(err) ~ log(bdrydist), data = data.frame(err = abs(naivevals$obj - approxedvals$obj)[isbdry, ], bdrydist = bdrydist[isbdry])) 
-  # about is err ~ exp(-40) / bdrydist^2
-  # reaches 1E-6 in error just below 1E-5 in bdry distance
-
-  # look at grad values
-  data.frame(err = abs(naivevals$grad-approxedvals$grad),
-           bdrydist = bdrydist,
-           bdrycomponent = factor(bdrycomponent)) %>%
-    tidyr::pivot_longer(!c(bdrydist, bdrycomponent)) %>%
-    ggplot(aes(x = bdrydist, y = value, col = bdrycomponent)) +
-    facet_wrap(vars(name)) +
-    geom_point() +
-    scale_x_log10() +
-    scale_y_log10() +
-    geom_smooth(method = "lm", se = FALSE)
-  # again straight lines in the log-log plots
-  # most components of the grad reach error of 1E-13 at about bdry dist of 1E-05  # the beta components are at this limit at 1E-3 bdry distance.
-  # I suspect the naive calculations are the one that are wrong here (since error is consistent relation to bdry distance) and that the cause is some numerical instability
-
-  # look at hess values
-  data.frame(err = abs(naivevals$hess-approxedvals$hess),
-           bdrydist = bdrydist,
-           bdrycomponent = factor(bdrycomponent)) %>%
-    tidyr::pivot_longer(!c(bdrydist, bdrycomponent)) %>%
-    ggplot(aes(x = bdrydist, y = value, col = bdrycomponent)) +
-    facet_wrap(vars(name)) +
-    geom_point() +
-    scale_x_log10() +
-    scale_y_log10()
-  # relationship between accuracy and distance (linear in log-log) is a power law for the errors above 1E-14.
-})
 
 test_that("W is symmetric for ppi with clr, fitting all parameters", {
   # if W is symmetric then should equal the smo up to a constant wrt theta
