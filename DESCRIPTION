@@ -30,7 +30,6 @@ Depends:
     R (>= 3.5.0)
 Imports:
     MCMCpack,
-    Rcpp (>= 1.0.9),
     Rcgmin,
     FixedPoint,
     Directional,
