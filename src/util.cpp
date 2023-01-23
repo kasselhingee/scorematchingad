@@ -1,4 +1,4 @@
-# include "util.hpp"
+# include "util.h"
 
 veca1 ptoM(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad){
   veca1 z_ad(u_ad.size());

@@ -1,4 +1,4 @@
-#include "cppad_interface.hpp"
+#include "cppad_interface.h"
 
 
 Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam){

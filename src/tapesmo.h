@@ -3,7 +3,7 @@
 
 # include "scorecompdir_types.h"
 # include <cppad/cppad.hpp>
-# include "tapedivweight.hpp"
+# include "tapedivweight.h"
 # include "mycpp/divweights.hpp"
 # include "mycpp/mantrans.hpp"
 # include "mycpp/PrintFor.hpp"

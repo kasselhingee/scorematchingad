@@ -1,4 +1,4 @@
-# include "tapesmo.hpp"
+# include "tapesmo.h"
 
 // function that tapes the score-matching objective
 CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement for taping

@@ -1,4 +1,4 @@
-# include "exposemanifold.hpp"
+# include "exposemanifold.h"
 
 // manifold object 'factory'
 manifold<a1type> * newmantran(const std::string &manifoldname){
