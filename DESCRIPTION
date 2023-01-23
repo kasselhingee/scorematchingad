@@ -23,6 +23,8 @@ Suggests:
     mclust,
     knitr, rmarkdown,
 	cubature,
+	dplyr, 
+	ggplot2,
     numDeriv
 Depends: 
     R (>= 3.5.0)
