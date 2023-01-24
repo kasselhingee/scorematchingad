@@ -25,7 +25,7 @@ test_that("Fitting ppi via clr transform gets close estimates via sqrt", {
 })
 
 
-test_that("Fitting ppi all parameters via clr transform can get close to true values for positive-looking beta", {
+test_that("Fitting ppi all parameters via clr transform can get close to true values for eg ppi", {
   skip_on_cran()
   set.seed(12345)
   model <- ppi_egmodel(10000, maxden = 4)
@@ -35,8 +35,9 @@ test_that("Fitting ppi all parameters via clr transform can get close to true va
 
   expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
   # and that the SE are small
-  expect_lt(max(abs(out$SE$paramvec), na.rm = TRUE), 20)
+  scorecompdir:::expect_lte_v(abs(out$SE$paramvec), c(rep(20, 5), 0.05, 0.05, 20))
 })
+
   # method of moments from JASA paper supplementary
   dirichmom <- function(X) {
     # Method of Moments estimates of the Dirichlet Distribution
