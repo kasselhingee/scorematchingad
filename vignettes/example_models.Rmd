@@ -43,8 +43,7 @@ beta0=matrix(-0.8,p,1)
 beta0[p]=-0.5
 
 #simulate sample from PPI model
-samp=scorecompdir:::rppi_singly(n,p,beta0,ALs,bL,4)[[1]]
-# samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
+samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
 ```
 
 ```{r plot1_ternarypackage}
@@ -81,8 +80,7 @@ SigA[2,1]=SigA[1,2]
 ALs=-0.5*solve(SigA)
 bL=solve(SigA)%*%muL
 beta0=matrix(1,p,1)
-samp=scorecompdir:::rppi_singly(n,p,beta0,ALs,bL,4)[[1]]
-# samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
+samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 30)
 ```
 
 ```{r centresimplex_plot}
@@ -111,8 +109,7 @@ SigA[2,1]=SigA[1,2]
 ALs=-0.5*solve(SigA)
 bL=solve(SigA)%*%muL
 beta0=matrix(-0.8,p,1)
-samp=scorecompdir:::rppi_singly(n,p,beta0,ALs,bL,4)[[1]]
-# samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
+samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 30)
 ```
 
 ```{r centresimplex_w_edge_plot}
@@ -143,8 +140,7 @@ bL=solve(SigA)%*%muL
 beta0=matrix(c(-0.5, -0.5, -0.5),p,1)
 
 #simulate sample from PPI model
-samp=scorecompdir:::rppi_singly(n,p,beta0,ALs,bL,4)[[1]]
-# samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
+samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 120)
 ```
 
 ```{r largeu1_plot}
@@ -162,8 +158,7 @@ beta0=matrix(-0.8,p,1)
 beta0[p]=-0.5
 
 #simulate sample from PPI model
-samp=scorecompdir:::rppi_singly(n,p,beta0,matrix(0, 2, 2), matrix(0, 2, 1),4)[[1]]
-# samp=rppi(n,beta = beta0, AL = 0, bL = 0,maxden = 4)
+samp=rppi(n,beta = beta0, AL = 0, bL = 0,maxden = 4)
 ```
 
 ```{r dirichlet_plot}
