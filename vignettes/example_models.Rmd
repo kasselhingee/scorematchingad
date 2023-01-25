@@ -43,19 +43,20 @@ beta0=matrix(-0.8,p,1)
 beta0[p]=-0.5
 
 #simulate sample from PPI model
-samp=rppi(n,p,beta0,ALs,bL,4)
+samp=scorecompdir:::rppi_singly(n,p,beta0,ALs,bL,4)[[1]]
+# samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
 ```
 
 ```{r plot1_ternarypackage}
-colMeans(samp$samp3)
+colMeans(samp)
 Ternary::TernaryPlot("u1", "u2", "u3",
                      "larger u1 \U2192")
 # Ternary::ColourTernary(Ternary::TernaryDensity(coordinates = samp$samp3) )
-Ternary::AddToTernary(points, samp$samp3, pch = "+")
+Ternary::AddToTernary(points, samp, pch = "+")
 ```
 
 ```{r s2_3modelplot}
-data.frame(samp$samp3) %>%
+data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggplot(aes(x = u1, y = u2, z = u3)) +
   coord_tern() +
@@ -80,12 +81,13 @@ SigA[2,1]=SigA[1,2]
 ALs=-0.5*solve(SigA)
 bL=solve(SigA)%*%muL
 beta0=matrix(1,p,1)
-samp=rppi(n,p,beta0,ALs,bL,4)
+samp=scorecompdir:::rppi_singly(n,p,beta0,ALs,bL,4)[[1]]
+# samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
 ```
 
 ```{r centresimplex_plot}
-colMeans(samp$samp3)
-data.frame(samp$samp3) %>%
+colMeans(samp)
+data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggplot(aes(x = u1, y = u2, z = u3)) +
   coord_tern() +
@@ -109,12 +111,13 @@ SigA[2,1]=SigA[1,2]
 ALs=-0.5*solve(SigA)
 bL=solve(SigA)%*%muL
 beta0=matrix(-0.8,p,1)
-samp=rppi(n,p,beta0,ALs,bL,4)
+samp=scorecompdir:::rppi_singly(n,p,beta0,ALs,bL,4)[[1]]
+# samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
 ```
 
 ```{r centresimplex_w_edge_plot}
-colMeans(samp$samp3)
-data.frame(samp$samp3) %>%
+colMeans(samp)
+data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggplot(aes(x = u1, y = u2, z = u3)) +
   coord_tern() +
@@ -140,11 +143,12 @@ bL=solve(SigA)%*%muL
 beta0=matrix(c(-0.5, -0.5, -0.5),p,1)
 
 #simulate sample from PPI model
-samp=rppi(n,p,beta0,ALs,bL,4)
+samp=scorecompdir:::rppi_singly(n,p,beta0,ALs,bL,4)[[1]]
+# samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
 ```
 
 ```{r largeu1_plot}
-data.frame(samp$samp3) %>%
+data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggplot(aes(x = u1, y = u2, z = u3)) +
   coord_tern() +
@@ -158,11 +162,12 @@ beta0=matrix(-0.8,p,1)
 beta0[p]=-0.5
 
 #simulate sample from PPI model
-samp=rppi(n,p,beta0,matrix(0, 2, 2), matrix(0, 2, 1),4)
+samp=scorecompdir:::rppi_singly(n,p,beta0,matrix(0, 2, 2), matrix(0, 2, 1),4)[[1]]
+# samp=rppi(n,beta = beta0, AL = 0, bL = 0,maxden = 4)
 ```
 
 ```{r dirichlet_plot}
-data.frame(samp$samp3) %>%
+data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggplot(aes(x = u1, y = u2, z = u3)) +
   coord_tern() +
