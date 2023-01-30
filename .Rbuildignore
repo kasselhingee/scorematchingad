@@ -1,5 +1,6 @@
 ^cdabyppi\.Rproj$
 ^\.Rproj\.user$
+*.Rproj
 designquestions.md
 ^LICENSE\.md$
 tests/test.sh
