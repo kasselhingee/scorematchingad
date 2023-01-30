@@ -34,6 +34,7 @@ Imports:
     FixedPoint,
     Directional,
     Rdpack,
+    Rcpp (>= 1.0.9),
     methods,
     stats,
     utils,
