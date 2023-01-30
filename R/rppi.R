@@ -78,6 +78,7 @@ rppi <- function(n, ..., paramvec = NULL, maxden = 4, maxmemorysize = 1E5){
   while (nsamples < n){
     blocksize <- min(ceiling((n - nsamples)/propaccepted), maxblockrows) #choose so that the matrices of Dirichlet samples never get bigger than maxmemorysize bytes
     newsamples <- rppi_block(blocksize,p,beta,AL,bL,maxden)
+    if (newsamples$maxden > maxden){warning(sprintf("Input maxden (i.e. the log(C) maximum) was %0.2f, but sampler suggests higher than %0.2f is required. You will have to call rppi() with a higher maxden.", maxdenin, newsamples$maxden))} 
     maxden <- newsamples$maxden
     nproposals <- nproposals + blocksize
     propaccepted <- (nsamples + nrow(newsamples$accepted))/nproposals
@@ -146,25 +147,24 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
 }
 
 #' @title Improper Log-Density of the PPI Model
-#' @description Compute the __natural logarithm__ of the improper density for the PPI model for the given matrix of measurements `Y`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
-#' @param Y A matrix of measurements.
+#' @description Compute the __natural logarithm__ of the improper density for the PPI model for the given matrix of locations `Y`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
+#' @param Y A matrix of locations in the simplex. Each row is a location, each column a component.
 #' @inheritParams rppi
 #' @details The value calculated by `dppi` is
 #' \deqn{z_L^TA_Lz_L + b_L^Tz_L + \beta^T \log(z),}
 #' where \eqn{z} is the multivariate observation, and \eqn{z_L} ommits the final element of \eqn{z}.
 #' @export
-dppi <- function(Y, AL = NULL,bL = NULL, beta = NULL, paramvec = NULL){
+dppi <- function(Y, ..., paramvec = NULL){
   #process inputs
-  if (is.null(paramvec)){if (any(is.null(beta), is.null(AL), is.null(bL))){stop("If paramvec isn't supplied then beta, AL, and bL must be supplied")}}
-  else {
-    if (!all(is.null(beta), is.null(AL), is.null(bL))){stop("Providing a paramvec is incompatible with providing a beta, AL or bL.")}
-    if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA")}
-    parammats <- ppi_parammats(paramvec)
-    beta <- parammats$beta
-    AL <- parammats$AL
-    bL <- parammats$bL
+  if (is.null(paramvec)){
+    paramvec <- ppi_paramvec(...)
   }
-
+  if (any(is.na(paramvec))){stop("All elements of paramvec must be non-NA. Did you forget to specify AL, bL or beta?")}
+  parammats <- ppi_parammats(paramvec)
+  beta <- parammats$beta
+  AL <- parammats$AL
+  bL <- parammats$bL
+  
   p <- ncol(Y)
   if (!("matrix" %in% class(bL))){bL <- as.matrix(bL, ncol = 1)}
   stopifnot(isTRUE(ncol(bL) == 1))
