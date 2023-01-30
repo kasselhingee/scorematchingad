@@ -1,25 +1,49 @@
 ---
-title: "Example Parameter Simulations"
+title: "Plots of Example PPI Models"
 author: "Kassel Hingee"
-date: "16/03/2022"
-output: 
-  html_document: 
-    toc: yes
+output:  pdf_document
+vignette: >
+  %\VignetteIndexEntry{Plots of Example PPI Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: '`r system.file("REFERENCES.bib", package="scorecompdir")`'
 ---
 
-This document contains plots of a number of example PPI models.
+This document ternary scatter plots for a number of example 3-component PPI models.
 
 ```{r setup, include=FALSE}
 library(scorecompdir)
-library(Ternary)
 library(ggtern)
 library(ggplot2)
 library(dplyr)
 
 knitr::opts_chunk$set(echo = TRUE)
+n <- 1000
+p <- 3
 ```
 
-# Model from Section 2.3 of JASA Paper
+# Dirichlet
+A Dirichlet model can be obtained by setting all of $A_L$ and $b_L$ to 0.
+
+```{r dirichlet_simulate}
+beta0=c(-0.8, -0.8, -0.5)
+
+#simulate sample from PPI model
+samp=rppi(n,beta = beta0, AL = 0, bL = 0,maxden = 4)
+```
+
+```{r dirichlet_plot}
+data.frame(samp) %>%
+  dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
+  ggplot(aes(x = u1, y = u2, z = u3)) +
+  coord_tern() +
+  geom_density_tern(bins = 5, bdl = 0.01) + 
+  geom_point(size = 1, alpha = 0.5, shape = "+")
+```
+
+# Model from Section 2.3 of Scealy and Wood (2022)
+The model below is obtained by [@scealy2022sc]
+
 ```{r simulateS2_3model}
 #dimension
 p=3
@@ -44,14 +68,6 @@ beta0[p]=-0.5
 
 #simulate sample from PPI model
 samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
-```
-
-```{r plot1_ternarypackage}
-colMeans(samp)
-Ternary::TernaryPlot("u1", "u2", "u3",
-                     "larger u1 \U2192")
-# Ternary::ColourTernary(Ternary::TernaryDensity(coordinates = samp$samp3) )
-Ternary::AddToTernary(points, samp, pch = "+")
 ```
 
 ```{r s2_3modelplot}
@@ -152,20 +168,5 @@ data.frame(samp) %>%
   geom_point(size = 1, alpha = 0.5, shape = "+")
 ```
 
-# Dirichlet
-```{r dirichlet_simulate}
-beta0=matrix(-0.8,p,1)
-beta0[p]=-0.5
+# References
 
-#simulate sample from PPI model
-samp=rppi(n,beta = beta0, AL = 0, bL = 0,maxden = 4)
-```
-
-```{r dirichlet_plot}
-data.frame(samp) %>%
-  dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
-  ggplot(aes(x = u1, y = u2, z = u3)) +
-  coord_tern() +
-  geom_density_tern(bins = 5, bdl = 0.01) + 
-  geom_point(size = 1, alpha = 0.5, shape = "+")
-```
