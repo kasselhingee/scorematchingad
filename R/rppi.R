@@ -150,6 +150,7 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
 #' @description Compute the __natural logarithm__ of the improper density for the PPI model for the given matrix of locations `Y`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
 #' @param Y A matrix of locations in the simplex. Each row is a location, each column a component.
 #' @inheritParams rppi
+#' @inheritDotParams ppi_paramvec
 #' @details The value calculated by `dppi` is
 #' \deqn{z_L^TA_Lz_L + b_L^Tz_L + \beta^T \log(z),}
 #' where \eqn{z} is the multivariate observation, and \eqn{z_L} ommits the final element of \eqn{z}.
