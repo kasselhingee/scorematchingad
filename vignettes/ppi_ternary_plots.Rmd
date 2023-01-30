@@ -121,9 +121,9 @@ data.frame(samp) %>%
 The probability mass can be moved away from `u3` by increasing all elements of $b_L$. 
 
 ```{r centresimplex_shift_plot, warning=FALSE, out.width = "0.5\\linewidth"}
-ppi_plotdensity(beta = 0, AL = ALs, bL = bL * 1.1)
+ppi_plotdensity(beta = 0, AL = ALs, bL = bL * 1.2)
 set.seed(3136)
-samp=rppi(n,beta = 0, AL = ALs, bL = bL * 1.1, maxden = 60)
+samp=rppi(n,beta = 0, AL = ALs, bL = bL * 1.2, maxden = 35)
 data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggtern(aes(x = u1, y = u2, z = u3)) +
