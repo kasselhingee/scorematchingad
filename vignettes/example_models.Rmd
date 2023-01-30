@@ -1,57 +1,67 @@
 ---
-title: "Plots of Example PPI Models"
+title: "Ternary Plots of Example PPI Models"
 author: "Kassel Hingee"
-output:  pdf_document
+output: 
+  pdf_document: 
+    toc: yes
 vignette: >
-  %\VignetteIndexEntry{Plots of Example PPI Models}
+  %\VignetteIndexEntry{Ternary Plots of Example PPI Models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: '`r system.file("REFERENCES.bib", package="scorecompdir")`'
 ---
 
-This document ternary scatter plots for a number of example 3-component PPI models.
+This document presents ternary scatter plots for a number of example 3-component PPI models.
 
-```{r setup, include=FALSE}
+# Preparation
+```{r setup, include=TRUE}
 library(scorecompdir)
 library(ggtern)
 library(ggplot2)
 library(dplyr)
 
 knitr::opts_chunk$set(echo = TRUE)
-n <- 1000
+n <- 500
 p <- 3
+
+ppi_plotdensity <- function(...){
+  Yarr <- expand.grid(u1 = seq(0.01, 0.99, length.out = 50),
+                    u2 = seq(0.01, 0.99, length.out = 50))
+  Yarr[, "u3"] <- 1- rowSums(Yarr)
+  Yarr <- as.matrix(Yarr)
+  Yarr <- Yarr[rowSums(Yarr < 0) == 0, ] #drop points outside the simplex
+  Yarr <- Yarr[rowSums(Yarr == 0) == 0, ] #drop boundary points
+  lden <- dppi(Yarr, ...)
+  iden <- exp(dppi(Yarr, ...) - min(lden, na.rm = TRUE))
+  data.frame(Yarr, iden) %>%
+    ggtern(aes(x = u1, y = u2, z = u3, value = iden)) +
+    # geom_interpolate_tern(aes(colour = ..level..), base = "identity", bins = 500) +
+    geom_hex_tern(fun = max, na.rm = TRUE) +
+    scale_fill_viridis_c(name = "Unnormalised Density", trans = "log") +
+    ggtitle("Unnormalised Density")
+}
 ```
 
 # Dirichlet
 A Dirichlet model can be obtained by setting all of $A_L$ and $b_L$ to 0.
 
-```{r dirichlet_simulate}
-beta0=c(-0.8, -0.8, -0.5)
+```{r dirichlet_simulate, warning=FALSE, out.width = "0.5\\linewidth"}
+set.seed(3654)
+samp=rppi(n,beta = c(-0.8, -0.8, -0.5), AL = 0, bL = 0,maxden = 4)
+ppi_plotdensity(beta = c(-0.8, -0.8, -0.5), AL = 0, bL = 0)
 
-#simulate sample from PPI model
-samp=rppi(n,beta = beta0, AL = 0, bL = 0,maxden = 4)
-```
-
-```{r dirichlet_plot}
 data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
-  ggplot(aes(x = u1, y = u2, z = u3)) +
-  coord_tern() +
-  geom_density_tern(bins = 5, bdl = 0.01) + 
-  geom_point(size = 1, alpha = 0.5, shape = "+")
+  ggtern(aes(x = u1, y = u2, z = u3)) +
+  geom_density_tern(bins = 10, bdl = 0.005) + 
+  geom_point(size = 1, alpha = 0.5, shape = "+") +
+  ggtitle("Sample Points")
 ```
 
 # Model from Section 2.3 of Scealy and Wood (2022)
 The model below is obtained by [@scealy2022sc]
 
 ```{r simulateS2_3model}
-#dimension
-p=3
-
-#sample size
-n=1000
-
-#parameters for the PPI model
 muL=matrix(0,p-1,1)
 muL[1:sum(p,-1)]=0.12 #location is close to u1=0, u2=0.
 aa=matrix(1/500,p-1,1)
@@ -65,107 +75,61 @@ ALs=-0.5*solve(SigA)
 bL=solve(SigA)%*%muL
 beta0=matrix(-0.8,p,1)
 beta0[p]=-0.5
+```
 
-#simulate sample from PPI model
+
+```{r s2_3modelplot, warning=FALSE, out.width = "0.5\\linewidth"}
+ppi_plotdensity(beta = beta0, AL = ALs, bL = bL)
+
+set.seed(13546)
 samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
-```
-
-```{r s2_3modelplot}
 data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
-  ggplot(aes(x = u1, y = u2, z = u3)) +
-  coord_tern() +
-  geom_density_tern(bins = 5, bdl = 0.01) + 
-  geom_point(size = 1, alpha = 0.5, shape = "+")
+  ggtern(aes(x = u1, y = u2, z = u3)) +
+  geom_density_tern(bins = 15, bdl = 0.005) + 
+  geom_point(size = 1, alpha = 0.5, shape = "+") +
+  ggtitle("Sample Points")
 ```
 
-# Centre of Simplex
-For a model with points focused on the interior of the simplex, change muL (influences bL) to close to 0.5, and make the beta exponents large.
+# Elliptical Contours in Centre of Simplex
+For a PPI model without concentrations on the boundary of the simplex, make the $\beta$ elements non-negative. 
+When the elements of $\beta$ are not large then $A_L$ mostly controls the ellipticity of contours of constant density, which is similar to the logistic normal distribution [@scaely2022sc].
 
-```{r centresimplex_simulate}
+Here we keep $A_L$ of the previous section, set all of $\beta$ to $0$, and change `muL` (influences $b_L$) to 0.3.
+
+Simulation of this model is slower as it is further from a Dirichlet model, which is used as the envelope in the rejection-sampling method of `rppi()`.
+
+```{r centresimplex_def}
 #parameters for the PPI model
 muL=matrix(0,p-1,1)
 muL[1:sum(p,-1)]=0.3
-aa=matrix(1/500,p-1,1)
-D=diag(as.vector(aa))
-SigA=D
-SigA[1,1]=SigA[1,1]*2
-cor=0.5
-SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
-SigA[2,1]=SigA[1,2]
-ALs=-0.5*solve(SigA)
 bL=solve(SigA)%*%muL
-beta0=matrix(1,p,1)
-samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 30)
 ```
 
-```{r centresimplex_plot}
-colMeans(samp)
+```{r centresimplex_plot, warning=FALSE, out.width = "0.5\\linewidth"}
+ppi_plotdensity(beta = 0, AL = ALs, bL = bL)
+set.seed(3136)
+samp=rppi(n,beta = 0, AL = ALs, bL = bL ,maxden = 30)
 data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
-  ggplot(aes(x = u1, y = u2, z = u3)) +
-  coord_tern() +
+  ggtern(aes(x = u1, y = u2, z = u3)) +
   geom_density_tern(bins = 5, bdl = 0.01) + 
-  geom_point(size = 1, alpha = 0.5, shape = "+")
+  geom_point(size = 1, alpha = 0.5, shape = "+") +
+  ggtitle("Sample Points")
 ```
+# Shift Probability Mass Using bL
+The probability mass can be moved away from `u3` by increasing all elements of $b_L$. 
 
-# Centre of Simplex with Near Zeros
-An implausible model with points that are interior to the simplex and extra density near the simplex edges.
-```{r centresimplex_wedge_simulate}
-#parameters for the PPI model
-muL=matrix(0,p-1,1)
-muL[1:sum(p,-1)]=0.3
-aa=matrix(1/500,p-1,1)
-D=diag(as.vector(aa))
-SigA=D
-SigA[1,1]=SigA[1,1]*2
-cor=0.5
-SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
-SigA[2,1]=SigA[1,2]
-ALs=-0.5*solve(SigA)
-bL=solve(SigA)%*%muL
-beta0=matrix(-0.8,p,1)
-samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 30)
-```
-
-```{r centresimplex_w_edge_plot}
-colMeans(samp)
+```{r centresimplex_shift_plot, warning=FALSE, out.width = "0.5\\linewidth"}
+ppi_plotdensity(beta = 0, AL = ALs, bL = bL * 1.1)
+set.seed(3136)
+samp=rppi(n,beta = 0, AL = ALs, bL = bL * 1.1, maxden = 60)
 data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
-  ggplot(aes(x = u1, y = u2, z = u3)) +
-  coord_tern() +
+  ggtern(aes(x = u1, y = u2, z = u3)) +
   geom_density_tern(bins = 5, bdl = 0.01) + 
-  geom_point(size = 1, alpha = 0.5, shape = "+")
-```
-
-# Large u1
-```{r largeu1}
-#parameters for the PPI model
-muL=matrix(0,p-1,1)
-muL[1, 1] <- 0.9
-muL[2, 1] <- 0.12
-aa=matrix(1/500,p-1,1)
-D=diag(as.vector(aa))
-SigA=D
-SigA[1,1]=SigA[1,1]*2
-cor=0.5
-SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
-SigA[2,1]=SigA[1,2]
-ALs=-0.5*solve(SigA)
-bL=solve(SigA)%*%muL
-beta0=matrix(c(-0.5, -0.5, -0.5),p,1)
-
-#simulate sample from PPI model
-samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 120)
-```
-
-```{r largeu1_plot}
-data.frame(samp) %>%
-  dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
-  ggplot(aes(x = u1, y = u2, z = u3)) +
-  coord_tern() +
-  geom_density_tern(bins = 5, bdl = 0.01) + 
-  geom_point(size = 1, alpha = 0.5, shape = "+")
+  geom_point(size = 1, alpha = 0.5, shape = "+") +
+  ggtitle("Sample Points")
 ```
 
 # References
