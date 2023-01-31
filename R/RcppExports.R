@@ -4,6 +4,7 @@
 #' @title Switch Dynamic and Independent Values of a Tape
 #' @description Convert an ADFun so that the independent values become dynamic parameters
 #' and the dynamic parameters become independent values
+#' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
 #' @param newvalue The independent value (in the sense after the switch has occurred) at which to tape the ADFun
 #' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
 #' @return A pointer to an ADFun
@@ -13,7 +14,7 @@ swapDynamic <- function(pfun, newvalue, newdynparam) {
 }
 
 #' @title Evaluate the Jacobian of a tape
-#' @param pfun Rcpp::XPtr to an ADFun
+#' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
 #' @param value A vector in the domain of the taped function.
 #' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
 #' @return The Jacobian of pfun
