@@ -28,7 +28,6 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
      warning(sprintf("Y contains measurement that don't add to 1. Largest discrepancy is %s.", sum_m1))
   }
 
-  stopifnot(pow == 1)
   stopifnot(trans %in% c("alr", "sqrt", "clr", "none"))
   man <- switch(trans,
            alr = "Ralr",
