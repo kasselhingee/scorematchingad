@@ -6,7 +6,6 @@
 # include "tapedivweight.h"
 # include "mycpp/divweights.hpp"
 # include "mycpp/mantrans.hpp"
-# include "mycpp/PrintFor.hpp"
 
 CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement for taping
                              veca1 theta, //a vector of parameters for taping

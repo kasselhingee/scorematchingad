@@ -6,7 +6,6 @@
 # include <cppad/cppad.hpp>
 # include "scorecompdir_types.h"
 # include "mycpp/likelihoods.hpp"
-# include "mycpp/PrintFor.hpp"
 
 // declare a function that tapes a log likelihood
 CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manifold

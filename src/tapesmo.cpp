@@ -31,24 +31,15 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
 
     //START TAPING
     CppAD::Independent(theta, u); //differentiate wrt beta, dynamic parameter is u
-    if (verbose){
-      PrintForVec("\n\n(START) theta is: ", theta);
-      PrintForVec("\n\n(START) u is: ", u);
-    }
 
     // veca1 u(n);
     z = M.toM(u); //transform u to the manifold
 
     Pmat = M.Pmatfun(z);
-    if (verbose){PrintForMatrix("\nThe value of Pmat is: \n", Pmat);}
     veca1 h2(1);
     veca1 gradh2(d); //will be set by h2tape.Jacobian below anyway
     h2 = h2tape.Forward(0, z);
     gradh2 = h2tape.Jacobian(z);
-    if (verbose){
-      PrintForVec("\n h2 is: ", h2);
-      PrintForVec("\n gradh2 is: ", gradh2);
-    }
 
     //update parameters ('dynamic' values) of lltape
     lltapehigher.new_dynamic(theta);
@@ -56,38 +47,31 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     //grad(ll)
     veca1 jac(d); // Jacobian of ll
     jac  = lltapehigher.Jacobian(z);      // Jacobian for operation sequence
-    if (verbose){PrintForVec("\nThe value of ll gradient is: ", jac);}
 
     //hgPg
     veca1 hgPg(1);
     hgPg[0] = 0.5 * h2[0] * (Pmat * jac).dot(jac);
-    if (verbose){PrintForVec("\n(1)The value of hgPg is:", hgPg);}
 
     //hlap
     veca1 lapl(1);
     lapl[0] = 0.;
     for(size_t i=0; i < d; i++){
        lapl[0] += Pmat.row(i) * M.dPmatfun(z, i) * jac;
-       if (verbose){PrintForMatrix("\nThe value of dPmat is: \n", M.dPmatfun(z, i));}
     }
     mata1 hess(d * d, 1);
     hess = lltapehigher.Hessian(z, 0); //the zero here is something about selecting the range-space component of f, 0 selects the first and only component, I presume.
     hess.resize(d, d);
-    if (verbose){PrintForMatrix("\nThe value of ll Hessian is: \n", hess);}
     lapl[0] += (Pmat*hess).trace();
     lapl[0] *= h2[0]; //weight by h2
-    if (verbose){PrintForVec("\n(2)The value of hlapl is:", lapl);}
 
 
     //ghPg
     veca1 ghPg(1);
     ghPg = gradh2.transpose() * Pmat * jac;//jac; //gradprodsq(x).transpose().eval() *
-    if (verbose){PrintForVec("\n(3)The value of ghPg is:", ghPg);}
 
     //combine components
     veca1 smo(1);
     smo = lapl + hgPg + ghPg;
-    if (verbose){PrintForVec("\n(END)The value of smo is:", smo);}
 
     //finish taping
     CppAD::ADFun<double> smofun;
