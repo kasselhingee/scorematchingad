@@ -40,39 +40,30 @@
 #'  * `SE` contains estimates of the standard errors if computed.
 #'  * `info` contains a variety of information about the model fitting procedure and results.
 #' @export
-vMF <- function(Y, paramvec = NULL, method = "smfull", control = default_Rcgmin(), w = rep(1, nrow(Y)), paramvec_start = NULL){
-  firstfit <- NULL
+vMF <- function(Y, paramvec = NULL, method = "smfull", control = default_Rcgmin(), w = rep(1, nrow(Y))){
+  fit <- NULL
   if (method == "smfull"){
     if (is.null(paramvec)){
       paramvec <- rep(NA, ncol(Y))
     }
-    if (is.null(paramvec_start)){ starttheta <- t_u2s_const(paramvec, 0.1) }
-    else {starttheta <- t_us2s(paramvec, paramvec_start) }
-    isfixed <- t_u2i(paramvec)
-    firstfit <- vMF_full(Y, starttheta = starttheta, isfixed, control = control, w=w)
+    fit <- vMF_full(Y, paramvec, control = control, w=w)
   }
   if (method %in% c("Mardia")){
     if (!is.null(paramvec)){if (any(!is.na(paramvec))){stop("Mardia estimator cannot fix any elements of paramvec")}}
-    if (is.null(paramvec_start)){ startk <- 10 }
-    else {startk <- sqrt(sum(paramvec_start^2))}
-    firstfit <- vMF_Mardia(Y, startk = startk, control = control, w=w)
-    isfixed <- rep(FALSE, ncol(Y)) #for Windham robust estimation, if it is used
+    fit <- vMF_Mardia(Y, control = control, w=w)
   }
-  if (is.null(firstfit)){stop(sprintf("Method '%s' is not valid", method))}
+  if (is.null(fit)){stop(sprintf("Method '%s' is not valid", method))}
 
-  return(firstfit)
+  return(fit)
 }
 
 
 #for vMF_Mardia startk must be the value of the k parameter
-vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin(), w = rep(1, nrow(sample))){
-  stopifnot(length(startk) == 1)
-  stopifnot(length(isfixed) == 1)
-  stopifnot(!isfixed)
+vMF_Mardia <- function(sample, control = default_Rcgmin(), w = rep(1, nrow(sample))){
   mu <- vMF_m(sample, w = w)
   samplestd <- vMF_stdY(sample, m = mu, w = w)
   # check: mustd <- colMeans(samplestd); mustd <- mustd / sqrt(sum(mustd^2))
-  kappaest <- vMF_kappa(Y = samplestd, w = w, paramvec_start = startk, 
+  kappaest <- vMF_kappa(Y = samplestd, w = w, 
                         control = control)
   return(list(
     est = list(paramvec = kappaest$k * mu,
@@ -86,21 +77,20 @@ vMF_Mardia <- function(sample, startk, isfixed = FALSE, control = default_Rcgmin
 }
 
 
-vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w = NULL){
+vMF_full <- function(sample, usertheta, control = default_Rcgmin(), w = NULL){
   p <- ncol(sample)
-  stopifnot(length(starttheta) == p)
-  stopifnot(length(starttheta) == length(isfixed))
+  stopifnot(length(usertheta) == p)
 
   tapes <- buildsmotape("Snative", "vMF",
                         rep(1, p)/sqrt(p), 
-                        usertheta = t_si2u(starttheta, isfixed),
+                        usertheta = usertheta,
                         weightname = "ones",
                         verbose = FALSE)
   out <- cppad_closed(tapes$smotape, Y = sample, w=w)
-  theta <- t_sfi2u(out$est, starttheta, isfixed)
+  theta <- t_fu2t(out$est, usertheta)
 
   if (isa(out$SE, "numeric")){
-    SE <- t_sfi2u(out$SE, rep(0, length(starttheta)), isfixed)
+    SE <- t_fu2t(out$SE, 0 * usertheta)
     SE <- list(paramvec = SE)
   } else {SE <- out$SE}
   return(list(
