@@ -10,6 +10,7 @@
 //' @title Switch Dynamic and Independent Values of a Tape
 //' @description Convert an ADFun so that the independent values become dynamic parameters
 //' and the dynamic parameters become independent values
+//' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
 //' @param newvalue The independent value (in the sense after the switch has occurred) at which to tape the ADFun
 //' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
 //' @return A pointer to an ADFun
@@ -18,13 +19,13 @@
 Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
 
 //' @title Evaluate the Jacobian of a tape
-//' @param pfun Rcpp::XPtr to an ADFun
-//' @param x A vector in the domain of the taped function.
+//' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
+//' @param value A vector in the domain of the taped function.
 //' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
 //' @return The Jacobian of pfun
 //' @export
 // [[Rcpp::export]]
-vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
+vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
 
 //' @title Evaluate a CppAD tape
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
@@ -83,7 +84,6 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeHessian(Rcpp::XPtr< CppAD::ADFun<double
 //' @title Indicate Constant Components of Range
 //' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the independent values.
 //' @param pfun A CppAD tape.
-//' @param dynparam A set of dynamic parameters for `pfun`.
 //' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
 //' @details The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/en/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
 //' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/en/latest/glossary.html#dynamic> ).
@@ -124,7 +124,6 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<dou
 //' @param dynparam a vector of the dynamic parameters
 //' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
 //' The `x` vector is used as the value to conduct the taping.
-//' @details
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 //' @export
 // [[Rcpp::export]]

@@ -35,6 +35,8 @@ simplex_isboundary <- function(Y, bdrythreshold = 1E-15){
 }
 
 
+# OBSOLETE - JUST USED FOR TESTING
+#' @noRd
 #' @title Detect boundary observations and generate Taylor approximation centres
 #' @description 
 #' Splits the matrix of observations `Y` into boundary points and interior points using [`simplex_isboundary()`].
@@ -56,7 +58,6 @@ simplex_isboundary <- function(Y, bdrythreshold = 1E-15){
 #' @examples
 #' m <- ppi_egmodel(10)
 #' simplex_boundaryshift(m$sample, shiftsize = 1E-5)
-#' @export
 simplex_boundarysplit <- function(Y, bdrythreshold = 1E-15, shiftsize = 1E-10, w = NULL){
   onbdry <- simplex_isboundary(Y, bdrythreshold = bdrythreshold)
   acentres <- simplex_boundaryshift(Y = Y[onbdry, , drop = FALSE], shiftsize = shiftsize)

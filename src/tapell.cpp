@@ -1,7 +1,7 @@
 # include "tapell.h"
 
 // define a function that tapes a log likelihood
-CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
+CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manifold
                             veca1 theta, //theta parameter
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
                                manifold<a1type> *pman, //it seems points must be passed for abstract classes (note error when compiling without the *, and Stefan's demo)
@@ -123,7 +123,7 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the
 
 
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapell(z_ad,
+  *out = tapellcpp(z_ad,
                 theta_ad,
                 ll,
                 pman.checked_get(),

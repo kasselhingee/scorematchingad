@@ -14,12 +14,12 @@ swapDynamic <- function(pfun, newvalue, newdynparam) {
 
 #' @title Evaluate the Jacobian of a tape
 #' @param pfun Rcpp::XPtr to an ADFun
-#' @param x A vector in the domain of the taped function.
+#' @param value A vector in the domain of the taped function.
 #' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
 #' @return The Jacobian of pfun
 #' @export
-pJacobian <- function(pfun, value, theta) {
-    .Call('_scorecompdir_pJacobian', PACKAGE = 'scorecompdir', pfun, value, theta)
+pJacobian <- function(pfun, value, dynparam) {
+    .Call('_scorecompdir_pJacobian', PACKAGE = 'scorecompdir', pfun, value, dynparam)
 }
 
 #' @title Evaluate a CppAD tape
@@ -81,7 +81,6 @@ pTapeHessian <- function(pfun, x, dynparam) {
 #' @title Indicate Constant Components of Range
 #' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the independent values.
 #' @param pfun A CppAD tape.
-#' @param dynparam A set of dynamic parameters for `pfun`.
 #' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
 #' @details The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/en/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
 #' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/en/latest/glossary.html#dynamic> ).
@@ -121,7 +120,6 @@ pTapeGradOffset <- function(pfun, x, dynparam) {
 #' @param dynparam a vector of the dynamic parameters
 #' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
 #' The `x` vector is used as the value to conduct the taping.
-#' @details
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 #' @export
 ptapelogdetJ <- function(pfun, x, dynparam) {

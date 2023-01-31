@@ -31,13 +31,13 @@ Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> 
 }
 
 
-vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta){
+vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam){
   //check inputs and tape match
   if (pfun->Domain() != value.size()){Rcpp::stop("Size of input vector %i does not match domain size %i of taped function.", value.size(), pfun->Domain());}
-  if (pfun->size_dyn_ind() != theta.size()){Rcpp::stop("Size of parameter vector %i does not match parameter size %i of the taped function.", theta.size(), pfun->size_dyn_ind());}
+  if (pfun->size_dyn_ind() != dynparam.size()){Rcpp::stop("Size of parameter vector %i does not match parameter size %i of the taped function.", dynparam.size(), pfun->size_dyn_ind());}
 
   vecd grad(value.size());
-  pfun->new_dynamic(theta);
+  pfun->new_dynamic(dynparam);
   grad = pfun->Jacobian(value);  //treat the Rcpp::XPtr as a regular pointer
 
   return(grad);

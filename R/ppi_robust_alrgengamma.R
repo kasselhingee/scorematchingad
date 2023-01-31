@@ -1,12 +1,13 @@
 #' @title Windham Robustness for Scealy et al 2023
 #' @description
-#' Performs the Windham robustification algorithm exactly as described in \insertCite{scealy2023ro;textual}{scorecompdir} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This method gives the same results as the more general implementation in [`Windham()`].
+#' Performs the Windham robustification algorithm exactly as described in \insertCite{scealy2023ro;textual}{scorecompdir} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general [`Windham()`] and [`ppi()`].
+#' @inheritParams Windham
 #' @inheritParams ppi_robust
 #' @inherit ppi_robust return
 #' @param ... Passed to a special version of [`Windham()`] and on to [`ppi()`]. 
 #' @details
 #' This method must fit a PPI model via additive-log ratio transform with \eqn{b_L=0} fixed and the final element of \eqn{\beta} fixed.
-#' The default convergence metric and threshold are different to usual, to match the original implementation. Override this behaviour by specifying the elements `ConvergenceMetric` and `ConvergenceMetricThreshold` elements in a `fpcontrol` list, which is passed to [`FixedPoint::FixedPoint()`].
+#' The default convergence metric and threshold are different to the default for [`ppi_robust()`] to match the original implementation: convergence is measured by the change in the first element of \eqn{\beta}, and convergence is reached when the change is smaller than `1E-6`. Override this behaviour by specifying the elements `ConvergenceMetric` and `ConvergenceMetricThreshold` in a list passed as `fpcontrol`.
 #' @references
 #' \insertAllCited{}
 #' @export

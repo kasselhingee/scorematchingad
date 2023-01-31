@@ -4,6 +4,7 @@
 #' @param lltape Tape of the log-likelihood function from the manifold represented by `pmanifoldtransform`. Construct `lltape` using [`tapell()`].
 #' @param divweight The name of the divergence weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.
 #' @param acut The threshold \eqn{a_c} in the divergence weight function `divweight`. Ignored for `divweight = "ones"`.
+#' @param verbose If `TRUE`, some information about the tape is printed.
 #' @examples 
 #' sqrtman <- manifoldtransform("sphere")
 #' ppitape <- tapell(llname = "ppi",

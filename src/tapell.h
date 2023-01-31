@@ -9,7 +9,7 @@
 # include "mycpp/PrintFor.hpp"
 
 // declare a function that tapes a log likelihood
-CppAD::ADFun<double> tapell(veca1 z, //data measurement tranformed to M manifold
+CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manifold
                             veca1 theta, //theta parameter
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
                                manifold<a1type> *pman, //it seems points must be passed for abstract classes (note error when compiling without the *, and Stefan's demo)

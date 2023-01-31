@@ -44,7 +44,7 @@
 
 #' @param trans The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".
 #' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
-#' @param paramvec Optionally a vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate `paramvec` easily using [ppi_paramvec()].
+#' @param paramvec Optionally a vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate `paramvec` easily using [ppi_paramvec()].  If `NULL` then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.
 #' @param divweight The divergence weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
 #' @param acut The threshold \eqn{a_c} in `divweight` to avoid over-weighting measurements interior to the simplex
 #' @param control `iterative` only. Passed to [`Rcgmin::Rcgmin()`] to control the iterative solver. Default values are given by [`default_Rcgmin()`].
@@ -53,6 +53,7 @@
 #' @param approxorder `iterative` or `closed` methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.
 #' @param method "hardcoded" uses the hardcoded estimators by JS. "closed" uses `CppAD` to solve in closed form the a quadratic score matching objective using [`cppad_closed()`]. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`Rcgmin::Rcgmin()`]) to iteratively find the minimum of the weighted Hyvarinen divergence.
 #' @param paramvec_start `iterative` method only. The starting guess for `Rcgmin` with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec_start` easily using [`ppi_paramvec()`].
+#' @param w Weights for each observation, if different observations have different importance. Used by [`Windham()`] and [`ppi_robust()`] for robust estimation.
 #' @references
 #' \insertAllCited{}
 #' @examples
@@ -65,7 +66,7 @@
 #'               divweight = "minsq", acut = 0.1)
 #' @export
 ppi <- function(Y, paramvec = NULL,
-                pow = 1, trans, method = "closed", w = rep(1, nrow(Y)),
+                trans, method = "closed", w = rep(1, nrow(Y)),
                 divweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin(), paramvec_start = NULL#specific to cppad methods
                 ){
@@ -81,7 +82,6 @@ ppi <- function(Y, paramvec = NULL,
      warning(sprintf("Y contains measurement that don't add to 1. Largest discrepancy is %s.", sum_m1))
   }
 
-  stopifnot(pow == 1)
   stopifnot(trans %in% c("alr", "sqrt", "clr", "none"))
   man <- switch(trans,
            alr = "Ralr",

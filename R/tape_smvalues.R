@@ -1,6 +1,7 @@
 #' @title Compute score matching objective value, gradient, and Hessian
 #' @description Computes a range of relevant information for investigating score matching estimators.
 #' @inheritParams tape_eval
+#' @param smotape A taped score matching objective. Most easily created by [`buildsmotape()`].
 #' @details The score matching objective values are differ from the Hyvarinen Divergence by a constant, see ... .
 #' The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in `xmat` and `pmat`. 
 #' @examples

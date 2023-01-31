@@ -3,6 +3,7 @@
 #' @param xmat A matrix of (multivariate) independent variables. Each represents a single independent variable vector. Or a single vector of that is used for all rows of `pmat`.
 #' @param pmat A matrix of dynamic parameters. Or a single vector of dynamic parameters to use for all rows of `xmat`.
 #' @param xcentres A matrix of approximation for Taylor approximation centres for `xmat`. Use values of `NA` for rows that do not require Taylor approximation.
+#' @param approxorder Order of Taylor approximation
 #' @description Evaluates a tape exactly or approximately for an array of provided variable values and dynamic parameter values.
 #' The function `tape_eval_wsum()` computes the column-wise weighted sum of the result.
 #' @details

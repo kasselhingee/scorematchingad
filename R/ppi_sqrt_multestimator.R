@@ -13,15 +13,15 @@
 #' @references
 #' \insertAllCited{}
 #' @export
-ppi_mmmm <- function(x, ni, beta0, w = rep(1, nrow(x)))
+ppi_mmmm <- function(Y, ni, beta0, w = rep(1, nrow(Y)))
 {
 
-	X1=x
-	X2=x*(x-1)
-	X3=x*(x-1)*(x-2)
-	X4=x*(x-1)*(x-2)*(x-3)
-	X5=x*(x-1)*(x-2)*(x-3)*(x-4)
-	X6=x*(x-1)*(x-2)*(x-3)*(x-4)*(x-5)
+	X1=Y
+	X2=Y*(Y-1)
+	X3=Y*(Y-1)*(Y-2)
+	X4=Y*(Y-1)*(Y-2)*(Y-3)
+	X5=Y*(Y-1)*(Y-2)*(Y-3)*(Y-4)
+	X6=Y*(Y-1)*(Y-2)*(Y-3)*(Y-4)*(Y-5)
 
 	fac1=ni
 	fac2=ni*(ni-1)

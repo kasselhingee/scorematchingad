@@ -1,11 +1,7 @@
 #' @title Generate random observations from the PPI model
 #' @description Given parameters of the PPI model, generates independent samples.
 #' @param n Sample size
-#' @param p Number of components
-#' @param beta The \eqn{\beta}{beta} shape parameter vector
-#' @param AL The \eqn{A_L} parameter matrix
-#' @param bL The \eqn{b_L} parameter vector
-#' @param paramvec The PPI parameter vector, created easily using [ppi_paramvec()] and also returned by [ppi()].
+#' @param paramvec The PPI parameter vector, created easily using [`ppi_paramvec()`] and also returned by [`ppi()`].
 #' @param maxden This is the constant \eqn{log(C)} in \insertCite{@Appendix A.1.3 @scealy2022sc}{scorecompdir}.
 #' @param maxmemorysize Advanced use. The maximum size, in bytes, for matrices containing simulated Dirchlet samples. The default of `1E5` corresponds to 100 mega bytes.
 #' @return A matrix with `n` rows and `p` columns. Each row is an independent draw from the specified PPI distribution.
