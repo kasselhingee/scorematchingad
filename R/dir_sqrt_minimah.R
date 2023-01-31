@@ -1,7 +1,6 @@
 #' @noRd
 #' @describeIn estimator_dir The score matching estimator using the minima-based Hyvarinen weight function
 #' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2).}
-#' @export
 dir_sqrt_minimah <- function(Y,acut, w=rep(1, nrow(Y)))
 {
   n=nrow(Y)

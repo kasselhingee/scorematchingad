@@ -6,7 +6,6 @@
 #' @return A vector of estimates.
 #' @describeIn estimator_dir The score matching estimator using the product-based Hyvarinen weight
 #' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2).}
-#' @export
 dir_sqrt_prodh <- function(Y,acut, w = rep(1, nrow(Y)))
 {
   n=nrow(Y)

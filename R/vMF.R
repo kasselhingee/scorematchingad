@@ -20,8 +20,7 @@
 #' The method "smfull" uses score matching to estimate the vector \eqn{\kappa \mu}.
 #' The method "Mardia" uses [`vMF_stdY()`] and [`vMF_kappa()`] to estimate \eqn{\kappa} and \eqn{\mu} seperately.
 #' @param Y A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.
-#' @param paramvec `smfull` method only: Optional. A vector of same length as the dimension, representing the elements of the vector \eqn{\kappa \mu}. 
-#' If supplied, the non-NA elements are fixed. It is easy to generate `paramvec` using [`vMF_paramvec()`].
+#' @param paramvec `smfull` method only: Optional. A vector of same length as the dimension, representing the elements of the vector that is the element-wise (Hadamard) product \eqn{\kappa \mu}. 
 #' @param control Control parameters passed to [`Rcgmin::Rcgmin()`].
 #' @param method Either "Mardia" for the hybrid score matching estimator from \insertCite{@mardia2016sc}{scorecompdir}.
 #'  or "smfull" for the full score matching estimator.
@@ -113,9 +112,9 @@ vMF_full <- function(sample, starttheta, isfixed, control = default_Rcgmin(), w 
   ))
 }
 
-vMF_paramvec <- function(m, k){
-  return(k*m)
-}
+#vMF_paramvec <- function(m, k){
+#  return(k*m)
+#}
 
 vMF_fromparamvec <- function(paramvec){
   k <- sqrt(sum(paramvec^2))
