@@ -50,7 +50,7 @@ pHessian <- function(pfun, value, theta) {
 #' When the function returns a real value (as is the case for densities and the score matching objective) the Jacobian is equivalent to the gradient.
 #' The `x` vector is used as the value to conduct the taping.
 #' @details
-#' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Jacobian in long format (see [https://coin-or.github.io/CppAD/doc/jacobian.htm]).
+#' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Jacobian in long format (see <https://cppad.readthedocs.io/en/latest/Jacobian.html>).
 #' Suppose the function represented by `pfun` maps from \eqn{n}-dimensional space to \eqn{m}-dimensional space, then
 #' the first \eqn{n} elements of vector is the gradient of the first component of function output.
 #' The next \eqn{n} elements of the vector is the gradient of the second component of the function output.
@@ -67,7 +67,7 @@ pTapeJacobian <- function(pfun, x, dynparam) {
 #' The taped function represented by `pfun` must be scalar-valued (i.e. a vector of length 1).
 #' The `x` vector and `dynparam` are used as the values to conduct the taping.
 #' @details
-#' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Hessian in long format (see [https://coin-or.github.io/CppAD/doc/hessian.htm]).
+#' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Hessian in long format (see <https://cppad.readthedocs.io/en/latest/Hessian.html>).
 #' Suppose the function represented by `pfun` maps from \eqn{n}-dimensional space to \eqn{1}-dimensional space, then
 #' the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
 #' The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
@@ -83,8 +83,8 @@ pTapeHessian <- function(pfun, x, dynparam) {
 #' @param pfun A CppAD tape.
 #' @param dynparam A set of dynamic parameters for `pfun`.
 #' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
-#' @details The `CppAD` function `Parameter(i)` [https://coin-or.github.io/CppAD/doc/fun_property.htm] returns `TRUE` when the `i`th component of the range does not depend on the independent value
-#' (the `i`th component may still depend on the value of the dynamic parameters (see 'Dynamic' in [https://coin-or.github.io/CppAD/doc/glossary.htm#Parameter]) ).
+#' @details The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/en/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
+#' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/en/latest/glossary.html#dynamic> ).
 #' @export
 pParameter <- function(pfun) {
     .Call('_scorecompdir_pParameter', PACKAGE = 'scorecompdir', pfun)
@@ -142,17 +142,6 @@ pmanifold <- function(manifoldname) {
     .Call('_scorecompdir_pmanifold', PACKAGE = 'scorecompdir', manifoldname)
 }
 
-#' @noRd
-#' @title Test a manifold object
-#' @description A lightweight test of a manifold object.
-#' Its main benefit is to force compilation of templated functions for the manifold,
-#' and to print results to standard output.
-#' @param pman An Rcpp::XPtr to a manifold object. Created by `pmanifold()`
-#' @return An integer. 0 if the testable parts pass.
-testmanifold <- function(pman, u_ad) {
-    .Call('_scorecompdir_testmanifold', PACKAGE = 'scorecompdir', pman, u_ad)
-}
-
 printgraph <- function(pfun) {
     invisible(.Call('_scorecompdir_printgraph', PACKAGE = 'scorecompdir', pfun))
 }
@@ -182,7 +171,7 @@ ptapesmo <- function(u_ad, theta_ad, pll, pman, weightname, acut, verbose) {
 #' @noRd
 #' @title Apply to `toM` function of a manifold object
 #' @description Apply the `toM` function of a manifold object.
-#' @param pman An Rcpp::XPtr to a manifold object. Created by `pmanifold()`.
+#' @param pman An Rcpp::XPtr to a manifold object. Created by [`manifoldtransform()`].
 #' @param u A vector to be transformed to the manifold via `toM`.
 #' @return A vector on the manifold.
 ptoM <- function(pman, u_ad) {

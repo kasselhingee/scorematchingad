@@ -138,18 +138,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// testmanifold
-int testmanifold(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad);
-RcppExport SEXP _scorecompdir_testmanifold(SEXP pmanSEXP, SEXP u_adSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< manifold<a1type> > >::type pman(pmanSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type u_ad(u_adSEXP);
-    rcpp_result_gen = Rcpp::wrap(testmanifold(pman, u_ad));
-    return rcpp_result_gen;
-END_RCPP
-}
 // printgraph
 void printgraph(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
 RcppExport SEXP _scorecompdir_printgraph(SEXP pfunSEXP) {
@@ -246,7 +234,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_pTapeGradOffset", (DL_FUNC) &_scorecompdir_pTapeGradOffset, 3},
     {"_scorecompdir_ptapelogdetJ", (DL_FUNC) &_scorecompdir_ptapelogdetJ, 3},
     {"_scorecompdir_pmanifold", (DL_FUNC) &_scorecompdir_pmanifold, 1},
-    {"_scorecompdir_testmanifold", (DL_FUNC) &_scorecompdir_testmanifold, 2},
     {"_scorecompdir_printgraph", (DL_FUNC) &_scorecompdir_printgraph, 1},
     {"_scorecompdir_ptapell", (DL_FUNC) &_scorecompdir_ptapell, 6},
     {"_scorecompdir_ptapesmo", (DL_FUNC) &_scorecompdir_ptapesmo, 7},

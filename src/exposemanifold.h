@@ -21,16 +21,5 @@
 // [[Rcpp::export]]
 Rcpp::XPtr< manifold<a1type> > pmanifold(std::string manifoldname);
 
-//' @noRd
-//' @title Test a manifold object
-//' @description A lightweight test of a manifold object.
-//' Its main benefit is to force compilation of templated functions for the manifold,
-//' and to print results to standard output.
-//' @param pman An Rcpp::XPtr to a manifold object. Created by `pmanifold()`
-//' @return An integer. 0 if the testable parts pass.
-// [[Rcpp::export]]
-int testmanifold(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad);
-
-
 #endif
 

@@ -61,7 +61,7 @@ test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
   expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
 
   # try out FB estimation
-  pman <- pmanifold("Snative")
+  pman <- manifoldtransform("Snative")
   thetaFB <- FB_mats2theta(1E-10, c(1, 0, 0), A)
   tapes <- buildsmotape("Snative",
                         "FB",

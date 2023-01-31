@@ -28,30 +28,6 @@ Rcpp::XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   return(pout);
 }
 
-int testmanifold(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad){
-  Rcpp::Rcout << "Starting tests" << std::endl;
-  // toM then fromM get back to u
-  Rcpp::Rcout << "               Input u was: " << u_ad.transpose() << std::endl;
-  veca1 z_ad(u_ad.size());
-  z_ad = pman->toM(u_ad);
-  Rcpp::Rcout << "                 After toM: " << z_ad.transpose() << std::endl;
-  veca1 u2_ad(u_ad.size());
-  u2_ad = pman->fromM(z_ad);
-  Rcpp::Rcout << "      After toM then fromM: " << u2_ad.transpose() << std::endl;
-  if ((u2_ad - u_ad).array().abs().maxCoeff() > 1E-8){
-    Rcpp::Rcout << "toM then fromM not passed." << std::endl;
-    return(1);
-  }
-
-  // Run the other elements
-  Rcpp::Rcout << " logdetJ_fromM at toM(u): " << pman->logdetJfromM(z_ad) << std::endl;
-  Rcpp::Rcout << " Pmat at toM(u): " << std::endl << pman->Pmatfun(z_ad) << std::endl;
-  for (long int d=0; d<u_ad.size(); d++){
-    Rcpp::Rcout << " dPmat at toM(u) in dimension " << d <<":" << std::endl << pman->dPmatfun(z_ad, d) << std::endl;
-  }
-  return(0);
-}
-
 RCPP_MODULE(manifolds) {
   Rcpp::class_< manifold_a1type >("mantran_ad")
       .factory<const std::string &>(newmantran)

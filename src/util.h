@@ -9,7 +9,7 @@
 //' @noRd
 //' @title Apply to `toM` function of a manifold object
 //' @description Apply the `toM` function of a manifold object.
-//' @param pman An Rcpp::XPtr to a manifold object. Created by `pmanifold()`.
+//' @param pman An Rcpp::XPtr to a manifold object. Created by [`manifoldtransform()`].
 //' @param u A vector to be transformed to the manifold via `toM`.
 //' @return A vector on the manifold.
 // [[Rcpp::export]]
