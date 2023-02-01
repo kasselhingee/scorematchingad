@@ -6,8 +6,7 @@
 #' @description Cleaned. TM7, Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria, other
 
 ppi_microbiomedata_cleaned_TCAP <- function(){
-  utils::data("microdata", package = "scorecompdir", envir = environment())
-  microdata <- microdata[!microdata$IndividualID %in% c(2079, 2280), ] #remove two outlying measurements
+  microdata <- scorecompdir::microdata[!microdata$IndividualID %in% c(2079, 2280), ] #remove two outlying measurements
   countdata=as.matrix(microdata[,12:31])
 
   #sample size
@@ -64,8 +63,7 @@ ppi_microbiomedata_cleaned_TCAP <- function(){
 #' @noRd
 #' @description Not cleaned. TM7, Cyanobacteria/Chloroplast, Actinobacteria, Proteobacteria, other
 ppi_microbiomedata_TCAP <- function(){
-  utils::data("microdata", package = "scorecompdir", envir = environment())
-  countdata=as.matrix(microdata[,12:31])
+  countdata=as.matrix(scorecompdir::microdata[,12:31])
   
   #sample size
   n=94
@@ -115,8 +113,7 @@ ppi_microbiomedata_TCAP <- function(){
 #' @noRd
 #' @description Not cleaned. Spirochates, Verrucomicrobia, Cyanobacteria/Chloroplast, TM7 and pooled
 ppi_microbiomedata_SVCTP <- function(){
-  utils::data("microdata", package = "scorecompdir", envir = environment())
-  countdata=as.matrix(microdata[,12:31])
+  countdata=as.matrix(scorecompdir::microdata[,12:31])
 
   #sample size
   n=94
