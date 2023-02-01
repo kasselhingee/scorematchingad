@@ -25,6 +25,7 @@ Suggests:
 	cubature,
 	dplyr, 
 	ggplot2,
+    ggtern,
     numDeriv
 Depends: 
     R (>= 3.5.0)
