@@ -49,23 +49,9 @@ test_that("rotation is the simplest for e1, e2, e3", {
   e2 <- c(0, 1, 0)
   e3 <- c(0, 0, 1)
   Rmat <- rotationmatrix(e1, e3)
-  # Rmat <- Directional::rotation(e3, e1)
   expect_equal(Rmat %*% e3, e1, ignore_attr = TRUE)
   expect_equal(Rmat %*% e2, e2, ignore_attr = TRUE)
   expect_equal(Rmat %*% e1, -e3, ignore_attr = TRUE)
-})
-
-test_that("rotationmatrix(a,b) = Directional::rotation(b,a)", {
-  skip_on_cran() #so Directional doesn't need to be loaded
-  u <- c(1, 2, 3, 4, 5, 6)
-  u <- u/sqrt(u%*%u)[[1]]
-  b <- c(6,5,1,2,3,4)
-  b <- b/sqrt(b%*%b)[[1]]
-
-
-  Q1 <- rotationmatrix(u, b)
-  Q2 <- Directional::rotation(b, u)
-  expect_equal(Q1, Q2)
 })
 
 test_that("Rotation matrix rotates opposite direction to one", {

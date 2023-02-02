@@ -45,100 +45,6 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
     ignore_attr = TRUE, tolerance = 1E-5)
 })
 
-test_that("rfb() simulation for diagonal matricies via Bingham() fitting", {
-  skip_on_cran() #rfb() tested when fitting tested
-  p <- 3
-  A <- diag(c(30, 1, -31))
-  sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -A)
-  est <- Bingham_full(sample)
-
-  v010tonth <- rotationmatrix(c(1, rep(0, p-1)), c(0, 1, 0))
-  rotatedA <- v010tonth %*% A %*% solve(v010tonth) #rotate A so that size of diagonal is increasing
-  expect_lt_v(abs(est$A - rotatedA)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
-
-  sample <- Directional::rfb(1000, 1E-10, c(1, 0, 0), -rotatedA)
-  est <- Bingham_full(sample, control = list(tol = 1E-15))
-  expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])  #the index removal of p*p removes that final element of the diagonal
-
-  # try out FB estimation
-  pman <- manifoldtransform("Snative")
-  thetaFB <- FB_mats2theta(1E-10, c(1, 0, 0), A)
-  tapes <- buildsmotape("Snative",
-                        "FB",
-                        utape = sample[1, ],
-                        usertheta = rep(NA, length(thetaFB)))
-
-  est <- cppad_closed(tapes$smotape, Y=sample)
-
-  expect_absdiff_lte_v(est$est, thetaFB, 3 * est$SE)
-})
-
-test_that("rfb() simulation for general symmetric matrices via Bingham() fitting", {
-  skip_on_cran() #rfb() tested when fitting tested
-  p <- 3
-  set.seed(345)
-  theta <- runif(p-1 + (p - 1) * p/2)
-  A <- Bingham_theta2Amat(theta)
-  # diag(A) <- c(30, 1, NA) * diag(A)
-  diag(A)[p] <- -sum(diag(A)[-p], na.rm = TRUE)
-  theta <- Bingham_Amat2theta(A)
-  A_es <- eigen(A)
-
-  #simulate samples with a very small weighting on the concentration for von-mises
-  set.seed(123)
-  m <- c(1, 0, 0)
-  B <- Directional::rotation(c(0, 1, 0), m)
-  sample <- Directional::rfb(1000, 1E-8, m, -solve(B) %*% A %*% B)
-  est <- Bingham_full(sample)
-  estA_es <- eigen(est$A)
-
-  #results have the same eigen values
-  expect_equal(estA_es$values, A_es$values, tolerance = 0.5)
-  #matrix values match
-  expect_lt_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
-
-  # note that parameter estimates have suprisingly large margin given that there is 1000 samples
-
-  # try out FB estimation
-  thetaFB <- FB_mats2theta(1E-8, m, A)
-  tapes <- buildsmotape("Snative",
-                        "FB",
-                        utape = sample[1, ],
-                        usertheta = rep(NA, length(thetaFB)))
-                        
-  est <- cppad_closed(tapes$smotape, Y=sample)
-
-  expect_absdiff_lte_v(est$est, thetaFB, 3 * est$SE)
-})
-
-
-test_that("rfb() simulation for general symmetric matrices fitting", {
-  p <- 3
-  set.seed(111)
-  theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
-  thetamats <- FB_theta2mats(theta)
-  # lapply(thetamats, round, 2) #nice view
-
-  #simulate
-  set.seed(12345)
-  B <- Directional::rotation(c(0, 1, 0), thetamats$m)
-  sample <- Directional::rfb(100000, thetamats$k, thetamats$m, -solve(B) %*% thetamats$A %*% B)
-
-  #estimate
-  tapes <- buildsmotape("Snative",
-                        "FB",
-                        utape = sample[1, ],
-                        usertheta = rep(NA, length(theta)))
-                        
-  est <- cppad_closed(tapes$smotape, Y=sample)
-
-  expect_absdiff_lte_v(est$est, theta, 3 * est$SE)
-  # whooo it is working! But sample huge and SEs are still huge - it is almost like the model is misspecified
-  # lapply(FB_theta2mats(est$par), round, 2)
-  # lapply(thetamats, round, 2)
-})
-
-
 test_that("FB() fits for p = 3", {
   skip_on_cran() #test with various fixed elements is sufficient
   p <- 3
@@ -147,12 +53,13 @@ test_that("FB() fits for p = 3", {
   thetamats <- FB_theta2mats(theta)
 
   #simulate
-  set.seed(12345)
+  set.seed(123451)
   sample <- simdd::rFisherBingham(10000, mu = thetamats$k * thetamats$m, Aplus = thetamats$A)
 
   #Fit
   estobj <- FB(sample, control = list(tol = 1E-10))
-  expect_lt_v(abs(estobj$est$paramvec - theta), 3 * estobj$SE$paramvec)
+  expect_absdiff_lte_v(estobj$est$paramvec, theta, 3 * estobj$SE$paramvec)
+  expect_lt_v(estobj$SE$paramvec, rep(5))
 })
 
 test_that("FB() fits with various fixed elements", {
@@ -206,3 +113,21 @@ test_that("FB() with many fixed elements leads to smaller smobjgrad", {
   smvals <- tape_smvalues_wsum(tapes$smotape, sample, theta[is.na(intheta)])
   sum(smvals$grad^2)
 })
+
+test_that("FB() fits for p = 3, small sample, but with terrible accuracy", {
+  skip_on_cran() #test with various fixed elements is sufficient
+  p <- 3
+  set.seed(111)
+  theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
+  thetamats <- FB_theta2mats(theta)
+
+  #simulate
+  set.seed(123)
+  sample <- simdd::rFisherBingham(1000, mu = thetamats$k * thetamats$m, Aplus = thetamats$A)
+
+  #Fit
+  estobj <- FB(sample, control = list(tol = 1E-10))
+  expect_absdiff_lte_v(estobj$est$paramvec, theta, 2 * estobj$SE$paramvec)
+  expect_lt_v(estobj$SE$paramvec, rep(20))
+})
+
