@@ -25,15 +25,16 @@
 #' @examples
 #' p <- 3
 #' u <- movMF::rmovMF(1, rep(1, p))
-#' ltheta <- p-1 + (p - 1) * p/2 + p #length of Fisher-Bingham parameter vector
+#' ltheta <- p #length of vMF parameter vector
 #' intheta <- rep(NA, length.out = ltheta)
-#' tapes <- buildsmotape("Snative", "FB",
-#'               u, intheta,
+#' tapes <- buildsmotape("Snative", "vMF",
+#'               utape = u,
+#'               usertheta = intheta,
 #'               "ones", 1, verbose = FALSE
 #'               )
 #' pForward0(tapes$lltape, u, runif(n = ltheta))
 #' pForward0(tapes$smotape, runif(n = ltheta), u)
-# @export
+#' @export
 buildsmotape <- function(manifoldname, llname,
                          utape, usertheta,
                          weightname = "ones", acut = 1,
