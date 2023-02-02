@@ -8,20 +8,26 @@
 #' @param verbose If `TRUE`, some information about the tape is printed.
 #' @description Creates a `CppAD` tape of the log-likelihood as a function of values on the provided manifold. The log-likelihood accounts for the change of measure between the natural manifold of the log-likelihood and the manifold with transformation provided by `manifoldname`.
 #' @return 
-#' An `Rcpp::XPrt` object that points to a `CppAD::ADFun` object.
+#' An `Rcpp::XPtr` object that points to a `CppAD::ADFun` object.
 #' The object will also have attributes:
 #'  + `fname` A name of the taped function, derived from `llname`
 #'  + `xtape` The value of `xtape`
 #'  + `dyntape` The value of non-fixed elements of `usertheta` used for taping.
 #'  + `usertheta` The vector `usertheta`.
 #' @examples 
-#' sqrtman <- manifoldtransform("sphere")
+#' simpwsqrt <- manifoldtransform("sphere")
 #' ppitape <- tapell(llname = "ppi",
 #'                   xtape = c(0.2, 0.3, 0.5),
 #'                   usertheta = ppi_paramvec(p = 3), 
-#'                   pmanifoldtransform = sqrtman)
+#'                   pmanifoldtransform = simpwsqrt)
 #' pForward0(ppitape, 
-#'   ptoM(sqrtman, rep(1/3, 3)), 
+#'   sqrt(rep(1/3, 3)), 
+#'   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
+#' pJacobian(ppitape, 
+#'   sqrt(rep(1/3, 3)), 
+#'   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
+#' pHessian(ppitape, 
+#'   sqrt(rep(1/3, 3)), 
 #'   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
 #' @section Warning: There is limited checking of the inputs.
 #' @export

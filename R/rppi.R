@@ -16,28 +16,10 @@
 #' Advanced use: The number of Dirichlet proposals created at a time is limited such that the matrices storing the Dirchlet proposals are always smaller than `maxmemorysize` bytes (give or take a few bytes for wrapping), which reduces the use of virtual RAM. 
 #' Larger `maxmemorysize` leads to faster simulation so long as `maxmemorysize` bytes are reliably contiguously available in RAM.
 #' @examples
-#' n=1000
-#' p=3
 #' beta0=c(-0.8, -0.8, -0.5)
-#'
-#' muL=matrix(0,p-1,1)
-#' muL[1:sum(p,-1)]=0.12
-#' aa=matrix(1/500,p-1,1)
-#' D=diag(as.vector(aa))
-#' SigA=D
-#' SigA[1,1]=SigA[1,1]*2
-#' cor=0.5
-#' SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
-#' SigA[2,1]=SigA[1,2]
-#' AL=-0.5*solve(SigA)
-#' bL=solve(SigA)%*%muL
-#'
-#' samp <- rppi(n,beta=beta,AL=AL,bL=bL,maxden4)
-#' plot(ks::kde(samp[,-p]),
-#'  xlim = c(0, 1), ylim = c(0, 1))
-#' segments(0, 0, 0, 1)
-#' segments(0, 1, 1, 0)
-#' segments(1, 0, 0, 0)
+#' AL = diag(nrow = 2)
+#' bL = c(2, 3)
+#' samp <- rppi(100,beta=beta0,AL=AL,bL=bL)
 #' @export
 rppi <- function(n, ..., paramvec = NULL, maxden = 4, maxmemorysize = 1E5){
   ellipsis::check_dots_used()
