@@ -184,20 +184,6 @@ test_that("controls of FixedPoint() are passed", {
   expect_error(expect_equal(out_default, out1))
 })
 
-
-test_that("dmovMF() and dmvf() are NOT equal", {
-  set.seed(123)
-  p <- 5
-  k <- 3
-  m <- runif(p, min = -10, 10)
-  m <- m / sqrt(sum(m^2))
-  km <-  k * m
-  sample <- Directional::rvmf(5, m, k)
-
-  expect_error(expect_equal(movMF::dmovMF(sample, km, log = TRUE),
-               Directional::dvmf(sample, k, m, logden = TRUE)))
-})
-
 test_that("vMF(), vMF_stdY() and vMF_m() differs when weights differ", {
   p <- 5
   k <- 3

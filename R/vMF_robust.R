@@ -25,7 +25,7 @@ vMF_robust <- function(Y, cW, ...){
   ldenfun <- function(Y, theta){ #here theta is km
     k <- sqrt(sum(theta^2))
     m <- theta/k
-    return(drop(Directional::dvmf(Y, k, m, logden = TRUE)))
+    return(drop(Y %*% theta))
   }
   est <- Windham(Y = Y,
                      estimator = vMF,
@@ -49,7 +49,7 @@ vMF_kappa_robust <- function(Y, cW, ...){
   ldenfun <- function(Y, theta){ #here theta is k and m is c(1, 0, ...)
     k <- theta
     m <- c(1 , rep(0, ncol(Y) - 1))
-    return(drop(Directional::dvmf(Y, k, m, logden = TRUE)))
+    return(k * Y[1, ])
   }
   est <- Windham(Y = Y,
                      estimator = vMF_kappa,
