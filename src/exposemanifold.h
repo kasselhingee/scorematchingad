@@ -17,7 +17,6 @@
 //'  + "simplex" for the simplex without any transformation.
 //'  + "Ralr" for the additive log-ratio transformation from the simplex to Euclidean space, using the final component of vectors in the denominator of the ratio.
 //'  + "Snative" for the sphere without any transformation
-//' @export
 // [[Rcpp::export]]
 Rcpp::XPtr< manifold<a1type> > pmanifold(std::string manifoldname);
 

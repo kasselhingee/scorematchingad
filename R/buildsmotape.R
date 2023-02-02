@@ -1,10 +1,9 @@
-#' @noRd
 #' @title Build a CppAD Tape of a Score-Matching Objective Function
 #' @param utape A measurment to use for taping
 #' @param intheta A vector of parameters. NA values will be estimated, non-NA values will be fixed.
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
-#' @param manifoldname Manifold with tranformation name ('Ralr', 'simplex'...)
-#' @param llname Name of the log-likelihood function
+#' @param manifoldname Manifold with tranformation name. Passed to [`manifoldtransform()`].
+#' @param llname Name of the log-likelihood function. Passed to [`tapell()`].
 #' @param utape An example observation (a single vector) to use for taping. The results shouldn't depend on `utape` so long as `utape` is in the manifold and the other functions are properly implemented.
 #' @param usertheta A vector of parameter elements for the likelihood function. `NA` elements are to be fitted. Other elements are fixed at the provided value.
 #' @param weightname The name of the divergence weight function ('ones' for manifolds without boundary).
