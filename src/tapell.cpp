@@ -49,6 +49,7 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
     Rcpp::Rcout << "thetavar is: " << thetavar.transpose() << std::endl;
+    PrintForVec("\n thetavar is: ", thetavar);
   }
 
   //combine fixed and variable theta
@@ -64,6 +65,7 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
   }
   if (verbose){
     Rcpp::Rcout << "thetarecom is: " << thetarecom.transpose() << std::endl;
+    PrintForVec("\n thetarecom is: ", thetarecom);
   }
 
   // range space vector
