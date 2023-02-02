@@ -10,7 +10,5 @@ test_that("Kent distribution is fitted correctly", {
   A_es <- eigen(Amat)
   stopifnot(any(abs(A_es$values) < 1E-5))
   k = 2
-  sample <- rFB(100, k, mu, Amat)
-
-
+  sample <- simdd::rFisherBingham(100, mu = k*mu, Aplus = Amat)
 })

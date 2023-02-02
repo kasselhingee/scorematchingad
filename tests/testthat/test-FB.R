@@ -148,7 +148,7 @@ test_that("FB() fits for p = 3", {
 
   #simulate
   set.seed(12345)
-  sample <- rFB(10000, thetamats$k, thetamats$m, thetamats$A)
+  sample <- simdd::rFisherBingham(10000, mu = thetamats$k * thetamats$m, Aplus = thetamats$A)
 
   #Fit
   estobj <- FB(sample, control = list(tol = 1E-10))
@@ -163,7 +163,7 @@ test_that("FB() fits with various fixed elements", {
 
   #simulate
   set.seed(12345)
-  sample <- rFB(1000, thetamats$k, thetamats$m, thetamats$A)
+  sample <- simdd::rFisherBingham(10000, mu = thetamats$k * thetamats$m, Aplus = thetamats$A)
 
   #a fixed A element
   inA <- matrix(NA, nrow = p, ncol = p)
@@ -196,7 +196,7 @@ test_that("FB() with many fixed elements leads to smaller smobjgrad", {
 
   #simulate
   set.seed(12345)
-  sample <- rFB(1E7, thetamats$k, thetamats$m, thetamats$A)
+  sample <- simdd::rFisherBingham(10000, mu = thetamats$k * thetamats$m, Aplus = thetamats$A)
 
   #many fixed elements
   intheta <- theta

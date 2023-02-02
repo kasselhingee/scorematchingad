@@ -1,6 +1,6 @@
 #' @noRd
 #' @title Simulate from the Rivest model
-#' @description This function uses `Directional::rfb()` to simulate from the Rivest model.
+#' @description This function uses `simdd::rFisherBingham()` to simulate from the Rivest model.
 #' The direction of the Fisher compenent is chosen based on the magnitude of the eigenvalues using an index.
 #' @param i The eigenvector for the Fisher component is selected as the `i`th vector in increase eigenvalue magnitude.
 #' E.g. `i=1` means the eigenvector with smallest eigenvalue size.
@@ -24,7 +24,7 @@ rRivest <- function(n, k, A, i){
     m <- -m
     k <- -k
   }
-  sample <- rFB(n, k, m, A)
+  sample <- simdd::rFisherBingham(n, mu = k*m, Aplus = A)
   return(sample)
 }
 
