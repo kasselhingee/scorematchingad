@@ -23,8 +23,6 @@ vMF_robust <- function(Y, cW, ...){
 
 
   ldenfun <- function(Y, theta){ #here theta is km
-    k <- sqrt(sum(theta^2))
-    m <- theta/k
     return(drop(Y %*% theta))
   }
   est <- Windham(Y = Y,
@@ -47,9 +45,7 @@ vMF_kappa_robust <- function(Y, cW, ...){
   Y <- vMF_stdY(Y, w = extraargs$w)
   ellipsis::check_dots_used()
   ldenfun <- function(Y, theta){ #here theta is k and m is c(1, 0, ...)
-    k <- theta
-    m <- c(1 , rep(0, ncol(Y) - 1))
-    return(k * Y[1, ])
+    return(drop(theta * Y[1, ]))
   }
   est <- Windham(Y = Y,
                      estimator = vMF_kappa,
