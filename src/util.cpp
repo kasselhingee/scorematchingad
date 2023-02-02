@@ -1,7 +1,6 @@
 # include "util.h"
 
 veca1 ptoM(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad){
-  std::cout.rdbuf(Rcpp::Rcout.rdbuf()); //redirect std::cout to Rcout
   veca1 z_ad(u_ad.size());
   z_ad = pman->toM(u_ad);
   return(z_ad);
@@ -11,7 +10,6 @@ veca1 ptoM(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad){
 vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                      vecd u, vecd centre,
                      vecd dynparam, size_t order){
-  std::cout.rdbuf(Rcpp::Rcout.rdbuf()); //redirect std::cout to Rcout
   vecd out(pfun->Range());
   pfun->new_dynamic(dynparam);
   out = taylorapprox(*pfun,
@@ -25,7 +23,6 @@ vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
 
 CppAD::ADFun<double> tapefromM(veca1 z,
                                manifold<a1type> *pman){
-  std::cout.rdbuf(Rcpp::Rcout.rdbuf()); //redirect std::cout to Rcout
   //tape relationship between z and h2
   CppAD::Independent(z);
   // range space vector
@@ -40,7 +37,6 @@ CppAD::ADFun<double> tapefromM(veca1 z,
 
 Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z,
                                Rcpp::XPtr<manifold<a1type> > pman){
-  std::cout.rdbuf(Rcpp::Rcout.rdbuf()); //redirect std::cout to Rcout
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   *out = tapefromM(z, pman.checked_get());
 
