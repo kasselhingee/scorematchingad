@@ -41,6 +41,7 @@ vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 //' @param u A vector in the simplex.
 //' @param beta a vector of the dynamic parameters
+//' @export
 //' @return The Hessian of pfun
 // [[Rcpp::export]]
 vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);

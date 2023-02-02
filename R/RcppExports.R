@@ -38,6 +38,7 @@ pForward0 <- function(pfun, x, dynparam) {
 #' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 #' @param u A vector in the simplex.
 #' @param beta a vector of the dynamic parameters
+#' @export
 #' @return The Hessian of pfun
 pHessian <- function(pfun, value, theta) {
     .Call('_scorecompdir_pHessian', PACKAGE = 'scorecompdir', pfun, value, theta)
