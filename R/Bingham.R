@@ -24,7 +24,7 @@
 #' p <- 4
 #' A <- rsymmetricmatrix(p)
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
-#' sample <- rBingham(100, A)
+#' sample <- simdd::rBingham(100, A)
 #'
 #' Bingham(sample, method = "Mardia")
 #' @family Mardia hybrid estimators
@@ -37,23 +37,6 @@ Bingham <- function(sample, A = NULL, method = "smfull", control = default_Rcgmi
     out <- Bingham_Mardia(sample, control = control)
     }
   return(out)
-}
-
-#' @noRd
-#' @describeIn Bingham Uses `Directional::rbingham` to simulate from the Bingham distribution.
-#' @param A is the parameter matrix for the Bingham distribution. The log density is proportional to `t(u) * A * u`
-#' @param n The number of samples to generate.
-#' @export
-rBingham <- function(n, A){
-  if (is.matrix(A)){
-    if (dim(A)[[1]] == dim(A)[[2]]){
-      sample <- Directional::rbingham(n, -A) # Fallaize and Kypraios 2018 use a '-' in the exponent for the Bingham distribution
-    }
-  } else {
-    A <- Bingham_theta2Amat(A)
-    sample <- Directional::rbingham(n, -A)
-  }
-  return(sample)
 }
 
 Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){

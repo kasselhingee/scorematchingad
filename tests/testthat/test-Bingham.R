@@ -7,7 +7,7 @@ test_that("taped Bingham log-likelihood gives correct values", {
   expect_equal(Bingham_Amat2theta(A), theta)
 
   set.seed(123)
-  sample <- rBingham(2, A)
+  sample <- simdd::rBingham(2, A)
 
   pman <- manifoldtransform("Snative")
   lltape <- ptapell(sample[2,], theta + 1, llname = "Bingham", pman,
@@ -39,7 +39,7 @@ test_that("Bingham_full() optimiser works", {
   A <- Bingham_theta2Amat(theta)
 
   set.seed(123)
-  sample <- rBingham(100, A)
+  sample <- simdd::rBingham(100, A)
   est <- Bingham_full(sample, control = list(tol = 1E-15))
   expect_absdiff_lte_v(est$sminfo$est, theta, 3 * est$sminfo$SE)
 })
@@ -51,7 +51,7 @@ test_that("Bingham_Mardia() optimiser works", {
   A <- Bingham_theta2Amat(theta)
 
   set.seed(123)
-  sample <- rBingham(100, A)
+  sample <- simdd::rBingham(100, A)
   est <- Bingham_Mardia(sample)
   A_es <- eigen(A)
   expect_absdiff_lte_v(est$Lambda[-p], A_es$values[-p], 3 * est$Lambda_SE[-p])
@@ -64,7 +64,7 @@ test_that("Bingham() works", {
   A <- Bingham_theta2Amat(theta)
 
   set.seed(123)
-  sample <- rBingham(10, A)
+  sample <- simdd::rBingham(10, A)
 
   expect_equal(Bingham_full(sample), Bingham(sample, method = "smfull"))
   expect_equal(Bingham_Mardia(sample), Bingham(sample, method = "Mardia"))
@@ -82,7 +82,7 @@ test_that("Bingham() works with highly skewed trace", {
   theta <- Bingham_Amat2theta(A)
 
   set.seed(123)
-  sample <- rBingham(1000, A)
+  sample <- simdd::rBingham(1000, A)
 
   est <- Bingham(sample, method = "smfull", control = list(tol = 1E-15))
   expect_absdiff_lte_v(est$sminfo$est, theta, 3 * est$sminfo$SE)
@@ -99,7 +99,7 @@ test_that("Bingham_full() with various fixed elements works", {
   A <- rsymmetricmatrix(p, -10, 10)
   A[p,p] <- -sum(diag(A)[-p])
   theta <- Bingham_Amat2theta(A)
-  sample <- rBingham(1000, A)
+  sample <- simdd::rBingham(1000, A)
 
   #a fixed off diagonal element
   inA <- matrix(NA, nrow = p, ncol = p)
