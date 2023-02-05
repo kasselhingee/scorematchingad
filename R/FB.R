@@ -7,7 +7,7 @@
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
 #' m <- runif(p, -10, 10)
 #' m <- m / sqrt(sum(m^2))
-#' Y <- rFB(1000, 2, m, A)
+#' Y <- simdd::rFisherBingham(1000, 2 * m, A)
 #' FB(Y)
 #' @param Y An array of multivariate observations. Each row a single measurement, each column is a different dimension of the measurement.
 #' @param km Optional. A vector of same length as the dimension, representing the parameter vector for the von Mises-Fisher component (i.e. the \eqn{\kappa \mu} see [`vMF()`]).
