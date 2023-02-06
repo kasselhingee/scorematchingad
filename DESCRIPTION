@@ -25,6 +25,7 @@ Suggests:
 	cubature,
 	dplyr, 
 	ggplot2,
+    simdd,
     ggtern,
     numDeriv
 Depends: 
