@@ -33,13 +33,12 @@ pForward0 <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pForward0', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
-#' @noRd
-#' @title OBSOLETE: The Hessian of recorded function. Used only in smobj.R
+#' @title The Hessian of recorded function.
 #' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 #' @param u A vector in the simplex.
 #' @param beta a vector of the dynamic parameters
 #' @export
-#' @return The Hessian of pfun
+#' @return The Hessian of pfun as a vector.
 pHessian <- function(pfun, value, theta) {
     .Call('_scorecompdir_pHessian', PACKAGE = 'scorecompdir', pfun, value, theta)
 }

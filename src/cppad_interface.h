@@ -36,13 +36,12 @@ vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynpara
 // [[Rcpp::export]]
 vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
-//' @noRd
-//' @title OBSOLETE: The Hessian of recorded function. Used only in smobj.R
+//' @title The Hessian of recorded function.
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 //' @param u A vector in the simplex.
 //' @param beta a vector of the dynamic parameters
 //' @export
-//' @return The Hessian of pfun
+//' @return The Hessian of pfun as a vector.
 // [[Rcpp::export]]
 vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
 
