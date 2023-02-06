@@ -37,13 +37,13 @@ vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynpara
 vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
 //' @title The Hessian of recorded function.
-//' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-//' @param u A vector in the simplex.
-//' @param beta a vector of the dynamic parameters
+//' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
+//' @param value A vector in the domain of the taped function.
+//' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
 //' @export
 //' @return The Hessian of pfun as a vector.
 // [[Rcpp::export]]
-vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd theta);
+vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
 
 //' @title Tape the Jacobian of CppAD Tape
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters

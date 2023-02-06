@@ -34,13 +34,13 @@ pForward0 <- function(pfun, x, dynparam) {
 }
 
 #' @title The Hessian of recorded function.
-#' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-#' @param u A vector in the simplex.
-#' @param beta a vector of the dynamic parameters
+#' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
+#' @param value A vector in the domain of the taped function.
+#' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
 #' @export
 #' @return The Hessian of pfun as a vector.
-pHessian <- function(pfun, value, theta) {
-    .Call('_scorecompdir_pHessian', PACKAGE = 'scorecompdir', pfun, value, theta)
+pHessian <- function(pfun, value, dynparam) {
+    .Call('_scorecompdir_pHessian', PACKAGE = 'scorecompdir', pfun, value, dynparam)
 }
 
 #' @title Tape the Jacobian of CppAD Tape
