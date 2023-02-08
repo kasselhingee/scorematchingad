@@ -9,7 +9,7 @@ Authors@R:
     person("Ngambri Country", role = c("ctb"))
     )
 Description: Score matching is a useful estimation technique when the normalising constant for a probability distribution is difficult to compute. This package includes methods for the flexible Polynomially-Tilted Pairwise Interaction (PPI) model for compositional data. These methods can perform well when there are zeros, even many zeros (Scealy and Wood, 2022). The package also includes hybrid estimators for directional distributions proposed by Mardia, Kent and Laha (2016). Tools for implementing additional score-matching estimators using CppAD for algorithmic differentiation are also included.
-License: LICENSE
+License: GPL (>=3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
