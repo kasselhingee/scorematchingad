@@ -9,3 +9,5 @@ tests/prepinteractivetesting.R
 
 ^doc$
 ^Meta$
+cout2Rcout.sh
+
