@@ -1,3 +1,14 @@
+YEAR: 2023
+
+CppAD is usually distributed under the terms of the Eclipse Public License Version 2.0. In this package the `include/cppad` directory of CppAD source code is included in `inst/include/cppad/`. The file `cppad_lib/cpp_graph_op.cpp` is stored separately at `src/cpp_graph_op.cpp`. The CppAD Source Code may also be made available under the following Secondary License when the conditions for such availability set forth in the Eclipse Public License, Version 2.0 are satisfied: GNU General Public License, Version 2.0 or later. 
+
+The CppAD code here contains modifications that replace all use of std::cerr and std::cout with Rcpp::Rcerr and Rcpp::Rcout respectively. Consequently the R package as a whole is licensed as GPL (>= 3). The Eclipse Public License Version 2.0 is included below for reference.
+
+The copyright for CppAD is held by Bradley M. Bell (Copyright (C) 2003-18). The CppAD source code is available at https://github.com/coin-or/CppAD.git .
+
+
+==============================
+
 Eclipse Public License - v 2.0
 
     THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE
