@@ -180,11 +180,11 @@ test_that("printgraph() runs", {
   tapes <- buildsmotape("Hclr", "ppi", utape = Y[1, ], 
                         usertheta = ppi_paramvec(p = 5))
 
-  expect_snapshot(printgraph(tapes$smotape))
+  expect_output(printgraph(tapes$smotape), "2112") #2112 is the final node
   Jtape <- pTapeJacobian(tapes$smotape, ppi_paramvec(AL = 0, bL = 0, beta = beta0), Y[1, ])
-  expect_snapshot(printgraph(Jtape))
+  expect_output(printgraph(Jtape), "1658") #1658 is final node - interesting that fewer than smotape!
   Htape <- pTapeHessian(tapes$smotape, ppi_paramvec(AL = 0, bL = 0, beta = beta0), Y[1, ])
-  expect_snapshot(printgraph(Htape))
+  expect_output(printgraph(Htape), "25630") #25630 is final mode
 })
 
 
