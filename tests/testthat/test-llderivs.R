@@ -4,7 +4,7 @@ p = m$p
 u = as.vector(m$sample)
 AL = m$AL
 bL = m$bL
-beta0 = m$beta0
+beta0 = m$beta
 theta = m$theta
 
 ppill_r <- function(u, beta0, AL, bL){

@@ -11,7 +11,7 @@ test_that("ppi iterative solve match estimator1 minsq with fixed beta for ppi_eg
             bdrythreshold = 0,
             trans = "sqrt", divweight = "minsq", acut = acut)
 
-  hardcodedestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta0)
+  hardcodedestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta)
   
   expect_absdiff_lte_v(out$est$paramvec, hardcodedestimate$est$paramvec, 0.0001 * out$SE$paramvec) #proxy for optimisation flatness
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 2 * out$SE$paramvec)

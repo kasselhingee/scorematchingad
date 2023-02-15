@@ -8,8 +8,8 @@ test_that("Gradient of smo for ppi wrt u is CLOSE TO CORRECT for interior points
   smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
 
-  testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta0 + 1)
-  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta0 + 1)
+  testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
+  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
 
   # double check that smo values are equal
   hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
@@ -37,8 +37,8 @@ test_that("Gradient of smo for ppi wrt theta is correct for interior points", {
   lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", pman = psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
   smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function #this line fails when testing after devtools::load_all()
 
-  testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta0 + 1)
-  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta0 + 1)
+  testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
+  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
 
   # double check that smo values are equal
   hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
@@ -69,8 +69,8 @@ test_that("Gradient of smo approxcentre for ppi wrt theta is correct", {
   smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
 
-  testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta0 + 1)
-  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta0 + 1)
+  testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
+  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
 
   # double check that smo values are equal
   hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)
@@ -123,8 +123,8 @@ test_that("Gradient of smo approxcentre for ppi wrt u is close", {
   smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, pman = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
 
-  testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta0 + 1)
-  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta0 + 1)
+  testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
+  testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
 
   # double check that smo values are equal
   hardcodedsmoval <- estimatorall1_smo(testcanntheta, m$sample[1, , drop = FALSE], acut)

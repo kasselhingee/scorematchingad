@@ -79,12 +79,12 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
   model <- ppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
-  out <- ppi(model$sample, paramvec = ppi_paramvec(betaL = model$beta0[1:2], betap = model$beta0[3]),
+  out <- ppi(model$sample, paramvec = ppi_paramvec(betaL = model$beta[1:2], betap = model$beta[3]),
             method = "closed",
                    bdrythreshold = 1E-10,
             trans = "sqrt", divweight = "minsq", acut = acut)
 
-  hardcodedestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta0)
+  hardcodedestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta)
 
   expect_equal(out$est$paramvec, hardcodedestimate$est$paramvec)
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 2 * out$SE$paramvec)
@@ -95,14 +95,14 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmo
   model <- ppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
-  out <- ppi(model$sample, ppi_paramvec(betaL = model$beta0[1:2], betap = model$beta0[3]),
+  out <- ppi(model$sample, ppi_paramvec(betaL = model$beta[1:2], betap = model$beta[3]),
              method = "closed",
                    trans = "sqrt", divweight = "prodsq", acut = acut, 
                    control = list(tol = 1E-12))
 
-  hardcodedestimate <- estimator2(model$sample, acut, incb = TRUE, beta0 = model$beta0)
+  hardcodedestimate <- estimator2(model$sample, acut, incb = TRUE, beta0 = model$beta)
 
-  expect_equal(out$est$paramvec, c(hardcodedestimate$estimator2, model$beta0)) 
+  expect_equal(out$est$paramvec, c(hardcodedestimate$estimator2, model$beta)) 
 
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
@@ -160,7 +160,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
              paramvec = ppi_paramvec(betap = tail(model$beta, 1), p = model$p),
              trans = "sqrt", divweight = "minsq", acut = acut)
 
-  hardcodedestimate <- estimatorall1(model$sample, acut, betap = model$beta0[model$p])
+  hardcodedestimate <- estimatorall1(model$sample, acut, betap = model$beta[model$p])
 
   expect_equal(out$est$paramvec, t_fu2t(hardcodedestimate$estimator1, ppi_paramvec(betap = tail(model$beta, 1), p = model$p)), ignore_attr = TRUE)
 
@@ -177,7 +177,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
              paramvec = ppi_paramvec(betap = tail(model$beta, 1), p = model$p),
              trans = "sqrt", divweight = "minsq", acut = acut)
 
-  hardcodedestimate <- estimatorall1(model$sample, acut, betap = model$beta0[model$p])
+  hardcodedestimate <- estimatorall1(model$sample, acut, betap = model$beta[model$p])
 
   expect_equal(out$est$paramvec, t_fu2t(hardcodedestimate$estimator1, ppi_paramvec(betap = tail(model$beta, 1), p = model$p)), tolerance = 1E-4)
 

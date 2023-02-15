@@ -3,7 +3,7 @@
 
 #### Setup ####
 list2env(ppi_egmodel(1), globalenv())
-theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL)
+theta <- c(diag(AL), AL[upper.tri(AL)], bL)
 
 
 
@@ -16,9 +16,9 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
 
   #simulate sample from PPI model
   set.seed(321)
-  samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
+  samp3=rppi(n,beta=beta,AL=AL,bL=bL,maxden=4)
   theta <- ppi_paramvec(p,
-              AL = ALs, bL = drop(bL), beta = drop(beta0))
+              AL = AL, bL = drop(bL), beta = drop(beta))
 
   ####Score1ac estimator##
 
@@ -52,7 +52,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   beta0=matrix(-0.8,p,1)
   beta0[p] = 5
   theta <- ppi_paramvec(p,
-                                               AL = ALs, bL = drop(bL), beta = drop(beta0))
+                                               AL = AL, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
   set.seed(124)
@@ -85,7 +85,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   beta0=matrix(-0.8,p,1)
   beta0[p]= 5
   theta <- ppi_paramvec(p,
-                                               AL = ALs, bL = drop(bL), beta = drop(beta0))
+                                               AL = AL, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
   samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
