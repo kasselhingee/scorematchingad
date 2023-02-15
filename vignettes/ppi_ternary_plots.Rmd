@@ -35,7 +35,7 @@ ppi_plotdensity <- function(...){
   iden <- exp(dppi(Yarr, ...) - min(lden, na.rm = TRUE))
   data.frame(Yarr, iden) %>%
     ggtern(aes(x = u1, y = u2, z = u3, value = iden)) +
-    # geom_interpolate_tern(aes(colour = ..level..), base = "identity", bins = 500) +
+    # geom_interpolate_tern(aes(colour = ..level..), base = "identity", bins = 500, base = "identity") +
     geom_hex_tern(fun = max, na.rm = TRUE) +
     scale_fill_viridis_c(name = "Unnormalised Density", trans = "log") +
     ggtitle("Unnormalised Density")
@@ -53,7 +53,7 @@ ppi_plotdensity(beta = c(-0.8, -0.8, -0.5), AL = 0, bL = 0)
 data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggtern(aes(x = u1, y = u2, z = u3)) +
-  geom_density_tern(bins = 10, bdl = 0.005) + 
+  geom_density_tern(bins = 10, bdl = 0.005, base = "identity") + 
   geom_point(size = 1, alpha = 0.5, shape = "+") +
   ggtitle("Sample Points")
 ```
@@ -86,7 +86,7 @@ samp=rppi(n,beta = beta0, AL = ALs, bL = bL,maxden = 4)
 data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggtern(aes(x = u1, y = u2, z = u3)) +
-  geom_density_tern(bins = 15, bdl = 0.005) + 
+  geom_density_tern(bins = 15, bdl = 0.005, base = "identity") + 
   geom_point(size = 1, alpha = 0.5, shape = "+") +
   ggtitle("Sample Points")
 ```
@@ -113,7 +113,7 @@ samp=rppi(n,beta = 0, AL = ALs, bL = bL ,maxden = 30)
 data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggtern(aes(x = u1, y = u2, z = u3)) +
-  geom_density_tern(bins = 5, bdl = 0.01) + 
+  geom_density_tern(bins = 5, bdl = 0.01, base = "identity") + 
   geom_point(size = 1, alpha = 0.5, shape = "+") +
   ggtitle("Sample Points")
 ```
@@ -127,7 +127,7 @@ samp=rppi(n,beta = 0, AL = ALs, bL = bL * 1.2, maxden = 35)
 data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggtern(aes(x = u1, y = u2, z = u3)) +
-  geom_density_tern(bins = 5, bdl = 0.01) + 
+  geom_density_tern(bins = 5, bdl = 0.01, base = "identity") + 
   geom_point(size = 1, alpha = 0.5, shape = "+") +
   ggtitle("Sample Points")
 ```
