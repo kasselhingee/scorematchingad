@@ -35,13 +35,14 @@ test_that("Score1ac estimator works on highly concentrated data, with some compo
   #calculate scoring estimate for full model (only beta[p] fixed at -0.5):
   estimator=estimatorall1(samp3,acut,-0.5)
   estimate1all=estimator$estimator1
+  # use CppAD for SE
+  cppadest <- ppi(Y = samp3, paramvec = ppi_paramvec(p = p, betap = -0.5), trans = "sqrt", divweight="minsq", acut = acut)
+  expect_equal(cppadest$est$paramvec, c(estimate1all, -0.5))
   # use SE estimates as if beta0 was fixed at the estimate (not estimated)
-  std1=estimator1SE(samp3,acut,estimate1all[1:5, , drop = FALSE],estimator$W_est,1, beta0 = c(estimate1all[6:7], beta0[3]))
-  theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL)
-  #2*SE bounds
-  expect_true(all(abs(theta - estimate1all[1:5]) <= 2*std1))
-  message("Misuse of estimator1SE for estimatorall1 results in this test")
-  #invented bounds for beta0 estimates for now
+  SE <- cppadest$SE$paramvec
+  # within 2*SE
+  expect_absdiff_lte_v(c(estimate1all, -0.5),  c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0), 2*SE)
+  #plus invented bounds for beta0 estimates for now
   expect_true(all(abs(beta0[-p] - estimate1all[6:7]) <= 2*3/sqrt(n)))
 
   #calculate scoring estimate with beta fixed at beta0:
@@ -50,6 +51,6 @@ test_that("Score1ac estimator works on highly concentrated data, with some compo
   std1=estimator$SE$paramvec
   # check
   #2*SE bounds
-  expect_true(all(abs(theta - estimate1[1:length(theta)]) < 2*std1[1:length(theta)]))
+  expect_absdiff_lte_v(estimate1, c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0), 2*std1)
 })
 

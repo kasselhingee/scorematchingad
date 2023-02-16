@@ -70,7 +70,7 @@ test_that("ppi ll tape is fails the quadratic test", {
 
   # check only with pParameter()
   expect_false(testquadratictape(ppitape))
-  expect_message(testquadratictape(ppitape, verbose = TRUE))
+  expect_message(testquadratictape(ppitape, verbose = TRUE), "non-constant")
 
   # check some values
 
@@ -80,6 +80,8 @@ test_that("ppi ll tape is fails the quadratic test", {
   xmat <- cbind(xmat, 1-rowSums(xmat))
 
   expect_false(testquadratictape(ppitape, xmat = xmat, dynparammat = dynparammat))
-  expect_message(testquadratictape(ppitape, xmat = xmat, dynparammat = dynparammat, verbose = TRUE))
+  testquadratictape(ppitape, xmat = xmat, dynparammat = dynparammat, verbose = TRUE) |> 
+    expect_message("non-constant") |>
+    expect_message("non-zero")
 })
 
