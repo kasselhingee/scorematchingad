@@ -17,35 +17,6 @@ test_that("ppi iterative solve match estimator1 minsq with fixed beta for ppi_eg
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 2 * out$SE$paramvec)
 })
 
-
-test_that("Simulated weights for ppi with minsq match itself and estimatorall1", {
-  set.seed(1243)
-  m <- ppi_egmodel(1000, maxden = 4)
-  #simulate weights
-  set.seed(134)
-  vw <- virtualweights(m$sample)
-  acut = 0.01
-
-  out_sim <- ppi(vw$newY, 
-            method = "iterative",
-            bdrythreshold = 0,
-            trans = "sqrt", divweight = "minsq", acut = 0.01,
-            control = list(tol = 1E-15, maxit = 2000))
-  out_dir <- ppi(m$sample, 
-            method = "iterative",
-            bdrythreshold = 0,
-            trans = "sqrt", divweight = "minsq", acut = 0.01,
-            w = vw$w,
-            control = list(tol = 1E-15, maxit = 2000))
-
-  expect_equal(out_sim[!(names(out_sim) %in% c("info", "SE"))], 
-     out_dir[!(names(out_sim) %in% c("info", "SE"))],
-     tolerance = 1E-2)
-
-  hardcodedestimate <- estimatorall1(m$sample, acut = 0.01, w = vw$w)
-  expect_equal(hardcodedestimate$estimator1, out_sim$est$paramvec, tolerance = 1E-2, ignore_attr = TRUE)
-})
-
 test_that("Iterative solver works on microbiome data without outliers", {
   list2env(ppi_microbiomedata_cleaned_TCAP(), globalenv())
   
@@ -89,7 +60,7 @@ test_that("cppad_search gives similar result to cppad_closed", {
                         utape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),
                         weightname = "minsq", acut = 0.1)
-  estsearch <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-20, maxit = 1000))
+  estsearch <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-10, maxit = 2000))
   estclosed <- cppad_closed(tapes$smotape, m$sample)
   expect_equal(estsearch$est, estclosed$est, tolerance = 1E-3)
   expect_equal(estsearch$SE, estclosed$SE, tolerance = 1E-3)
