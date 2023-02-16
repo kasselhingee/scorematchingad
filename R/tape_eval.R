@@ -1,4 +1,5 @@
 #' @title Simple wrapper to evaluate CppAD tapes and derivatives many times
+#' @family tape evaluators
 #' @param tape A `CppAD` `tape`.
 #' @param xmat A matrix of (multivariate) independent variables. Each represents a single independent variable vector. Or a single vector of that is used for all rows of `pmat`.
 #' @param pmat A matrix of dynamic parameters. Or a single vector of dynamic parameters to use for all rows of `xmat`.

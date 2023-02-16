@@ -1,4 +1,5 @@
 #' @title Compute score matching objective value, gradient, and Hessian
+#' @family tape evaluators
 #' @description Computes a range of relevant information for investigating score matching estimators.
 #' @inheritParams tape_eval
 #' @param smotape A taped score matching objective. Most easily created by [`buildsmotape()`].

@@ -1,4 +1,5 @@
 #' @title Test Whether a CppAD Tape is a Quadratic Function
+#' @family tape evaluators
 #' @description
 #' Uses [`pParameter()`] and derivatives [`pTapeJacobian()`], [`pJacobian()`] to test whether
 #' the tape is quadratic.

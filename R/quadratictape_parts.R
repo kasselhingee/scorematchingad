@@ -1,4 +1,5 @@
 #' @title Evaluate the Hessian and gradient offset of a Taped Quadratic Function
+#' @family tape evaluators
 #' @description
 #' When the score matching objective function is quadratic then the gradient of the score matching objective function can be written using the Hessian and an offset term. This can be useful for solving for the situation when the gradient is zero.
 #' The Hessian and offset term are computed using `CppAD` tapes.

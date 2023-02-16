@@ -20,6 +20,7 @@
 Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
 
 //' @title Evaluate the Jacobian of a tape
+//' @family tape evaluators
 //' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
 //' @param value A vector in the domain of the taped function.
 //' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
@@ -29,6 +30,7 @@ Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> 
 vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
 
 //' @title Evaluate a CppAD tape
+//' @family tape evaluators
 //' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 //' @param x A vector in the domain of the taped function.
 //' @param dynparam a vector of the dynamic parameters.
@@ -38,6 +40,7 @@ vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynpara
 vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
 //' @title The Hessian of recorded function.
+//' @family tape evaluators
 //' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
 //' @param value A vector in the domain of the taped function.
 //' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
@@ -85,6 +88,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeHessian(Rcpp::XPtr< CppAD::ADFun<double
                     veca1 x, veca1 dynparam);
 
 //' @title Indicate Constant Components of Range
+//' @family tape evaluators
 //' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the independent values.
 //' @param pfun A CppAD tape.
 //' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.

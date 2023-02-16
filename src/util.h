@@ -17,6 +17,7 @@ veca1 ptoM(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad);
 
 
 //' @title The value of a recorded function approximated by Taylor expansion
+//' @family tape evaluators
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
 //' @param u A vector in the domain of the taped function.
 //' @param centre A vector in the domain of the taped function to approximate the value at `u` from.

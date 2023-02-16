@@ -15,6 +15,7 @@ swapDynamic <- function(pfun, newvalue, newdynparam) {
 }
 
 #' @title Evaluate the Jacobian of a tape
+#' @family tape evaluators
 #' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
 #' @param value A vector in the domain of the taped function.
 #' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
@@ -25,6 +26,7 @@ pJacobian <- function(pfun, value, dynparam) {
 }
 
 #' @title Evaluate a CppAD tape
+#' @family tape evaluators
 #' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
 #' @param x A vector in the domain of the taped function.
 #' @param dynparam a vector of the dynamic parameters.
@@ -35,6 +37,7 @@ pForward0 <- function(pfun, x, dynparam) {
 }
 
 #' @title The Hessian of recorded function.
+#' @family tape evaluators
 #' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
 #' @param value A vector in the domain of the taped function.
 #' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
@@ -83,6 +86,7 @@ pTapeHessian <- function(pfun, x, dynparam) {
 }
 
 #' @title Indicate Constant Components of Range
+#' @family tape evaluators
 #' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the independent values.
 #' @param pfun A CppAD tape.
 #' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
@@ -182,6 +186,7 @@ ptoM <- function(pman, u_ad) {
 }
 
 #' @title The value of a recorded function approximated by Taylor expansion
+#' @family tape evaluators
 #' @param pfun Rcpp::XPtr to an ADFun tape a tape with independent values that are the points to be differentiated with
 #' @param u A vector in the domain of the taped function.
 #' @param centre A vector in the domain of the taped function to approximate the value at `u` from.
