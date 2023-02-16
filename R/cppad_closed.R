@@ -32,7 +32,6 @@
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
-#' @family {General score matching}
 #' @export
 cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y, 
                          w = rep(1, nrow(Y)),

@@ -6,7 +6,6 @@
 #' Often a sample with mean direction of `c(1, 0, 0, ...., 0)` is created by estimating the mean direction and rotating the data such that the mean direction equals `c(1, 0, 0, ...)`.
 #' Performing this mean direction estimate, then rotation, then estimating concentration with score matching correponds to the hybrid estimator by \insertCite{mardia2016sc;textual}{scorecompdir}.
 #' @inherit vMF sections
-#' @family Mardia hybrid estimators
 #' @references \insertAllCited()
 #' @details
 #' The function `vMF_kappa()` estimates *only* the concentration \eqn{\kappa}, and assumes that \eqn{\mu} is \eqn{(1, 0, 0, ..., 0)}.

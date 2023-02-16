@@ -9,7 +9,6 @@
 #' @return
 #' A vector of weights corresponding to the rows of `Y`.
 #' The weights are normalised to sum to 1.
-#' @family Windham functions
 #' @export
 Windham_weights <- function(ldenfun, Y, theta, cW){
   if (is.null(ldenfun)){stop("ldenfun is NULL")}
