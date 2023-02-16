@@ -1,4 +1,5 @@
 #' @title Build a CppAD Tape of a Score-Matching Objective Function
+#' @family tape builders
 #' @param utape A measurment to use for taping
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
 #' @param manifoldname Manifold with tranformation name. Passed to [`manifoldtransform()`].

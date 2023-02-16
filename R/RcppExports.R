@@ -2,6 +2,7 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' @title Switch Dynamic and Independent Values of a Tape
+#' @family tape builders
 #' @description Convert an ADFun so that the independent values become dynamic parameters
 #' and the dynamic parameters become independent values
 #' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
@@ -44,6 +45,7 @@ pHessian <- function(pfun, value, dynparam) {
 }
 
 #' @title Tape the Jacobian of CppAD Tape
+#' @family tape builders
 #' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 #' @param x A vector in the domain of the taped function.
 #' @param dynparam a vector of the dynamic parameters
@@ -63,6 +65,7 @@ pTapeJacobian <- function(pfun, x, dynparam) {
 }
 
 #' @title Tape the Hessian of a CppAD Tape
+#' @family tape builders
 #' @inheritParams pTapeJacobian
 #' @description Creates a tape of the Hessian of a function taped by CppAD.
 #' The taped function represented by `pfun` must be scalar-valued (i.e. a vector of length 1).
@@ -91,6 +94,7 @@ pParameter <- function(pfun) {
 }
 
 #' @title Tape the Gradient Offset of a Quadratic CppAD Tape
+#' @family tape builders
 #' @inheritParams pTapeJacobian
 #' @description A quadratic function can be written as
 #' \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
@@ -116,6 +120,7 @@ pTapeGradOffset <- function(pfun, x, dynparam) {
 }
 
 #' @title Tape the log of Jacobian determinant of a CppAD Tape
+#' @family tape builders
 #' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 #' @param x A vector in the domain of the taped function.
 #' @param dynparam a vector of the dynamic parameters

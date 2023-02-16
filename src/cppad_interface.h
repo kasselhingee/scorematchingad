@@ -8,6 +8,7 @@
 #include "mycpp/wrapas.hpp"  //needed because converting veca1 from R
 
 //' @title Switch Dynamic and Independent Values of a Tape
+//' @family tape builders
 //' @description Convert an ADFun so that the independent values become dynamic parameters
 //' and the dynamic parameters become independent values
 //' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
@@ -46,6 +47,7 @@ vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
 
 //' @title Tape the Jacobian of CppAD Tape
+//' @family tape builders
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 //' @param x A vector in the domain of the taped function.
 //' @param dynparam a vector of the dynamic parameters
@@ -65,6 +67,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeJacobian(Rcpp::XPtr< CppAD::ADFun<doubl
                     veca1 x, veca1 dynparam);
 
 //' @title Tape the Hessian of a CppAD Tape
+//' @family tape builders
 //' @inheritParams pTapeJacobian
 //' @description Creates a tape of the Hessian of a function taped by CppAD.
 //' The taped function represented by `pfun` must be scalar-valued (i.e. a vector of length 1).
@@ -93,6 +96,7 @@ std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
 // According to the help, applying Variable(u) to each return value would be false if u depends on the dynamic parameters and does not depend on the independent variable vector.
 
 //' @title Tape the Gradient Offset of a Quadratic CppAD Tape
+//' @family tape builders
 //' @inheritParams pTapeJacobian
 //' @description A quadratic function can be written as
 //' \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
@@ -119,6 +123,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<dou
 
 
 //' @title Tape the log of Jacobian determinant of a CppAD Tape
+//' @family tape builders
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
 //' @param x A vector in the domain of the taped function.
 //' @param dynparam a vector of the dynamic parameters
