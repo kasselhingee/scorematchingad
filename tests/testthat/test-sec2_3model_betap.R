@@ -16,9 +16,9 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
 
   #simulate sample from PPI model
   set.seed(321)
-  samp3=rppi(n,beta=beta,AL=AL,bL=bL,maxden=4)
+  samp3=rppi(n,beta=beta0,AL=AL,bL=bL,maxden=4)
   theta <- ppi_paramvec(p,
-              AL = AL, bL = drop(bL), beta = drop(beta))
+              AL = AL, bL = drop(bL), beta = drop(beta0))
 
   ####Score1ac estimator##
 
@@ -51,12 +51,11 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   n=100
   beta0=matrix(-0.8,p,1)
   beta0[p] = 5
-  theta <- ppi_paramvec(p,
-                                               AL = AL, bL = drop(bL), beta = drop(beta0))
+  theta <- ppi_paramvec(p, AL = AL, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
   set.seed(124)
-  samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
+  samp3=rppi(n,beta=beta0,AL=AL,bL=bL,maxden=4)
 
   ####Score1ac estimator##
 
@@ -84,11 +83,10 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   n=100
   beta0=matrix(-0.8,p,1)
   beta0[p]= 5
-  theta <- ppi_paramvec(p,
-                                               AL = AL, bL = drop(bL), beta = drop(beta0))
+  theta <- ppi_paramvec(p, AL = AL, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
-  samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
+  samp3=rppi(n,beta=beta0,AL=AL,bL=bL,maxden=4)
 
   ####Score1ac estimator##
 
