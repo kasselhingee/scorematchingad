@@ -1,4 +1,5 @@
 #' @title Score Matching Estimator for Quadratic-Form Score-Matching Objective Functions
+#' @family generic score matching tools
 #' @description 
 #' For a `CppAD` tape of a quadratic-form score matching objective function, calculates the vector of parameters such that the gradient of the score matching objective is zero.
 #' Also estimates standard errors and covariance.

@@ -1,10 +1,11 @@
 #' @title Robustly Estimate Parameters of the PPI Distribution
+#' @family PPI model tools
 #' @description Uses [`Windham()`] and [`ppi()`] to estimate a PPI distribution robustly.
 #' There are many arguments to the [`ppi()`] function and we highly recommend trialling your arguments on [`ppi()`] first before running `ppi_robust()`.
 #' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
 #' @param cW A vector of robustness tuning constants. Easy to build using [`ppi_cW()`] and [`ppi_cW_auto()`]. See [`Windham()`] for more details on `cW`.
 #' @param ... Passed to [`Windham()`] then to [`ppi()`].
-#' @family Windham functions
+#' @family Windham robustness functions
 #' @return A list:
 #'  * `est` The estimated parameters as vector form (`paramvec`) and as `AL`, `bL` and `beta`.
 #'  * `SE` "Not calculated." Returned for consistency with other estimators.

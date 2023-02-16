@@ -1,4 +1,5 @@
 #' @title Compute score matching objective value, gradient, and Hessian for a PPI Model
+#' @family directional model estimators
 #' @description Using similar arguments to [`ppi()`], compute values related to score matching. See [`tape_smvalues()`]. The gradient offset is also computed (see [`quadratictape_parts()`]. 
 #' @inheritParams ppi
 #' @param evalparam The parameter set to evaluate the score matching values.

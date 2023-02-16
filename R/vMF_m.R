@@ -1,4 +1,5 @@
 #' @title Mean direction and rotation for von Mises Fisher
+#' @family directional model estimators
 #' @description Computes the mean direction of a sample, which is also the maximum likelihood estimate for the mean direction parameter `m` in the von Mises Fisher distribution.
 #' @param Y A matrix of observations in Cartesian coordinates. Each row is a single observation.
 #' @param w Weights associated with each observation in `Y`.

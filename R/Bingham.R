@@ -1,4 +1,5 @@
 #' @title Score matching estimates for the Bingham distribution
+#' @family directional model estimators
 #' @param sample A matrix of observations in Cartesian coordinates. Each row is a (multivariate) measurement.
 #' @param control Control parameters passed to [`Rcgmin::Rcgmin()`].
 #' @param A For full score matching only: if supplied, then NA elements of `A` are estimated and the other elements are fixed.
@@ -27,7 +28,6 @@
 #' sample <- simdd::rBingham(100, A)
 #'
 #' Bingham(sample, method = "Mardia")
-#' @family Mardia hybrid estimators
 #' @export
 Bingham <- function(sample, A = NULL, method = "smfull", control = default_Rcgmin()){
   if (method == "smfull"){

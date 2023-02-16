@@ -1,4 +1,5 @@
 #' @title Estimation of Polynomially-Tilted Pairwise Interaction (PPI) model
+#' @family PPI model tools
 #' @description 
 #' Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir} for compositional data.
 #' For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2022sc}{scorecompdir}.

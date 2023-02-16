@@ -1,4 +1,5 @@
 #' @title Score matching estimator for the von-Mises Fisher distribution
+#' @family directional model estimators
 #' @description
 #' We recommend using [`movMF::movMF()`] over the function here, `vMF()`, for estimating the von Mises Fisher distribution. 
 #' 
@@ -27,7 +28,6 @@
 #' @param w An optional vector of weights for each measurement in `Y`
 #' @references
 #' \insertAllCited{}
-#' @family Mardia hybrid estimators
 #' @examples
 #' set.seed(12342)
 #' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))

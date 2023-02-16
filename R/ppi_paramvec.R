@@ -1,4 +1,5 @@
 #' @title User friendly preparation of parameter vector for PPI model
+#' @family PPI model tools
 #' @description The PPI model is parametrised using a symmetric covariance-like matrix \eqn{A_L}, a location-like vector \eqn{b_L} and a set of Dirichlet exponents \eqn{\beta}. For `p` components, \eqn{A_L} has `p-1` rows, \eqn{b_L} is a vector with `p-1` elements and \eqn{\beta} is a vector with `p` elements.
 #' These are converted to a single vector using `ppi_paramvec()` that can then be used for fitting with [ppi()], where NA-valued elements are fitted and all other elements are fixed.
 #' @return

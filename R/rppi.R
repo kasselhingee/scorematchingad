@@ -1,4 +1,5 @@
 #' @title Generate random observations from the PPI model
+#' @family PPI model tools
 #' @description Given parameters of the PPI model, generates independent samples.
 #' @param n Sample size
 #' @param paramvec The PPI parameter vector, created easily using [`ppi_paramvec()`] and also returned by [`ppi()`].
@@ -125,6 +126,7 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
 }
 
 #' @title Improper Log-Density of the PPI Model
+#' @family PPI model tools
 #' @description Compute the __natural logarithm__ of the improper density for the PPI model for the given matrix of locations `Y`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
 #' @param Y A matrix of locations in the simplex. Each row is a location, each column a component.
 #' @inheritParams rppi

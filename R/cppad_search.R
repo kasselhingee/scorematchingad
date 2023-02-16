@@ -1,18 +1,13 @@
 # same parameters as cppad_closed
 #' @title Iterative Score Matching Estimator Using Conjugate-Gradient Descent
+#' @family generic score matching tools
 #' @description 
 #' Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching objective is within tolerance of zero.
 #' Also estimates standard errors and covariance.
 #' Useful when the score matching objective function is not of quadratic form;
 #' for score matching objective functions that are quadratic [`cppad_closed()`] will be usually be more accurate and faster.
-#' @param Yapproxcentres A matrix of Taylor approximation centres for rows of Y that require approximation. `NA` for rows that do not require approximation.
-#' @param smotape A tape of a score matching objective function.
-#' The `smotape`'s independent variables are assumed to be the model parameters to fit
-#' and the `smotape`'s dynamic parameter is a (multivariate) measurement.
-#' @param Y A matrix of multivariate observations. Each row is an observation.
+#' @inheritParams cppad_closed
 #' @param theta The starting parameter set
-#' @param w Weights for each observation.
-#' @param approxorder The order of Taylor approximation to use.
 #' @param control Control parameters passed to [`Rcgmin::Rcgmin()`]
 #' @details
 #' The score matching objective function and gradient of the score matching function are passed to [`Rcgmin::Rcgmin()`]. 

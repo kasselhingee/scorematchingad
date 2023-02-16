@@ -1,4 +1,5 @@
 #' @title Load and simulate example PPI models
+#' @family PPI model tools
 #' @param n Number of samples to generate
 #' @param maxden the log(C) maximum in simulating a PPI model. See [`rppi()`].
 #' @return A list: 
