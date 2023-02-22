@@ -8,7 +8,7 @@
 #' @examples 
 #' sqrtman <- manifoldtransform("sphere")
 #' ppitape <- tapell(llname = "ppi",
-#'                   xtape = c(0.2, 0.3, 0.5),
+#'                   ytape = c(0.2, 0.3, 0.5),
 #'                   usertheta = ppi_paramvec(p = 3), 
 #'                   pmanifoldtransform = sqrtman)
 #' ppismotape <- tapesmo(lltape = ppitape,
@@ -33,17 +33,17 @@ tapesmo <- function(lltape,
                    verbose = FALSE){
   stopifnot(is.numeric(acut))
   
-  smotape <- ptapesmo(attr(lltape, "xtape"),
-                      attr(lltape, "dyntape"),
-                      lltape,
+  smotape <- ptapesmo(attr(lltape, "ytape"),
+                      lltape$dyntape,
+                      lltape$ptr,
                       pmanifoldtransform,
                       divweight, 
                       acut, 
                       verbose = verbose)
-  attr(smotape, "fname") <- paste(attr(lltape, "fname"), "smo", sep = "-")
-  attr(smotape, "xtape") <- attr(lltape, "dyntape")
+  attr(smotape, "fname") <- paste(lltape$name, "smo", sep = "-")
+  attr(smotape, "xtape") <- lltape$dyntape
   attr(smotape, "usertheta") <- attr(lltape, "usertheta")
-  attr(smotape, "dyntape") <- attr(lltape, "xtape")
+  attr(smotape, "dyntape") <- attr(lltape, "ytape")
   attr(smotape, "divweight") <- divweight
   attr(smotape, "acut") <- acut
   return(smotape)

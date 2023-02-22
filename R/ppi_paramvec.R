@@ -125,5 +125,5 @@ ppi_paramvec <- function(p = NULL, AL = NULL, bL = NULL, Astar = NULL, beta = NU
   beta = c(betaLprep, betapprep)
   stopifnot(isSymmetric.matrix(ALprep))
   theta <- c(fromsmatrix(ALprep), bLprep, beta)
-  return(theta)
+  return(as.numeric(theta))
 }
