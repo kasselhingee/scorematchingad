@@ -21,6 +21,21 @@
 #'
 #' To build a tape for the score matching objective function, the package first tapes the map from a point \eqn{z} on the manifold to the value of the log-likelihood, where the independent variable is the \eqn{z}, and the dynamic variable is a vector of the *non*-fixed parameter values.
 #' This tape is then used to generate a tape for the score matching objective with the non-fixed parameter values as the independent variable.
+#' # Introduction to CppAD Tapes
+#' This package uses version 2022000.2 of the algorithmic differentiation library `CppAD` \insertCite{bell2023cp}{scorecompdir} to build score matching estimators.
+#' Full help for `CppAD` can be found at <https://cppad.readthedocs.io/>.
+#' 
+#' Differentiation proceeds by *taping* the basic (*atomic*) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
+#' Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) steps, and `CppAD` has [special tools for this](https://cppad.readthedocs.io/en/latest/CondExp.html).
+
+#' Once the taping is complete an [`ADFun`](https://cppad.readthedocs.io/en/latest/ADFun.html) object is created.
+#' This tape can be evaluated, differentiated, used for further taping (see [base2ad](https://cppad.readthedocs.io/en/latest/base2ad.html)), solving differential equations and more.
+#' The sequence of operations can also be printed.
+#' The differentiation is with respect to the independent variables, although the dynamic parameters can be altered, allowing for swapping independent variables and dynamic parameters.
+
+
+#' @references \insertAllCited{}
+
 #' @return
 #' Returns a list of the log-likelihood tape (note that the *input* for this tape is a function on the manifold), the tape of the score matching objective (the *input* here is the non-fixed parameter values), and some information used to generate the tape.
 #' @examples
@@ -93,3 +108,5 @@ buildsmotape_internal <- function(manifoldname, llname,
     )
   ))
 }
+
+
