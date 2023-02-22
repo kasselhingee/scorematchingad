@@ -1,16 +1,16 @@
 ## ppi() fitting tested with cppad_closed() tests
 
 test_that("testquadratictape passes on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
-  sqrtman <- manifoldtransform("sphere")
-  ppitape <- tapell(llname = "ppi",
-                    xtape = c(0.2, 0.3, 0.5),
-                    usertheta = ppi_paramvec(p = 3), 
-                    pmanifoldtransform = sqrtman)
-  ppismotape <- tapesmo(lltape = ppitape,
-                        pmanifoldtransform = sqrtman,
-                        divweight = "minsq",
-                        acut = 0.1,
-                        verbose = FALSE)
+  tapes <- buildsmotape(
+     manifoldname = "sphere",
+     llname = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3), 
+     weightname = "minsq",
+     acut = 0.1,
+     verbose = FALSE)
+  ppismotape <- tapes$smotape
+
 
   # check only with pParameter()
   expect_true(testquadratictape(ppismotape))
@@ -27,16 +27,15 @@ test_that("testquadratictape passes on PPI model with sqrt transformation, minsq
 
   # manual tests
 test_that("manual tests on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
-  sqrtman <- manifoldtransform("sphere")
-  ppitape <- tapell(llname = "ppi",
-                    xtape = c(0.2, 0.3, 0.5),
-                    usertheta = ppi_paramvec(p = 3), 
-                    pmanifoldtransform = sqrtman)
-  ppismotape <- tapesmo(lltape = ppitape,
-                        pmanifoldtransform = sqrtman,
-                        divweight = "minsq",
-                        acut = 0.1,
-                        verbose = FALSE)
+  tapes <- buildsmotape(
+     manifoldname = "sphere",
+     llname = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3), 
+     weightname = "minsq",
+     acut = 0.1,
+     verbose = FALSE)
+  ppismotape <- tapes$smotape
 
   ppismotapeJ <- pTapeJacobian(ppismotape, attr(ppismotape, "xtape"), attr(ppismotape, "dyntape"))
   ppismotapeH <- pTapeHessian(ppismotape, attr(ppismotape, "xtape"), attr(ppismotape, "dyntape"))
@@ -64,7 +63,7 @@ test_that("manual tests on PPI model with sqrt transformation, minsq divergence 
 test_that("ppi ll tape is fails the quadratic test", {
   sqrtman <- manifoldtransform("sphere")
   ppitape <- tapell(llname = "ppi",
-                    xtape = c(0.2, 0.3, 0.5),
+                    ytape = c(0.2, 0.3, 0.5),
                     usertheta = ppi_paramvec(p = 3), 
                     pmanifoldtransform = sqrtman)
 

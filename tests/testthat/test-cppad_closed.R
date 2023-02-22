@@ -3,15 +3,14 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
   mod <- ppi_egmodel(100)
   Y <- mod$sample
 
-  Ralr <- manifoldtransform("Ralr")
-  ppitape <- tapell(llname = "ppi",
-                  xtape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)), 
-                  pmanifoldtransform = Ralr)
-  smotape <- tapesmo(lltape = ppitape,
-                      pmanifoldtransform = Ralr,
-                      divweight = "ones",
-                      verbose = FALSE)
+  tapes <- buildsmotape(
+     manifoldname = "Ralr",
+     llname = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
+     weightname = "ones",
+     verbose = FALSE)
+  smotape <- tapes$smotape
 
   estobj <- cppad_closed(smotape, Y)
 
@@ -37,15 +36,13 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
   Yapproxcentres[!isbdry, ] <- NA 
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(dsample[isbdry, , drop = FALSE])
 
-  Ralr <- manifoldtransform("Ralr")
-  ppitape <- tapell(llname = "ppi",
-                  xtape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)), 
-                  pmanifoldtransform = Ralr)
-  smotape <- tapesmo(lltape = ppitape,
-                      pmanifoldtransform = Ralr,
-                      divweight = "ones",
-                      verbose = FALSE)
+  tapes <- buildsmotape(
+     manifoldname = "Ralr",
+     llname = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)), 
+     weightname = "ones",
+     verbose = FALSE)
 
   estobj <- cppad_closed(smotape, Y = dsample, Yapproxcentres, approxorder = 10)
 

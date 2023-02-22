@@ -63,8 +63,8 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   # potentially the ordering of the theta values is wrong??
   out <- cppad_closed(ppitapes$smotape, Y = utabl)
 
-  expect_equal(pForward0(dirtapes$lltape, utabl[2, ], beta), pForward0(ppitapes$lltape, utabl[2, ], beta))
-  expect_equal(pJacobian(dirtapes$lltape, utabl[2, ], beta), pJacobian(ppitapes$lltape, utabl[2, ], beta))
+  expect_equal(pForward0(dirtapes$lltape$ptr, utabl[2, ], beta), pForward0(ppitapes$lltape$ptr, utabl[2, ], beta))
+  expect_equal(pJacobian(dirtapes$lltape$ptr, utabl[2, ], beta), pJacobian(ppitapes$lltape$ptr, utabl[2, ], beta))
   expect_equal(pForward0(dirtapes$smotape, beta, utabl[2, ]), pForward0(ppitapes$smotape, beta, utabl[2, ]))
 
   hardcodedestimate <- dir_sqrt_minimah(utabl, acut)
