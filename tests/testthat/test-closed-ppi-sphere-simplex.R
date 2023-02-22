@@ -202,7 +202,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
-  prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=35)
+  expect_warning({prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=35)}, "maxden")
 
   acut = 0.1
   est_hardcoded <- estimator1(prop, acut, incb = 0, beta = beta)
