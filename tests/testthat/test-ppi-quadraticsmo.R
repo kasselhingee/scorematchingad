@@ -68,8 +68,8 @@ test_that("ppi ll tape is fails the quadratic test", {
                     pmanifoldtransform = sqrtman)
 
   # check only with pParameter()
-  expect_false(testquadratictape(ppitape))
-  expect_message(testquadratictape(ppitape, verbose = TRUE), "non-constant")
+  expect_false(testquadratictape(ppitape$ptr))
+  expect_message(testquadratictape(ppitape$ptr, verbose = TRUE), "non-constant")
 
   # check some values
 

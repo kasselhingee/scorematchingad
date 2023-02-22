@@ -2,15 +2,13 @@ test_that("Hess + Offset match gradient for a PPI Example", {
   mod <- ppi_egmodel(100)
   Y <- mod$sample
 
-  Ralr <- manifoldtransform("Ralr")
-  ppitape <- tapell(llname = "ppi",
-                  xtape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3, betap=0.5), 
-                  pmanifoldtransform = Ralr)
-  smotape <- tapesmo(lltape = ppitape,
-                      pmanifoldtransform = Ralr,
-                      divweight = "ones",
-                      verbose = FALSE)
+  tapes <- buildsmotape(
+     manifoldname = "Ralr",
+     llname = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3, betap=0.5), 
+     verbose = FALSE)
+  smotape <- tapes$smotape
 
   values <- quadratictape_parts(smotape, Y)
 
@@ -52,15 +50,13 @@ test_that("quadratictape_parts with approx centres is close to quadratic_parts f
   Y <- mod$sample
   Ycen <- simplex_boundaryshift(Y)
 
-  Ralr <- manifoldtransform("Ralr")
-  ppitape <- tapell(llname = "ppi",
-                  xtape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3), 
-                  pmanifoldtransform = Ralr)
-  smotape <- tapesmo(lltape = ppitape,
-                      pmanifoldtransform = Ralr,
-                      divweight = "ones",
-                      verbose = FALSE)
+  tapes <- buildsmotape(
+     manifoldname = "Ralr",
+     llname = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3), 
+     verbose = FALSE)
+  smotape <- tapes$smotape
   
   valuesexact <- quadratictape_parts(smotape, Y)
   valuesapprox <- quadratictape_parts(smotape, Y, tcentres = Ycen, approxorder = 1)

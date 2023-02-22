@@ -10,7 +10,7 @@ test_that("von-Mises Fisher likelihood runs and fits", {
                         rep(1, p)/sqrt(p), rep(NA, p),
                         weightname = "ones",
                         verbose = FALSE)
-  expect_equal(pForward0(tapes$lltape, sample[1, ], theta), sum(sample[1, ]  * theta)) ## very important to check a tape
+  expect_equal(pForward0(tapes$lltape$ptr, sample[1, ], theta), sum(sample[1, ]  * theta)) ## very important to check a tape
   out <- cppad_closed(tapes$smotape, Y = sample)
   expect_absdiff_lte_v(out$est, theta, 3 * out$SE)
 })
