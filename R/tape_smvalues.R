@@ -8,7 +8,7 @@
 #' @examples
 #' m <- ppi_egmodel(100)
 #' tapes <- buildsmotape("sphere", "ppi",
-#'               utape = rep(1/m$p, m$p),
+#'               ytape = rep(1/m$p, m$p),
 #'               usertheta = ppi_paramvec(beta = m$beta),
 #'               weightname = "minsq", acut = 0.01)
 #' tape_smvalues(tapes$smotape, xmat = m$sample, pmat = m$theta[1:5])

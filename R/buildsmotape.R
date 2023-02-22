@@ -3,7 +3,7 @@
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
 #' @param manifoldname Manifold with tranformation name. Passed to [`manifoldtransform()`].
 #' @param llname Name of the log-likelihood function. Passed to [`tapell()`].
-#' @param utape An example observation (a single vector) to use for taping. The results should only depend on the length of `utape` so long as `utape` In the natural manifold of the model.
+#' @param ytape An example observation (a single vector) to use for taping. The results should only depend on the length of `ytape` so long as `ytape` In the natural manifold of the model.
 #' @param usertheta A vector of parameter elements for the likelihood function. `NA` elements are to be fitted. Other elements are fixed at the provided value.
 #' @param weightname The name of the divergence weight function ('ones' for manifolds without boundary).
 #' @param acut The threshold \eqn{a_c} in the divergence weight function.
@@ -43,7 +43,7 @@
 #' ltheta <- p #length of vMF parameter vector
 #' intheta <- rep(NA, length.out = ltheta)
 #' tapes <- buildsmotape("Snative", "vMF",
-#'               utape = u,
+#'               ytape = u,
 #'               usertheta = intheta,
 #'               "ones", 1, verbose = FALSE
 #'               )
@@ -51,7 +51,7 @@
 #' pForward0(tapes$smotape, runif(n = ltheta), u)
 #' @export
 buildsmotape <- function(manifoldname, llname,
-                         utape, usertheta,
+                         ytape, usertheta,
                          weightname = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
                          verbose = FALSE){
@@ -59,7 +59,7 @@ buildsmotape <- function(manifoldname, llname,
   isfixed <- t_u2i(usertheta)
 
   out <- buildsmotape_internal(manifoldname, llname,
-                         utape, starttheta, isfixed,
+                         ytape, starttheta, isfixed,
                          weightname = weightname, acut = acut,
                          filler = thetatape_creator,
                          verbose = verbose)
@@ -67,7 +67,7 @@ buildsmotape <- function(manifoldname, llname,
 }
 
 buildsmotape_internal <- function(manifoldname, llname,
-                         utape, starttheta, isfixed,
+                         ytape, starttheta, isfixed,
                          weightname = "ones", acut = 1,
                          filler = function(n){seq(length.out = n)},
                          verbose = FALSE){
@@ -83,7 +83,7 @@ buildsmotape_internal <- function(manifoldname, llname,
 
   pman <- manifoldtransform(manifoldname)
   lltape <- tapell(llname = llname,
-                    xtape = utape,
+                    xtape = ytape,
                     usertheta = t_si2u(starttheta, isfixed), 
                     thetatape_creator = function(n){t_si2f(starttheta, isfixed)},
                     pmanifoldtransform = pman)
@@ -99,7 +99,7 @@ buildsmotape_internal <- function(manifoldname, llname,
     info = list(
       name = llname,
       manifold = manifoldname,
-      ulength = length(utape),
+      ulength = length(ytape),
       starttheta = starttheta,
       isfixed = isfixed,
       weightname = weightname,

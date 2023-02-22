@@ -49,9 +49,9 @@ Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){
 
   intheta <- Bingham_Amat2theta(A)
 
-  utape <- rep(1, p) / sqrt(p)
+  ytape <- rep(1, p) / sqrt(p)
   tapes <- buildsmotape("Snative", "Bingham",
-                           utape, intheta,
+                           ytape, intheta,
                            weightname = "ones")
   out <- cppad_closed(tapes$smotape, Y = sample)
   theta <- intheta

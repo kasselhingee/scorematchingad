@@ -7,7 +7,7 @@ acut = 0.1
 
 test_that("cppad_closed() w = rep(1, nrow(Y)) is near the result as if w omitted", {
   tapes <- buildsmotape("sphere", "ppi",
-                        utape = rep(1/p, m$p),
+                        ytape = rep(1/p, m$p),
                         usertheta = rep(NA, length(m$theta)),
                         weightname = "minsq", acut = acut)
   out_constant <- cppad_closed(tapes$smotape, m$sample, w = rep(1, nrow(m$sample)))
@@ -19,7 +19,7 @@ test_that("cppad_closed() w = rep(1, nrow(Y)) is near the result as if w omitted
 
 test_that("cppad_search() w = rep(1, nrow(Y)) is near the result as if w omitted", {
   tapes <- buildsmotape("sphere", "ppi",
-                        utape = rep(1/p, m$p),
+                        ytape = rep(1/p, m$p),
                         usertheta = rep(NA, length(m$theta)),
                         weightname = "minsq", acut = acut)
   out_constant <- cppad_search(tapes$smotape, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12), w = rep(1, nrow(m$sample)))
@@ -80,7 +80,7 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights w
 
 test_that("cppad_search() for ppi with minsq matches itself", {
   tapes <- buildsmotape("sphere", "ppi",
-               utape = rep(1/m$p, m$p),
+               ytape = rep(1/m$p, m$p),
                usertheta = ppi_paramvec(m$p),
                weightname = "minsq",
                acut = acut)

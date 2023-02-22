@@ -23,7 +23,7 @@ vMF_kappa <- function(Y, w = rep(1, nrow(Y)), control = default_Rcgmin()){
   # because kappa * e1 = (kappa, 0, 0, 0, ...)
     p <- ncol(Y)
     tapes <- buildsmotape("Snative", "vMF",
-                          utape = rep(1, p)/sqrt(p),
+                          ytape = rep(1, p)/sqrt(p),
                           usertheta = c(NA, rep(0, p-1)))
     sminfo <- cppad_closed(tapes$smotape, Y, w = w)
     k <- sminfo$est
