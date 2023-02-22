@@ -16,18 +16,16 @@
 #' If the results of the tests differ the returned value is `FALSE` and a message is printed indicating which test failed.
 #' @return `TRUE` or `FALSE`
 #' @examples
-#'  sqrtman <- manifoldtransform("sphere")
-#'  ppitape <- tapell(llname = "ppi",
-#'                    xtape = c(0.2, 0.3, 0.5),
-#'                    usertheta = ppi_paramvec(p = 3), 
-#'                    pmanifoldtransform = sqrtman)
-#'  ppismotape <- tapesmo(lltape = ppitape,
-#'                        pmanifoldtransform = sqrtman,
-#'                        divweight = "minsq",
-#'                        acut = 0.1,
-#'                        verbose = FALSE)
+#' tapes <- buildsmotape(
+#'    manifoldname = "sphere",
+#'    llname = "ppi",
+#'    ytape = c(0.2, 0.3, 0.5),
+#'    usertheta = ppi_paramvec(p = 3), 
+#'    weightname = "minsq",
+#'    acut = 0.1,
+#'    verbose = FALSE)
 #'
-#'  testquadratictape(ppismotape)
+#'  testquadratictape(tapes$smotape)
 #' @export
 testquadratictape <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE){
   tapeJ <- pTapeJacobian(tape, attr(tape, "xtape"), attr(tape, "dyntape"))

@@ -45,17 +45,15 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
 
   if (is.null(paramvec)){paramvec <- rep(NA, ppithetalength(ncol(Y)))}
 
-
-  pman <- manifoldtransform(man)
-  ppitape <- tapell(llname = "ppi",
-                  xtape = rep(1/p, p),
-                  usertheta = paramvec, 
-                  pmanifoldtransform = pman)
-  smotape <- tapesmo(lltape = ppitape,
-                     pmanifoldtransform = pman,
-                     divweight = divweight,
-                     acut = acut,
-                     verbose = FALSE)
+  tapes <- buildsmotape(
+     manifoldname = man,
+     llname = "ppi",
+     ytape =  rep(1/p, p),
+     usertheta = paramvec,
+     weightname = divweight,
+     acut = acut,
+     verbose = FALSE)
+  smotape <- tapes$smotape
 
   # find boundary points and their approximation centres
   isbdry <- simplex_isboundary(Y, bdrythreshold)

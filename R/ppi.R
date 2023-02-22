@@ -176,16 +176,15 @@ ppi <- function(Y, paramvec = NULL,
     else {stheta <- t_us2s(usertheta, paramvec_start)}
     isfixed <- t_u2i(usertheta)
     # prepare tapes
-    pman <- manifoldtransform(man)
-    ppitape <- tapell(llname = "ppi",
-                    xtape = rep(1/p, p),
-                    usertheta = t_si2u(stheta, isfixed), 
-                    pmanifoldtransform = pman)
-    smotape <- tapesmo(lltape = ppitape,
-                       pmanifoldtransform = pman,
-                       divweight = divweight,
-                       acut = acut,
-                       verbose = FALSE)
+    tapes <- buildsmotape(
+       manifoldname = man,
+       llname = "ppi",
+       ytape =  rep(1/p, p),
+       usertheta = t_si2u(stheta, isfixed),
+       weightname = divweight,
+       acut = acut,
+       verbose = FALSE)
+    smotape <- tapes$smotape
   
     # find boundary points and their approximation centres
     isbdry <- simplex_isboundary(Y, bdrythreshold)

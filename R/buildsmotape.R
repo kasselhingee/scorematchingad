@@ -83,7 +83,7 @@ buildsmotape_internal <- function(manifoldname, llname,
 
   pman <- manifoldtransform(manifoldname)
   lltape <- tapell(llname = llname,
-                    xtape = ytape,
+                    ytape = ytape,
                     usertheta = t_si2u(starttheta, isfixed), 
                     thetatape_creator = function(n){t_si2f(starttheta, isfixed)},
                     pmanifoldtransform = pman)
