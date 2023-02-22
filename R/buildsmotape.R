@@ -1,17 +1,16 @@
-#' @title Build a CppAD Tape of a Score-Matching Objective Function
+#' @title Build a CppAD Tapes for Score Matching
 #' @family tape builders
-#' @param utape A measurment to use for taping
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
 #' @param manifoldname Manifold with tranformation name. Passed to [`manifoldtransform()`].
 #' @param llname Name of the log-likelihood function. Passed to [`tapell()`].
-#' @param utape An example observation (a single vector) to use for taping. The results shouldn't depend on `utape` so long as `utape` is in the manifold and the other functions are properly implemented.
+#' @param utape An example observation (a single vector) to use for taping. The results should only depend on the length of `utape` so long as `utape` In the natural manifold of the model.
 #' @param usertheta A vector of parameter elements for the likelihood function. `NA` elements are to be fitted. Other elements are fixed at the provided value.
 #' @param weightname The name of the divergence weight function ('ones' for manifolds without boundary).
 #' @param acut The threshold \eqn{a_c} in the divergence weight function.
 #' @param thetatape_creator A function that accepts an integer `n`, and returns a vector of `n` length. The function is used to fill in the `NA` elements of `usertheta` when building the tapes.
 #' @param verbose If `TRUE` more details are printed when taping.
 #' @description
-#' Generates `CppAD` tapes for a model.
+#' Generates `CppAD` tapes for the log-likelihood and score matching objective  for a model specified by name and manifold/transformation.
 #' @details
 #' When using, `CppAD` one first creates *tapes* of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
 #' The taping relies on specifying typical argument values for the functions, so the programming is simplest when the function is defined without conditions.
