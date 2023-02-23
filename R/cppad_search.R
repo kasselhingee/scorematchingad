@@ -31,17 +31,17 @@
 #' where `n` is the number of observations.
 #' @export
 cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10, control = default_Rcgmin()){
-  Jsmofun <- pTapeJacobian(smotape, attr(smotape, "xtape"), attr(smotape, "dyntape"))
-  Hsmofun <- pTapeJacobian(Jsmofun, attr(smotape, "xtape"), attr(smotape, "dyntape"))
+  Jsmofun <- tapeJacobian(smotape)
+  Hsmofun <- tapeJacobian(Jsmofun)
   
-  smofun_u <- swapDynamic(smotape, attr(smotape, "dyntape"), attr(smotape, "xtape")) #don't use a boundary point here!
-  Jsmofun_u <- swapDynamic(Jsmofun, attr(smotape, "dyntape"), attr(smotape, "xtape"))
+  smofun_u <- tapeSwap(smotape) #don't use a boundary point for taping here!
+  Jsmofun_u <- tapeSwap(Jsmofun)
 
   smoobj <- function(atheta){
-    tape_eval_wsum(smofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
+    tape_eval_wsum(smofun_u$ptr, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
   smograd <- function(atheta){
-    tape_eval_wsum(Jsmofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
+    tape_eval_wsum(Jsmofun_u$ptr, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
 
   # useful to debugging as Rcgmin hides the error codes
@@ -68,7 +68,7 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
 
   out$SE <- "Not calculated."
   if (isTRUE(all(w[[1]] == w))){
-    out$SE <- sqrt(diag(sme_estvar(smotape, estimate = out$par, Y = Y, Yapproxcentres = Yapproxcentres, approxorder = approxorder)))
+    out$SE <- sqrt(diag(sme_estvar(smotape$ptr, estimate = out$par, Y = Y, Yapproxcentres = Yapproxcentres, approxorder = approxorder)))
   }
   gradatest <- smograd(out$par) / sum(w)
   out$sqgradsize <- sum(gradatest^2)

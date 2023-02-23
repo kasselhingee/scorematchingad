@@ -40,11 +40,10 @@ tapesmo <- function(lltape,
                       divweight, 
                       acut, 
                       verbose = verbose)
-  attr(smotape, "fname") <- paste(lltape$name, "smo", sep = "-")
-  attr(smotape, "xtape") <- lltape$dyntape
-  attr(smotape, "usertheta") <- attr(lltape, "usertheta")
-  attr(smotape, "dyntape") <- attr(lltape, "ytape")
-  attr(smotape, "divweight") <- divweight
-  attr(smotape, "acut") <- acut
-  return(smotape)
+  out <- ADFun$new(ptr = smotape,
+                   name = paste(lltape$name, "smo", sep = "-"),
+                   xtape = as.numeric(lltape$dyntape),
+                   dyntape = as.numeric(attr(lltape, "ytape")),
+                   usertheta = as.numeric(lltape$usertheta))
+  return(out)
 }

@@ -47,11 +47,11 @@ tapell <- function(llname,
   out <- ADFun$new(ptr = lltape,
                    name = paste(attr(pmanifoldtransform, "name"), llname, sep = "-"),
                    xtape = ztape,
-                   dyntape =  as.numeric(starttheta[!t_u2i(usertheta)]))
+                   dyntape =  as.numeric(starttheta[!t_u2i(usertheta)]),
+                   usertheta = as.numeric(usertheta))
 
   attr(out, "ytape") <- ytape
   attr(out, "manifoldtransform") <- attr(pmanifoldtransform, "name")
-  attr(out, "usertheta") <- usertheta
   return(out)
 }
 

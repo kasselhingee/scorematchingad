@@ -8,25 +8,29 @@ ADFun <- R6::R6Class("ADFun",
     .ptr = NULL,
     .name = NULL,
     .xtape = vector("numeric"),
-    .dyntape = vector("numeric")
+    .dyntape = vector("numeric"),
+    .usertheta = vector("numeric")
   ),
   public = list(
-    initialize = function(ptr, name = NULL, xtape = vector("numeric"), dyntape = vector("numeric")){
+    initialize = function(ptr, name = NULL, xtape = vector("numeric"), dyntape = vector("numeric"), usertheta = rep(NA_real_, length(dyntape))){
       stopifnot(isa(ptr, "externalptr"))
       stopifnot(is.null(name) | isa(name, "character"))
       stopifnot(isa(xtape, "numeric"))
       stopifnot(isa(dyntape, "numeric"))
+      stopifnot(isa(usertheta, "numeric"))
       private$.ptr <- ptr
       private$.name <- name
       private$.xtape <- xtape
       private$.dyntape <- dyntape
+      private$.usertheta <- usertheta
     }
   ),
   active = list(
     ptr = function(value){if (missing(value)){private$.ptr} else {stop("`$ptr' is read only", call. = FALSE)}},
     name = function(value){if (missing(value)){private$.name} else {stop("`$name' is read only", call. = FALSE)}},
     xtape = function(value){if (missing(value)){private$.xtape} else {stop("`$xtape' is read only", call. = FALSE)}},
-    dyntape = function(value){if (missing(value)){private$.dyntape} else {stop("`$dyntape' is read only", call. = FALSE)}}
+    dyntape = function(value){if (missing(value)){private$.dyntape} else {stop("`$dyntape' is read only", call. = FALSE)}},
+    usertheta = function(value){if (missing(value)){private$.dyntape} else {stop("`$usertheta' is read only", call. = FALSE)}}
   ),
   cloneable = FALSE
 )
