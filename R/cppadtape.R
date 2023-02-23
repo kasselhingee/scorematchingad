@@ -30,7 +30,7 @@ ADFun <- R6::R6Class("ADFun",
     name = function(value){if (missing(value)){private$.name} else {stop("`$name' is read only", call. = FALSE)}},
     xtape = function(value){if (missing(value)){private$.xtape} else {stop("`$xtape' is read only", call. = FALSE)}},
     dyntape = function(value){if (missing(value)){private$.dyntape} else {stop("`$dyntape' is read only", call. = FALSE)}},
-    usertheta = function(value){if (missing(value)){private$.dyntape} else {stop("`$usertheta' is read only", call. = FALSE)}}
+    usertheta = function(value){if (missing(value)){private$.usertheta} else {stop("`$usertheta' is read only", call. = FALSE)}}
   ),
   cloneable = FALSE
 )
