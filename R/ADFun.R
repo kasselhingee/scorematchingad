@@ -1,8 +1,34 @@
 # R6 ADFun class. Making it here because templating of the Cpp class means it is hard to expose via Rcpp
 # Using R6 because it has modify in place semantics which match the ADFun objects
 # following https://adv-r.hadley.nz/r6.html
-# @examples
 
+#' @title A Class for Storing a CppAD Tape (ADFun) Object
+#' @description An `R6` class for storing a 'pointer' to a `CppAD` tape in `C++` (called an `ADFun`) and associated information. The data in an `ADFun` object is read only as the information stored cannot be modified for the corresponding `CppAD` object.
+#' @field ptr A `Rcpp` external pointer to a `CppAD` `ADFun` object.
+#' @param ptr A `Rcpp` external pointer to a `CppAD` `ADFun` object, often created via [`buildsmotape()`].
+#' @field xtape The (numeric) vector of independent variable values used for taping.
+#' @param xtape The (numeric) vector of independent variables used for taping.
+#' @field dyntape The (numeric) vector of dynamic parameters used for taping.
+#' @param dyntape The (numeric) vector of dynamic parameters used for taping.
+#' @field usertheta A (numeric) vector of `NA` values and fixed values specifying the inputs of the taped function that were considered independent variables or fixed parameters.
+#' @param usertheta A (numeric) vector of `NA` values and fixed values specifying the inputs of the taped function that were considered independent variables or fixed parameters.
+#' @field name An easy to read name for the taped function
+#' @param name An easy to read name for the taped function
+#' @inheritSection buildsmotape Introduction to CppAD Tapes
+#' @examples
+#' tapes <- buildsmotape(
+#'   manifoldname = "sqrt",
+#'   llname = "ppi",
+#'   ytape =  rep(1/3, 3),
+#'   usertheta = ppi_paramvec(p=3),
+#'   weightname = "minsq",
+#'   acut = "0.01",
+#'   verbose = FALSE)
+#' tapes$smotape$xtape
+#' tapes$smotape$dyntape
+#' tapes$smotape$name
+#' tapes$smotape$ptr
+#' @export
 ADFun <- R6::R6Class("ADFun",
   private = list( #private == not modifiable
     .ptr = NULL,
@@ -12,6 +38,7 @@ ADFun <- R6::R6Class("ADFun",
     .usertheta = vector("numeric")
   ),
   public = list(
+    #' @description Create a new `ADFun` object from an external pointer to a `CppAD` `ADFun` object.
     initialize = function(ptr, name = NULL, xtape = vector("numeric"), dyntape = vector("numeric"), usertheta = rep(NA_real_, length(dyntape))){
       stopifnot(isa(ptr, "externalptr"))
       stopifnot(is.null(name) | isa(name, "character"))
