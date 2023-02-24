@@ -29,15 +29,15 @@ test_that("cppad_search() w = rep(1, nrow(Y)) is near the result as if w omitted
   expect_equal(out_ommit$value, out_constant$value)
 })
 
-test_that("tape_eval_wsum() matches for simulated weights and constant weights", {
+test_that("evaltape_wsum() matches for simulated weights and constant weights", {
   intheta <- ppi_paramvec(m$p)
   tapes <- buildsmotape("sphere", "ppi",
                         m$sample[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
   smo_u <- tapeSwap(tapes$smotape)
-  smo_sim <- tape_eval_wsum(smo_u, vw$newY, m$theta)
-  smo_hardcoded <- tape_eval_wsum(smo_u, m$sample, m$theta, w=vw$w)
+  smo_sim <- evaltape_wsum(smo_u, vw$newY, m$theta)
+  smo_hardcoded <- evaltape_wsum(smo_u, m$sample, m$theta, w=vw$w)
   expect_equal(smo_sim, smo_hardcoded)
 
   # compare results to old smobj  
@@ -52,7 +52,7 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights",
   expect_equal(smo_sim_manual, smo_dir_manual)
 })
 
-test_that("tape_eval_wsum() matches for simulated weights and constant weights with boundary data", {
+test_that("evaltape_wsum() matches for simulated weights and constant weights with boundary data", {
   intheta <- ppi_paramvec(m$p)
   tapes <- buildsmotape("sphere", "ppi",
                         m$sample[1, ], intheta,
@@ -73,8 +73,8 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights w
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = 1E-3)
   simYcentres <- Yapproxcentres
 
-  smo_sim <- tape_eval_wsum(smo_u, vw$newY, pmat = m$theta, xcentres = simYcentres)
-  smo_hardcoded <- tape_eval_wsum(smo_u, m$sample, pmat = m$theta, xcentres = origYcentres, w=vw$w)
+  smo_sim <- evaltape_wsum(smo_u, vw$newY, pmat = m$theta, xcentres = simYcentres)
+  smo_hardcoded <- evaltape_wsum(smo_u, m$sample, pmat = m$theta, xcentres = origYcentres, w=vw$w)
   expect_equal(smo_sim, smo_hardcoded)
 })
 

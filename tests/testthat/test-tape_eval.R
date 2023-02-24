@@ -28,7 +28,7 @@ test_that("PPI ALR hardcoded estimate has low smo and smgrad values and constant
 })
 
 
-test_that("smobj() etc calculates the same as tape_eval()", {
+test_that("smobj() etc calculates the same as evaltape()", {
   mnongamma <- ppi_egmodel(1)
   theta <- ppi_paramvec(beta = c(-0.95, -0.9, 0.5), AL = mnongamma$AL, bL = 0)
   set.seed(1234)
@@ -44,14 +44,14 @@ test_that("smobj() etc calculates the same as tape_eval()", {
   est_hardcoded <- ppi(dsample, paramvec = usertheta, trans = "alr", method = "hardcoded")
 
 
-  vals_tape_eval <- ppi_smvalues(dsample, paramvec = usertheta, evalparam = est_hardcoded$est$paramvec, trans = "alr")
+  vals_evaltape <- ppi_smvalues(dsample, paramvec = usertheta, evalparam = est_hardcoded$est$paramvec, trans = "alr")
   vals_smobj <- ppi_cppad_values(dsample,
          stheta = est_hardcoded$est$paramvec,
          isfixed = t_u2i(usertheta),
          man = "Ralr", hsqfun = "ones", acut = 1)
-  expect_equal(vals_tape_eval$obj, vals_smobj$obj)
-  expect_equal(vals_tape_eval$grad, vals_smobj$grad)
-  expect_equal(vals_tape_eval$hess, vals_smobj$hess, ignore_attr = TRUE)
+  expect_equal(vals_evaltape$obj, vals_smobj$obj)
+  expect_equal(vals_evaltape$grad, vals_smobj$grad)
+  expect_equal(vals_evaltape$hess, vals_smobj$hess, ignore_attr = TRUE)
 })
 
 

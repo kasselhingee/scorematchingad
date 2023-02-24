@@ -38,10 +38,10 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
   Jsmofun_u <- tapeSwap(Jsmofun)
 
   smoobj <- function(atheta){
-    tape_eval_wsum(smofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
+    evaltape_wsum(smofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
   smograd <- function(atheta){
-    tape_eval_wsum(Jsmofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
+    evaltape_wsum(Jsmofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
 
   # useful to debugging as Rcgmin hides the error codes
@@ -58,7 +58,7 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
     if (grepl("Initial point", out$message)){
       stop(paste(out$message, "Initial point was", paste(theta, collapse = " ")))
     } else {
-      stop(paste(out$message, "Perhaps tape_eval_wsum() generates a non-number?"))
+      stop(paste(out$message, "Perhaps evaltape_wsum() generates a non-number?"))
     }
   }
   if (out$convergence != 0){warning("Optimisation did not converge.")}
