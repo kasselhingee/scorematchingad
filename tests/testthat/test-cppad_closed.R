@@ -14,7 +14,7 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
 
   estobj <- cppad_closed(smotape, Y)
 
-  grads <- t(apply(Y, MARGIN = 1, function(x) pJacobian(smotape, estobj$est, x))) 
+  grads <- t(apply(Y, MARGIN = 1, function(x) pJacobian(smotape$ptr, estobj$est, x))) 
   totalgrad <- colSums(grads)
   expect_lt(sum(totalgrad^2), 1E-20)
 

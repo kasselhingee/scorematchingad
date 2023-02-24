@@ -152,7 +152,7 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
 
   values <- quadratictape_parts(tapes$smotape, Y)
 
-  smoorig <- apply(Y, MARGIN = 1, function(x){pForward0(tapes$smotape$ptr, ftheta, x)})
+  smoorig <- evaltape(tapes$smotape, xmat = Y, pmat = ftheta)
 
   smopoly <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * ftheta %*% matrix(values$Hessian[i, ], ncol = length(ftheta)) %*% ftheta + 
@@ -163,7 +163,7 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
   
   #test constant by trying another theta
   ftheta2 <- ftheta+1
-  smoorig2 <- apply(Y, MARGIN = 1, function(x){pForward0(tapes$smotape, ftheta2, x)})
+  smoorig2 <- evaltape(tapes$smotape, xmat = Y, pmat = ftheta2)
   smopoly2 <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * ftheta2 %*% matrix(values$Hessian[i, ], ncol = length(ftheta2)) %*% ftheta2 +
       values$offset[i, , drop = FALSE] %*% ftheta2)

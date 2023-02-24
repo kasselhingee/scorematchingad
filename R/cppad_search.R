@@ -38,10 +38,10 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
   Jsmofun_u <- tapeSwap(Jsmofun)
 
   smoobj <- function(atheta){
-    tape_eval_wsum(smofun_u$ptr, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
+    tape_eval_wsum(smofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
   smograd <- function(atheta){
-    tape_eval_wsum(Jsmofun_u$ptr, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
+    tape_eval_wsum(Jsmofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
 
   # useful to debugging as Rcgmin hides the error codes
@@ -68,7 +68,7 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
 
   out$SE <- "Not calculated."
   if (isTRUE(all(w[[1]] == w))){
-    out$SE <- sqrt(diag(sme_estvar(smotape$ptr, estimate = out$par, Y = Y, Yapproxcentres = Yapproxcentres, approxorder = approxorder)))
+    out$SE <- sqrt(diag(sme_estvar(smotape, estimate = out$par, Y = Y, Yapproxcentres = Yapproxcentres, approxorder = approxorder)))
   }
   gradatest <- smograd(out$par) / sum(w)
   out$sqgradsize <- sum(gradatest^2)
