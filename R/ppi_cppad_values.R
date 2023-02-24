@@ -25,19 +25,17 @@ ppi_cppad_values <- function(prop, stheta, isfixed,
                            nrow(datasplit$uboundary),
                            0)
 
-  eginteriorpt <- rep(1/p, p)
-  theta_for_taping <- t_si2f(stheta, tapes$info$isfixed)
-  Jsmofun <- pTapeJacobian(tapes$smotape, theta_for_taping, eginteriorpt)
-  Hsmofun <- pTapeJacobian(Jsmofun, theta_for_taping, eginteriorpt)
-  smofun_u <- swapDynamic(tapes$smotape, eginteriorpt, theta_for_taping)
-  Jsmofun_u <- swapDynamic(Jsmofun, eginteriorpt, theta_for_taping)
-  Hsmofun_u <- swapDynamic(Hsmofun, eginteriorpt, theta_for_taping)
+  Jsmofun <- tapeJacobian(tapes$smotape)
+  Hsmofun <- tapeJacobian(Jsmofun)
+  smofun_u <- tapeSwap(tapes$smotape)
+  Jsmofun_u <- tapeSwap(Jsmofun)
+  Hsmofun_u <- tapeSwap(Hsmofun)
 
 
-  objval <- smobj(smofun = tapes$smotape,
+  objval <- smobj(smofun = tapes$smotape$ptr,
         theta = t_si2f(stheta, tapes$info$isfixed),
         utabl = datasplit$interior,
-        smofun_u = smofun_u,
+        smofun_u = smofun_u$ptr,
         uboundary = datasplit$uboundary,
         boundaryapprox = datasplit$boundaryapprox,
         approxorder = approxorder,
@@ -45,10 +43,10 @@ ppi_cppad_values <- function(prop, stheta, isfixed,
         wboundary = datasplit$wboundary
         )
 
-  gradval <- smobjgrad(smofun = tapes$smotape,
+  gradval <- smobjgrad(smofun = tapes$smotape$ptr,
         theta = t_si2f(stheta, tapes$info$isfixed),
         utabl = datasplit$interior,
-        Jsmofun_u = Jsmofun_u,
+        Jsmofun_u = Jsmofun_u$ptr,
         uboundary = datasplit$uboundary,
         boundaryapprox = datasplit$boundaryapprox,
         approxorder = approxorder,
@@ -56,10 +54,10 @@ ppi_cppad_values <- function(prop, stheta, isfixed,
         wboundary = datasplit$wboundary
         )
   
-  hessval <- smobjhess(smofun = tapes$smotape,
+  hessval <- smobjhess(smofun = tapes$smotape$ptr,
         theta = t_si2f(stheta, tapes$info$isfixed),
         utabl = datasplit$interior,
-        Hsmofun_u = Hsmofun_u,
+        Hsmofun_u = Hsmofun_u$ptr,
         uboundary = datasplit$uboundary,
         boundaryapprox = datasplit$boundaryapprox,
         approxorder = approxorder,

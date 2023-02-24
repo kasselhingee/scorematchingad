@@ -1,13 +1,13 @@
 #' @title Test Whether a CppAD Tape is a Quadratic Function
 #' @family tape evaluators
 #' @description
-#' Uses [`pParameter()`] and derivatives [`pTapeJacobian()`], [`pJacobian()`] to test whether
+#' Uses [`pParameter()`] and derivatives [`tapeJacobian()`], [`pJacobian()`] to test whether
 #' the tape is quadratic.
-#' @param tape An `Rcpp::XPtr` to a CppAD tape.
+#' @param tape An `ADFun` object.
 #' @param xmat If passed, the third-order derivatives at values of the rows of `xmat` are tested.
 #' @param dynparammat The dynamic parameters for the tape. If passed, the rows of `dynparammat` are passed to the tape as `dynparam`.
 #' @param verbose If TRUE information about the failed tests is passed.
-#' @details Uses the `xtape` and `dyntape` attributes of `tape` to create new tapes.
+#' @details Uses the `xtape` and `dyntape` values stored in `tape` to create new tapes.
 #' A tape of Hessian is obtained by applying [`pTapeJacobian()`] twice. Using [`pTapeHessian()`] directly did not show constant parameters via [`pParameter()`] in tests.
 #'
 #' Two tests are conducted on the tape of the Hessian.
@@ -28,11 +28,12 @@
 #'  testquadratictape(tapes$smotape)
 #' @export
 testquadratictape <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE){
-  tapeJ <- pTapeJacobian(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
-  tapeH <- pTapeJacobian(tapeJ, attr(tape, "xtape"), attr(tape, "dyntape"))
+  stopifnot(inherits(tape, "ADFun"))
+  tapeJ <- tapeJacobian(tape)
+  tapeH <- tapeJacobian(tapeJ)
 
   #pParameter() test
-  isparameter <- pParameter(tapeH)
+  isparameter <- pParameter(tapeH$ptr)
   result_pParameter <- all(isparameter)
   if (verbose && !result_pParameter){
     message(sprintf("The Hessian was non-constant according to pParameter() for elements %s.",

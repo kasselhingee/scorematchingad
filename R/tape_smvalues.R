@@ -14,19 +14,19 @@
 #' tape_smvalues(tapes$smotape, xmat = m$sample, pmat = m$theta[1:5])
 #' @export
 tape_smvalues <- function(smotape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
+  stopifnot(inherits(smotape, "ADFun"))
   # prepare tapes
-  Jsmofun <- pTapeJacobian(smotape, attr(smotape, "xtape"), attr(smotape, "dyntape"))
-  Hsmofun <- pTapeJacobian(Jsmofun, attr(smotape, "xtape"), attr(smotape, "dyntape"))
+  Jsmofun <- tapeJacobian(smotape)
+  Hsmofun <- tapeJacobian(Jsmofun)
   
-  smofun_u <- swapDynamic(smotape, attr(smotape, "dyntape"), attr(smotape, "xtape")) #don't use a boundary point here!
-  Jsmofun_u <- swapDynamic(Jsmofun, attr(smotape, "dyntape"), attr(smotape, "xtape"))
-  Hsmofun_u <- swapDynamic(Hsmofun, attr(smotape, "dyntape"), attr(smotape, "xtape"))
+  smofun_u <- tapeSwap(smotape) #don't use a boundary for taping!
+  Jsmofun_u <- tapeSwap(Jsmofun)
+  Hsmofun_u <- tapeSwap(Hsmofun)
 
+  smovals <- evaltape(smofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
 
-  smovals <- tape_eval(smofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
-
-  gradvals <- tape_eval(Jsmofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
-  hessvals <- tape_eval(Hsmofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
+  gradvals <- evaltape(Jsmofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
+  hessvals <- evaltape(Hsmofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
 
   return(list(
     obj = smovals,
