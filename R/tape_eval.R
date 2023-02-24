@@ -12,7 +12,10 @@
 #' @return
 #' A matrix, each row corresponding to the evaluation of the same row in `xmat`, `pmat` and the `xcentres`.
 #' @export
-tape_eval <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
+evaltape <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
+  if (R6::is.R6(tape) && inherits(tape, "ADFun")){
+     tape <- tape$ptr
+  }
   stopifnot(nrow(xmat) == nrow(xcentres))
   if (is.vector(xmat)){xmat <- matrix(xmat, ncol = length(xmat))}
   if (is.vector(pmat)){pmat <- matrix(pmat, ncol = length(pmat))}
@@ -45,7 +48,7 @@ tape_eval <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
 
 #' @rdname tape_eval
 #' @param w Weights to apply to each row of `xmat` for computing the weighted sum. If `NULL` then each row is given a weight of `1`.
-tape_eval_wsum <- function(tape, xmat, pmat, w=NULL, xcentres = NA * xmat, approxorder = 10){
+evaltape_wsum <- function(tape, xmat, pmat, w=NULL, xcentres = NA * xmat, approxorder = 10){
   evals <- tape_eval(tape, xmat = xmat, pmat = pmat,
                      xcentres = xcentres, approxorder = approxorder)
   
@@ -54,4 +57,7 @@ tape_eval_wsum <- function(tape, xmat, pmat, w=NULL, xcentres = NA * xmat, appro
   return(out)
 }
 
+
+tape_eval <- evaltape
+tape_eval_wsum <- evaltape_wsum
 
