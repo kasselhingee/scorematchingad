@@ -37,24 +37,24 @@ test_that("manual tests on PPI model with sqrt transformation, minsq divergence 
      verbose = FALSE)
   ppismotape <- tapes$smotape
 
-  ppismotapeJ <- pTapeJacobian(ppismotape, attr(ppismotape, "xtape"), attr(ppismotape, "dyntape"))
-  ppismotapeH <- pTapeHessian(ppismotape, attr(ppismotape, "xtape"), attr(ppismotape, "dyntape"))
-  ppismotapeH2 <- pTapeJacobian(ppismotapeJ, attr(ppismotape, "xtape"), attr(ppismotape, "dyntape"))
+  ppismotapeJ <- tapeJacobian(ppismotape)
+  ppismotapeH <- tapeHessian(ppismotape)
+  ppismotapeH2 <- tapeJacobian(ppismotapeJ)
 
   expect_equal(
-  pForward0(ppismotapeH, attr(ppismotape, "xtape"), c(0.1, 0.1, 0.8)),
-  pForward0(ppismotapeH2, attr(ppismotape, "xtape"), c(0.1, 0.1, 0.8)))
+  pForward0(ppismotapeH$ptr, ppismotape$xtape, c(0.1, 0.1, 0.8)),
+  pForward0(ppismotapeH2$ptr, ppismotape$xtape, c(0.1, 0.1, 0.8)))
 
   #test that the value of Hessian *does* depend on the measurement vector  
-  Hnearedge <- pForward0(ppismotapeH2, attr(ppismotape, "xtape"), c(0.1, 0.1, 0.8))
-  Hnearcentre <- pForward0(ppismotapeH2, attr(ppismotape, "xtape"), c(0.3, 0.3, 0.4))
+  Hnearedge <- pForward0(ppismotapeH2$ptr, ppismotape$xtape, c(0.1, 0.1, 0.8))
+  Hnearcentre <- pForward0(ppismotapeH2$ptr, ppismotape$xtape, c(0.3, 0.3, 0.4))
   expect_false(isTRUE(all.equal(Hnearedge, Hnearcentre)))
 
   # the next results are false for a reason unknown to me because the tape seems to be doing the right thing
-  expect_equal(pParameter(ppismotapeH), rep(FALSE, length(ppi_paramvec(p = 3))^2))
-  expect_equal(pParameter(ppismotapeH2), rep(TRUE, length(ppi_paramvec(p = 3))^2))
+  expect_equal(pParameter(ppismotapeH$ptr), rep(FALSE, length(ppi_paramvec(p = 3))^2))
+  expect_equal(pParameter(ppismotapeH2$ptr), rep(TRUE, length(ppi_paramvec(p = 3))^2))
   
-  hessgrad <- pJacobian(ppismotapeH,
+  hessgrad <- pJacobian(ppismotapeH$ptr,
                            ppi_paramvec(p = 3, AL=1, bL=1, beta=c(-0.1,-0.1,0.5)),
                            c(0.1, 0.1, 0.8))
   expect_equal(hessgrad, rep(0, length(ppi_paramvec(p = 3))^3))

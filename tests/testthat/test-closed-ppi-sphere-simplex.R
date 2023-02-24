@@ -35,8 +35,8 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
                            rep(0.1, p), theta * NA,
                            weightname = "minsq", acut = acut)
 
-  ppival <- pForward0(ppitapes$smotape, theta, utabl[2, ])
-  dirval <- pForward0(dirtapes$smotape, beta, utabl[2, ])
+  ppival <- pForward0(ppitapes$smotape$ptr, theta, utabl[2, ])
+  dirval <- pForward0(dirtapes$smotape$ptr, beta, utabl[2, ])
   expect_equal(ppival, dirval)
 })
 
@@ -65,7 +65,7 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 
   expect_equal(pForward0(dirtapes$lltape$ptr, utabl[2, ], beta), pForward0(ppitapes$lltape$ptr, utabl[2, ], beta))
   expect_equal(pJacobian(dirtapes$lltape$ptr, utabl[2, ], beta), pJacobian(ppitapes$lltape$ptr, utabl[2, ], beta))
-  expect_equal(pForward0(dirtapes$smotape, beta, utabl[2, ]), pForward0(ppitapes$smotape, beta, utabl[2, ]))
+  expect_equal(pForward0(dirtapes$smotape$ptr, beta, utabl[2, ]), pForward0(ppitapes$smotape$ptr, beta, utabl[2, ]))
 
   hardcodedestimate <- dir_sqrt_minimah(utabl, acut)
 

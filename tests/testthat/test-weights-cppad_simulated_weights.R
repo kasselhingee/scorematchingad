@@ -45,8 +45,8 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights",
   expect_equal(smobj(smofun = tapes$smotape, theta = m$theta, utabl = m$sample, w=vw$w), smo_hardcoded/sum(vw$w))
 
   # compare results to manual calculation
-  smo_sim_manual <- sum(vapply(1:nrow(vw$newY), function(i){pForward0(tapes$smotape, m$theta, vw$newY[i, ])}, FUN.VALUE = 1.3))
-  smo_dir_manual_v <- vapply(1:nrow(m$sample), function(i){pForward0(tapes$smotape, m$theta, m$sample[i, ])}, FUN.VALUE = 1.3)
+  smo_sim_manual <- sum(vapply(1:nrow(vw$newY), function(i){pForward0(tapes$smotape$ptr, m$theta, vw$newY[i, ])}, FUN.VALUE = 1.3))
+  smo_dir_manual_v <- vapply(1:nrow(m$sample), function(i){pForward0(tapes$smotape$ptr, m$theta, m$sample[i, ])}, FUN.VALUE = 1.3)
   smo_dir_manual <- sum(smo_dir_manual_v*vw$w)
   expect_equal(smo_sim_manual, smo_sim)
   expect_equal(smo_sim_manual, smo_dir_manual)
