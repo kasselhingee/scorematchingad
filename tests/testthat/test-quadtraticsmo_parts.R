@@ -25,7 +25,7 @@ test_that("Hess + Offset match gradient for a PPI Example", {
 
   # if W is symmetric then should equal the smo up to a constant wrt theta
   # and my expectation is that W is symmetric for ppi
-  smoorig <- apply(Y, MARGIN = 1, function(x){pForward0(smotape, theta, x)})
+  smoorig <- evaltape(smotape, theta, Y)
 
   smopoly <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * theta %*% matrix(values$Hessian[i, ], ncol = length(theta)) %*% theta + 
