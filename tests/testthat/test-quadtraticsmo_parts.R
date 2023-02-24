@@ -14,7 +14,7 @@ test_that("Hess + Offset match gradient for a PPI Example", {
 
   # expect results to match for gradient
   theta <- head(mod$theta, 7) #theta could be anything though
-  gradorig <- t(apply(Y, MARGIN = 1, function(x){pJacobian(smotape, theta, x)}))
+  gradorig <- t(apply(Y, MARGIN = 1, function(x){pJacobian(smotape$ptr, theta, x)}))
 
   gradpoly <- lapply(1:nrow(values$offset), function(i){
     drop(matrix(values$Hessian[i, ], ncol = length(theta)) %*% theta + 

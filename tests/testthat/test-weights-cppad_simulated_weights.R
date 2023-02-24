@@ -41,7 +41,7 @@ test_that("evaltape_wsum() matches for simulated weights and constant weights", 
   expect_equal(smo_sim, smo_hardcoded)
 
   # compare results to old smobj  
-  expect_equal(smobj(smofun = tapes$smotape, theta = m$theta, utabl = vw$newY), smo_sim / nrow(vw$newY))
+  expect_equal(smobj(smofun = tapes$smotape$ptr, theta = m$theta, utabl = vw$newY), smo_sim / nrow(vw$newY))
   expect_equal(smobj(smofun = tapes$smotape, theta = m$theta, utabl = m$sample, w=vw$w), smo_hardcoded/sum(vw$w))
 
   # compare results to manual calculation
