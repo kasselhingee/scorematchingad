@@ -11,9 +11,9 @@
 #'               ytape = rep(1/m$p, m$p),
 #'               usertheta = ppi_paramvec(beta = m$beta),
 #'               weightname = "minsq", acut = 0.01)
-#' tape_smvalues(tapes$smotape, xmat = m$sample, pmat = m$theta[1:5])
+#' smvalues_tape(tapes$smotape, xmat = m$sample, pmat = m$theta[1:5])
 #' @export
-tape_smvalues <- function(smotape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
+smvalues_tape <- function(smotape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
   stopifnot(inherits(smotape, "ADFun"))
   # prepare tapes
   Jsmofun <- tapeJacobian(smotape)
@@ -40,10 +40,10 @@ tape_smvalues <- function(smotape, xmat, pmat, xcentres = NA * xmat, approxorder
 #'  + `grad` the gradient of the score matching objective
 #'  + `hess` the Hessian of the score matching objective
 
-#' @rdname tape_smvalues
+#' @rdname smvalues_tape
 #' @param w Weights to apply to each row of `xmat` for computing the weighted sum. If `NULL` then each row is given a weight of `1`.
-tape_smvalues_wsum <- function(tape, xmat, pmat, w=NULL, xcentres = NA * xmat, approxorder = 10){
-  evals_l <- tape_smvalues(tape, xmat = xmat, pmat = pmat,
+smvalues_tape_wsum <- function(tape, xmat, pmat, w=NULL, xcentres = NA * xmat, approxorder = 10){
+  evals_l <- smvalues_tape(tape, xmat = xmat, pmat = pmat,
                      xcentres = xcentres, approxorder = approxorder)
   
   # do weight checks afterwards so that eval results can be used to choose weights

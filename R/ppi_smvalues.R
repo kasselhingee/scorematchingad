@@ -1,6 +1,6 @@
 #' @title Compute score matching objective value, gradient, and Hessian for a PPI Model
 #' @family PPI model tools
-#' @description Using similar arguments to [`ppi()`], compute values related to score matching. See [`tape_smvalues()`]. The gradient offset is also computed (see [`quadratictape_parts()`]. 
+#' @description Using similar arguments to [`ppi()`], compute values related to score matching. See [`smvalues_tape()`]. The gradient offset is also computed (see [`quadratictape_parts()`]. 
 #' @inheritParams ppi
 #' @param evalparam The parameter set to evaluate the score matching values.
 #' This is different to `paramvec`, which *fixes* parameters and constrains the estimation.
@@ -61,7 +61,7 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
   Yapproxcentres[!isbdry, ] <- NA
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = shiftsize)
 
-  valgradhess <- tape_smvalues_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
+  valgradhess <- smvalues_tape_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
                             xcentres = Yapproxcentres,
                             w = w,
                             approxorder = approxorder)

@@ -218,10 +218,10 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   ppitapes <- buildsmotape("sphere", "ppi",
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
                            weightname = "minsq", acut = acut)
-  smvals <- tape_smvalues_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL))
+  smvals <- smvalues_tape_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL))
   expect_lt(sum(smvals$grad^2), 1E-20)
 
   # check that rearrangement has large gradient
-  smvals <- tape_smvalues_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL)[c(1:6, 8, 7, 9, 10)])
+  smvals <- smvalues_tape_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL)[c(1:6, 8, 7, 9, 10)])
   expect_gt(sum(smvals$grad^2), 1E-2)
 })

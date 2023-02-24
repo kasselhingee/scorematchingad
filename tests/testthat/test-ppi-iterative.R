@@ -80,7 +80,7 @@ test_that("cppad_search with weights gives similar result to cppad_closed", {
   expect_equal(estsearch$SE, estclosed$SE)
 })
 
-test_that("cppad_search output value matches tape_smvalues result", {
+test_that("cppad_search output value matches smvalues_tape result", {
   set.seed(1234)
   m <- ppi_egmodel(1000, maxden = 4)
   tapes <- buildsmotape("sphere", "ppi",
@@ -90,7 +90,7 @@ test_that("cppad_search output value matches tape_smvalues result", {
 
   est <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 1000))
 
-  smvalues <- tape_smvalues_wsum(tapes$smotape, m$sample, est$est)
+  smvalues <- smvalues_tape_wsum(tapes$smotape, m$sample, est$est)
   expect_equal(est$value, smvalues$obj/nrow(m$sample))
   expect_equal(est$sqgradsize, sum(smvalues$grad^2))
 })
