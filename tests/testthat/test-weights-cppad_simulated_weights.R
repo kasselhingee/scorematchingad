@@ -35,7 +35,7 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights",
                         m$sample[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
-  smo_u <- swapDynamic(tapes$smotape, attr(tapes$smotape, "dyntape"), attr(tapes$smotape, "xtape"))
+  smo_u <- tapeSwap(tapes$smotape)
   smo_sim <- tape_eval_wsum(smo_u, vw$newY, m$theta)
   smo_hardcoded <- tape_eval_wsum(smo_u, m$sample, m$theta, w=vw$w)
   expect_equal(smo_sim, smo_hardcoded)
@@ -58,7 +58,7 @@ test_that("tape_eval_wsum() matches for simulated weights and constant weights w
                         m$sample[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
-  smo_u <- swapDynamic(tapes$smotape, attr(tapes$smotape, "dyntape"), attr(tapes$smotape, "xtape"))
+  smo_u <- tapeSwap(tapes$smotape)
   Y <- m$sample
   isbdry <- simplex_isboundary(Y, 1E-2)
   Yapproxcentres <- Y 
