@@ -36,7 +36,7 @@ test_that("Hess + Offset match gradient for a PPI Example", {
   
   #test constant by trying another theta
   theta2 <- theta+1
-  smoorig2 <- apply(Y, MARGIN = 1, function(x){pForward0(smotape, theta2, x)})
+  smoorig2 <- evaltape(smotape, theta2, Y)
   smopoly2 <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * theta2 %*% matrix(values$Hessian[i, ], ncol = length(theta2)) %*% theta2 +
       values$offset[i, , drop = FALSE] %*% theta2)
