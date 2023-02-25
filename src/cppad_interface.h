@@ -7,6 +7,7 @@
 #include "scorecompdir_types.h"
 #include "mycpp/wrapas.hpp"  //needed because converting veca1 from R
 
+//' @nord
 //' @title Switch Dynamic and Independent Values of a Tape
 //' @family tape builders
 //' @description Convert an ADFun so that the independent values become dynamic parameters
@@ -18,36 +19,27 @@
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
 
-//' @title Evaluate the Jacobian of a tape
+//' @describeIn evaltapes_internal Evaluates a tape without any differentiation at the given values of `x` and dynparam. 
+//' The name `pForward0` is a reference to the zero order `CppAD` method (`forward`)[https://cppad.readthedocs.io/en/latest/forward_zero.html], and the prefix 'p' is because the tape is passed as a pointer.
 //' @family tape evaluators
-//' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
-//' @param value A vector in the domain of the taped function.
-//' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
-//' @return The Jacobian of pfun
-//' @export
-// [[Rcpp::export]]
-vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
-
-//' @title Evaluate a CppAD tape
-//' @family tape evaluators
-//' @param pfun Rcpp::XPtr to an ADFun with dynamic parameters
-//' @param x A vector in the domain of the taped function.
-//' @param dynparam a vector of the dynamic parameters.
-//' @return The value of `pfun` evaluated at `x` with parameters `dynparam`.
+//' @param pfun Rcpp::XPtr to an ADFun. Can be obtained as the `ptr` field of an [`ADFun`] object.
+//' @param x A vector in the domain of the taped function
+//' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
 //' @export
 // [[Rcpp::export]]
 vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
-//' @title The Hessian of recorded function.
-//' @family tape evaluators
-//' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
-//' @param value A vector in the domain of the taped function.
-//' @param dynparam a vector of the dynamic parameters. If `pfun` has no dynamic parameters then set `dynparam = vector(mode = "numeric")`.
+//' @describeIn evaltapes_internal Evaluates a the Jacobian of a tape using the `CppAD` `Jacobian` method <https://cppad.readthedocs.io/en/latest/Jacobian.html>. 
 //' @export
-//' @return The Hessian of pfun as a vector.
+// [[Rcpp::export]]
+vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
+
+//' @describeIn evaltapes_internal Evaluates a the Hessian of a tape using the `CppAD` `Hessian` method <https://cppad.readthedocs.io/en/latest/Hessian.html>, assuming that range space of the taped function has dimension of `1`. 
+//' @export
 // [[Rcpp::export]]
 vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
 
+//' @nord
 //' @title Tape the Jacobian of CppAD Tape
 //' @family tape builders
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
@@ -63,11 +55,11 @@ vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam
 //' The next \eqn{n} elements of the vector is the gradient of the second component of the function output.
 //' The Jacobian as a matrix, could then be obtained by [`as.matrix()`] with `byrow = TRUE` and `ncol = n`.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
-//' @export
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> >  pTapeJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam);
 
+//' @noRd
 //' @title Tape the Hessian of a CppAD Tape
 //' @family tape builders
 //' @inheritParams pTapeJacobian
@@ -81,23 +73,23 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeJacobian(Rcpp::XPtr< CppAD::ADFun<doubl
 //' The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
 //' The Hessian as a matrix, can be obtained by using [`as.matrix()`] with `ncol = n`.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
-//' @export
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> >  pTapeHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam);
 
-//' @title Indicate Constant Components of Range
-//' @family tape evaluators
-//' @description Use `CppAD`'s `Parameter()` function for `ADFun` objects to see if the returned values of a tape are constant with respect to the independent values.
-//' @param pfun A CppAD tape.
-//' @return A vector logical values. `TRUE` indicates that element of the tape result is constant.
-//' @details The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/en/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
+//' @describeIn evaltapes_internal Test whether the returned values are constant with respect to the independent values using 
+//' `CppAD`'s `Parameter` method <https://cppad.readthedocs.io/en/latest/fun_property.html>.
+//' Returns A vector of logical values. `TRUE` indicates that element of the tape result is constant.
+//' @details 
+//' # pParameter
+//' The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/en/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
 //' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/en/latest/glossary.html#dynamic> ).
 //' @export
 // [[Rcpp::export]]
 std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
 // According to the help, applying Variable(u) to each return value would be false if u depends on the dynamic parameters and does not depend on the independent variable vector.
 
+//' @noRd
 //' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 //' @family tape builders
 //' @inheritParams pTapeJacobian
@@ -114,12 +106,12 @@ std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
 //' The tape calculates \eqn{b(\theta)} as
 //'  \deqn{b(\theta) = \Delta f(x;\theta) - H f(x; \theta) x,}
 //' which does not depend on \eqn{x}.
-//' @export
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam);
 
 
+//' @noRd
 //' @title Tape the log of Jacobian determinant of a CppAD Tape
 //' @family tape builders
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
@@ -128,7 +120,6 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<dou
 //' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
 //' The `x` vector is used as the value to conduct the taping.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
-//' @export
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> >  ptapelogdetJ(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam);

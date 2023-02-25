@@ -25,19 +25,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pJacobian
-vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
-RcppExport SEXP _scorecompdir_pJacobian(SEXP pfunSEXP, SEXP valueSEXP, SEXP dynparamSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< vecd >::type value(valueSEXP);
-    Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(pJacobian(pfun, value, dynparam));
-    return rcpp_result_gen;
-END_RCPP
-}
 // pForward0
 vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 RcppExport SEXP _scorecompdir_pForward0(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
@@ -48,6 +35,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
     Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
     rcpp_result_gen = Rcpp::wrap(pForward0(pfun, x, dynparam));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pJacobian
+vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
+RcppExport SEXP _scorecompdir_pJacobian(SEXP pfunSEXP, SEXP valueSEXP, SEXP dynparamSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< vecd >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
+    rcpp_result_gen = Rcpp::wrap(pJacobian(pfun, value, dynparam));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -194,17 +194,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // pTaylorApprox
-vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd u, vecd centre, vecd dynparam, size_t order);
-RcppExport SEXP _scorecompdir_pTaylorApprox(SEXP pfunSEXP, SEXP uSEXP, SEXP centreSEXP, SEXP dynparamSEXP, SEXP orderSEXP) {
+vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd centre, vecd dynparam, size_t order);
+RcppExport SEXP _scorecompdir_pTaylorApprox(SEXP pfunSEXP, SEXP xSEXP, SEXP centreSEXP, SEXP dynparamSEXP, SEXP orderSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< vecd >::type u(uSEXP);
+    Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
     Rcpp::traits::input_parameter< vecd >::type centre(centreSEXP);
     Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
     Rcpp::traits::input_parameter< size_t >::type order(orderSEXP);
-    rcpp_result_gen = Rcpp::wrap(pTaylorApprox(pfun, u, centre, dynparam, order));
+    rcpp_result_gen = Rcpp::wrap(pTaylorApprox(pfun, x, centre, dynparam, order));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -225,8 +225,8 @@ RcppExport SEXP _rcpp_module_boot_manifolds();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_swapDynamic", (DL_FUNC) &_scorecompdir_swapDynamic, 3},
-    {"_scorecompdir_pJacobian", (DL_FUNC) &_scorecompdir_pJacobian, 3},
     {"_scorecompdir_pForward0", (DL_FUNC) &_scorecompdir_pForward0, 3},
+    {"_scorecompdir_pJacobian", (DL_FUNC) &_scorecompdir_pJacobian, 3},
     {"_scorecompdir_pHessian", (DL_FUNC) &_scorecompdir_pHessian, 3},
     {"_scorecompdir_pTapeJacobian", (DL_FUNC) &_scorecompdir_pTapeJacobian, 3},
     {"_scorecompdir_pTapeHessian", (DL_FUNC) &_scorecompdir_pTapeHessian, 3},
