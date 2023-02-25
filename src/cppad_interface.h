@@ -19,9 +19,19 @@
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
 
+//' @name evaltapes_internal
+//' @title Advanced: Evaluate `CppAD` Tapes via their Pointer
+//' @description The recommended method for evaluating tapes is [`evaltape()`].
+//' Internally, `evaltape()` and other methods are using the methods documented here.
+//' There methods access the tapes using `Rcpp::XPtr` objects and perform evaluations a single point at a time. 
+//' @return A vector of numeric values, except `pParameter()`, which returns logical values.
+//' @family tape evaluators
+//' @param pfun Rcpp::XPtr to an ADFun. Can be obtained as the `ptr` field of an [`ADFun`] object.
+//' @param x A vector in the domain of the taped function
+//' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
+
 //' @describeIn evaltapes_internal Evaluates a tape without any differentiation at the given values of `x` and dynparam. 
 //' The name `pForward0` is a reference to the zero order `CppAD` method (`forward`)[https://cppad.readthedocs.io/en/latest/forward_zero.html], and the prefix 'p' is because the tape is passed as a pointer.
-//' @family tape evaluators
 //' @param pfun Rcpp::XPtr to an ADFun. Can be obtained as the `ptr` field of an [`ADFun`] object.
 //' @param x A vector in the domain of the taped function
 //' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
