@@ -12,19 +12,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// swapDynamic
-Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
-RcppExport SEXP _scorecompdir_swapDynamic(SEXP pfunSEXP, SEXP newvalueSEXP, SEXP newdynparamSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type newvalue(newvalueSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type newdynparam(newdynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(swapDynamic(pfun, newvalue, newdynparam));
-    return rcpp_result_gen;
-END_RCPP
-}
 // pForward0
 vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 RcppExport SEXP _scorecompdir_pForward0(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
@@ -39,28 +26,39 @@ BEGIN_RCPP
 END_RCPP
 }
 // pJacobian
-vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
-RcppExport SEXP _scorecompdir_pJacobian(SEXP pfunSEXP, SEXP valueSEXP, SEXP dynparamSEXP) {
+vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
+RcppExport SEXP _scorecompdir_pJacobian(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< vecd >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
     Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(pJacobian(pfun, value, dynparam));
+    rcpp_result_gen = Rcpp::wrap(pJacobian(pfun, x, dynparam));
     return rcpp_result_gen;
 END_RCPP
 }
 // pHessian
-vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
-RcppExport SEXP _scorecompdir_pHessian(SEXP pfunSEXP, SEXP valueSEXP, SEXP dynparamSEXP) {
+vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
+RcppExport SEXP _scorecompdir_pHessian(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< vecd >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
     Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(pHessian(pfun, value, dynparam));
+    rcpp_result_gen = Rcpp::wrap(pHessian(pfun, x, dynparam));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pParameter
+std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
+RcppExport SEXP _scorecompdir_pParameter(SEXP pfunSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    rcpp_result_gen = Rcpp::wrap(pParameter(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -90,17 +88,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pParameter
-std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
-RcppExport SEXP _scorecompdir_pParameter(SEXP pfunSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    rcpp_result_gen = Rcpp::wrap(pParameter(pfun));
-    return rcpp_result_gen;
-END_RCPP
-}
 // pTapeGradOffset
 Rcpp::XPtr< CppAD::ADFun<double> > pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 x, veca1 dynparam);
 RcppExport SEXP _scorecompdir_pTapeGradOffset(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
@@ -124,6 +111,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< veca1 >::type x(xSEXP);
     Rcpp::traits::input_parameter< veca1 >::type dynparam(dynparamSEXP);
     rcpp_result_gen = Rcpp::wrap(ptapelogdetJ(pfun, x, dynparam));
+    return rcpp_result_gen;
+END_RCPP
+}
+// swapDynamic
+Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
+RcppExport SEXP _scorecompdir_swapDynamic(SEXP pfunSEXP, SEXP newvalueSEXP, SEXP newdynparamSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type newvalue(newvalueSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type newdynparam(newdynparamSEXP);
+    rcpp_result_gen = Rcpp::wrap(swapDynamic(pfun, newvalue, newdynparam));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -224,15 +224,15 @@ END_RCPP
 RcppExport SEXP _rcpp_module_boot_manifolds();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_scorecompdir_swapDynamic", (DL_FUNC) &_scorecompdir_swapDynamic, 3},
     {"_scorecompdir_pForward0", (DL_FUNC) &_scorecompdir_pForward0, 3},
     {"_scorecompdir_pJacobian", (DL_FUNC) &_scorecompdir_pJacobian, 3},
     {"_scorecompdir_pHessian", (DL_FUNC) &_scorecompdir_pHessian, 3},
+    {"_scorecompdir_pParameter", (DL_FUNC) &_scorecompdir_pParameter, 1},
     {"_scorecompdir_pTapeJacobian", (DL_FUNC) &_scorecompdir_pTapeJacobian, 3},
     {"_scorecompdir_pTapeHessian", (DL_FUNC) &_scorecompdir_pTapeHessian, 3},
-    {"_scorecompdir_pParameter", (DL_FUNC) &_scorecompdir_pParameter, 1},
     {"_scorecompdir_pTapeGradOffset", (DL_FUNC) &_scorecompdir_pTapeGradOffset, 3},
     {"_scorecompdir_ptapelogdetJ", (DL_FUNC) &_scorecompdir_ptapelogdetJ, 3},
+    {"_scorecompdir_swapDynamic", (DL_FUNC) &_scorecompdir_swapDynamic, 3},
     {"_scorecompdir_pmanifold", (DL_FUNC) &_scorecompdir_pmanifold, 1},
     {"_scorecompdir_printgraph", (DL_FUNC) &_scorecompdir_printgraph, 1},
     {"_scorecompdir_ptapell", (DL_FUNC) &_scorecompdir_ptapell, 6},

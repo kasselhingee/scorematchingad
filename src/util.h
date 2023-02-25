@@ -16,7 +16,7 @@
 veca1 ptoM(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad);
 
 
-//' @describeIn evaltapes_internal The value of a recorded function approximated by Taylor expansion.
+//' @describeIn evaltape_internal The value of a recorded function approximated by Taylor expansion.
 //' Returns the approximate value of `pfun` at `x`.
 //' @details
 //' # pTaylorApprox 
