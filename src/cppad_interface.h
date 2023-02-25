@@ -7,7 +7,7 @@
 #include "scorecompdir_types.h"
 #include "mycpp/wrapas.hpp"  //needed because converting veca1 from R
 
-//' @nord
+//' @noRd
 //' @title Switch Dynamic and Independent Values of a Tape
 //' @family tape builders
 //' @description Convert an ADFun so that the independent values become dynamic parameters
@@ -39,7 +39,7 @@ vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynpara
 // [[Rcpp::export]]
 vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd value, vecd dynparam);
 
-//' @nord
+//' @noRd
 //' @title Tape the Jacobian of CppAD Tape
 //' @family tape builders
 //' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
