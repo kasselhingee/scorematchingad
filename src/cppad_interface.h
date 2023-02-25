@@ -15,7 +15,6 @@
 //' @param newvalue The independent value (in the sense after the switch has occurred) at which to tape the ADFun
 //' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
 //' @return A pointer to an ADFun
-//' @export
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
 
@@ -102,24 +101,19 @@ std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
 //' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 //' @family tape builders
 //' @inheritParams pTapeJacobian
-//' @description A quadratic function can be written as
-//' \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
-//' The function `pTapeGradOffset` creates a tape of \eqn{b(\theta)} where \eqn{\theta} is the independent variable.
-//' @param pfun A quadratic CppAD Tape. Test for quadratic form using [`testquadratictape()`].
-//' @details
-//' The gradient of \eqn{f(x; \theta)} with respect to \eqn{\theta} is
-//' \deqn{\Delta f(x; \theta) = \frac{1}{2}(W(\theta) + W(\theta)^T)\theta + b(\theta),}
-//' and the Hessian is 
-//' \deqn{H f(x; \theta) = \frac{1}{2}(W(\theta) + W(\theta)^T),}
-//' which does not depend on \eqn{x}.
-//' The gradient of the function can be rewritten as
-//' \deqn{\Delta f(x;\theta) = H f(x; \theta) x + b(\theta)^T x.}
-//' The tape calculates \eqn{b(\theta)} as
-//'  \deqn{b(\theta) = \Delta f(x;\theta) - H f(x; \theta) x},
-//' which does not depend on \eqn{x}.
-//' In `pTapeGradOffset()` the `x` provided as an argument is used as the template for calculating \eqn{b(\theta)}.
-//' The `x` vector and `dynparam` are used as the values to conduct the taping.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object. The independent argument to the function are the dynamic parameters of `pfun`.
+//' @details A quadratic function can be written as
+//' \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
+//' The gradient of \eqn{f(x; \theta)} with respect to \eqn{x} is
+//' \deqn{\Delta f(x; \theta) = \frac{1}{2}(W(\theta) + W(\theta)^T)x + b(\theta).}
+//' The Hessian is 
+//' \deqn{H f(x; \theta) = \frac{1}{2}(W(\theta) + W(\theta)^T),}
+//' which does not depend on \eqn{x},
+//' so the gradient of the function can be rewritten as
+//' \deqn{\Delta f(x;\theta) = H f(x; \theta) x + b(\theta)^T.}
+//' The tape calculates \eqn{b(\theta)} as
+//'  \deqn{b(\theta) = \Delta f(x;\theta) - H f(x; \theta) x,}
+//' which does not depend on \eqn{x}.
 //' @export
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
