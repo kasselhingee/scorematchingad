@@ -3,6 +3,7 @@
 
 #include "scorecompdir_types.h"
 #include "mycpp/mantrans.hpp"
+#include "mycpp/transforms.hpp"
 #include <Rcpp.h>
 
 ////////////// Create Pointers to Manifold Objects ///////////////

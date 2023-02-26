@@ -238,7 +238,6 @@ END_RCPP
 }
 
 RcppExport SEXP _rcpp_module_boot_manifolds();
-RcppExport SEXP _rcpp_module_boot_transforms();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_pForward0", (DL_FUNC) &_scorecompdir_pForward0, 3},
@@ -259,7 +258,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_pTaylorApprox", (DL_FUNC) &_scorecompdir_pTaylorApprox, 5},
     {"_scorecompdir_ptapefromM", (DL_FUNC) &_scorecompdir_ptapefromM, 2},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
-    {"_rcpp_module_boot_transforms", (DL_FUNC) &_rcpp_module_boot_transforms, 0},
     {NULL, NULL, 0}
 };
 

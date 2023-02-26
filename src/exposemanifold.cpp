@@ -20,6 +20,18 @@ manifold<a1type> * newmantran(const std::string &manifoldname){
   return(out);
 }
 
+// transform factory
+transform<a1type> * newtransform(const std::string &name){
+  transform<a1type> * out;  //returning a pointer
+  if (name.compare("alr") == 0){
+    out = new mantran::alr<a1type>();
+  } else {
+    Rcpp::stop("Manifold not found");
+  }
+
+  return(out);
+}
+
 Rcpp::XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
   manifold<a1type> * out;  //returning a pointer
   out = newmantran(manifoldname);
@@ -36,6 +48,13 @@ RCPP_MODULE(manifolds) {
       .method("logdetJfromM", &manifold_a1type::logdetJfromM, "compute the log of the determinant of the Jacobian of fromM()")
       .method("Pmatfun", &manifold_a1type::Pmatfun, "Pmatfun(z) returns the matrix that orthogonally projects onto the manifold's tangent space at z")
       .method("dPmatfun", &manifold_a1type::dPmatfun, "dPmatfun(z, i) returns the element-wise derivative of Pmatfun() at location z with respect to the ith dimension")
+  ;
+  
+  Rcpp::class_< transform_a1type >("transform_ad")
+      .factory<const std::string &>(newtransform)
+      .method("toM", &transform_a1type::toM, "transform a vector to the manifold")
+      .method("fromM", &transform_a1type::fromM, "reverse of toM()")
+      .method("logdetJfromM", &transform_a1type::logdetJfromM, "compute the log of the determinant of the Jacobian of fromM()")
   ;
 }
 

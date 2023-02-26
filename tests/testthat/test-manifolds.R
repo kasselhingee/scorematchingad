@@ -13,7 +13,7 @@ test_that("Manifold objects can be created, and member functions run", {
 })
 
 test_that("Transform objects can be created, and member functions run", {
-  mod <- Rcpp::Module("transforms", PACKAGE="scorecompdir")
+  mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
   obj <- mod$transform_ad
   alr <- new(obj, "alr")
   expect_s4_class(alr, "Rcpp_transform_ad")
