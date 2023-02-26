@@ -74,7 +74,7 @@ buildsmotape <- function(tran, man, llname,
   stopifnot(is.numeric(acut))
   smotape <- tapesmo(lltape = lltape,
                         tran = tranman$tran,
-                        man = tranman$tran,
+                        man = tranman$man,
                         divweight = weightname,
                         acut = acut,
                         verbose = verbose)
@@ -83,11 +83,9 @@ buildsmotape <- function(tran, man, llname,
     smotape = smotape,
     info = list(
       name = llname,
-      transform = tran,
-      manifold = man,
+      transform = tranman$tran$name(),
+      manifold = tranman$man$name(),
       ulength = length(ytape),
-      starttheta = starttheta,
-      isfixed = isfixed,
       weightname = weightname,
       acut = acut
     )
