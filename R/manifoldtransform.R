@@ -5,7 +5,7 @@
 #'  + `srqt'
 #'  + `alr'
 #'  + `clr'
-#'  + `none' (or 'identity')
+#'  + `none' (or `identity')
 #' @param man The name of the manifold that `tran` maps `start` to. Available manifolds are:
 #'  + `sph' unit sphere
 #'  + `Hn111' hyperplane normal to 1, 1, 1, 1, ...

@@ -1,7 +1,7 @@
 #' @title Build a CppAD Tapes for Score Matching
 #' @family tape builders
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
-#' @param manifoldname Manifold with tranformation name. Passed to [`manifoldtransform()`].
+#' @inheritParams manifoldtransform
 #' @param llname Name of the log-likelihood function. Passed to [`tapell()`].
 #' @param ytape An example observation (a single vector) to use for taping. The results should only depend on the length of `ytape` so long as `ytape` is in *interior* of the natural manifold of the model.
 #' @param usertheta A vector of parameter elements for the likelihood function. `NA` elements are to be fitted. Other elements are fixed at the provided value.
