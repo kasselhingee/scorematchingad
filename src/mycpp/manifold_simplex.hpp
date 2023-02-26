@@ -7,6 +7,11 @@ struct sim : public manifold<T> {
   ~sim(){};
   sim(){};
 
+  std::string name() const {
+    std::string out = "sim";
+    return(out);
+  }
+
   Eigen::Matrix<T, Eigen::Dynamic, 1> toM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x) override {
     Eigen::Matrix<T, Eigen::Dynamic, 1> out(x.size());
     out = x;

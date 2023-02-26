@@ -9,6 +9,11 @@ struct sph : public manifold<Type> {
   ~sph(){};
   sph(){};
 
+  std::string name() const {
+    std::string out = "sph";
+    return(out);
+  }
+
   Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
      out = x;

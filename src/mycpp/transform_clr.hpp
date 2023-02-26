@@ -9,6 +9,11 @@ struct clr : public transform<Type> {
   ~clr(){};
   clr(){};
 
+  std::string name() const {
+    std::string out = "clr";
+    return(out);
+  }
+
   Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
      out = x.array().log(); //log all elements of x

@@ -8,6 +8,11 @@ struct sqrt : public transform<Type> {
   ~sqrt(){};
   sqrt(){};
 
+  std::string name() const {
+    std::string out = "sqrt";
+    return(out);
+  }
+
   Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
      out = x.cwiseSqrt();
