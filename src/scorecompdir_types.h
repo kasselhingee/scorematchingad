@@ -38,7 +38,6 @@ struct manifold { //exactly like a class, but with default public members https:
 };
 
 typedef manifold<a1type> manifold_a1type;
-RCPP_EXPOSED_CLASS_NODECL(manifold_a1type)
 
 namespace Rcpp {
   template <> a1type as( SEXP );
