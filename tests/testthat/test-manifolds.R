@@ -12,6 +12,17 @@ test_that("Manifold objects can be created, and member functions run", {
   expect_equal(dim(Ralr$dPmatfun(z, 1)), c(2,2))
 })
 
+test_that("Transform objects can be created, and member functions run", {
+  mod <- Rcpp::Module("transforms", PACKAGE="scorecompdir")
+  obj <- mod$transform_ad
+  alr <- new(obj, "alr")
+  expect_s4_class(alr, "Rcpp_transform_ad")
+  u <- c(0.1, 0.3, 0.6)
+  z <- alr$toM(u)
+  expect_equal(alr$fromM(z), u)
+  expect_true(is.finite(alr$logdetJfromM(z)))
+})
+
 mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
 obj <- mod$mantran_ad
 
