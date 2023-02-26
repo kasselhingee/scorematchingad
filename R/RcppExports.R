@@ -160,6 +160,16 @@ ptapell <- function(z_ad, theta_ad, llname, pman, fixedtheta, verbose) {
 }
 
 #' @noRd
+#' @title Tape of a log-likelihood calculation
+#' @param p dimension of measurements
+#' @param bd dimension of the parameter vector
+#' @param llname name of the likelihood function
+#' @return An RCpp::XPtr object pointing to the ADFun
+mptapell <- function(z_ad, theta_ad, llname, pman, fixedtheta, verbose) {
+    .Call('_scorecompdir_mptapell', PACKAGE = 'scorecompdir', z_ad, theta_ad, llname, pman, fixedtheta, verbose)
+}
+
+#' @noRd
 #' @title The score matching objective calculator.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
 #' @param n The dimension of x.

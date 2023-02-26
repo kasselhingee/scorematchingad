@@ -153,4 +153,72 @@ ldetJfromM <- function(z){
 })
 
 
+test_that("Manifold objects can be passed to specialist C++ functions taking plain pointers to manifolds", {
+  mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+  obj <- mod$mantran_ad
+  Ralr <- new(obj, "Ralr")
+
+  ytape <- rep(1/3, 3)
+  ztape <- Ralr$toM(ytape)
+  expect_error(dirll <- ptapell(ztape, 
+           rep(-0.5, 3),
+           "dirichlet",
+           Ralr,
+           rep(FALSE, 3),
+           FALSE), "external pointer")
+  dirll <- mptapell(ztape, 
+           rep(-0.5, 3),
+           "dirichlet",
+           Ralr,
+           rep(FALSE, 3),
+           FALSE)
+  viamodule <- pForward0(dirll, c(0.1, 0.2), rep(-0.5, 3))
+
+  dirll2 <- tapell("dirichlet", ytape, rep(NA, 3), manifoldtransform("Ralr"))
+
+  other <- pForward0(dirll2$ptr, c(0.1, 0.2), rep(-0.5, 3))
+  expect_equal(other, viamodule)
+})
+
+test_that("Manifold objects converted to externalptr can be passed to other C++ functions", {
+  mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+  obj <- mod$mantran_ad
+  Ralr <- new(obj, "Ralr")
+
+  ytape <- rep(1/3, 3)
+  ztape <- Ralr$toM(ytape)
+  dirll <- ptapell(ztape, 
+           rep(-0.5, 3),
+           "dirichlet",
+           get(".pointer", env = as.environment(Ralr)),
+           rep(FALSE, 3),
+           FALSE)
+  viamodule <- pForward0(dirll, c(0.1, 0.2), rep(-0.5, 3))
+
+  dirll2 <- tapell("dirichlet", ytape, rep(NA, 3), manifoldtransform("Ralr"))
+
+  other <- pForward0(dirll2$ptr, c(0.1, 0.2), rep(-0.5, 3))
+  expect_equal(other, viamodule)
+})
+
+test_that("Manifold objects converted to externalptr can be passed to other C++ functions", {
+  mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+  obj <- mod$mantran_ad
+  Ralr <- new(obj, "Ralr")
+
+  ytape <- rep(1/3, 3)
+  ztape <- Ralr$toM(ytape)
+  dirll <- ptapell(ztape, 
+           rep(-0.5, 3),
+           "dirichlet",
+           Ralr$.pointer, #accesses it like an environment (like above test)
+           rep(FALSE, 3),
+           FALSE)
+  viamodule <- pForward0(dirll, c(0.1, 0.2), rep(-0.5, 3))
+
+  dirll2 <- tapell("dirichlet", ytape, rep(NA, 3), manifoldtransform("Ralr"))
+
+  other <- pForward0(dirll2$ptr, c(0.1, 0.2), rep(-0.5, 3))
+  expect_equal(other, viamodule)
+})
 

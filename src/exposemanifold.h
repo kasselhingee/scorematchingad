@@ -5,7 +5,6 @@
 #include "mycpp/mantrans.hpp"
 #include <Rcpp.h>
 
-
 ////////////// Create Pointers to Manifold Objects ///////////////
 //in R store a pointer to the ADFun object
 //' @noRd
