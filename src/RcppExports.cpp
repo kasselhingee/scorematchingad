@@ -165,7 +165,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // mptapell
-Rcpp::XPtr< CppAD::ADFun<double> > mptapell(veca1 z_ad, veca1 theta_ad, std::string llname, manifold_a1type * pman, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
+Rcpp::XPtr< CppAD::ADFun<double> > mptapell(veca1 z_ad, veca1 theta_ad, std::string llname, manifold_a1type& pman, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
 RcppExport SEXP _scorecompdir_mptapell(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -173,7 +173,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< veca1 >::type z_ad(z_adSEXP);
     Rcpp::traits::input_parameter< veca1 >::type theta_ad(theta_adSEXP);
     Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
-    Rcpp::traits::input_parameter< manifold_a1type * >::type pman(pmanSEXP);
+    Rcpp::traits::input_parameter< manifold_a1type& >::type pman(pmanSEXP);
     Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type fixedtheta(fixedthetaSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     rcpp_result_gen = Rcpp::wrap(mptapell(z_ad, theta_ad, llname, pman, fixedtheta, verbose));

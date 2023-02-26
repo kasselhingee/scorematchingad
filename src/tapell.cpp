@@ -137,7 +137,7 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the
 Rcpp::XPtr< CppAD::ADFun<double> > mptapell(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
                                      std::string llname,
-                                     manifold_a1type * pman,
+                                     manifold_a1type & pman,
                                      Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
                                      bool verbose
                                      ){
@@ -172,7 +172,7 @@ Rcpp::XPtr< CppAD::ADFun<double> > mptapell(veca1 z_ad, //data measurement on th
   *out = tapellcpp(z_ad,
                 theta_ad,
                 ll,
-                pman,
+                &pman,
                 fixedtheta,
                 verbose);
 
