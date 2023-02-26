@@ -1,4 +1,5 @@
 #' @title Score matching estimates for the Bingham distribution
+#' @family directional model estimators
 #' @param sample A matrix of observations in Cartesian coordinates. Each row is a (multivariate) measurement.
 #' @param control Control parameters passed to [`Rcgmin::Rcgmin()`].
 #' @param A For full score matching only: if supplied, then NA elements of `A` are estimated and the other elements are fixed.
@@ -27,7 +28,6 @@
 #' sample <- simdd::rBingham(100, A)
 #'
 #' Bingham(sample, method = "Mardia")
-#' @family Mardia hybrid estimators
 #' @export
 Bingham <- function(sample, A = NULL, method = "smfull", control = default_Rcgmin()){
   if (method == "smfull"){
@@ -49,9 +49,9 @@ Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){
 
   intheta <- Bingham_Amat2theta(A)
 
-  utape <- rep(1, p) / sqrt(p)
-  tapes <- buildsmotape("Snative", "Bingham",
-                           utape, intheta,
+  ytape <- rep(1, p) / sqrt(p)
+  tapes <- buildsmotape("sph","identity", "sph", "Bingham",
+                           ytape, intheta,
                            weightname = "ones")
   out <- cppad_closed(tapes$smotape, Y = sample)
   theta <- intheta
@@ -83,7 +83,7 @@ Bingham_Mardia <- function(sample,  control = default_Rcgmin()){
   diag(A) <- NA
   stopifnot(all(dim(A) == p))
   intheta <- Bingham_Amat2theta(A)
-  tapes <- buildsmotape("Snative", "Bingham",
+  tapes <- buildsmotape("sph","identity", "sph", "Bingham",
                         rep(1, p) / sqrt(p), intheta,
                         weightname = "ones")
 

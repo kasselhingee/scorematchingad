@@ -7,7 +7,6 @@
 #' @param Y The compositional measurements
 #' @param shiftsize The distance to away from `u` to create the approximation centre.
 #' @return A matrix the same size as `Y`, containing the measurements in `Y` translated `shiftsize` distance towards the simplex centre.
-#' @family simplex boundary helpers
 #' @examples
 #' m <- ppi_egmodel(10)
 #' simplex_boundaryshift(m$sample, shiftsize = 1E-5)
@@ -26,7 +25,6 @@ simplex_boundaryshift <- function(Y, shiftsize = 1E-4){
 #' @description Tests whether points are within `bdrythreshold` distance of the boundary, where distance is the size of minimum component. 
 #' @param Y Measurement matrix.
 #' @param bdrythreshold Measurements closer than `bdrythreshold` to the edge of the simplex will be considered boundary measurements.
-#' @family simplex boundary helpers
 #' @return A vector of `TRUE` or `FALSE` values. Rows of `Y` corresponding to `TRUE` are on the boundary of the simplex.
 #' @export
 simplex_isboundary <- function(Y, bdrythreshold = 1E-15){
@@ -54,7 +52,6 @@ simplex_isboundary <- function(Y, bdrythreshold = 1E-15){
 #'  * `boundaryapprox` Corresponding approximation centres for `uboundary`.
 #'  * `winterior` Weights from `w` corresponding to `interior` (`NULL` if not weights supplied).
 #'  * `wboundary` Weights from `w` corresponding to `uboundary` (`NULL` if not weights supplied).
-#' @family simplex boundary helpers
 #' @examples
 #' m <- ppi_egmodel(10)
 #' simplex_boundaryshift(m$sample, shiftsize = 1E-5)

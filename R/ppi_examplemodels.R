@@ -1,4 +1,5 @@
 #' @title Load and simulate example PPI models
+#' @family PPI model tools
 #' @param n Number of samples to generate
 #' @param maxden the log(C) maximum in simulating a PPI model. See [`rppi()`].
 #' @return A list: 
@@ -29,11 +30,7 @@ ppi_egmodel <- function(n, maxden = 4){
     p = 3,
     theta = ppi_paramvec(AL = mats$AL, bL = mats$bL, beta = mats$beta)
     ),
-    mats,
-    list(beta0 = mats$beta,
-         ALs = mats$AL))
-
-
+    mats)
   return(out)
 }
 
@@ -50,11 +47,7 @@ ppi_egmodel_p4 <- function(n, maxden = 8){
     p = 4,
     theta = ppi_paramvec(AL = mats$AL, bL = mats$bL, beta = mats$beta)
     ),
-    mats,
-    list(beta0 = mats$beta,
-         ALs = mats$AL))
-
-
+    mats)
   return(out)
 }
 

@@ -1,4 +1,5 @@
 #' @title Score Matching Estimator for Quadratic-Form Score-Matching Objective Functions
+#' @family generic score matching tools
 #' @description 
 #' For a `CppAD` tape of a quadratic-form score matching objective function, calculates the vector of parameters such that the gradient of the score matching objective is zero.
 #' Also estimates standard errors and covariance.
@@ -31,7 +32,6 @@
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
-#' @family {General score matching}
 #' @export
 cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y, 
                          w = rep(1, nrow(Y)),

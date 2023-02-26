@@ -1,4 +1,5 @@
 #' @title Estimate the Fisher-Bingham distribution
+#' @family directional model estimators
 #' @description Estimates parameters for the Fisher-Bingham distribution using score-matching.
 #' @param control A list of control parameters passed to `Rcgmin::Rcgmin()`.
 #' @examples
@@ -36,7 +37,7 @@ FB <- function(Y, km = NULL, A = NULL, control = default_Rcgmin()){
 
   intheta <- FB_mats2theta(1, km, A)
 
-  tapes <- buildsmotape("Snative", "FB",
+  tapes <- buildsmotape("sph","identity", "sph", "FB",
                rep(1, p)/sqrt(p), intheta,
                weightname = "ones",
                verbose = FALSE)

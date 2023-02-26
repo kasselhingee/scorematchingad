@@ -115,7 +115,7 @@ test_that("Hess + Offset match gradient for Hclr in interior", {
   Y <- mod$sample
   Y <- rbind(Y, rep(1/3, 3))
 
-  tapes <- buildsmotape("Hclr", "ppi", utape = c(0.2, 0.3, 0.5), 
+  tapes <- buildsmotape("sim","clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
                         usertheta = ppi_paramvec(p = 3))
 
   # find boundary points and remove them - expect results pJacobian to give good results when no points need approximation
@@ -124,7 +124,7 @@ test_that("Hess + Offset match gradient for Hclr in interior", {
   values <- quadratictape_parts(tapes$smotape, Y)
 
   # expect results to match for gradient
-  gradorig <- t(apply(Y, MARGIN = 1, function(x){pJacobian(tapes$smotape, mod$theta, x)}))
+  gradorig <- t(apply(Y, MARGIN = 1, function(x){pJacobian(tapes$smotape$ptr, mod$theta, x)}))
 
   gradpoly <- lapply(1:nrow(values$offset), function(i){
     drop(matrix(values$Hessian[i, ], ncol = length(mod$theta)) %*% mod$theta + 
@@ -147,12 +147,12 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
 
   usertheta = ppi_paramvec(p = 3, beta = mod$beta)
   ftheta <- t_ut2f(usertheta, mod$theta)
-  tapes <- buildsmotape("Hclr", "ppi", utape = c(0.2, 0.3, 0.5), 
+  tapes <- buildsmotape("sim","clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
                         usertheta = usertheta)
 
   values <- quadratictape_parts(tapes$smotape, Y)
 
-  smoorig <- apply(Y, MARGIN = 1, function(x){pForward0(tapes$smotape, ftheta, x)})
+  smoorig <- evaltape(tapes$smotape, pmat = Y, xmat = ftheta)
 
   smopoly <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * ftheta %*% matrix(values$Hessian[i, ], ncol = length(ftheta)) %*% ftheta + 
@@ -163,7 +163,7 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
   
   #test constant by trying another theta
   ftheta2 <- ftheta+1
-  smoorig2 <- apply(Y, MARGIN = 1, function(x){pForward0(tapes$smotape, ftheta2, x)})
+  smoorig2 <- evaltape(tapes$smotape, pmat = Y, xmat = ftheta2)
   smopoly2 <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * ftheta2 %*% matrix(values$Hessian[i, ], ncol = length(ftheta2)) %*% ftheta2 +
       values$offset[i, , drop = FALSE] %*% ftheta2)
@@ -177,14 +177,14 @@ test_that("printgraph() runs", {
   set.seed(1245)
   beta0 <- c(-0.7, -0.1, -0.5, -0.1, -0.6) 
   Y <- MCMCpack::rdirichlet(10, beta0+1)
-  tapes <- buildsmotape("Hclr", "ppi", utape = Y[1, ], 
+  tapes <- buildsmotape("sim","clr", "Hn111", "ppi", ytape = Y[1, ], 
                         usertheta = ppi_paramvec(p = 5))
 
-  expect_output(printgraph(tapes$smotape), "2112") #2112 is the final node
-  Jtape <- pTapeJacobian(tapes$smotape, ppi_paramvec(AL = 0, bL = 0, beta = beta0), Y[1, ])
-  expect_output(printgraph(Jtape), "1658") #1658 is final node - interesting that fewer than smotape!
-  Htape <- pTapeHessian(tapes$smotape, ppi_paramvec(AL = 0, bL = 0, beta = beta0), Y[1, ])
-  expect_output(printgraph(Htape), "25630") #25630 is final mode
+  expect_output(printgraph(tapes$smotape$ptr), "2112") #2112 is the final node
+  Jtape <- tapeJacobian(tapes$smotape)
+  expect_output(printgraph(Jtape$ptr), "1658") #1658 is final node - interesting that fewer than smotape!
+  Htape <- tapeHessian(tapes$smotape)
+  expect_output(printgraph(Htape$ptr), "25630") #25630 is final mode
 })
 
 

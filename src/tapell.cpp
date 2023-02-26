@@ -4,7 +4,7 @@
 CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manifold
                             veca1 theta, //theta parameter
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
-                               manifold<a1type> *pman, //it seems points must be passed for abstract classes (note error when compiling without the *, and Stefan's demo)
+                               transform<a1type> & tran, //it seems pointer or references must be passed for abstract classes (note error when compiling without the *, and Stefan's demo)
                                Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
                                bool verbose
                                ){
@@ -71,12 +71,12 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
   // range space vector
   veca1 y(1); // vector of ranges space variables
   veca1 u(0); //0 here because size dictated by fromM
-  u = pman->fromM(z);
+  u = tran.fromM(z);
   y.setZero();
   y[0] += llf(u, thetarecom);
 
   //get log determinant of fromM
-  y[0] += pman->logdetJfromM(z);
+  y[0] += tran.logdetJfromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
   if (verbose){
@@ -91,7 +91,7 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
 Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
                                      std::string llname,
-                                     Rcpp::XPtr< manifold<a1type> > pman,
+                                     transform_a1type & tran,
                                      Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
                                      bool verbose
                                      ){
@@ -126,10 +126,11 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the
   *out = tapellcpp(z_ad,
                 theta_ad,
                 ll,
-                pman.checked_get(),
+                tran,
                 fixedtheta,
                 verbose);
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
+

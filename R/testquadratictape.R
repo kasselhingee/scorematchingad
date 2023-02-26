@@ -1,12 +1,13 @@
 #' @title Test Whether a CppAD Tape is a Quadratic Function
+#' @family tape evaluators
 #' @description
-#' Uses [`pParameter()`] and derivatives [`pTapeJacobian()`], [`pJacobian()`] to test whether
+#' Uses [`pParameter()`] and derivatives [`tapeJacobian()`], [`pJacobian()`] to test whether
 #' the tape is quadratic.
-#' @param tape An `Rcpp::XPtr` to a CppAD tape.
+#' @param tape An `ADFun` object.
 #' @param xmat If passed, the third-order derivatives at values of the rows of `xmat` are tested.
 #' @param dynparammat The dynamic parameters for the tape. If passed, the rows of `dynparammat` are passed to the tape as `dynparam`.
 #' @param verbose If TRUE information about the failed tests is passed.
-#' @details Uses the `xtape` and `dyntape` attributes of `tape` to create new tapes.
+#' @details Uses the `xtape` and `dyntape` values stored in `tape` to create new tapes.
 #' A tape of Hessian is obtained by applying [`pTapeJacobian()`] twice. Using [`pTapeHessian()`] directly did not show constant parameters via [`pParameter()`] in tests.
 #'
 #' Two tests are conducted on the tape of the Hessian.
@@ -15,25 +16,24 @@
 #' If the results of the tests differ the returned value is `FALSE` and a message is printed indicating which test failed.
 #' @return `TRUE` or `FALSE`
 #' @examples
-#'  sqrtman <- manifoldtransform("sphere")
-#'  ppitape <- tapell(llname = "ppi",
-#'                    xtape = c(0.2, 0.3, 0.5),
-#'                    usertheta = ppi_paramvec(p = 3), 
-#'                    pmanifoldtransform = sqrtman)
-#'  ppismotape <- tapesmo(lltape = ppitape,
-#'                        pmanifoldtransform = sqrtman,
-#'                        divweight = "minsq",
-#'                        acut = 0.1,
-#'                        verbose = FALSE)
+#' tapes <- buildsmotape(
+#'    manifoldname = "sphere",
+#'    llname = "ppi",
+#'    ytape = c(0.2, 0.3, 0.5),
+#'    usertheta = ppi_paramvec(p = 3), 
+#'    weightname = "minsq",
+#'    acut = 0.1,
+#'    verbose = FALSE)
 #'
-#'  testquadratictape(ppismotape)
+#'  testquadratictape(tapes$smotape)
 #' @export
 testquadratictape <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE){
-  tapeJ <- pTapeJacobian(tape, attr(tape, "xtape"), attr(tape, "dyntape"))
-  tapeH <- pTapeJacobian(tapeJ, attr(tape, "xtape"), attr(tape, "dyntape"))
+  stopifnot(inherits(tape, "ADFun"))
+  tapeJ <- tapeJacobian(tape)
+  tapeH <- tapeJacobian(tapeJ)
 
   #pParameter() test
-  isparameter <- pParameter(tapeH)
+  isparameter <- pParameter(tapeH$ptr)
   result_pParameter <- all(isparameter)
   if (verbose && !result_pParameter){
     message(sprintf("The Hessian was non-constant according to pParameter() for elements %s.",
@@ -45,7 +45,7 @@ testquadratictape <- function(tape, xmat = NULL, dynparammat = NULL, verbose = F
   #try Jacobian
   stopifnot(isTRUE(nrow(xmat) == nrow(dynparammat)))
   thirdderivs <- lapply(1:nrow(xmat), function(i){
-    pJacobian(tapeH, xmat[i, ], dynparammat[i, ])
+    pJacobian(tapeH$ptr, xmat[i, ], dynparammat[i, ])
   })
   isallzero <- unlist(lapply(thirdderivs, function(vec){all(vec == 0)}))
   result_thirdderiv <- all(isallzero)

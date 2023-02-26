@@ -30,7 +30,7 @@ beta0[p]=-0.5
 
 test_that("Score1ac estimator of A, b and beta works on highly concentrated data, with some components close to the boundary", {
   #simulate sample from PPI model
-  set.seed(1210)
+  set.seed(12101)
   samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
 
   ####Score1ac estimator##
@@ -41,13 +41,14 @@ test_that("Score1ac estimator of A, b and beta works on highly concentrated data
   #calculate scoring estimate for full model (only beta[p] fixed at -0.5):
   estimator=estimatorall1(samp3,acut,betap = -0.5)
   estimate1all=estimator$estimator1
+  # use CppAD for SE
+  cppadest <- ppi(Y = samp3, paramvec = ppi_paramvec(p = 4, betap = -0.5), trans = "sqrt", divweight="minsq", acut = acut)
+  expect_equal(cppadest$est$paramvec, c(estimate1all, -0.5))
   # use SE estimates as if beta0 was fixed at the estimate (not estimated)
-  std1=estimator1SE(samp3,acut,estimate1all[1:9, , drop = FALSE],estimator$W_est,1, beta0 = c(estimate1all[10:12], beta0[p]))
-  theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL)
-  #2*SE bounds for 75% of parameters
-  expect_gte(mean(abs(theta - estimate1all[1:9]) <= 2*std1), 0.75)
-  message("Misuse of estimator1SE for estimatorall1 results in this test")
-  #invented bounds for beta0 estimates for now
+  SE <- cppadest$SE$paramvec
+  # within 2*SE
+  expect_absdiff_lte_v(c(estimate1all, -0.5),  c(diag(ALs), ALs[upper.tri(ALs)], bL, beta0), 2*SE)
+  #plus invented bounds for beta0 estimates for now
   expect_true(all(abs(beta0[-p] - estimate1all[10:12]) <= 2*3/sqrt(n)))
 
   #calculate scoring estimate with beta fixed at beta0:

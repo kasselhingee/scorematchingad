@@ -3,7 +3,7 @@
 
 #### Setup ####
 list2env(ppi_egmodel(1), globalenv())
-theta <- c(diag(ALs), ALs[upper.tri(ALs)], bL)
+theta <- c(diag(AL), AL[upper.tri(AL)], bL)
 
 
 
@@ -16,9 +16,9 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
 
   #simulate sample from PPI model
   set.seed(321)
-  samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
+  samp3=rppi(n,beta=beta0,AL=AL,bL=bL,maxden=4)
   theta <- ppi_paramvec(p,
-              AL = ALs, bL = drop(bL), beta = drop(beta0))
+              AL = AL, bL = drop(bL), beta = drop(beta0))
 
   ####Score1ac estimator##
 
@@ -31,7 +31,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
 
   # Get SE from CppAD methods
   intheta <- ppi_paramvec(p)
-  tapes <- buildsmotape("sphere", "ppi",
+  tapes <- buildsmotape("sim", "sqrt", "sph", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
@@ -40,7 +40,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   expect_absdiff_lte_v(estimate1all, theta, 3 * SE)
 
   # compare to ppi via cppad
-  expect_lt(sum(tape_smvalues_wsum(tapes$smotape, samp3, drop(estimate1all))$grad^2), 1E-14)
+  expect_lt(sum(smvalues_tape_wsum(tapes$smotape, samp3, drop(estimate1all))$grad^2), 1E-14)
   est2 <- ppi(samp3, trans = "sqrt", divweight = "minsq", acut = acut, bdrythreshold = 1E-20, control = list(tol = 1E-12), method = "closed")
   expect_equal(est2$est$paramvec, drop(estimate1all), tolerance = 1E-2) #within 1% of each other roughly
   expect_absdiff_lte_v(drop(estimate1all), est2$est$paramvec, 2*est2$SE$paramvec)
@@ -51,12 +51,11 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   n=100
   beta0=matrix(-0.8,p,1)
   beta0[p] = 5
-  theta <- ppi_paramvec(p,
-                                               AL = ALs, bL = drop(bL), beta = drop(beta0))
+  theta <- ppi_paramvec(p, AL = AL, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
   set.seed(124)
-  samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
+  samp3=rppi(n,beta=beta0,AL=AL,bL=bL,maxden=4)
 
   ####Score1ac estimator##
 
@@ -69,7 +68,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
 
   # SE from cppad
   intheta <- ppi_paramvec(p, betap = beta0[p])
-  tapes <- buildsmotape("sphere", "ppi",
+  tapes <- buildsmotape("sim", "sqrt", "sph", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
@@ -84,11 +83,10 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   n=100
   beta0=matrix(-0.8,p,1)
   beta0[p]= 5
-  theta <- ppi_paramvec(p,
-                                               AL = ALs, bL = drop(bL), beta = drop(beta0))
+  theta <- ppi_paramvec(p, AL = AL, bL = drop(bL), beta = drop(beta0))
 
   #simulate sample from PPI model
-  samp3=rppi(n,beta=beta0,AL=ALs,bL=bL,maxden=4)
+  samp3=rppi(n,beta=beta0,AL=AL,bL=bL,maxden=4)
 
   ####Score1ac estimator##
 
@@ -101,7 +99,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
 
   # SE from cppad
   intheta <- ppi_paramvec(p, betap = -0.5)
-  tapes <- buildsmotape("sphere", "ppi",
+  tapes <- buildsmotape("sim", "sqrt", "sph", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)

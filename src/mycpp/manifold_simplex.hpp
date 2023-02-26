@@ -1,11 +1,16 @@
-#ifndef mycpp_manifold_simplex
-#define mycpp_manifold_simplex
+#ifndef mycpp_manifold_sim
+#define mycpp_manifold_sim
 #include <RcppEigen.h>
 namespace mantran {
 template <typename T>
-struct simplex : public manifold<T> {
-  ~simplex(){};
-  simplex(){};
+struct sim : public manifold<T> {
+  ~sim(){};
+  sim(){};
+
+  std::string name() const {
+    std::string out = "sim";
+    return(out);
+  }
 
   Eigen::Matrix<T, Eigen::Dynamic, 1> toM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x) override {
     Eigen::Matrix<T, Eigen::Dynamic, 1> out(x.size());

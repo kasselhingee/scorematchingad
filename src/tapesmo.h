@@ -11,6 +11,7 @@
 CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement for taping
                              veca1 theta, //a vector of parameters for taping
                              CppAD::ADFun<double> & lltape,
+                             transform<a1type> &tran,
                              manifold<a1type> &M,
                              a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
                              const double & acut, //the acut constraint for the weight functions
@@ -30,7 +31,8 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
 Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
                                       veca1 theta_ad,
                                       Rcpp::XPtr< CppAD::ADFun<double> > pll,
-                                      Rcpp::XPtr< manifold<a1type> > pman,
+                                      transform_a1type & tran,
+                                      manifold_a1type & man,
                                       std::string weightname,
                                       const double acut,
                                       bool verbose);

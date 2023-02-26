@@ -2,8 +2,8 @@ test_that("ppi_alr_gengamma matches CppAD closed method for constant weight, p =
   set.seed(1234)
   m <- ppi_egmodel(100, maxden = 4)
 
-  est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "closed", divweight = "ones")
-  est_hardcoded <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "hardcoded")
+  est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "closed", divweight = "ones")
+  est_hardcoded <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "hardcoded")
 
   expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec)
 })
@@ -14,8 +14,8 @@ test_that("ppi_alr_gengamma matches CppAD closed method for constant weight and 
   dsample <- round(m$sample * 100)/100
   dsample[, 3] <- 1 - rowSums(dsample[, 1:2])
 
-  est_hardcoded <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "hardcoded")
-  est_cppad <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "closed", divweight = "ones",
+  est_hardcoded <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "hardcoded")
+  est_cppad <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "closed", divweight = "ones",
                          bdrythreshold = 1E-100) #1E-200 was too small for some reason - it produced NaN values
 
   expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec)
@@ -55,8 +55,8 @@ test_that("ppi_alr_gengamma matches for simulated weights", {
   weights[as.numeric(names(table(ind)))] <- table(ind)
   newsample <- m$sample[ind, ]
 
-  est_sim <- ppi_alr_gengamma(newsample, betap = m$beta0[3], w = rep(1, nrow(newsample)))
-  est_hardcoded <- ppi_alr_gengamma(m$sample, betap = m$beta0[3], w = weights)
+  est_sim <- ppi_alr_gengamma(newsample, betap = m$beta[3], w = rep(1, nrow(newsample)))
+  est_hardcoded <- ppi_alr_gengamma(m$sample, betap = m$beta[3], w = weights)
   expect_equal(est_hardcoded$est$paramvec, est_sim$est$paramvec)
 })
 
@@ -66,10 +66,10 @@ test_that("ppi_alr_gengamma() and cppad match for a randomly selected weight vec
   set.seed(1212)
   w <- runif(100)
 
-  est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "closed", divweight = "ones",
+  est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "closed", divweight = "ones",
                          w = w,
                          )
-  est_hardcoded <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta0[3]), trans = "alr", method = "hardcoded", w = w)
+  est_hardcoded <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "hardcoded", w = w)
 
   expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec)
 })

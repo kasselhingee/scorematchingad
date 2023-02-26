@@ -8,7 +8,7 @@
 #' @examples 
 #' sqrtman <- manifoldtransform("sphere")
 #' ppitape <- tapell(llname = "ppi",
-#'                   xtape = c(0.2, 0.3, 0.5),
+#'                   ytape = c(0.2, 0.3, 0.5),
 #'                   usertheta = ppi_paramvec(p = 3), 
 #'                   pmanifoldtransform = sqrtman)
 #' ppismotape <- tapesmo(lltape = ppitape,
@@ -27,24 +27,27 @@
 #   c(0.1, 0.1, 0.8)) 
 #' @export
 tapesmo <- function(lltape,
-                   pmanifoldtransform,
+                   tran,
+                   man,
                    divweight,
                    acut = 1,
                    verbose = FALSE){
+  inherits(tran, "Rcpp_transform_ad")
+  inherits(man, "Rcpp_man_ad")
   stopifnot(is.numeric(acut))
   
-  smotape <- ptapesmo(attr(lltape, "xtape"),
-                      attr(lltape, "dyntape"),
-                      lltape,
-                      pmanifoldtransform,
+  smotape <- ptapesmo(attr(lltape, "ytape"),
+                      lltape$dyntape,
+                      lltape$ptr,
+                      tran,
+                      man,
                       divweight, 
                       acut, 
                       verbose = verbose)
-  attr(smotape, "fname") <- paste(attr(lltape, "fname"), "smo", sep = "-")
-  attr(smotape, "xtape") <- attr(lltape, "dyntape")
-  attr(smotape, "usertheta") <- attr(lltape, "usertheta")
-  attr(smotape, "dyntape") <- attr(lltape, "xtape")
-  attr(smotape, "divweight") <- divweight
-  attr(smotape, "acut") <- acut
-  return(smotape)
+  out <- ADFun$new(ptr = smotape,
+                   name = paste(lltape$name, "smo", sep = "-"),
+                   xtape = as.numeric(lltape$dyntape),
+                   dyntape = as.numeric(attr(lltape, "ytape")),
+                   usertheta = as.numeric(lltape$usertheta))
+  return(out)
 }

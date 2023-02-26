@@ -1,21 +1,21 @@
 # include "util.h"
 
-veca1 ptoM(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad){
+veca1 ptoM(manifold<a1type> & man, veca1 u_ad){
   veca1 z_ad(u_ad.size());
-  z_ad = pman->toM(u_ad);
+  z_ad = man.toM(u_ad);
   return(z_ad);
 }
 
 
 vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
-                     vecd u, vecd centre,
+                     vecd x, vecd centre,
                      vecd dynparam, size_t order){
   vecd out(pfun->Range());
   pfun->new_dynamic(dynparam);
   out = taylorapprox(*pfun,
                      centre,
                      order,
-                     u);
+                     x);
 
   return(out);
 }
@@ -36,9 +36,9 @@ CppAD::ADFun<double> tapefromM(veca1 z,
 
 
 Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z,
-                               Rcpp::XPtr<manifold<a1type> > pman){
+                               manifold_a1type & man){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapefromM(z, pman.checked_get());
+  *out = tapefromM(z, &man);
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);

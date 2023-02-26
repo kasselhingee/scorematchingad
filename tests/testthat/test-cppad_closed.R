@@ -3,19 +3,20 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
   mod <- ppi_egmodel(100)
   Y <- mod$sample
 
-  Ralr <- manifoldtransform("Ralr")
-  ppitape <- tapell(llname = "ppi",
-                  xtape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)), 
-                  pmanifoldtransform = Ralr)
-  smotape <- tapesmo(lltape = ppitape,
-                      pmanifoldtransform = Ralr,
-                      divweight = "ones",
-                      verbose = FALSE)
+  tapes <- buildsmotape(
+     start = "sim",
+     tran = "alr",
+     man = "Euc",
+     llname = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
+     weightname = "ones",
+     verbose = FALSE)
+  smotape <- tapes$smotape
 
   estobj <- cppad_closed(smotape, Y)
 
-  grads <- t(apply(Y, MARGIN = 1, function(x) pJacobian(smotape, estobj$est, x))) 
+  grads <- t(apply(Y, MARGIN = 1, function(x) pJacobian(smotape$ptr, estobj$est, x))) 
   totalgrad <- colSums(grads)
   expect_lt(sum(totalgrad^2), 1E-20)
 
@@ -37,21 +38,21 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
   Yapproxcentres[!isbdry, ] <- NA 
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(dsample[isbdry, , drop = FALSE])
 
-  Ralr <- manifoldtransform("Ralr")
-  ppitape <- tapell(llname = "ppi",
-                  xtape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)), 
-                  pmanifoldtransform = Ralr)
-  smotape <- tapesmo(lltape = ppitape,
-                      pmanifoldtransform = Ralr,
-                      divweight = "ones",
-                      verbose = FALSE)
+  tapes <- buildsmotape(
+     start = "sim",
+     tran = "alr",
+     man = "Euc",
+     llname = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)), 
+     weightname = "ones",
+     verbose = FALSE)
 
-  estobj <- cppad_closed(smotape, Y = dsample, Yapproxcentres, approxorder = 10)
+  estobj <- cppad_closed(tapes$smotape, Y = dsample, Yapproxcentres, approxorder = 10)
 
   est_hardcode <- ppi(dsample, paramvec = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)),
       trans = "alr", method = "hardcoded")
-  expect_equal(est_hardcode$est$paramvec, t_fu2t(estobj$est, attr(ppitape, "usertheta")))
+  expect_equal(est_hardcode$est$paramvec, t_fu2t(estobj$est, ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1))))
 
 })
 

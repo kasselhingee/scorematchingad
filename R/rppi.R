@@ -1,4 +1,5 @@
 #' @title Generate random observations from the PPI model
+#' @family PPI model tools
 #' @description Given parameters of the PPI model, generates independent samples.
 #' @param n Sample size
 #' @param paramvec The PPI parameter vector, created easily using [`ppi_paramvec()`] and also returned by [`ppi()`].
@@ -23,17 +24,6 @@
 #' @export
 rppi <- function(n, ..., paramvec = NULL, maxden = 4, maxmemorysize = 1E5){
   ellipsis::check_dots_used()
-  # a warning if maxden is high
-  if (maxden > 10){
-    rlang::warn(message = paste(sprintf("'maxden' of %0.2f is higher than 10.", maxden),
-                                "When rppi() requires a high 'maxden' it could mean that",
-                                "PPI density is hugely different from the Dirichlet component of the density.",
-                                "This could mean that the concentrations on the boundary from the Dirichlet component",
-                                "will be too narrow to be represented in simulatad samples."),
-                .frequency = "once",
-                .frequency_id = "highmaxden")
-  }
-
   #process inputs
   if (is.null(paramvec)){
     paramvec <- ppi_paramvec(...)
@@ -44,6 +34,16 @@ rppi <- function(n, ..., paramvec = NULL, maxden = 4, maxmemorysize = 1E5){
   AL <- parammats$AL
   bL <- parammats$bL
   p <- length(beta)
+  
+  # a warning if maxden is high
+  if (maxden > 10){
+    mess <- paste(sprintf("'maxden' of %0.2f is higher than 10.", maxden),
+                                "When rppi() requires a high 'maxden' it could mean that",
+                                "PPI density is hugely different from the Dirichlet component of the density.")
+    if (any(beta < 0)){mess <- paste(mess, "This could mean that the concentrations on the boundary from the Dirichlet component will be too narrow to be represented in simulatad samples.")}
+    rlang::warn(message = mess, .frequency = "once", .frequency_id = "highmaxden")
+  }
+
 
   maxdenin <- maxden
   propaccepted <- 1 #start at 100 acceptance rate
@@ -125,6 +125,7 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
 }
 
 #' @title Improper Log-Density of the PPI Model
+#' @family PPI model tools
 #' @description Compute the __natural logarithm__ of the improper density for the PPI model for the given matrix of locations `Y`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
 #' @param Y A matrix of locations in the simplex. Each row is a location, each column a component.
 #' @inheritParams rppi

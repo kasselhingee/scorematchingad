@@ -1,4 +1,6 @@
 #' @title Windham Robustness for Scealy et al 2023
+#' @family PPI model tools
+#' @family Windham robustness functions
 #' @description
 #' Performs the Windham robustification algorithm exactly as described in \insertCite{scealy2023ro;textual}{scorecompdir} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general [`Windham()`] and [`ppi()`].
 #' @inheritParams Windham

@@ -1,4 +1,5 @@
 #' @title Windham Robustification of Point Estimators for Exponential Family Distributions
+#' @family generic score matching tools
 #' @description Performs a generalisation of Windham's robustifying method \insertCite{windham1995ro}{scorecompdir} for exponential models with natural parameters that are a linear function of the parameters for estimation.
 #' Estimators must solve estimating equations of the form
 #' \deqn{\sum_{i = 1}^n U(z_i; \theta) = 0.}
@@ -28,7 +29,7 @@
 #' The estimate returned by `Windham()` is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n \approx \theta_{n+1}}.
 #'
 #' An exponential model with a base rate may be used with `Windham()` so long as the base rate is omitted from `ldenfun` (i.e. not used for weighting).
-#' @family Windham functions
+#' @family Windham robustness functions
 #' @return
 #' A list:
 #' * `theta` the estimated parameter vector

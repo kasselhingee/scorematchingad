@@ -1,4 +1,5 @@
 #' @title Convert a PPI Parameter Vector to AL, bL and beta
+#' @family PPI model tools
 #' @description
 #' The parameters for the PPI model are the symmetric matrix \eqn{A_L},
 #' the vector \eqn{b_L}, and the vector \eqn{\beta}.

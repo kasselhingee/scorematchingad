@@ -1,5 +1,6 @@
 #' @title Compute score matching objective value, gradient, and Hessian for a PPI Model
-#' @description Using similar arguments to [`ppi()`], compute values related to score matching. See [`tape_smvalues()`]. The gradient offset is also computed (see [`quadratictape_parts()`]. 
+#' @family PPI model tools
+#' @description Using similar arguments to [`ppi()`], compute values related to score matching. See [`smvalues_tape()`]. The gradient offset is also computed (see [`quadratictape_parts()`]. 
 #' @inheritParams ppi
 #' @param evalparam The parameter set to evaluate the score matching values.
 #' This is different to `paramvec`, which *fixes* parameters and constrains the estimation.
@@ -30,11 +31,15 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
 
   stopifnot(trans %in% c("alr", "sqrt", "clr", "none"))
   man <- switch(trans,
-           alr = "Ralr",
-           clr = "Hclr",
-           sqrt = "sphere",
-           none = "simplex")
-  if (!(man %in% c("simplex", "sphere"))){
+           alr = "Euc",
+           clr = "Hn111",
+           sqrt = "sph",
+           none = "sim")
+  if (trans == "none"){trans <- "identity"}
+
+  if (man %in% c("sim", "sph")){
+    if (divweight == "ones"){stop("Manifold supplied has a boundary - set divweight to something that isn't 'ones'")}
+  } else {
     if (divweight != "ones"){warning("Manifold supplied has no boundary. Setting divweight to 'ones'.")}
   }
   if (divweight == "ones"){
@@ -44,17 +49,17 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
 
   if (is.null(paramvec)){paramvec <- rep(NA, ppithetalength(ncol(Y)))}
 
-
-  pman <- manifoldtransform(man)
-  ppitape <- tapell(llname = "ppi",
-                  xtape = rep(1/p, p),
-                  usertheta = paramvec, 
-                  pmanifoldtransform = pman)
-  smotape <- tapesmo(lltape = ppitape,
-                     pmanifoldtransform = pman,
-                     divweight = divweight,
-                     acut = acut,
-                     verbose = FALSE)
+  tapes <- buildsmotape(
+     start = "sim",
+     tran = trans,
+     man = man,
+     llname = "ppi",
+     ytape =  rep(1/p, p),
+     usertheta = paramvec,
+     weightname = divweight,
+     acut = acut,
+     verbose = FALSE)
+  smotape <- tapes$smotape
 
   # find boundary points and their approximation centres
   isbdry <- simplex_isboundary(Y, bdrythreshold)
@@ -62,7 +67,7 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
   Yapproxcentres[!isbdry, ] <- NA
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = shiftsize)
 
-  valgradhess <- tape_smvalues_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
+  valgradhess <- smvalues_tape_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
                             xcentres = Yapproxcentres,
                             w = w,
                             approxorder = approxorder)

@@ -9,9 +9,22 @@
 #'  + "Ralr" for the additive log-ratio transformation from the simplex to Euclidean space, using the final component of vectors in the denominator of the ratio.
 #'  + "Snative" for the sphere without any transformation
 #' @examples
-#' manifoldtransform("Ralr")
+#' manifoldtransform("alr", "Euc")
 #' @export
-manifoldtransform <- function(name){
-  out <- pmanifold(name)
+manifoldtransform <- function(start, tran, man){
+  stopifnot(paste(start, tran, man, sep = "-") %in% mantrancombos)
+  out <- list(tran = new(mantranmodule$transform_ad, tran),
+       man = new(mantranmodule$man_ad, man))
   return(out)
 }
+
+mantranmodule <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+
+mantrancombos <- c(
+  "sim-sqrt-sph",
+  "sim-identity-sim",
+  "sim-alr-Euc",
+  "sim-clr-Hn111",
+  "sph-identity-sph"
+)
+

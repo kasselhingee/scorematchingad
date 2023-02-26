@@ -4,6 +4,7 @@
 CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement for taping
                              veca1 theta, //a vector of parameters for taping
                              CppAD::ADFun<double> & lltape,
+                             transform<a1type> &tran,
                              manifold<a1type> &M,
                              a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
                              const double & acut, //the acut constraint for the weight functions
@@ -17,7 +18,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     //get h2 tape
     CppAD::ADFun<double> dh2tape;
     veca1 z(d); //size of z changed by toM result below
-    z = M.toM(u); //transform u to the manifold
+    z = tran.toM(u); //transform u to the manifold
     CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
 
@@ -37,7 +38,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     }
 
     // veca1 u(n);
-    z = M.toM(u); //transform u to the manifold
+    z = tran.toM(u); //transform u to the manifold
 
     Pmat = M.Pmatfun(z);
     if (verbose){PrintForMatrix("\nThe value of Pmat is: \n", Pmat);}
@@ -101,7 +102,8 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
 Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
                                       veca1 theta_ad,
                                       Rcpp::XPtr< CppAD::ADFun<double> > pll,
-                                      Rcpp::XPtr< manifold<a1type> > pman,
+                                      transform_a1type & tran,
+                                      manifold_a1type & man,
                                       std::string weightname,
                                       const double acut,
                                       bool verbose){
@@ -127,7 +129,8 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
   *out = tapesmo(u_ad,
                  theta_ad,
                  *pll,
-                 *pman,
+                 tran,
+                 man,
                  h2fun,
                  acut,
                  verbose);

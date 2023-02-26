@@ -1,11 +1,11 @@
 #' @title Estimate the concentration for a von Mises Fisher distribution
+#' @family directional model estimators
 #' @description Using score matching, estimates the concentration \eqn{\kappa} from a sample with mean direction of `c(1, 0, 0, ..., 0)`. 
 #' Results by \insertCite{mardia2016sc;textual}{scorecompdir} and some experiments of our own suggest that good implementations of the maximum likelihood estimator (e.g. [`movMF::movMF()`] ) will out perform `vMF_kappa()`.
 #'
 #' Often a sample with mean direction of `c(1, 0, 0, ...., 0)` is created by estimating the mean direction and rotating the data such that the mean direction equals `c(1, 0, 0, ...)`.
 #' Performing this mean direction estimate, then rotation, then estimating concentration with score matching correponds to the hybrid estimator by \insertCite{mardia2016sc;textual}{scorecompdir}.
 #' @inherit vMF sections
-#' @family Mardia hybrid estimators
 #' @references \insertAllCited()
 #' @details
 #' The function `vMF_kappa()` estimates *only* the concentration \eqn{\kappa}, and assumes that \eqn{\mu} is \eqn{(1, 0, 0, ..., 0)}.
@@ -22,8 +22,8 @@ vMF_kappa <- function(Y, w = rep(1, nrow(Y)), control = default_Rcgmin()){
   # do estimate, where all but the first component of theta are fixed at zero
   # because kappa * e1 = (kappa, 0, 0, 0, ...)
     p <- ncol(Y)
-    tapes <- buildsmotape("Snative", "vMF",
-                          utape = rep(1, p)/sqrt(p),
+    tapes <- buildsmotape("sph","identity", "sph", "vMF",
+                          ytape = rep(1, p)/sqrt(p),
                           usertheta = c(NA, rep(0, p-1)))
     sminfo <- cppad_closed(tapes$smotape, Y, w = w)
     k <- sminfo$est

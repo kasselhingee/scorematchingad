@@ -23,8 +23,8 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
   sample <- sample / sqrt(rowSums(sample^2))
   stopifnot(all(abs(sqrt(rowSums(sample^2)) - 1) < 1E-5))
 
-  pman <- manifoldtransform("Snative")
-  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(theta)), llname = "FB", pman,
+  pman <- manifoldtransform("sph", "identity", "sph")
+  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(theta)), llname = "FB", pman$tran,
                     fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
 
   expect_equal(pForward0(lltape, sample[1, ], theta), log(qdFB(sample[1, ], k, m, A)),
@@ -108,9 +108,9 @@ test_that("FB() with many fixed elements leads to smaller smobjgrad", {
   #many fixed elements
   intheta <- theta
   intheta[8] <- NA
-  tapes <- buildsmotape("Snative", "FB",
+  tapes <- buildsmotape("identity", "sph", "FB",
                         sample[1, ], intheta)
-  smvals <- tape_smvalues_wsum(tapes$smotape, sample, theta[is.na(intheta)])
+  smvals <- smvalues_tape_wsum(tapes$smotape, sample, theta[is.na(intheta)])
   sum(smvals$grad^2)
 })
 

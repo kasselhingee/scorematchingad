@@ -2,21 +2,21 @@ test_that("Hess + Offset match gradient for a PPI Example", {
   mod <- ppi_egmodel(100)
   Y <- mod$sample
 
-  Ralr <- manifoldtransform("Ralr")
-  ppitape <- tapell(llname = "ppi",
-                  xtape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3, betap=0.5), 
-                  pmanifoldtransform = Ralr)
-  smotape <- tapesmo(lltape = ppitape,
-                      pmanifoldtransform = Ralr,
-                      divweight = "ones",
-                      verbose = FALSE)
+  tapes <- buildsmotape(
+     start = "sim",
+     tran = "alr",
+     man = "Euc",
+     llname = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3, betap=0.5), 
+     verbose = FALSE)
+  smotape <- tapes$smotape
 
   values <- quadratictape_parts(smotape, Y)
 
   # expect results to match for gradient
   theta <- head(mod$theta, 7) #theta could be anything though
-  gradorig <- t(apply(Y, MARGIN = 1, function(x){pJacobian(smotape, theta, x)}))
+  gradorig <- t(apply(Y, MARGIN = 1, function(x){pJacobian(smotape$ptr, theta, x)}))
 
   gradpoly <- lapply(1:nrow(values$offset), function(i){
     drop(matrix(values$Hessian[i, ], ncol = length(theta)) %*% theta + 
@@ -27,7 +27,7 @@ test_that("Hess + Offset match gradient for a PPI Example", {
 
   # if W is symmetric then should equal the smo up to a constant wrt theta
   # and my expectation is that W is symmetric for ppi
-  smoorig <- apply(Y, MARGIN = 1, function(x){pForward0(smotape, theta, x)})
+  smoorig <- evaltape(smotape, theta, Y)
 
   smopoly <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * theta %*% matrix(values$Hessian[i, ], ncol = length(theta)) %*% theta + 
@@ -38,7 +38,7 @@ test_that("Hess + Offset match gradient for a PPI Example", {
   
   #test constant by trying another theta
   theta2 <- theta+1
-  smoorig2 <- apply(Y, MARGIN = 1, function(x){pForward0(smotape, theta2, x)})
+  smoorig2 <- evaltape(smotape, theta2, Y)
   smopoly2 <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * theta2 %*% matrix(values$Hessian[i, ], ncol = length(theta2)) %*% theta2 +
       values$offset[i, , drop = FALSE] %*% theta2)
@@ -52,15 +52,15 @@ test_that("quadratictape_parts with approx centres is close to quadratic_parts f
   Y <- mod$sample
   Ycen <- simplex_boundaryshift(Y)
 
-  Ralr <- manifoldtransform("Ralr")
-  ppitape <- tapell(llname = "ppi",
-                  xtape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3), 
-                  pmanifoldtransform = Ralr)
-  smotape <- tapesmo(lltape = ppitape,
-                      pmanifoldtransform = Ralr,
-                      divweight = "ones",
-                      verbose = FALSE)
+  tapes <- buildsmotape(
+     start = "sim",
+     tran = "alr",
+     man = "Euc",
+     llname = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3), 
+     verbose = FALSE)
+  smotape <- tapes$smotape
   
   valuesexact <- quadratictape_parts(smotape, Y)
   valuesapprox <- quadratictape_parts(smotape, Y, tcentres = Ycen, approxorder = 1)
