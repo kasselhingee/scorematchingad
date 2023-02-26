@@ -28,7 +28,7 @@ ppill_r_S <- function(z, beta0, AL, bL){
 # test Jacobian of ll function using numerical differentiation
 test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estimates", {
   psimplex <- manifoldtransform("simplex") #because above ppill_r is for the simplex
-  lltape <- ptapell(u, theta, llname = "ppi", pman = psimplex, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
+  lltape <- ptapell(u, theta, llname = "ppi", man = psimplex, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
 
   # wrt u
   expect_equal(ppill_r(u, beta0, AL, bL), pForward0(lltape, u, theta), ignore_attr = TRUE)
@@ -66,7 +66,7 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
 # test Jacobian of ll function using numerical differentiation
 test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estimates", {
   psphere <- manifoldtransform("sphere")
-  lltape <- ptapell(u, theta, llname = "ppi", pman = psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
+  lltape <- ptapell(u, theta, llname = "ppi", man = psphere, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
 
   # wrt u
   expect_equal(ppill_r_S(u, beta0, AL, bL), pForward0(lltape, u, theta), ignore_attr = TRUE)
@@ -110,7 +110,7 @@ test_that("dirichlet ll evaluation and Jacobian matches expected", {
   dirichlet_r <- function(u, beta){sum(beta * log(u))}
 
   psimplex <- manifoldtransform("simplex")
-  lltape <- ptapell(u, beta, llname = "dirichlet", pman = psimplex, fixedtheta = rep(FALSE, length(beta)), verbose = FALSE)
+  lltape <- ptapell(u, beta, llname = "dirichlet", man = psimplex, fixedtheta = rep(FALSE, length(beta)), verbose = FALSE)
   #forward0
   expect_equal(dirichlet_r(u, beta), pForward0(lltape, u, beta), ignore_attr = TRUE)
 
