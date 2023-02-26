@@ -41,7 +41,7 @@ tapell <- function(llname,
   ztape <- ptoM(pmanifoldtransform, ytape) #the value of ytape transformed to the manifold
   lltape <- ptapell(ztape, starttheta,
                     llname = llname, 
-                    pman = pmanifoldtransform,
+                    man = pmanifoldtransform,
                     fixedtheta = t_u2i(usertheta),
                     verbose = verbose)
   out <- ADFun$new(ptr = lltape,
