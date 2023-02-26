@@ -155,18 +155,8 @@ printgraph <- function(pfun) {
 #' @param bd dimension of the parameter vector
 #' @param llname name of the likelihood function
 #' @return An RCpp::XPtr object pointing to the ADFun
-ptapell <- function(z_ad, theta_ad, llname, man, fixedtheta, verbose) {
-    .Call('_scorecompdir_ptapell', PACKAGE = 'scorecompdir', z_ad, theta_ad, llname, man, fixedtheta, verbose)
-}
-
-#' @noRd
-#' @title Tape of a log-likelihood calculation
-#' @param p dimension of measurements
-#' @param bd dimension of the parameter vector
-#' @param llname name of the likelihood function
-#' @return An RCpp::XPtr object pointing to the ADFun
-mptapell <- function(z_ad, theta_ad, llname, pman, fixedtheta, verbose) {
-    .Call('_scorecompdir_mptapell', PACKAGE = 'scorecompdir', z_ad, theta_ad, llname, pman, fixedtheta, verbose)
+ptapell <- function(z_ad, theta_ad, llname, tran, fixedtheta, verbose) {
+    .Call('_scorecompdir_ptapell', PACKAGE = 'scorecompdir', z_ad, theta_ad, llname, tran, fixedtheta, verbose)
 }
 
 #' @noRd
@@ -177,8 +167,8 @@ mptapell <- function(z_ad, theta_ad, llname, pman, fixedtheta, verbose) {
 #' @param weightname The name of the weight function to use
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
-ptapesmo <- function(u_ad, theta_ad, pll, man, weightname, acut, verbose) {
-    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, man, weightname, acut, verbose)
+ptapesmo <- function(u_ad, theta_ad, pll, tran, man, weightname, acut, verbose) {
+    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, tran, man, weightname, acut, verbose)
 }
 
 #' @noRd
