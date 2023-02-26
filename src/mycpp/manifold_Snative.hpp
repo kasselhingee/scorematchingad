@@ -1,13 +1,13 @@
-#ifndef mycpp_manifold_Snative
-#define mycpp_manifold_Snative
+#ifndef mycpp_manifold_sph
+#define mycpp_manifold_sph
 
 // code for various tools for the sphere, without transformation required
 #include <RcppEigen.h>
 namespace mantran {
 template <typename Type>
-struct Snative : public manifold<Type> {
-  ~Snative(){};
-  Snative(){};
+struct sph : public manifold<Type> {
+  ~sph(){};
+  sph(){};
 
   Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());

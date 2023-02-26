@@ -1,15 +1,15 @@
-#ifndef mycpp_manifold_Ralr
-#define mycpp_manifold_Ralr
+#ifndef mycpp_manifold_Euc
+#define mycpp_manifold_Euc
 // code for various tools for the additive log ratio transform
 #include <RcppEigen.h>
 namespace mantran {//names space for manifold-transformation pair (triplets}
 template <typename Type>
-struct Ralr : public manifold<Type> {
-  ~Ralr(){};
-  Ralr(){};
+struct Euc : public manifold<Type> {
+  ~Euc(){};
+  Euc(){};
 
   std::string name() const {
-    std::string out = "Ralr";
+    std::string out = "Euc";
     return(out);
   }
 
