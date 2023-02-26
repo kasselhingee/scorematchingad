@@ -50,7 +50,7 @@ Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){
   intheta <- Bingham_Amat2theta(A)
 
   ytape <- rep(1, p) / sqrt(p)
-  tapes <- buildsmotape("identity", "sph", "Bingham",
+  tapes <- buildsmotape("sph","identity", "sph", "Bingham",
                            ytape, intheta,
                            weightname = "ones")
   out <- cppad_closed(tapes$smotape, Y = sample)
@@ -83,7 +83,7 @@ Bingham_Mardia <- function(sample,  control = default_Rcgmin()){
   diag(A) <- NA
   stopifnot(all(dim(A) == p))
   intheta <- Bingham_Amat2theta(A)
-  tapes <- buildsmotape("identity", "sph", "Bingham",
+  tapes <- buildsmotape("sph","identity", "sph", "Bingham",
                         rep(1, p) / sqrt(p), intheta,
                         weightname = "ones")
 

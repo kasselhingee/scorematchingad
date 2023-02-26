@@ -8,7 +8,7 @@ test_that("ppi tape values do not effect ll values", {
   ueval <- matrix(c(0.4, 0.011, 1 - 0.4 - 0.011), nrow = 1)
   thetaeval <- model1$theta + 1
 
-  psphere <- manifoldtransform("sqrt", "sph")
+  psphere <- manifoldtransform("sim", "sqrt", "sph")
   pppi1 <- ptapell(u1, model1$theta, "ppi", psphere$tran,  fixedtheta = fixedtheta, verbose = FALSE)
   pppi2 <- ptapell(u0, model0$theta, "ppi", psphere$tran, fixedtheta = fixedtheta, verbose = FALSE)
 
@@ -28,10 +28,10 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
   utabl <- rppi(10,beta=beta,AL=ALs,bL=bL,maxden=4)
 
   acut = 0.1
-  dirtapes <- buildsmotape("sqrt", "sph", "dirichlet",
+  dirtapes <- buildsmotape("sim","sqrt", "sph", "dirichlet",
                            rep(0.1, p), rep(0.1, p) * NA,
                            weightname = "minsq", acut = acut)
-  ppitapes <- buildsmotape("sqrt", "sph", "ppi",
+  ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), theta * NA,
                            weightname = "minsq", acut = acut)
 
@@ -52,10 +52,10 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   utabl <- rppi(100,beta=beta,AL=ALs,bL=bL,maxden=4)
 
   acut = 0.1
-  dirtapes <- buildsmotape("sqrt", "sph", "dirichlet",
+  dirtapes <- buildsmotape("sim","sqrt", "sph", "dirichlet",
                            rep(0.1, p), rep(0.1, p) * NA,
                            weightname = "minsq", acut = acut)
-  ppitapes <- buildsmotape("sqrt", "sph", "ppi",
+  ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), ppi_paramvec(AL = 0, bL=0, p = p),
                            weightname = "minsq", acut = acut)
 
@@ -215,7 +215,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
                ignore_attr = TRUE)
 
   #also it makes sense that the smo and gradient are v low at the hardcoded estimate
-  ppitapes <- buildsmotape("sqrt", "sph", "ppi",
+  ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
                            weightname = "minsq", acut = acut)
   smvals <- smvalues_tape_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL))

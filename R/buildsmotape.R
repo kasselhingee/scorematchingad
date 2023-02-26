@@ -50,7 +50,7 @@
 #' pForward0(tapes$lltape, u, runif(n = ltheta))
 #' pForward0(tapes$smotape, runif(n = ltheta), u)
 #' @export
-buildsmotape <- function(tran, man, llname,
+buildsmotape <- function(start, tran, man, llname,
                          ytape, usertheta,
                          weightname = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
@@ -65,7 +65,7 @@ buildsmotape <- function(tran, man, llname,
     warning("The value of 'acut' is ignored for weightname == 'ones'")
   }
 
-  tranman <- manifoldtransform(tran, man)
+  tranman <- manifoldtransform(start, tran, man)
   lltape <- tapell(llname = llname,
                     ytape = ytape,
                     usertheta = usertheta, 
@@ -83,8 +83,8 @@ buildsmotape <- function(tran, man, llname,
     smotape = smotape,
     info = list(
       name = llname,
-      transform = tranman$tran$name(),
-      manifold = tranman$man$name(),
+      transform = tran,
+      manifold = man,
       ulength = length(ytape),
       weightname = weightname,
       acut = acut

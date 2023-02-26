@@ -3,6 +3,7 @@ test_that("Hess + Offset match gradient for a PPI Example", {
   Y <- mod$sample
 
   tapes <- buildsmotape(
+     start = "sim",
      tran = "alr",
      man = "Euc",
      llname = "ppi",
@@ -52,6 +53,7 @@ test_that("quadratictape_parts with approx centres is close to quadratic_parts f
   Ycen <- simplex_boundaryshift(Y)
 
   tapes <- buildsmotape(
+     start = "sim",
      tran = "alr",
      man = "Euc",
      llname = "ppi",

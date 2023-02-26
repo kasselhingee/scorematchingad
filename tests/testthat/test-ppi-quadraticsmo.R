@@ -2,6 +2,7 @@
 
 test_that("testquadratictape passes on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
   tapes <- buildsmotape(
+     start = "sim",
      tran = "sqrt",
      man = "sph",
      llname = "ppi",
@@ -29,6 +30,7 @@ test_that("testquadratictape passes on PPI model with sqrt transformation, minsq
   # manual tests
 test_that("manual tests on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
   tapes <- buildsmotape(
+     start = "sim",
      tran = "sqrt",
      man = "sph",
      llname = "ppi",
@@ -63,7 +65,7 @@ test_that("manual tests on PPI model with sqrt transformation, minsq divergence 
 })
 
 test_that("ppi ll tape is fails the quadratic test", {
-  sqrtman <- manifoldtransform("sqrt", "sph")
+  sqrtman <- manifoldtransform("sim", "sqrt", "sph")
   ppitape <- tapell(llname = "ppi",
                     ytape = c(0.2, 0.3, 0.5),
                     usertheta = ppi_paramvec(p = 3), 

@@ -179,6 +179,7 @@ ppi <- function(Y, paramvec = NULL,
     isfixed <- t_u2i(usertheta)
     # prepare tapes
     tapes <- buildsmotape(
+       start = "sim",
        tran = trans,
        man = man,
        llname = "ppi",

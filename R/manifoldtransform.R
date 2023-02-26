@@ -11,10 +11,22 @@
 #' @examples
 #' manifoldtransform("alr", "Euc")
 #' @export
-manifoldtransform <- function(tran, man){
+manifoldtransform <- function(start, tran, man){
+  stopifnot(c(start, tran, man) %in% mantrancombos)
   out <- list(tran = new(mantranmodule$transform_ad, tran),
        man = new(mantranmodule$man_ad, man))
   return(out)
 }
 
 mantranmodule <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+
+mantrancombos <- matrix(c(
+  "sim", "sqrt" , "sph",
+  "sim", "identity", "sim",
+  "sim", "alr", "Euc",
+  "sim", "clr", "Hn111",
+  "sph", "identity", "sph"
+), byrow = TRUE, ncol = 3)
+colnames(mantrancombos) <- c("start", "tran", "man")
+mantrancombos <- split(mantrancombos, 1:nrow(mantrancombos))
+
