@@ -6,7 +6,7 @@ test_that("von-Mises Fisher likelihood runs and fits", {
 
   p <- length(theta)
   intheta <- c(NA, rep(0, p - 1))
-  tapes <- buildsmotape("identity", "sph", "vMF",
+  tapes <- buildsmotape("sph", "identity", "sph", "vMF",
                         rep(1, p)/sqrt(p), rep(NA, p),
                         weightname = "ones",
                         verbose = FALSE)
