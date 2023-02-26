@@ -31,11 +31,15 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
 
   stopifnot(trans %in% c("alr", "sqrt", "clr", "none"))
   man <- switch(trans,
-           alr = "Ralr",
-           clr = "Hclr",
-           sqrt = "sphere",
-           none = "simplex")
-  if (!(man %in% c("simplex", "sphere"))){
+           alr = "Euc",
+           clr = "Hn111",
+           sqrt = "sph",
+           none = "sim")
+  if (trans == "none"){trans <- "identity"}
+
+  if (man %in% c("sim", "sph")){
+    if (divweight == "ones"){stop("Manifold supplied has a boundary - set divweight to something that isn't 'ones'")}
+  } else {
     if (divweight != "ones"){warning("Manifold supplied has no boundary. Setting divweight to 'ones'.")}
   }
   if (divweight == "ones"){
@@ -46,7 +50,8 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
   if (is.null(paramvec)){paramvec <- rep(NA, ppithetalength(ncol(Y)))}
 
   tapes <- buildsmotape(
-     manifoldname = man,
+       tran = trans,
+       man = man,
      llname = "ppi",
      ytape =  rep(1/p, p),
      usertheta = paramvec,
