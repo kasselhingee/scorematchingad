@@ -81,7 +81,7 @@ vMF_full <- function(sample, usertheta, control = default_Rcgmin(), w = NULL){
   p <- ncol(sample)
   stopifnot(length(usertheta) == p)
 
-  tapes <- buildsmotape("Snative", "vMF",
+  tapes <- buildsmotape("identity", "sph", "vMF",
                         rep(1, p)/sqrt(p), 
                         usertheta = usertheta,
                         weightname = "ones",

@@ -2,7 +2,8 @@
 
 test_that("testquadratictape passes on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
   tapes <- buildsmotape(
-     manifoldname = "sphere",
+     tran = "sqrt",
+     man = "sph",
      llname = "ppi",
      ytape = c(0.2, 0.3, 0.5),
      usertheta = ppi_paramvec(p = 3), 
@@ -28,7 +29,8 @@ test_that("testquadratictape passes on PPI model with sqrt transformation, minsq
   # manual tests
 test_that("manual tests on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
   tapes <- buildsmotape(
-     manifoldname = "sphere",
+     tran = "sqrt",
+     man = "sph",
      llname = "ppi",
      ytape = c(0.2, 0.3, 0.5),
      usertheta = ppi_paramvec(p = 3), 

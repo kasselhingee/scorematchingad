@@ -34,14 +34,14 @@
 tapell <- function(llname,
                    ytape,
                    usertheta,
-                   pmanifoldtransform,
+                   tran,
                    thetatape_creator = function(n){seq(length.out = n)},
                    verbose = FALSE){
   starttheta <- t_u2s(usertheta, filler = thetatape_creator)
   ztape <- ptoM(pmanifoldtransform, ytape) #the value of ytape transformed to the manifold
   lltape <- ptapell(ztape, starttheta,
                     llname = llname, 
-                    man = pmanifoldtransform,
+                    tran = tran,
                     fixedtheta = t_u2i(usertheta),
                     verbose = verbose)
   out <- ADFun$new(ptr = lltape,

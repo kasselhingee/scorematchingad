@@ -85,11 +85,13 @@ ppi <- function(Y, paramvec = NULL,
 
   stopifnot(trans %in% c("alr", "sqrt", "clr", "none"))
   man <- switch(trans,
-           alr = "Ralr",
-           clr = "Hclr",
-           sqrt = "sphere",
-           none = "simplex")
-  if (man %in% c("simplex", "sphere")){
+           alr = "Euc",
+           clr = "Hn111",
+           sqrt = "sph",
+           none = "sim")
+  if (trans == "none"){trans <- "identity"}
+
+  if (man %in% c("sim", "sph")){
     if (divweight == "ones"){stop("Manifold supplied has a boundary - set divweight to something that isn't 'ones'")}
   } else {
     if (divweight != "ones"){warning("Manifold supplied has no boundary. Setting divweight to 'ones'.")}
@@ -111,13 +113,13 @@ ppi <- function(Y, paramvec = NULL,
   
   # hardcoded methods:
   if (method == "hardcoded"){
-    if (man == "Ralr"){
+    if (trans == "alr"){
       if (usertheta_ppi_alr_gengamma_compatible(usertheta)){
         firstfit <- ppi_alr_gengamma(Y, betap = tail(usertheta, 1), w = w) #any theta is fine
         fitfun <- "ppi_alr_gengamma"
       }
     }
-    if (man == "sphere"){ # a number of methods implemented
+    if (trans == "sqrt"){ # a number of methods implemented
       if (divweight == "minsq"){
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
           betaest <- as.vector(dir_sqrt_minimah(Y, acut = acut, w = w))
@@ -177,7 +179,8 @@ ppi <- function(Y, paramvec = NULL,
     isfixed <- t_u2i(usertheta)
     # prepare tapes
     tapes <- buildsmotape(
-       manifoldname = man,
+       tran = trans,
+       man = man,
        llname = "ppi",
        ytape =  rep(1/p, p),
        usertheta = t_si2u(stheta, isfixed),

@@ -31,7 +31,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
 
   # Get SE from CppAD methods
   intheta <- ppi_paramvec(p)
-  tapes <- buildsmotape("sphere", "ppi",
+  tapes <- buildsmotape("sqrt", "sph", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
@@ -68,7 +68,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
 
   # SE from cppad
   intheta <- ppi_paramvec(p, betap = beta0[p])
-  tapes <- buildsmotape("sphere", "ppi",
+  tapes <- buildsmotape("sqrt", "sph", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)
@@ -99,7 +99,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
 
   # SE from cppad
   intheta <- ppi_paramvec(p, betap = -0.5)
-  tapes <- buildsmotape("sphere", "ppi",
+  tapes <- buildsmotape("sqrt", "sph", "ppi",
                         samp3[1, ], intheta,
                         weightname = "minsq",
                         acut = acut)

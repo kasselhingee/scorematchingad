@@ -50,46 +50,31 @@
 #' pForward0(tapes$lltape, u, runif(n = ltheta))
 #' pForward0(tapes$smotape, runif(n = ltheta), u)
 #' @export
-buildsmotape <- function(manifoldname, llname,
+buildsmotape <- function(tran, man, llname,
                          ytape, usertheta,
                          weightname = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
                          verbose = FALSE){
-  starttheta <- t_u2s(usertheta, filler = thetatape_creator)
-  isfixed <- t_u2i(usertheta)
 
-  out <- buildsmotape_internal(manifoldname, llname,
-                         ytape, starttheta, isfixed,
-                         weightname = weightname, acut = acut,
-                         filler = thetatape_creator,
-                         verbose = verbose)
-  return(out)
-}
+  if(all(is.na(usertheta))){stop("All elements of theta are fixed")}
 
-buildsmotape_internal <- function(manifoldname, llname,
-                         ytape, starttheta, isfixed,
-                         weightname = "ones", acut = 1,
-                         filler = function(n){seq(length.out = n)},
-                         verbose = FALSE){
-  if(all(isfixed)){stop("All elements of theta are fixed")}
-  thetatape <- starttheta
-
-  if (!(manifoldname %in% c("simplex", "sphere"))){
+  if (!(man %in% c("simplex", "sphere"))){
     if (weightname != "ones"){warning("Manifold supplied has no boundary. Using weightname = 'ones' is strongly recommended.")}
   }
   if ((weightname == "ones") && (abs(acut - 1) > 1E-8)){
     warning("The value of 'acut' is ignored for weightname == 'ones'")
   }
 
-  pman <- manifoldtransform(manifoldname)
+  tranman <- manifoldtransform(tran, man)
   lltape <- tapell(llname = llname,
                     ytape = ytape,
-                    usertheta = t_si2u(starttheta, isfixed), 
-                    thetatape_creator = function(n){t_si2f(starttheta, isfixed)},
-                    pmanifoldtransform = pman)
+                    usertheta = usertheta, 
+                    thetatape_creator = thetatape_creator,
+                    tran = tranman$tran)
   stopifnot(is.numeric(acut))
   smotape <- tapesmo(lltape = lltape,
-                        pmanifoldtransform = pman,
+                        tran = tranman$tran,
+                        man = tranman$tran,
                         divweight = weightname,
                         acut = acut,
                         verbose = verbose)
@@ -98,7 +83,8 @@ buildsmotape_internal <- function(manifoldname, llname,
     smotape = smotape,
     info = list(
       name = llname,
-      manifold = manifoldname,
+      transform = tran,
+      manifold = man,
       ulength = length(ytape),
       starttheta = starttheta,
       isfixed = isfixed,

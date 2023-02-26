@@ -27,7 +27,8 @@
 #   c(0.1, 0.1, 0.8)) 
 #' @export
 tapesmo <- function(lltape,
-                   pmanifoldtransform,
+                   tran,
+                   man,
                    divweight,
                    acut = 1,
                    verbose = FALSE){
@@ -36,7 +37,8 @@ tapesmo <- function(lltape,
   smotape <- ptapesmo(attr(lltape, "ytape"),
                       lltape$dyntape,
                       lltape$ptr,
-                      pmanifoldtransform,
+                      tran,
+                      man,
                       divweight, 
                       acut, 
                       verbose = verbose)

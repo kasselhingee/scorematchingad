@@ -56,7 +56,7 @@ expect_equal(est_hardcoded$est$paramvec, est_iterative$est$paramvec, tolerance =
 test_that("cppad_search gives similar result to cppad_closed", {
   set.seed(354)
   m <- ppi_egmodel(100, maxden = 4)
-  tapes <- buildsmotape("sphere", "ppi",
+  tapes <- buildsmotape("sqrt", "sph", "ppi",
                         ytape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),
                         weightname = "minsq", acut = 0.1)
@@ -69,7 +69,7 @@ test_that("cppad_search gives similar result to cppad_closed", {
 test_that("cppad_search with weights gives similar result to cppad_closed", {
   set.seed(124)
   m <- ppi_egmodel(100, maxden = 4)
-  tapes <- buildsmotape("sphere", "ppi",
+  tapes <- buildsmotape("sqrt", "sph", "ppi",
                         ytape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),
                         weightname = "minsq", acut = 0.1)
@@ -83,7 +83,7 @@ test_that("cppad_search with weights gives similar result to cppad_closed", {
 test_that("cppad_search output value matches smvalues_tape result", {
   set.seed(1234)
   m <- ppi_egmodel(1000, maxden = 4)
-  tapes <- buildsmotape("sphere", "ppi",
+  tapes <- buildsmotape("sqrt", "sph", "ppi",
                         ytape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),
                         weightname = "minsq", acut = 0.1)

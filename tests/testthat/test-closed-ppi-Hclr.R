@@ -115,7 +115,7 @@ test_that("Hess + Offset match gradient for Hclr in interior", {
   Y <- mod$sample
   Y <- rbind(Y, rep(1/3, 3))
 
-  tapes <- buildsmotape("Hclr", "ppi", ytape = c(0.2, 0.3, 0.5), 
+  tapes <- buildsmotape("clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
                         usertheta = ppi_paramvec(p = 3))
 
   # find boundary points and remove them - expect results pJacobian to give good results when no points need approximation
@@ -147,7 +147,7 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
 
   usertheta = ppi_paramvec(p = 3, beta = mod$beta)
   ftheta <- t_ut2f(usertheta, mod$theta)
-  tapes <- buildsmotape("Hclr", "ppi", ytape = c(0.2, 0.3, 0.5), 
+  tapes <- buildsmotape("clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
                         usertheta = usertheta)
 
   values <- quadratictape_parts(tapes$smotape, Y)
@@ -177,7 +177,7 @@ test_that("printgraph() runs", {
   set.seed(1245)
   beta0 <- c(-0.7, -0.1, -0.5, -0.1, -0.6) 
   Y <- MCMCpack::rdirichlet(10, beta0+1)
-  tapes <- buildsmotape("Hclr", "ppi", ytape = Y[1, ], 
+  tapes <- buildsmotape("clr", "Hn111", "ppi", ytape = Y[1, ], 
                         usertheta = ppi_paramvec(p = 5))
 
   expect_output(printgraph(tapes$smotape$ptr), "2112") #2112 is the final node

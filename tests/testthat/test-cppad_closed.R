@@ -4,7 +4,8 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
   Y <- mod$sample
 
   tapes <- buildsmotape(
-     manifoldname = "Ralr",
+     tran = "alr",
+     man = "Euc",
      llname = "ppi",
      ytape = c(0.2, 0.3, 0.5),
      usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
@@ -37,7 +38,8 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(dsample[isbdry, , drop = FALSE])
 
   tapes <- buildsmotape(
-     manifoldname = "Ralr",
+     tran = "alr",
+     man = "Euc",
      llname = "ppi",
      ytape = c(0.2, 0.3, 0.5),
      usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)), 
