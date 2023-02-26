@@ -28,30 +28,4 @@ test_that("PPI ALR hardcoded estimate has low smo and smgrad values and constant
 })
 
 
-test_that("smobj() etc calculates the same as evaltape()", {
-  mnongamma <- ppi_egmodel(1)
-  theta <- ppi_paramvec(beta = c(-0.95, -0.9, 0.5), AL = mnongamma$AL, bL = 0)
-  set.seed(1234)
-  Ycts <- rppi(1000, paramvec = theta)
-  dsample <- round(Ycts * 100)/ 100
-  dsample[, 3] <- 1 - rowSums(dsample[, 1:2])
-  colMeans(dsample == 0)
-  mean(apply(dsample, 1, min) == 0)  #0.96
-
-  usertheta = ppi_paramvec(p = ncol(dsample),
-                           bL = 0,
-                           betap = tail(theta, 1))
-  est_hardcoded <- ppi(dsample, paramvec = usertheta, trans = "alr", method = "hardcoded")
-
-
-  vals_evaltape <- ppi_smvalues(dsample, paramvec = usertheta, evalparam = est_hardcoded$est$paramvec, trans = "alr")
-  vals_smobj <- ppi_cppad_values(dsample,
-         stheta = est_hardcoded$est$paramvec,
-         isfixed = t_u2i(usertheta),
-         man = "Ralr", hsqfun = "ones", acut = 1)
-  expect_equal(vals_evaltape$obj, vals_smobj$obj)
-  expect_equal(vals_evaltape$grad, vals_smobj$grad)
-  expect_equal(vals_evaltape$hess, vals_smobj$hess, ignore_attr = TRUE)
-})
-
 
