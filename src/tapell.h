@@ -32,4 +32,18 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the
                                      bool verbose
                                      );
 
+//' @noRd
+//' @title Tape of a log-likelihood calculation
+//' @param p dimension of measurements
+//' @param bd dimension of the parameter vector
+//' @param llname name of the likelihood function
+//' @return An RCpp::XPtr object pointing to the ADFun
+// [[Rcpp::export]]
+Rcpp::XPtr< CppAD::ADFun<double> > mptapell(veca1 z_ad, //data measurement on the M manifold
+                                     veca1 theta_ad,
+                                     std::string llname,
+                                     manifold_a1type * pman,
+                                     Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
+                                     bool verbose
+                                     );
 #endif
