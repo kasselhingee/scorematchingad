@@ -5,7 +5,7 @@ test_that("Gradient of smo for ppi wrt u is CLOSE TO CORRECT for interior points
 
   psphere <- manifoldtransform("sqrt", "sph") #because above ppill_r is for the simplex
   lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$man, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$tran, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
