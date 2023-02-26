@@ -149,18 +149,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapell
-Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, veca1 theta_ad, std::string llname, Rcpp::XPtr< manifold<a1type> > pman, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
-RcppExport SEXP _scorecompdir_ptapell(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llnameSEXP, SEXP pmanSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
+Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, veca1 theta_ad, std::string llname, manifold_a1type& man, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
+RcppExport SEXP _scorecompdir_ptapell(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llnameSEXP, SEXP manSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< veca1 >::type z_ad(z_adSEXP);
     Rcpp::traits::input_parameter< veca1 >::type theta_ad(theta_adSEXP);
     Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
-    Rcpp::traits::input_parameter< Rcpp::XPtr< manifold<a1type> > >::type pman(pmanSEXP);
+    Rcpp::traits::input_parameter< manifold_a1type& >::type man(manSEXP);
     Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type fixedtheta(fixedthetaSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapell(z_ad, theta_ad, llname, pman, fixedtheta, verbose));
+    rcpp_result_gen = Rcpp::wrap(ptapell(z_ad, theta_ad, llname, man, fixedtheta, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -181,31 +181,31 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapesmo
-Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pll, Rcpp::XPtr< manifold<a1type> > pman, std::string weightname, const double acut, bool verbose);
-RcppExport SEXP _scorecompdir_ptapesmo(SEXP u_adSEXP, SEXP theta_adSEXP, SEXP pllSEXP, SEXP pmanSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
+Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pll, manifold_a1type& man, std::string weightname, const double acut, bool verbose);
+RcppExport SEXP _scorecompdir_ptapesmo(SEXP u_adSEXP, SEXP theta_adSEXP, SEXP pllSEXP, SEXP manSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< veca1 >::type u_ad(u_adSEXP);
     Rcpp::traits::input_parameter< veca1 >::type theta_ad(theta_adSEXP);
     Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pll(pllSEXP);
-    Rcpp::traits::input_parameter< Rcpp::XPtr< manifold<a1type> > >::type pman(pmanSEXP);
+    Rcpp::traits::input_parameter< manifold_a1type& >::type man(manSEXP);
     Rcpp::traits::input_parameter< std::string >::type weightname(weightnameSEXP);
     Rcpp::traits::input_parameter< const double >::type acut(acutSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapesmo(u_ad, theta_ad, pll, pman, weightname, acut, verbose));
+    rcpp_result_gen = Rcpp::wrap(ptapesmo(u_ad, theta_ad, pll, man, weightname, acut, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // ptoM
-veca1 ptoM(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad);
-RcppExport SEXP _scorecompdir_ptoM(SEXP pmanSEXP, SEXP u_adSEXP) {
+veca1 ptoM(manifold_a1type& man, veca1 u_ad);
+RcppExport SEXP _scorecompdir_ptoM(SEXP manSEXP, SEXP u_adSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< manifold<a1type> > >::type pman(pmanSEXP);
+    Rcpp::traits::input_parameter< manifold_a1type& >::type man(manSEXP);
     Rcpp::traits::input_parameter< veca1 >::type u_ad(u_adSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptoM(pman, u_ad));
+    rcpp_result_gen = Rcpp::wrap(ptoM(man, u_ad));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -225,14 +225,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapefromM
-Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z, Rcpp::XPtr<manifold<a1type> > pman);
-RcppExport SEXP _scorecompdir_ptapefromM(SEXP zSEXP, SEXP pmanSEXP) {
+Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z, manifold<a1type>& man);
+RcppExport SEXP _scorecompdir_ptapefromM(SEXP zSEXP, SEXP manSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< veca1 >::type z(zSEXP);
-    Rcpp::traits::input_parameter< Rcpp::XPtr<manifold<a1type> > >::type pman(pmanSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapefromM(z, pman));
+    Rcpp::traits::input_parameter< manifold<a1type>& >::type man(manSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapefromM(z, man));
     return rcpp_result_gen;
 END_RCPP
 }

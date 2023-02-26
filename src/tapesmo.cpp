@@ -101,7 +101,7 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
 Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
                                       veca1 theta_ad,
                                       Rcpp::XPtr< CppAD::ADFun<double> > pll,
-                                      Rcpp::XPtr< manifold<a1type> > pman,
+                                      manifold_a1type & man,
                                       std::string weightname,
                                       const double acut,
                                       bool verbose){
@@ -127,7 +127,7 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
   *out = tapesmo(u_ad,
                  theta_ad,
                  *pll,
-                 *pman,
+                 man,
                  h2fun,
                  acut,
                  verbose);

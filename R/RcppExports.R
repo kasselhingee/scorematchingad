@@ -155,8 +155,8 @@ printgraph <- function(pfun) {
 #' @param bd dimension of the parameter vector
 #' @param llname name of the likelihood function
 #' @return An RCpp::XPtr object pointing to the ADFun
-ptapell <- function(z_ad, theta_ad, llname, pman, fixedtheta, verbose) {
-    .Call('_scorecompdir_ptapell', PACKAGE = 'scorecompdir', z_ad, theta_ad, llname, pman, fixedtheta, verbose)
+ptapell <- function(z_ad, theta_ad, llname, man, fixedtheta, verbose) {
+    .Call('_scorecompdir_ptapell', PACKAGE = 'scorecompdir', z_ad, theta_ad, llname, man, fixedtheta, verbose)
 }
 
 #' @noRd
@@ -177,8 +177,8 @@ mptapell <- function(z_ad, theta_ad, llname, pman, fixedtheta, verbose) {
 #' @param weightname The name of the weight function to use
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
-ptapesmo <- function(u_ad, theta_ad, pll, pman, weightname, acut, verbose) {
-    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, pman, weightname, acut, verbose)
+ptapesmo <- function(u_ad, theta_ad, pll, man, weightname, acut, verbose) {
+    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, man, weightname, acut, verbose)
 }
 
 #' @noRd
@@ -187,8 +187,8 @@ ptapesmo <- function(u_ad, theta_ad, pll, pman, weightname, acut, verbose) {
 #' @param pman An Rcpp::XPtr to a manifold object. Created by [`manifoldtransform()`].
 #' @param u A vector to be transformed to the manifold via `toM`.
 #' @return A vector on the manifold.
-ptoM <- function(pman, u_ad) {
-    .Call('_scorecompdir_ptoM', PACKAGE = 'scorecompdir', pman, u_ad)
+ptoM <- function(man, u_ad) {
+    .Call('_scorecompdir_ptoM', PACKAGE = 'scorecompdir', man, u_ad)
 }
 
 #' @describeIn evaltape_internal The value of a recorded function approximated by Taylor expansion.
@@ -203,7 +203,7 @@ pTaylorApprox <- function(pfun, x, centre, dynparam, order) {
     .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, x, centre, dynparam, order)
 }
 
-ptapefromM <- function(z, pman) {
-    .Call('_scorecompdir_ptapefromM', PACKAGE = 'scorecompdir', z, pman)
+ptapefromM <- function(z, man) {
+    .Call('_scorecompdir_ptapefromM', PACKAGE = 'scorecompdir', z, man)
 }
 

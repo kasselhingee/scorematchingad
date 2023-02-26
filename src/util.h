@@ -13,7 +13,7 @@
 //' @param u A vector to be transformed to the manifold via `toM`.
 //' @return A vector on the manifold.
 // [[Rcpp::export]]
-veca1 ptoM(Rcpp::XPtr< manifold<a1type> > pman, veca1 u_ad);
+veca1 ptoM(manifold_a1type & man, veca1 u_ad);
 
 
 //' @describeIn evaltape_internal The value of a recorded function approximated by Taylor expansion.
@@ -37,7 +37,7 @@ CppAD::ADFun<double> tapefromM(veca1 z,
 // for calculating the determinant of the transform to a manifold
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z,
-                               Rcpp::XPtr<manifold<a1type> > pman);
+                               manifold<a1type> & man);
 
 
 
