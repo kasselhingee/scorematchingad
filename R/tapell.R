@@ -38,20 +38,20 @@ tapell <- function(llname,
                    thetatape_creator = function(n){seq(length.out = n)},
                    verbose = FALSE){
   starttheta <- t_u2s(usertheta, filler = thetatape_creator)
-  ztape <- ptoM(pmanifoldtransform, ytape) #the value of ytape transformed to the manifold
+  ztape <- tran$toM(ytape) #the value of ytape transformed to the manifold
   lltape <- ptapell(ztape, starttheta,
                     llname = llname, 
                     tran = tran,
                     fixedtheta = t_u2i(usertheta),
                     verbose = verbose)
   out <- ADFun$new(ptr = lltape,
-                   name = paste(attr(pmanifoldtransform, "name"), llname, sep = "-"),
+                   name = paste(tran$name(), llname, sep = "-"),
                    xtape = ztape,
                    dyntape =  as.numeric(starttheta[!t_u2i(usertheta)]),
                    usertheta = as.numeric(usertheta))
 
   attr(out, "ytape") <- ytape
-  attr(out, "manifoldtransform") <- attr(pmanifoldtransform, "name")
+  attr(out, "manifoldtransform") <- tran$name()
   return(out)
 }
 

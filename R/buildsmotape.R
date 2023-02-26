@@ -56,9 +56,9 @@ buildsmotape <- function(tran, man, llname,
                          thetatape_creator = function(n){seq(length.out = n)},
                          verbose = FALSE){
 
-  if(all(is.na(usertheta))){stop("All elements of theta are fixed")}
+  if(all(!is.na(usertheta))){stop("All elements of theta are fixed")}
 
-  if (!(man %in% c("simplex", "sphere"))){
+  if (!(all(c(tran, man) == c("sqrt", "sph")) | all(c(tran, man) == c("identity", "sim")))){
     if (weightname != "ones"){warning("Manifold supplied has no boundary. Using weightname = 'ones' is strongly recommended.")}
   }
   if ((weightname == "ones") && (abs(acut - 1) > 1E-8)){

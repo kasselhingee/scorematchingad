@@ -23,8 +23,8 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
   sample <- sample / sqrt(rowSums(sample^2))
   stopifnot(all(abs(sqrt(rowSums(sample^2)) - 1) < 1E-5))
 
-  pman <- manifoldtransform("Snative")
-  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(theta)), llname = "FB", pman,
+  pman <- manifoldtransform("identity", "sim")
+  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(theta)), llname = "FB", pman$tran,
                     fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
 
   expect_equal(pForward0(lltape, sample[1, ], theta), log(qdFB(sample[1, ], k, m, A)),

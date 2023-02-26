@@ -3,9 +3,9 @@ test_that("Gradient of smo for ppi wrt u is CLOSE TO CORRECT for interior points
   m <- ppi_egmodel(2)
   acut <- 0.1
 
-  psphere <- manifoldtransform("sphere") #because above ppill_r is for the simplex
-  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", man = psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, man = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  psphere <- manifoldtransform("sqrt", "sph") #because above ppill_r is for the simplex
+  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
+  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$man, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
@@ -33,9 +33,9 @@ test_that("Gradient of smo for ppi wrt theta is correct for interior points", {
   m <- ppi_egmodel(2)
   acut <- 0.1
 
-  psphere <- manifoldtransform("sphere") #because above ppill_r is for the simplex
-  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", man = psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, man = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function #this line fails when testing after devtools::load_all()
+  psphere <- manifoldtransform("sqrt", "sph") #because above ppill_r is for the simplex
+  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
+  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$tran, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function #this line fails when testing after devtools::load_all()
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
   testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
@@ -64,9 +64,9 @@ test_that("Gradient of smo approxcentre for ppi wrt theta is correct", {
   acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-15)
   acut <- 0.1
 
-  psphere <- manifoldtransform("sphere") #because above ppill_r is for the simplex
-  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", man = psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, man = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  psphere <- manifoldtransform("sqrt", "sph") #because above ppill_r is for the simplex
+  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
+  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$tran, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
@@ -118,9 +118,9 @@ test_that("Gradient of smo approxcentre for ppi wrt u is close", {
   acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-3)
   acut <- 0.1
 
-  psphere <- manifoldtransform("sphere") #because above ppill_r is for the simplex
-  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", man = psphere, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, man = psphere, "minsq", acut = acut, verbose = FALSE) #tape of the score function
+  psphere <- manifoldtransform("sqrt", "sph") #because above ppill_r is for the simplex
+  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
+  smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$tran, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function
   smoppi_u <- swapDynamic(smoppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
