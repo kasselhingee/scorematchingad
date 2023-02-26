@@ -34,7 +34,7 @@ test_that("Gradient of smo for ppi wrt theta is correct for interior points", {
   acut <- 0.1
 
   psphere <- manifoldtransform("sqrt", "sph") #because above ppill_r is for the simplex
-  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
+  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
   smoppi <- ptapesmo(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$tran, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function #this line fails when testing after devtools::load_all()
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)

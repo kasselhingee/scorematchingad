@@ -63,7 +63,7 @@ test_that("manual tests on PPI model with sqrt transformation, minsq divergence 
 })
 
 test_that("ppi ll tape is fails the quadratic test", {
-  sqrtman <- manifoldtransform("sqrt", "sphere")
+  sqrtman <- manifoldtransform("sqrt", "sph")
   ppitape <- tapell(llname = "ppi",
                     ytape = c(0.2, 0.3, 0.5),
                     usertheta = ppi_paramvec(p = 3), 
