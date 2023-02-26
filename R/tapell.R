@@ -37,6 +37,7 @@ tapell <- function(llname,
                    tran,
                    thetatape_creator = function(n){seq(length.out = n)},
                    verbose = FALSE){
+  stopifnot(inherits(tran, "Rcpp_transform_ad"))
   starttheta <- t_u2s(usertheta, filler = thetatape_creator)
   ztape <- tran$toM(ytape) #the value of ytape transformed to the manifold
   lltape <- ptapell(ztape, starttheta,

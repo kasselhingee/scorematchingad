@@ -32,6 +32,8 @@ tapesmo <- function(lltape,
                    divweight,
                    acut = 1,
                    verbose = FALSE){
+  inherits(tran, "Rcpp_transform_ad")
+  inherits(man, "Rcpp_man_ad")
   stopifnot(is.numeric(acut))
   
   smotape <- ptapesmo(attr(lltape, "ytape"),
