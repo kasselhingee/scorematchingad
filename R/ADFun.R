@@ -15,6 +15,8 @@
 #' @field name An easy to read name for the taped function
 #' @param name An easy to read name for the taped function
 #' @inheritSection buildsmotape Introduction to CppAD Tapes
+#' @section Warning: multiple CPU
+#' Each time computations such as derivatives are performed the corresponding `C++` object is altered. Parallel use of the same `ADFun` object thus requires care and is not tested. For now I recommend creating a new `ADFun` object for each CPU.
 #' @examples
 #' tapes <- buildsmotape(
 #'   "sim", "sqrt", "sph",
