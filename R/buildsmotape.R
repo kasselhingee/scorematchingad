@@ -31,7 +31,9 @@
 #' This tape can be evaluated, differentiated, used for further taping (see [base2ad](https://cppad.readthedocs.io/en/latest/base2ad.html)), solving differential equations and more.
 #' The sequence of operations can also be printed.
 #' The differentiation is with respect to the independent variables, although the dynamic parameters can be altered, allowing for swapping independent variables and dynamic parameters.
-
+#' 
+#' # Warning: multiple CPU
+#' Each time computations such as derivatives are performed the corresponding `C++` object is altered. Parallel use of the same `ADFun` object thus requires care and is not tested. For now I recommend creating a new `ADFun` object for each CPU.
 
 #' @references \insertAllCited{}
 
