@@ -17,7 +17,7 @@
 #' @inheritSection buildsmotape Introduction to CppAD Tapes
 #' @examples
 #' tapes <- buildsmotape(
-#'   manifoldname = "sqrt",
+#'   "sim", "sqrt", "sph",
 #'   llname = "ppi",
 #'   ytape =  rep(1/3, 3),
 #'   usertheta = ppi_paramvec(p=3),
