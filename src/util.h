@@ -2,7 +2,7 @@
 #define util
 
 #include "scorecompdir_types.h"
-#include "mycpp/mantrans.hpp"
+#include "mycpp/manifolds.hpp"
 #include "mycpp/approx.hpp"
 #include <Rcpp.h>
 

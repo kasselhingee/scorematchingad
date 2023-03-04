@@ -47,9 +47,6 @@ Rcpp::XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
 RCPP_MODULE(manifolds) {
   Rcpp::class_< manifold_a1type >("man_ad")
       .factory<const std::string &>(newmantran)
-      .method("toM", &manifold_a1type::toM, "transform a vector to the manifold")
-      .method("fromM", &manifold_a1type::fromM, "reverse of toM()")
-      .method("logdetJfromM", &manifold_a1type::logdetJfromM, "compute the log of the determinant of the Jacobian of fromM()")
       .method("Pmatfun", &manifold_a1type::Pmatfun, "Pmatfun(z) returns the matrix that orthogonally projects onto the manifold's tangent space at z")
       .method("dPmatfun", &manifold_a1type::dPmatfun, "dPmatfun(z, i) returns the element-wise derivative of Pmatfun() at location z with respect to the ith dimension")
       .method("name", &manifold_a1type::name)

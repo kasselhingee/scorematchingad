@@ -5,7 +5,7 @@
 # include <cppad/cppad.hpp>
 # include "tapedivweight.h"
 # include "mycpp/divweights.hpp"
-# include "mycpp/mantrans.hpp"
+# include "mycpp/manifolds.hpp"
 # include "mycpp/PrintFor.hpp"
 
 CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement for taping
