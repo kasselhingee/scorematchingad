@@ -1,31 +1,18 @@
-#ifndef mycpp_manifold_Spos
-#define mycpp_manifold_Spos
-// code for various tools for the positive quadrant of the sphere
+#ifndef mycpp_manifold_sph
+#define mycpp_manifold_sph
+
+// code for various tools for the sphere, without transformation required
 #include <RcppEigen.h>
 namespace mantran {
 template <typename Type>
-struct Spos : public manifold<Type> {
-  ~Spos(){};
-  Spos(){};
+struct sph : public manifold<Type> {
+  ~sph(){};
+  sph(){};
 
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
-     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
-     out = x.cwiseSqrt();
-     return(out);
+  std::string name() const {
+    std::string out = "sph";
+    return(out);
   }
-
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
-     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
-     out = x.cwiseProduct(x);
-     return(out);
-  }
-
-  Type logdetJfromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z) override {
-     Type out;
-     out = z.array().log().sum() + 0.6931472 * z.size(); //final number here is log(2)
-     return(out);
-  }
-
 
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
   Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Pmatfun(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
@@ -46,7 +33,6 @@ struct Spos : public manifold<Type> {
     bvx += bvx.transpose().eval(); //eval() means the tranposition happens in a temporary location
     return(bvx);
   }
-
 
 };
 }

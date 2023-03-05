@@ -174,11 +174,11 @@ ptapesmo <- function(u_ad, theta_ad, pll, tran, man, weightname, acut, verbose) 
 #' @noRd
 #' @title Apply to `toM` function of a manifold object
 #' @description Apply the `toM` function of a manifold object.
-#' @param pman An Rcpp::XPtr to a manifold object. Created by [`manifoldtransform()`].
+#' @param tran An Rcpp_transform_ad object.
 #' @param u A vector to be transformed to the manifold via `toM`.
 #' @return A vector on the manifold.
-ptoM <- function(man, u_ad) {
-    .Call('_scorecompdir_ptoM', PACKAGE = 'scorecompdir', man, u_ad)
+ptoM <- function(tran, u_ad) {
+    .Call('_scorecompdir_ptoM', PACKAGE = 'scorecompdir', tran, u_ad)
 }
 
 #' @describeIn evaltape_internal The value of a recorded function approximated by Taylor expansion.
@@ -193,7 +193,7 @@ pTaylorApprox <- function(pfun, x, centre, dynparam, order) {
     .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, x, centre, dynparam, order)
 }
 
-ptapefromM <- function(z, man) {
-    .Call('_scorecompdir_ptapefromM', PACKAGE = 'scorecompdir', z, man)
+ptapefromM <- function(z, tran) {
+    .Call('_scorecompdir_ptapefromM', PACKAGE = 'scorecompdir', z, tran)
 }
 

@@ -12,25 +12,6 @@ struct sim : public manifold<T> {
     return(out);
   }
 
-  Eigen::Matrix<T, Eigen::Dynamic, 1> toM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x) override {
-    Eigen::Matrix<T, Eigen::Dynamic, 1> out(x.size());
-    out = x;
-    return(out);
-  }
-
-  Eigen::Matrix<T, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x) override {
-    Eigen::Matrix<T, Eigen::Dynamic, 1> out(x.size());
-    out = x;
-    return(out);
-  }
-
-  T logdetJfromM(const Eigen::Matrix<T, Eigen::Dynamic, 1> &z) override {
-    T out;
-    out = 0.;
-    return(out);
-  }
-
-
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric
   Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &x) override {
     int n = x.size();

@@ -8,7 +8,7 @@
 #' @param dynparammat The dynamic parameters for the tape. If passed, the rows of `dynparammat` are passed to the tape as `dynparam`.
 #' @param verbose If TRUE information about the failed tests is passed.
 #' @details Uses the `xtape` and `dyntape` values stored in `tape` to create new tapes.
-#' A tape of Hessian is obtained by applying [`pTapeJacobian()`] twice. Using [`pTapeHessian()`] directly did not show constant parameters via [`pParameter()`] in tests.
+#' A tape of Hessian is obtained by applying [`tapeJacobian()`] twice. Using [`tapeHessian()`] directly did not show the correct constant parameters via [`pParameter()`] in tests.
 #'
 #' Two tests are conducted on the tape of the Hessian.
 #' For a function of quadratic form, [`pParameter()`] should return a vector of `TRUE` values.

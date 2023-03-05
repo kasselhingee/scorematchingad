@@ -1,7 +1,7 @@
 #' @title Build a CppAD Tapes for Score Matching
 #' @family tape builders
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
-#' @param manifoldname Manifold with tranformation name. Passed to [`manifoldtransform()`].
+#' @inheritParams manifoldtransform
 #' @param llname Name of the log-likelihood function. Passed to [`tapell()`].
 #' @param ytape An example observation (a single vector) to use for taping. The results should only depend on the length of `ytape` so long as `ytape` is in *interior* of the natural manifold of the model.
 #' @param usertheta A vector of parameter elements for the likelihood function. `NA` elements are to be fitted. Other elements are fixed at the provided value.
@@ -31,7 +31,9 @@
 #' This tape can be evaluated, differentiated, used for further taping (see [base2ad](https://cppad.readthedocs.io/en/latest/base2ad.html)), solving differential equations and more.
 #' The sequence of operations can also be printed.
 #' The differentiation is with respect to the independent variables, although the dynamic parameters can be altered, allowing for swapping independent variables and dynamic parameters.
-
+#' 
+#' # Warning: multiple CPU
+#' Each time computations such as derivatives are performed the corresponding `C++` object is altered. Parallel use of the same `ADFun` object thus requires care and is not tested. For now I recommend creating a new `ADFun` object for each CPU.
 
 #' @references \insertAllCited{}
 

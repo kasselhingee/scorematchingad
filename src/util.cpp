@@ -1,8 +1,8 @@
 # include "util.h"
 
-veca1 ptoM(manifold<a1type> & man, veca1 u_ad){
+veca1 ptoM(transform_a1type & tran, veca1 u_ad){
   veca1 z_ad(u_ad.size());
-  z_ad = man.toM(u_ad);
+  z_ad = tran.toM(u_ad);
   return(z_ad);
 }
 
@@ -22,12 +22,12 @@ vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
 
 
 CppAD::ADFun<double> tapefromM(veca1 z,
-                               manifold<a1type> *pman){
+                               transform<a1type> & tran){
   //tape relationship between z and h2
   CppAD::Independent(z);
   // range space vector
   veca1 y(0); // vector of ranges space variables - length to be set by from(z);
-  y = pman->fromM(z);
+  y = tran.fromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
   tape.optimize(); //remove some of the extra variables that were used for recording the ADFun, but aren't needed anymore (hopefully very good when logdetJ is constant.
@@ -36,9 +36,9 @@ CppAD::ADFun<double> tapefromM(veca1 z,
 
 
 Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z,
-                               manifold_a1type & man){
+                               transform_a1type & tran){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapefromM(z, &man);
+  *out = tapefromM(z, tran);
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);

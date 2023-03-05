@@ -8,35 +8,11 @@ template <typename Type>
 struct Hn111 : public manifold<Type> {
   ~Hn111(){};
   Hn111(){};
-
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
-     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
-     out = x.array().log(); //log all elements of x
-     Eigen::Matrix<Type, 1, 1> sumlog; //use a matrix so that -= is a known operation
-     sumlog << out.mean(); //sum logged values - mean would work just as well, but sum has fewer operations (except maybe when dimensions are very large?)
-     out -= sumlog; //take the sumlog away from each element
-     return(out);
-  }
-
-  Eigen::Matrix<Type, Eigen::Dynamic, 1> fromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
-     Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
-     out = x.array().exp(); //exp all elements of x
-     Type sumexp = out.sum(); 
-     Eigen::Matrix<Type, Eigen::Dynamic, 1> out2(x.size());
-     out2 = out / sumexp; //normalise by sum
-     return(out2);
-  }
   
-  Type logdetJfromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z) override {
-    Eigen::Matrix<Type, Eigen::Dynamic, 1> u(z.size());
-    u = fromM(z);
-    Type out; //use a matrix so that -= is a known operation
-    out = u.array().log().sum() + log(u.size());
+  std::string name() const {
+    std::string out = "Hn111";
     return(out);
   }
-  //could us Sylvester's determinant theorem for direct value
-  // or matrix determinant lemma according to Wikipedia
-
 
   //Pmat is the same as for simplex (both planes with normal of (1,1,1,....1)
   // manifold tangent-plane projection matrix P (for isometric(?) embeddings this is closely related to the manifold metric

@@ -15,9 +15,10 @@
 #' @field name An easy to read name for the taped function
 #' @param name An easy to read name for the taped function
 #' @inheritSection buildsmotape Introduction to CppAD Tapes
+#' @inheritSection buildsmotape Warning: multiple CPU
 #' @examples
 #' tapes <- buildsmotape(
-#'   manifoldname = "sqrt",
+#'   "sim", "sqrt", "sph",
 #'   llname = "ppi",
 #'   ytape =  rep(1/3, 3),
 #'   usertheta = ppi_paramvec(p=3),
