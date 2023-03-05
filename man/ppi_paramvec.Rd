@@ -52,3 +52,15 @@ These are converted to a single vector using \code{ppi_paramvec()} that can then
 \examples{
 ppi_paramvec(AL = "diag", bL = 0, betap = -0.5, p = 3)
 }
+\seealso{
+Other PPI model tools: 
+\code{\link{dppi}()},
+\code{\link{ppi_egmodel}()},
+\code{\link{ppi_parammats}()},
+\code{\link{ppi_robust_alrgengamma}()},
+\code{\link{ppi_robust}()},
+\code{\link{ppi_smvalues}()},
+\code{\link{ppi}()},
+\code{\link{rppi}()}
+}
+\concept{PPI model tools}

@@ -45,4 +45,10 @@ The variance of the estimator is then estimated as
 \eqn{G^{-1}JG^{-1}/n,}
 where \code{n} is the number of observations.
 }
-\concept{{General score matching}}
+\seealso{
+Other generic score matching tools: 
+\code{\link{Windham}()},
+\code{\link{cppad_search}()},
+\code{\link{default_Rcgmin}()}
+}
+\concept{generic score matching tools}

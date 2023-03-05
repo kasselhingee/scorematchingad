@@ -2,12 +2,14 @@
 % Please edit documentation in R/buildsmotape.R
 \name{buildsmotape}
 \alias{buildsmotape}
-\title{Build a CppAD Tape of a Score-Matching Objective Function}
+\title{Build a CppAD Tapes for Score Matching}
 \usage{
 buildsmotape(
-  manifoldname,
+  start,
+  tran,
+  man,
   llname,
-  utape,
+  ytape,
   usertheta,
   weightname = "ones",
   acut = 1,
@@ -18,11 +20,27 @@ buildsmotape(
 )
 }
 \arguments{
-\item{manifoldname}{Manifold with tranformation name. Passed to \code{\link[=manifoldtransform]{manifoldtransform()}}.}
+\item{start}{The starting manifold. Used for checking that \code{tran} and \code{man} match.}
+
+\item{tran}{The name of a transformation. Available transformations are
+\itemize{
+\item `srqt'
+\item `alr'
+\item `clr'
+\item \verb{none' (or }identity')
+}}
+
+\item{man}{The name of the manifold that \code{tran} maps \code{start} to. Available manifolds are:
+\itemize{
+\item `sph' unit sphere
+\item `Hn111' hyperplane normal to 1, 1, 1, 1, ...
+\item `sim' simplex
+\item `Euc' Euclidean space
+}}
 
 \item{llname}{Name of the log-likelihood function. Passed to \code{\link[=tapell]{tapell()}}.}
 
-\item{utape}{An example observation (a single vector) to use for taping. The results shouldn't depend on \code{utape} so long as \code{utape} is in the manifold and the other functions are properly implemented.}
+\item{ytape}{An example observation (a single vector) to use for taping. The results should only depend on the length of \code{ytape} so long as \code{ytape} is in \emph{interior} of the natural manifold of the model.}
 
 \item{usertheta}{A vector of parameter elements for the likelihood function. \code{NA} elements are to be fitted. Other elements are fixed at the provided value.}
 
@@ -38,7 +56,7 @@ buildsmotape(
 Returns a list of the log-likelihood tape (note that the \emph{input} for this tape is a function on the manifold), the tape of the score matching objective (the \emph{input} here is the non-fixed parameter values), and some information used to generate the tape.
 }
 \description{
-Generates \code{CppAD} tapes for a model.
+Generates \code{CppAD} tapes for the log-likelihood and score matching objective  for a model specified by name and manifold/transformation.
 }
 \details{
 When using, \code{CppAD} one first creates \emph{tapes} of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
@@ -50,16 +68,40 @@ Tapes of tapes are possible, including tapes that swap the independent and dynam
 To build a tape for the score matching objective function, the package first tapes the map from a point \eqn{z} on the manifold to the value of the log-likelihood, where the independent variable is the \eqn{z}, and the dynamic variable is a vector of the \emph{non}-fixed parameter values.
 This tape is then used to generate a tape for the score matching objective with the non-fixed parameter values as the independent variable.
 }
+\section{Introduction to CppAD Tapes}{
+This package uses version 2022000.2 of the algorithmic differentiation library \code{CppAD} \insertCite{bell2023cp}{scorecompdir} to build score matching estimators.
+Full help for \code{CppAD} can be found at \url{https://cppad.readthedocs.io/}.
+
+Differentiation proceeds by \emph{taping} the basic (\emph{atomic}) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
+Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) steps, and \code{CppAD} has \href{https://cppad.readthedocs.io/en/latest/CondExp.html}{special tools for this}.
+Once the taping is complete an \href{https://cppad.readthedocs.io/en/latest/ADFun.html}{\code{ADFun}} object is created.
+This tape can be evaluated, differentiated, used for further taping (see \href{https://cppad.readthedocs.io/en/latest/base2ad.html}{base2ad}), solving differential equations and more.
+The sequence of operations can also be printed.
+The differentiation is with respect to the independent variables, although the dynamic parameters can be altered, allowing for swapping independent variables and dynamic parameters.
+}
+
+\section{Warning: multiple CPU}{
+Each time computations such as derivatives are performed the corresponding \verb{C++} object is altered. Parallel use of the same \code{ADFun} object thus requires care and is not tested. For now I recommend creating a new \code{ADFun} object for each CPU.
+}
+
 \examples{
 p <- 3
 u <- movMF::rmovMF(1, rep(1, p))
 ltheta <- p #length of vMF parameter vector
 intheta <- rep(NA, length.out = ltheta)
 tapes <- buildsmotape("Snative", "vMF",
-              utape = u,
+              ytape = u,
               usertheta = intheta,
               "ones", 1, verbose = FALSE
               )
 pForward0(tapes$lltape, u, runif(n = ltheta))
 pForward0(tapes$smotape, runif(n = ltheta), u)
 }
+\references{
+\insertAllCited{}
+}
+\seealso{
+Other tape builders: 
+\code{\link{moretapebuilders}}
+}
+\concept{tape builders}

@@ -24,10 +24,3 @@ Evaluates \eqn{f(z, c\circ\theta)}, which is the density \eqn{f} at observation 
 These are the weights used by \code{\link[=Windham]{Windham()}}.
 The density function is passed to \code{Windham_weights()} in log form.
 }
-\seealso{
-Other Windham functions: 
-\code{\link{Windham}()},
-\code{\link{ppi_robust}()},
-\code{\link{vMF_robust}()}
-}
-\concept{Windham functions}

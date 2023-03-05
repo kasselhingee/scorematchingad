@@ -15,7 +15,7 @@ cppad_search(
 )
 }
 \arguments{
-\item{smotape}{A tape of a score matching objective function.
+\item{smotape}{A \code{CppAD} tape of a score matching objective function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratictape]{testquadratictape()}}.
 The \code{smotape}'s independent variables are assumed to be the model parameters to fit
 and the \code{smotape}'s dynamic parameter is a (multivariate) measurement.}
 
@@ -51,3 +51,10 @@ The variance of the estimator is then estimated as
 \eqn{G^{-1}JG^{-1}/n,}
 where \code{n} is the number of observations.
 }
+\seealso{
+Other generic score matching tools: 
+\code{\link{Windham}()},
+\code{\link{cppad_closed}()},
+\code{\link{default_Rcgmin}()}
+}
+\concept{generic score matching tools}

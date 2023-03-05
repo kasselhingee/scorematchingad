@@ -21,9 +21,17 @@ Robust fitting for von Mises Fisher distribution using \code{\link[=Windham]{Win
 for the full parameter vector \eqn{\kappa\mu} with \code{vMF_robust()} or just the concentration with \code{vMF_kappa_robust()} assuming a mean direction of \code{c(1, 0, 0, ....)}.
 }
 \seealso{
-Other Windham functions: 
-\code{\link{Windham_weights}()},
+Other directional model estimators: 
+\code{\link{Bingham}()},
+\code{\link{FB}()},
+\code{\link{vMF_kappa}()},
+\code{\link{vMF_m}()},
+\code{\link{vMF}()}
+
+Other Windham robustness functions: 
 \code{\link{Windham}()},
+\code{\link{ppi_robust_alrgengamma}()},
 \code{\link{ppi_robust}()}
 }
-\concept{Windham functions}
+\concept{Windham robustness functions}
+\concept{directional model estimators}

@@ -7,7 +7,7 @@
 testquadratictape(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE)
 }
 \arguments{
-\item{tape}{An \code{Rcpp::XPtr} to a CppAD tape.}
+\item{tape}{An \code{ADFun} object.}
 
 \item{xmat}{If passed, the third-order derivatives at values of the rows of \code{xmat} are tested.}
 
@@ -19,12 +19,12 @@ testquadratictape(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE)
 \code{TRUE} or \code{FALSE}
 }
 \description{
-Uses \code{\link[=pParameter]{pParameter()}} and derivatives \code{\link[=pTapeJacobian]{pTapeJacobian()}}, \code{\link[=pJacobian]{pJacobian()}} to test whether
+Uses \code{\link[=pParameter]{pParameter()}} and derivatives \code{\link[=tapeJacobian]{tapeJacobian()}}, \code{\link[=pJacobian]{pJacobian()}} to test whether
 the tape is quadratic.
 }
 \details{
-Uses the \code{xtape} and \code{dyntape} attributes of \code{tape} to create new tapes.
-A tape of Hessian is obtained by applying \code{\link[=pTapeJacobian]{pTapeJacobian()}} twice. Using \code{\link[=pTapeHessian]{pTapeHessian()}} directly did not show constant parameters via \code{\link[=pParameter]{pParameter()}} in tests.
+Uses the \code{xtape} and \code{dyntape} values stored in \code{tape} to create new tapes.
+A tape of Hessian is obtained by applying \code{\link[=tapeJacobian]{tapeJacobian()}} twice. Using \code{\link[=tapeHessian]{tapeHessian()}} directly did not show the correct constant parameters via \code{\link[=pParameter]{pParameter()}} in tests.
 
 Two tests are conducted on the tape of the Hessian.
 For a function of quadratic form, \code{\link[=pParameter]{pParameter()}} should return a vector of \code{TRUE} values.
@@ -32,16 +32,22 @@ The other test evaluates the Jacobian at each row of \code{xmat} and \code{dynpa
 If the results of the tests differ the returned value is \code{FALSE} and a message is printed indicating which test failed.
 }
 \examples{
- sqrtman <- manifoldtransform("sphere")
- ppitape <- tapell(llname = "ppi",
-                   xtape = c(0.2, 0.3, 0.5),
-                   usertheta = ppi_paramvec(p = 3), 
-                   pmanifoldtransform = sqrtman)
- ppismotape <- tapesmo(lltape = ppitape,
-                       pmanifoldtransform = sqrtman,
-                       divweight = "minsq",
-                       acut = 0.1,
-                       verbose = FALSE)
+tapes <- buildsmotape(
+   manifoldname = "sphere",
+   llname = "ppi",
+   ytape = c(0.2, 0.3, 0.5),
+   usertheta = ppi_paramvec(p = 3), 
+   weightname = "minsq",
+   acut = 0.1,
+   verbose = FALSE)
 
- testquadratictape(ppismotape)
+ testquadratictape(tapes$smotape)
 }
+\seealso{
+Other tape evaluators: 
+\code{\link{evaltape_internal}},
+\code{\link{evaltape}()},
+\code{\link{quadratictape_parts}()},
+\code{\link{smvalues_tape}()}
+}
+\concept{tape evaluators}

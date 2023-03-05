@@ -62,3 +62,15 @@ AL = diag(nrow = 2)
 bL = c(2, 3)
 samp <- rppi(100,beta=beta0,AL=AL,bL=bL)
 }
+\seealso{
+Other PPI model tools: 
+\code{\link{dppi}()},
+\code{\link{ppi_egmodel}()},
+\code{\link{ppi_parammats}()},
+\code{\link{ppi_paramvec}()},
+\code{\link{ppi_robust_alrgengamma}()},
+\code{\link{ppi_robust}()},
+\code{\link{ppi_smvalues}()},
+\code{\link{ppi}()}
+}
+\concept{PPI model tools}

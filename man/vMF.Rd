@@ -65,8 +65,11 @@ vMF(Y, method = "Mardia")
 \insertAllCited{}
 }
 \seealso{
-Other Mardia hybrid estimators: 
+Other directional model estimators: 
 \code{\link{Bingham}()},
-\code{\link{vMF_kappa}()}
+\code{\link{FB}()},
+\code{\link{vMF_kappa}()},
+\code{\link{vMF_m}()},
+\code{\link{vMF_robust}()}
 }
-\concept{Mardia hybrid estimators}
+\concept{directional model estimators}

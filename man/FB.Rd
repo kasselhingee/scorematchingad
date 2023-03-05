@@ -41,3 +41,12 @@ m <- m / sqrt(sum(m^2))
 Y <- simdd::rFisherBingham(1000, 2 * m, A)
 FB(Y)
 }
+\seealso{
+Other directional model estimators: 
+\code{\link{Bingham}()},
+\code{\link{vMF_kappa}()},
+\code{\link{vMF_m}()},
+\code{\link{vMF_robust}()},
+\code{\link{vMF}()}
+}
+\concept{directional model estimators}

@@ -17,8 +17,3 @@ A vector of \code{TRUE} or \code{FALSE} values. Rows of \code{Y} corresponding t
 \description{
 Tests whether points are within \code{bdrythreshold} distance of the boundary, where distance is the size of minimum component.
 }
-\seealso{
-Other simplex boundary helpers: 
-\code{\link{simplex_boundaryshift}()}
-}
-\concept{simplex boundary helpers}

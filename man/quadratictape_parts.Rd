@@ -38,7 +38,15 @@ The gradient of the function with respect to \eqn{x} can then be written
 where the Hessian and offset \eqn{b(t)} depend only on \eqn{t}.
 
 The functions here evaluate the Hessian and offset \eqn{b(t)} for many values of \eqn{t}.
-Tapes of the Hessian and gradient offset are created using \code{\link[=pTapeHessian]{pTapeHessian()}} and \code{\link[=pTapeGradOffset]{pTapeGradOffset()}} respectively.
+Tapes of the Hessian and gradient offset are created using \code{\link[=tapeHessian]{tapeHessian()}} and \code{\link[=tapeGradOffset]{tapeGradOffset()}} respectively.
 These tapes are then evaluated for every row of \code{tmat}.
 When the \code{tcentres} row is not \code{NA}, then approximate results are calculated using \code{\link[=pTaylorApprox]{pTaylorApprox()}}
 }
+\seealso{
+Other tape evaluators: 
+\code{\link{evaltape_internal}},
+\code{\link{evaltape}()},
+\code{\link{smvalues_tape}()},
+\code{\link{testquadratictape}()}
+}
+\concept{tape evaluators}

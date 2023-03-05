@@ -26,9 +26,20 @@ Uses \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}} to estimate
 There are many arguments to the \code{\link[=ppi]{ppi()}} function and we highly recommend trialling your arguments on \code{\link[=ppi]{ppi()}} first before running \code{ppi_robust()}.
 }
 \seealso{
-Other Windham functions: 
-\code{\link{Windham_weights}()},
+Other PPI model tools: 
+\code{\link{dppi}()},
+\code{\link{ppi_egmodel}()},
+\code{\link{ppi_parammats}()},
+\code{\link{ppi_paramvec}()},
+\code{\link{ppi_robust_alrgengamma}()},
+\code{\link{ppi_smvalues}()},
+\code{\link{ppi}()},
+\code{\link{rppi}()}
+
+Other Windham robustness functions: 
 \code{\link{Windham}()},
+\code{\link{ppi_robust_alrgengamma}()},
 \code{\link{vMF_robust}()}
 }
-\concept{Windham functions}
+\concept{PPI model tools}
+\concept{Windham robustness functions}

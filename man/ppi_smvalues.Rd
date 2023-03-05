@@ -53,5 +53,17 @@ A list of
 }
 }
 \description{
-Using similar arguments to \code{\link[=ppi]{ppi()}}, compute values related to score matching. See \code{\link[=tape_smvalues]{tape_smvalues()}}. The gradient offset is also computed (see \code{\link[=quadratictape_parts]{quadratictape_parts()}}.
+Using similar arguments to \code{\link[=ppi]{ppi()}}, compute values related to score matching. See \code{\link[=smvalues_tape]{smvalues_tape()}}. The gradient offset is also computed (see \code{\link[=quadratictape_parts]{quadratictape_parts()}}.
 }
+\seealso{
+Other PPI model tools: 
+\code{\link{dppi}()},
+\code{\link{ppi_egmodel}()},
+\code{\link{ppi_parammats}()},
+\code{\link{ppi_paramvec}()},
+\code{\link{ppi_robust_alrgengamma}()},
+\code{\link{ppi_robust}()},
+\code{\link{ppi}()},
+\code{\link{rppi}()}
+}
+\concept{PPI model tools}

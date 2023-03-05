@@ -23,3 +23,15 @@ any vector created by \code{\link[=ppi_paramvec]{ppi_paramvec()}} is converted i
 vec <- ppi_paramvec(AL = rsymmetricmatrix(2), beta = c(-0.8, -0.7, 0))
 ppi_parammats(vec)
 }
+\seealso{
+Other PPI model tools: 
+\code{\link{dppi}()},
+\code{\link{ppi_egmodel}()},
+\code{\link{ppi_paramvec}()},
+\code{\link{ppi_robust_alrgengamma}()},
+\code{\link{ppi_robust}()},
+\code{\link{ppi_smvalues}()},
+\code{\link{ppi}()},
+\code{\link{rppi}()}
+}
+\concept{PPI model tools}

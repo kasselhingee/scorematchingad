@@ -17,3 +17,10 @@ Windham robustness (see \code{\link[=Windham]{Windham()}}) uses \code{\link[Fixe
 \details{
 The default for \code{Rcgmin()} is \code{list(tol = 1E-20)}, which means the optimisation won't end until the squared size of the gradient summed over all observations at the estimate parameter set is less than 1E-20.
 }
+\seealso{
+Other generic score matching tools: 
+\code{\link{Windham}()},
+\code{\link{cppad_closed}()},
+\code{\link{cppad_search}()}
+}
+\concept{generic score matching tools}

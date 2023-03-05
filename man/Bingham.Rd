@@ -41,8 +41,11 @@ sample <- simdd::rBingham(100, A)
 Bingham(sample, method = "Mardia")
 }
 \seealso{
-Other Mardia hybrid estimators: 
+Other directional model estimators: 
+\code{\link{FB}()},
 \code{\link{vMF_kappa}()},
+\code{\link{vMF_m}()},
+\code{\link{vMF_robust}()},
 \code{\link{vMF}()}
 }
-\concept{Mardia hybrid estimators}
+\concept{directional model estimators}

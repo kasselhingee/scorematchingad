@@ -4,26 +4,48 @@
 \alias{manifoldtransform}
 \title{Build an object specifying the manifold-transform pair.}
 \usage{
-manifoldtransform(name)
+manifoldtransform(start, tran, man)
 }
 \arguments{
-\item{name}{Name of the manifold-transform pair. See details.}
+\item{start}{The starting manifold. Used for checking that \code{tran} and \code{man} match.}
+
+\item{tran}{The name of a transformation. Available transformations are
+\itemize{
+\item `srqt'
+\item `alr'
+\item `clr'
+\item \verb{none' (or }identity')
+}}
+
+\item{man}{The name of the manifold that \code{tran} maps \code{start} to. Available manifolds are:
+\itemize{
+\item `sph' unit sphere
+\item `Hn111' hyperplane normal to 1, 1, 1, 1, ...
+\item `sim' simplex
+\item `Euc' Euclidean space
+}}
 }
 \value{
-An \code{Rcpp::XPtr} object with attribute \code{name}.
+A named list with:
+\itemize{
+\item \code{tran} A object of type \code{Rcpp_transform_ad} representing the transform
+\item \code{man} A object of type \code{Rcpp_man_ad} representing the manifold
+}
 }
 \description{
 Generate an object used to specify a manifold and transformation to the manifold. This specific to each type of data.
 }
 \details{
-Available pairs are
+Only some combinations of \code{start}, \code{tran} and \code{man} are available because \code{tran} must map between \code{start} and \code{man}.
+These combinations of \code{start}-\code{tran}-\code{man} are available:
 \itemize{
-\item "sphere" for square-root transformation from the simplex to the positive orthant of the sphere
-\item "simplex" for the simplex without any transformation.
-\item "Ralr" for the additive log-ratio transformation from the simplex to Euclidean space, using the final component of vectors in the denominator of the ratio.
-\item "Snative" for the sphere without any transformation
+\item sim-sqrt-sph
+\item sim-identity-sim
+\item sim-alr-Euc
+\item sim-clr-Hn111
+\item sph-identity-sph
 }
 }
 \examples{
-manifoldtransform("Ralr")
+manifoldtransform("sim", "alr", "Euc")
 }

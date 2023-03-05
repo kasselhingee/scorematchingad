@@ -57,9 +57,15 @@ The estimate returned by \code{Windham()} is the parameter set \eqn{\hat{\theta}
 An exponential model with a base rate may be used with \code{Windham()} so long as the base rate is omitted from \code{ldenfun} (i.e. not used for weighting).
 }
 \seealso{
-Other Windham functions: 
-\code{\link{Windham_weights}()},
+Other generic score matching tools: 
+\code{\link{cppad_closed}()},
+\code{\link{cppad_search}()},
+\code{\link{default_Rcgmin}()}
+
+Other Windham robustness functions: 
+\code{\link{ppi_robust_alrgengamma}()},
 \code{\link{ppi_robust}()},
 \code{\link{vMF_robust}()}
 }
-\concept{Windham functions}
+\concept{Windham robustness functions}
+\concept{generic score matching tools}

@@ -25,3 +25,12 @@ Computes the mean direction of a sample, which is also the maximum likelihood es
 \examples{
 Y <- simdd::rFisherBingham(nsim = 10, mu = c(1,2,3))
 }
+\seealso{
+Other directional model estimators: 
+\code{\link{Bingham}()},
+\code{\link{FB}()},
+\code{\link{vMF_kappa}()},
+\code{\link{vMF_robust}()},
+\code{\link{vMF}()}
+}
+\concept{directional model estimators}

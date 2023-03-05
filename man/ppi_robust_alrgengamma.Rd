@@ -33,3 +33,21 @@ The default convergence metric and threshold are different to the default for \c
 \references{
 \insertAllCited{}
 }
+\seealso{
+Other PPI model tools: 
+\code{\link{dppi}()},
+\code{\link{ppi_egmodel}()},
+\code{\link{ppi_parammats}()},
+\code{\link{ppi_paramvec}()},
+\code{\link{ppi_robust}()},
+\code{\link{ppi_smvalues}()},
+\code{\link{ppi}()},
+\code{\link{rppi}()}
+
+Other Windham robustness functions: 
+\code{\link{Windham}()},
+\code{\link{ppi_robust}()},
+\code{\link{vMF_robust}()}
+}
+\concept{PPI model tools}
+\concept{Windham robustness functions}

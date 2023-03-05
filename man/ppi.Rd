@@ -109,3 +109,15 @@ estsqrt <- ppi(model$sample,
 \references{
 \insertAllCited{}
 }
+\seealso{
+Other PPI model tools: 
+\code{\link{dppi}()},
+\code{\link{ppi_egmodel}()},
+\code{\link{ppi_parammats}()},
+\code{\link{ppi_paramvec}()},
+\code{\link{ppi_robust_alrgengamma}()},
+\code{\link{ppi_robust}()},
+\code{\link{ppi_smvalues}()},
+\code{\link{rppi}()}
+}
+\concept{PPI model tools}

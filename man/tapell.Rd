@@ -6,9 +6,9 @@
 \usage{
 tapell(
   llname,
-  xtape,
+  ytape,
   usertheta,
-  pmanifoldtransform,
+  tran,
   thetatape_creator = function(n) {
      seq(length.out = n)
  },
@@ -18,12 +18,12 @@ tapell(
 \arguments{
 \item{llname}{The name of the log-likelihood function to tape}
 
-\item{xtape}{An example measurement value to use for creating the tape. In the natural manifold of the log-likelihood function. \code{xtape} will be converted to the manifold according to \code{manifoldname} before taping.
-Please ensure that \code{xtape} is the interior of the manifold, and it is probably best if all components of \code{xtape} are non-zero when transformed form onto the manifold provided in \code{manifoldname}.}
+\item{ytape}{An example measurement value to use for creating the tape. In the natural manifold of the log-likelihood function. \code{ytape} will be converted to the manifold according to the \code{toM()} method for \code{tran} before taping.
+Please ensure that \code{ytape} is the interior of the manifold, and it is probably best if all components of \code{tran$toM(ytape)} are non-zero.}
 
 \item{usertheta}{A vector of parameter elements for the likelihood function. \code{NA} elements will become \emph{dynamic parameters}. Other elements will be fixed at the provided value. The length of \code{usertheta} must be the correct length for the log-likelihood, no checking is conducted.}
 
-\item{pmanifoldtransform}{An \code{Rcpp::XPtr} object pointing to a manifold and transformation to the manifold from the natural space of the log-likelihood. Generate \code{pmanifoldtransform} with \code{\link[=manifoldtransform]{manifoldtransform()}}.}
+\item{tran}{A transform object (of type \code{Rcpp_transform_ad}), typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
 
 \item{thetatape_creator}{A function that accepts an integer \code{n}, and returns a vector of \code{n} length. The function is used to fill in the \code{NA} elements of \code{usertheta} when building the tapes. Please ensure that the values filled by \code{thetatape_creator} lead to plausible parameter vectors for the chosen log-likelihood.}
 
@@ -34,7 +34,7 @@ An \code{Rcpp::XPtr} object that points to a \code{CppAD::ADFun} object.
 The object will also have attributes:
 \itemize{
 \item \code{fname} A name of the taped function, derived from \code{llname}
-\item \code{xtape} The value of \code{xtape}
+\item \code{ytape} The value of \code{ytape}
 \item \code{dyntape} The value of non-fixed elements of \code{usertheta} used for taping.
 \item \code{usertheta} The vector \code{usertheta}.
 }
@@ -49,7 +49,7 @@ Creates a \code{CppAD} tape of the log-likelihood as a function of values on the
 \examples{
 simpwsqrt <- manifoldtransform("sphere")
 ppitape <- tapell(llname = "ppi",
-                  xtape = c(0.2, 0.3, 0.5),
+                  ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
                   pmanifoldtransform = simpwsqrt)
 pForward0(ppitape, 

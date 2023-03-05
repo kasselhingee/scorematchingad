@@ -26,8 +26,3 @@ The function here generates this approximation centre.
 m <- ppi_egmodel(10)
 simplex_boundaryshift(m$sample, shiftsize = 1E-5)
 }
-\seealso{
-Other simplex boundary helpers: 
-\code{\link{simplex_isboundary}()}
-}
-\concept{simplex boundary helpers}

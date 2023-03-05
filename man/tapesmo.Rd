@@ -4,12 +4,14 @@
 \alias{tapesmo}
 \title{Tape a score matching objective function}
 \usage{
-tapesmo(lltape, pmanifoldtransform, divweight, acut = 1, verbose = FALSE)
+tapesmo(lltape, tran, man, divweight, acut = 1, verbose = FALSE)
 }
 \arguments{
 \item{lltape}{Tape of the log-likelihood function from the manifold represented by \code{pmanifoldtransform}. Construct \code{lltape} using \code{\link[=tapell]{tapell()}}.}
 
-\item{pmanifoldtransform}{An \code{Rcpp::XPtr} object pointing to a manifold and transformation to the manifold from the natural space of the log-likelihood. Generate \code{pmanifoldtransform} with \code{\link[=manifoldtransform]{manifoldtransform()}}.}
+\item{tran}{A transform object (of type \code{Rcpp_transform_ad}), typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
+
+\item{man}{A transform object (of type \code{Rcpp_man_ad}) matching \code{tran}, and typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
 
 \item{divweight}{The name of the divergence weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.}
 
@@ -23,7 +25,7 @@ Generates a \code{CppAD} tape of the empirical score matching objective function
 \examples{
 sqrtman <- manifoldtransform("sphere")
 ppitape <- tapell(llname = "ppi",
-                  xtape = c(0.2, 0.3, 0.5),
+                  ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
                   pmanifoldtransform = sqrtman)
 ppismotape <- tapesmo(lltape = ppitape,

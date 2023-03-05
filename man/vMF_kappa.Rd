@@ -43,8 +43,11 @@ The effect of the \eqn{\mu} and \eqn{\kappa} can be decoupled in a sense \insert
 \insertAllCited()
 }
 \seealso{
-Other Mardia hybrid estimators: 
+Other directional model estimators: 
 \code{\link{Bingham}()},
+\code{\link{FB}()},
+\code{\link{vMF_m}()},
+\code{\link{vMF_robust}()},
 \code{\link{vMF}()}
 }
-\concept{Mardia hybrid estimators}
+\concept{directional model estimators}

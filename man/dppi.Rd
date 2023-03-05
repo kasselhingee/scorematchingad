@@ -44,3 +44,15 @@ The value calculated by \code{dppi} is
 \deqn{z_L^TA_Lz_L + b_L^Tz_L + \beta^T \log(z),}
 where \eqn{z} is the multivariate observation, and \eqn{z_L} ommits the final element of \eqn{z}.
 }
+\seealso{
+Other PPI model tools: 
+\code{\link{ppi_egmodel}()},
+\code{\link{ppi_parammats}()},
+\code{\link{ppi_paramvec}()},
+\code{\link{ppi_robust_alrgengamma}()},
+\code{\link{ppi_robust}()},
+\code{\link{ppi_smvalues}()},
+\code{\link{ppi}()},
+\code{\link{rppi}()}
+}
+\concept{PPI model tools}
