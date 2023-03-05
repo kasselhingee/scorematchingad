@@ -9,11 +9,11 @@
 //' @noRd
 //' @title Apply to `toM` function of a manifold object
 //' @description Apply the `toM` function of a manifold object.
-//' @param pman An Rcpp::XPtr to a manifold object. Created by [`manifoldtransform()`].
+//' @param tran An Rcpp_transform_ad object.
 //' @param u A vector to be transformed to the manifold via `toM`.
 //' @return A vector on the manifold.
 // [[Rcpp::export]]
-veca1 ptoM(manifold_a1type & man, veca1 u_ad);
+veca1 ptoM(transform_a1type & tran, veca1 u_ad);
 
 
 //' @describeIn evaltape_internal The value of a recorded function approximated by Taylor expansion.
@@ -31,13 +31,13 @@ vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
 
 // A function that creates a tape of fromM
 CppAD::ADFun<double> tapefromM(veca1 z,
-                               manifold<a1type> *pman);
+                               transform<a1type> & tran);
 
 // And its version for R
 // for calculating the determinant of the transform to a manifold
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z,
-                               manifold<a1type> & man);
+                               transform<a1type> & tran);
 
 
 

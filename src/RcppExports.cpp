@@ -183,14 +183,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptoM
-veca1 ptoM(manifold_a1type& man, veca1 u_ad);
-RcppExport SEXP _scorecompdir_ptoM(SEXP manSEXP, SEXP u_adSEXP) {
+veca1 ptoM(transform_a1type& tran, veca1 u_ad);
+RcppExport SEXP _scorecompdir_ptoM(SEXP tranSEXP, SEXP u_adSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< manifold_a1type& >::type man(manSEXP);
+    Rcpp::traits::input_parameter< transform_a1type& >::type tran(tranSEXP);
     Rcpp::traits::input_parameter< veca1 >::type u_ad(u_adSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptoM(man, u_ad));
+    rcpp_result_gen = Rcpp::wrap(ptoM(tran, u_ad));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -210,14 +210,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapefromM
-Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z, manifold<a1type>& man);
-RcppExport SEXP _scorecompdir_ptapefromM(SEXP zSEXP, SEXP manSEXP) {
+Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z, transform<a1type>& tran);
+RcppExport SEXP _scorecompdir_ptapefromM(SEXP zSEXP, SEXP tranSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< veca1 >::type z(zSEXP);
-    Rcpp::traits::input_parameter< manifold<a1type>& >::type man(manSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapefromM(z, man));
+    Rcpp::traits::input_parameter< transform<a1type>& >::type tran(tranSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapefromM(z, tran));
     return rcpp_result_gen;
 END_RCPP
 }
