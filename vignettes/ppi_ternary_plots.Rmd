@@ -42,7 +42,7 @@ ppi_plotdensity <- function(...){
 }
 ```
 
-# Dirichlet
+# A Dirichlet with Concentrations on Multiple Edges
 A Dirichlet model can be obtained by setting all of $A_L$ and $b_L$ to 0.
 
 ```{r dirichlet_simulate, warning=FALSE, out.width = "0.5\\linewidth"}
@@ -58,7 +58,22 @@ data.frame(samp) %>%
   ggtitle("Sample Points")
 ```
 
-# Model from Section 2.3 of Scealy and Wood (2022)
+# A Dirichlet with Concentration on Centre of One Edge
+```{r dirichlet2, warning=FALSE, out.width = "0.5\\linewidth"}
+ppi_plotdensity(beta = c(-0.8, 10, 10), AL = 0, bL = 0)
+
+set.seed(3654)
+samp=rppi(n, beta = c(-0.8, 10, 10), AL = 0, bL = 0,maxden = 4)
+
+data.frame(samp) %>%
+  dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
+  ggtern(aes(x = u1, y = u2, z = u3)) +
+  geom_density_tern(bins = 10, bdl = 0.005, base = "identity") + 
+  geom_point(size = 1, alpha = 0.5, shape = "+") +
+  ggtitle("Sample Points")
+```
+
+# PPI Model from Section 2.3 of Scealy and Wood (2022)
 The model below is obtained by [@scealy2022sc]
 
 ```{r simulateS2_3model}
@@ -87,6 +102,21 @@ data.frame(samp) %>%
   dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
   ggtern(aes(x = u1, y = u2, z = u3)) +
   geom_density_tern(bins = 15, bdl = 0.005, base = "identity") + 
+  geom_point(size = 1, alpha = 0.5, shape = "+") +
+  ggtitle("Sample Points")
+```
+
+# A PPI with Concentration on Centre of One Edge and Some Interior Mass
+```{r dirichlet2, warning=FALSE, out.width = "0.5\\linewidth"}
+ppi_plotdensity(beta = c(0, 0, -0.5), AL = diag(c(0, -5)), bL = c(0, 5))
+
+set.seed(3654)
+samp=rppi(n, beta = c(0, 0, -0.5), AL = diag(c(0, -5)), bL = c(0, 5),maxden = 4)
+
+data.frame(samp) %>%
+  dplyr::rename(u1 = X1, u2 = X2, u3 = X3) %>%
+  ggtern(aes(x = u1, y = u2, z = u3)) +
+  geom_density_tern(bins = 10, bdl = 0.005, base = "identity") + 
   geom_point(size = 1, alpha = 0.5, shape = "+") +
   ggtitle("Sample Points")
 ```
