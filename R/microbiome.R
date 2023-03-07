@@ -19,7 +19,7 @@
 #' ```
 #' Two further individuals (`IndividualID` of `2079` and `2280`) were deemed outliers by \insertCite{scealy2022sc;textual}{scorecompdir}, and removed in their analyses.
 #'
-#' This file was created from the file on [Nematode.net](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) using the below code.
+#' This file was created from the source file hosted on [Nematode.net](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) using the below code.
 #'
 #' ```
 #' microbiome <- readxl::read_excel("S1_Table.xlsx",
@@ -62,7 +62,7 @@
 #' 
 #'
 #' @source [S1_Table.xlsx](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) from [http://nematode.net](http://nematode.net/NN3_frontpage.cgi?navbar_selection=environmental_interaction&subnav_selection=Indonesia_16s). 
-#' [S1_Table.xlsx](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) was created by Bruce A Rosa for \insertCite{martin2019mi;textual}{scorecompdir}.
+#' [S1_Table.xlsx](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) was created by Dr. Bruce A Rosa for \insertCite{martin2019mi;textual}{scorecompdir}.
 #' @references
 #' \insertAllCited{}
 "microbiome"
