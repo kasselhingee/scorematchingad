@@ -1,6 +1,6 @@
 #' 16s Microbiome Data for Soil-Transmitted Helminths
 #'
-#' The data `microbiome` contains paired DNA samples before treatment and at 21 months after treatment for helminth infections \insertCite{martin2019mi}{scorecompdir}.
+#' The `microbiome` data contains paired DNA samples from before treatment and 21 months after treatment for helminth infections \insertCite{martin2019mi}{scorecompdir}.
 #' This data was analysed by \insertCite{martin2019mi;textual}{scorecompdir} and a further subset was studied by \insertCite{scealy2022sc;textual}{scorecompdir}.
 #' The data come from a study into the effect of helminth infections on the course of malaria infections (ImmunoSPIN-Malaria) in the Nangapanda subdistrict, Indonesia \insertCite{wiria2010do}{scorecompdir}.
 #' As part of the study, some participants were given 400mg of albendazole every three months for 1.5 years,
@@ -36,7 +36,8 @@
 #' microbiome <- microbiome |>
 #'   dplyr::mutate(across(c(1,2,3,12:31), as.integer)) |>
 #'   dplyr::mutate(micr_Tt = as.logical(micr_Tt),
-#'                 Treatment = as.logical(Treatment))
+#'                 Treatment = as.logical(Treatment)) |>
+#'   dplyr::rename(IndividualID = `Individual ID`)
 #' microbiome <- as.data.frame(microbiome)
 #save(microbiome, file = "../data/microbiome.rda")
 #' ```
