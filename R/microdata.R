@@ -1,21 +1,23 @@
-#' Microbiome Data for Soil-Transmitted Helminths
+#' 16s Microbiome Data for Soil-Transmitted Helminths
 #'
-#' The data `microbiome` contains paired DNA samples before treatment and at 21 months after treatment for helminth infections \insertCite{Martin2019mi}{scorecompdir}.
-#' This data was analysed by Martin et al \insertCite{Martin2019mi}{scorecompdir} and a further subset was studied by Scealy et al \insertCite{Scealy2022sc}{scorecompdir}.
-#' The data come from a study into the effect of helminth infections on the course of malaria infections (ImmunoSPIN-Malaria) in the Nangapanda subdistrict, Indonesia \insertCite{Wiria2010do}{scorecompdir}.
+#' The data `microbiome` contains paired DNA samples before treatment and at 21 months after treatment for helminth infections \insertCite{martin2019mi}{scorecompdir}.
+#' This data was analysed by \insertCite{martin2019mi;textual}{scorecompdir} and a further subset was studied by \insertCite{scealy2022sc;textual}{scorecompdir}.
+#' The data come from a study into the effect of helminth infections on the course of malaria infections (ImmunoSPIN-Malaria) in the Nangapanda subdistrict, Indonesia \insertCite{wiria2010do}{scorecompdir}.
 #' As part of the study, some participants were given 400mg of albendazole every three months for 1.5 years,
 #' remaining participants were given a placebo
-#'  \insertCite{Wiria2010do}{scorecompdir}.
+#'  \insertCite{wiria2010do}{scorecompdir}.
 #' 
 #' @details 
 #' The measurements in the data come from stool samples before and after treatment.
-#' Gut microbiome prevalence was measured using 16s rRNA 454 sequencing \insertCite{Martin2019mi}{scorecompdir}.
-#' Helminth infections were detected by PCR or microscopy \insertCite{Martin2019mi}{scorecompdir}.
+#' Gut microbiome prevalence was measured using 16s rRNA 454 sequencing \insertCite{martin2019mi}{scorecompdir}.
+#' Helminth infections were detected by PCR or microscopy \insertCite{martin2019mi}{scorecompdir}.
 #' 
-#' The subset studied by Scealy and Wood  \insertCite{Scealy2022sc}{scorecompdir} contained only the measurements from before treatment, and only those individuals with a helminth infection.
+#' The subset studied by  \insertCite{scealy2022sc;textual}{scorecompdir} contained only the measurements from before treatment, and only those individuals with a helminth infection.
 #' These measurements can be obtained by running
-#' `microbiome[(microbiome$Year == 2008) & microbiome$Helminth, ]`.
-#' Two further individuals (`IndividualID` of `2079` and `2280`) were deemed outliers by Scealy and Wood \insertCite{Scealy2022sc}{scorecompdir}, and removed in their analyses.
+#' ```
+#' microbiome[(microbiome$Year == 2008) & microbiome$Helminth, ]
+#' ```
+#' Two further individuals (`IndividualID` of `2079` and `2280`) were deemed outliers by \insertCite{scealy2022sc;textual}{scorecompdir}, and removed in their analyses.
 #'
 #' This file was created from the file on [Nematode.net](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) using the below code.
 #'
@@ -39,7 +41,7 @@
 #save(microbiome, file = "../data/microbiome.rda")
 #' ```
 #' @format 
-#' A dataframe with 300 rows and 31 columns:
+#' A dataframe with 300 rows (two rows per individual) and 31 columns:
 #' \describe{
 #'   \item{IndividualID}{An integer uniquely specifying the individual.}
 #'   \item{Year}{The collection year for the sample. `2008` for before treatment. `2010` for after treatment.}
@@ -51,14 +53,15 @@
 #'   \item{ct_Al}{The qPCR cycle threshold (CT) for *Ascaris lumbricoides* (large roundworm). *Ascaris lumbricoides* can be considered present if the value is 30 or less.}
 #'   \item{ct_Na}{The qPCR cycle threshold (CT) for *Necator americanus* (a hookworm). *Necator americanus* can be considered present if the value is 30 or less.}
 #'   \item{ct_Ad}{The qPCR cycle threshold (CT) for *Ancylostoma duodenale* (a hookworm). *Ancylostoma duodenale* can be considered present if the value is 30 or less.}
-#'   \item{micr_Tt}{The presence of *Trichuris trichiura* as determined by microscopy. A value of `1` means *Trichuris trichiura* was detected.}
+#'   \item{micr_Tt}{The presence of *Trichuris trichiura* as determined by microscopy. A value of `TRUE` means *Trichuris trichiura* was detected.}
 #'   \item{Helminth}{If any of the above helminths were detected then `TRUE`, otherwise `FALSE`.}
 #'   }
 #'   \item{Remaining columns}{Count prevalence of 18 bacterial phyla and 2 unclassified columns.}
 #' }
 #' 
 #'
-#' @source To be confirmed.
+#' @source [S1_Table.xlsx](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) from [http://nematode.net](http://nematode.net/NN3_frontpage.cgi?navbar_selection=environmental_interaction&subnav_selection=Indonesia_16s). 
+#' [S1_Table.xlsx](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) was created by Bruce A Rosa for \insertCite{martin2019mi;textual}{scorecompdir}.
 #' @references
 #' \insertAllCited{}
 "microbiome"
