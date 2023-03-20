@@ -10,15 +10,16 @@ test_that("taped Bingham log-likelihood gives correct values", {
   sample <- simdd::rBingham(2, A)
 
   pman <- manifoldtransform("sph", "identity", "sph")
-  lltape <- ptapell(sample[2,], theta + 1, llname = "Bingham", pman$tran,
-                    fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
+  lltape <- tapell(llname = "Bingham", ytape = sample[2, ],
+                    usertheta = rep(NA, length(theta)),
+                    tran = pman$tran)
 
   u <- t(sample[1, , drop = FALSE])
 
-  expect_equal(pForward0(lltape, u, theta), t(u) %*% A %*% u,
+  expect_equal(pForward0(lltape$ptr, u, theta), t(u) %*% A %*% u,
                ignore_attr = TRUE)
 
-  expect_equal(pJacobian(lltape, u, theta), 2 * A %*% u,
+  expect_equal(pJacobian(lltape$ptr, u, theta), 2 * A %*% u,
                ignore_attr = TRUE)
 
   # test deriv wrt theta
@@ -27,8 +28,8 @@ test_that("taped Bingham log-likelihood gives correct values", {
     return(t(u) %*% A %*% u)
   }
   Rgradt <- numericDeriv(quote(llBingham(theta)), c("theta"))
-  lltape_t <- swapDynamic(lltape, theta+1, sample[2, ])
-  expect_equal(pJacobian(lltape_t, theta, u), attr(Rgradt, "gradient"),
+  lltape_t <- tapeSwap(lltape)
+  expect_equal(pJacobian(lltape_t$ptr, theta, u), attr(Rgradt, "gradient"),
                tolerance = 1E-5, ignore_attr = TRUE)
 })
 
