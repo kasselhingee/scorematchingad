@@ -1,6 +1,6 @@
 #' @title Score matching estimates for the Bingham distribution
 #' @family directional model estimators
-#' @param sample A matrix of observations in Cartesian coordinates. Each row is a (multivariate) measurement.
+#' @param Y A matrix of observations in Cartesian coordinates. Each row is a (multivariate) measurement.
 #' @param control Control parameters passed to [`Rcgmin::Rcgmin()`].
 #' @param A For full score matching only: if supplied, then NA elements of `A` are estimated and the other elements are fixed.
 #' @param method The estimating method, either "smfull" for score matching estimates for all parameters
@@ -25,22 +25,22 @@
 #' p <- 4
 #' A <- rsymmetricmatrix(p)
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
-#' sample <- simdd::rBingham(100, A)
+#' Y <- simdd::rBingham(100, A)
 #'
-#' Bingham(sample, method = "Mardia")
+#' Bingham(Y, method = "Mardia")
 #' @export
-Bingham <- function(sample, A = NULL, method = "smfull", control = default_Rcgmin()){
+Bingham <- function(Y, A = NULL, method = "smfull", control = default_Rcgmin()){
   if (method == "smfull"){
-    out <- Bingham_full(sample, A = A, control = control)}
+    out <- Bingham_full(Y, A = A, control = control)}
   if (method %in% c("Mardia", "hybrid")){
     stopifnot(is.null(A))
-    out <- Bingham_Mardia(sample, control = control)
+    out <- Bingham_Mardia(Y, control = control)
     }
   return(out)
 }
 
-Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){
-  p <- ncol(sample)
+Bingham_full <- function(Y,  A = NULL, control = default_Rcgmin()){
+  p <- ncol(Y)
   if (is.null(A)){
     A <- matrix(NA, nrow = p, ncol = p)
   }
@@ -53,7 +53,7 @@ Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){
   tapes <- buildsmotape("sph","identity", "sph", "Bingham",
                            ytape, intheta,
                            weightname = "ones")
-  out <- cppad_closed(tapes$smotape, Y = sample)
+  out <- cppad_closed(tapes$smotape, Y = Y)
   theta <- intheta
   theta[is.na(intheta)] <- out$est
   tSE <- intheta * 0
@@ -72,13 +72,13 @@ Bingham_full <- function(sample,  A = NULL, control = default_Rcgmin()){
   ))
 }
 
-Bingham_Mardia <- function(sample,  control = default_Rcgmin()){
-  Tmat <- 1/nrow(sample) * t(sample) %*% sample
+Bingham_Mardia <- function(Y,  control = default_Rcgmin()){
+  Tmat <- 1/nrow(Y) * t(Y) %*% Y
   Tmat_es <- eigen(Tmat)
   Gammahat <- Tmat_es$vectors
-  samplestd <- sample %*% Gammahat
+  Ystd <- Y %*% Gammahat
 
-  p <- ncol(samplestd)
+  p <- ncol(Ystd)
   A <- matrix(0, nrow = p, ncol = p)
   diag(A) <- NA
   stopifnot(all(dim(A) == p))
@@ -87,7 +87,7 @@ Bingham_Mardia <- function(sample,  control = default_Rcgmin()){
                         rep(1, p) / sqrt(p), intheta,
                         weightname = "ones")
 
-  sm <- cppad_closed(tapes$smotape, Y = samplestd)
+  sm <- cppad_closed(tapes$smotape, Y = Ystd)
   theta <- intheta
   theta[is.na(intheta)] <- sm$est
   Astd <- Bingham_theta2Amat(theta)
