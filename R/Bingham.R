@@ -3,6 +3,8 @@
 #' @param Y A matrix of observations in Cartesian coordinates. Each row is a (multivariate) measurement.
 #' @param control Control parameters passed to [`Rcgmin::Rcgmin()`].
 #' @param A For full score matching only: if supplied, then NA elements of `A` are estimated and the other elements are fixed.
+#' @param paramvec For compatibility with [`Windham()`], `paramvec` has the same effect as `A`, but is the vector form of `A`, ordered according to `c(diag(A)[1:(p-1)], A[upper.tri(A)])`, where `p` is the dimension of the ambient space.
+#' Must be `NULL` if `A` is not `NULL`.
 #' @param method The estimating method, either "smfull" for score matching estimates for all parameters
 #'  or "Mardia" for the \insertCite{mardia2016sc}{scorecompdir} hybrid estimator.
 
@@ -29,7 +31,9 @@
 #'
 #' Bingham(Y, method = "Mardia")
 #' @export
-Bingham <- function(Y, A = NULL, method = "smfull", control = default_Rcgmin()){
+Bingham <- function(Y, A = NULL, method = "smfull", control = default_Rcgmin(), paramvec = NULL){
+  if (!(is.null(A) | is.null(paramvec))){stop("'paramvec' and 'A' provided")}
+  if (is.null(A) & (!is.null(paramvec))){A <- Bingham_theta2Amat(paramvec)}
   if (method == "smfull"){
     out <- Bingham_full(Y, A = A, control = control)}
   if (method %in% c("Mardia", "hybrid")){
