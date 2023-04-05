@@ -1,7 +1,6 @@
 #' @title Score matching estimates for the Bingham distribution
 #' @family directional model estimators
 #' @param Y A matrix of observations in Cartesian coordinates. Each row is a (multivariate) measurement.
-#' @param control Control parameters passed to [`Rcgmin::Rcgmin()`].
 #' @param A For full score matching only: if supplied, then NA elements of `A` are estimated and the other elements are fixed.
 #' @param method The estimating method, either "smfull" for score matching estimates for all parameters
 #'  or "Mardia" for the \insertCite{mardia2016sc}{scorecompdir} hybrid estimator.
@@ -29,17 +28,17 @@
 #'
 #' Bingham(Y, method = "Mardia")
 #' @export
-Bingham <- function(Y, A = NULL, method = "smfull", control = default_Rcgmin()){
+Bingham <- function(Y, A = NULL, method = "smfull"){
   if (method == "smfull"){
-    out <- Bingham_full(Y, A = A, control = control)}
+    out <- Bingham_full(Y, A = A)}
   if (method %in% c("Mardia", "hybrid")){
     stopifnot(is.null(A))
-    out <- Bingham_Mardia(Y, control = control)
+    out <- Bingham_Mardia(Y)
     }
   return(out)
 }
 
-Bingham_full <- function(Y,  A = NULL, control = default_Rcgmin()){
+Bingham_full <- function(Y,  A = NULL){
   p <- ncol(Y)
   if (is.null(A)){
     A <- matrix(NA, nrow = p, ncol = p)
@@ -72,7 +71,7 @@ Bingham_full <- function(Y,  A = NULL, control = default_Rcgmin()){
   ))
 }
 
-Bingham_Mardia <- function(Y,  control = default_Rcgmin()){
+Bingham_Mardia <- function(Y){
   Tmat <- 1/nrow(Y) * t(Y) %*% Y
   Tmat_es <- eigen(Tmat)
   Gammahat <- Tmat_es$vectors
