@@ -13,7 +13,6 @@
 #' A <- rsymmetricmatrix(p, -10, 10)
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint for Bingham
 #' rRivest(100, -3.2, A, 2)
-#' @export
 rRivest <- function(n, k, A, i){
   A_es <- eigen(A)
   sizeorder <- order(abs(A_es$values))
