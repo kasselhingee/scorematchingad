@@ -33,7 +33,7 @@ test_that("taped Bingham log-likelihood gives correct values", {
                tolerance = 1E-5, ignore_attr = TRUE)
 })
 
-test_that("Bingham_full() optimiser works", {
+test_that("Bingham() with smfull optimiser works", {
   p <- 4
   set.seed(345)
   theta <- runif(p-1 + (p - 1) * p/2)
@@ -41,11 +41,11 @@ test_that("Bingham_full() optimiser works", {
 
   set.seed(123)
   sample <- simdd::rBingham(100, A)
-  est <- Bingham_full(sample, control = list(tol = 1E-15))
-  expect_absdiff_lte_v(est$sminfo$est, theta, 3 * est$sminfo$SE)
+  est <- Bingham(sample, method = "smfull")
+  expect_absdiff_lte_v(est$est$paramvec, theta, 3 * est$SE$paramvec)
 })
 
-test_that("Bingham_Mardia() optimiser works", {
+test_that("Bingham() w Mardia optimiser works", {
   p <- 5
   set.seed(345)
   theta <- runif(p-1 + (p - 1) * p/2)
@@ -53,12 +53,12 @@ test_that("Bingham_Mardia() optimiser works", {
 
   set.seed(123)
   sample <- simdd::rBingham(100, A)
-  est <- Bingham_Mardia(sample)
+  est <- Bingham(sample, method = "Mardia")
   A_es <- eigen(A)
-  expect_absdiff_lte_v(est$Lambda[-p], A_es$values[-p], 3 * est$Lambda_SE[-p])
+  expect_absdiff_lte_v(est$est$Lambda[-p], A_es$values[-p], 3 * est$SE$Lambda[-p])
 })
 
-test_that("Bingham() works", {
+test_that("Bingham() chooses methods correctly", {
   p <- 4
   set.seed(345)
   theta <- runif(p-1 + (p - 1) * p/2)
@@ -85,15 +85,15 @@ test_that("Bingham() works with highly skewed trace", {
   set.seed(123)
   sample <- simdd::rBingham(1000, A)
 
-  est <- Bingham(sample, method = "smfull", control = list(tol = 1E-15))
-  expect_absdiff_lte_v(est$sminfo$est, theta, 3 * est$sminfo$SE)
+  est <- Bingham(sample, method = "smfull")
+  expect_absdiff_lte_v(est$est$paramvec, theta, 3 * est$SE$paramvec)
 
   estM <- Bingham(sample, method = "Mardia")
   A_es <- eigen(A)
-  expect_absdiff_lte_v(estM$Lambda[-p], A_es$values[-p], 3 * estM$Lambda_SE[-p])
+  expect_absdiff_lte_v(estM$est$Lambda[-p], A_es$values[-p], 3 * estM$SE$Lambda[-p])
 })
 
-test_that("Bingham_full() with various fixed elements works", {
+test_that("Bingham() with various fixed elements works", {
   skip_on_cran() #slow
   p <- 4
   set.seed(345)
@@ -105,23 +105,24 @@ test_that("Bingham_full() with various fixed elements works", {
   #a fixed off diagonal element
   inA <- matrix(NA, nrow = p, ncol = p)
   inA[p, 1] <- inA[1, p] <- A[1, p]
-  est <- Bingham(sample, A = inA, method = "smfull", control = list(tol = 1E-15))
-  expect_lte_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
-  expect_equal(est$A[!is.na(inA)], A[!is.na(inA)])
-  expect_equal(est$A_SE[!is.na(inA)], 0 * A[!is.na(inA)])
-  expect_error(Bingham(sample, A = inA, method = "Mardia", control = list(tol = 1E-15)))
-
+  est <- Bingham(sample, A = inA, method = "smfull")
+  expect_lte_v(abs(est$est$A - A)[-(p*p)], 3 * est$SE$A[-(p*p)])
+  expect_equal(est$est$A[!is.na(inA)], A[!is.na(inA)])
+  expect_equal(est$SE$A[!is.na(inA)], 0 * A[!is.na(inA)])
+  expect_error(Bingham(sample, A = inA, method = "Mardia"))
+ 
   #a fixed diagonal element
   inA <- matrix(NA, nrow = p, ncol = p)
   inA[2, 2] <- A[2, 2]
-  est <- Bingham(sample, A = inA, method = "smfull", control = list(tol = 1E-15))
-  expect_lte_v(abs(est$A - A)[-(p*p)], 3 * est$A_SE[-(p*p)])
-  expect_equal(est$A[!is.na(inA)], A[!is.na(inA)])
-  expect_equal(est$A_SE[!is.na(inA)], 0 * A[!is.na(inA)])
-  expect_error(Bingham(sample, A = inA, method = "Mardia", control = list(tol = 1E-15)))
+  est <- Bingham(sample, A = inA, method = "smfull")
+  expect_lte_v(abs(est$est$A - A)[-(p*p)], 3 * est$SE$A[-(p*p)])
+  expect_equal(est$est$A[!is.na(inA)], A[!is.na(inA)])
+  expect_equal(est$SE$A[!is.na(inA)], 0 * A[!is.na(inA)])
+  expect_error(Bingham(sample, A = inA, method = "Mardia"))
 
   #fixed final diagonal element should error
   inA <- matrix(NA, nrow = p, ncol = p)
   inA[p, p] <- A[p, p]
-  expect_error(Bingham(sample, A = inA, method = "smfull", control = list(tol = 1E-15)))
+  expect_error(Bingham(sample, A = inA, method = "smfull"))
 })
+

@@ -1,11 +1,7 @@
 #' @title Score matching estimates for the Bingham distribution
 #' @family directional model estimators
-#' @param Y A matrix of observations in Cartesian coordinates. Each row is a (multivariate) measurement.
+#' @inheritParams vMF
 #' @param A For full score matching only: if supplied, then NA elements of `A` are estimated and the other elements are fixed.
-#' @param method The estimating method, either "smfull" for score matching estimates for all parameters
-#'  or "Mardia" for the \insertCite{mardia2016sc}{scorecompdir} hybrid estimator.
-
-
 #' @description
 #' Score matching estimator of the Bingham matrix.
 #' @details
@@ -27,6 +23,11 @@
 #' Y <- simdd::rBingham(100, A)
 #'
 #' Bingham(Y, method = "Mardia")
+#' @return
+#' A list of `est`, `SE` and `info`.
+#'  * `est` contains the estimated matrix `A` and a vector form, `paramvec`, of `A` (ordered according to `c(diag(A)[1:(p-1)], A[upper.tri(A)])` ). For the Mardia method, the estimated eigenvalues of `A` (`Lambda`) and eigenvectors of `A` (`Gamma`) are also returned.
+#'  * `SE` contains estimates of the standard errors if computed.
+#'  * `info` contains a variety of information about the model fitting procedure and results.
 #' @export
 Bingham <- function(Y, A = NULL, method = "smfull"){
   if (method == "smfull"){
@@ -61,13 +62,10 @@ Bingham_full <- function(Y,  A = NULL){
   SE = Bingham_theta2Amat(tSE)
   SE[p, p] <- NA
 
-  A_es <- eigen(A)
   return(list(
-    A = A,
-    A_SE = SE,
-    Gamma = A_es$vectors,
-    Lambda = A_es$values,
-    sminfo = out
+    est = list(A = A, paramvec = theta),
+    SE = list(A = SE, paramvec = tSE),
+    info = out
   ))
 }
 
@@ -96,12 +94,15 @@ Bingham_Mardia <- function(Y){
   SE[is.na(intheta)] <- sm$SE
   SE <- Bingham_theta2Amat(SE)
   SE[p, p] <- NA#final NA because final diagonal element is not estimated directly
+  
+  A <- Gammahat %*% diag(Lambda) %*% t(Gammahat)
   return(list(
-    Lambda = Lambda,
-    Lambda_SE = diag(SE),
-    Gamma = Gammahat,
-    A = Gammahat %*% diag(Lambda) %*% t(Gammahat),
-    sminfo = sm
+    est = list(A = A,
+               Lambda = Lambda,
+               Gamma = Gammahat,
+               paramvec = Bingham_Amat2theta(A)),
+    SE = list(Lambda = diag(SE)),
+    info = sm 
   ))
 }
 
