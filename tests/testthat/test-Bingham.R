@@ -55,7 +55,7 @@ test_that("Bingham() w Mardia optimiser works", {
   sample <- simdd::rBingham(100, A)
   est <- Bingham(sample, method = "Mardia")
   A_es <- eigen(A)
-  expect_absdiff_lte_v(est$est$Lambda[-p], A_es$values[-p], 3 * est$SE$Lambda[-p])
+  expect_absdiff_lte_v(est$est$evals[-p], A_es$values[-p], 3 * est$SE$evals[-p])
 })
 
 test_that("Bingham() chooses methods correctly", {
@@ -90,7 +90,7 @@ test_that("Bingham() works with highly skewed trace", {
 
   estM <- Bingham(sample, method = "Mardia")
   A_es <- eigen(A)
-  expect_absdiff_lte_v(estM$est$Lambda[-p], A_es$values[-p], 3 * estM$SE$Lambda[-p])
+  expect_absdiff_lte_v(estM$est$evals[-p], A_es$values[-p], 3 * estM$SE$evals[-p])
 })
 
 test_that("Bingham() with various fixed elements works", {

@@ -23,7 +23,7 @@
 #' @param Y A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.
 #' @param paramvec `smfull` method only: Optional. A vector of same length as the dimension, representing the elements of the vector that is the element-wise (Hadamard) product \eqn{\kappa \mu}. 
 #' @param control Control parameters passed to [`Rcgmin::Rcgmin()`].
-#' @param method Either "Mardia" for the hybrid score matching estimator from \insertCite{@mardia2016sc}{scorecompdir}.
+#' @param method Either "Mardia" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}.
 #'  or "smfull" for the full score matching estimator.
 #' @param w An optional vector of weights for each measurement in `Y`
 #' @references
