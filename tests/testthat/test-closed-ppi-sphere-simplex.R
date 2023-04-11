@@ -30,10 +30,10 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
   acut = 0.1
   dirtapes <- buildsmotape("sim","sqrt", "sph", "dirichlet",
                            rep(0.1, p), rep(0.1, p) * NA,
-                           weightname = "minsq", acut = acut)
+                           divweight = "minsq", acut = acut)
   ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), theta * NA,
-                           weightname = "minsq", acut = acut)
+                           divweight = "minsq", acut = acut)
 
   ppival <- pForward0(ppitapes$smotape$ptr, theta, utabl[2, ])
   dirval <- pForward0(dirtapes$smotape$ptr, beta, utabl[2, ])
@@ -54,10 +54,10 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   acut = 0.1
   dirtapes <- buildsmotape("sim","sqrt", "sph", "dirichlet",
                            rep(0.1, p), rep(0.1, p) * NA,
-                           weightname = "minsq", acut = acut)
+                           divweight = "minsq", acut = acut)
   ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), ppi_paramvec(AL = 0, bL=0, p = p),
-                           weightname = "minsq", acut = acut)
+                           divweight = "minsq", acut = acut)
 
   # it looks like the taped function above is not altering bL or beta
   # potentially the ordering of the theta values is wrong??
@@ -217,7 +217,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   #also it makes sense that the smo and gradient are v low at the hardcoded estimate
   ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
-                           weightname = "minsq", acut = acut)
+                           divweight = "minsq", acut = acut)
   smvals <- smvalues_tape_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL))
   expect_lt(sum(smvals$grad^2), 1E-20)
 

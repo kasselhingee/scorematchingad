@@ -8,7 +8,7 @@ test_that("von-Mises Fisher likelihood runs and fits", {
   intheta <- c(NA, rep(0, p - 1))
   tapes <- buildsmotape("sph", "identity", "sph", "vMF",
                         rep(1, p)/sqrt(p), rep(NA, p),
-                        weightname = "ones",
+                        divweight = "ones",
                         verbose = FALSE)
   expect_equal(pForward0(tapes$lltape$ptr, sample[1, ], theta), sum(sample[1, ]  * theta)) ## very important to check a tape
   out <- cppad_closed(tapes$smotape, Y = sample)

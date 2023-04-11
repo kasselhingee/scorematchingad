@@ -33,7 +33,7 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
   intheta <- ppi_paramvec(p)
   tapes <- buildsmotape("sim", "sqrt", "sph", "ppi",
                         samp3[1, ], intheta,
-                        weightname = "minsq",
+                        divweight = "minsq",
                         acut = acut)
   SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
 
@@ -70,7 +70,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
   intheta <- ppi_paramvec(p, betap = beta0[p])
   tapes <- buildsmotape("sim", "sqrt", "sph", "ppi",
                         samp3[1, ], intheta,
-                        weightname = "minsq",
+                        divweight = "minsq",
                         acut = acut)
   SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
 
@@ -101,7 +101,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
   intheta <- ppi_paramvec(p, betap = -0.5)
   tapes <- buildsmotape("sim", "sqrt", "sph", "ppi",
                         samp3[1, ], intheta,
-                        weightname = "minsq",
+                        divweight = "minsq",
                         acut = acut)
   SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
 
