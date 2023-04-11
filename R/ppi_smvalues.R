@@ -56,7 +56,7 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
      llname = "ppi",
      ytape =  rep(1/p, p),
      usertheta = paramvec,
-     weightname = divweight,
+     divweight = divweight,
      acut = acut,
      verbose = FALSE)
   smotape <- tapes$smotape

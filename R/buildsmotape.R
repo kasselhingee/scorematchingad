@@ -1,12 +1,10 @@
 #' @title Build a CppAD Tapes for Score Matching
 #' @family tape builders
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
-#' @param weightname The name of the divergence weight function ('ones' for manifolds without boundary).
-#' @param acut The threshold \eqn{a_c} in the divergence weight function.
 #' @param verbose If `TRUE` more details are printed when taping.
 #' @description
 #' Generates `CppAD` tapes for the log-likelihood and score matching objective  for a model specified by name and an optional transformation to a manifold.
-#' There are three steps corresponding to each of the functions `manifoldtransform()`, `tapell()` and `tapesmo()`.
+#' Three steps are performed by `buildsmotape()`, corresponding to each of the functions `manifoldtransform()`, `tapell()` and `tapesmo()`.
 #' @details
 #' When using, `CppAD` one first creates *tapes* of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
 #' The taping relies on specifying typical argument values for the functions, so the programming is simplest when the function is defined without conditions.
@@ -52,17 +50,17 @@
 #' @export
 buildsmotape <- function(start, tran, man, llname,
                          ytape, usertheta,
-                         weightname = "ones", acut = 1,
+                         divweight = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
                          verbose = FALSE){
 
   if(all(!is.na(usertheta))){stop("All elements of theta are fixed")}
 
   if (!(all(c(tran, man) == c("sqrt", "sph")) | all(c(tran, man) == c("identity", "sim")))){
-    if (weightname != "ones"){warning("Manifold supplied has no boundary. Using weightname = 'ones' is strongly recommended.")}
+    if (divweight != "ones"){warning("Manifold supplied has no boundary. Using divweight = 'ones' is strongly recommended.")}
   }
-  if ((weightname == "ones") && (abs(acut - 1) > 1E-8)){
-    warning("The value of 'acut' is ignored for weightname == 'ones'")
+  if ((divweight == "ones") && (abs(acut - 1) > 1E-8)){
+    warning("The value of 'acut' is ignored for divweight == 'ones'")
   }
 
   tranman <- manifoldtransform(start, tran, man)
@@ -75,7 +73,7 @@ buildsmotape <- function(start, tran, man, llname,
   smotape <- tapesmo(lltape = lltape,
                         tran = tranman$tran,
                         man = tranman$man,
-                        divweight = weightname,
+                        divweight = divweight,
                         acut = acut,
                         verbose = verbose)
   return(list(
@@ -86,7 +84,7 @@ buildsmotape <- function(start, tran, man, llname,
       transform = tran,
       manifold = man,
       ulength = length(ytape),
-      weightname = weightname,
+      divweight = divweight,
       acut = acut
     )
   ))

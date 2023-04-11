@@ -185,7 +185,7 @@ ppi <- function(Y, paramvec = NULL,
        llname = "ppi",
        ytape =  rep(1/p, p),
        usertheta = t_si2u(stheta, isfixed),
-       weightname = divweight,
+       divweight = divweight,
        acut = acut,
        verbose = FALSE)
     smotape <- tapes$smotape
