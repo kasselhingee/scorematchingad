@@ -1,5 +1,4 @@
-#' @title Build an object specifying the manifold-transform pair.
-#' @description Generate an object used to specify a manifold and transformation to the manifold. This specific to each type of data.
+#' @describeIn buildsmotape Build an object specifying the transformation to and from a manifold. 
 #' @param start The starting manifold. Used for checking that `tran` and `man` match.
 #' @param tran The name of a transformation. Available transformations are
 #'  + `srqt'
@@ -11,7 +10,7 @@
 #'  + `Hn111' hyperplane normal to 1, 1, 1, 1, ...
 #'  + `sim' simplex
 #'  + `Euc' Euclidean space
-#' @return A named list with:
+#' @return `manifoldtransform()` returns a named list with:
 #'  + `tran` A object of type `Rcpp_transform_ad` representing the transform
 #'  + `man` A object of type `Rcpp_man_ad` representing the manifold
 #' @details
