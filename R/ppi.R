@@ -232,6 +232,14 @@ ppi <- function(Y, paramvec = NULL,
     firstfit$info$boundarypoints <- sum(isbdry)
   }
 
+  if (length(firstfit) == 0){stop("Could not find fitting method.")}
+
+  if (any(firstfit$est$beta <= -1)){
+    warning("Beta estimates of -1 or lower, replacing these with -1 + 1E-7")
+    firstfit$est$beta[firstfit$est$beta <= -1] <- -1 + 1E-7
+    firstfit$est$paramvec <- do.call(ppi_paramvec, firstfit$est[c("AL", "bL", "beta")])
+  }
+
   firstfit$info$method <- fitfun
   return(firstfit)
 }
