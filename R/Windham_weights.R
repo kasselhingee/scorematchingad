@@ -12,7 +12,6 @@
 #' @export
 Windham_weights <- function(ldenfun, Y, theta, cW){
   if (is.null(ldenfun)){stop("ldenfun is NULL")}
-  browser()
   stopifnot(length(cW) == length(theta))
   stopifnot(is.numeric(cW))
   thetaforweights <- cW * theta #the elements of theta with FALSE inWW will be set to zero
