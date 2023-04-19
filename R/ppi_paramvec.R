@@ -37,6 +37,8 @@ ppi_paramvec <- function(p = NULL, AL = NULL, bL = NULL, Astar = NULL, beta = NU
     else if (isTRUE( (is.matrix(beta) || is.vector(beta)) && (length(beta) > 1))){p <- length(as.vector(beta))}
     else {stop("Could not guess 'p' from other arguments. Please specify 'p'.")}
   }
+  stopifnot(is.vector(p, mode = "numeric"))
+  stopifnot(length(p) == 1)
 
   # initialise parameter objects
   bLprep = rep(NA, p-1)
