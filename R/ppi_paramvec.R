@@ -13,7 +13,7 @@
 #' If a number, then \eqn{b_L} will be fixed at the supplied value.
 #' @param Astar  Either `NULL` or a p x p matrix.
 #' If non-null, then overrides `AL` and `bL`.
-#' If a matrix, all elements must be non-`NA` and `Astar` will be converted to `AL` and `bL`.
+#' If a matrix, all elements must be non-`NA` and `Astar` will be converted to `AL` and `bL` using [`ppi_fromAstar()`].
 #' @param beta Either `NULL`, a number, or a vector of length p.
 #' If NULL then all elements of \eqn{\beta} will be set to `NA`, and [`ppi()`] will estimate them.
 #' If a number then the \eqn{\beta} elements will be fixed at the given number.
@@ -47,7 +47,7 @@ ppi_paramvec <- function(p = NULL, AL = NULL, bL = NULL, Astar = NULL, beta = NU
   # AL, bL and A
   if (!is.null(Astar)){
     if (!(is.null(AL) & is.null(bL))){warning("AL, bL and Astar supplied. Astar argument will override AL and bL.")}
-    translated <- fromAstar(Astar)
+    translated <- ppi_fromAstar(Astar)
     ALprep <- translated$AL
     bLprep <- translated$bL
   } else {
