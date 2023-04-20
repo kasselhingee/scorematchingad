@@ -5,6 +5,7 @@
 #' @param ALs The block of A that is non zero (which is the first p-1th row and column)
 #' @param bL The first p-1th elements of b (the final element of b must be zero by definition)
 #' @examples
+#' Astar <- rWishart(...)
 #' Qin <- orthogmatwith111vec()
 #' Astar <- Qin %*% diag(c(3, -2, 0)) %*% t(Qin)
 #' fromAstar(Astar)
@@ -52,30 +53,17 @@ toAstar <- function(AL, bL){
 # @export
 fromAstar <- function(Astar){
   p = ncol(Astar)
-  stopifnot(isSymmetric.matrix(Astar))
-  eigenspace <- eigen(Astar, symmetric = TRUE)
-  # rearrange so 0 at the end
-  neworder <- order(abs(eigenspace$values), decreasing = TRUE)
-  eigenvalues <- eigenspace$values[neworder]
-  stopifnot( abs(eigenvalues[p]) < 1E-10 )
-  Q <- eigenspace$vectors[, neworder] #Q is such that Q %*% diag(eigenvalues) %*% t(Q) = Astar
-  stopifnot(isTRUE(all.equal(Q %*% diag(eigenvalues) %*% t(Q), Astar)))
-  if(!all(abs(Q[1:(p-1),p] - Q[p, p]) < 1E-10)){stop("Final eigenvector of Astar is not proportional to the vector 1,1,...,1")}
+  DL = Astar[1:(p-1), 1:(p-1)]
+  DB = Astar[1:(p-1), p]
+  DC = Astar[p, p]
 
-  vL <- Q[-p, -p] - matrix(Q[p, -p], ncol = p-1, nrow = p - 1, byrow = TRUE) #first (p-1) eigen vectors minus their pth element
-  bL <- rowSums(2 * vL %*% diag(eigenvalues[-p] * Q[p,-p]))
-    # 2 * (eigenspace$values[1] * Q[p,1] * v1n + eigenspace$values[2] * Q[p,2] * v2n)  %*% u[1:2]
-  AL <- vL %*% diag(eigenvalues[-p]) %*% t(vL)
-  const <- sum(eigenvalues[-p] * Q[p, -p]^2)
+  ones <- rep(1, p)
+  onesL <- rep(1, p-1)
 
-  # check
-  u <- runif(p)
-  u <- u / sum(u)
-  uL <- u[-p]
-  stopifnot(abs((u %*% Astar %*% u) - (uL %*% AL %*% uL + const + t(bL) %*% uL)) < 1E-10)
-
+  AL <- DL - DB %*% t(onesL) - onesL %*% t(DB) + DC * onesL %*% t(onesL)
+  bL <- 2 * (DB - DC * onesL)
   return(list(
     AL = AL,
     bL = bL,
-    const = const))
+    const = DC))
 }
