@@ -1,6 +1,7 @@
 #' @name ppi_toAstar
+#' @family PPI model tools
 #' @title Obtain AL and bL from Astar and Reverse
-#' @description \insertCite{scealy2022sc}{scorecompdir} give two parametrisations of the PPI model. The function [`ppi()`] and most other PPI functions in this package use the parametrisation with matrix \eqn{A_L} and vector \eqn{b_L}. An alternative parametrisation uses a single matrix `Astar` instead of \eqn{A_L} and \eqn{b_L}.
+#' @description \insertCite{scealy2022sc;textual}{scorecompdir} give two parameterisations of the PPI model. The function [`ppi()`] and most other PPI functions in this package use the parameterisation with matrix \eqn{A_L} and vector \eqn{b_L}. An alternative parameterisation uses a single matrix `Astar` instead of \eqn{A_L} and \eqn{b_L}.
 #' @details
 #' The `Astar` parametrisation rewrites the PPI density as proportional to 
 #' \deqn{\exp(u^TA^*u)\prod_{i=1}^p u_i^{\beta_i},}
