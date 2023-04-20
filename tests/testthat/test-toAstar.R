@@ -1,32 +1,28 @@
-# genscore has a function gen() for simulating data
+test_that("fromAstar() has same result for compositional vectors", {
+  set.seed(3645)
+  p <- 3
+  Astar <- rWishart(1, 6, diag(3))[,,1]
+  ALbL <- ppi_fromAstar(Astar)
 
-test_that("toAstar() works on an example matrix", {
-  #dimension
-  p=3
+  # two orthogonal vectors from rep(1, p)/p using rows of the Helmert submatrix
+  u <- c(1, -1, 0)/5 + rep(1, p)/p
+  uL <- u[-p]
+  expect_equal(t(u) %*% Astar %*% u,
+               t(uL) %*% ALbL$AL %*% uL + t(ALbL$bL) %*% uL + ALbL$const)
 
-  #sample size
-  n=100
 
-  #parameters for the PPI model
-  muL=matrix(0,p-1,1)
-  muL[1:sum(p,-1)]=0.12
-  aa=matrix(1/500,p-1,1)
-  D=diag(as.vector(aa))
-  SigA=D
-  SigA[1,1]=SigA[1,1]*2
-  cor=0.5
-  SigA[1,2]=cor*sqrt(SigA[1,1]*SigA[2,2])
-  SigA[2,1]=SigA[1,2]
-  ALs=-0.5*solve(SigA)
-  bL=solve(SigA)%*%muL
-  beta0=matrix(-0.8,p,1)
-  beta0[p]=-0.5
+  u <- c(1, 1, -2)/10 + rep(1, p)/p
+  uL <- u[-p]
+  expect_equal(t(u) %*% Astar %*% u,
+               t(uL) %*% ALbL$AL %*% uL + t(ALbL$bL) %*% uL + ALbL$const)
 
-  expect_error(Astar <- toAstar(ALs, bL))
+})
 
-  # check conversion
-  samp <- c(0.007, 0.05, 1 - 0.007 - 0.05)
-  hardcoded <- t(samp[-p]) %*% ALs %*% samp[-p] + t(bL) %*% samp[-p]
-  # expect_equal(hardcoded, t(samp) %*% Astar %*% samp)
+test_that("toAstar() reverses fromAstar()", {
+  set.seed(3645)
+  Astar <- rWishart(1, 6, diag(3))[,,1]
+  ALbL <- ppi_fromAstar(Astar)
+  newAstar <- ppi_toAstar(ALbL$AL, ALbL$bL)
+  expect_equal(newAstar + sum(Astar)/(3*3), Astar)
 })
 
