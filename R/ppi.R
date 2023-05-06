@@ -172,7 +172,7 @@ ppi <- function(Y, paramvec = NULL,
     }
   }
 
-  # cppad_search method
+  # cppad methods
   if (method %in% c("iterative", "closed")){
     if (is.null(paramvec_start)){stheta <- t_u2s_const(usertheta, 0.2)}
     else {stheta <- t_us2s(usertheta, paramvec_start)}
