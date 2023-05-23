@@ -107,7 +107,7 @@ data.frame(samp) %>%
 ```
 
 # A PPI with Concentration on Centre of One Edge and Some Interior Mass
-```{r dirichlet2, warning=FALSE, out.width = "0.5\\linewidth"}
+```{r ppi_egdeconcentration, warning=FALSE, out.width = "0.5\\linewidth"}
 ppi_plotdensity(beta = c(0, 0, -0.5), AL = diag(c(0, -5)), bL = c(0, 5))
 
 set.seed(3654)
