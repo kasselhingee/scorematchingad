@@ -29,17 +29,17 @@
 #'  * `SE` contains estimates of the standard errors if computed.
 #'  * `info` contains a variety of information about the model fitting procedure and results.
 #' @export
-Bingham <- function(Y, A = NULL, method = "smfull"){
+Bingham <- function(Y, A = NULL, w = rep(1, nrow(Y)), method = "smfull"){
   if (method == "smfull"){
     out <- Bingham_full(Y, A = A)}
   if (method %in% c("Mardia", "hybrid")){
     stopifnot(is.null(A))
-    out <- Bingham_Mardia(Y)
+    out <- Bingham_Mardia(Y, w = w)
     }
   return(out)
 }
 
-Bingham_full <- function(Y,  A = NULL){
+Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y)){
   p <- ncol(Y)
   if (is.null(A)){
     A <- matrix(NA, nrow = p, ncol = p)
@@ -53,14 +53,19 @@ Bingham_full <- function(Y,  A = NULL){
   tapes <- buildsmotape("sph","identity", "sph", "Bingham",
                            ytape, intheta,
                            divweight = "ones")
-  out <- cppad_closed(tapes$smotape, Y = Y)
+  out <- cppad_closed(tapes$smotape, Y = Y, w = w)
   theta <- intheta
   theta[is.na(intheta)] <- out$est
-  tSE <- intheta * 0
-  tSE[is.na(intheta)] <- out$SE
   A = Bingham_theta2Amat(theta)
-  SE = Bingham_theta2Amat(tSE)
-  SE[p, p] <- NA
+  if (is.numeric(sm$SE)){
+    tSE <- intheta * 0
+    tSE[is.na(intheta)] <- out$SE
+    SE = Bingham_theta2Amat(tSE)
+    SE[p, p] <- NA
+  } else {
+    tSE <- sm$SE,
+    SE <- sm$SE
+  }
 
   return(list(
     est = list(A = A, paramvec = theta),
@@ -69,8 +74,8 @@ Bingham_full <- function(Y,  A = NULL){
   ))
 }
 
-Bingham_Mardia <- function(Y){
-  Tmat <- 1/nrow(Y) * t(Y) %*% Y
+Bingham_Mardia <- function(Y, w = rep(1, nrow(Y)){
+  Tmat <- t(Y) %*% (Y * w/sum(w))  #elements of Tmat are sample averages Yj*Yi being squares or cross products between the coordinates
   Tmat_es <- eigen(Tmat)
   Gammahat <- Tmat_es$vectors
   Ystd <- Y %*% Gammahat
@@ -84,25 +89,29 @@ Bingham_Mardia <- function(Y){
                         rep(1, p) / sqrt(p), intheta,
                         divweight = "ones")
 
-  sm <- cppad_closed(tapes$smotape, Y = Ystd)
+  sm <- cppad_closed(tapes$smotape, Y = Ystd, w = w)
   theta <- intheta
   theta[is.na(intheta)] <- sm$est
   Astd <- Bingham_theta2Amat(theta)
   Lambda <- diag(Astd)
 
-  SE <- intheta * 0
-  SE[is.na(intheta)] <- sm$SE
-  SE <- Bingham_theta2Amat(SE)
-  SE[p, p] <- NA#final NA because final diagonal element is not estimated directly
-  
+  if (is.numeric(sm$SE)){
+    SE <- intheta * 0
+    SE[is.na(intheta)] <- sm$SE
+    SE <- Bingham_theta2Amat(SE)
+    SE[p, p] <- NA#final NA because final diagonal element is not estimated directly
+    evalSE <- diag(SE)
+  } else {
+    evalSE <- sm$SE
+  }
   A <- Gammahat %*% diag(Lambda) %*% t(Gammahat)
   return(list(
     est = list(A = A,
                evals = Lambda,
                G = Gammahat,
                paramvec = Bingham_Amat2theta(A)),
-    SE = list(evals = diag(SE)),
-    info = sm 
+    SE = list(evals = evalSE),
+    info = c(sm, list(Aforstddata = Astd))
   ))
 }
 
