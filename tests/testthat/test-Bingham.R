@@ -126,3 +126,24 @@ test_that("Bingham() with various fixed elements works", {
   expect_error(Bingham(sample, A = inA, method = "smfull"))
 })
 
+test_that("Bingham methods match for simulated weights, ignoring SE, which shouldn't match", {
+  p <- 4
+  set.seed(345)
+  theta <- runif(p-1 + (p - 1) * p/2)
+  A <- Bingham_theta2Amat(theta)
+
+  set.seed(123)
+  Y <- simdd::rBingham(100, A)
+  
+  #simulate weights
+  set.seed(1342)
+  vw <- virtualweights(Y)
+
+  sim1 <- Bingham(vw$newY, method = "Mardia")
+  dir1 <-  Bingham(Y, method = "Mardia", w = vw$w)
+  expect_equal(sim1$est, dir1$est)
+
+  sim2 <- Bingham(vw$newY, method = "smfull")
+  dir2 <-  Bingham(Y, method = "smfull", w = vw$w)
+  expect_equal(sim2$est, dir2$est)
+})
