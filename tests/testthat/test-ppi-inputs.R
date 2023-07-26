@@ -100,11 +100,11 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   expect_equal(out$est$AL[1, 2], 0)
 })
 
-test_that("ppi() uses paramvec_start}", {
+test_that("ppi() uses paramvec_start", {
   set.seed(1245)
   model <- ppi_egmodel(100)
   hardcoded <- ppi(model$sample, trans = "sqrt", divweight = "minsq", acut = 0.1, method = "closed")
-  out <- ppi(model$sample, trans = "sqrt", divweight = "minsq", acut = 0.1, method = "iterative", control = list(tol = 1E-10), paramvec_start = hardcoded$est$paramvec)
+  out <- ppi(model$sample, trans = "sqrt", divweight = "minsq", acut = 0.1, method = "iterative", control = list(tol = 1E-10), paramvec_start = hardcoded$info$est)
 
   #expect very few iterations
   expect_lte_v(out$info$counts, rep(1, 1))
