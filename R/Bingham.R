@@ -31,7 +31,7 @@
 #' @export
 Bingham <- function(Y, A = NULL, w = rep(1, nrow(Y)), method = "smfull"){
   if (method == "smfull"){
-    out <- Bingham_full(Y, A = A)}
+    out <- Bingham_full(Y, A = A, w = w)}
   if (method %in% c("Mardia", "hybrid")){
     stopifnot(is.null(A))
     out <- Bingham_Mardia(Y, w = w)
@@ -39,7 +39,7 @@ Bingham <- function(Y, A = NULL, w = rep(1, nrow(Y)), method = "smfull"){
   return(out)
 }
 
-Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y)){
+Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y))){
   p <- ncol(Y)
   if (is.null(A)){
     A <- matrix(NA, nrow = p, ncol = p)
@@ -57,14 +57,14 @@ Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y)){
   theta <- intheta
   theta[is.na(intheta)] <- out$est
   A = Bingham_theta2Amat(theta)
-  if (is.numeric(sm$SE)){
+  if (is.numeric(out$SE)){
     tSE <- intheta * 0
     tSE[is.na(intheta)] <- out$SE
     SE = Bingham_theta2Amat(tSE)
     SE[p, p] <- NA
   } else {
-    tSE <- sm$SE,
-    SE <- sm$SE
+    tSE <- out$SE
+    SE <- out$SE
   }
 
   return(list(
@@ -74,7 +74,7 @@ Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y)){
   ))
 }
 
-Bingham_Mardia <- function(Y, w = rep(1, nrow(Y)){
+Bingham_Mardia <- function(Y, w = rep(1, nrow(Y))){
   Tmat <- t(Y) %*% (Y * w/sum(w))  #elements of Tmat are sample averages Yj*Yi being squares or cross products between the coordinates
   Tmat_es <- eigen(Tmat)
   Gammahat <- Tmat_es$vectors
