@@ -32,7 +32,7 @@ Depends:
     R (>= 3.5.0)
 Imports:
     MCMCpack,
-    Rcgmin,
+    optimx,
     FixedPoint,
     Rdpack,
     Rcpp (>= 1.0.9),

@@ -8,11 +8,11 @@
 #' for score matching objective functions that are quadratic [`cppad_closed()`] will be usually be more accurate and faster.
 #' @inheritParams cppad_closed
 #' @param theta The starting parameter set
-#' @param control Control parameters passed to [`Rcgmin::Rcgmin()`]
+#' @param control Control parameters passed to [`optimx::Rcgmin()`]
 #' @details
-#' The score matching objective function and gradient of the score matching function are passed to [`Rcgmin::Rcgmin()`]. 
+#' The score matching objective function and gradient of the score matching function are passed to [`optimx::Rcgmin()`]. 
 #' Taylor approximations are performed using [`pTaylorApprox()`] for measurements with non-`NA` rows in `Yapproxcentres`.
-#' The call to [`Rcgmin::Rcgmin()`] uses the *sum* of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to `Rcgmin()` (e.g. `tol`). The results are converted into averages so the use of sums can be ignored when not setting control parameters, or studying the behaviour of Rcgmin. 
+#' The call to [`optimx::Rcgmin()`] uses the *sum* of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to `Rcgmin()` (e.g. `tol`). The results are converted into averages so the use of sums can be ignored when not setting control parameters, or studying the behaviour of Rcgmin. 
 #'
 #' Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (*would like a good reference for this here*).
 #' The sensitivity matrix \eqn{G} is estimated as
@@ -50,7 +50,7 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
   stopifnot(is.finite(smoobj(theta)))
   stopifnot(all(is.finite(smograd(theta))))
   # now do the search 
-  out <- Rcgmin::Rcgmin(par = theta,
+  out <- optimx::Rcgmin(par = theta,
                         fn = smoobj,
                         gr = smograd,
                         control = control)
@@ -80,5 +80,5 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
 #' + `est` The estimate
 #' + `sqgradsize` The squared size of the gradient at the estimate
 #' + `SE` The standard error of the estimates when `w` is constant. If `w` changes between observations then this slot contains the string "Not calculated."
-#' + additional output from [`Rcgmin::Rcgmin()`]
+#' + additional output from [`optimx::Rcgmin()`]
 

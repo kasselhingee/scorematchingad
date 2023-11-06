@@ -1,7 +1,7 @@
 # Wrappers for numerical optimisers and related info
 #' @title Default control parameters for numerical optimisers
 #' @family generic score matching tools
-#' @description This package uses [`Rcgmin::Rcgmin()`] in many of the score matching estimates and
+#' @description This package uses [`optimx::Rcgmin()`] in many of the score matching estimates and
 #' `default_Rcgmin()` returns the default control values used throughout the package.
 #' Windham robustness (see [`Windham()`]) uses [`FixedPoint::FixedPoint()`] for a fixed point search, with default control parameters given by `default_FixedPoint()`.
 #' @details
