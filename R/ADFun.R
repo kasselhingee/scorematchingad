@@ -23,7 +23,7 @@
 #'   ytape =  rep(1/3, 3),
 #'   usertheta = ppi_paramvec(p=3),
 #'   divweight = "minsq",
-#'   acut = "0.01",
+#'   acut = 0.01,
 #'   verbose = FALSE)
 #' tapes$smotape$xtape
 #' tapes$smotape$dyntape

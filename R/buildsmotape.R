@@ -40,13 +40,13 @@
 #' u <- movMF::rmovMF(1, rep(1, p))
 #' ltheta <- p #length of vMF parameter vector
 #' intheta <- rep(NA, length.out = ltheta)
-#' tapes <- buildsmotape("Snative", "vMF",
+#' tapes <- buildsmotape("sph", "identity", "sph", "vMF",
 #'               ytape = u,
 #'               usertheta = intheta,
-#'               "ones", 1, verbose = FALSE
+#'               "ones", verbose = FALSE
 #'               )
-#' pForward0(tapes$lltape, u, runif(n = ltheta))
-#' pForward0(tapes$smotape, runif(n = ltheta), u)
+#' evaltape(tapes$lltape, u, runif(n = ltheta))
+#' evaltape(tapes$smotape, runif(n = ltheta), u)
 #' @export
 buildsmotape <- function(start, tran, man, llname,
                          ytape, usertheta,

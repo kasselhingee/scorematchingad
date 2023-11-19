@@ -50,14 +50,11 @@
 #'   \item{Sex}{`1` if female, `0` otherwise.}
 #'   \item{Treatment}{`TRUE` if individual given 400mg of albendazole every three months for 1.5 years, `FALSE` otherwise.}
 #'   \item{Age}{Age at first sample.}
-#'   \item{}{Helminth measurements:}
-#'   \describe{
-#'   \item{ct_Al}{The qPCR cycle threshold (CT) for *Ascaris lumbricoides* (large roundworm). *Ascaris lumbricoides* can be considered present if the value is 30 or less.}
-#'   \item{ct_Na}{The qPCR cycle threshold (CT) for *Necator americanus* (a hookworm). *Necator americanus* can be considered present if the value is 30 or less.}
-#'   \item{ct_Ad}{The qPCR cycle threshold (CT) for *Ancylostoma duodenale* (a hookworm). *Ancylostoma duodenale* can be considered present if the value is 30 or less.}
-#'   \item{micr_Tt}{The presence of *Trichuris trichiura* as determined by microscopy. A value of `TRUE` means *Trichuris trichiura* was detected.}
-#'   \item{Helminth}{If any of the above helminths were detected then `TRUE`, otherwise `FALSE`.}
-#'   }
+#'   \item{ct_Al}{A Helminth measurement: The qPCR cycle threshold (CT) for *Ascaris lumbricoides* (large roundworm). *Ascaris lumbricoides* can be considered present if the value is 30 or less.}
+#'   \item{ct_Na}{A Helminth measurement: The qPCR cycle threshold (CT) for *Necator americanus* (a hookworm). *Necator americanus* can be considered present if the value is 30 or less.}
+#'   \item{ct_Ad}{A Helminth measurement: The qPCR cycle threshold (CT) for *Ancylostoma duodenale* (a hookworm). *Ancylostoma duodenale* can be considered present if the value is 30 or less.}
+#'   \item{micr_Tt}{A Helminth measurement: The presence of *Trichuris trichiura* as determined by microscopy. A value of `TRUE` means *Trichuris trichiura* was detected.}
+#'   \item{Helminth}{A Helminth measurement: If any of the above helminths were detected then `TRUE`, otherwise `FALSE`.}
 #'   \item{Remaining columns}{Count prevalence of 18 bacterial phyla and 2 unclassified columns.}
 #' }
 #' 

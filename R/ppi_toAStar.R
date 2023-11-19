@@ -15,7 +15,7 @@ NULL
 
 #' @param AL The `p-1` by `p-1` \eqn{A_L} matrix
 #' @param bL The vector \eqn{b_L} (length `p-1`).
-#' @describeIn ppi_toAstar Takes matrix `AL` and vector `bL` and returns the equivalent `Astar` with `\eqn{1^T A^* 1 = }sum(Astar) = 0`.
+#' @describeIn ppi_toAstar Takes matrix `AL` and vector `bL` and returns the equivalent `Astar` with \eqn{1^T A^* 1 = }`sum(Astar) = 0`.
 #' @export
 ppi_toAstar <- function(AL, bL){
   # assumes DC = 0 initially
