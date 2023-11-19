@@ -15,7 +15,7 @@
 #'                   tran = sqrtman$tran)
 #' ppismotape <- tapesmo(lltape = ppitape,
 #'                       tran = sqrtman$tran,
-#'                       man = 
+#'                       man = sqrtman$man,
 #'                       divweight = "minsq",
 #'                       acut = 0.1,
 #'                       verbose = FALSE)
