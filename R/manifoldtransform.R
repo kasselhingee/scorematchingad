@@ -23,7 +23,7 @@
 #' @examples
 #' manifoldtransform("sim", "alr", "Euc")
 #' @export
-manifoldtransform <- function(start, tran, man){
+manifoldtransform <- function(start, tran = "identity", man = start){
   stopifnot(paste(start, tran, man, sep = "-") %in% mantrancombos)
   out <- list(tran = methods::new(mantranmodule$transform_ad, tran),
        man = methods::new(mantranmodule$man_ad, man))
