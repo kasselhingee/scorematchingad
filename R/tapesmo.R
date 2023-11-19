@@ -8,17 +8,18 @@
 #' @return 
 #' `tapesmo()` returns an [`ADFun`] object.  
 #' @examples 
-#' sqrtman <- manifoldtransform("sphere")
+#' sqrtman <- manifoldtransform("sim", "sqrt", "sph")
 #' ppitape <- tapell(llname = "ppi",
 #'                   ytape = c(0.2, 0.3, 0.5),
 #'                   usertheta = ppi_paramvec(p = 3), 
-#'                   pmanifoldtransform = sqrtman)
+#'                   tran = sqrtman$tran)
 #' ppismotape <- tapesmo(lltape = ppitape,
-#'                       pmanifoldtransform = sqrtman,
+#'                       tran = sqrtman$tran,
+#'                       man = 
 #'                       divweight = "minsq",
 #'                       acut = 0.1,
 #'                       verbose = FALSE)
-#' pForward0(ppismotape, 
+#' pForward0(ppismotape$ptr, 
 #'   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(-0.1,-0.1,0.5)),
 #'   rep(1/3, 3)) 
 # objs <- buildsmotape("sphere", "ppi", c(0.2, 0.3, 0.5),

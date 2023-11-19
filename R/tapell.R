@@ -10,18 +10,18 @@
 #'  + `ytape` The value of `ytape`
 #'  + `tran` The name of the transform specified in `tran`.
 #' @examples 
-#' simpwsqrt <- manifoldtransform("sphere")
+#' maninfo <- manifoldtransform("sim", "sqrt", "sph")
 #' ppitape <- tapell(llname = "ppi",
 #'                   ytape = c(0.2, 0.3, 0.5),
 #'                   usertheta = ppi_paramvec(p = 3), 
-#'                   pmanifoldtransform = simpwsqrt)
-#' pForward0(ppitape, 
+#'                   tran = maninfo$tran) 
+#' pForward0(ppitape$ptr, 
 #'   sqrt(rep(1/3, 3)), 
 #'   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
-#' pJacobian(ppitape, 
+#' pJacobian(ppitape$ptr, 
 #'   sqrt(rep(1/3, 3)), 
 #'   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
-#' pHessian(ppitape, 
+#' pHessian(ppitape$ptr, 
 #'   sqrt(rep(1/3, 3)), 
 #'   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
 #' @section Warning: There is limited checking of the inputs.
