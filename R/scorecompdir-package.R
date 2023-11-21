@@ -3,7 +3,7 @@
 #' @importFrom Rdpack reprompt
 #' @importFrom methods formalArgs
 #' @importFrom stats cov runif var weighted.mean
-#' @importFrom utils installed.packages packageDescription tail
+#' @importFrom utils tail
 #' @useDynLib scorecompdir
 #' @details
 #' This package's major contributions are
