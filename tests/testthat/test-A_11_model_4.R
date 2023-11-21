@@ -31,18 +31,6 @@ samp3=rtGaussian(n,p,muL,SigA)
 #the response variable prop is the true proportions samp3
 prop=samp3
 
-test_that("Score1ac is within 3 SE for 75% of parameters", {
-  #a_c for h function:
-  acut=0.1
-
-  #calculate scoring estimate:
-  estimator=estimator1(prop,acut,1, beta0, computeSE = TRUE)
-  estimate1=estimator$est$paramvec
-
-  #standard errors for Score1ac
-  std1=estimator$SE$paramvec
-  expect_gt(mean(abs(ppi_paramvec(AL = ALs, bL = bL, beta = beta0) - estimate1) <= 3*std1), 0.75)
-})
 
 test_that("Score2ac is within 3 SE for 75% of parameters", {
   #a_c for h function:
@@ -74,14 +62,3 @@ test_that("Score2 estimate with 3 Score2ac-SE for 75% of parameters", {
   expect_gt(mean(abs(theta - estimate3) <= 3*std2), 0.75)
 })
 
-test_that("Score1 estimate with large acut within 3 SE for 75% of parameters", {
-  acut=10
-
-  #calculate scoring estimate:
-  estimator=estimator1(prop,acut,1, beta0, computeSE = TRUE)
-  estimate4=estimator$est$paramvec
-
-  std=estimator$SE$paramvec
-  theta = c(diag(ALs), ALs[upper.tri(ALs)], bL)
-  expect_gt(mean(abs(theta - head(estimate4, length(theta))) <= 3*head(std, length(theta))), 0.75)
-})

@@ -19,7 +19,8 @@
 #' ```
 #' Two further individuals (`IndividualID` of `2079` and `2280`) were deemed outliers by \insertCite{scealy2022sc;textual}{scorecompdir}, and removed in their analyses.
 #'
-#' This file was created from the source file hosted on [Nematode.net](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) using the below code.
+#' # Modifications from the Source
+#' The `microbiome` data was created from the file `S1_Table.xlsx` hosted on [Nematode.net](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) using the below code.
 #'
 #' ```
 #' microbiome <- readxl::read_excel("S1_Table.xlsx",
@@ -49,20 +50,17 @@
 #'   \item{Sex}{`1` if female, `0` otherwise.}
 #'   \item{Treatment}{`TRUE` if individual given 400mg of albendazole every three months for 1.5 years, `FALSE` otherwise.}
 #'   \item{Age}{Age at first sample.}
-#'   \item{}{Helminth measurements:}
-#'   \describe{
-#'   \item{ct_Al}{The qPCR cycle threshold (CT) for *Ascaris lumbricoides* (large roundworm). *Ascaris lumbricoides* can be considered present if the value is 30 or less.}
-#'   \item{ct_Na}{The qPCR cycle threshold (CT) for *Necator americanus* (a hookworm). *Necator americanus* can be considered present if the value is 30 or less.}
-#'   \item{ct_Ad}{The qPCR cycle threshold (CT) for *Ancylostoma duodenale* (a hookworm). *Ancylostoma duodenale* can be considered present if the value is 30 or less.}
-#'   \item{micr_Tt}{The presence of *Trichuris trichiura* as determined by microscopy. A value of `TRUE` means *Trichuris trichiura* was detected.}
-#'   \item{Helminth}{If any of the above helminths were detected then `TRUE`, otherwise `FALSE`.}
-#'   }
+#'   \item{ct_Al}{A Helminth measurement: The qPCR cycle threshold (CT) for *Ascaris lumbricoides* (large roundworm). *Ascaris lumbricoides* can be considered present if the value is 30 or less.}
+#'   \item{ct_Na}{A Helminth measurement: The qPCR cycle threshold (CT) for *Necator americanus* (a hookworm). *Necator americanus* can be considered present if the value is 30 or less.}
+#'   \item{ct_Ad}{A Helminth measurement: The qPCR cycle threshold (CT) for *Ancylostoma duodenale* (a hookworm). *Ancylostoma duodenale* can be considered present if the value is 30 or less.}
+#'   \item{micr_Tt}{A Helminth measurement: The presence of *Trichuris trichiura* as determined by microscopy. A value of `TRUE` means *Trichuris trichiura* was detected.}
+#'   \item{Helminth}{A Helminth measurement: If any of the above helminths were detected then `TRUE`, otherwise `FALSE`.}
 #'   \item{Remaining columns}{Count prevalence of 18 bacterial phyla and 2 unclassified columns.}
 #' }
 #' 
 #'
 #' @source [S1_Table.xlsx](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) from [http://nematode.net](http://nematode.net/NN3_frontpage.cgi?navbar_selection=environmental_interaction&subnav_selection=Indonesia_16s). 
-#' [S1_Table.xlsx](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) was created by Dr. Bruce A Rosa for \insertCite{martin2019mi;textual}{scorecompdir}.
+#' [S1_Table.xlsx](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) was created by Dr. Bruce A Rosa for \insertCite{martin2019mi;textual}{scorecompdir}. Permission to share this data was obtained from Dr. Bruce Rosa and Dr. Ivonne Martin.
 #' @references
 #' \insertAllCited{}
 "microbiome"

@@ -1,16 +1,10 @@
 #' @title Build a CppAD Tapes for Score Matching
 #' @family tape builders
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
-#' @inheritParams manifoldtransform
-#' @param llname Name of the log-likelihood function. Passed to [`tapell()`].
-#' @param ytape An example observation (a single vector) to use for taping. The results should only depend on the length of `ytape` so long as `ytape` is in *interior* of the natural manifold of the model.
-#' @param usertheta A vector of parameter elements for the likelihood function. `NA` elements are to be fitted. Other elements are fixed at the provided value.
-#' @param weightname The name of the divergence weight function ('ones' for manifolds without boundary).
-#' @param acut The threshold \eqn{a_c} in the divergence weight function.
-#' @param thetatape_creator A function that accepts an integer `n`, and returns a vector of `n` length. The function is used to fill in the `NA` elements of `usertheta` when building the tapes.
 #' @param verbose If `TRUE` more details are printed when taping.
 #' @description
-#' Generates `CppAD` tapes for the log-likelihood and score matching objective  for a model specified by name and manifold/transformation.
+#' Generates `CppAD` tapes for the log-likelihood and score matching objective  for a model specified by name and an optional transformation to a manifold.
+#' Three steps are performed by `buildsmotape()`, corresponding to each of the functions `manifoldtransform()`, `tapell()` and `tapesmo()`.
 #' @details
 #' When using, `CppAD` one first creates *tapes* of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
 #' The taping relies on specifying typical argument values for the functions, so the programming is simplest when the function is defined without conditions.
@@ -38,33 +32,35 @@
 #' @references \insertAllCited{}
 
 #' @return
-#' Returns a list of the log-likelihood tape (note that the *input* for this tape is a function on the manifold), the tape of the score matching objective (the *input* here is the non-fixed parameter values), and some information used to generate the tape.
+#' `buildsmotape()` returns a list of the log-likelihood tape (note that the *input* for this tape is a function on the manifold), the tape of the score matching objective (the *input* here is the non-fixed parameter values), and some information used to generate the tape.
+#'
+#' 
 #' @examples
 #' p <- 3
 #' u <- movMF::rmovMF(1, rep(1, p))
 #' ltheta <- p #length of vMF parameter vector
 #' intheta <- rep(NA, length.out = ltheta)
-#' tapes <- buildsmotape("Snative", "vMF",
+#' tapes <- buildsmotape("sph", "identity", "sph", "vMF",
 #'               ytape = u,
 #'               usertheta = intheta,
-#'               "ones", 1, verbose = FALSE
+#'               "ones", verbose = FALSE
 #'               )
-#' pForward0(tapes$lltape, u, runif(n = ltheta))
-#' pForward0(tapes$smotape, runif(n = ltheta), u)
+#' evaltape(tapes$lltape, u, runif(n = ltheta))
+#' evaltape(tapes$smotape, runif(n = ltheta), u)
 #' @export
 buildsmotape <- function(start, tran, man, llname,
                          ytape, usertheta,
-                         weightname = "ones", acut = 1,
+                         divweight = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
                          verbose = FALSE){
 
   if(all(!is.na(usertheta))){stop("All elements of theta are fixed")}
 
   if (!(all(c(tran, man) == c("sqrt", "sph")) | all(c(tran, man) == c("identity", "sim")))){
-    if (weightname != "ones"){warning("Manifold supplied has no boundary. Using weightname = 'ones' is strongly recommended.")}
+    if (divweight != "ones"){warning("Manifold supplied has no boundary. Using divweight = 'ones' is strongly recommended.")}
   }
-  if ((weightname == "ones") && (abs(acut - 1) > 1E-8)){
-    warning("The value of 'acut' is ignored for weightname == 'ones'")
+  if ((divweight == "ones") && (abs(acut - 1) > 1E-8)){
+    warning("The value of 'acut' is ignored for divweight == 'ones'")
   }
 
   tranman <- manifoldtransform(start, tran, man)
@@ -77,7 +73,7 @@ buildsmotape <- function(start, tran, man, llname,
   smotape <- tapesmo(lltape = lltape,
                         tran = tranman$tran,
                         man = tranman$man,
-                        divweight = weightname,
+                        divweight = divweight,
                         acut = acut,
                         verbose = verbose)
   return(list(
@@ -88,7 +84,7 @@ buildsmotape <- function(start, tran, man, llname,
       transform = tran,
       manifold = man,
       ulength = length(ytape),
-      weightname = weightname,
+      divweight = divweight,
       acut = acut
     )
   ))

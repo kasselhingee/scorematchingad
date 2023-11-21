@@ -1,7 +1,7 @@
 ---
 title: "Introduction to Score Matching"
 author: "Kassel Hingee"
-date: "02 Jan 2023"
+date: "23 May 2023"
 output:  pdf_document
 vignette: >
   %\VignetteIndexEntry{Introduction to Score Matching}
@@ -31,13 +31,13 @@ $$\phi(f, f_0) =  \frac{1}{2} \int_M f_0(z)h(z)^2 \left\lVert P(z)\Big(\nabla_z 
  When the density functions $f$ and $f_0$ are smooth and positive inside $M$,
  and the divergence weight function is smooth or of particular forms for specific manifolds [Section 3.2, @scealy2022sc],
  then minimising the weighted Hyvarinen divergence $\phi(f, f_0)$ is equivalent to minimising [Theorem 1 @scealy2022sc]
-  $$\psi(f, f_0) = \frac{1}{2} \int f_0(z)\big(A(z_i) + B(z_i) + C(z_i)\big)dM(z),$$
+  $$\psi(f, f_0) = \int f_0(z)\big(A(z_i) + B(z_i) + C(z_i)\big)dM(z),$$
  where 
- $$A(z_i) = \left(\nabla_z \log(f)\right)^T P(z) \left(\nabla_z \log(f)\right),$$
+ $$A(z_i) = \frac{1}{2} h(z)^2 \left(\nabla_z \log(f)\right)^T P(z) \left(\nabla_z \log(f)\right),$$
  $$B(z_i) = h(z)^2\Delta_z\log(f),$$
  $$C(z_i) = \left(\nabla_z h(z)^2)\right)^T P(z) \left(\nabla_z \log(f)\right).$$
  When $n$ iid observations from $f_0$ are available, the integration in $\psi(f, f_0)$ can be approximated by an average over the observations, 
-  $$\psi(f, f_0) \approx \hat\psi(f, f_0) = \frac{1}{2n} \sum_{i = 1}^n A(z_i) + B(z_i) + C(z_i).$$
+  $$\psi(f, f_0) \approx \hat\psi(f, f_0) = \frac{1}{n} \sum_{i = 1}^n A(z_i) + B(z_i) + C(z_i).$$
  The *score matching estimator* minimises $\hat\psi(f, f_0)$.
 
 

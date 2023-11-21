@@ -17,11 +17,11 @@
 #' @return `TRUE` or `FALSE`
 #' @examples
 #' tapes <- buildsmotape(
-#'    manifoldname = "sphere",
+#'    "sim", "sqrt", "sph",
 #'    llname = "ppi",
 #'    ytape = c(0.2, 0.3, 0.5),
 #'    usertheta = ppi_paramvec(p = 3), 
-#'    weightname = "minsq",
+#'    divweight = "minsq",
 #'    acut = 0.1,
 #'    verbose = FALSE)
 #'

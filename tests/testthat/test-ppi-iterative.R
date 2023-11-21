@@ -59,7 +59,7 @@ test_that("cppad_search gives similar result to cppad_closed", {
   tapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                         ytape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),
-                        weightname = "minsq", acut = 0.1)
+                        divweight = "minsq", acut = 0.1)
   estsearch <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-14, maxit = 2000))
   estclosed <- cppad_closed(tapes$smotape, m$sample)
   expect_equal(estsearch$est, estclosed$est, tolerance = 1E-3)
@@ -72,7 +72,7 @@ test_that("cppad_search with weights gives similar result to cppad_closed", {
   tapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                         ytape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),
-                        weightname = "minsq", acut = 0.1)
+                        divweight = "minsq", acut = 0.1)
   w <- runif(100)
   estsearch <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 1000), w = w)
   estclosed <- cppad_closed(tapes$smotape, m$sample, w = w)
@@ -86,7 +86,7 @@ test_that("cppad_search output value matches smvalues_tape result", {
   tapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                         ytape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),
-                        weightname = "minsq", acut = 0.1)
+                        divweight = "minsq", acut = 0.1)
 
   est <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 1000))
 

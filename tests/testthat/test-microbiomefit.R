@@ -6,7 +6,7 @@ list2env(ppi_microbiomedata_cleaned_TCAP(), globalenv())
 acut=0.01
 
 #### Test including b_L ####
-test_that("estimator1 and SE is historically correct with b_L included (article Table 4)", {
+test_that("estimator1 and SE is historically correct with b_L included (Scealy and Wood, 2022, Table 4)", {
 
 
   #calculate scoring estimate:

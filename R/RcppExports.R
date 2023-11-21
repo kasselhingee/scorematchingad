@@ -14,7 +14,7 @@
 NULL
 
 #' @describeIn evaltape_internal Evaluates a tape without any differentiation at the given values of `x` and dynparam. 
-#' The name `pForward0` is a reference to the zero order `CppAD` method (`forward`)[https://cppad.readthedocs.io/en/latest/forward_zero.html], and the prefix 'p' is because the tape is passed as a pointer.
+#' The name `pForward0` is a reference to the zero order `CppAD` method [`forward`](https://cppad.readthedocs.io/forward_zero.html), and the prefix 'p' is because the tape is passed as a pointer.
 #' @param pfun Rcpp::XPtr to an ADFun. Can be obtained as the `ptr` field of an [`ADFun`] object.
 #' @param x A vector in the domain of the taped function
 #' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.

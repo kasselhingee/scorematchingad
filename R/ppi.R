@@ -3,7 +3,7 @@
 #' @description 
 #' Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir} for compositional data.
 #' For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2022sc}{scorecompdir}.
-#' In the other situations, the score matching estimate is found by iteratively minimising the *weighted Hyvarinen divergence* \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (`CppAD`) and [`Rcgmin::Rcgmin()`].
+#' In the other situations, the score matching estimate is found by iteratively minimising the *weighted Hyvarinen divergence* \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (`CppAD`) and [`optimx::Rcgmin()`].
 
 #' @section PPI Model:
 #' The PPI model density is proportional to
@@ -48,17 +48,17 @@
 #' @param paramvec Optionally a vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate `paramvec` easily using [ppi_paramvec()].  If `NULL` then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.
 #' @param divweight The divergence weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
 #' @param acut The threshold \eqn{a_c} in `divweight` to avoid over-weighting measurements interior to the simplex
-#' @param control `iterative` only. Passed to [`Rcgmin::Rcgmin()`] to control the iterative solver. Default values are given by [`default_Rcgmin()`].
+#' @param control `iterative` only. Passed to [`optimx::Rcgmin()`] to control the iterative solver. Default values are given by [`default_Rcgmin()`].
 #' @param bdrythreshold `iterative` or `closed` methods only. For measurements close to the boundary of the simplex Taylor approximation is applied. See [`simplex_isboundary()`].
 #' @param shiftsize `iterative` or `closed` methods only. For Taylor approximation, approximation centres are chosen based on `shiftsize`. See [`simplex_boundaryshift()`].
 #' @param approxorder `iterative` or `closed` methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.
-#' @param method "hardcoded" uses the hardcoded estimators by JS. "closed" uses `CppAD` to solve in closed form the a quadratic score matching objective using [`cppad_closed()`]. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`Rcgmin::Rcgmin()`]) to iteratively find the minimum of the weighted Hyvarinen divergence.
+#' @param method "hardcoded" uses the hardcoded estimators by JS. "closed" uses `CppAD` to solve in closed form the a quadratic score matching objective using [`cppad_closed()`]. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`optimx::Rcgmin()`]) to iteratively find the minimum of the weighted Hyvarinen divergence.
 #' @param paramvec_start `iterative` method only. The starting guess for `Rcgmin` with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec_start` easily using [`ppi_paramvec()`].
 #' @param w Weights for each observation, if different observations have different importance. Used by [`Windham()`] and [`ppi_robust()`] for robust estimation.
 #' @references
 #' \insertAllCited{}
 #' @examples
-#' model <- ppi_egmodel(1000)
+#' model <- ppi_egmodel(100)
 #' estalr <- ppi(model$sample,
 #'               paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)),
 #'               trans = "alr", method = "closed")
@@ -172,7 +172,7 @@ ppi <- function(Y, paramvec = NULL,
     }
   }
 
-  # cppad_search method
+  # cppad methods
   if (method %in% c("iterative", "closed")){
     if (is.null(paramvec_start)){stheta <- t_u2s_const(usertheta, 0.2)}
     else {stheta <- t_us2s(usertheta, paramvec_start)}
@@ -185,7 +185,7 @@ ppi <- function(Y, paramvec = NULL,
        llname = "ppi",
        ytape =  rep(1/p, p),
        usertheta = t_si2u(stheta, isfixed),
-       weightname = divweight,
+       divweight = divweight,
        acut = acut,
        verbose = FALSE)
     smotape <- tapes$smotape
@@ -230,6 +230,14 @@ ppi <- function(Y, paramvec = NULL,
     } else {firstfit$SE <- rawout$SE}
     firstfit$info <- rawout 
     firstfit$info$boundarypoints <- sum(isbdry)
+  }
+
+  if (length(firstfit) == 0){stop("Could not find fitting method.")}
+
+  if (any(firstfit$est$beta <= -1)){
+    warning("Beta estimates of -1 or lower, replacing these with -1 + 1E-7")
+    firstfit$est$beta[firstfit$est$beta <= -1] <- -1 + 1E-7
+    firstfit$est$paramvec <- do.call(ppi_paramvec, firstfit$est[c("AL", "bL", "beta")])
   }
 
   firstfit$info$method <- fitfun

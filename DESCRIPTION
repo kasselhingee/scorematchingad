@@ -1,6 +1,6 @@
 Package: scorecompdir
 Title: DRAFT Score-Matching for Directional and Compositional Data
-Version: 0.0.0.0045
+Version: 0.0.0.0048
 Authors@R: 
     c(person(given = "Kassel Liam", family = "Hingee", email = "kassel.hingee@anu.edu.au", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9894-2407")),
     person("Janice", "Scealy", role = c("aut")),
@@ -32,7 +32,7 @@ Depends:
     R (>= 3.5.0)
 Imports:
     MCMCpack,
-    Rcgmin,
+    optimx,
     FixedPoint,
     Rdpack,
     Rcpp (>= 1.0.9),

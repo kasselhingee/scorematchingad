@@ -2,11 +2,11 @@
 # @return A data frame of information
 
 getinstallinfo <- function(){
-scorecompdirinfo <- packageDescription("scorecompdir")
+scorecompdirinfo <- utils::packageDescription("scorecompdir")
 pkgimportant <- paste(scorecompdirinfo[c("Suggests", "Imports", "Depends")], collapse = ", ")
 pkgimportant <- unlist(strsplit(gsub("[^,ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]", "", pkgimportant), ","))
 pkgimportant <- c(pkgimportant, "scorecompdir")
-pkginfo <- as.data.frame(installed.packages(fields = c("Built", "Packaged")))
+pkginfo <- as.data.frame(utils::installed.packages(fields = c("Built", "Packaged")))
 pkginfo <- pkginfo[pkginfo$Package %in% pkgimportant, 
                    c("Package", "LibPath", "Version",
                      "Built", "Packaged")]

@@ -22,8 +22,8 @@
 #' The method "Mardia" uses [`vMF_stdY()`] and [`vMF_kappa()`] to estimate \eqn{\kappa} and \eqn{\mu} seperately.
 #' @param Y A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.
 #' @param paramvec `smfull` method only: Optional. A vector of same length as the dimension, representing the elements of the vector that is the element-wise (Hadamard) product \eqn{\kappa \mu}. 
-#' @param control Control parameters passed to [`Rcgmin::Rcgmin()`].
-#' @param method Either "Mardia" for the hybrid score matching estimator from \insertCite{@mardia2016sc}{scorecompdir}.
+#' @param control Control parameters passed to [`optimx::Rcgmin()`].
+#' @param method Either "Mardia" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}.
 #'  or "smfull" for the full score matching estimator.
 #' @param w An optional vector of weights for each measurement in `Y`
 #' @references
@@ -84,7 +84,7 @@ vMF_full <- function(sample, usertheta, control = default_Rcgmin(), w = NULL){
   tapes <- buildsmotape("sph","identity", "sph", "vMF",
                         rep(1, p)/sqrt(p), 
                         usertheta = usertheta,
-                        weightname = "ones",
+                        divweight = "ones",
                         verbose = FALSE)
   out <- cppad_closed(tapes$smotape, Y = sample, w=w)
   theta <- t_fu2t(out$est, usertheta)

@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Simulate from the Rivest model
 #' @description This function uses `simdd::rFisherBingham()` to simulate from the Rivest model.
 #' The direction of the Fisher compenent is chosen based on the magnitude of the eigenvalues using an index.
@@ -13,7 +14,6 @@
 #' A <- rsymmetricmatrix(p, -10, 10)
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint for Bingham
 #' rRivest(100, -3.2, A, 2)
-#' @export
 rRivest <- function(n, k, A, i){
   A_es <- eigen(A)
   sizeorder <- order(abs(A_es$values))

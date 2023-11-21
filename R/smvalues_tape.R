@@ -7,10 +7,10 @@
 #' The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in `xmat` and `pmat`. 
 #' @examples
 #' m <- ppi_egmodel(100)
-#' tapes <- buildsmotape("sphere", "ppi",
+#' tapes <- buildsmotape("sim", "sqrt", "sph", "ppi",
 #'               ytape = rep(1/m$p, m$p),
 #'               usertheta = ppi_paramvec(beta = m$beta),
-#'               weightname = "minsq", acut = 0.01)
+#'               divweight = "minsq", acut = 0.01)
 #' smvalues_tape(tapes$smotape, xmat = m$sample, pmat = m$theta[1:5])
 #' @export
 smvalues_tape <- function(smotape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){

@@ -5,6 +5,7 @@
 #' @param evalparam The parameter set to evaluate the score matching values.
 #' This is different to `paramvec`, which *fixes* parameters and constrains the estimation.
 #'  All elements of `evalparam` must be non-NA, and if there are any parameter fixed by `paramvec` then `evalparam` must match them (and it will warn if not). 
+#' @param average If TRUE return the (weighted average) of the measurements, otherwise return the values for each measurement.
 #' @return
 #' A list of 
 #'  + `obj` the score matching objective value
@@ -15,7 +16,8 @@
 ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
                 trans, method = "closed", w = rep(1, nrow(Y)),
                 divweight = "ones", acut = NULL, #specific to some methods
-                bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10 #specific to cppad methods
+                bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, #specific to cppad methods
+                average = TRUE
                 ){
   ###### process inputs #####
   stopifnot("matrix" %in% class(Y))
@@ -56,7 +58,7 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
      llname = "ppi",
      ytape =  rep(1/p, p),
      usertheta = paramvec,
-     weightname = divweight,
+     divweight = divweight,
      acut = acut,
      verbose = FALSE)
   smotape <- tapes$smotape
@@ -67,18 +69,26 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
   Yapproxcentres[!isbdry, ] <- NA
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = shiftsize)
 
-  valgradhess <- smvalues_tape_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
-                            xcentres = Yapproxcentres,
-                            w = w,
-                            approxorder = approxorder)
-  quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
-  quadparts_wsum <- lapply(quadparts, wcolSums, w = w)
-
-  if (is.null(w)){
-    normaliser <- nrow(Y)
+  if (average){
+    valgradhess <- smvalues_tape_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
+                              xcentres = Yapproxcentres,
+                              w = w,
+                              approxorder = approxorder)
+    quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
+    quadparts_wsum <- lapply(quadparts, wcolSums, w = w)
+  
+    if (is.null(w)){
+      normaliser <- nrow(Y)
+    } else {
+    normaliser <- sum(w)
+    }
+    out <- lapply(c(valgradhess, quadparts_wsum["offset"]), function(x){x/normaliser})
   } else {
-  normaliser <- sum(w)
+    valgradhess <- smvalues_tape(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
+                                      xcentres = Yapproxcentres,
+                                      approxorder = approxorder)
+    quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
+    out <- c(valgradhess, quadparts["offset"])
   }
-  out <- lapply(c(valgradhess, quadparts_wsum["offset"]), function(x){x/normaliser})
   return(out)
 }
