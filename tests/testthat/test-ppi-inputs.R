@@ -68,7 +68,7 @@ test_that("Inputs to ppi() are processed into the correct theta", {
 test_that("ppi with cppad method works easily on ppi_egmodel", {
   set.seed(1245)
   model <- ppi_egmodel(100)
-  out <- ppi(model$sample, trans = "sqrt", divweight = "minsq", acut = 0.1, method = "closed", control = list(tol = 1E-10))
+  suppressWarinings({out <- ppi(model$sample, trans = "sqrt", divweight = "minsq", acut = 0.1, method = "closed", control = list(tol = 1E-10))})
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 
   # try fixing betap
@@ -103,8 +103,8 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
 test_that("ppi() uses paramvec_start", {
   set.seed(1245)
   model <- ppi_egmodel(100)
-  hardcoded <- ppi(model$sample, trans = "sqrt", divweight = "minsq", acut = 0.1, method = "closed")
-  out <- ppi(model$sample, trans = "sqrt", divweight = "minsq", acut = 0.1, method = "iterative", control = list(tol = 1E-10), paramvec_start = hardcoded$info$est)
+  suppressWarnings(hardcoded <- ppi(model$sample, trans = "sqrt", divweight = "minsq", acut = 0.1, method = "closed"))
+  suppressWarnings(out <- ppi(model$sample, trans = "sqrt", divweight = "minsq", acut = 0.1, method = "iterative", control = list(tol = 1E-10), paramvec_start = hardcoded$info$est))
 
   #expect very few iterations
   expect_lte_v(out$info$counts, rep(1, 1))

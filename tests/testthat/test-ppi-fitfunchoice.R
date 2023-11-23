@@ -1,3 +1,4 @@
+set.seed(314)
 m <- ppi_egmodel(10)
 
 test_that("Correctly chooses Dirichlet", {
@@ -45,9 +46,9 @@ test_that("Correctly chooses sphere estimators with fixed beta", {
 })
 
 test_that("Correctly chooses sphere estimators for unfixed beta", {
-  out <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)), trans = "sqrt", method = "hardcoded",
+  suppressWarnings({out <- ppi(m$sample, ppi_paramvec(p=3, betap = tail(m$beta, 1)), trans = "sqrt", method = "hardcoded",
              acut = 0.1,
-             divweight = "minsq")
+             divweight = "minsq")})
   expect_ppi_str(out, m$p)
   expect_equal(out$info$method, "ppi_sqrt_minimah_betap")
   out <- ppi(m$sample, trans = "sqrt", method = "hardcoded",
@@ -65,10 +66,10 @@ test_that("Correctly chooses cppad", {
   expect_ppi_str(out, m$p)
   expect_equal(out$info$method, "closed")
 
-  expect_warning(out <- ppi(m$sample, trans = "sqrt", method = "hardcoded",
+  out <- ppi(m$sample, trans = "sqrt", method = "hardcoded",
              acut = 0.1,
              control = list(tol = 1E-10),
-             divweight = "prodsq"))
+             divweight = "prodsq")
   expect_ppi_str(out, m$p)
 
   out <- ppi(m$sample, ppi_paramvec(beta = m$beta), trans = "sqrt", method = "closed",

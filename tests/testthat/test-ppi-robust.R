@@ -66,9 +66,9 @@ test_that("Robustness runs for hardcoded and cppad methods", {
   expect_gt(out$info$fpevals, 1)
 
   # estimatorall1 betap fitted
-  out <- ppi_robust(Y = m$sample,
+  expect_warning({out <- ppi_robust(Y = m$sample,
              acut=0.1, method = "hardcoded", trans = "sqrt", divweight = "minsq",
-             cW = ppi_cW_auto(1E-2, m$sample))
+             cW = ppi_cW_auto(1E-2, m$sample))}, "Beta estimates.*-1")
   expect_gt(out$info$fpevals, 1)
 
   # cppad - the default takes a long time
