@@ -2,7 +2,6 @@
 #define mycpp_transform_clr
 // code for various tools for the additive log ratio transform
 #include <RcppEigen.h>
-#include <cppad/cppad.hpp> //for CppAD::log
 namespace mantran {//names space for manifold-transformation pair (triplets}
 template <typename Type>
 struct clr : public transform<Type> {
