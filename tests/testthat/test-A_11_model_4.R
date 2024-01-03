@@ -10,7 +10,6 @@ p=10
 n=1000
 
 #set seed
-# set.seed(1)
 
 #parameters for the tGaussian model:
 muL=matrix(0,p-1,1)
@@ -25,6 +24,7 @@ beta0=matrix(0,p,1)
 
 
 #simulate sample from the tGaussian model:
+set.seed(1)
 samp3=rtGaussian(n,p,muL,SigA)
 
 
@@ -43,10 +43,19 @@ test_that("Score2ac is within 3 SE for 75% of parameters", {
   #estimate of W matrix
   W_est=estimator$W_est
 
-  #standard errors for Score2ac
+  #standard errors for Score2ac #this takes a really long time!
   std2=estimator2SE(prop,acut,estimate2,W_est,1, beta0)
   theta = c(diag(ALs), ALs[upper.tri(ALs)], bL)
   expect_gt(mean(abs(theta - estimate2) <= 3*std2), 0.75)
+
+  # estimate
+  out <- ppi(prop, paramvec = ppi_paramvec(beta = beta0),
+             method = "closed",
+             trans = "sqrt", divweight = "prodsq", acut = acut)
+
+  #check
+  theta <- ppi_paramvec(AL = ALs, bL = bL, beta = beta0)
+  expect_absdiff_lte_v(theta, out$est$paramvec, 3 * out$SE$paramvec)
 })
 
 test_that("Score2 estimate with 3 Score2ac-SE for 75% of parameters", {
