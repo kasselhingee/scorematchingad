@@ -55,6 +55,8 @@
 #' @param method "hardcoded" uses the hardcoded estimators by JS. "closed" uses `CppAD` to solve in closed form the a quadratic score matching objective using [`cppad_closed()`]. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`optimx::Rcgmin()`]) to iteratively find the minimum of the weighted Hyvarinen divergence.
 #' @param paramvec_start `iterative` method only. The starting guess for `Rcgmin` with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec_start` easily using [`ppi_paramvec()`].
 #' @param w Weights for each observation, if different observations have different importance. Used by [`Windham()`] and [`ppi_robust()`] for robust estimation.
+#' @param constrainbeta If `TRUE`, elements of \eqn{\beta} that are less than `-1` are converted to `-1 + 1E-7`.
+
 #' @references
 #' \insertAllCited{}
 #' @examples
@@ -68,6 +70,7 @@
 #' @export
 ppi <- function(Y, paramvec = NULL,
                 trans, method = "closed", w = rep(1, nrow(Y)),
+                contrainbeta = FALSE,
                 divweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin(), paramvec_start = NULL#specific to cppad methods
                 ){
@@ -234,7 +237,7 @@ ppi <- function(Y, paramvec = NULL,
 
   if (length(firstfit) == 0){stop("Could not find fitting method.")}
 
-  if (any(firstfit$est$beta <= -1)){
+  if (constrainbeta & (any(firstfit$est$beta <= -1))){
     warning("Beta estimates of -1 or lower, replacing these with -1 + 1E-7")
     firstfit$est$beta[firstfit$est$beta <= -1] <- -1 + 1E-7
     firstfit$est$paramvec <- do.call(ppi_paramvec, firstfit$est[c("AL", "bL", "beta")])
