@@ -70,7 +70,7 @@
 #' @export
 ppi <- function(Y, paramvec = NULL,
                 trans, method = "closed", w = rep(1, nrow(Y)),
-                contrainbeta = FALSE,
+                constrainbeta = FALSE,
                 divweight = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin(), paramvec_start = NULL#specific to cppad methods
                 ){
