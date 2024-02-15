@@ -16,7 +16,14 @@ tosmatrix <- function(theta){
 
 fromsmatrix <- function(mat){
   stopifnot(isSymmetric.matrix(mat))
-  return(c(diag(mat), mat[upper.tri(mat)]))
+  out <- c(diag(mat), mat[upper.tri(mat)])
+  
+  # element names
+  namdiag <- paste0(1:nrow(mat),",",1:nrow(mat))
+  indx <- which(upper.tri(mat), arr.ind = TRUE)
+  nam <- paste0(indx[, "row"], ",", indx[, "col"])
+  names(out) <- c(namdiag, nam)
+  return(out)
 }
 
 # return the array of row/column indices, and the length
