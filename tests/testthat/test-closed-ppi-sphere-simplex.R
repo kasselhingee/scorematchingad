@@ -86,7 +86,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
 
   hardcodedestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta)
 
-  expect_equal(out$est$paramvec, hardcodedestimate$est$paramvec)
+  expect_equal(out$est$paramvec, hardcodedestimate$est$paramvec, ignore_attr = "names")
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 2 * out$SE$paramvec)
 })
 
@@ -102,7 +102,7 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmo
 
   hardcodedestimate <- estimator2(model$sample, acut, incb = TRUE, beta0 = model$beta)
 
-  expect_equal(out$est$paramvec, c(hardcodedestimate$estimator2, model$beta)) 
+  expect_equal(out$est$paramvec, c(hardcodedestimate$estimator2, model$beta), ignore_attr = "names") 
 
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
@@ -202,7 +202,7 @@ test_that("ppi via cppad matches Score1 for p=5, particularly the order of the o
   ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
-  expect_warning({prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=35)}, "maxden")
+  expect_warning({prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=35)}, regexp = "maxden")
 
   acut = 0.1
   est_hardcoded <- estimator1(prop, acut, incb = 0, beta = beta)

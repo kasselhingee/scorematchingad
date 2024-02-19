@@ -19,9 +19,9 @@ test_that("Fitting ppi all parameters via clr transform can get close to true va
   model <- ppi_egmodel(10000, maxden = 4)
 
   expect_warning({out <- ppi(Y = model$sample,
-             trans = "clr", bdrythreshold = 1E-10)}, "Beta estimates.*-1") #default
+             trans = "clr", bdrythreshold = 1E-10, constrainbeta = TRUE)}, "Beta estimates.*-1") #default
   expect_warning({out2 <- ppi(Y = model$sample,
-             trans = "clr", bdrythreshold = 1E-5)}, "Beta estimates.*-1")
+             trans = "clr", bdrythreshold = 1E-5, constrainbeta = TRUE)}, "Beta estimates.*-1")
 
   expect_equal(out$est$paramvec, out2$est$paramvec)
   expect_equal(out$SE$paramvec, out2$SE$paramvec)
