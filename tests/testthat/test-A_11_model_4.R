@@ -24,7 +24,7 @@ beta0=matrix(0,p,1)
 
 
 #simulate sample from the tGaussian model:
-set.seed(1)
+set.seed(3)
 samp3=rtGaussian(n,p,muL,SigA)
 
 
