@@ -41,7 +41,7 @@ rppi <- function(n, ..., paramvec = NULL, maxden = 4, maxmemorysize = 1E5){
                                 "When rppi() requires a high 'maxden' it could mean that",
                                 "PPI density is hugely different from the Dirichlet component of the density.")
     if (any(beta < 0)){mess <- paste(mess, "This could mean that the concentrations on the boundary from the Dirichlet component will be too narrow to be represented in simulatad samples.")}
-    rlang::warn(message = mess, .frequency = "once", .frequency_id = "highmaxden")
+    warning(mess)
   }
 
 
