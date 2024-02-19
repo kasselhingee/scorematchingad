@@ -66,10 +66,10 @@ test_that("Correctly chooses cppad", {
   expect_ppi_str(out, m$p)
   expect_equal(out$info$method, "closed")
 
-  out <- ppi(m$sample, trans = "sqrt", method = "hardcoded",
+  expect_warning({out <- ppi(m$sample, trans = "sqrt", method = "hardcoded",
              acut = 0.1,
              control = list(tol = 1E-10),
-             divweight = "prodsq")
+             divweight = "prodsq")}, "hard-coded")
   expect_ppi_str(out, m$p)
 
   out <- ppi(m$sample, ppi_paramvec(beta = m$beta), trans = "sqrt", method = "closed",

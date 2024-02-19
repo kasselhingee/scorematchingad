@@ -7,8 +7,8 @@ test_that("to then from PPI param vector returns the same params", {
   paramvec <- ppi_paramvec(AL = ALs,  bL=bL, beta=beta)
   params2 <- ppi_parammats(paramvec)
   expect_equal(params2$AL, ALs)
-  expect_equal(params2$bL, bL)
-  expect_equal(params2$beta, beta)
+  expect_equal(params2$bL, bL, ignore_attr = "names")
+  expect_equal(params2$beta, beta, ignore_attr = "names")
 })
 
 test_that("ppiltheta2p() matches other operations", {
@@ -41,7 +41,7 @@ test_that("indexcombinations() for vectorising matrices matches ppi_paramvec and
   indexcombparam <- c(diag(Amat),
   Amat[t(indinfo$ind)], #each column is the own dimension, each row single element to extract
   rep(0, p + p -1))
-  expect_equal(ppiparam, indexcombparam)
+  expect_equal(ppiparam, indexcombparam, ignore_attr = "names")
 })
 
 test_that("from PPI param vector order", {

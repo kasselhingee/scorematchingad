@@ -6,7 +6,7 @@ test_that("full ppi estimates are mostly within 3 SE for difficult AL with large
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
   set.seed(1111) #this seed leads to some ginormous elements for the second diagonal element of ALs
-  suppressMessages(prop <- rppi(1000, beta = beta, AL=ALs, bL=bL, maxden=35)) #rppi_singly took 1005 seconds, rppi() took 13seconds
+  suppressWarnings(prop <- rppi(1000, beta = beta, AL=ALs, bL=bL, maxden=35)) #rppi_singly took 1005 seconds, rppi() took 13seconds
   #prop %>% as_tibble() %>% tidyr::pivot_longer(everything()) %>% ggplot() + facet_wrap(vars(name)) + geom_freqpoly(aes(x=value))
 
   est_cppad <- ppi(prop, ppi_paramvec(bL = bL), trans = "sqrt", divweight = "minsq",
@@ -27,7 +27,7 @@ test_that("full ppi estimates are within 3 SE of beta for difficult AL with larg
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.3, 0)
   set.seed(11112) #this seed leads to some ginormous elements for the second diagonal element of ALs
-  suppressMessages(prop <- rppi(20000, beta=beta, AL=ALs, bL=bL, maxden=20))
+  suppressWarnings(prop <- rppi(20000, beta=beta, AL=ALs, bL=bL, maxden=20))
   expect_equal(colMeans(prop), c(0.1, 0.99, 0.1), tolerance = 0.5)
 
   est_cppad <- ppi(prop, ppi_paramvec(bL = bL), trans = "sqrt", divweight = "minsq",
