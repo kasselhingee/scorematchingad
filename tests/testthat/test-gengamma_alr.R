@@ -5,7 +5,7 @@ test_that("ppi_alr_gengamma matches CppAD closed method for constant weight, p =
   est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "closed", divweight = "ones")
   est_hardcoded <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "hardcoded")
 
-  expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec)
+  expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec, ignore_attr = "names")
 })
 
 test_that("ppi_alr_gengamma matches CppAD closed method for constant weight and data with zeros, p = 3", {
@@ -18,7 +18,7 @@ test_that("ppi_alr_gengamma matches CppAD closed method for constant weight and 
   est_cppad <- ppi(dsample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "closed", divweight = "ones",
                          bdrythreshold = 1E-100) #1E-200 was too small for some reason - it produced NaN values
 
-  expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec)
+  expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec, ignore_attr = "names")
 })
 
 test_that("ppi_alr_gengamma matches CppAD closed method for constant weight, p = 5", {
@@ -71,7 +71,7 @@ test_that("ppi_alr_gengamma() and cppad match for a randomly selected weight vec
                          )
   est_hardcoded <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "hardcoded", w = w)
 
-  expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec)
+  expect_equal(est_hardcoded$est$paramvec, est_cppad$est$paramvec, ignore_attr = "names")
 })
 
 

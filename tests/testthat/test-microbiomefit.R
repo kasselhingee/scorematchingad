@@ -57,7 +57,7 @@ test_that("alr and cppad closed estimator for this data set are consistent", {
   est_closed <- ppi(Y = propreal, method = "closed",
                  trans = "alr", 
                  paramvec = ppi_paramvec(p = ncol(propreal), bL = 0, betap = tail(beta0, 1)))
-  expect_equal(est_hardcoded$est$paramvec, est_closed$est$paramvec)
+  expect_equal(est_hardcoded$est$paramvec, est_closed$est$paramvec, ignore_attr = "names")
 })
 
 #### Test omitting b_L ####
