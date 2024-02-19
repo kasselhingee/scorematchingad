@@ -29,7 +29,7 @@ test_that("Iterative solver works on microbiome data without outliers", {
                    bdrythreshold = 1E-15, shiftsize = 1E-10,
                    paramvec = ppi_paramvec(beta = beta0),
                    control = list(maxit = 100000, tol = 1E-20))
-  expect_equal(est_cppad$est$paramvec, estimator$est$paramvec, tolerance = 1E-3)
+  expect_equal(est_cppad$est$paramvec, estimator$est$paramvec, tolerance = 1E-3, ignore_attr = "names")
 })
 
 test_that("Iterative solver works on microbiome data with outliers, alr", {
@@ -62,7 +62,7 @@ test_that("cppad_search gives similar result to cppad_closed", {
                         divweight = "minsq", acut = 0.1)
   estsearch <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-14, maxit = 2000))
   estclosed <- cppad_closed(tapes$smotape, m$sample)
-  expect_equal(estsearch$est, estclosed$est, tolerance = 1E-3)
+  expect_equal(estsearch$est, estclosed$est, tolerance = 1E-3, ignore_attr = "names")
   expect_equal(estsearch$SE, estclosed$SE, tolerance = 1E-3)
 })
 
@@ -76,7 +76,7 @@ test_that("cppad_search with weights gives similar result to cppad_closed", {
   w <- runif(100)
   estsearch <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 1000), w = w)
   estclosed <- cppad_closed(tapes$smotape, m$sample, w = w)
-  expect_equal(estsearch$est, estclosed$est, tolerance = 1E-2)
+  expect_equal(estsearch$est, estclosed$est, tolerance = 1E-2, ignore_attr = "names")
   expect_equal(estsearch$SE, estclosed$SE)
 })
 

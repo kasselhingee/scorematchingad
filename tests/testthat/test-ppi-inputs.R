@@ -40,7 +40,7 @@ test_that("Inputs to ppi() are processed into the correct theta", {
                rep(NA, thetalength), ignore_attr = "names")
   expect_equal(ppi_paramvec(p, betap = 1),
                c(rep(NA, thetalength - 1), 1), ignore_attr = "names")
-  expect_error(ppi_paramvec(p, betap = c(1, 2)), ignore_attr = "names")
+  expect_error(ppi_paramvec(p, betap = c(1, 2)))
 
   #beta by itself check
   expect_equal(ppi_paramvec(p, beta = NA),
@@ -74,7 +74,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   # try fixing betap
   out <- ppi(model$sample, ppi_paramvec(p = 3, betap = -0.5), trans = "sqrt", divweight = "minsq", acut = 0.1, method = "closed", control = list(tol = 1E-10))
   expect_lte_v(abs(out$est$paramvec - model$theta), 3 * out$SE$paramvec)
-  expect_equal(out$est$beta[model$p], -0.5)
+  expect_equal(out$est$beta[model$p], -0.5, ignore_attr = "names")
   expect_equal(out$SE$beta[model$p], 0)
 
   # try fixing AL to diagonal
@@ -85,7 +85,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   theta <- ppi_paramvec(AL=AL, bL=bL, beta=beta)
   out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", betap = -0.5), trans = "sqrt", divweight = "minsq", acut = 0.1, method = "closed", control = list(tol = 1E-10))
   expect_lte_v(abs(out$est$paramvec - theta), 3 * out$SE$paramvec)
-  expect_equal(out$est$beta[model$p], -0.5)
+  expect_equal(out$est$beta[model$p], -0.5, ignore_attr = "names")
   expect_equal(out$est$AL[1, 2], 0)
 
   # try fixing AL to diagonal, bL to 0, betap = -0.5, on Ralr
@@ -96,7 +96,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
   theta <- ppi_paramvec(AL=AL, bL=bL, beta=beta)
   out <- ppi(prop, ppi_paramvec(p=3, AL = "diag", bL = 0, betap = -0.5), trans = "alr", divweight = "ones", method = "closed", control = list(tol = 1E-10))
   expect_lte_v(abs(out$est$paramvec - theta), 3 * out$SE$paramvec)
-  expect_equal(out$est$beta[model$p], -0.5)
+  expect_equal(out$est$beta[model$p], -0.5, ignore_attr = "names")
   expect_equal(out$est$AL[1, 2], 0)
 })
 

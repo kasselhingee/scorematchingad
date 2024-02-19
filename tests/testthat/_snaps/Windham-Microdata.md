@@ -16,7 +16,13 @@
 
     {
       "type": "double",
-      "attributes": {},
+      "attributes": {
+        "names": {
+          "type": "character",
+          "attributes": {},
+          "value": ["beta1", "beta2", "beta3", "beta4", "beta5"]
+        }
+      },
       "value": [-0.770598, -0.870534, -0.079014, -0.149064, 0]
     }
 
@@ -38,7 +44,13 @@
 
     {
       "type": "double",
-      "attributes": {},
+      "attributes": {
+        "names": {
+          "type": "character",
+          "attributes": {},
+          "value": ["beta1", "beta2", "beta3", "beta4", "beta5"]
+        }
+      },
       "value": [-0.904972, -0.909156, -0.74007, -0.464552, 0]
     }
 

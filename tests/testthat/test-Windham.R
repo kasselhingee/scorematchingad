@@ -55,7 +55,7 @@ test_that("robust ppi() with Ralr transform gives correct params on simulated, n
              method = "closed", trans = "alr",
              cW = ppi_cW_auto(cW, prop))
   expect_equal(est1$est$AL, ALs, tolerance = 1)
-  expect_equal(est1$est$beta, beta, tolerance = 1E-1)
+  expect_equal(est1$est$beta, beta, tolerance = 1E-1, ignore_attr = "names")
   rmse <- function(v1, v2){sqrt(mean((v1 - v2)^2))}
   # expect the non-robust estimate to be equal or poorer in accuracy:
   expect_gt(rmse(beta, est_unload$est$beta) + 1E-6, rmse(beta, est1$est$beta))
@@ -75,7 +75,7 @@ test_that("robust ppi gives correct params on simulated, no outlier, data. p = 5
   cW=0.1
   est1=ppi_robust(Y = prop, paramvec = ppi_paramvec(bL = 0, betap = tail(beta, 1), p=5), cW = ppi_cW(cW, 1, 1, 1, 0, 0), trans = "alr", method = "closed")
   expect_equal(est1$est$AL, ALs, tolerance = 1E0)
-  expect_equal(est1$est$beta, beta, tolerance = 1E-1)
+  expect_equal(est1$est$beta, beta, tolerance = 1E-1, ignore_attr = "names")
 })
 
 test_that("Windham_assess_estimator works", {
@@ -161,5 +161,5 @@ test_that("ppi_robust() matches specialist Windham_alrgengamma() for simple data
                     cW = ppi_cW(cW, 1, 1, 1, 0, 0),
                     method = "hardcoded")
 
-  expect_equal(est1$est, est2$est, tolerance = 1E-5)
+  expect_equal(est1$est, est2$est, tolerance = 1E-5, ignore_attr = "names")
 })

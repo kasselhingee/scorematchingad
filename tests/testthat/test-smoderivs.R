@@ -52,7 +52,7 @@ test_that("Gradient of smo for ppi wrt theta is correct for interior points", {
   gradt_components <- ppi_parammats(attr(gradt_hardcoded, "gradient"))
   gradt_components$beta <- gradt_components$beta * 2 #to account for cannonical exponential form
   gradt_cppad_numerical <- numericDeriv(quote(pForward0(smoppi, testtheta, u)), c("testtheta"))
-  expect_equal(gradt_cppad, do.call(ppi_paramvec, gradt_components), tolerance = 1E-5)
+  expect_equal(gradt_cppad, do.call(ppi_paramvec, gradt_components), tolerance = 1E-5, ignore_attr = "names")
   expect_equal(attr(gradt_cppad_numerical, "gradient"), do.call(ppi_paramvec, gradt_components),
                tolerance = 1E-5, ignore_attr = TRUE)
 })

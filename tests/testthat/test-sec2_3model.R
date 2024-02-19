@@ -37,7 +37,7 @@ test_that("Score1ac estimator works on highly concentrated data, with some compo
   estimate1all=estimator$estimator1
   # use CppAD for SE
   cppadest <- ppi(Y = samp3, paramvec = ppi_paramvec(p = p, betap = -0.5), trans = "sqrt", divweight="minsq", acut = acut)
-  expect_equal(cppadest$est$paramvec, c(estimate1all, -0.5))
+  expect_equal(cppadest$est$paramvec, c(estimate1all, -0.5), ignore_attr = "names")
   # use SE estimates as if beta0 was fixed at the estimate (not estimated)
   SE <- cppadest$SE$paramvec
   # within 2*SE
