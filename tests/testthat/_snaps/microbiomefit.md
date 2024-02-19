@@ -1,4 +1,4 @@
-# estimator1 and SE is historically correct with b_L included (article Table 4)
+# estimator1 and SE is historically correct with b_L included (Scealy and Wood, 2022, Table 4)
 
     {
       "type": "double",
