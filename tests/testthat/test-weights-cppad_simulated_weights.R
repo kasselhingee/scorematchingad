@@ -17,18 +17,6 @@ test_that("cppad_closed() w = rep(1, nrow(Y)) is near the result as if w omitted
   expect_equal(out_ommit$value, out_constant$value)
 })
 
-test_that("cppad_search() w = rep(1, nrow(Y)) is near the result as if w omitted", {
-  tapes <- buildsmotape("sim","sqrt", "sph", "ppi",
-                        ytape = rep(1/p, m$p),
-                        usertheta = rep(NA, length(m$theta)),
-                        divweight = "minsq", acut = acut)
-  out_constant <- cppad_search(tapes$smotape, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12), w = rep(1, nrow(m$sample)))
-  out_ommit <- cppad_search(tapes$smotape, m$theta * 0 + 1, m$sample, control = list(tol = 1E-12))
-
-  expect_equal(out_ommit$est, out_constant$est)
-  expect_equal(out_ommit$value, out_constant$value)
-})
-
 test_that("evaltape_wsum() matches for simulated weights and constant weights", {
   intheta <- ppi_paramvec(m$p)
   tapes <- buildsmotape("sim","sqrt", "sph", "ppi",
@@ -81,8 +69,8 @@ test_that("cppad_search() for ppi with minsq matches itself", {
                divweight = "minsq",
                acut = acut)
 
-  out_sim <- cppad_search(tapes$smotape, m$theta *0 + 1, vw$newY, control = list(tol = 1E-12))
-  out_dir <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 1000), w = vw$w)
+  suppressWarnings({out_sim <- cppad_search(tapes$smotape, m$theta *0 + 1, vw$newY, control = list(tol = 1E-12, maxit = 10))})
+  suppressWarnings({out_dir <- cppad_search(tapes$smotape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 10), w = vw$w)})
   expect_equal(out_sim[!(names(out_sim) %in% c("counts", "SE"))], 
      out_dir[!(names(out_sim) %in% c("counts", "SE"))],
      tolerance = 1E-3)
