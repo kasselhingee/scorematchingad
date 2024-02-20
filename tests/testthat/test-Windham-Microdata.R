@@ -120,7 +120,8 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
                    cW = ppi_cW(cW, TRUE, TRUE, TRUE, TRUE, FALSE),
                    method = "hardcoded", trans = "alr",
                    paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
-                   paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
+                   paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est),
+                   fpcontrol = list(MaxIter = 50))
   #estimate of A_L:
   expect_snapshot_value(signif(ppi_parammats(est1$est$paramvec)$AL,6), style = "json2")
   #estimate of beta:
@@ -131,7 +132,8 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
                    cW = ppi_cW(cW, TRUE, TRUE, TRUE, TRUE, FALSE),
                    method = "closed", trans = "alr",
                    paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
-                   paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est))
+                   paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est),
+                   fpcontrol = list(MaxIter = 50))
   expect_equal(est1b$est$paramvec, est1$est$paramvec)
 
   # check specialist ppi_robust_alrgengamma() matches results too
@@ -179,11 +181,12 @@ test_that("A simulate then estimate of TCAP errors appropriately", {
 
   options("show.error.messages" = FALSE)
 
-  expect_warning({est2=ppi_robust_alrgengamma(Y = mnprop,
+  expect_warning({est2 <- ppi_robust_alrgengamma(Y = mnprop,
                   cW = cWvec,
                   method = "closed",
                   paramvec = ppi_paramvec(p=p, bL = 0, betap = 0),
                   paramvec_start =  est1$est$paramvec)},
                   "extremely small")
+  options("show.error.messages" = TRUE)
 })
 
