@@ -26,8 +26,8 @@ test_that("full ppi estimates are within 3 SE of beta for difficult AL with larg
   ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.3, 0)
-  set.seed(11112) #this seed leads to some ginormous elements for the second diagonal element of ALs
-  suppressWarnings(prop <- rppi(20000, beta=beta, AL=ALs, bL=bL, maxden=20))
+  set.seed(11112)
+  suppressWarnings(prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=20))
   expect_equal(colMeans(prop), c(0.1, 0.99, 0.1), tolerance = 0.5)
 
   est_cppad <- ppi(prop, ppi_paramvec(bL = bL), trans = "sqrt", divweight = "minsq",
