@@ -196,13 +196,13 @@ test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
 
-test_that("ppi via cppad matches Score1 for p=5, particularly the order of the off diagonals in ALs", {
+test_that("ppi via cppad matches Score1 for p=5 and has SM discrepancy has small gradient", {
   set.seed(1273)
   p = 5
   ALs <- exp(rsymmetricmatrix(p-1, -4, 4))
   bL <- rep(0, p-1)
   beta <- c(-0.7, -0.8, -0.3, 0, 0)
-  expect_warning({prop <- rppi(1000, beta=beta, AL=ALs, bL=bL, maxden=35)}, regexp = "maxden")
+  expect_warning({prop <- rppi(100, beta=beta, AL=ALs, bL=bL, maxden=35)}, regexp = "maxden")
 
   acut = 0.1
   est_hardcoded <- estimator1(prop, acut, incb = 0, beta = beta)
