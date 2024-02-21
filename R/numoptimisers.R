@@ -7,11 +7,6 @@
 #' @details
 #' The default for `Rcgmin()` is `list(tol = 1E-20)`, which means the optimisation won't end until the squared size of the gradient summed over all observations at the estimate parameter set is less than 1E-20.
 #' @export
-default_Rcgmin <- function(){
-  list(tol = 1E-15, checkgrad = TRUE)
-}
-#' @rdname default_Rcgmin 
-#' @export
 default_FixedPoint <- function(){
   list(Method = "Simple", ConvergenceMetricThreshold = 1E-10)
 }
@@ -27,11 +22,6 @@ fp <- function(...){
 }
 
 FixedPoint_controlnames <- setdiff(formalArgs(FixedPoint::FixedPoint), c("Function", "Inputs"))
-
-
-#### Root Finding ####
-
-Rcgmin_controlnames <- c("maxit", "trace", "eps", "dowarn", "tol", "checkgrad", "checkbounds")
 
 
 #### Function to split control parameters between Rcgmin and FixedPoint ####

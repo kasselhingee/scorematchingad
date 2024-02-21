@@ -48,7 +48,7 @@
 #' @param paramvec Optionally a vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate `paramvec` easily using [ppi_paramvec()].  If `NULL` then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.
 #' @param divweight The divergence weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
 #' @param acut The threshold \eqn{a_c} in `divweight` to avoid over-weighting measurements interior to the simplex
-#' @param control `iterative` only. Passed to [`optimx::Rcgmin()`] to control the iterative solver. Default values are given by [`default_Rcgmin()`].
+#' @param control `iterative` only. Passed to [`optimx::Rcgmin()`] to control the iterative solver.
 #' @param bdrythreshold `iterative` or `closed` methods only. For measurements close to the boundary of the simplex Taylor approximation is applied. See [`simplex_isboundary()`].
 #' @param shiftsize `iterative` or `closed` methods only. For Taylor approximation, approximation centres are chosen based on `shiftsize`. See [`simplex_boundaryshift()`].
 #' @param approxorder `iterative` or `closed` methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.
@@ -72,7 +72,7 @@ ppi <- function(Y, paramvec = NULL,
                 trans, method = "closed", w = rep(1, nrow(Y)),
                 constrainbeta = FALSE,
                 divweight = "ones", acut = NULL, #specific to some methods
-                bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = default_Rcgmin(), paramvec_start = NULL#specific to cppad methods
+                bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = list(tol = 1E-15, checkgrad = TRUE), paramvec_start = NULL#specific to cppad methods
                 ){
   ###### process inputs #####
   stopifnot("matrix" %in% class(Y))

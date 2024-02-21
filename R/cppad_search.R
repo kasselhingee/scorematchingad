@@ -30,7 +30,7 @@
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
 #' @export
-cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10, control = default_Rcgmin()){
+cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10, control = list(tol = 1E-15, checkgrad = TRUE)){
   Jsmofun <- tapeJacobian(smotape)
   Hsmofun <- tapeJacobian(Jsmofun)
   
