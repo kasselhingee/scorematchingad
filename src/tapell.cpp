@@ -113,9 +113,6 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the
   if (llname.compare("FB") == 0){
     ll = ll::ll_FB;
   }
-  if (llname.compare("Rivest") == 0){
-    ll = ll::ll_Rivest;
-  }
   //check ll function
   if (ll == nullptr){
     throw std::invalid_argument("Matching ll function not found");

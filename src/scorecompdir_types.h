@@ -6,7 +6,6 @@
 # include <vector>          // standard vector
 # include <cppad/example/cppad_eigen.hpp>  //load eigen
 # include <cppad/cppad.hpp> // the CppAD package
-# include <cppad/utility/index_sort.hpp> //for index sorting - for Rivest model
 
 // [[Rcpp::depends(RcppEigen)]] //include RcppEigen here so that Eigen:: below makes sense
 #include <RcppEigen.h>
