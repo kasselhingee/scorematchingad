@@ -172,18 +172,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ptoM
-veca1 ptoM(transform_a1type& tran, veca1 u_ad);
-RcppExport SEXP _scorecompdir_ptoM(SEXP tranSEXP, SEXP u_adSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< transform_a1type& >::type tran(tranSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type u_ad(u_adSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptoM(tran, u_ad));
-    return rcpp_result_gen;
-END_RCPP
-}
 // pTaylorApprox
 vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd centre, vecd dynparam, size_t order);
 RcppExport SEXP _scorecompdir_pTaylorApprox(SEXP pfunSEXP, SEXP xSEXP, SEXP centreSEXP, SEXP dynparamSEXP, SEXP orderSEXP) {
@@ -196,18 +184,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
     Rcpp::traits::input_parameter< size_t >::type order(orderSEXP);
     rcpp_result_gen = Rcpp::wrap(pTaylorApprox(pfun, x, centre, dynparam, order));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ptapefromM
-Rcpp::XPtr< CppAD::ADFun<double> > ptapefromM(veca1 z, transform<a1type>& tran);
-RcppExport SEXP _scorecompdir_ptapefromM(SEXP zSEXP, SEXP tranSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< veca1 >::type z(zSEXP);
-    Rcpp::traits::input_parameter< transform<a1type>& >::type tran(tranSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapefromM(z, tran));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -227,9 +203,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_pmanifold", (DL_FUNC) &_scorecompdir_pmanifold, 1},
     {"_scorecompdir_ptapell", (DL_FUNC) &_scorecompdir_ptapell, 6},
     {"_scorecompdir_ptapesmo", (DL_FUNC) &_scorecompdir_ptapesmo, 8},
-    {"_scorecompdir_ptoM", (DL_FUNC) &_scorecompdir_ptoM, 2},
     {"_scorecompdir_pTaylorApprox", (DL_FUNC) &_scorecompdir_pTaylorApprox, 5},
-    {"_scorecompdir_ptapefromM", (DL_FUNC) &_scorecompdir_ptapefromM, 2},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
     {NULL, NULL, 0}
 };
