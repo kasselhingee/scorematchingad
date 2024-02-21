@@ -7,7 +7,6 @@
 #include "vMF.hpp"
 #include "Bingham.hpp"
 #include "FB.hpp"
-#include "Rivest.hpp"
 
 #endif
 
