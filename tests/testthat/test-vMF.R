@@ -52,7 +52,7 @@ test_that("vMF() fitting works on dimension 5", {
   set.seed(12412)
   sample <- movMF::rmovMF(1000, m * k)
   #full method
-  out <- vMF(Y = sample, method = "smfull", control = list(tol = 1E-10))
+  out <- vMF(Y = sample, method = "smfull")
   expect_lt_v(abs(out$est$paramvec - km), 3 * out$SE$paramvec)
   #full with a fixed components
   inkm <- km
@@ -112,9 +112,9 @@ test_that("vMF() robust fitting works on dimension 5 with direction outliers", {
   outliers <- movMF::rmovMF(10, -km)
   sample_o <- rbind(sample, outliers)
   #full method, not robust
-  out1 <- vMF(Y = sample_o, method = "smfull", control = list(tol = 1E-10))
+  out1 <- vMF(Y = sample_o, method = "smfull")
   #full method, robust, expect to be closer to true value (due to the outliers)
-  out2 <- vMF_robust(Y = sample_o, cW = rep(0.1, 5), method = "smfull", control = list(tol = 1E-10))
+  out2 <- vMF_robust(Y = sample_o, cW = rep(0.1, 5), method = "smfull")
   expect_true(all(abs(out2$est$paramvec - km) < abs(out1$est$paramvec - km)))
 
   #check that fixed components remain fixed for full method

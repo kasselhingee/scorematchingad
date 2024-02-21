@@ -22,7 +22,6 @@
 #' The method "Mardia" uses [`vMF_stdY()`] and [`vMF_kappa()`] to estimate \eqn{\kappa} and \eqn{\mu} seperately.
 #' @param Y A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.
 #' @param paramvec `smfull` method only: Optional. A vector of same length as the dimension, representing the elements of the vector that is the element-wise (Hadamard) product \eqn{\kappa \mu}. 
-#' @param control Control parameters passed to [`optimx::Rcgmin()`].
 #' @param method Either "Mardia" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}.
 #'  or "smfull" for the full score matching estimator.
 #' @param w An optional vector of weights for each measurement in `Y`
@@ -50,7 +49,7 @@ vMF <- function(Y, paramvec = NULL, method = "smfull", w = rep(1, nrow(Y))){
   }
   if (method %in% c("Mardia")){
     if (!is.null(paramvec)){if (any(!is.na(paramvec))){stop("Mardia estimator cannot fix any elements of paramvec")}}
-    fit <- vMF_Mardia(Y, control = control, w=w)
+    fit <- vMF_Mardia(Y, w=w)
   }
   if (is.null(fit)){stop(sprintf("Method '%s' is not valid", method))}
 
