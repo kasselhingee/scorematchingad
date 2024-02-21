@@ -35,12 +35,12 @@
 #' * `theta` the estimated parameter vector
 #' * `optim` information about the fixed point iterations and opimisation process. Including a slot `finalweights` for the weights in the final iteration.
 #' @export
-Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
+Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1E-10), paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   out <- Windham_raw(Y, estimator, ldenfun, cW, ..., fpcontrol = fpcontrol, paramvec_start = paramvec_start, multiplicativecorrection = TRUE)
   return(out)
 }
 
-Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramvec_start = NULL, multiplicativecorrection = TRUE){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
+Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1E-10), paramvec_start = NULL, multiplicativecorrection = TRUE){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)
   ellipsis::check_dots_used()
   # assuming estimator has arguments: Y, paramvec, w, and optionally paramvec_start.
@@ -129,8 +129,10 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramv
   tmp <- fpiterator(starttheta[!isfixed])
 
   # do the main computation
-  est <- fp(Function = fpiterator, Inputs = starttheta[!isfixed],
-                    control = fpcontrol)
+  if (!isTRUE(fpcontrol$Method == "Simple")){warning("You have chosen to use a fixed point search that isn't the standard 'Simple'")}
+  est <- do.call(FixedPoint::FixedPoint, 
+                 c(list(Function = fpiterator, Inputs = starttheta[!isfixed]),
+                    control = fpcontrol))
 
   # process results
   nevals <- ncol(est$Inputs)

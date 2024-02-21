@@ -13,7 +13,7 @@
 #' @references
 #' \insertAllCited{}
 #' @export
-ppi_robust_alrgengamma <- function(Y, cW, ..., fpcontrol = NULL){
+ppi_robust_alrgengamma <- function(Y, cW, ..., fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1E-10)){
   ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
     return(drop(dppi(Y, paramvec = theta)))
   }
