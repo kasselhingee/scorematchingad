@@ -23,14 +23,3 @@ fp <- function(...){
 
 FixedPoint_controlnames <- setdiff(formalArgs(FixedPoint::FixedPoint), c("Function", "Inputs"))
 
-
-#### Function to split control parameters between Rcgmin and FixedPoint ####
-splitcontrol <- function(control){
-  Rcgmincontrol <- control[names(control) %in% Rcgmin_controlnames, drop = FALSE]
-  if (length(Rcgmincontrol) == 0){Rcgmincontrol <- default_Rcgmin()}
-  fpcontrol <- control[names(control) %in% FixedPoint_controlnames, drop = FALSE]
-  if (length(fpcontrol) == 0){fpcontrol <- default_FixedPoint()}
-  return(list(
-    fp = fpcontrol,
-    Rcgmin = Rcgmincontrol))
-}
