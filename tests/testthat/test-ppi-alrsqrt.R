@@ -13,7 +13,6 @@ test_that("Fitting ppi via ppi_alrsqrt_robust version gets closer with outliers"
              cW = ppi_cW_auto(0.001, model$sample), #c(0.1, 0.01, 0.01, 0.1, 0.01, 0, 0, 0), # 
              paramvec = ppi_paramvec(p = ncol(model$sample), betap = -0.5),
              acut = 0.01,
-             fpcontrol = list(),
              paramvec_start = model$theta
              )
 

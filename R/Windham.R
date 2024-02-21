@@ -132,7 +132,7 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method 
   if (!isTRUE(fpcontrol$Method == "Simple")){warning("You have chosen to use a fixed point search that isn't the standard 'Simple'")}
   est <- do.call(FixedPoint::FixedPoint, 
                  c(list(Function = fpiterator, Inputs = starttheta[!isfixed]),
-                    control = fpcontrol))
+                    fpcontrol))
 
   # process results
   nevals <- ncol(est$Inputs)
