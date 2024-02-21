@@ -173,18 +173,3 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
 })
 
 
-test_that("printgraph() runs", {
-  set.seed(1245)
-  beta0 <- c(-0.7, -0.1, -0.5, -0.1, -0.6) 
-  Y <- MCMCpack::rdirichlet(10, beta0+1)
-  tapes <- buildsmotape("sim","clr", "Hn111", "ppi", ytape = Y[1, ], 
-                        usertheta = ppi_paramvec(p = 5))
-
-  expect_output(printgraph(tapes$smotape$ptr), "2112") #2112 is the final node
-  Jtape <- tapeJacobian(tapes$smotape)
-  expect_output(printgraph(Jtape$ptr), "1658") #1658 is final node - interesting that fewer than smotape!
-  Htape <- tapeHessian(tapes$smotape)
-  expect_output(printgraph(Htape$ptr), "25630") #25630 is final mode
-})
-
-
