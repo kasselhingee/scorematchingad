@@ -15,8 +15,6 @@ test_that("Fitting ppi via alr inc all beta gets close to true values", {
   set.seed(111)
   model <- ppi_egmodel(1000, maxden = 4)
 
-  acut = 0.1 #not needed for Ralr per se, but code still expects it
-
   out <- ppi(Y = model$sample,
              trans = "alr")
 
