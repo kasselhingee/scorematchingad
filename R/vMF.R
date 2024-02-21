@@ -40,13 +40,13 @@
 #'  * `SE` contains estimates of the standard errors if computed.
 #'  * `info` contains a variety of information about the model fitting procedure and results.
 #' @export
-vMF <- function(Y, paramvec = NULL, method = "smfull", control = default_Rcgmin(), w = rep(1, nrow(Y))){
+vMF <- function(Y, paramvec = NULL, method = "smfull", w = rep(1, nrow(Y))){
   fit <- NULL
   if (method == "smfull"){
     if (is.null(paramvec)){
       paramvec <- rep(NA, ncol(Y))
     }
-    fit <- vMF_full(Y, paramvec, control = control, w=w)
+    fit <- vMF_full(Y, paramvec, w=w)
   }
   if (method %in% c("Mardia")){
     if (!is.null(paramvec)){if (any(!is.na(paramvec))){stop("Mardia estimator cannot fix any elements of paramvec")}}
@@ -59,12 +59,11 @@ vMF <- function(Y, paramvec = NULL, method = "smfull", control = default_Rcgmin(
 
 
 #for vMF_Mardia startk must be the value of the k parameter
-vMF_Mardia <- function(sample, control = default_Rcgmin(), w = rep(1, nrow(sample))){
+vMF_Mardia <- function(sample, w = rep(1, nrow(sample))){
   mu <- vMF_m(sample, w = w)
   samplestd <- vMF_stdY(sample, m = mu, w = w)
   # check: mustd <- colMeans(samplestd); mustd <- mustd / sqrt(sum(mustd^2))
-  kappaest <- vMF_kappa(Y = samplestd, w = w, 
-                        control = control)
+  kappaest <- vMF_kappa(Y = samplestd, w = w) 
   return(list(
     est = list(paramvec = kappaest$k * mu,
                k = kappaest$k,
@@ -77,7 +76,7 @@ vMF_Mardia <- function(sample, control = default_Rcgmin(), w = rep(1, nrow(sampl
 }
 
 
-vMF_full <- function(sample, usertheta, control = default_Rcgmin(), w = NULL){
+vMF_full <- function(sample, usertheta, w = NULL){
   p <- ncol(sample)
   stopifnot(length(usertheta) == p)
 
