@@ -49,7 +49,7 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramv
   estargs$paramvec_start <- paramvec_start #adding this slot this way so that it is omitted if NULL
 
   #assess the passes estimator
-  assessment <- do.call(Windham_assess_estimator, c(list(estimator = estimator), estargs))
+  assessment <- do.call(Windham_assess_estimator, c(list(estimator = estimator), estargs[intersect(names(formals(estimator)), names(estargs))]))
 
 
   # extract start vector from a paramvec and paramvec_start
@@ -90,6 +90,7 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = NULL, paramv
   # functions for adding paramvec_start or otherwise to estimator arguments
   if (!assessment$paramvec_start){
     additionalargsbuilder <- function(extraargs = list(), paramvec_start = NULL){
+      extraargs$paramvec_start <- NULL
       return(extraargs) #paramvec passed as part of extraargs
     }
   }
