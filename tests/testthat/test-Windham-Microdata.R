@@ -74,7 +74,7 @@ est1b=ppi_robust(Y = propreal,
                 method = "hardcoded", trans = "alr",
                 paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                 paramvec_start = est1$est$paramvec,
-                fpcontrol = list(ConvergenceMetricThreshold = 1E-9)) #slightly larger to beat est1
+                fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1E-9)) #slightly larger to beat est1
 expect_equal(est1b$est$paramvec, est1$est$paramvec)
 
 # check that ppi_robust with 'closed' method also works
@@ -121,7 +121,7 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
                    method = "hardcoded", trans = "alr",
                    paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                    paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est),
-                   fpcontrol = list(MaxIter = 50))
+                   fpcontrol = list(Method = "Simple", MaxIter = 50))
   #estimate of A_L:
   expect_snapshot_value(signif(ppi_parammats(est1$est$paramvec)$AL,6), style = "json2")
   #estimate of beta:
@@ -133,7 +133,7 @@ test_that("robust ppi via alr estimator matches historical results on dataset wi
                    method = "closed", trans = "alr",
                    paramvec = ppi_paramvec(p=ncol(propreal), bL = 0, betap = 0),
                    paramvec_start = ppi_paramvec(AL = ALs_est, bL = bL_est, beta = beta0_est),
-                   fpcontrol = list(MaxIter = 50))
+                   fpcontrol = list(Method = "Simple", MaxIter = 50))
   expect_equal(est1b$est$paramvec, est1$est$paramvec)
 
   # check specialist ppi_robust_alrgengamma() matches results too
