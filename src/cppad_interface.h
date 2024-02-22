@@ -114,6 +114,19 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<dou
 
 
 //' @noRd
+//' @title Tape the log of Jacobian determinant of a CppAD Tape
+//' @family tape builders
+//' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
+//' @param x A vector in the domain of the taped function.
+//' @param dynparam a vector of the dynamic parameters
+//' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
+//' The `x` vector is used as the value to conduct the taping.
+//' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+// [[Rcpp::export]]
+Rcpp::XPtr< CppAD::ADFun<double> >  ptapelogdetJ(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
+                    veca1 x, veca1 dynparam);
+
+//' @noRd
 //' @title Switch Dynamic and Independent Values of a Tape
 //' @family tape builders
 //' @description Convert an ADFun so that the independent values become dynamic parameters

@@ -173,3 +173,32 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<dou
   return(pout);
 }
 
+Rcpp::XPtr< CppAD::ADFun<double> >  ptapelogdetJ(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
+                    veca1 x, veca1 dynparam){
+  // x and dynparam must have elements of a1type so that taping can proceed
+  //check inputs and tape match
+  if (pfun->Domain() != x.size()){Rcpp::stop("Size of input vector %i does not match domain size %i of taped function.", x.size(), pfun->Domain());}
+  if (pfun->size_dyn_ind() != dynparam.size()){Rcpp::stop("Size of parameter vector %i does not match parameter size %i of the taped function.", dynparam.size(), pfun->size_dyn_ind());}
+  
+  //convert taped object to higher order, so that the 'base' type of the tape is a1type, so x and dynparam can be passed into Jacobian()
+  CppAD::ADFun<a1type, double> pfunhigher;
+  pfunhigher = pfun->base2ad();
+
+  CppAD::Independent(x, dynparam);  //start taping with x as the usual independent parameter and dynparam as the dynamic parameter
+  pfunhigher.new_dynamic(dynparam);
+  mata1 jacmat(pfunhigher.Domain() * pfunhigher.Range(), 1);
+  jacmat = pfunhigher.Jacobian(x);
+  jacmat.resize(pfunhigher.Domain(), pfunhigher.Range()); //first row is: du1/dz1, du2/dz1, du3/dz1. Second row is du1/dz2, du2/dz2, du3/dz2
+  veca1 logdet(1);
+  logdet[0] = CppAD::log(CppAD::abs(jacmat.determinant()));
+
+  //end taping
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  out->Dependent(x, logdet);
+  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  out->check_for_nan(false);
+
+  Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}
+
