@@ -127,17 +127,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pmanifold
-Rcpp::XPtr< manifold<a1type> > pmanifold(std::string manifoldname);
-RcppExport SEXP _scorecompdir_pmanifold(SEXP manifoldnameSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type manifoldname(manifoldnameSEXP);
-    rcpp_result_gen = Rcpp::wrap(pmanifold(manifoldname));
-    return rcpp_result_gen;
-END_RCPP
-}
 // ptapell
 Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, veca1 theta_ad, std::string llname, transform_a1type& tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
 RcppExport SEXP _scorecompdir_ptapell(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llnameSEXP, SEXP tranSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
@@ -200,7 +189,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_pTapeGradOffset", (DL_FUNC) &_scorecompdir_pTapeGradOffset, 3},
     {"_scorecompdir_ptapelogdetJ", (DL_FUNC) &_scorecompdir_ptapelogdetJ, 3},
     {"_scorecompdir_swapDynamic", (DL_FUNC) &_scorecompdir_swapDynamic, 3},
-    {"_scorecompdir_pmanifold", (DL_FUNC) &_scorecompdir_pmanifold, 1},
     {"_scorecompdir_ptapell", (DL_FUNC) &_scorecompdir_ptapell, 6},
     {"_scorecompdir_ptapesmo", (DL_FUNC) &_scorecompdir_ptapesmo, 8},
     {"_scorecompdir_pTaylorApprox", (DL_FUNC) &_scorecompdir_pTaylorApprox, 5},

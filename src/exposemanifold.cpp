@@ -36,14 +36,6 @@ transform<a1type> * newtransform(const std::string &name){
   return(out);
 }
 
-Rcpp::XPtr< manifold<a1type> > pmanifold(std::string manifoldname){
-  manifold<a1type> * out;  //returning a pointer
-  out = newmantran(manifoldname);
-  Rcpp::XPtr< manifold<a1type> > pout(out, true);
-  pout.attr("name") = out->name();
-  return(pout);
-}
-
 RCPP_MODULE(manifolds) {
   Rcpp::class_< manifold_a1type >("man_ad")
       .factory<const std::string &>(newmantran)
