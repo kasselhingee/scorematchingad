@@ -107,6 +107,19 @@ pTapeGradOffset <- function(pfun, x, dynparam) {
 }
 
 #' @noRd
+#' @title Tape the log of Jacobian determinant of a CppAD Tape
+#' @family tape builders
+#' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
+#' @param x A vector in the domain of the taped function.
+#' @param dynparam a vector of the dynamic parameters
+#' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
+#' The `x` vector is used as the value to conduct the taping.
+#' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+ptapelogdetJ <- function(pfun, x, dynparam) {
+    .Call('_scorecompdir_ptapelogdetJ', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+}
+
+#' @noRd
 #' @title Switch Dynamic and Independent Values of a Tape
 #' @family tape builders
 #' @description Convert an ADFun so that the independent values become dynamic parameters
