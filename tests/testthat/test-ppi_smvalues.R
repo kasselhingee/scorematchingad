@@ -25,6 +25,10 @@ test_that("PPI ALR hardcoded estimate has low smo and smgrad values and constant
   # expect the Hessian and offset to be the same - because they are independent of theta, only depend on the data
   expect_equal(hardcodedvals$hess, modelvals$hess)
   expect_equal(hardcodedvals$offset, modelvals$offset)
+
+
+  perobservation <- ppi_smvalues(dsample, paramvec = usertheta, evalparam = theta, trans = "alr", average = FALSE)
+  expect_equal(lapply(perobservation, colMeans), modelvals)
 })
 
 
