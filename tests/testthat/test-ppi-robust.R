@@ -75,7 +75,7 @@ test_that("Robustness runs for hardcoded and cppad methods", {
   out <- ppi_robust(Y = m$sample,
              acut=0.1, method = "closed", trans = "sqrt", divweight = "minsq",
              control = list(tol = 1E-10, maxit = 100),
-             fpcontrol = list(MaxIter = 100),
+             fpcontrol = list(method = "Simple", MaxIter = 100),
              cW = ppi_cW_auto(1E-2, m$sample))
   expect_gt(out$info$fpevals, 1)
 })
