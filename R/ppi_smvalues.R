@@ -69,25 +69,32 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
   Yapproxcentres[!isbdry, ] <- NA
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = shiftsize)
 
+  # gradient values
   if (average){
     valgradhess <- smvalues_tape_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
                               xcentres = Yapproxcentres,
                               w = w,
                               approxorder = approxorder)
-    quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
+  } else {
+    valgradhess <- smvalues_tape(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
+                                      xcentres = Yapproxcentres,
+                                      approxorder = approxorder)
+  }
+
+  # quadratic simplification of divergence discrepancy
+  quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
+
+  # combine:
+  if (average){
     quadparts_wsum <- lapply(quadparts, wcolSums, w = w)
   
     if (is.null(w)){
       normaliser <- nrow(Y)
     } else {
-    normaliser <- sum(w)
+      normaliser <- sum(w)
     }
     out <- lapply(c(valgradhess, quadparts_wsum["offset"]), function(x){x/normaliser})
   } else {
-    valgradhess <- smvalues_tape(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
-                                      xcentres = Yapproxcentres,
-                                      approxorder = approxorder)
-    quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
     out <- c(valgradhess, quadparts["offset"])
   }
   return(out)
