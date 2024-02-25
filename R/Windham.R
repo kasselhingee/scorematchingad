@@ -128,7 +128,11 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method 
   #try fpiterator once
   tmp <- fpiterator(starttheta[!isfixed])
 
-  # do the main computation
+  # do the main computation, first check control args
+  noncontrolargs <- setdiff(names(fpcontrol), formalArgs(FixedPoint::FixedPoint)) 
+  if (length(noncontrolargs) > 0){
+    stop(paste("The follow arguments are not accepted by FixedPoint():", paste0(noncontrolargs, collapse = ", ")))
+  }
   if (!isTRUE(fpcontrol$Method == "Simple")){warning("You have chosen to use a fixed point search that isn't the standard 'Simple'")}
   est <- do.call(FixedPoint::FixedPoint, 
                  c(list(Function = fpiterator, Inputs = starttheta[!isfixed]),
