@@ -80,9 +80,9 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method 
    }}
    inWW <- (cW > 1E-10)
    cWav <- mean(cW[cW > 1E-10]) #note that cW ~~ inWW * cWav
-   thetaadjuster <- WindhamCorrection_additive
+   thetaadjuster <- Windham_populationinverse_alternative
   } else {
-    tauinv <- WindhamCorrection_multiplicative_tauinv(cW)
+    tauinv <- Windham_populationinverse(cW)
     cWav <- NULL  #not relevant to this correction method
     thetaadjuster <- function(newtheta, previoustheta = NULL, cW = NULL, cWav = NULL){tauinv %*% newtheta}
   }
@@ -174,13 +174,14 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method 
 #' \eqn{(1 + c) \circ \theta}.
 #' The inverse of this change to the parameter vector is then a matrix multiplication by a diagonal matrix with elements \eqn{1/(1+c_i)}, with \eqn{c_i} denoting the elements of \eqn{c}.
 #' @export
-WindhamCorrection_multiplicative_tauinv <- function(cW){
+Windham_populationinverse <- function(cW){
   tauinv <- diag(1/(1 + cW), nrow = length(cW)) #matrix that converts theta to the new theta*cW based on inclusion/exclusion  #klh: the extra argument nrow = length(cW) forces diag() to use the cW values on the diagonal, rather than treat them as the size of the matrix desired - useful when cW is legitimately length 1
   return(tauinv)
 }
 
-# returns adjustment of the new estimate according to Scealy's first draft
-WindhamCorrection_additive <- function(newtheta, previoustheta, cW, cWav){ #cW is a vector, cWav is the average of the non-zero elements of cW
+#' @describeIn Windham_populationinverse The transform implemented as described by \insertCite{scealy2024; textual}. It is mathematically equivalent to multiplication by the result of `Windham_populationinverse()` when \eqn{c} is constant.
+#' @export
+Windham_populationinverse_alternative <- function(newtheta, previoustheta, cW, cWav){ #cW is a vector, cWav is the average of the non-zero elements of cW
   # generate the tuning constants dbeta, dA
   dtheta <- previoustheta * (cW - cWav) # = theta * cWav * (inWW - 1) = theta * cWav * -1 * !inWW = -cW * theta * !inWW
   return((newtheta - dtheta)/(cWav + 1))
