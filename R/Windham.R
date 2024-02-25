@@ -152,13 +152,24 @@ Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method 
            optim = c(est, list(finalweights = weight_vec))))
 }
 
-# @title Windham transform matrix for a given parameter vector
-# @description Generates the correction matrix $\eqn{\tau_c(\theta) = \tau_c \theta}$ for models
-# with density proportional to
-# $\eqn{\exp(\eta(\theta) t(u))}$
-# with \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u}.
-# and \eqn{\eta} is *linear* function.
-# The linear assumption means that \eqn{\tau_c(\theta)} is a multiplication by the matrix diag(1 + cW).
+#' @title Inverse transform for the population parameters under Windham weights
+#' @description Returns the matrix which reverses the effect of weights on a population for certain models.
+#' @param cW A vector of tuning constants for the Windham robustification method performed by [`Windham()`].
+#' @return A diagonal matrix with the same number of columns as `cW`.
+#' @details 
+#' In the Windham robustification method the effect of weighting a population plays a central role.
+#' When the 
+#' the model density is proportional to \eqn{\exp(\eta(\theta) \cdot t(u))},
+#' where \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u},
+#' and \eqn{\eta} a *linear* function,
+#' Then weights proportional to 
+#' \eqn{\exp(\eta(c \circ \theta) \cdot t(u))},
+#' where \eqn{c} is a vector of tuning constants and \eqn{\circ} is the Hadamard (element-wise) product,
+#' have a very simple effect on the population parameter vector \eqn{\theta}:
+#' the weighted population follows a density of the same form, but with a parameter vector of 
+#' \eqn{(1 + c) \circ \theta}.
+#' The inverse of this change to the parameter vector is then a matrix multiplication by a diagonal matrix with elements \eqn{1/(1+c_i)}, with \eqn{c_i} denoting the elements of \eqn{c}.
+#' @export
 WindhamCorrection_multiplicative_tauinv <- function(cW){
   tauinv <- diag(1/(1 + cW), nrow = length(cW)) #matrix that converts theta to the new theta*cW based on inclusion/exclusion  #klh: the extra argument nrow = length(cW) forces diag() to use the cW values on the diagonal, rather than treat them as the size of the matrix desired - useful when cW is legitimately length 1
   return(tauinv)
