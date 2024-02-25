@@ -108,7 +108,7 @@ ppi <- function(Y, paramvec = NULL,
 
   stopifnot(length(usertheta) == ppithetalength(p))
 
-  firstfit <- list()
+  fitobj <- list()
   fitfun <- NA
 
   ########## DO THE FITTING ###############
@@ -118,7 +118,7 @@ ppi <- function(Y, paramvec = NULL,
   if (method == "hardcoded"){
     if (trans == "alr"){
       if (usertheta_ppi_alr_gengamma_compatible(usertheta)){
-        firstfit <- ppi_alr_gengamma(Y, betap = tail(usertheta, 1), w = w) #any theta is fine
+        fitobj <- ppi_alr_gengamma(Y, betap = tail(usertheta, 1), w = w) #any theta is fine
         fitfun <- "ppi_alr_gengamma"
       }
     }
@@ -127,26 +127,26 @@ ppi <- function(Y, paramvec = NULL,
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
           betaest <- as.vector(dir_sqrt_minimah(Y, acut = acut, w = w))
           estparamvec <- t_fu2t(betaest, usertheta)
-          firstfit$est <- c(list(paramvec = estparamvec),
+          fitobj$est <- c(list(paramvec = estparamvec),
                             ppi_parammats(estparamvec))
-          firstfit$SE <- "Not calculated."
+          fitobj$SE <- "Not calculated."
           fitfun <- "dir_sqrt_minimah"
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
-          firstfit <- estimator1(Y,acut = acut,incb = 0,
+          fitobj <- estimator1(Y,acut = acut,incb = 0,
                             beta = ppi_parammats(usertheta)$beta,
                             w= w, computeSE = TRUE)
           fitfun <- "estimator1_zerob"
         } else if (ppi_usertheta_estimator1_compatible_incb(usertheta)){
-          firstfit <- estimator1(Y,acut = acut,incb = 1,
+          fitobj <- estimator1(Y,acut = acut,incb = 1,
                             beta = ppi_parammats(usertheta)$beta,
                             w= w, computeSE = TRUE)
           fitfun <- "estimator1_incb"
         } else if (utheta_estimatorall1_betap_compatible(usertheta)){
-          firstfit <- ppi_sqrt_minimah_full(Y, acut, tail(ppi_parammats(usertheta)$beta, 1),
+          fitobj <- ppi_sqrt_minimah_full(Y, acut, tail(ppi_parammats(usertheta)$beta, 1),
                                             w)
           fitfun <- "ppi_sqrt_minimah_betap"
         } else if (utheta_estimatorall1_full_compatible(usertheta)){
-          firstfit <- ppi_sqrt_minimah_full(Y, acut, betap = NULL,
+          fitobj <- ppi_sqrt_minimah_full(Y, acut, betap = NULL,
                                             w)
           fitfun <- "ppi_sqrt_minimah_full"
         }
@@ -157,14 +157,14 @@ ppi <- function(Y, paramvec = NULL,
           betaest <- dir_sqrt_prodh(Y, acut = acut, w = w)
           fitfun <- "dir_sqrt_prodh"
           estparamvec <- t_fu2t(betaest, usertheta)
-          firstfit$est <- c(list(paramvec = estparamvec),
+          fitobj$est <- c(list(paramvec = estparamvec),
                             ppi_parammats(estparamvec))
-          firstfit$SE <- "Not calculated."
+          fitobj$SE <- "Not calculated."
         } else if (ppi_usertheta_estimator1_compatible_zerob(usertheta)){
-          firstfit <- ppi_sqrt_prodh_zerob(Y, acut, beta = ppi_parammats(usertheta)$beta, w)
+          fitobj <- ppi_sqrt_prodh_zerob(Y, acut, beta = ppi_parammats(usertheta)$beta, w)
           fitfun <- "ppi_sqrt_prodh_zerob"
         } else if (ppi_usertheta_estimator1_compatible_incb(usertheta)){
-          firstfit <- ppi_sqrt_prodh(Y, acut, beta = ppi_parammats(usertheta)$beta, w)
+          fitobj <- ppi_sqrt_prodh(Y, acut, beta = ppi_parammats(usertheta)$beta, w)
           fitfun <- "ppi_sqrt_prodh"
         }
       }
@@ -199,7 +199,7 @@ ppi <- function(Y, paramvec = NULL,
     Yapproxcentres[!isbdry, ] <- NA
     Yapproxcentres[isbdry, ] <- simplex_boundaryshift(Y[isbdry, , drop = FALSE], shiftsize = shiftsize)
 
-    firstfit <- list()
+    fitobj <- list()
     if (method == "iterative"){ 
       rawout <- cppad_search(smotape = smotape,
                    theta = t_si2f(stheta, isfixed),
@@ -209,7 +209,7 @@ ppi <- function(Y, paramvec = NULL,
                    approxorder = approxorder,
                    control = control)
   
-      firstfit$info$smval <- rawout$value
+      fitobj$info$smval <- rawout$value
       fitfun <- "iterative"
     }
     if (method == "closed"){
@@ -224,27 +224,27 @@ ppi <- function(Y, paramvec = NULL,
     thetaest <- t_sfi2u(rawout$est, stheta, isfixed)
                    
     #refactor results to fit with ppi() standard output
-    firstfit$est <- c(list(paramvec = thetaest),
+    fitobj$est <- c(list(paramvec = thetaest),
                       ppi_parammats(thetaest))
     if (isa(rawout$SE, "numeric")){
       SE <- t_sfi2u(rawout$SE, rep(0, length(stheta)), isfixed)
-      firstfit$SE <- c(list(paramvec = SE),
+      fitobj$SE <- c(list(paramvec = SE),
                       ppi_parammats(SE))
-    } else {firstfit$SE <- rawout$SE}
-    firstfit$info <- rawout 
-    firstfit$info$boundarypoints <- sum(isbdry)
+    } else {fitobj$SE <- rawout$SE}
+    fitobj$info <- rawout 
+    fitobj$info$boundarypoints <- sum(isbdry)
   }
 
-  if (length(firstfit) == 0){stop("Could not find fitting method.")}
+  if (length(fitobj) == 0){stop("Could not find fitting method.")}
 
-  if (constrainbeta & (any(firstfit$est$beta <= -1))){
+  if (constrainbeta & (any(fitobj$est$beta <= -1))){
     warning("Beta estimates of -1 or lower, replacing these with -1 + 1E-7")
-    firstfit$est$beta[firstfit$est$beta <= -1] <- -1 + 1E-7
-    firstfit$est$paramvec <- do.call(ppi_paramvec, firstfit$est[c("AL", "bL", "beta")])
+    fitobj$est$beta[fitobj$est$beta <= -1] <- -1 + 1E-7
+    fitobj$est$paramvec <- do.call(ppi_paramvec, fitobj$est[c("AL", "bL", "beta")])
   }
 
-  firstfit$info$method <- fitfun
-  return(firstfit)
+  fitobj$info$method <- fitfun
+  return(fitobj)
 }
 
 
