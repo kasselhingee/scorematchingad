@@ -10,7 +10,7 @@ Windham(
   ldenfun,
   cW,
   ...,
-  fpcontrol = NULL,
+  fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1e-10),
   paramvec_start = NULL
 )
 }
@@ -59,8 +59,7 @@ An exponential model with a base rate may be used with \code{Windham()} so long 
 \seealso{
 Other generic score matching tools: 
 \code{\link{cppad_closed}()},
-\code{\link{cppad_search}()},
-\code{\link{default_Rcgmin}()}
+\code{\link{cppad_search}()}
 
 Other Windham robustness functions: 
 \code{\link{ppi_robust_alrgengamma}()},

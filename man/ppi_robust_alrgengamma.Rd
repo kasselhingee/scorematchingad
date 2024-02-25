@@ -4,7 +4,12 @@
 \alias{ppi_robust_alrgengamma}
 \title{Windham Robustness for Scealy et al 2023}
 \usage{
-ppi_robust_alrgengamma(Y, cW, ..., fpcontrol = NULL)
+ppi_robust_alrgengamma(
+  Y,
+  cW,
+  ...,
+  fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1e-10)
+)
 }
 \arguments{
 \item{Y}{A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.}
@@ -41,6 +46,7 @@ Other PPI model tools:
 \code{\link{ppi_paramvec}()},
 \code{\link{ppi_robust}()},
 \code{\link{ppi_smvalues}()},
+\code{\link{ppi_toAstar}()},
 \code{\link{ppi}()},
 \code{\link{rppi}()}
 

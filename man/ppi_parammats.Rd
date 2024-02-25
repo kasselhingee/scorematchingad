@@ -31,6 +31,7 @@ Other PPI model tools:
 \code{\link{ppi_robust_alrgengamma}()},
 \code{\link{ppi_robust}()},
 \code{\link{ppi_smvalues}()},
+\code{\link{ppi_toAstar}()},
 \code{\link{ppi}()},
 \code{\link{rppi}()}
 }

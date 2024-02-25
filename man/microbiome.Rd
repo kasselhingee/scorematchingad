@@ -12,20 +12,17 @@ A dataframe with 300 rows (two rows per individual) and 31 columns:
 \item{Sex}{\code{1} if female, \code{0} otherwise.}
 \item{Treatment}{\code{TRUE} if individual given 400mg of albendazole every three months for 1.5 years, \code{FALSE} otherwise.}
 \item{Age}{Age at first sample.}
-\item{}{Helminth measurements:}
-\describe{
-\item{ct_Al}{The qPCR cycle threshold (CT) for \emph{Ascaris lumbricoides} (large roundworm). \emph{Ascaris lumbricoides} can be considered present if the value is 30 or less.}
-\item{ct_Na}{The qPCR cycle threshold (CT) for \emph{Necator americanus} (a hookworm). \emph{Necator americanus} can be considered present if the value is 30 or less.}
-\item{ct_Ad}{The qPCR cycle threshold (CT) for \emph{Ancylostoma duodenale} (a hookworm). \emph{Ancylostoma duodenale} can be considered present if the value is 30 or less.}
-\item{micr_Tt}{The presence of \emph{Trichuris trichiura} as determined by microscopy. A value of \code{TRUE} means \emph{Trichuris trichiura} was detected.}
-\item{Helminth}{If any of the above helminths were detected then \code{TRUE}, otherwise \code{FALSE}.}
-}
+\item{ct_Al}{A Helminth measurement: The qPCR cycle threshold (CT) for \emph{Ascaris lumbricoides} (large roundworm). \emph{Ascaris lumbricoides} can be considered present if the value is 30 or less.}
+\item{ct_Na}{A Helminth measurement: The qPCR cycle threshold (CT) for \emph{Necator americanus} (a hookworm). \emph{Necator americanus} can be considered present if the value is 30 or less.}
+\item{ct_Ad}{A Helminth measurement: The qPCR cycle threshold (CT) for \emph{Ancylostoma duodenale} (a hookworm). \emph{Ancylostoma duodenale} can be considered present if the value is 30 or less.}
+\item{micr_Tt}{A Helminth measurement: The presence of \emph{Trichuris trichiura} as determined by microscopy. A value of \code{TRUE} means \emph{Trichuris trichiura} was detected.}
+\item{Helminth}{A Helminth measurement: If any of the above helminths were detected then \code{TRUE}, otherwise \code{FALSE}.}
 \item{Remaining columns}{Count prevalence of 18 bacterial phyla and 2 unclassified columns.}
 }
 }
 \source{
 \href{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx}{S1_Table.xlsx} from \href{http://nematode.net/NN3_frontpage.cgi?navbar_selection=environmental_interaction&subnav_selection=Indonesia_16s}{http://nematode.net}.
-\href{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx}{S1_Table.xlsx} was created by Dr. Bruce A Rosa for \insertCite{martin2019mi;textual}{scorecompdir}.
+\href{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx}{S1_Table.xlsx} was created by Dr. Bruce A Rosa for \insertCite{martin2019mi;textual}{scorecompdir}. Permission to share this data was obtained from Dr. Bruce Rosa and Dr. Ivonne Martin.
 }
 \usage{
 microbiome
@@ -50,8 +47,9 @@ These measurements can be obtained by running
 }\if{html}{\out{</div>}}
 
 Two further individuals (\code{IndividualID} of \code{2079} and \code{2280}) were deemed outliers by \insertCite{scealy2022sc;textual}{scorecompdir}, and removed in their analyses.
-
-This file was created from the source file hosted on \href{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx}{Nematode.net} using the below code.
+}
+\section{Modifications from the Source}{
+The \code{microbiome} data was created from the file \code{S1_Table.xlsx} hosted on \href{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx}{Nematode.net} using the below code.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{microbiome <- readxl::read_excel("S1_Table.xlsx",
   range = "A3:AE303") #avoids the genus data, keeping - only phyla
@@ -72,6 +70,7 @@ microbiome <- microbiome |>
 microbiome <- as.data.frame(microbiome)
 }\if{html}{\out{</div>}}
 }
+
 \references{
 \insertAllCited{}
 }

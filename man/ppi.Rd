@@ -10,12 +10,13 @@ ppi(
   trans,
   method = "closed",
   w = rep(1, nrow(Y)),
+  constrainbeta = FALSE,
   divweight = "ones",
   acut = NULL,
   bdrythreshold = 1e-10,
   shiftsize = bdrythreshold,
   approxorder = 10,
-  control = default_Rcgmin(),
+  control = list(tol = 1e-15, checkgrad = TRUE),
   paramvec_start = NULL
 )
 }
@@ -26,9 +27,11 @@ ppi(
 
 \item{trans}{The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".}
 
-\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching objective using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[Rcgmin:Rcgmin]{Rcgmin::Rcgmin()}}) to iteratively find the minimum of the weighted Hyvarinen divergence.}
+\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching objective using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) to iteratively find the minimum of the weighted Hyvarinen divergence.}
 
 \item{w}{Weights for each observation, if different observations have different importance. Used by \code{\link[=Windham]{Windham()}} and \code{\link[=ppi_robust]{ppi_robust()}} for robust estimation.}
+
+\item{constrainbeta}{If \code{TRUE}, elements of \eqn{\beta} that are less than \code{-1} are converted to \code{-1 + 1E-7}.}
 
 \item{divweight}{The divergence weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.}
 
@@ -40,14 +43,14 @@ ppi(
 
 \item{approxorder}{\code{iterative} or \code{closed} methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.}
 
-\item{control}{\code{iterative} only. Passed to \code{\link[Rcgmin:Rcgmin]{Rcgmin::Rcgmin()}} to control the iterative solver. Default values are given by \code{\link[=default_Rcgmin]{default_Rcgmin()}}.}
+\item{control}{\code{iterative} only. Passed to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}} to control the iterative solver.}
 
 \item{paramvec_start}{\code{iterative} method only. The starting guess for \code{Rcgmin} with possibly NA values for the fixed (not-estimated) elements. Generate \code{paramvec_start} easily using \code{\link[=ppi_paramvec]{ppi_paramvec()}}.}
 }
 \description{
 Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir} for compositional data.
 For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2022sc}{scorecompdir}.
-In the other situations, the score matching estimate is found by iteratively minimising the \emph{weighted Hyvarinen divergence} \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (\code{CppAD}) and \code{\link[Rcgmin:Rcgmin]{Rcgmin::Rcgmin()}}.
+In the other situations, the score matching estimate is found by iteratively minimising the \emph{weighted Hyvarinen divergence} \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (\code{CppAD}) and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
 }
 \details{
 Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyvarinen divergence} \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
@@ -98,7 +101,7 @@ The \eqn{i}th component of \eqn{\beta} controls the concentration of density whe
 }
 
 \examples{
-model <- ppi_egmodel(1000)
+model <- ppi_egmodel(100)
 estalr <- ppi(model$sample,
               paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)),
               trans = "alr", method = "closed")
@@ -118,6 +121,7 @@ Other PPI model tools:
 \code{\link{ppi_robust_alrgengamma}()},
 \code{\link{ppi_robust}()},
 \code{\link{ppi_smvalues}()},
+\code{\link{ppi_toAstar}()},
 \code{\link{rppi}()}
 }
 \concept{PPI model tools}

@@ -133,19 +133,6 @@ swapDynamic <- function(pfun, newvalue, newdynparam) {
 }
 
 #' @noRd
-#' @title Generate manifold with transformation object
-#' @param manifoldname The name of the manifold to transform to. Either 'sphere' or 'simplex'
-#' @return An RCpp::XPtr object pointing to the C++ manifold object
-#' @details
-#'  + "sphere" for square-root transformation from the simplex to the positive orthant of the sphere
-#'  + "simplex" for the simplex without any transformation.
-#'  + "Ralr" for the additive log-ratio transformation from the simplex to Euclidean space, using the final component of vectors in the denominator of the ratio.
-#'  + "Snative" for the sphere without any transformation
-pmanifold <- function(manifoldname) {
-    .Call('_scorecompdir_pmanifold', PACKAGE = 'scorecompdir', manifoldname)
-}
-
-#' @noRd
 #' @title Tape of a log-likelihood calculation
 #' @param p dimension of measurements
 #' @param bd dimension of the parameter vector

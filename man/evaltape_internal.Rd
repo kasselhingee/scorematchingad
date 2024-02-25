@@ -41,7 +41,7 @@ There methods access the tapes using \code{Rcpp::XPtr} objects and perform evalu
 \section{Functions}{
 \itemize{
 \item \code{pForward0()}: Evaluates a tape without any differentiation at the given values of \code{x} and dynparam.
-The name \code{pForward0} is a reference to the zero order \code{CppAD} method (\code{forward})\link{https://cppad.readthedocs.io/en/latest/forward_zero.html}, and the prefix 'p' is because the tape is passed as a pointer.
+The name \code{pForward0} is a reference to the zero order \code{CppAD} method \href{https://cppad.readthedocs.io/forward_zero.html}{\code{forward}}, and the prefix 'p' is because the tape is passed as a pointer.
 
 \item \code{pJacobian()}: Evaluates a the Jacobian of a tape using the \code{CppAD} \code{Jacobian} method \url{https://cppad.readthedocs.io/en/latest/Jacobian.html}.
 

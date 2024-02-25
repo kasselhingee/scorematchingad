@@ -4,23 +4,15 @@
 \alias{vMF}
 \title{Score matching estimator for the von-Mises Fisher distribution}
 \usage{
-vMF(
-  Y,
-  paramvec = NULL,
-  method = "smfull",
-  control = default_Rcgmin(),
-  w = rep(1, nrow(Y))
-)
+vMF(Y, paramvec = NULL, method = "smfull", w = rep(1, nrow(Y)))
 }
 \arguments{
 \item{Y}{A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.}
 
 \item{paramvec}{\code{smfull} method only: Optional. A vector of same length as the dimension, representing the elements of the vector that is the element-wise (Hadamard) product \eqn{\kappa \mu}.}
 
-\item{method}{Either "Mardia" for the hybrid score matching estimator from \insertCite{@mardia2016sc}{scorecompdir}.
+\item{method}{Either "Mardia" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}.
 or "smfull" for the full score matching estimator.}
-
-\item{control}{Control parameters passed to \code{\link[Rcgmin:Rcgmin]{Rcgmin::Rcgmin()}}.}
 
 \item{w}{An optional vector of weights for each measurement in \code{Y}}
 }

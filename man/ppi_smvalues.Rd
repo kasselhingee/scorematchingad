@@ -15,7 +15,8 @@ ppi_smvalues(
   acut = NULL,
   bdrythreshold = 1e-10,
   shiftsize = bdrythreshold,
-  approxorder = 10
+  approxorder = 10,
+  average = TRUE
 )
 }
 \arguments{
@@ -29,7 +30,7 @@ All elements of \code{evalparam} must be non-NA, and if there are any parameter 
 
 \item{trans}{The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".}
 
-\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching objective using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[Rcgmin:Rcgmin]{Rcgmin::Rcgmin()}}) to iteratively find the minimum of the weighted Hyvarinen divergence.}
+\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching objective using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) to iteratively find the minimum of the weighted Hyvarinen divergence.}
 
 \item{w}{Weights for each observation, if different observations have different importance. Used by \code{\link[=Windham]{Windham()}} and \code{\link[=ppi_robust]{ppi_robust()}} for robust estimation.}
 
@@ -42,6 +43,8 @@ All elements of \code{evalparam} must be non-NA, and if there are any parameter 
 \item{shiftsize}{\code{iterative} or \code{closed} methods only. For Taylor approximation, approximation centres are chosen based on \code{shiftsize}. See \code{\link[=simplex_boundaryshift]{simplex_boundaryshift()}}.}
 
 \item{approxorder}{\code{iterative} or \code{closed} methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.}
+
+\item{average}{If TRUE return the (weighted average) of the measurements, otherwise return the values for each measurement.}
 }
 \value{
 A list of
@@ -63,6 +66,7 @@ Other PPI model tools:
 \code{\link{ppi_paramvec}()},
 \code{\link{ppi_robust_alrgengamma}()},
 \code{\link{ppi_robust}()},
+\code{\link{ppi_toAstar}()},
 \code{\link{ppi}()},
 \code{\link{rppi}()}
 }

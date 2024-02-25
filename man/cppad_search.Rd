@@ -11,7 +11,7 @@ cppad_search(
   Yapproxcentres = NA * Y,
   w = rep(1, nrow(Y)),
   approxorder = 10,
-  control = default_Rcgmin()
+  control = list(tol = 1e-15, checkgrad = TRUE)
 )
 }
 \arguments{
@@ -29,7 +29,7 @@ and the \code{smotape}'s dynamic parameter is a (multivariate) measurement.}
 
 \item{approxorder}{The order of Taylor approximation to use.}
 
-\item{control}{Control parameters passed to \code{\link[Rcgmin:Rcgmin]{Rcgmin::Rcgmin()}}}
+\item{control}{Control parameters passed to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}}
 }
 \description{
 Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching objective is within tolerance of zero.
@@ -38,9 +38,9 @@ Useful when the score matching objective function is not of quadratic form;
 for score matching objective functions that are quadratic \code{\link[=cppad_closed]{cppad_closed()}} will be usually be more accurate and faster.
 }
 \details{
-The score matching objective function and gradient of the score matching function are passed to \code{\link[Rcgmin:Rcgmin]{Rcgmin::Rcgmin()}}.
+The score matching objective function and gradient of the score matching function are passed to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
 Taylor approximations are performed using \code{\link[=pTaylorApprox]{pTaylorApprox()}} for measurements with non-\code{NA} rows in \code{Yapproxcentres}.
-The call to \code{\link[Rcgmin:Rcgmin]{Rcgmin::Rcgmin()}} uses the \emph{sum} of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to \code{Rcgmin()} (e.g. \code{tol}). The results are converted into averages so the use of sums can be ignored when not setting control parameters, or studying the behaviour of Rcgmin.
+The call to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}} uses the \emph{sum} of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to \code{Rcgmin()} (e.g. \code{tol}). The results are converted into averages so the use of sums can be ignored when not setting control parameters, or studying the behaviour of Rcgmin.
 
 Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (\emph{would like a good reference for this here}).
 The sensitivity matrix \eqn{G} is estimated as
@@ -54,7 +54,6 @@ where \code{n} is the number of observations.
 \seealso{
 Other generic score matching tools: 
 \code{\link{Windham}()},
-\code{\link{cppad_closed}()},
-\code{\link{default_Rcgmin}()}
+\code{\link{cppad_closed}()}
 }
 \concept{generic score matching tools}

@@ -4,41 +4,49 @@
 \alias{Bingham}
 \title{Score matching estimates for the Bingham distribution}
 \usage{
-Bingham(sample, A = NULL, method = "smfull", control = default_Rcgmin())
+Bingham(Y, A = NULL, w = rep(1, nrow(Y)), method = "smfull")
 }
 \arguments{
-\item{sample}{A matrix of observations in Cartesian coordinates. Each row is a (multivariate) measurement.}
+\item{Y}{A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.}
 
-\item{A}{For full score matching only: if supplied, then NA elements of \code{A} are estimated and the other elements are fixed.}
+\item{A}{For full score matching only: if supplied, then NA elements of \code{A} are estimated and the other elements are fixed. For identifiability the final element of \code{diag(A)} must be \code{NA}.}
 
-\item{method}{The estimating method, either "smfull" for score matching estimates for all parameters
-or "Mardia" for the \insertCite{mardia2016sc}{scorecompdir} hybrid estimator.}
+\item{w}{An optional vector of weights for each measurement in \code{Y}}
 
-\item{control}{Control parameters passed to \code{\link[Rcgmin:Rcgmin]{Rcgmin::Rcgmin()}}.}
+\item{method}{Either "Mardia" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}.
+or "smfull" for the full score matching estimator.}
+}
+\value{
+A list of \code{est}, \code{SE} and \code{info}.
+\itemize{
+\item \code{est} contains the estimated matrix \code{A} and a vector form, \code{paramvec}, of \code{A} (ordered according to \code{c(diag(A)[1:(p-1)], A[upper.tri(A)])} ). For the Mardia method, the estimated eigenvalues of \code{A} (named \code{evals}) and eigenvectors of \code{A} (named \code{G}) are also returned.
+\item \code{SE} contains estimates of the standard errors if computed.
+\item \code{info} contains a variety of information about the model fitting procedure and results.
+}
 }
 \description{
-Score matching estimator of the Bingham matrix.
+Score matching estimators for the Bingham distribution's parameter matrix. Two methods are available: a full score matching method that estimates the parameter matrix directly; and a hybrid method by \insertCite{mardia2016sc;textual}{scorecompdir} that uses score matching to estimate just the eigenvalues of the parameter matrix.
 }
 \details{
-The Bingham distribution , which has a density proportional to
+The Bingham distribution has a density proportional to
 \deqn{\exp(z^T A z),}
 where \eqn{A} is a symmetric matrix and the trace (sum of the diagonals) of \eqn{A} is zero for identifiability \insertCite{@p181, @mardia2000di}{scorecompdir}.
 
-The function \code{Bingham()} calculates the final diagonal element of \eqn{A} from the sum of the other diagonal elements to ensure that the trace of \eqn{A} is zero. All other elements of \eqn{A} are estimated using score matching.
+The full score matching method estimates all elements of \eqn{A} directly except the final element of the diagonal, which is calculated from the sum of the other diagonal elements to ensure that the trace of \eqn{A} is zero.
 
-The estimating method by \insertCite{mardia2016sc;textual}{scorecompdir} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}.
+The method by \insertCite{mardia2016sc;textual}{scorecompdir} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}.
 The observations \code{Y} are then standardised to \code{Y}\eqn{G}.
 After this standardisation, the non-diagonal elements of \eqn{A} are zero.
-The diagonal elements are estimated using score matching.
-See \insertCite{mardia2016sc}{scorecompdir} for details.
+The diagonal elements (eigenvalues of the pre-standadised \eqn{A}) are estimated using score matching, with the final element calculated from the sum of the other elements.
+See \insertCite{mardia2016sc;textual}{scorecompdir} for details.
 }
 \examples{
 p <- 4
 A <- rsymmetricmatrix(p)
 A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
-sample <- simdd::rBingham(100, A)
+Y <- simdd::rBingham(100, A)
 
-Bingham(sample, method = "Mardia")
+Bingham(Y, method = "Mardia")
 }
 \seealso{
 Other directional model estimators: 

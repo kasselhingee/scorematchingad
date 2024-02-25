@@ -4,18 +4,16 @@
 \alias{FB}
 \title{Estimate the Fisher-Bingham distribution}
 \usage{
-FB(Y, km = NULL, A = NULL, control = default_Rcgmin())
+FB(Y, km = NULL, A = NULL)
 }
 \arguments{
-\item{Y}{An array of multivariate observations. Each row a single measurement, each column is a different dimension of the measurement.}
+\item{Y}{A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.}
 
 \item{km}{Optional. A vector of same length as the dimension, representing the parameter vector for the von Mises-Fisher component (i.e. the \eqn{\kappa \mu} see \code{\link[=vMF]{vMF()}}).
 If supplied, the non-NA elements are fixed.}
 
 \item{A}{Optional. The Bingham matrix. If supplied the non-NA elements of the Bingham matrix are fixed.
 The final element of the diagonal of \code{A} must be NA as the software calculates this value to ensure the trace is zero.}
-
-\item{control}{A list of control parameters passed to \code{Rcgmin::Rcgmin()}.}
 }
 \description{
 Estimates parameters for the Fisher-Bingham distribution using score-matching.
@@ -26,10 +24,10 @@ The density of the Fisher-Bingham distribution is proportional to
 where \eqn{A} is a matrix as in the Bingham distribution, and
 \eqn{\kappa} and \eqn{\mu} are the concentration and mean direction, respectively, as in the von Mises-Fisher distribution.
 }
-\section{Warning}{
- The score matching estimate appears to converge very slowly for the Fisher-Bingham distribution.
+\section{Warning: Slow Convergence with Sample Size}{
+The score matching estimate converges slowly for the Fisher-Bingham distribution.
 Even with a million simulated measurements,
-the gradient of the score matching objective at the true parameters has size 0.001, which is substantially non-zero.
+the gradient of the score matching objective at the true parameters can have size (L2 Euclidean norm) more than 0.001, which is substantially non-zero.
 }
 
 \examples{

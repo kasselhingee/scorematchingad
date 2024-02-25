@@ -48,7 +48,6 @@ where \code{n} is the number of observations.
 \seealso{
 Other generic score matching tools: 
 \code{\link{Windham}()},
-\code{\link{cppad_search}()},
-\code{\link{default_Rcgmin}()}
+\code{\link{cppad_search}()}
 }
 \concept{generic score matching tools}

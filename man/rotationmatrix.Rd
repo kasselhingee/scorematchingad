@@ -17,7 +17,7 @@ Creates a rotation matrix that rotates between two vectors. The matrix was speci
 \details{
 The return matrix \eqn{Q} is a rotation such that \eqn{Qb=a}, and for any vector \eqn{z} perpendicular to both \code{b} and \code{a}, \eqn{Qz=z}.
 In the extremely rare situation that \code{b} = -\code{a}, the \insertCite{amaral2007pi;textual}{scorecompdir} method does not apply. Instead \code{rotationmatrix()}, rotates \code{b} to the south pole, applies a rotation of \code{pi} that passes through the second basis vector and then reverses the first rotation.
-The same method, without the case of \code{b = -a} is also implemented in \code{\link[Directional:rotation]{Directional::rotation()}}.
+The same method, without the case of \code{b = -a}, is also implemented in \code{rotation()} function of the \href{https://cran.r-project.org/package=Directional}{\code{Directional}} package.
 }
 \examples{
 a <- c(1,2,3,4,5)

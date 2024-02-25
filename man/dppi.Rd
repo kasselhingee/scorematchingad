@@ -21,7 +21,7 @@ If \code{NULL}, then all elements of \eqn{b_L} will be set to \code{NA}, and \co
 If a number, then \eqn{b_L} will be fixed at the supplied value.}
     \item{\code{Astar}}{Either \code{NULL} or a p x p matrix.
 If non-null, then overrides \code{AL} and \code{bL}.
-If a matrix, all elements must be non-\code{NA} and \code{Astar} will be converted to \code{AL} and \code{bL}.}
+If a matrix, all elements must be non-\code{NA} and \code{Astar} will be converted to \code{AL} and \code{bL} using \code{\link[=ppi_fromAstar]{ppi_fromAstar()}}.}
     \item{\code{beta}}{Either \code{NULL}, a number, or a vector of length p.
 If NULL then all elements of \eqn{\beta} will be set to \code{NA}, and \code{\link[=ppi]{ppi()}} will estimate them.
 If a number then the \eqn{\beta} elements will be fixed at the given number.}
@@ -52,6 +52,7 @@ Other PPI model tools:
 \code{\link{ppi_robust_alrgengamma}()},
 \code{\link{ppi_robust}()},
 \code{\link{ppi_smvalues}()},
+\code{\link{ppi_toAstar}()},
 \code{\link{ppi}()},
 \code{\link{rppi}()}
 }

@@ -4,14 +4,12 @@
 \alias{vMF_kappa}
 \title{Estimate the concentration for a von Mises Fisher distribution}
 \usage{
-vMF_kappa(Y, w = rep(1, nrow(Y)), control = default_Rcgmin())
+vMF_kappa(Y, w = rep(1, nrow(Y)))
 }
 \arguments{
 \item{Y}{A data matrix, each row is an observation.}
 
 \item{w}{Weights corresponding to each row of \code{Y}.}
-
-\item{control}{A list of control arguments passed to \code{\link[Rcgmin:Rcgmin]{Rcgmin::Rcgmin()}}.}
 }
 \value{
 A list of \code{est}, \code{SE} and \code{info}.
