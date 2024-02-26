@@ -70,7 +70,7 @@ Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "S
 
   # Correction of parameter preparation
   # use the WindhamCorrection(), the alternative is Scealy's original additive method in the draft paper
-  if (!multiplicativecorrection){
+  if (alternative_populationinverse){
    if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #require constant cW (or zero) because I'm not sure what Scealy's correction method should be in the presence of a different tuning constants per value
      stop("Non-zero cW values vary, which is not supported by 'additive' correction of the parameter estimate.")
    }}
