@@ -16,9 +16,9 @@
 #' @details
 #' Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and *weighted Hyvarinen divergence* \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
 #'
-#' There are three divergence weight functions available:
+#' There are three boundary weight functions available:
 #' * The function "ones" applies no weights and should be used whenever the manifold does not have a bounday.
-#' * The function "minsq" is the minima-based divergence weight function for the PPI model \insertCite{@Equation 12, @scealy2022sc}{scorecompdir}
+#' * The function "minsq" is the minima-based boundary weight function for the PPI model \insertCite{@Equation 12, @scealy2022sc}{scorecompdir}
 #' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
 #' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 #' and \eqn{z_j}{zj} is the jth component of z.
@@ -28,16 +28,16 @@
 #' and \eqn{z_j}{zj} is the jth component of z.
 #'
 #' Scealy and Wood \insertCite{@Theorem 1, @scealy2022sc}{scorecompdir} prove that minimising the weighted Hyvarinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See __Score Matching__ in [`scorecompdir-package`])
-#' when the divergence weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
+#' when the boundary weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
 #'
 #' Hard-coded estimators are available for the following situations:
-#'  + Square root transformation ("sqrt") with the "minsq" divergence weight function:
+#'  + Square root transformation ("sqrt") with the "minsq" boundary weight function:
 #'    + full parameter vector (`paramvec` not provided)
 #'    + `paramvec` fixes only the final element of \eqn{\beta}
 #'    + `paramvec` fixes all elements of \eqn{\beta} 
 #'    + `paramvec` fixes \eqn{b_L = 0} and provides fixed values of \eqn{\beta}
 #'    + `paramvec` fixes \eqn{A_L=0} and \eqn{b_L=0}, leaving \eqn{\beta} to be fitted. 
-#'  + Square root transformation ("sqrt") with the "prodsq" divergence weight function:
+#'  + Square root transformation ("sqrt") with the "prodsq" boundary weight function:
 #'    + `paramvec` fixes all elements of \eqn{\beta} 
 #'    + `paramvec` fixes \eqn{b_L = 0} and provides fixed values of \eqn{\beta}
 #'    + `paramvec` fixes \eqn{A_L=0} and \eqn{b_L=0}, leaving \eqn{\beta} to be fitted. 
@@ -46,7 +46,7 @@
 #' @param trans The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".
 #' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
 #' @param paramvec Optionally a vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate `paramvec` easily using [ppi_paramvec()].  If `NULL` then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.
-#' @param divweight The divergence weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
+#' @param divweight The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
 #' @param acut The threshold \eqn{a_c} in `divweight` to avoid over-weighting measurements interior to the simplex
 #' @param control `iterative` only. Passed to [`optimx::Rcgmin()`] to control the iterative solver.
 #' @param bdrythreshold `iterative` or `closed` methods only. For measurements close to the boundary of the simplex Taylor approximation is applied. See [`simplex_isboundary()`].

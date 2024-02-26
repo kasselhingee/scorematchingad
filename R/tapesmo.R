@@ -2,8 +2,8 @@
 #' @param tran A transform object (of type `Rcpp_transform_ad`), typically created by [`manifoldtransform()`].
 #' @param man A transform object (of type `Rcpp_man_ad`) matching `tran`, and typically created by [`manifoldtransform()`].
 #' @param lltape Tape of the log-likelihood function constructed using [`tapell()`].
-#' @param divweight The name of the divergence weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.
-#' @param acut The threshold \eqn{a_c} in the divergence weight function `divweight`. Ignored for `divweight = "ones"`.
+#' @param divweight The name of the boundary weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.
+#' @param acut The threshold \eqn{a_c} in the boundary weight function `divweight`. Ignored for `divweight = "ones"`.
 #' @param verbose If `TRUE`, some information about the tape is printed.
 #' @return 
 #' `tapesmo()` returns an [`ADFun`] object.  

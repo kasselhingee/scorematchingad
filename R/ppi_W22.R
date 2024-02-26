@@ -23,7 +23,7 @@ calcW22 <- function(p, h, h4m, w = rep(1, length(h))){
 # The below calculates this for all j, for each measurement and averages.
 # When h(z)^2 = 0, then the limit of h(z)^2/z_j^2 as z_j goes to zero is used,
 # For the minima h(z) form, this limit is 1 when z_j is the minimum
-# Note: indh is not used for the product style divergence weight function (hstyle)
+# Note: indh is not used for the product style boundary weight function (hstyle)
 h2onz2_mean <- function(p, n, z, h, indh, hstyle = "minima", w = rep(1, nrow(z))){
   if (hstyle=="minima"){
     limit <- matrix(0, n, p)
