@@ -169,6 +169,10 @@ Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "S
 #' the weighted population follows a density of the same form, but with a parameter vector of 
 #' \eqn{(1 + c) \circ \theta}.
 #' The inverse of this change to the parameter vector is then a matrix multiplication by a diagonal matrix with elements \eqn{1/(1+c_i)}, with \eqn{c_i} denoting the elements of \eqn{c}.
+#' @name Windham_populationinverse 
+NULL
+
+#' @describeIn Windham_populationinverse The matrix with diagonal elements \eqn{1/(1+c_i)} 
 #' @export
 Windham_populationinverse <- function(cW){
   tauinv <- diag(1/(1 + cW), nrow = length(cW)) #matrix that converts theta to the new theta*cW based on inclusion/exclusion  #klh: the extra argument nrow = length(cW) forces diag() to use the cW values on the diagonal, rather than treat them as the size of the matrix desired - useful when cW is legitimately length 1
