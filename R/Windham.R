@@ -179,7 +179,7 @@ Windham_populationinverse <- function(cW){
   return(tauinv)
 }
 
-#' @describeIn Windham_populationinverse The transform implemented as described by \insertCite{scealy2024; textual}. It is mathematically equivalent to multiplication by the result of `Windham_populationinverse()` when c is constant.
+#' @describeIn Windham_populationinverse The transform implemented as described by \insertCite{scealy2024; textual}{scorecompdir}. It is mathematically equivalent to multiplication by the result of `Windham_populationinverse()` in the situation in \insertCite{scealy2024; textual}{scorecompdir}.
 #' @export
 #' @param newtheta The parameter vector most recently estimated
 #' @param previoustheta The parameter vector estimated in the previous step
