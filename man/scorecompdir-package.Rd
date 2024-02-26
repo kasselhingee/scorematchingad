@@ -6,7 +6,7 @@
 \alias{scorecompdir-package}
 \title{scorecompdir: DRAFT Score-Matching for Directional and Compositional Data}
 \description{
-Score matching is a useful estimation technique when the normalising constant for a probability distribution is difficult to compute. This package includes methods for the flexible Polynomially-Tilted Pairwise Interaction (PPI) model for compositional data. These methods can perform well when there are zeros, even many zeros. See Scealy and Wood (2022) \url{https://doi.org/10.1080/01621459.2021.2016422} and Scealy, Hingee, Kent, and Wood (2024 - in publication). The package also includes hybrid estimators for directional distributions proposed by Mardia, Kent and Laha (2016) \url{http://arxiv.org/abs/1604.08470}. Tools for implementing additional score-matching estimators using CppAD \url{https://github.com/coin-or/CppAD} for algorithmic differentiation are also included.
+Score matching is a useful estimation technique when the normalising constant for a probability distribution is difficult to compute. This package includes methods for the flexible Polynomially-Tilted Pairwise Interaction (PPI) model for compositional data. These methods can perform well when there are zeros, even many zeros. See Scealy and Wood (2022) \doi{10.1080/01621459.2021.2016422} and Scealy, Hingee, Kent, and Wood (2024 - in publication). The package also includes hybrid estimators for directional distributions proposed by Mardia, Kent and Laha (2016) \href{https://arxiv.org/abs/1604.08470}{arXiv:1604.08470}. Tools for implementing additional score-matching estimators using CppAD \url{https://github.com/coin-or/CppAD} for algorithmic differentiation are also included.
 }
 \details{
 This package's major contributions are
