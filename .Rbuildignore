@@ -1,13 +1,11 @@
 ^cdabyppi\.Rproj$
 ^\.Rproj\.user$
 .*.Rproj$
-designquestions.md
 ^LICENSE\.md$
-tests/test.sh
-tests/externtest.R
-tests/prepinteractivetesting.R
 
 ^doc$
 ^Meta$
 cout2Rcout.sh
+CONTRIBUTING
+data-raw
 
