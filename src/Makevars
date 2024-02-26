@@ -1,5 +1,5 @@
 CXX_STD = CXX11
 
-PKG_CXXFLAGS = -I../inst/include  `$(R_HOME)/bin/Rscript -e 'Rcpp:::CxxFlags()'` -Wno-ignored-attributes
+PKG_CXXFLAGS = -I../inst/include  `$(R_HOME)/bin/Rscript -e 'Rcpp:::CxxFlags()'`
 
 
