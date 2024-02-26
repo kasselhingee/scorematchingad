@@ -11,7 +11,8 @@ Windham(
   cW,
   ...,
   fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1e-10),
-  paramvec_start = NULL
+  paramvec_start = NULL,
+  alternative_populationinverse = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ It must have arguments \code{Y} that is a matrix of measurements and \code{w} th
 \item{fpcontrol}{A named list of control arguments to pass to \code{\link[FixedPoint:FixedPoint]{FixedPoint::FixedPoint()}} for the fixed point iteration.}
 
 \item{paramvec_start}{Initially used to check the function \code{estimator}. If \code{estimator} accepts a \code{paramvec_start}, then the current estimate of the parameter vector is passed as \code{paramvec_start} to \code{estimator} in each iteration.}
+
+\item{alternative_populationinverse}{The default is to use \code{\link[=Windham_populationinverse]{Windham_populationinverse()}}. If TRUE an alternative implementation in \code{\link[=Windham_populationinverse_alternative]{Windham_populationinverse_alternative()}} is used. So far we have not seen any difference between the results.}
 }
 \value{
 A list:

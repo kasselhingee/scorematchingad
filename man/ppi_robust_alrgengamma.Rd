@@ -16,7 +16,7 @@ ppi_robust_alrgengamma(
 
 \item{cW}{A vector of robustness tuning constants. When computing the weight for an observation the parameter vector is multiplied element-wise with \code{cW}. For the PPI model, generate \code{cW} easily using \code{\link[=ppi_cW]{ppi_cW()}} and \code{\link[=ppi_cW_auto]{ppi_cW_auto()}}.}
 
-\item{...}{Passed to a special version of \code{\link[=Windham]{Windham()}} and on to \code{\link[=ppi]{ppi()}}.}
+\item{...}{Passed to \code{\link[=Windham]{Windham()}} and on to \code{\link[=ppi]{ppi()}}.}
 
 \item{fpcontrol}{A named list of control arguments to pass to \code{\link[FixedPoint:FixedPoint]{FixedPoint::FixedPoint()}} for the fixed point iteration.}
 }
@@ -34,6 +34,7 @@ Performs the Windham robustification algorithm exactly as described in \insertCi
 \details{
 This method must fit a PPI model via additive-log ratio transform with \eqn{b_L=0} fixed and the final element of \eqn{\beta} fixed.
 The default convergence metric and threshold are different to the default for \code{\link[=ppi_robust]{ppi_robust()}} to match the original implementation: convergence is measured by the change in the first element of \eqn{\beta}, and convergence is reached when the change is smaller than \code{1E-6}. Override this behaviour by specifying the elements \code{ConvergenceMetric} and \code{ConvergenceMetricThreshold} in a list passed as \code{fpcontrol}.
+\code{\link[=Windham]{Windham()}} is called with \code{alternative_populationinverse = TRUE}.
 }
 \references{
 \insertAllCited{}
