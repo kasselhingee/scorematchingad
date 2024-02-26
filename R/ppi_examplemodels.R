@@ -11,10 +11,8 @@
 #'  * `beta` The \eqn{\beta} parameter vector 
 #' @examples
 #' ppi_egmodel(1000)
-#' ppi_eggengamma(100)
 #' @description 
-#' The function `ppi_egmodel()` simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2022sc}{scorecompdir}. The function `ppi_eggengamma()` simulates from the 5-component model of \insertCite{@Section A.11, @scealy2022sc}{scorecompdir}, which is a generalised gamma model (i.e. \eqn{b_L} = 0).
-#' Model parameters and the simulated sample are returned.
+#' Simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2022sc}{scorecompdir}. 
 #' @references
 #' \insertAllCited{}
 #' @export
