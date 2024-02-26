@@ -6,10 +6,11 @@
 #' @inheritParams Windham
 #' @inheritParams ppi_robust
 #' @inherit ppi_robust return
-#' @param ... Passed to a special version of [`Windham()`] and on to [`ppi()`]. 
+#' @param ... Passed to [`Windham()`] and on to [`ppi()`]. 
 #' @details
 #' This method must fit a PPI model via additive-log ratio transform with \eqn{b_L=0} fixed and the final element of \eqn{\beta} fixed.
 #' The default convergence metric and threshold are different to the default for [`ppi_robust()`] to match the original implementation: convergence is measured by the change in the first element of \eqn{\beta}, and convergence is reached when the change is smaller than `1E-6`. Override this behaviour by specifying the elements `ConvergenceMetric` and `ConvergenceMetricThreshold` in a list passed as `fpcontrol`.
+#' [`Windham()`] is called with `alternative_populationinverse = TRUE`.
 #' @references
 #' \insertAllCited{}
 #' @export
@@ -32,14 +33,14 @@ ppi_robust_alrgengamma <- function(Y, cW, ..., fpcontrol = list(Method = "Simple
   # remove duplicates - removes the second element
   fpcontrol <- fpcontrol[!duplicated(names(fpcontrol))]
 
-  est = Windham_raw(Y = Y,
+  est = Windham(Y = Y,
                     estimator = ppi,
                     ldenfun = ldenfun,
                     cW = cW,
                     trans = "alr",
                     ...,
                     fpcontrol = fpcontrol,
-                    multiplicativecorrection = FALSE)
+                    alternative_populationinverse = TRUE)
 
   #make results nicer and consistent with ppi()
   out <- list(

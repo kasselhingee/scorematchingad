@@ -15,6 +15,7 @@
 #' Initially used to check the function `estimator`. If `estimator` accepts a `paramvec_start`, then the current estimate of the parameter vector is passed as `paramvec_start` to `estimator` in each iteration.
 #' @param cW A vector of robustness tuning constants. When computing the weight for an observation the parameter vector is multiplied element-wise with `cW`. For the PPI model, generate `cW` easily using [ppi_cW()] and [ppi_cW_auto()].
 #' @param fpcontrol A named list of control arguments to pass to [FixedPoint::FixedPoint()] for the fixed point iteration.
+#' @param alternative_populationinverse The default is to use [`Windham_populationinverse()`]. If TRUE an alternative implementation in [`Windham_populationinverse_alternative()`] is used. So far we have not seen any difference between the results.
 
 
 #' @details
@@ -35,12 +36,7 @@
 #' * `theta` the estimated parameter vector
 #' * `optim` information about the fixed point iterations and opimisation process. Including a slot `finalweights` for the weights in the final iteration.
 #' @export
-Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1E-10), paramvec_start = NULL){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
-  out <- Windham_raw(Y, estimator, ldenfun, cW, ..., fpcontrol = fpcontrol, paramvec_start = paramvec_start, multiplicativecorrection = TRUE)
-  return(out)
-}
-
-Windham_raw <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1E-10), paramvec_start = NULL, multiplicativecorrection = TRUE){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
+Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1E-10), paramvec_start = NULL, alternative_populationinverse = FALSE){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)
   ellipsis::check_dots_used()
   # assuming estimator has arguments: Y, paramvec, w, and optionally paramvec_start.
@@ -181,6 +177,9 @@ Windham_populationinverse <- function(cW){
 
 #' @describeIn Windham_populationinverse The transform implemented as described by \insertCite{scealy2024; textual}. It is mathematically equivalent to multiplication by the result of `Windham_populationinverse()` when \eqn{c} is constant.
 #' @export
+#' @param newtheta The parameter vector most recently estimated
+#' @param previoustheta The parameter vector estimated in the previous step
+#' @param cWav The value of the non-zero elements of `cW`. That is `cW` have elements that are zero or equal to `cWav`.
 Windham_populationinverse_alternative <- function(newtheta, previoustheta, cW, cWav){ #cW is a vector, cWav is the average of the non-zero elements of cW
   # generate the tuning constants dbeta, dA
   dtheta <- previoustheta * (cW - cWav) # = theta * cWav * (inWW - 1) = theta * cWav * -1 * !inWW = -cW * theta * !inWW
