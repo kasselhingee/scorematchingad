@@ -54,7 +54,7 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
   tapes <- buildsmotape(
      start = "sim",
      tran = trans,
-     man = man,
+     end = man,
      llname = "ppi",
      ytape =  rep(1/p, p),
      usertheta = paramvec,

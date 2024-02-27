@@ -4,7 +4,7 @@ test_that("testquadratictape passes on PPI model with sqrt transformation, minsq
   tapes <- buildsmotape(
      start = "sim",
      tran = "sqrt",
-     man = "sph",
+     end = "sph",
      llname = "ppi",
      ytape = c(0.2, 0.3, 0.5),
      usertheta = ppi_paramvec(p = 3), 
@@ -32,7 +32,7 @@ test_that("manual tests on PPI model with sqrt transformation, minsq divergence 
   tapes <- buildsmotape(
      start = "sim",
      tran = "sqrt",
-     man = "sph",
+     end = "sph",
      llname = "ppi",
      ytape = c(0.2, 0.3, 0.5),
      usertheta = ppi_paramvec(p = 3), 

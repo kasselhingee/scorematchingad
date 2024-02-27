@@ -184,7 +184,7 @@ ppi <- function(Y, paramvec = NULL,
     tapes <- buildsmotape(
        start = "sim",
        tran = trans,
-       man = man,
+       end = man,
        llname = "ppi",
        ytape =  rep(1/p, p),
        usertheta = t_si2u(stheta, isfixed),

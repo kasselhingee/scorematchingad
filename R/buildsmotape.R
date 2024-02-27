@@ -49,7 +49,7 @@
 #' evaltape(tapes$lltape, u, runif(n = ltheta))
 #' evaltape(tapes$smotape, runif(n = ltheta), u)
 #' @export
-buildsmotape <- function(start, tran, man, llname,
+buildsmotape <- function(start, tran, end, llname,
                          ytape, usertheta,
                          divweight = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
@@ -57,14 +57,14 @@ buildsmotape <- function(start, tran, man, llname,
 
   if(all(!is.na(usertheta))){stop("All elements of theta are fixed")}
 
-  if (!(all(c(tran, man) == c("sqrt", "sph")) | all(c(tran, man) == c("identity", "sim")))){
+  if (!(all(c(tran, end) == c("sqrt", "sph")) | all(c(tran, end) == c("identity", "sim")))){
     if (divweight != "ones"){warning("Manifold supplied has no boundary. Using divweight = 'ones' is strongly recommended.")}
   }
   if ((divweight == "ones") && (abs(acut - 1) > 1E-8)){
     warning("The value of 'acut' is ignored for divweight == 'ones'")
   }
 
-  tranman <- manifoldtransform(start, tran, man)
+  tranman <- manifoldtransform(start, tran, end)
   lltape <- tapell(llname = llname,
                     ytape = ytape,
                     usertheta = usertheta, 
@@ -83,7 +83,7 @@ buildsmotape <- function(start, tran, man, llname,
     info = list(
       name = llname,
       transform = tran,
-      manifold = man,
+      manifold = end,
       ulength = length(ytape),
       divweight = divweight,
       acut = acut

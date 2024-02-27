@@ -5,17 +5,17 @@
 #'  + `alr'
 #'  + `clr'
 #'  + `none' (or `identity')
-#' @param man The name of the manifold that `tran` maps `start` to. Available manifolds are:
+#' @param end The name of the manifold that `tran` maps `start` to. Available manifolds are:
 #'  + `sph' unit sphere
 #'  + `Hn111' hyperplane normal to 1, 1, 1, 1, ...
 #'  + `sim' simplex
 #'  + `Euc' Euclidean space
 #' @return `manifoldtransform()` returns a named list with:
 #'  + `tran` A object of type `Rcpp_transform_ad` representing the transform
-#'  + `man` A object of type `Rcpp_man_ad` representing the manifold
+#'  + `man` A object of type `Rcpp_man_ad` representing the end manifold
 #' @details
-#' Only some combinations of `start`, `tran` and `man` are available because `tran` must map between `start` and `man`.
-#' These combinations of `start`-`tran`-`man` are available:
+#' Only some combinations of `start`, `tran` and `end` are available because `tran` must map between `start` and `end`.
+#' These combinations of `start`-`tran`-`end` are available:
 #'
 #' ```{r mantrans, results = "asis", echo = FALSE}
 #' cat(paste(" +", mantrancombos), sep = "\n")
@@ -23,10 +23,10 @@
 #' @examples
 #' manifoldtransform("sim", "alr", "Euc")
 #' @export
-manifoldtransform <- function(start, tran = "identity", man = start){
-  stopifnot(paste(start, tran, man, sep = "-") %in% mantrancombos)
+manifoldtransform <- function(start, tran = "identity", end = start){
+  stopifnot(paste(start, tran, end, sep = "-") %in% mantrancombos)
   out <- list(tran = methods::new(mantranmodule$transform_ad, tran),
-       man = methods::new(mantranmodule$man_ad, man))
+       man = methods::new(mantranmodule$man_ad, end))
   return(out)
 }
 

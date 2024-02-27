@@ -6,7 +6,7 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
   tapes <- buildsmotape(
      start = "sim",
      tran = "alr",
-     man = "Euc",
+     end = "Euc",
      llname = "ppi",
      ytape = c(0.2, 0.3, 0.5),
      usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
@@ -41,7 +41,7 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
   tapes <- buildsmotape(
      start = "sim",
      tran = "alr",
-     man = "Euc",
+     end = "Euc",
      llname = "ppi",
      ytape = c(0.2, 0.3, 0.5),
      usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)), 

@@ -5,7 +5,7 @@ test_that("Hess + Offset match gradient for a PPI Example", {
   tapes <- buildsmotape(
      start = "sim",
      tran = "alr",
-     man = "Euc",
+     end = "Euc",
      llname = "ppi",
      ytape = c(0.2, 0.3, 0.5),
      usertheta = ppi_paramvec(p = 3, betap=0.5), 
@@ -55,7 +55,7 @@ test_that("quadratictape_parts with approx centres is close to quadratic_parts f
   tapes <- buildsmotape(
      start = "sim",
      tran = "alr",
-     man = "Euc",
+     end = "Euc",
      llname = "ppi",
      ytape = c(0.2, 0.3, 0.5),
      usertheta = ppi_paramvec(p = 3), 
