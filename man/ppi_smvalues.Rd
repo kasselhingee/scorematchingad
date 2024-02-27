@@ -2,7 +2,7 @@
 % Please edit documentation in R/ppi_smvalues.R
 \name{ppi_smvalues}
 \alias{ppi_smvalues}
-\title{Compute score matching objective value, gradient, and Hessian for a PPI Model}
+\title{Compute score matching discrepancy value, gradient, and Hessian for a PPI Model}
 \usage{
 ppi_smvalues(
   Y,
@@ -30,7 +30,7 @@ All elements of \code{evalparam} must be non-NA, and if there are any parameter 
 
 \item{trans}{The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".}
 
-\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching objective using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) to iteratively find the minimum of the weighted Hyv\"arinen divergence.}
+\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching discrepancy using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) to iteratively find the minimum of the weighted Hyv\"arinen divergence.}
 
 \item{w}{Weights for each observation, if different observations have different importance. Used by \code{\link[=Windham]{Windham()}} and \code{\link[=ppi_robust]{ppi_robust()}} for robust estimation.}
 
@@ -49,9 +49,9 @@ All elements of \code{evalparam} must be non-NA, and if there are any parameter 
 \value{
 A list of
 \itemize{
-\item \code{obj} the score matching objective value
-\item \code{grad} the gradient of the score matching objective
-\item \code{hess} the Hessian of the score matching objective
+\item \code{obj} the score matching discrepancy value
+\item \code{grad} the gradient of the score matching discrepancy
+\item \code{hess} the Hessian of the score matching discrepancy
 \item \code{offset} gradient offset (see \code{\link[=quadratictape_parts]{quadratictape_parts()}})
 }
 }

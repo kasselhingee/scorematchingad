@@ -13,7 +13,7 @@ cppad_closed(
 )
 }
 \arguments{
-\item{smotape}{A \code{CppAD} tape of a score matching objective function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratictape]{testquadratictape()}}.
+\item{smotape}{A \code{CppAD} tape of a score matching discrepancy function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratictape]{testquadratictape()}}.
 The \code{smotape}'s independent variables are assumed to be the model parameters to fit
 and the \code{smotape}'s dynamic parameter is a (multivariate) measurement.}
 
@@ -26,7 +26,7 @@ and the \code{smotape}'s dynamic parameter is a (multivariate) measurement.}
 \item{approxorder}{The order of Taylor approximation to use.}
 }
 \description{
-For a \code{CppAD} tape of a quadratic-form score matching objective function, calculates the vector of parameters such that the gradient of the score matching objective is zero.
+For a \code{CppAD} tape of a quadratic-form score matching discrepancy function, calculates the vector of parameters such that the gradient of the score matching discrepancy is zero.
 Also estimates standard errors and covariance.
 Many score matching estimators have an objective function that has a quadratic form.
 }

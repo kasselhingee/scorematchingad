@@ -24,7 +24,7 @@ Computes a marginal moment matching estimator \insertCite{@Section 6.2, @scealy2
 \details{
 Only \eqn{A_L} is estimated. \eqn{\beta=\beta_0} is fixed and not estimated. \eqn{b_L} is fixed at zero.
 See \insertCite{@Section 6.2 and A.8 of @scealy2022sc}{scorecompdir}.
-The boundary weight function in the score matching objective is the unthresholded product weight function
+The boundary weight function in the score matching discrepancy is the unthresholded product weight function
 \deqn{h(z)^2 = \min\left(\prod_{j=1}^{p} z_j^2, a_c^2\right).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2).}
 }
 \references{

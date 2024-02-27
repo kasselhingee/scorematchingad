@@ -19,7 +19,7 @@ Move compositional measurements by \code{shiftsize} towards the centre of the si
 }
 \details{
 Measurements on the boundary of the simplex can lead to degenerate log-likelihood values, which are avoided in score matching by the boundary weight function. However, \code{CppAD} still computes the log-likelihood and derivatives, and (to KLH's knowledge) is not able to evaluate the value of \eqn{0/0} or similar.
-Good approximations of the score matching objective value can be obtained through Taylor approximations, which require a \emph{centre}.
+Good approximations of the score matching discrepancy value can be obtained through Taylor approximations, which require a \emph{centre}.
 The function here generates this approximation centre.
 }
 \examples{

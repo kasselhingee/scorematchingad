@@ -6,7 +6,7 @@
 \alias{manifoldtransform}
 \alias{tapell}
 \alias{tapesmo}
-\title{Build a CppAD Tapes for Score Matching}
+\title{Build CppAD Tapes for Score Matching}
 \usage{
 buildsmotape(
   start,
@@ -63,7 +63,7 @@ Please ensure that \code{ytape} is the interior of the manifold, and it is proba
 \item{lltape}{Tape of the log-likelihood function constructed using \code{\link[=tapell]{tapell()}}.}
 }
 \value{
-\code{buildsmotape()} returns a list of the log-likelihood tape (note that the \emph{input} for this tape is a function on the manifold), the tape of the score matching objective (the \emph{input} here is the non-fixed parameter values), and some information used to generate the tape.
+\code{buildsmotape()} returns a list of the log-likelihood tape (note that the \emph{input} for this tape is a function on the manifold), the tape of the score matching discrepancy (the \emph{input} here is the non-fixed parameter values), and some information used to generate the tape.
 
 \code{manifoldtransform()} returns a named list with:
 \itemize{
@@ -80,18 +80,20 @@ Please ensure that \code{ytape} is the interior of the manifold, and it is proba
 \code{tapesmo()} returns an \code{\link{ADFun}} object.
 }
 \description{
-Generates \code{CppAD} tapes for the log-likelihood and score matching objective  for a model specified by name and an optional transformation to a manifold.
-Three steps are performed by \code{buildsmotape()}, corresponding to each of the functions \code{manifoldtransform()}, \code{tapell()} and \code{tapesmo()}.
+Generates \code{CppAD} tapes (called \code{ADFun}) for the log-likelihood and the score matching discrepancy of a model faimly.
+Three steps are performed by \code{buildsmotape()}: first an object that specifies the manifold and any transformation to another manifold is created using \code{\link[=manifoldtransform]{manifoldtransform()}}; then a tape of the log-likelihood (without normalising constant) is created using \code{\link[=tapell]{tapell()}}; finally a tape of the score matching discrepancy is created using \code{\link[=tapesmo]{tapesmo()}}.
 }
 \details{
+The model log-likelihood must be implemented in \verb{C++} and is selected by name. Similarly the transforms of the manifold must be implemented in \verb{C++} and selected by name.t
+
 When using, \code{CppAD} one first creates \emph{tapes} of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
 The taping relies on specifying typical argument values for the functions, so the programming is simplest when the function is defined without conditions.
 Tapes can have both \emph{independent} variables and \emph{dynamic} variables.
 The differentiation with \code{CppAD} occurs with respect to the independent variables.
 Tapes of tapes are possible, including tapes that swap the independent and dynamic variables - this is how this package differentiates with respect to a dynamic variables.
 
-To build a tape for the score matching objective function, the package first tapes the map from a point \eqn{z} on the manifold to the value of the log-likelihood, where the independent variable is the \eqn{z}, and the dynamic variable is a vector of the \emph{non}-fixed parameter values.
-This tape is then used to generate a tape for the score matching objective with the non-fixed parameter values as the independent variable.
+To build a tape for the score matching discrepancy function, the package first tapes the map from a point \eqn{z} on the manifold to the value of the log-likelihood, where the independent variable is the \eqn{z}, and the dynamic variable is a vector of the \emph{non}-fixed parameter values.
+This tape is then used to generate a tape for the score matching discrepancy with the non-fixed parameter values as the independent variable.
 
 Only some combinations of \code{start}, \code{tran} and \code{man} are available because \code{tran} must map between \code{start} and \code{man}.
 These combinations of \code{start}-\code{tran}-\code{man} are available:
@@ -109,7 +111,7 @@ These combinations of \code{start}-\code{tran}-\code{man} are available:
 
 \item \code{tapell()}: Creates a \code{CppAD} tape of the log-likelihood as a function of values on the provided manifold. The log-likelihood accounts for the change of measure between the natural manifold of the log-likelihood and the manifold with transformation provided by \code{tran}.
 
-\item \code{tapesmo()}: Generates a \code{CppAD} tape of the empirical score matching objective function for a single measurement (\eqn{\tilde\psi} in Score Matching vignette). Requires a tape of the log-likelihood function and the corresponding manifold with the transformation.
+\item \code{tapesmo()}: Generates a \code{CppAD} tape of the empirical score matching discrepancy function for a single measurement (\eqn{\tilde\psi} in Score Matching vignette). Requires a tape of the log-likelihood function and the corresponding manifold with the transformation.
 
 }}
 \section{Introduction to CppAD Tapes}{

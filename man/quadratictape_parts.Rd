@@ -7,7 +7,7 @@
 quadratictape_parts(tape, tmat, tcentres = NA * tmat, approxorder = 10)
 }
 \arguments{
-\item{tape}{A tape of a quadratic function (such as score matching objective function)}
+\item{tape}{A tape of a quadratic function (such as score matching discrepancy function)}
 
 \item{tmat}{A matrix of \code{t} vectors. Each row corresponds to a vector.}
 
@@ -23,7 +23,7 @@ A list of
 }
 }
 \description{
-When the score matching objective function is quadratic then the gradient of the score matching objective function can be written using the Hessian and an offset term. This can be useful for solving for the situation when the gradient is zero.
+When the score matching discrepancy function is quadratic then the gradient of the score matching discrepancy function can be written using the Hessian and an offset term. This can be useful for solving for the situation when the gradient is zero.
 The Hessian and offset term are computed using \code{CppAD} tapes.
 Taylor approximation can be used for locations at removable singularities.
 }

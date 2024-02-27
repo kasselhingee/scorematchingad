@@ -15,7 +15,7 @@ cppad_search(
 )
 }
 \arguments{
-\item{smotape}{A \code{CppAD} tape of a score matching objective function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratictape]{testquadratictape()}}.
+\item{smotape}{A \code{CppAD} tape of a score matching discrepancy function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratictape]{testquadratictape()}}.
 The \code{smotape}'s independent variables are assumed to be the model parameters to fit
 and the \code{smotape}'s dynamic parameter is a (multivariate) measurement.}
 
@@ -32,13 +32,13 @@ and the \code{smotape}'s dynamic parameter is a (multivariate) measurement.}
 \item{control}{Control parameters passed to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}}
 }
 \description{
-Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching objective is within tolerance of zero.
+Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching discrepancy is within tolerance of zero.
 Also estimates standard errors and covariance.
-Useful when the score matching objective function is not of quadratic form;
-for score matching objective functions that are quadratic \code{\link[=cppad_closed]{cppad_closed()}} will be usually be more accurate and faster.
+Useful when the score matching discrepancy function is not of quadratic form;
+for score matching discrepancy functions that are quadratic \code{\link[=cppad_closed]{cppad_closed()}} will be usually be more accurate and faster.
 }
 \details{
-The score matching objective function and gradient of the score matching function are passed to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
+The score matching discrepancy function and gradient of the score matching function are passed to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
 Taylor approximations are performed using \code{\link[=pTaylorApprox]{pTaylorApprox()}} for measurements with non-\code{NA} rows in \code{Yapproxcentres}.
 The call to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}} uses the \emph{sum} of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to \code{Rcgmin()} (e.g. \code{tol}). The results are converted into averages so the use of sums can be ignored when not setting control parameters, or studying the behaviour of Rcgmin.
 

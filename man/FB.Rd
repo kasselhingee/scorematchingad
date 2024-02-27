@@ -27,7 +27,7 @@ where \eqn{A} is a matrix as in the Bingham distribution, and
 \section{Warning: Slow Convergence with Sample Size}{
 The score matching estimate converges slowly for the Fisher-Bingham distribution.
 Even with a million simulated measurements,
-the gradient of the score matching objective at the true parameters can have size (L2 Euclidean norm) more than 0.001, which is substantially non-zero.
+the gradient of the score matching discrepancy at the true parameters can have size (L2 Euclidean norm) more than 0.001, which is substantially non-zero.
 }
 
 \examples{

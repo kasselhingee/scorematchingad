@@ -3,7 +3,7 @@
 \name{smvalues_tape}
 \alias{smvalues_tape}
 \alias{smvalues_tape_wsum}
-\title{Compute score matching objective value, gradient, and Hessian}
+\title{Compute score matching discrepancy value, gradient, and Hessian}
 \usage{
 smvalues_tape(smotape, xmat, pmat, xcentres = NA * xmat, approxorder = 10)
 
@@ -17,7 +17,7 @@ smvalues_tape_wsum(
 )
 }
 \arguments{
-\item{smotape}{A taped score matching objective. Most easily created by \code{\link[=buildsmotape]{buildsmotape()}}.}
+\item{smotape}{A taped score matching discrepancy. Most easily created by \code{\link[=buildsmotape]{buildsmotape()}}.}
 
 \item{xmat}{A matrix of (multivariate) independent variables. Each represents a single independent variable vector. Or a single vector of that is used for all rows of \code{pmat}.}
 
@@ -34,16 +34,16 @@ smvalues_tape_wsum(
 \value{
 A list of
 \itemize{
-\item \code{obj} the score matching objective values
-\item \code{grad} the gradient of the score matching objective
-\item \code{hess} the Hessian of the score matching objective
+\item \code{obj} the score matching discrepancy values
+\item \code{grad} the gradient of the score matching discrepancy
+\item \code{hess} the Hessian of the score matching discrepancy
 }
 }
 \description{
 Computes a range of relevant information for investigating score matching estimators.
 }
 \details{
-The score matching objective values are differ from the Hyv\"arinen Divergence by a constant, see ... .
+The score matching discrepancy values are differ from the Hyv\"arinen Divergence by a constant, see ... .
 The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in \code{xmat} and \code{pmat}.
 }
 \examples{
