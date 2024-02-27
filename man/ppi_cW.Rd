@@ -24,7 +24,7 @@ These functions help to quickly generate a set of Windham exponents for use in \
 Elements corresponding to \eqn{A_L} and \eqn{b_L} corresponding to components with strong concentrations have non-zero constant tuning exponent, and all other elements have a tuning constant of zero.
 All elements of \eqn{\beta} have a tuning exponent of zero.
 
-The function \code{ppi_cW_auto()} automatically detects concentrations near zero by fitting a PPI distribution with \eqn{A_L=0} and \eqn{b_L=0} (i.e. a Dirichlet distribution) with the square root transformation and minima-based divergence weight function.
+The function \code{ppi_cW_auto()} automatically detects concentrations near zero by fitting a PPI distribution with \eqn{A_L=0} and \eqn{b_L=0} (i.e. a Dirichlet distribution) with the square root transformation and minima-based boundary weight function.
 }
 \details{
 The Windham robustifying method involes weighting observations by a function of the proposed model density \insertCite{windham1995ro}{scorecompdir}.

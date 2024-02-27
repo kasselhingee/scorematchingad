@@ -52,9 +52,9 @@ Please ensure that \code{ytape} is the interior of the manifold, and it is proba
 
 \item{usertheta}{A vector of parameter elements for the likelihood function. \code{NA} elements will become \emph{dynamic parameters}. Other elements will be fixed at the provided value. The length of \code{usertheta} must be the correct length for the log-likelihood, no checking is conducted.}
 
-\item{divweight}{The name of the divergence weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.}
+\item{divweight}{The name of the boundary weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.}
 
-\item{acut}{The threshold \eqn{a_c} in the divergence weight function \code{divweight}. Ignored for \code{divweight = "ones"}.}
+\item{acut}{The threshold \eqn{a_c} in the boundary weight function \code{divweight}. Ignored for \code{divweight = "ones"}.}
 
 \item{thetatape_creator}{A function that accepts an integer \code{n}, and returns a vector of \code{n} length. The function is used to fill in the \code{NA} elements of \code{usertheta} when building the tapes. Please ensure that the values filled by \code{thetatape_creator} lead to plausible parameter vectors for the chosen log-likelihood.}
 

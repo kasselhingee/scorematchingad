@@ -27,13 +27,13 @@ ppi(
 
 \item{trans}{The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".}
 
-\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching objective using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) to iteratively find the minimum of the weighted Hyvarinen divergence.}
+\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching objective using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) to iteratively find the minimum of the weighted Hyv\"arinen divergence.}
 
 \item{w}{Weights for each observation, if different observations have different importance. Used by \code{\link[=Windham]{Windham()}} and \code{\link[=ppi_robust]{ppi_robust()}} for robust estimation.}
 
 \item{constrainbeta}{If \code{TRUE}, elements of \eqn{\beta} that are less than \code{-1} are converted to \code{-1 + 1E-7}.}
 
-\item{divweight}{The divergence weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.}
+\item{divweight}{The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.}
 
 \item{acut}{The threshold \eqn{a_c} in \code{divweight} to avoid over-weighting measurements interior to the simplex}
 
@@ -50,15 +50,15 @@ ppi(
 \description{
 Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir} for compositional data.
 For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2022sc}{scorecompdir}.
-In the other situations, the score matching estimate is found by iteratively minimising the \emph{weighted Hyvarinen divergence} \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (\code{CppAD}) and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
+In the other situations, the score matching estimate is found by iteratively minimising the \emph{weighted Hyv\"arinen divergence} \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (\code{CppAD}) and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
 }
 \details{
-Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyvarinen divergence} \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
+Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyv\"arinen divergence} \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
 
-There are three divergence weight functions available:
+There are three boundary weight functions available:
 \itemize{
 \item The function "ones" applies no weights and should be used whenever the manifold does not have a bounday.
-\item The function "minsq" is the minima-based divergence weight function for the PPI model \insertCite{@Equation 12, @scealy2022sc}{scorecompdir}
+\item The function "minsq" is the minima-based boundary weight function for the PPI model \insertCite{@Equation 12, @scealy2022sc}{scorecompdir}
 \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
 where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 and \eqn{z_j}{zj} is the jth component of z.
@@ -68,12 +68,12 @@ where \eqn{z} is a point in the positive orthant of the p-dimensional unit spher
 and \eqn{z_j}{zj} is the jth component of z.
 }
 
-Scealy and Wood \insertCite{@Theorem 1, @scealy2022sc}{scorecompdir} prove that minimising the weighted Hyvarinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See \strong{Score Matching} in \code{\link{scorecompdir-package}})
-when the divergence weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
+Scealy and Wood \insertCite{@Theorem 1, @scealy2022sc}{scorecompdir} prove that minimising the weighted Hyv\"arinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See \strong{Score Matching} in \code{\link{scorecompdir-package}})
+when the boundary weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
 
 Hard-coded estimators are available for the following situations:
 \itemize{
-\item Square root transformation ("sqrt") with the "minsq" divergence weight function:
+\item Square root transformation ("sqrt") with the "minsq" boundary weight function:
 \itemize{
 \item full parameter vector (\code{paramvec} not provided)
 \item \code{paramvec} fixes only the final element of \eqn{\beta}
@@ -81,7 +81,7 @@ Hard-coded estimators are available for the following situations:
 \item \code{paramvec} fixes \eqn{b_L = 0} and provides fixed values of \eqn{\beta}
 \item \code{paramvec} fixes \eqn{A_L=0} and \eqn{b_L=0}, leaving \eqn{\beta} to be fitted.
 }
-\item Square root transformation ("sqrt") with the "prodsq" divergence weight function:
+\item Square root transformation ("sqrt") with the "prodsq" boundary weight function:
 \itemize{
 \item \code{paramvec} fixes all elements of \eqn{\beta}
 \item \code{paramvec} fixes \eqn{b_L = 0} and provides fixed values of \eqn{\beta}
