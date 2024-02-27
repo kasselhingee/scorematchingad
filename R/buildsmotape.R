@@ -19,12 +19,11 @@
 #' Full help for `CppAD` can be found at <https://cppad.readthedocs.io/>.
 #' 
 #' Differentiation proceeds by *taping* the basic (*atomic*) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
-#' Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) steps, and `CppAD` has [special tools for this](https://cppad.readthedocs.io/en/latest/CondExp.html).
+#' Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and `CppAD` has [special tools for this](https://cppad.readthedocs.io/en/latest/CondExp.html).
 
-#' Once the taping is complete an [`ADFun`](https://cppad.readthedocs.io/en/latest/ADFun.html) object is created.
-#' This tape can be evaluated, differentiated, used for further taping (see [base2ad](https://cppad.readthedocs.io/en/latest/base2ad.html)), solving differential equations and more.
-#' The sequence of operations can also be printed.
-#' The differentiation is with respect to the independent variables, although the dynamic parameters can be altered, allowing for swapping independent variables and dynamic parameters.
+#' The result of taping is an [`ADFun`](https://cppad.readthedocs.io/en/latest/ADFun.html) object, often called a *tape*.
+#' This `ADFun` object can be evaluated, differentiated, used for further taping (see [base2ad](https://cppad.readthedocs.io/en/latest/base2ad.html)), solving differential equations and more.
+#' The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new `ADFun` object where the dynamic parameters have become independent variables (see [`tapeSwap()`]).
 #' 
 #' # Warning: multiple CPU
 #' Each time computations such as derivatives are performed the corresponding `C++` object is altered. Parallel use of the same `ADFun` object thus requires care and is not tested. For now I recommend creating a new `ADFun` object for each CPU.

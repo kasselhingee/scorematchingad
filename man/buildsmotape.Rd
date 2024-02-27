@@ -117,11 +117,10 @@ This package uses version 2022000.2 of the algorithmic differentiation library \
 Full help for \code{CppAD} can be found at \url{https://cppad.readthedocs.io/}.
 
 Differentiation proceeds by \emph{taping} the basic (\emph{atomic}) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
-Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) steps, and \code{CppAD} has \href{https://cppad.readthedocs.io/en/latest/CondExp.html}{special tools for this}.
-Once the taping is complete an \href{https://cppad.readthedocs.io/en/latest/ADFun.html}{\code{ADFun}} object is created.
-This tape can be evaluated, differentiated, used for further taping (see \href{https://cppad.readthedocs.io/en/latest/base2ad.html}{base2ad}), solving differential equations and more.
-The sequence of operations can also be printed.
-The differentiation is with respect to the independent variables, although the dynamic parameters can be altered, allowing for swapping independent variables and dynamic parameters.
+Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and \code{CppAD} has \href{https://cppad.readthedocs.io/en/latest/CondExp.html}{special tools for this}.
+The result of taping is an \href{https://cppad.readthedocs.io/en/latest/ADFun.html}{\code{ADFun}} object, often called a \emph{tape}.
+This \code{ADFun} object can be evaluated, differentiated, used for further taping (see \href{https://cppad.readthedocs.io/en/latest/base2ad.html}{base2ad}), solving differential equations and more.
+The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new \code{ADFun} object where the dynamic parameters have become independent variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
 }
 
 \section{Warning: multiple CPU}{

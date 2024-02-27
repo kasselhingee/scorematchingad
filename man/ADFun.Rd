@@ -4,18 +4,20 @@
 \alias{ADFun}
 \title{A Class for Storing a CppAD Tape (ADFun) Object}
 \description{
-An \code{R6} class for storing a 'pointer' to a \code{CppAD} tape in \verb{C++} (called an \code{ADFun}) and associated information. The data in an \code{ADFun} object is read only as the information stored cannot be modified for the corresponding \code{CppAD} object.
+\emph{This is a low level object useful for implementing score matching estimators.}
+An \code{R6} class for storing a 'pointer' to a \code{CppAD} tape in \verb{C++} (also called an \code{ADFun}) and associated information.
+Currently tools for modifying this information are not available in this package, however tools for creating new \code{ADFun} objects from an existing \code{ADFun} are available.
+Typically an \code{ADFun} object will be created by \code{\link[=buildsmotape]{buildsmotape()}}.
 }
 \section{Introduction to CppAD Tapes}{
 This package uses version 2022000.2 of the algorithmic differentiation library \code{CppAD} \insertCite{bell2023cp}{scorecompdir} to build score matching estimators.
 Full help for \code{CppAD} can be found at \url{https://cppad.readthedocs.io/}.
 
 Differentiation proceeds by \emph{taping} the basic (\emph{atomic}) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
-Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) steps, and \code{CppAD} has \href{https://cppad.readthedocs.io/en/latest/CondExp.html}{special tools for this}.
-Once the taping is complete an \href{https://cppad.readthedocs.io/en/latest/ADFun.html}{\code{ADFun}} object is created.
-This tape can be evaluated, differentiated, used for further taping (see \href{https://cppad.readthedocs.io/en/latest/base2ad.html}{base2ad}), solving differential equations and more.
-The sequence of operations can also be printed.
-The differentiation is with respect to the independent variables, although the dynamic parameters can be altered, allowing for swapping independent variables and dynamic parameters.
+Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and \code{CppAD} has \href{https://cppad.readthedocs.io/en/latest/CondExp.html}{special tools for this}.
+The result of taping is an \href{https://cppad.readthedocs.io/en/latest/ADFun.html}{\code{ADFun}} object, often called a \emph{tape}.
+This \code{ADFun} object can be evaluated, differentiated, used for further taping (see \href{https://cppad.readthedocs.io/en/latest/base2ad.html}{base2ad}), solving differential equations and more.
+The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new \code{ADFun} object where the dynamic parameters have become independent variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
 }
 
 \section{Warning: multiple CPU}{
@@ -45,7 +47,7 @@ tapes$smotape$ptr
 
 \item{\code{dyntape}}{The (numeric) vector of dynamic parameters used for taping.}
 
-\item{\code{usertheta}}{A (numeric) vector of \code{NA} values and fixed values specifying the inputs of the taped function that were considered independent variables or fixed parameters.}
+\item{\code{usertheta}}{A (numeric) vector of \code{NA} values and fixed values specifying the inputs of the taped function that were considered independent variables or dynamic parameters respectively.}
 
 \item{\code{name}}{An easy to read name for the taped function}
 }
@@ -75,7 +77,7 @@ Create a new \code{ADFun} object from an external pointer to a \code{CppAD} \cod
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{ptr}}{A \code{Rcpp} external pointer to a \code{CppAD} \code{ADFun} object, often created via \code{\link[=buildsmotape]{buildsmotape()}}.}
+\item{\code{ptr}}{A \code{Rcpp} external pointer to a \code{CppAD} \code{ADFun} object.}
 
 \item{\code{name}}{An easy to read name for the taped function}
 
@@ -83,7 +85,7 @@ Create a new \code{ADFun} object from an external pointer to a \code{CppAD} \cod
 
 \item{\code{dyntape}}{The (numeric) vector of dynamic parameters used for taping.}
 
-\item{\code{usertheta}}{A (numeric) vector of \code{NA} values and fixed values specifying the inputs of the taped function that were considered independent variables or fixed parameters.}
+\item{\code{usertheta}}{A (numeric) vector of \code{NA} values and fixed values specifying the inputs of the taped function that were considered independent variables or dynamic parameters respectively.}
 }
 \if{html}{\out{</div>}}
 }
