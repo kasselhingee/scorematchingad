@@ -1,7 +1,7 @@
 # @title Standard error estimates for Score2 estimates
 # @description Estimates the standard errors of Score2 estimates. See (Scealy and Wood, 2021; Sec. 3.2).
 # @param prop compositional data (n by p matrix)
-# @param acut \eqn{a_c} for the Hyvarinen weight function \eqn{h}
+# @param acut \eqn{a_c} for the Hyv\"arinen weight function \eqn{h}
 # @param estimate1 the value of [estimator1()] estimates
 # @param W_est The \eqn{\hat{W}}{W} matrix estimated by [estimator1()]
 # @param incb if `incb=1` then \eqn{b_L} is estimated otherwise \eqn{b_L} is fixed at zero.
