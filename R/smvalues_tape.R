@@ -1,9 +1,9 @@
-#' @title Compute score matching objective value, gradient, and Hessian
+#' @title Compute score matching discrepancy value, gradient, and Hessian
 #' @family tape evaluators
 #' @description Computes a range of relevant information for investigating score matching estimators.
 #' @inheritParams evaltape
-#' @param smotape A taped score matching objective. Most easily created by [`buildsmotape()`].
-#' @details The score matching objective values are differ from the Hyv\"arinen Divergence by a constant, see ... .
+#' @param smotape A taped score matching discrepancy. Most easily created by [`buildsmotape()`].
+#' @details The score matching discrepancy values are differ from the Hyv\"arinen Divergence by a constant, see ... .
 #' The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in `xmat` and `pmat`. 
 #' @examples
 #' m <- ppi_egmodel(100)
@@ -36,9 +36,9 @@ smvalues_tape <- function(smotape, xmat, pmat, xcentres = NA * xmat, approxorder
 }
 #' @return
 #' A list of 
-#'  + `obj` the score matching objective values
-#'  + `grad` the gradient of the score matching objective
-#'  + `hess` the Hessian of the score matching objective
+#'  + `obj` the score matching discrepancy values
+#'  + `grad` the gradient of the score matching discrepancy
+#'  + `hess` the Hessian of the score matching discrepancy
 
 #' @rdname smvalues_tape
 #' @param w Weights to apply to each row of `xmat` for computing the weighted sum. If `NULL` then each row is given a weight of `1`.

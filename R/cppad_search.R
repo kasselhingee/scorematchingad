@@ -2,15 +2,15 @@
 #' @title Iterative Score Matching Estimator Using Conjugate-Gradient Descent
 #' @family generic score matching tools
 #' @description 
-#' Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching objective is within tolerance of zero.
+#' Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching discrepancy is within tolerance of zero.
 #' Also estimates standard errors and covariance.
-#' Useful when the score matching objective function is not of quadratic form;
-#' for score matching objective functions that are quadratic [`cppad_closed()`] will be usually be more accurate and faster.
+#' Useful when the score matching discrepancy function is not of quadratic form;
+#' for score matching discrepancy functions that are quadratic [`cppad_closed()`] will be usually be more accurate and faster.
 #' @inheritParams cppad_closed
 #' @param theta The starting parameter set
 #' @param control Control parameters passed to [`optimx::Rcgmin()`]
 #' @details
-#' The score matching objective function and gradient of the score matching function are passed to [`optimx::Rcgmin()`]. 
+#' The score matching discrepancy function and gradient of the score matching function are passed to [`optimx::Rcgmin()`]. 
 #' Taylor approximations are performed using [`pTaylorApprox()`] for measurements with non-`NA` rows in `Yapproxcentres`.
 #' The call to [`optimx::Rcgmin()`] uses the *sum* of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to `Rcgmin()` (e.g. `tol`). The results are converted into averages so the use of sums can be ignored when not setting control parameters, or studying the behaviour of Rcgmin. 
 #'
@@ -18,7 +18,7 @@
 #' The sensitivity matrix \eqn{G} is estimated as
 #' the negative of the average over the Hessian of `smotape` evaluated at each observation in `Y`.
 # \deqn{\hat{G(\theta)} = \hat{E} -H(smo(\theta;Y))),}
-# where \eqn{smo} is the score matching objective function represented by `smotape`,
+# where \eqn{smo} is the score matching discrepancy function represented by `smotape`,
 # \eqn{H} is the Hessian with respect to \eqn{\theta}, which is constant for quadratic-form functions,
 # 
 #' The variability matrix \eqn{J} is then estimated as

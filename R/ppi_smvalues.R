@@ -1,4 +1,4 @@
-#' @title Compute score matching objective value, gradient, and Hessian for a PPI Model
+#' @title Compute score matching discrepancy value, gradient, and Hessian for a PPI Model
 #' @family PPI model tools
 #' @description Using similar arguments to [`ppi()`], compute values related to score matching. See [`smvalues_tape()`]. The gradient offset is also computed (see [`quadratictape_parts()`]. 
 #' @inheritParams ppi
@@ -8,9 +8,9 @@
 #' @param average If TRUE return the (weighted average) of the measurements, otherwise return the values for each measurement.
 #' @return
 #' A list of 
-#'  + `obj` the score matching objective value
-#'  + `grad` the gradient of the score matching objective
-#'  + `hess` the Hessian of the score matching objective
+#'  + `obj` the score matching discrepancy value
+#'  + `grad` the gradient of the score matching discrepancy
+#'  + `hess` the Hessian of the score matching discrepancy
 #'  + `offset` gradient offset (see [`quadratictape_parts()`])
 #' @export
 ppi_smvalues <- function(Y, paramvec = NULL, evalparam,

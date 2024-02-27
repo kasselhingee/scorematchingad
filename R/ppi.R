@@ -52,7 +52,7 @@
 #' @param bdrythreshold `iterative` or `closed` methods only. For measurements close to the boundary of the simplex Taylor approximation is applied. See [`simplex_isboundary()`].
 #' @param shiftsize `iterative` or `closed` methods only. For Taylor approximation, approximation centres are chosen based on `shiftsize`. See [`simplex_boundaryshift()`].
 #' @param approxorder `iterative` or `closed` methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.
-#' @param method "hardcoded" uses the hardcoded estimators by JS. "closed" uses `CppAD` to solve in closed form the a quadratic score matching objective using [`cppad_closed()`]. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`optimx::Rcgmin()`]) to iteratively find the minimum of the weighted Hyv\"arinen divergence.
+#' @param method "hardcoded" uses the hardcoded estimators by JS. "closed" uses `CppAD` to solve in closed form the a quadratic score matching discrepancy using [`cppad_closed()`]. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`optimx::Rcgmin()`]) to iteratively find the minimum of the weighted Hyv\"arinen divergence.
 #' @param paramvec_start `iterative` method only. The starting guess for `Rcgmin` with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec_start` easily using [`ppi_paramvec()`].
 #' @param w Weights for each observation, if different observations have different importance. Used by [`Windham()`] and [`ppi_robust()`] for robust estimation.
 #' @param constrainbeta If `TRUE`, elements of \eqn{\beta} that are less than `-1` are converted to `-1 + 1E-7`.

@@ -1,7 +1,7 @@
 #' @title Evaluate the Hessian and gradient offset of a Taped Quadratic Function
 #' @family tape evaluators
 #' @description
-#' When the score matching objective function is quadratic then the gradient of the score matching objective function can be written using the Hessian and an offset term. This can be useful for solving for the situation when the gradient is zero.
+#' When the score matching discrepancy function is quadratic then the gradient of the score matching discrepancy function can be written using the Hessian and an offset term. This can be useful for solving for the situation when the gradient is zero.
 #' The Hessian and offset term are computed using `CppAD` tapes.
 #' Taylor approximation can be used for locations at removable singularities.
 #' @details
@@ -18,7 +18,7 @@
 #' Tapes of the Hessian and gradient offset are created using [`tapeHessian()`] and [`tapeGradOffset()`] respectively.
 #' These tapes are then evaluated for every row of `tmat`.
 #' When the `tcentres` row is not `NA`, then approximate results are calculated using [`pTaylorApprox()`]
-#' @param tape A tape of a quadratic function (such as score matching objective function)
+#' @param tape A tape of a quadratic function (such as score matching discrepancy function)
 #' @param tmat A matrix of `t` vectors. Each row corresponds to a vector.
 #' @param tcentres A matrix of Taylor approximation centres for rows of `tmat` that require approximation. `NA` for rows that do not require approximation.
 #' @param approxorder The order of the Taylor approximation to use.

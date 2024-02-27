@@ -14,7 +14,7 @@
 #' The method by \insertCite{mardia2016sc;textual}{scorecompdir} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}. 
 #' The observations `Y` are then standardised to `Y`\eqn{G}. 
 #' After this standardisation, the non-diagonal elements of \eqn{A} are zero.
-#' The diagonal elements (eigenvalues of the pre-standadised \eqn{A}) are estimated using score matching, with the final element calculated from the sum of the other elements.
+#' The diagonal elements of \eqn{A} (which equals the eigenvalues of the pre-standadised \eqn{A}) are estimated using score matching, with the final element calculated from the sum of the other elements.
 #' See \insertCite{mardia2016sc;textual}{scorecompdir} for details.
 #' @references \insertAllCited{}
 #' @examples

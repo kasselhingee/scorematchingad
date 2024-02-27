@@ -1,9 +1,9 @@
-#' @title Build a CppAD Tapes for Score Matching
+#' @title Build CppAD Tapes for Score Matching
 #' @family tape builders
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
 #' @param verbose If `TRUE` more details are printed when taping.
 #' @description
-#' Generates `CppAD` tapes for the log-likelihood and score matching objective  for a model specified by name and an optional transformation to a manifold.
+#' Generates `CppAD` tapes (called `ADFun`) for the log-likelihood and score matching discrepancy  for a model specified by name and an optional transformation to a manifold.
 #' Three steps are performed by `buildsmotape()`, corresponding to each of the functions `manifoldtransform()`, `tapell()` and `tapesmo()`.
 #' @details
 #' When using, `CppAD` one first creates *tapes* of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
@@ -12,8 +12,8 @@
 #' The differentiation with `CppAD` occurs with respect to the independent variables.
 #' Tapes of tapes are possible, including tapes that swap the independent and dynamic variables - this is how this package differentiates with respect to a dynamic variables.
 #'
-#' To build a tape for the score matching objective function, the package first tapes the map from a point \eqn{z} on the manifold to the value of the log-likelihood, where the independent variable is the \eqn{z}, and the dynamic variable is a vector of the *non*-fixed parameter values.
-#' This tape is then used to generate a tape for the score matching objective with the non-fixed parameter values as the independent variable.
+#' To build a tape for the score matching discrepancy function, the package first tapes the map from a point \eqn{z} on the manifold to the value of the log-likelihood, where the independent variable is the \eqn{z}, and the dynamic variable is a vector of the *non*-fixed parameter values.
+#' This tape is then used to generate a tape for the score matching discrepancy with the non-fixed parameter values as the independent variable.
 #' # Introduction to CppAD Tapes
 #' This package uses version 2022000.2 of the algorithmic differentiation library `CppAD` \insertCite{bell2023cp}{scorecompdir} to build score matching estimators.
 #' Full help for `CppAD` can be found at <https://cppad.readthedocs.io/>.
@@ -31,7 +31,7 @@
 #' @references \insertAllCited{}
 
 #' @return
-#' `buildsmotape()` returns a list of the log-likelihood tape (note that the *input* for this tape is a function on the manifold), the tape of the score matching objective (the *input* here is the non-fixed parameter values), and some information used to generate the tape.
+#' `buildsmotape()` returns a list of the log-likelihood tape (note that the *input* for this tape is a function on the manifold), the tape of the score matching discrepancy (the *input* here is the non-fixed parameter values), and some information used to generate the tape.
 #'
 #' 
 #' @examples

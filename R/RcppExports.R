@@ -54,7 +54,7 @@ pParameter <- function(pfun) {
 #' @param x A vector in the domain of the taped function.
 #' @param dynparam a vector of the dynamic parameters
 #' @description Creates a tape of the Jacobian of function taped by CppAD.
-#' When the function returns a real value (as is the case for densities and the score matching objective) the Jacobian is equivalent to the gradient.
+#' When the function returns a real value (as is the case for densities and the score matching discrepancy) the Jacobian is equivalent to the gradient.
 #' The `x` vector is used as the value to conduct the taping.
 #' @details
 #' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Jacobian in long format (see <https://cppad.readthedocs.io/en/latest/Jacobian.html>).
@@ -143,7 +143,7 @@ ptapell <- function(z_ad, theta_ad, llname, tran, fixedtheta, verbose) {
 }
 
 #' @noRd
-#' @title The score matching objective calculator.
+#' @title The score matching discrepancy calculator.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
 #' @param n The dimension of x.
 #' @param manifoldname The name of the manifold to transform to

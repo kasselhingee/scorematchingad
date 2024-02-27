@@ -2,7 +2,7 @@
 #' @description 
 #' Move compositional measurements by `shiftsize` towards the centre of the simplex.
 #' @details Measurements on the boundary of the simplex can lead to degenerate log-likelihood values, which are avoided in score matching by the boundary weight function. However, `CppAD` still computes the log-likelihood and derivatives, and (to KLH's knowledge) is not able to evaluate the value of \eqn{0/0} or similar.
-#' Good approximations of the score matching objective value can be obtained through Taylor approximations, which require a *centre*.
+#' Good approximations of the score matching discrepancy value can be obtained through Taylor approximations, which require a *centre*.
 #' The function here generates this approximation centre.
 #' @param Y The compositional measurements
 #' @param shiftsize The distance to away from `u` to create the approximation centre.
@@ -41,7 +41,7 @@ simplex_isboundary <- function(Y, bdrythreshold = 1E-15){
 #' For the boundary points Taylor approximation centres are computed with [`simplex_boundaryshift()`].
 #' A weight vector, if supplied, is split consistently with the above split.
 #' @details Measurements on the boundary of the simplex can lead to degenerate log-likelihood values, which are avoided in score matching by the boundary weight function. However, `CppAD` still computes the log-likelihood and derivatives, and (to KLH's knowledge) is not able to evaluate the value of \eqn{0/0} or similar.
-#' Very good approximations of the score matching objective value can be obtained through Taylor approximations, which requires a centre.
+#' Very good approximations of the score matching discrepancy value can be obtained through Taylor approximations, which requires a centre.
 #' The function converts the data matrix `Y` into the necessary sub-data sets.
 #' @param Y A matrix of compositional measurements, each row is a multivariate measurement.
 #' @param bdrythreshold See [`simplex_isboundary()`].

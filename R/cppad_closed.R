@@ -1,11 +1,11 @@
 #' @title Score Matching Estimator for Quadratic-Form Score-Matching Objective Functions
 #' @family generic score matching tools
 #' @description 
-#' For a `CppAD` tape of a quadratic-form score matching objective function, calculates the vector of parameters such that the gradient of the score matching objective is zero.
+#' For a `CppAD` tape of a quadratic-form score matching discrepancy function, calculates the vector of parameters such that the gradient of the score matching discrepancy is zero.
 #' Also estimates standard errors and covariance.
 #' Many score matching estimators have an objective function that has a quadratic form.
 #' @param Yapproxcentres A matrix of Taylor approximation centres for rows of Y that require approximation. `NA` for rows that do not require approximation.
-#' @param smotape A `CppAD` tape of a score matching objective function that has *quadratic form*. Test for quadratic form using [`testquadratictape()`].
+#' @param smotape A `CppAD` tape of a score matching discrepancy function that has *quadratic form*. Test for quadratic form using [`testquadratictape()`].
 #' The `smotape`'s independent variables are assumed to be the model parameters to fit
 #' and the `smotape`'s dynamic parameter is a (multivariate) measurement.
 #' @param Y A matrix of multivariate observations. Each row is an observation.
@@ -21,7 +21,7 @@
 #' The sensitivity matrix \eqn{G} is estimated as
 #' the negative of the average over the Hessian of `smotape` evaluated at each observation in `Y`.
 # \deqn{\hat{G(\theta)} = \hat{E} -H(smo(\theta;Y))),}
-# where \eqn{smo} is the score matching objective function represented by `smotape`,
+# where \eqn{smo} is the score matching discrepancy function represented by `smotape`,
 # \eqn{H} is the Hessian with respect to \eqn{\theta}, which is constant for quadratic-form functions,
 # 
 #' The variability matrix \eqn{J} is then estimated as
@@ -51,7 +51,7 @@ cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y,
   invHess <- tryCatch(solve(Hess),
                error = function(e) {
      if (grepl("system.*singular", e)){
-          stop(paste("Hessian of the score-matching objective function is not invertible.", e))
+          stop(paste("Hessian of the score-matching discrepancy function is not invertible.", e))
         } else {stop(e)}
      })
   root <- drop(-1 * invHess %*% offset)
