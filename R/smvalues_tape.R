@@ -10,7 +10,7 @@
 #' tapes <- buildsmotape("sim", "sqrt", "sph", "ppi",
 #'               ytape = rep(1/m$p, m$p),
 #'               usertheta = ppi_paramvec(beta = m$beta),
-#'               divweight = "minsq", acut = 0.01)
+#'               bdryw = "minsq", acut = 0.01)
 #' smvalues_tape(tapes$smotape, xmat = m$sample, pmat = m$theta[1:5])
 #' @export
 smvalues_tape <- function(smotape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){

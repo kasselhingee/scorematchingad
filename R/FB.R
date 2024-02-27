@@ -40,7 +40,7 @@ FB <- function(Y, km = NULL, A = NULL){
 
   tapes <- buildsmotape("sph","identity", "sph", "FB",
                rep(1, p)/sqrt(p), intheta,
-               divweight = "ones",
+               bdryw = "ones",
                verbose = FALSE)
 
   sminfo <- cppad_closed(tapes$smotape, Y)

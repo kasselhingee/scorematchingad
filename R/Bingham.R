@@ -53,7 +53,7 @@ Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y))){
   ytape <- rep(1, p) / sqrt(p)
   tapes <- buildsmotape("sph","identity", "sph", "Bingham",
                            ytape, intheta,
-                           divweight = "ones")
+                           bdryw = "ones")
   out <- cppad_closed(tapes$smotape, Y = Y, w = w)
   theta <- intheta
   theta[is.na(intheta)] <- out$est
@@ -88,7 +88,7 @@ Bingham_Mardia <- function(Y, w = rep(1, nrow(Y))){
   intheta <- Bingham_Amat2theta(A)
   tapes <- buildsmotape("sph","identity", "sph", "Bingham",
                         rep(1, p) / sqrt(p), intheta,
-                        divweight = "ones")
+                        bdryw = "ones")
 
   sm <- cppad_closed(tapes$smotape, Y = Ystd, w = w)
   theta <- intheta

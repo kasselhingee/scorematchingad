@@ -9,21 +9,21 @@ test_that("WindamRobust() via ppi_robust() gives correct params on simulated dat
   m$sample <- rbind(m$sample, outlier1, outlier2)
 
   #check non-robust estimates, excluding the outliers
-  est_simple <- ppi(m$sample[1:1000, ], acut=0.1, method = "closed", trans = "sqrt", divweight = "minsq")
+  est_simple <- ppi(m$sample[1:1000, ], acut=0.1, method = "closed", trans = "sqrt", bdryw = "minsq")
   #get non-robust estimates with the outliers
-  est_simple_outlier <- ppi(m$sample, acut=0.1, method = "closed", trans = "sqrt", divweight = "minsq")
+  est_simple_outlier <- ppi(m$sample, acut=0.1, method = "closed", trans = "sqrt", bdryw = "minsq")
 
   #calculate robust estimates
   suppressWarnings({est <- ppi_robust(Y = m$sample, 
            cW = 0.1 * ppi_paramvec(m$p, AL = TRUE, bL = FALSE, beta = FALSE),
-           acut=0.1, method = "closed", trans = "sqrt", divweight = "minsq")})
+           acut=0.1, method = "closed", trans = "sqrt", bdryw = "minsq")})
 
   # variable c, expect estimates to be different
   cW <- ppi_paramvec(m$p, AL = matrix(c(0.1, 1E-3, 1E-3, 0.1), nrow = 2, ncol = 2),
                                  bL = 0, beta = 0)
   suppressWarnings({est_varcW <-  ppi_robust(Y = m$sample, 
            cW = cW,
-           acut=0.1, method = "closed", trans = "sqrt", divweight = "minsq")})
+           acut=0.1, method = "closed", trans = "sqrt", bdryw = "minsq")})
 
 
   expect_equal(est$est$paramvec, est_simple$est$paramvec, tolerance = 0.1, ignore_attr = TRUE)

@@ -8,7 +8,7 @@ test_that("Fitting ppi via clr transform gets close estimates via sqrt", {
   expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
   out2 <- ppi(Y = model$sample,
              paramvec = ppi_paramvec(p = 3, betap = -0.5),
-             trans = "sqrt", acut = 0.01, divweight = "minsq")
+             trans = "sqrt", acut = 0.01, bdryw = "minsq")
   expect_absdiff_lte_v(out$est$paramvec, out2$est$paramvec, 
        out$SE$paramvec * c(1, 0.1, 0.5, 1, 0.1, 1, 1, 1))
 })

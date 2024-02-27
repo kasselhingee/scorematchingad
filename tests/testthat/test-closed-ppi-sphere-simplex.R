@@ -30,10 +30,10 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
   acut = 0.1
   dirtapes <- buildsmotape("sim","sqrt", "sph", "dirichlet",
                            rep(0.1, p), rep(0.1, p) * NA,
-                           divweight = "minsq", acut = acut)
+                           bdryw = "minsq", acut = acut)
   ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), theta * NA,
-                           divweight = "minsq", acut = acut)
+                           bdryw = "minsq", acut = acut)
 
   ppival <- pForward0(ppitapes$smotape$ptr, theta, utabl[2, ])
   dirval <- pForward0(dirtapes$smotape$ptr, beta, utabl[2, ])
@@ -54,10 +54,10 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   acut = 0.1
   dirtapes <- buildsmotape("sim","sqrt", "sph", "dirichlet",
                            rep(0.1, p), rep(0.1, p) * NA,
-                           divweight = "minsq", acut = acut)
+                           bdryw = "minsq", acut = acut)
   ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), ppi_paramvec(AL = 0, bL=0, p = p),
-                           divweight = "minsq", acut = acut)
+                           bdryw = "minsq", acut = acut)
 
   # it looks like the taped function above is not altering bL or beta
   # potentially the ordering of the theta values is wrong??
@@ -82,7 +82,7 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
   out <- ppi(model$sample, paramvec = ppi_paramvec(betaL = model$beta[1:2], betap = model$beta[3]),
             method = "closed",
                    bdrythreshold = 1E-10,
-            trans = "sqrt", divweight = "minsq", acut = acut)
+            trans = "sqrt", bdryw = "minsq", acut = acut)
 
   hardcodedestimate <- estimator1(model$sample, acut, incb = TRUE, beta = model$beta)
 
@@ -97,7 +97,7 @@ test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmo
   acut = 0.1
   out <- ppi(model$sample, ppi_paramvec(betaL = model$beta[1:2], betap = model$beta[3]),
              method = "closed",
-                   trans = "sqrt", divweight = "prodsq", acut = acut, 
+                   trans = "sqrt", bdryw = "prodsq", acut = acut, 
                    control = list(tol = 1E-12))
 
   hardcodedestimate <- estimator2(model$sample, acut, incb = TRUE, beta0 = model$beta)
@@ -127,7 +127,7 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
 
   out <- ppi(utabl,
              method = "closed",
-                   trans = "sqrt", divweight = "minsq", acut = acut,
+                   trans = "sqrt", bdryw = "minsq", acut = acut,
                    control = list(tol = 1E-10))
 
   hardcodedestimate <- estimatorall1(utabl, acut)
@@ -142,7 +142,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel", {
   model <- ppi_egmodel(100, maxden = 4)
   acut = 0.1
   ppiest <- ppi(Y = model$sample, method = "closed",
-                trans = "sqrt", divweight = "minsq", acut = acut)
+                trans = "sqrt", bdryw = "minsq", acut = acut)
 
   hardcodedestimate <- estimatorall1(model$sample, acut)
 
@@ -158,7 +158,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
   acut = 0.1
   out <- ppi(Y = model$sample,
              paramvec = ppi_paramvec(betap = tail(model$beta, 1), p = model$p),
-             trans = "sqrt", divweight = "minsq", acut = acut)
+             trans = "sqrt", bdryw = "minsq", acut = acut)
 
   hardcodedestimate <- estimatorall1(model$sample, acut, betap = model$beta[model$p])
 
@@ -175,7 +175,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
   acut = 0.1
   out <- ppi(Y = model$sample, method = "closed",
              paramvec = ppi_paramvec(betap = tail(model$beta, 1), p = model$p),
-             trans = "sqrt", divweight = "minsq", acut = acut)
+             trans = "sqrt", bdryw = "minsq", acut = acut)
 
   hardcodedestimate <- estimatorall1(model$sample, acut, betap = model$beta[model$p])
 
@@ -191,7 +191,7 @@ test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   acut = 0.1
   out <- ppi(Y = model$sample,
              paramvec = ppi_paramvec(p = model$p, betap = tail(model$beta, 1)),
-             trans = "none", divweight = "minsq", acut = acut)
+             trans = "none", bdryw = "minsq", acut = acut)
 
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
@@ -209,7 +209,7 @@ test_that("ppi via cppad matches Score1 for p=5 and has SM discrepancy has small
 
   est_cppad <- ppi(prop, ppi_paramvec(bL = bL, beta = beta),
                    method = "closed",
-                         trans = "sqrt", acut = acut, divweight = "minsq",
+                         trans = "sqrt", acut = acut, bdryw = "minsq",
                          control = list(tol = 1E-13))
   expect_equal(est_cppad$est$paramvec, est_hardcoded$est$paramvec,
                ignore_attr = TRUE)
@@ -217,7 +217,7 @@ test_that("ppi via cppad matches Score1 for p=5 and has SM discrepancy has small
   #also it makes sense that the smo and gradient are v low at the hardcoded estimate
   ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
-                           divweight = "minsq", acut = acut)
+                           bdryw = "minsq", acut = acut)
   smvals <- smvalues_tape_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL))
   expect_lt(sum(smvals$grad^2), 1E-20)
 

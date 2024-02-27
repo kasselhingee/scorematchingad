@@ -21,7 +21,7 @@
 #'    llname = "ppi",
 #'    ytape = c(0.2, 0.3, 0.5),
 #'    usertheta = ppi_paramvec(p = 3), 
-#'    divweight = "minsq",
+#'    bdryw = "minsq",
 #'    acut = 0.1,
 #'    verbose = FALSE)
 #'

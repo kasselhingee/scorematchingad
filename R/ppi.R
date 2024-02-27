@@ -46,8 +46,8 @@
 #' @param trans The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".
 #' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
 #' @param paramvec Optionally a vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate `paramvec` easily using [ppi_paramvec()].  If `NULL` then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.
-#' @param divweight The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
-#' @param acut The threshold \eqn{a_c} in `divweight` to avoid over-weighting measurements interior to the simplex
+#' @param bdryw The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
+#' @param acut The threshold \eqn{a_c} in `bdryw` to avoid over-weighting measurements interior to the simplex
 #' @param control `iterative` only. Passed to [`optimx::Rcgmin()`] to control the iterative solver.
 #' @param bdrythreshold `iterative` or `closed` methods only. For measurements close to the boundary of the simplex Taylor approximation is applied. See [`simplex_isboundary()`].
 #' @param shiftsize `iterative` or `closed` methods only. For Taylor approximation, approximation centres are chosen based on `shiftsize`. See [`simplex_boundaryshift()`].
@@ -66,12 +66,12 @@
 #'               trans = "alr", method = "closed")
 #' estsqrt <- ppi(model$sample,
 #'               trans = "sqrt", method = "closed",
-#'               divweight = "minsq", acut = 0.1)
+#'               bdryw = "minsq", acut = 0.1)
 #' @export
 ppi <- function(Y, paramvec = NULL,
                 trans, method = "closed", w = rep(1, nrow(Y)),
                 constrainbeta = FALSE,
-                divweight = "ones", acut = NULL, #specific to some methods
+                bdryw = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, control = list(tol = 1E-15, checkgrad = TRUE), paramvec_start = NULL#specific to cppad methods
                 ){
   ###### process inputs #####
@@ -95,12 +95,12 @@ ppi <- function(Y, paramvec = NULL,
   if (trans == "none"){trans <- "identity"}
 
   if (man %in% c("sim", "sph")){
-    if (divweight == "ones"){stop("Manifold supplied has a boundary - set divweight to something that isn't 'ones'")}
+    if (bdryw == "ones"){stop("Manifold supplied has a boundary - set bdryw to something that isn't 'ones'")}
   } else {
-    if (divweight != "ones"){warning("Manifold supplied has no boundary. Setting divweight to 'ones'.")}
+    if (bdryw != "ones"){warning("Manifold supplied has no boundary. Setting bdryw to 'ones'.")}
   }
-  if (divweight == "ones"){
-    if (!is.null(acut)){warning("The value of 'acut' is ignored for divweight == 'ones'")}
+  if (bdryw == "ones"){
+    if (!is.null(acut)){warning("The value of 'acut' is ignored for bdryw == 'ones'")}
     acut <- 1 #set just for passing to CppAD
   }
   if (is.null(paramvec)){usertheta <- rep(NA, ppithetalength(p))}
@@ -123,7 +123,7 @@ ppi <- function(Y, paramvec = NULL,
       }
     }
     if (trans == "sqrt"){ # a number of methods implemented
-      if (divweight == "minsq"){
+      if (bdryw == "minsq"){
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
           betaest <- as.vector(dir_sqrt_minimah(Y, acut = acut, w = w))
           estparamvec <- t_fu2t(betaest, usertheta)
@@ -152,7 +152,7 @@ ppi <- function(Y, paramvec = NULL,
         }
       }
 
-      if (divweight == "prodsq"){
+      if (bdryw == "prodsq"){
         if (ppi_usertheta_for_dir_sqrt_minimah(usertheta)){
           betaest <- dir_sqrt_prodh(Y, acut = acut, w = w)
           fitfun <- "dir_sqrt_prodh"
@@ -188,7 +188,7 @@ ppi <- function(Y, paramvec = NULL,
        llname = "ppi",
        ytape =  rep(1/p, p),
        usertheta = t_si2u(stheta, isfixed),
-       divweight = divweight,
+       bdryw = bdryw,
        acut = acut,
        verbose = FALSE)
     smotape <- tapes$smotape

@@ -26,7 +26,7 @@
 #'   llname = "ppi",
 #'   ytape =  rep(1/3, 3),
 #'   usertheta = ppi_paramvec(p=3),
-#'   divweight = "minsq",
+#'   bdryw = "minsq",
 #'   acut = 0.01,
 #'   verbose = FALSE)
 #' tapes$smotape$xtape

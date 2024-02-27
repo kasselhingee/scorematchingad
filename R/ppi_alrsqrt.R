@@ -1,4 +1,4 @@
-ppi_alrsqrt <- function(Y, paramvec = ppi_paramvec(p = ncol(Y), bL = 0, betap = 0), acut, divweight = "minsq", w = rep(1, nrow(Y))){
+ppi_alrsqrt <- function(Y, paramvec = ppi_paramvec(p = ncol(Y), bL = 0, betap = 0), acut, bdryw = "minsq", w = rep(1, nrow(Y))){
   est1 <- ppi(Y, paramvec = paramvec,
             trans = "alr",
             w = w)
@@ -7,7 +7,7 @@ ppi_alrsqrt <- function(Y, paramvec = ppi_paramvec(p = ncol(Y), bL = 0, betap = 
   newparamvec <- do.call(ppi_paramvec, paramspec)
   est2 <- ppi(Y, paramvec = newparamvec,
               trans = "sqrt",
-              divweight = divweight,
+              bdryw = bdryw,
               acut = acut,
               w = w)
   if (is.list(est1$SE) && is.list(est2$SE)){ #as in SEs were estimated

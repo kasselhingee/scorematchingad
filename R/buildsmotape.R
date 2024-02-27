@@ -3,10 +3,10 @@
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
 #' @param verbose If `TRUE` more details are printed when taping.
 #' @description
-#' Generates `CppAD` tapes (called `ADFun`) for the log-likelihood and the score matching discrepancy of a model faimly.
-#' Three steps are performed by `buildsmotape()`: first an object that specifies the manifold and any transformation to another manifold is created using [`manifoldtransform()`]; then a tape of the log-likelihood (without normalising constant) is created using [`tapell()`]; finally a tape of the score matching discrepancy is created using [`tapesmo()`].
+#' The function `buildsmotape()` generates `CppAD` tapes (called `ADFun`) for the log-likelihood (without normalising constant) and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} from `vignette("scorematchingintro")` for a specified model faimly.
+#' Three steps are performed by `buildsmotape()`: first an object that specifies the manifold and any transformation to another manifold is created using [`manifoldtransform()`]; then a tape of the log-likelihood (without normalising constant) is created using [`tapell()`]; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using [`tapesmo()`].
 #' @details
-#' The model log-likelihood must be implemented in `C++` and is selected by name. Similarly the transforms of the manifold must be implemented in `C++` and selected by name.t
+#' The model log-likelihood must be implemented in `C++` and is selected by name. Similarly the transforms of the manifold must be implemented in `C++` and selected by name.
 #'
 #' When using, `CppAD` one first creates *tapes* of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
 #' The taping relies on specifying typical argument values for the functions, so the programming is simplest when the function is defined without conditions.
@@ -51,17 +51,17 @@
 #' @export
 buildsmotape <- function(start, tran, end, llname,
                          ytape, usertheta,
-                         divweight = "ones", acut = 1,
+                         bdryw = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
                          verbose = FALSE){
 
   if(all(!is.na(usertheta))){stop("All elements of theta are fixed")}
 
   if (!(all(c(tran, end) == c("sqrt", "sph")) | all(c(tran, end) == c("identity", "sim")))){
-    if (divweight != "ones"){warning("Manifold supplied has no boundary. Using divweight = 'ones' is strongly recommended.")}
+    if (bdryw != "ones"){warning("Manifold supplied has no boundary. Using bdryw = 'ones' is strongly recommended.")}
   }
-  if ((divweight == "ones") && (abs(acut - 1) > 1E-8)){
-    warning("The value of 'acut' is ignored for divweight == 'ones'")
+  if ((bdryw == "ones") && (abs(acut - 1) > 1E-8)){
+    warning("The value of 'acut' is ignored for bdryw == 'ones'")
   }
 
   tranman <- manifoldtransform(start, tran, end)
@@ -74,7 +74,7 @@ buildsmotape <- function(start, tran, end, llname,
   smotape <- tapesmo(lltape = lltape,
                         tran = tranman$tran,
                         man = tranman$man,
-                        divweight = divweight,
+                        bdryw = bdryw,
                         acut = acut,
                         verbose = verbose)
   return(list(
@@ -85,7 +85,7 @@ buildsmotape <- function(start, tran, end, llname,
       transform = tran,
       manifold = end,
       ulength = length(ytape),
-      divweight = divweight,
+      bdryw = bdryw,
       acut = acut
     )
   ))

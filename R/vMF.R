@@ -82,7 +82,7 @@ vMF_full <- function(sample, usertheta, w = NULL){
   tapes <- buildsmotape("sph","identity", "sph", "vMF",
                         rep(1, p)/sqrt(p), 
                         usertheta = usertheta,
-                        divweight = "ones",
+                        bdryw = "ones",
                         verbose = FALSE)
   out <- cppad_closed(tapes$smotape, Y = sample, w=w)
   theta <- t_fu2t(out$est, usertheta)

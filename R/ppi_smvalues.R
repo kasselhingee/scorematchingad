@@ -15,7 +15,7 @@
 #' @export
 ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
                 trans, method = "closed", w = rep(1, nrow(Y)),
-                divweight = "ones", acut = NULL, #specific to some methods
+                bdryw = "ones", acut = NULL, #specific to some methods
                 bdrythreshold = 1E-10, shiftsize = bdrythreshold, approxorder = 10, #specific to cppad methods
                 average = TRUE
                 ){
@@ -40,12 +40,12 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
   if (trans == "none"){trans <- "identity"}
 
   if (man %in% c("sim", "sph")){
-    if (divweight == "ones"){stop("Manifold supplied has a boundary - set divweight to something that isn't 'ones'")}
+    if (bdryw == "ones"){stop("Manifold supplied has a boundary - set bdryw to something that isn't 'ones'")}
   } else {
-    if (divweight != "ones"){warning("Manifold supplied has no boundary. Setting divweight to 'ones'.")}
+    if (bdryw != "ones"){warning("Manifold supplied has no boundary. Setting bdryw to 'ones'.")}
   }
-  if (divweight == "ones"){
-    if (!is.null(acut)){warning("The value of 'acut' is ignored for divweight == 'ones'")}
+  if (bdryw == "ones"){
+    if (!is.null(acut)){warning("The value of 'acut' is ignored for bdryw == 'ones'")}
     acut <- 1 #set just for passing to CppAD
   }
 
@@ -58,7 +58,7 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
      llname = "ppi",
      ytape =  rep(1/p, p),
      usertheta = paramvec,
-     divweight = divweight,
+     bdryw = bdryw,
      acut = acut,
      verbose = FALSE)
   smotape <- tapes$smotape
