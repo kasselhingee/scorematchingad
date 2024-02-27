@@ -11,7 +11,7 @@ ppi(
   method = "closed",
   w = rep(1, nrow(Y)),
   constrainbeta = FALSE,
-  divweight = "ones",
+  bdryw = "ones",
   acut = NULL,
   bdrythreshold = 1e-10,
   shiftsize = bdrythreshold,
@@ -33,9 +33,9 @@ ppi(
 
 \item{constrainbeta}{If \code{TRUE}, elements of \eqn{\beta} that are less than \code{-1} are converted to \code{-1 + 1E-7}.}
 
-\item{divweight}{The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.}
+\item{bdryw}{The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.}
 
-\item{acut}{The threshold \eqn{a_c} in \code{divweight} to avoid over-weighting measurements interior to the simplex}
+\item{acut}{The threshold \eqn{a_c} in \code{bdryw} to avoid over-weighting measurements interior to the simplex}
 
 \item{bdrythreshold}{\code{iterative} or \code{closed} methods only. For measurements close to the boundary of the simplex Taylor approximation is applied. See \code{\link[=simplex_isboundary]{simplex_isboundary()}}.}
 
@@ -107,7 +107,7 @@ estalr <- ppi(model$sample,
               trans = "alr", method = "closed")
 estsqrt <- ppi(model$sample,
               trans = "sqrt", method = "closed",
-              divweight = "minsq", acut = 0.1)
+              bdryw = "minsq", acut = 0.1)
 }
 \references{
 \insertAllCited{}

@@ -11,7 +11,7 @@ ppi_smvalues(
   trans,
   method = "closed",
   w = rep(1, nrow(Y)),
-  divweight = "ones",
+  bdryw = "ones",
   acut = NULL,
   bdrythreshold = 1e-10,
   shiftsize = bdrythreshold,
@@ -34,9 +34,9 @@ All elements of \code{evalparam} must be non-NA, and if there are any parameter 
 
 \item{w}{Weights for each observation, if different observations have different importance. Used by \code{\link[=Windham]{Windham()}} and \code{\link[=ppi_robust]{ppi_robust()}} for robust estimation.}
 
-\item{divweight}{The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.}
+\item{bdryw}{The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.}
 
-\item{acut}{The threshold \eqn{a_c} in \code{divweight} to avoid over-weighting measurements interior to the simplex}
+\item{acut}{The threshold \eqn{a_c} in \code{bdryw} to avoid over-weighting measurements interior to the simplex}
 
 \item{bdrythreshold}{\code{iterative} or \code{closed} methods only. For measurements close to the boundary of the simplex Taylor approximation is applied. See \code{\link[=simplex_isboundary]{simplex_isboundary()}}.}
 

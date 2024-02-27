@@ -11,11 +11,11 @@
 buildsmotape(
   start,
   tran,
-  man,
+  end,
   llname,
   ytape,
   usertheta,
-  divweight = "ones",
+  bdryw = "ones",
   acut = 1,
   thetatape_creator = function(n) {
      seq(length.out = n)
@@ -23,80 +23,101 @@ buildsmotape(
   verbose = FALSE
 )
 
-manifoldtransform(start, tran = "identity", man = start)
+manifoldtransform(start, tran = "identity", end = start)
 
 tapell(
   llname,
   ytape,
   usertheta,
-  tran,
+  tranobj,
   thetatape_creator = function(n) {
      seq(length.out = n)
  },
   verbose = FALSE
 )
 
-tapesmo(lltape, tran, man, divweight, acut = 1, verbose = FALSE)
+tapesmo(lltape, tranobj, man, bdryw, acut = 1, verbose = FALSE)
 }
 \arguments{
 \item{start}{The starting manifold. Used for checking that \code{tran} and \code{man} match.}
 
-\item{tran}{A transform object (of type \code{Rcpp_transform_ad}), typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
+\item{tran}{The name of a transformation. Available transformations are
+\itemize{
+\item `srqt'
+\item `alr'
+\item `clr'
+\item \verb{none' (or }identity')
+}}
 
-\item{man}{A transform object (of type \code{Rcpp_man_ad}) matching \code{tran}, and typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
+\item{end}{The name of the manifold that \code{tran} maps \code{start} to. Available manifolds are:
+\itemize{
+\item `sph' unit sphere
+\item `Hn111' hyperplane normal to 1, 1, 1, 1, ...
+\item `sim' simplex
+\item `Euc' Euclidean space
+}}
 
 \item{llname}{The name of the log-likelihood function to tape}
 
-\item{ytape}{An example measurement value to use for creating the tape. In the natural manifold of the log-likelihood function. \code{ytape} will be converted to the manifold according to the \code{toM()} method for \code{tran} before taping.
-Please ensure that \code{ytape} is the interior of the manifold, and it is probably best if all components of \code{tran$toM(ytape)} are non-zero.}
+\item{ytape}{An example measurement value to use for creating the tape. In the natural manifold of the log-likelihood function. \code{ytape} will be converted to the manifold according to the \code{toM()} method for \code{tranobj} before taping.
+Please ensure that \code{ytape} is the interior of the manifold, and it is probably best if all components of \code{tranobj$toM(ytape)} are non-zero.}
 
 \item{usertheta}{A vector of parameter elements for the likelihood function. \code{NA} elements will become \emph{dynamic parameters}. Other elements will be fixed at the provided value. The length of \code{usertheta} must be the correct length for the log-likelihood, no checking is conducted.}
 
-\item{divweight}{The name of the boundary weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.}
+\item{bdryw}{The name of the boundary weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.}
 
-\item{acut}{The threshold \eqn{a_c} in the boundary weight function \code{divweight}. Ignored for \code{divweight = "ones"}.}
+\item{acut}{The threshold \eqn{a_c} in the boundary weight function \code{bdryw}. Ignored for \code{bdryw = "ones"}.}
 
 \item{thetatape_creator}{A function that accepts an integer \code{n}, and returns a vector of \code{n} length. The function is used to fill in the \code{NA} elements of \code{usertheta} when building the tapes. Please ensure that the values filled by \code{thetatape_creator} lead to plausible parameter vectors for the chosen log-likelihood.}
 
 \item{verbose}{If \code{TRUE}, some information about the tape is printed.}
 
+\item{tranobj}{A transform object (of type \code{Rcpp_transform_ad}), typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
+
 \item{lltape}{Tape of the log-likelihood function constructed using \code{\link[=tapell]{tapell()}}.}
+
+\item{man}{A transform object (of type \code{Rcpp_man_ad}) matching \code{tranobj}, and typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
 }
 \value{
-\code{buildsmotape()} returns a list of the log-likelihood tape (note that the \emph{input} for this tape is a function on the manifold), the tape of the score matching discrepancy (the \emph{input} here is the non-fixed parameter values), and some information used to generate the tape.
+\code{buildsmotape()} returns a list of:
+\itemize{
+\item an \code{\link{ADFun}} object containing a log-likelihood tape with \eqn{z} on the \code{end} manifold as the independent variable
+\item an \code{\link{ADFun}} object containing a tape of the score matching discrepancy with the non-fixed parameter values as the independent variables
+\item some information used to generate the tapes
+}
 
 \code{manifoldtransform()} returns a named list with:
 \itemize{
 \item \code{tran} A object of type \code{Rcpp_transform_ad} representing the transform
-\item \code{man} A object of type \code{Rcpp_man_ad} representing the manifold
+\item \code{man} A object of type \code{Rcpp_man_ad} representing the end manifold
 }
 
 \code{tapell()} returns an \code{\link{ADFun}} object with two additional attributes accessed via \code{attr()}:
 \itemize{
 \item \code{ytape} The value of \code{ytape}
-\item \code{tran} The name of the transform specified in \code{tran}.
+\item \code{tran} The name of the transform specified in \code{tranobj}.
 }
 
 \code{tapesmo()} returns an \code{\link{ADFun}} object.
 }
 \description{
-Generates \code{CppAD} tapes (called \code{ADFun}) for the log-likelihood and the score matching discrepancy of a model faimly.
-Three steps are performed by \code{buildsmotape()}: first an object that specifies the manifold and any transformation to another manifold is created using \code{\link[=manifoldtransform]{manifoldtransform()}}; then a tape of the log-likelihood (without normalising constant) is created using \code{\link[=tapell]{tapell()}}; finally a tape of the score matching discrepancy is created using \code{\link[=tapesmo]{tapesmo()}}.
+The function \code{buildsmotape()} generates \code{CppAD} tapes (called \code{ADFun}) for the log-likelihood (without normalising constant) and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} from \code{vignette("scorematchingintro")} for a specified model faimly.
+Three steps are performed by \code{buildsmotape()}: first an object that specifies the manifold and any transformation to another manifold is created using \code{\link[=manifoldtransform]{manifoldtransform()}}; then a tape of the log-likelihood (without normalising constant) is created using \code{\link[=tapell]{tapell()}}; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using \code{\link[=tapesmo]{tapesmo()}}.
 }
 \details{
-The model log-likelihood must be implemented in \verb{C++} and is selected by name. Similarly the transforms of the manifold must be implemented in \verb{C++} and selected by name.t
+The model log-likelihood without normalising constant must be implemented in \verb{C++} and is selected by name. Similarly the transforms of the manifold must be implemented in \verb{C++} and selected by name.
 
 When using, \code{CppAD} one first creates \emph{tapes} of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
 The taping relies on specifying typical argument values for the functions, so the programming is simplest when the function is defined without conditions.
 Tapes can have both \emph{independent} variables and \emph{dynamic} variables.
 The differentiation with \code{CppAD} occurs with respect to the independent variables.
-Tapes of tapes are possible, including tapes that swap the independent and dynamic variables - this is how this package differentiates with respect to a dynamic variables.
+Tapes of tapes are possible, including tapes that swap the independent and dynamic variables - this is how this package differentiates with respect to a dynamic variables (see \code{\link[=swapDynamic]{swapDynamic()}}).
 
-To build a tape for the score matching discrepancy function, the package first tapes the map from a point \eqn{z} on the manifold to the value of the log-likelihood, where the independent variable is the \eqn{z}, and the dynamic variable is a vector of the \emph{non}-fixed parameter values.
-This tape is then used to generate a tape for the score matching discrepancy with the non-fixed parameter values as the independent variable.
+To build a tape for the score matching discrepancy function, the package first tapes the map from a point \eqn{z} on the \code{end} manifold to the value of the improper log-likelihood, where the independent variable is the \eqn{z}, and the dynamic variable is a vector of the parameters to estimate, and remaining parameters are fixed and not estimated.
+This tape is then used to generate a tape for the score matching discrepancy with the parameters to estimate are the independent variable.
 
-Only some combinations of \code{start}, \code{tran} and \code{man} are available because \code{tran} must map between \code{start} and \code{man}.
-These combinations of \code{start}-\code{tran}-\code{man} are available:
+Only some combinations of \code{start}, \code{tran} and \code{end} are available because \code{tran} must map between \code{start} and \code{end}.
+These combinations of \code{start}-\code{tran}-\code{end} are available:
 \itemize{
 \item sim-sqrt-sph
 \item sim-identity-sim
@@ -109,7 +130,8 @@ These combinations of \code{start}-\code{tran}-\code{man} are available:
 \itemize{
 \item \code{manifoldtransform()}: Build an object specifying the transformation to and from a manifold.
 
-\item \code{tapell()}: Creates a \code{CppAD} tape of the log-likelihood as a function of values on the provided manifold. The log-likelihood accounts for the change of measure between the natural manifold of the log-likelihood and the manifold with transformation provided by \code{tran}.
+\item \code{tapell()}: Creates a \code{CppAD} tape of an improper log-likelihood as a function of values on the \code{end} manifold in \code{tranobj}. The Jacobian of the associated transformation is used to convert the log-likelihood on the natural manifold \code{start} of the log-likelihood to the \code{end} manifold.
+This conversion is needed to account for the change in measure between the manifolds.
 
 \item \code{tapesmo()}: Generates a \code{CppAD} tape of the empirical score matching discrepancy function for a single measurement (\eqn{\tilde\psi} in Score Matching vignette). Requires a tape of the log-likelihood function and the corresponding manifold with the transformation.
 
@@ -123,6 +145,7 @@ Example values for the variables and parameters are used to conduct this taping,
 The result of taping is an \href{https://cppad.readthedocs.io/en/latest/ADFun.html}{\code{ADFun}} object, often called a \emph{tape}.
 This \code{ADFun} object can be evaluated, differentiated, used for further taping (see \href{https://cppad.readthedocs.io/en/latest/base2ad.html}{base2ad}), solving differential equations and more.
 The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new \code{ADFun} object where the dynamic parameters have become independent variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
+For the purposes of score matching, there is a third type of parameter: the \emph{fixed} parameters, which are the elements of the model's parameter vector that are given and not estimated.
 }
 
 \section{Warning: multiple CPU}{
@@ -150,7 +173,7 @@ maninfo <- manifoldtransform("sim", "sqrt", "sph")
 ppitape <- tapell(llname = "ppi",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
-                  tran = maninfo$tran) 
+                  tranobj = maninfo$tran) 
 pForward0(ppitape$ptr, 
   sqrt(rep(1/3, 3)), 
   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
@@ -164,11 +187,11 @@ sqrtman <- manifoldtransform("sim", "sqrt", "sph")
 ppitape <- tapell(llname = "ppi",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
-                  tran = sqrtman$tran)
+                  tranobj = sqrtman$tran)
 ppismotape <- tapesmo(lltape = ppitape,
-                      tran = sqrtman$tran,
+                      tranobj = sqrtman$tran,
                       man = sqrtman$man,
-                      divweight = "minsq",
+                      bdryw = "minsq",
                       acut = 0.1,
                       verbose = FALSE)
 pForward0(ppismotape$ptr, 
