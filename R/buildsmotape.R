@@ -3,9 +3,11 @@
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
 #' @param verbose If `TRUE` more details are printed when taping.
 #' @description
-#' Generates `CppAD` tapes (called `ADFun`) for the log-likelihood and score matching discrepancy  for a model specified by name and an optional transformation to a manifold.
-#' Three steps are performed by `buildsmotape()`, corresponding to each of the functions `manifoldtransform()`, `tapell()` and `tapesmo()`.
+#' Generates `CppAD` tapes (called `ADFun`) for the log-likelihood and the score matching discrepancy of a model faimly.
+#' Three steps are performed by `buildsmotape()`: first an object that specifies the manifold and any transformation to another manifold is created using [`manifoldtransform()`]; then a tape of the log-likelihood (without normalising constant) is created using [`tapell()`]; finally a tape of the score matching discrepancy is created using [`tapesmo()`].
 #' @details
+#' The model log-likelihood must be implemented in `C++` and is selected by name. Similarly the transforms of the manifold must be implemented in `C++` and selected by name.t
+#'
 #' When using, `CppAD` one first creates *tapes* of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
 #' The taping relies on specifying typical argument values for the functions, so the programming is simplest when the function is defined without conditions.
 #' Tapes can have both *independent* variables and *dynamic* variables.
