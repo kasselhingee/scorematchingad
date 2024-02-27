@@ -57,15 +57,15 @@ However, when the family of models is a canonical exponential family then often 
 Note that when $M$ has a few or more dimensions, the calculations of $A(z)$, $B(z)$ and $C(z)$ can become cumbersome. This package uses `CppAD` to automatically compute $A(z)$, $B(z)$ and $C(z)$, and the quadratic simplification if it exists.
 
 ## Transformations
-Unlike maximum likelihood, Hyvarinen divergence (\ref{hyvdiv}) is sensitive to transformations of the manifold.
-That is, changing the manifold $M$, changes the divergence between distributions and changes the minimum of $\hat\psi(f_\theta, f_0)$.
-
+Hyvarinen divergence (\ref{hyvdiv}) is sensitive to transformations of the manifold.
+That is, transforming the manifold $M$ changes the divergence between distributions and changes the minimum of $\hat\psi(f_\theta, f_0)$.
 The transformation changes the estimator and divergence but does *not* transform the data.
+
 For example, many different transformations of the simplex (i.e. compositional data) are possible [Appendix A.3, @scealy2024ro].
 Divergences that use the sphere, obtained from the simplex by a square root, have different behaviour to Hyvarinen divergence using a Euclidean space obtained from the simplex using logarithms [@sceal2024ro].
 The estimator for the latter does not apply logarithms to the observations, in fact the estimator involves only polynomials of the observed compositions [@scealy2024ro].
 
-The variety of estimator available through different transformations was a major motivator for this package as each transformation has different $A(z)$, $B(z)$ and $C(z)$, and without automatic differentiation, implementation of the score matching estimator in each case would require a huge programming effort.
+The variety of estimator behaviour available through different transformations was a major motivator for this package as each transformation has different $A(z)$, $B(z)$ and $C(z)$, and without automatic differentiation, implementation of the score matching estimator in each case would require a huge programming effort.
 
 # References
 
