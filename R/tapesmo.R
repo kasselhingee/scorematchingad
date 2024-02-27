@@ -1,4 +1,5 @@
-#' @describeIn buildsmotape Generates a `CppAD` tape of the empirical score matching discrepancy function for a single measurement (\eqn{\tilde\psi} in Score Matching vignette). Requires a tape of the log-likelihood function and the corresponding manifold with the transformation. 
+#' @title Tape the score matching discrepancy function for a specified model faimly
+#' @description Generates a `CppAD` tape of the empirical score matching discrepancy function for a single measurement  \eqn{A(z) + B(z) + C(z)} from `vignette("scorematchingintro")`. Requires a tape of the improper log-likelihood function and a corresponding manifold object from [`manifoldtransform()`]. 
 #' @param tran A transform object (of type `Rcpp_transform_ad`), typically created by [`manifoldtransform()`].
 #' @param man A transform object (of type `Rcpp_man_ad`) matching `tran`, and typically created by [`manifoldtransform()`].
 #' @param lltape Tape of the log-likelihood function constructed using [`tapell()`].
