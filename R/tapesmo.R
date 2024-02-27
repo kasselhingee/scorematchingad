@@ -1,6 +1,6 @@
 #' @describeIn buildsmotape Generates a `CppAD` tape of the empirical score matching discrepancy function for a single measurement (\eqn{\tilde\psi} in Score Matching vignette). Requires a tape of the log-likelihood function and the corresponding manifold with the transformation. 
-#' @param tran A transform object (of type `Rcpp_transform_ad`), typically created by [`manifoldtransform()`].
-#' @param man A transform object (of type `Rcpp_man_ad`) matching `tran`, and typically created by [`manifoldtransform()`].
+#' @param tranobj A transform object (of type `Rcpp_transform_ad`), typically created by [`manifoldtransform()`].
+#' @param man A transform object (of type `Rcpp_man_ad`) matching `tranobj`, and typically created by [`manifoldtransform()`].
 #' @param lltape Tape of the log-likelihood function constructed using [`tapell()`].
 #' @param bdryw The name of the boundary weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.
 #' @param acut The threshold \eqn{a_c} in the boundary weight function `bdryw`. Ignored for `bdryw = "ones"`.
@@ -12,9 +12,9 @@
 #' ppitape <- tapell(llname = "ppi",
 #'                   ytape = c(0.2, 0.3, 0.5),
 #'                   usertheta = ppi_paramvec(p = 3), 
-#'                   tran = sqrtman$tran)
+#'                   tranobj = sqrtman$tran)
 #' ppismotape <- tapesmo(lltape = ppitape,
-#'                       tran = sqrtman$tran,
+#'                       tranobj = sqrtman$tran,
 #'                       man = sqrtman$man,
 #'                       bdryw = "minsq",
 #'                       acut = 0.1,
@@ -30,19 +30,19 @@
 #   c(0.1, 0.1, 0.8)) 
 #' @export
 tapesmo <- function(lltape,
-                   tran,
+                   tranobj,
                    man,
                    bdryw,
                    acut = 1,
                    verbose = FALSE){
-  inherits(tran, "Rcpp_transform_ad")
+  inherits(tranobj, "Rcpp_transform_ad")
   inherits(man, "Rcpp_man_ad")
   stopifnot(is.numeric(acut))
   
   smotape <- ptapesmo(attr(lltape, "ytape"),
                       lltape$dyntape,
                       lltape$ptr,
-                      tran,
+                      tranobj,
                       man,
                       bdryw, 
                       acut, 

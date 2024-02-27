@@ -3,7 +3,7 @@ maninfo <- manifoldtransform("sim", "sqrt", "sph")
 ppitape <- tapell(llname = "ppi",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
-                  tran = maninfo$tran)
+                  tranobj = maninfo$tran)
 
 expect_type(ppitape$xtape, "double") #vectors are neither S3 objects nor S4 objects
 expect_type(ppitape$dyntape, "double")

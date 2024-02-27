@@ -12,7 +12,7 @@ test_that("taped Bingham log-likelihood gives correct values", {
   pman <- manifoldtransform("sph", "identity", "sph")
   lltape <- tapell(llname = "Bingham", ytape = sample[2, ],
                     usertheta = rep(NA, length(theta)),
-                    tran = pman$tran)
+                    tranobj = pman$tran)
 
   u <- t(sample[1, , drop = FALSE])
 

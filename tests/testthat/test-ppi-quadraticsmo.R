@@ -69,7 +69,7 @@ test_that("ppi ll tape is fails the quadratic test", {
   ppitape <- tapell(llname = "ppi",
                     ytape = c(0.2, 0.3, 0.5),
                     usertheta = ppi_paramvec(p = 3), 
-                    tran = sqrtman$tran)
+                    tranobj = sqrtman$tran)
 
   # check only with pParameter()
   expect_false(testquadratictape(ppitape))
