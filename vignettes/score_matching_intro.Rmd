@@ -30,16 +30,21 @@ $$\phi(f, f_0) =  \frac{1}{2} \int_M f_0(z)h(z)^2 \left\lVert P(z)\Big(\nabla_z 
 
  When the density functions $f$ and $f_0$ are smooth and positive inside $M$,
  and the boundary weight function is smooth or of particular forms for specific manifolds [Section 3.2, @scealy2022sc],
- then minimising the weighted Hyvarinen divergence $\phi(f, f_0)$ is equivalent to minimising [Theorem 1 @scealy2022sc]
+ then minimising the weighted Hyvarinen divergence $\phi(f, f_0)$ is equivalent to minimising the score matching discrepancy [Theorem 1 @scealy2022sc]
   $$\psi(f, f_0) = \int f_0(z)\big(A(z_i) + B(z_i) + C(z_i)\big)dM(z),$$
  where 
  $$A(z_i) = \frac{1}{2} h(z)^2 \left(\nabla_z \log(f)\right)^T P(z) \left(\nabla_z \log(f)\right),$$
  $$B(z_i) = h(z)^2\Delta_z\log(f),$$
  $$C(z_i) = \left(\nabla_z h(z)^2)\right)^T P(z) \left(\nabla_z \log(f)\right).$$
- When $n$ iid observations from $f_0$ are available, the integration in $\psi(f, f_0)$ can be approximated by an average over the observations, 
-  $$\psi(f, f_0) \approx \hat\psi(f, f_0) = \frac{1}{n} \sum_{i = 1}^n A(z_i) + B(z_i) + C(z_i).$$
- The *score matching estimator* minimises $\hat\psi(f, f_0)$.
 
+I suspect that this statement also holds for nearly all realistic continuous and piecewise-smooth boundary weight functions, although no proof exists to my knowledge.
+
+ When $n$ independent observations from $f_0$ are available, the integration in $\psi(f, f_0)$ can be approximated by an average over the observations, 
+  $$\psi(f, f_0) \approx \hat\psi(f, f_0) = \frac{1}{n} \sum_{i = 1}^n A(z_i) + B(z_i) + C(z_i).$$
+
+If we parameterise a family of models $f_\theta$ according to a vector of parameters $\theta$, then the *score matching estimate* is the $\theta$ that minimises $\hat\psi(f_\theta, f_0)$.
+In general, the score matching estimate must be found via numerical optimisation techniques, such as in the function `cppad_search()`.
+However, when the family of models is a canonical exponential family then often $\hat\psi(f_\theta, f_0)$ is a quadratic function of $\theta$ [@mardia2018ne] and the minimum has a closed-form solution found by `cppad_closed()`.
 
 # References
 
