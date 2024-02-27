@@ -1,9 +1,9 @@
-#' @title Score matching estimates for the Bingham distribution
+#' @title Score matching estimators for the Bingham distribution
 #' @family directional model estimators
 #' @inheritParams vMF
 #' @param A For full score matching only: if supplied, then NA elements of `A` are estimated and the other elements are fixed. For identifiability the final element of `diag(A)` must be `NA`.
 #' @description
-#' Score matching estimators for the Bingham distribution's parameter matrix. Two methods are available: a full score matching method that estimates the parameter matrix directly; and a hybrid method by \insertCite{mardia2016sc;textual}{scorecompdir} that uses score matching to estimate just the eigenvalues of the parameter matrix.
+#' Score matching estimators for the Bingham distribution's parameter matrix. Two methods are available: a full score matching method that estimates the parameter matrix directly and a hybrid method by \insertCite{mardia2016sc;textual}{scorecompdir} that uses score matching to estimate just the eigenvalues of the parameter matrix.
 #' @details
 #' The Bingham distribution has a density proportional to
 #' \deqn{\exp(z^T A z),}
@@ -16,6 +16,7 @@
 #' After this standardisation, the non-diagonal elements of \eqn{A} are zero.
 #' The diagonal elements (eigenvalues of the pre-standadised \eqn{A}) are estimated using score matching, with the final element calculated from the sum of the other elements.
 #' See \insertCite{mardia2016sc;textual}{scorecompdir} for details.
+#' @references \insertAllCited{}
 #' @examples
 #' p <- 4
 #' A <- rsymmetricmatrix(p)

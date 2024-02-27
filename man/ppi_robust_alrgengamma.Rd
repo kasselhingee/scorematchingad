@@ -29,7 +29,7 @@ A list:
 }
 }
 \description{
-Performs the Windham robustification algorithm exactly as described in \insertCite{scealy2023ro;textual}{scorecompdir} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}}.
+Performs the Windham robustification algorithm exactly as described in \insertCite{scealy2024ro;textual}{scorecompdir} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}}.
 }
 \details{
 This method must fit a PPI model via additive-log ratio transform with \eqn{b_L=0} fixed and the final element of \eqn{\beta} fixed.

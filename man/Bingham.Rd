@@ -2,7 +2,7 @@
 % Please edit documentation in R/Bingham.R
 \name{Bingham}
 \alias{Bingham}
-\title{Score matching estimates for the Bingham distribution}
+\title{Score matching estimators for the Bingham distribution}
 \usage{
 Bingham(Y, A = NULL, w = rep(1, nrow(Y)), method = "smfull")
 }
@@ -25,7 +25,7 @@ A list of \code{est}, \code{SE} and \code{info}.
 }
 }
 \description{
-Score matching estimators for the Bingham distribution's parameter matrix. Two methods are available: a full score matching method that estimates the parameter matrix directly; and a hybrid method by \insertCite{mardia2016sc;textual}{scorecompdir} that uses score matching to estimate just the eigenvalues of the parameter matrix.
+Score matching estimators for the Bingham distribution's parameter matrix. Two methods are available: a full score matching method that estimates the parameter matrix directly and a hybrid method by \insertCite{mardia2016sc;textual}{scorecompdir} that uses score matching to estimate just the eigenvalues of the parameter matrix.
 }
 \details{
 The Bingham distribution has a density proportional to
@@ -47,6 +47,9 @@ A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
 Y <- simdd::rBingham(100, A)
 
 Bingham(Y, method = "Mardia")
+}
+\references{
+\insertAllCited{}
 }
 \seealso{
 Other directional model estimators: 
