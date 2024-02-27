@@ -14,8 +14,13 @@ This package includes score matching estimators for particular distributions and
 Score matching is a popular estimation technique when normalising constants for the proposed model are difficult to calculate or compute.
 Score matching was first developed by @hyvarinen2005es and was further developed for subsets of Euclidean space [@hyvarinen2007ex;@yu2019ge;@yu2020ge;@liu2021es], Riemannian manifolds [@mardia2016sc;@mardia2018ne],
  and Riemannian manifolds with boundary [@scealy2022sc].
+
+## Score Matching in General
 In the most general form (Riemannian manifolds with boundary) score matching minimises the weighted Hyvarinen divergence [Equation 7, @scealy2022sc] 
-$$\phi(f, f_0) =  \frac{1}{2} \int_M f_0(z)h(z)^2 \left\lVert P(z)\Big(\nabla_z \log(f) - \nabla_z \log(f_0)\Big)\right\rVert^2 dM(z),$$
+\begin{equation}
+\phi(f, f_0) =  \frac{1}{2} \int_M f_0(z)h(z)^2 \left\lVert P(z)\Big(\nabla_z \log(f) - \nabla_z \log(f_0)\Big)\right\rVert^2 dM(z),
+\label{hyvdiv}
+\end{equation}
  where
 
  + $M$ is the manifold, isometrically embedded in Euclidean space, and $dM(z)$ is the unnormalised uniform measure on $M$.
@@ -31,11 +36,14 @@ $$\phi(f, f_0) =  \frac{1}{2} \int_M f_0(z)h(z)^2 \left\lVert P(z)\Big(\nabla_z 
  When the density functions $f$ and $f_0$ are smooth and positive inside $M$,
  and the boundary weight function is smooth or of particular forms for specific manifolds [Section 3.2, @scealy2022sc],
  then minimising the weighted Hyvarinen divergence $\phi(f, f_0)$ is equivalent to minimising the score matching discrepancy [Theorem 1 @scealy2022sc]
-  $$\psi(f, f_0) = \int f_0(z)\big(A(z_i) + B(z_i) + C(z_i)\big)dM(z),$$
+\begin{equation}
+\psi(f, f_0) = \int f_0(z)\big(A(z) + B(z) + C(z)\big)dM(z),
+\label{smd}
+\end{equation}
  where 
- $$A(z_i) = \frac{1}{2} h(z)^2 \left(\nabla_z \log(f)\right)^T P(z) \left(\nabla_z \log(f)\right),$$
- $$B(z_i) = h(z)^2\Delta_z\log(f),$$
- $$C(z_i) = \left(\nabla_z h(z)^2)\right)^T P(z) \left(\nabla_z \log(f)\right).$$
+ $$A(z) = \frac{1}{2} h(z)^2 \left(\nabla_z \log(f)\right)^T P(z) \left(\nabla_z \log(f)\right),$$
+ $$B(z) = h(z)^2\Delta_z\log(f),$$
+ $$C(z) = \left(\nabla_z h(z)^2)\right)^T P(z) \left(\nabla_z \log(f)\right).$$
 
 I suspect that this statement also holds for nearly all realistic continuous and piecewise-smooth boundary weight functions, although no proof exists to my knowledge.
 
@@ -45,6 +53,19 @@ I suspect that this statement also holds for nearly all realistic continuous and
 If we parameterise a family of models $f_\theta$ according to a vector of parameters $\theta$, then the *score matching estimate* is the $\theta$ that minimises $\hat\psi(f_\theta, f_0)$.
 In general, the score matching estimate must be found via numerical optimisation techniques, such as in the function `cppad_search()`.
 However, when the family of models is a canonical exponential family then often $\hat\psi(f_\theta, f_0)$ is a quadratic function of $\theta$ [@mardia2018ne] and the minimum has a closed-form solution found by `cppad_closed()`.
+
+Note that when $M$ has a few or more dimensions, the calculations of $A(z)$, $B(z)$ and $C(z)$ can become cumbersome. This package uses `CppAD` to automatically compute $A(z)$, $B(z)$ and $C(z)$, and the quadratic simplification if it exists.
+
+## Transformations
+Unlike maximum likelihood, Hyvarinen divergence (\ref{hyvdiv}) is sensitive to transformations of the manifold.
+That is, changing the manifold $M$, changes the divergence between distributions and changes the minimum of $\hat\psi(f_\theta, f_0)$.
+
+The transformation changes the estimator and divergence but does *not* transform the data.
+For example, many different transformations of the simplex (i.e. compositional data) are possible [Appendix A.3, @scealy2024ro].
+Divergences that use the sphere, obtained from the simplex by a square root, have different behaviour to Hyvarinen divergence using a Euclidean space obtained from the simplex using logarithms [@sceal2024ro].
+The estimator for the latter does not apply logarithms to the observations, in fact the estimator involves only polynomials of the observed compositions [@scealy2024ro].
+
+The variety of estimator available through different transformations was a major motivator for this package as each transformation has different $A(z)$, $B(z)$ and $C(z)$, and without automatic differentiation, implementation of the score matching estimator in each case would require a huge programming effort.
 
 # References
 
