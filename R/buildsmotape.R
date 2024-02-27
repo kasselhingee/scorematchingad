@@ -1,8 +1,5 @@
 #' @title Build CppAD Tapes for Score Matching
 #' @family tape builders
-#' @inheritParams manifoldtransform
-#' @inheritParams tapell
-#' @inheritParams tapesmo
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
 #' @param verbose If `TRUE` more details are printed when taping.
 #' @description
@@ -10,9 +7,7 @@
 #' Three steps are performed by `buildsmotape()`: first an object that specifies the manifold and any transformation to another manifold is created using [`manifoldtransform()`]; then a tape of the log-likelihood (without normalising constant) is created using [`tapell()`]; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using [`tapesmo()`].
 #' @details
 #' The model log-likelihood must be implemented in `C++` and is selected by name. Similarly the transforms of the manifold must be implemented in `C++` and selected by name.
-#' @inheritDetails manifoldtransform
 #'
-#' @details
 #' When using, `CppAD` one first creates *tapes* of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
 #' The taping relies on specifying typical argument values for the functions, so the programming is simplest when the function is defined without conditions.
 #' Tapes can have both *independent* variables and *dynamic* variables.
@@ -34,7 +29,6 @@
 #' 
 #' # Warning: multiple CPU
 #' Each time computations such as derivatives are performed the corresponding `C++` object is altered. Parallel use of the same `ADFun` object thus requires care and is not tested. For now I recommend creating a new `ADFun` object for each CPU.
-
 
 #' @references \insertAllCited{}
 
