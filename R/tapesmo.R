@@ -19,15 +19,9 @@
 #'                       bdryw = "minsq",
 #'                       acut = 0.1,
 #'                       verbose = FALSE)
-#' pForward0(ppismotape$ptr, 
+#' evaltape(ppismotape, 
 #'   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(-0.1,-0.1,0.5)),
 #'   rep(1/3, 3)) 
-# objs <- buildsmotape("sphere", "ppi", c(0.2, 0.3, 0.5),
-#                      bdryw = "minsq", acut = 0.1,
-#                      ppi_paramvec(p = 3))
-# pForward0(objs$smotape, 
-#   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(-0.1,-0.1,0.5)),
-#   c(0.1, 0.1, 0.8)) 
 #' @export
 tapesmo <- function(lltape,
                    tranobj,
