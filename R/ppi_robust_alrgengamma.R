@@ -1,14 +1,16 @@
 #' @title Windham Robustness for Scealy et al 2023
 #' @family PPI model tools
 #' @family Windham robustness functions
+#' @rdname ppi_robust
+#' @order 2
 #' @description
-#' Performs the Windham robustification algorithm exactly as described in \insertCite{scealy2024ro;textual}{scorecompdir} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general [`Windham()`] and [`ppi()`].
+#' `ppi_robust_alrgengamma()` performs the Windham robustification algorithm exactly as described in \insertCite{scealy2024ro;textual}{scorecompdir} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general [`Windham()`] and [`ppi()`].
 #' @inheritParams Windham
 #' @inheritParams ppi_robust
 #' @inherit ppi_robust return
 #' @param ... Passed to [`Windham()`] and on to [`ppi()`]. 
 #' @details
-#' This method must fit a PPI model via additive-log ratio transform with \eqn{b_L=0} fixed and the final element of \eqn{\beta} fixed.
+#' `ppi_robust_alrgengamma()`: must fit a PPI model via additive-log ratio transform with \eqn{b_L=0} fixed and the final element of \eqn{\beta} fixed.
 #' The default convergence metric and threshold are different to the default for [`ppi_robust()`] to match the original implementation: convergence is measured by the change in the first element of \eqn{\beta}, and convergence is reached when the change is smaller than `1E-6`. Override this behaviour by specifying the elements `ConvergenceMetric` and `ConvergenceMetricThreshold` in a list passed as `fpcontrol`.
 #' [`Windham()`] is called with `alternative_populationinverse = TRUE`.
 #' @references
