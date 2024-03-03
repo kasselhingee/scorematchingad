@@ -1,5 +1,5 @@
 #' @order 1
-#' @title Generate random observations from a PPI model
+#' @title Simulate from a PPI model
 #' @family PPI model tools
 #' @description Given parameters of the PPI model, generates independent samples.
 #' @param n Sample size
