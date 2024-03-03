@@ -7,6 +7,7 @@
 #include "scorecompdir_types.h"
 #include "mycpp/wrapas.hpp"  //needed because converting veca1 from R
 
+//' @noRd
 //' @name evaltape_internal
 //' @title Advanced: Evaluate `CppAD` Tapes via their Pointer
 //' @description The recommended method for evaluating tapes is [`evaltape()`].
@@ -23,17 +24,14 @@
 //' @param pfun Rcpp::XPtr to an ADFun. Can be obtained as the `ptr` field of an [`ADFun`] object.
 //' @param x A vector in the domain of the taped function
 //' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
-//' @export
 // [[Rcpp::export]]
 vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
 //' @describeIn evaltape_internal Evaluates a the Jacobian of a tape using the `CppAD` `Jacobian` method <https://cppad.readthedocs.io/en/latest/Jacobian.html>. 
-//' @export
 // [[Rcpp::export]]
 vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
 //' @describeIn evaltape_internal Evaluates a the Hessian of a tape using the `CppAD` `Hessian` method <https://cppad.readthedocs.io/en/latest/Hessian.html>, assuming that range space of the taped function has dimension of `1`. 
-//' @export
 // [[Rcpp::export]]
 vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
@@ -44,7 +42,6 @@ vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 //' # pParameter
 //' The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/en/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
 //' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/en/latest/glossary.html#dynamic> ).
-//' @export
 // [[Rcpp::export]]
 std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
 // According to the help, applying Variable(u) to each return value would be false if u depends on the dynamic parameters and does not depend on the independent variable vector.
