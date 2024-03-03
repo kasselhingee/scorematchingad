@@ -44,7 +44,6 @@ When the \code{tcentres} row is not \code{NA}, then approximate results are calc
 }
 \seealso{
 Other tape evaluators: 
-\code{\link{evaltape_internal}},
 \code{\link{evaltape}()},
 \code{\link{smvalues_tape}()},
 \code{\link{testquadratictape}()}

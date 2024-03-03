@@ -174,13 +174,10 @@ ppitape <- tapell(llname = "ppi",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
                   tranobj = maninfo$tran) 
-pForward0(ppitape$ptr, 
+evaltape(ppitape, 
   sqrt(rep(1/3, 3)), 
   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
-pJacobian(ppitape$ptr, 
-  sqrt(rep(1/3, 3)), 
-  ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
-pHessian(ppitape$ptr, 
+evaltape(tapeJacobian(ppitape), 
   sqrt(rep(1/3, 3)), 
   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
 sqrtman <- manifoldtransform("sim", "sqrt", "sph")

@@ -45,7 +45,6 @@ tapes <- buildsmotape(
 }
 \seealso{
 Other tape evaluators: 
-\code{\link{evaltape_internal}},
 \code{\link{evaltape}()},
 \code{\link{quadratictape_parts}()},
 \code{\link{smvalues_tape}()}

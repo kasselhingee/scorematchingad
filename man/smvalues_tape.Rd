@@ -27,7 +27,7 @@ smvalues_tape_wsum(
 
 \item{approxorder}{Order of Taylor approximation}
 
-\item{tape}{A \code{CppAD} \code{tape}.}
+\item{tape}{An \code{\link{ADFun}} object (i.e. a tape of a function).}
 
 \item{w}{Weights to apply to each row of \code{xmat} for computing the weighted sum. If \code{NULL} then each row is given a weight of \code{1}.}
 }
@@ -56,7 +56,6 @@ smvalues_tape(tapes$smotape, xmat = m$sample, pmat = m$theta[1:5])
 }
 \seealso{
 Other tape evaluators: 
-\code{\link{evaltape_internal}},
 \code{\link{evaltape}()},
 \code{\link{quadratictape_parts}()},
 \code{\link{testquadratictape}()}

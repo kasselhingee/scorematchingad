@@ -17,7 +17,7 @@ evaltape_wsum(
 )
 }
 \arguments{
-\item{tape}{A \code{CppAD} \code{tape}.}
+\item{tape}{An \code{\link{ADFun}} object (i.e. a tape of a function).}
 
 \item{xmat}{A matrix of (multivariate) independent variables. Each represents a single independent variable vector. Or a single vector of that is used for all rows of \code{pmat}.}
 
@@ -41,7 +41,6 @@ Approximation is via Taylor approximation of the independent variable around the
 }
 \seealso{
 Other tape evaluators: 
-\code{\link{evaltape_internal}},
 \code{\link{quadratictape_parts}()},
 \code{\link{smvalues_tape}()},
 \code{\link{testquadratictape}()}
