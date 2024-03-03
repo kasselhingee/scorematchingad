@@ -60,7 +60,7 @@
 #' @references
 #' \insertAllCited{}
 #' @examples
-#' model <- ppi_egmodel(100)
+#' model <- rppi_egmodel(100)
 #' estalr <- ppi(model$sample,
 #'               paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)),
 #'               trans = "alr", method = "closed")

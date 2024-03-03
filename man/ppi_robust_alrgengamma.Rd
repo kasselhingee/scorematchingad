@@ -42,7 +42,6 @@ The default convergence metric and threshold are different to the default for \c
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_egmodel}()},
 \code{\link{ppi_parammats}()},
 \code{\link{ppi_paramvec}()},
 \code{\link{ppi_robust}()},

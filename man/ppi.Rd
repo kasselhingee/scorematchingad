@@ -101,7 +101,7 @@ The \eqn{i}th component of \eqn{\beta} controls the concentration of density whe
 }
 
 \examples{
-model <- ppi_egmodel(100)
+model <- rppi_egmodel(100)
 estalr <- ppi(model$sample,
               paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)),
               trans = "alr", method = "closed")
@@ -115,7 +115,6 @@ estsqrt <- ppi(model$sample,
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_egmodel}()},
 \code{\link{ppi_parammats}()},
 \code{\link{ppi_paramvec}()},
 \code{\link{ppi_robust_alrgengamma}()},

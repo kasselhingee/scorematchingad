@@ -1,6 +1,6 @@
 test_that("ppi_alr_gengamma matches CppAD closed method for constant weight, p = 3", {
   set.seed(1234)
-  m <- ppi_egmodel(100, maxden = 4)
+  m <- rppi_egmodel(100, maxden = 4)
 
   est_cppad <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "closed", bdryw = "ones")
   est_hardcoded <- ppi(m$sample, ppi_paramvec(bL = rep(0, 3-1), betap = m$beta[3]), trans = "alr", method = "hardcoded")
@@ -10,7 +10,7 @@ test_that("ppi_alr_gengamma matches CppAD closed method for constant weight, p =
 
 test_that("ppi_alr_gengamma matches CppAD closed method for constant weight and data with zeros, p = 3", {
   set.seed(1234)
-  m <- ppi_egmodel(100, maxden = 4)
+  m <- rppi_egmodel(100, maxden = 4)
   dsample <- round(m$sample * 100)/100
   dsample[, 3] <- 1 - rowSums(dsample[, 1:2])
 
@@ -48,7 +48,7 @@ test_that("ppi_alr_gengamma matches CppAD closed method for constant weight, p =
 
 test_that("ppi_alr_gengamma matches for simulated weights", {
   set.seed(1234)
-  m <- ppi_egmodel(100, maxden = 4)
+  m <- rppi_egmodel(100, maxden = 4)
   #simulate weights
   ind <- sample(1:100, 150, replace = TRUE)
   weights <- rep(0, 100)
@@ -62,7 +62,7 @@ test_that("ppi_alr_gengamma matches for simulated weights", {
 
 test_that("ppi_alr_gengamma() and cppad match for a randomly selected weight vector", {
   set.seed(1234)
-  m <- ppi_egmodel(100, maxden = 4)
+  m <- rppi_egmodel(100, maxden = 4)
   set.seed(1212)
   w <- runif(100)
 

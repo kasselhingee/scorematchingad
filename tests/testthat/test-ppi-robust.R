@@ -1,6 +1,6 @@
 test_that("ppi including betaL with cW gives correct params on simulated data, with two outliers. p=3", {
   set.seed(1273)
-  m <- ppi_egmodel(1000, maxden = 4)
+  m <- rppi_egmodel(1000, maxden = 4)
   outlier1 <- c(0.9, 0.9, 0.01)
   outlier1 <- outlier1/sum(outlier1)
   outlier2 <- c(0.9, 0.1, 0.01)
@@ -23,7 +23,7 @@ test_that("ppi including betaL with cW gives correct params on simulated data, w
 
 test_that("Robustness runs for hardcoded and cppad methods", {
   set.seed(1273)
-  m <- ppi_egmodel(50, maxden = 4)  # at 20 got singularities
+  m <- rppi_egmodel(50, maxden = 4)  # at 20 got singularities
   outlier1 <- c(0.9, 0.9, 0.01)
   outlier1 <- outlier1/sum(outlier1)
   outlier2 <- c(0.9, 0.1, 0.01)

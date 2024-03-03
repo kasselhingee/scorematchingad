@@ -23,6 +23,6 @@ Good approximations of the score matching discrepancy value can be obtained thro
 The function here generates this approximation centre.
 }
 \examples{
-m <- ppi_egmodel(10)
+m <- rppi_egmodel(10)
 simplex_boundaryshift(m$sample, shiftsize = 1E-5)
 }

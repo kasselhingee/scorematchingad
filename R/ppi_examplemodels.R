@@ -1,8 +1,8 @@
-#' @title Load and simulate example PPI models
-#' @family PPI model tools
+# @title Simulate from an example PPI model
+# @family PPI model tools
 #' @param n Number of samples to generate
 #' @param maxden the log(C) maximum in simulating a PPI model. See [`rppi()`].
-#' @return A list: 
+#' @return `rppi_egmodel` returns a list: 
 #'  * `sample` A matrix of the simulated samples (`n` rows)
 #'  * `p` The number of components of the model
 #'  * `theta` The PPI parameter vector
@@ -10,13 +10,14 @@
 #'  * `bL` The \eqn{b_L} parameter vector
 #'  * `beta` The \eqn{\beta} parameter vector 
 #' @examples
-#' ppi_egmodel(1000)
-#' @description 
-#' Simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2022sc}{scorecompdir}. 
+#' rppi_egmodel(1000)
+#' @describeIn rppi 
+#' Simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2022sc}{scorecompdir} and returns both simulations and model parameters. 
+#' @order 2
 #' @references
 #' \insertAllCited{}
 #' @export
-ppi_egmodel <- function(n, maxden = 4){
+rppi_egmodel <- function(n, maxden = 4){
   mats <- pars_sec2dot3model(3)
   mats$beta = mats$beta
 
@@ -32,9 +33,9 @@ ppi_egmodel <- function(n, maxden = 4){
   return(out)
 }
 
-# @rdname ppi_egmodel
+# @rdname rppi_egmodel
 # @export
-ppi_egmodel_p4 <- function(n, maxden = 8){
+rppi_egmodel_p4 <- function(n, maxden = 8){
   mats <- pars_sec2dot3model(4)
 
   #simulate sample from PPI model

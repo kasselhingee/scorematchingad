@@ -1,5 +1,5 @@
 test_that("Hess + Offset match gradient for a PPI Example", {
-  mod <- ppi_egmodel(100)
+  mod <- rppi_egmodel(100)
   Y <- mod$sample
 
   tapes <- buildsmotape(
@@ -48,7 +48,7 @@ test_that("Hess + Offset match gradient for a PPI Example", {
 })
 
 test_that("quadratictape_parts with approx centres is close to quadratic_parts for simplex interior points", {
-  mod <- ppi_egmodel(100)
+  mod <- rppi_egmodel(100)
   Y <- mod$sample
   Ycen <- simplex_boundaryshift(Y)
 

@@ -1,6 +1,6 @@
 test_that("Fitting ppi via clr transform gets close estimates via sqrt", {
   set.seed(1234)
-  model <- ppi_egmodel(100, maxden = 4)
+  model <- rppi_egmodel(100, maxden = 4)
 
   out <- ppi(Y = model$sample,
              paramvec = ppi_paramvec(p = 3, betap = -0.5),
@@ -16,7 +16,7 @@ test_that("Fitting ppi via clr transform gets close estimates via sqrt", {
 
 test_that("Fitting ppi all parameters via clr transform can get close to true values for eg ppi, and is insensitive to bdrythreshold", {
   set.seed(12345)
-  model <- ppi_egmodel(10000, maxden = 4)
+  model <- rppi_egmodel(10000, maxden = 4)
 
   expect_warning({out <- ppi(Y = model$sample,
              trans = "clr", bdrythreshold = 1E-10, constrainbeta = TRUE)}, "Beta estimates.*-1") #default
@@ -35,7 +35,7 @@ test_that("Fitting ppi all parameters via clr transform can get close to true va
 
 test_that("Fitting ppi smo values via clr transform is insensitive to bdrythreshold", {
   set.seed(12345)
-  m <- ppi_egmodel(1000, maxden = 4)
+  m <- rppi_egmodel(1000, maxden = 4)
   #add some zeroes
   pushtozero <- function(x){
     whichmin <- which.min(x)
@@ -111,7 +111,7 @@ test_that("High concentration Dirichlet with zeros estimated broadly similar to 
 
 test_that("Hess + Offset match gradient for Hclr in interior", {
   set.seed(1245)
-  mod <- ppi_egmodel(100)
+  mod <- rppi_egmodel(100)
   Y <- mod$sample
   Y <- rbind(Y, rep(1/3, 3))
 
@@ -139,7 +139,7 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
   # if W is symmetric then should equal the smo up to a constant wrt theta
   # and my expectation is that W is symmetric for ppi with Hclr
   set.seed(1245)
-  mod <- ppi_egmodel(100)
+  mod <- rppi_egmodel(100)
   Y <- mod$sample
   Y <- rbind(Y, rep(1/3, 3))
   isbdry <- simplex_isboundary(Y, 1E-5)

@@ -2,7 +2,7 @@
 # edited from 'modelA.R' in the original code
 
 #### Setup ####
-list2env(ppi_egmodel(1), globalenv())
+list2env(rppi_egmodel(1), globalenv())
 theta <- c(diag(AL), AL[upper.tri(AL)], bL)
 
 

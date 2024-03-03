@@ -26,7 +26,6 @@ ppi_parammats(vec)
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_egmodel}()},
 \code{\link{ppi_paramvec}()},
 \code{\link{ppi_robust_alrgengamma}()},
 \code{\link{ppi_robust}()},

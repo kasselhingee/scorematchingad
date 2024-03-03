@@ -61,7 +61,6 @@ Using similar arguments to \code{\link[=ppi]{ppi()}}, compute values related to 
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_egmodel}()},
 \code{\link{ppi_parammats}()},
 \code{\link{ppi_paramvec}()},
 \code{\link{ppi_robust_alrgengamma}()},

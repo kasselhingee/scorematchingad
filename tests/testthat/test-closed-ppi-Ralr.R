@@ -1,7 +1,7 @@
 test_that("Fitting ppi via alr transform with fixed beta gets close to true values", {
   skip_on_cran()
   set.seed(1234)
-  model <- ppi_egmodel(1000, maxden = 4)
+  model <- rppi_egmodel(1000, maxden = 4)
 
   acut = 0.1 #not needed for Ralr per se, but code still expects it
   out <- ppi(Y = model$sample,
@@ -13,7 +13,7 @@ test_that("Fitting ppi via alr transform with fixed beta gets close to true valu
 
 test_that("Fitting ppi via alr inc all beta gets close to true values", {
   set.seed(111)
-  model <- ppi_egmodel(1000, maxden = 4)
+  model <- rppi_egmodel(1000, maxden = 4)
 
   out <- ppi(Y = model$sample,
              trans = "alr")

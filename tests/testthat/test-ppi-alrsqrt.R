@@ -1,6 +1,6 @@
 test_that("Fitting ppi via ppi_alrsqrt_robust version gets closer with outliers", {
   set.seed(1111)
-  model <- ppi_egmodel(100, maxden = 4)
+  model <- rppi_egmodel(100, maxden = 4)
 
   model$sample[1, ] <- c(0.5, 0.4, 0.1)
   model$sample[2, ] <- c(0.5, 0.4, 0.1)

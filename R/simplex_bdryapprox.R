@@ -8,7 +8,7 @@
 #' @param shiftsize The distance to away from `u` to create the approximation centre.
 #' @return A matrix the same size as `Y`, containing the measurements in `Y` translated `shiftsize` distance towards the simplex centre.
 #' @examples
-#' m <- ppi_egmodel(10)
+#' m <- rppi_egmodel(10)
 #' simplex_boundaryshift(m$sample, shiftsize = 1E-5)
 #' @export
 simplex_boundaryshift <- function(Y, shiftsize = 1E-4){
@@ -53,7 +53,7 @@ simplex_isboundary <- function(Y, bdrythreshold = 1E-15){
 #'  * `winterior` Weights from `w` corresponding to `interior` (`NULL` if not weights supplied).
 #'  * `wboundary` Weights from `w` corresponding to `uboundary` (`NULL` if not weights supplied).
 #' @examples
-#' m <- ppi_egmodel(10)
+#' m <- rppi_egmodel(10)
 #' simplex_boundaryshift(m$sample, shiftsize = 1E-5)
 simplex_boundarysplit <- function(Y, bdrythreshold = 1E-15, shiftsize = 1E-10, w = NULL){
   onbdry <- simplex_isboundary(Y, bdrythreshold = bdrythreshold)

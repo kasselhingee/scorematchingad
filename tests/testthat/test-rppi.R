@@ -4,7 +4,7 @@
 n=5000
 
 #parameters for the PPI model
-m <- ppi_egmodel(2)
+m <- rppi_egmodel(2)
 
 test_that("current PPI simulation method gives samples with similar empirical density estimates as the original simulation method", {
   skip_on_cran() #accuracy of the method is tested by all the estimators
@@ -24,7 +24,7 @@ test_that("current PPI simulation method gives samples with similar empirical de
 })
 
 test_that("rppi() is fixed by set.seed()", {
-  m <- ppi_egmodel(2)
+  m <- rppi_egmodel(2)
 
   set.seed(3212)
   Y1 <- rppi(100, beta = m$beta, AL= m$AL, bL= m$bL, maxden=4)
@@ -54,7 +54,7 @@ test_that("rppi() errors appropriately", {
 })
 
 test_that("dppi() produces -Inf results outside simplex", {
-  m <- ppi_egmodel(1)
+  m <- rppi_egmodel(1)
   prop <- matrix(c(-1, 1, 1, 0.1, 0.1, 0.1, 0.8, 0.8, 0.7), ncol = 3, byrow = TRUE)
   suppressWarnings(logdens <- dppi(prop, beta = m$beta, AL = m$AL, bL = m$bL) )
   expect_equal(logdens, rep(-Inf, 3))

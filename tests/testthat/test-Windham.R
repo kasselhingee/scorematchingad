@@ -1,7 +1,7 @@
 test_that("WindamRobust() via ppi_robust() gives correct params on simulated data, with two outliers. p=3", {
   skip_on_cran()#"only extra checks are the variable cW ones"
   set.seed(1273)
-  m <- ppi_egmodel(1000, maxden = 4)
+  m <- rppi_egmodel(1000, maxden = 4)
   outlier1 <- c(0.9, 0.9, 0.01)
   outlier1 <- outlier1/sum(outlier1)
   outlier2 <- c(0.9, 0.1, 0.01)

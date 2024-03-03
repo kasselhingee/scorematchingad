@@ -40,7 +40,6 @@ Because \eqn{u} lies in the simplex (in particular \eqn{\sum u_i = 1}), the dens
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_egmodel}()},
 \code{\link{ppi_parammats}()},
 \code{\link{ppi_paramvec}()},
 \code{\link{ppi_robust_alrgengamma}()},

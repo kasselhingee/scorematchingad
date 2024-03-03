@@ -1,5 +1,5 @@
 test_that("ppi tape values do not effect ll values", {
-  model1 <- ppi_egmodel(1)
+  model1 <- rppi_egmodel(1)
   u1 <-  c(0.001, 0.011, 1 - 0.01 - 0.011)
   model0 <- lapply(model1, function(x) x * 0)
   u0 <- rep(0, 3)
@@ -74,9 +74,9 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   expect_lt_v(abs(out$est - beta) / out$SE, 3)#assuming normally distributed with SE given by SE above
 })
 
-test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmodel", {
+test_that("ppi with minsq weights match estimator1 with fixed beta for rppi_egmodel", {
   set.seed(123)
-  model <- ppi_egmodel(1000, maxden = 4)
+  model <- rppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
   out <- ppi(model$sample, paramvec = ppi_paramvec(betaL = model$beta[1:2], betap = model$beta[3]),
@@ -90,9 +90,9 @@ test_that("ppi with minsq weights match estimator1 with fixed beta for ppi_egmod
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 2 * out$SE$paramvec)
 })
 
-test_that("ppi with prodsq weights match estimator1 with fixed beta for ppi_egmodel", {
+test_that("ppi with prodsq weights match estimator1 with fixed beta for rppi_egmodel", {
   set.seed(123)
-  model <- ppi_egmodel(1000, maxden = 4)
+  model <- rppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
   out <- ppi(model$sample, ppi_paramvec(betaL = model$beta[1:2], betap = model$beta[3]),
@@ -137,9 +137,9 @@ test_that("ppi with minsq weights match estimatorall1 for p = 4, mostly zero par
   expect_absdiff_lte_v(out$est$paramvec, theta, 3 * out$SE$paramvec)
 })
 
-test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel", {
+test_that("ppi with minsq weights match estimatorall1 for rppi_egmodel", {
   set.seed(111)
-  model <- ppi_egmodel(100, maxden = 4)
+  model <- rppi_egmodel(100, maxden = 4)
   acut = 0.1
   ppiest <- ppi(Y = model$sample, method = "closed",
                 trans = "sqrt", bdryw = "minsq", acut = acut)
@@ -151,9 +151,9 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel", {
   expect_absdiff_lte_v(ppiest$est$paramvec, model$theta, 3 * ppiest$SE$paramvec)
 })
 
-test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed final beta", {
+test_that("ppi with minsq weights match estimatorall1 for rppi_egmodel, fixed final beta", {
   set.seed(123)
-  model <- ppi_egmodel(100, maxden = 4)
+  model <- rppi_egmodel(100, maxden = 4)
 
   acut = 0.1
   out <- ppi(Y = model$sample,
@@ -167,10 +167,10 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 })
 
-test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed final beta, large n", {
+test_that("ppi with minsq weights match estimatorall1 for rppi_egmodel, fixed final beta, large n", {
   skip_on_cran()
   set.seed(123)
-  model <- ppi_egmodel(100000, maxden = 4)
+  model <- rppi_egmodel(100000, maxden = 4)
 
   acut = 0.1
   out <- ppi(Y = model$sample, method = "closed",
@@ -186,7 +186,7 @@ test_that("ppi with minsq weights match estimatorall1 for ppi_egmodel, fixed fin
 
 test_that("ppi with minsq weights performs well on simplex, fixed final beta", {
   set.seed(1234)
-  model <- ppi_egmodel(1000, maxden = 4)
+  model <- rppi_egmodel(1000, maxden = 4)
 
   acut = 0.1
   out <- ppi(Y = model$sample,

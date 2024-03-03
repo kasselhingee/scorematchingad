@@ -46,7 +46,6 @@ where \eqn{z} is the multivariate observation, and \eqn{z_L} ommits the final el
 }
 \seealso{
 Other PPI model tools: 
-\code{\link{ppi_egmodel}()},
 \code{\link{ppi_parammats}()},
 \code{\link{ppi_paramvec}()},
 \code{\link{ppi_robust_alrgengamma}()},

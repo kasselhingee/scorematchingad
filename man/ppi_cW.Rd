@@ -40,7 +40,7 @@ creating weights of infinity for models with concentrations at zero \insertCite{
 \insertCite{scealy2024ro;textual}{scorecompdir} set the remaining tuning exponents to a constant.
 }
 \examples{
-Y <- ppi_egmodel(100)$sample
+Y <- rppi_egmodel(100)$sample
 ppi_cW_auto(0.01, Y)
 ppi_cW(0.01, TRUE, TRUE, FALSE)
 }

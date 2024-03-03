@@ -3,7 +3,7 @@
 
 test_that("cppad_search gives similar result to cppad_closed", {
   set.seed(354)
-  m <- ppi_egmodel(100, maxden = 4)
+  m <- rppi_egmodel(100, maxden = 4)
   tapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                         ytape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),

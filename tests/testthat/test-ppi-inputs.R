@@ -65,9 +65,9 @@ test_that("Inputs to ppi() are processed into the correct theta", {
                c(rep(NA, p-1), rep(0, (p-2) * (p-1)/2), rep(0, p-1), rep(NA, p-1), -0.5), ignore_attr = "names")
 })
 
-test_that("ppi with cppad method works easily on ppi_egmodel", {
+test_that("ppi with cppad method works easily on rppi_egmodel", {
   set.seed(1245)
-  model <- ppi_egmodel(100)
+  model <- rppi_egmodel(100)
   suppressWarnings({out <- ppi(model$sample, trans = "sqrt", bdryw = "minsq", acut = 0.1, method = "closed", control = list(tol = 1E-10))})
   expect_absdiff_lte_v(out$est$paramvec, model$theta, 3 * out$SE$paramvec)
 
@@ -102,7 +102,7 @@ test_that("ppi with cppad method works easily on ppi_egmodel", {
 
 test_that("ppi() uses paramvec_start", {
   set.seed(1245)
-  model <- ppi_egmodel(100)
+  model <- rppi_egmodel(100)
   suppressWarnings(hardcoded <- ppi(model$sample, trans = "sqrt", bdryw = "minsq", acut = 0.1, method = "closed"))
   suppressWarnings(out <- ppi(model$sample, trans = "sqrt", bdryw = "minsq", acut = 0.1, method = "iterative", control = list(tol = 1E-10), paramvec_start = hardcoded$info$est))
 

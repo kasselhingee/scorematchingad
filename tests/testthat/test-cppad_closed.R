@@ -1,6 +1,6 @@
 test_that("Solution without boundary considerations for PPI has zero gradient and matches numerical minimum", {
   set.seed(13411)
-  mod <- ppi_egmodel(100)
+  mod <- rppi_egmodel(100)
   Y <- mod$sample
 
   tapes <- buildsmotape(
@@ -26,7 +26,7 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
 })
 
 test_that("Closed-from solution with boundary points matches hard-coded version", {
-  mnongamma <- ppi_egmodel(1)
+  mnongamma <- rppi_egmodel(1)
   theta <- ppi_paramvec(beta = c(-0.95, -0.9, 0.5), AL = mnongamma$AL, bL = 0)
   set.seed(1234)
   Ycts <- rppi(1000, paramvec = theta)
@@ -59,7 +59,7 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
 test_that("Closed-form solution with all boundary points and alr matches hardcoded", {
   skip("Hardcoded and closed methods both fail on this. But not on the microbiome data")
   set.seed(123)
-  m <- ppi_egmodel(100)
+  m <- rppi_egmodel(100)
   #add some zeroes
   pushtozero <- function(x){
     whichmin <- which.min(x)
