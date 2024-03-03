@@ -191,7 +191,7 @@ ppismotape <- tapesmo(lltape = ppitape,
                       bdryw = "minsq",
                       acut = 0.1,
                       verbose = FALSE)
-pForward0(ppismotape$ptr, 
+evaltape(ppismotape, 
   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(-0.1,-0.1,0.5)),
   rep(1/3, 3)) 
 }

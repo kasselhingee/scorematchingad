@@ -14,6 +14,7 @@
 #' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
 NULL
 
+#' @noRd
 #' @describeIn evaltape_internal Evaluates a tape without any differentiation at the given values of `x` and dynparam. 
 #' The name `pForward0` is a reference to the zero order `CppAD` method [`forward`](https://cppad.readthedocs.io/forward_zero.html), and the prefix 'p' is because the tape is passed as a pointer.
 #' @param pfun Rcpp::XPtr to an ADFun. Can be obtained as the `ptr` field of an [`ADFun`] object.
@@ -23,16 +24,19 @@ pForward0 <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pForward0', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
+#' @noRd
 #' @describeIn evaltape_internal Evaluates a the Jacobian of a tape using the `CppAD` `Jacobian` method <https://cppad.readthedocs.io/en/latest/Jacobian.html>. 
 pJacobian <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pJacobian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
+#' @noRd
 #' @describeIn evaltape_internal Evaluates a the Hessian of a tape using the `CppAD` `Hessian` method <https://cppad.readthedocs.io/en/latest/Hessian.html>, assuming that range space of the taped function has dimension of `1`. 
 pHessian <- function(pfun, x, dynparam) {
     .Call('_scorecompdir_pHessian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
 }
 
+#' @noRd
 #' @describeIn evaltape_internal Test whether the returned values are constant with respect to the independent values using 
 #' `CppAD`'s `Parameter` method <https://cppad.readthedocs.io/en/latest/fun_property.html>.
 #' Returns A vector of logical values. `TRUE` indicates that element of the tape result is constant.
