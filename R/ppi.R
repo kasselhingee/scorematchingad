@@ -1,4 +1,5 @@
 #' @title Estimation of Polynomially-Tilted Pairwise Interaction (PPI) model
+#' @order 1
 #' @family PPI model tools
 #' @description 
 #' Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir} for compositional data.
