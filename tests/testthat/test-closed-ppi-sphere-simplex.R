@@ -218,10 +218,10 @@ test_that("ppi via cppad matches Score1 for p=5 and has SM discrepancy has small
   ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
                            bdryw = "minsq", acut = acut)
-  smvals <- smvalues_tape_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL))
+  smvals <- smvalues_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL))
   expect_lt(sum(smvals$grad^2), 1E-20)
 
   # check that rearrangement has large gradient
-  smvals <- smvalues_tape_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL)[c(1:6, 8, 7, 9, 10)])
+  smvals <- smvalues_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL)[c(1:6, 8, 7, 9, 10)])
   expect_gt(sum(smvals$grad^2), 1E-2)
 })

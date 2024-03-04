@@ -25,9 +25,9 @@
 #'    acut = 0.1,
 #'    verbose = FALSE)
 #'
-#'  testquadratictape(tapes$smotape)
+#'  testquadratic(tapes$smotape)
 #' @export
-testquadratictape <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE){
+testquadratic <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE){
   stopifnot(inherits(tape, "ADFun"))
   tapeJ <- tapeJacobian(tape)
   tapeH <- tapeJacobian(tapeJ)

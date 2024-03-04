@@ -1,7 +1,7 @@
 #' @title Compute score matching discrepancy value, gradient, and Hessian for a PPI Model
 #' @family PPI model tools
 #' @rdname ppi
-#' @description For a given parameter vector `evalparam`, `ppi_smvalues()` computes the score matching discrepancy, the gradient and Hessian of the score matching discrepancy (see [`smvalues_tape()`]) and the gradient offset of the score matching discrepancy (see [`quadratictape_parts()`]). 
+#' @description For a given parameter vector `evalparam`, `ppi_smvalues()` computes the score matching discrepancy, the gradient and Hessian of the score matching discrepancy (see [`smvalues()`]) and the gradient offset of the score matching discrepancy (see [`quadratictape_parts()`]). 
 #' @order 2
 #' @param evalparam The parameter set to evaluate the score matching values.
 #' This is different to `paramvec`, which *fixes* parameters and constrains the estimation.
@@ -72,12 +72,12 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
 
   # gradient values
   if (average){
-    valgradhess <- smvalues_tape_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
+    valgradhess <- smvalues_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
                               xcentres = Yapproxcentres,
                               w = w,
                               approxorder = approxorder)
   } else {
-    valgradhess <- smvalues_tape(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
+    valgradhess <- smvalues(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
                                       xcentres = Yapproxcentres,
                                       approxorder = approxorder)
   }

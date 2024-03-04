@@ -1,6 +1,6 @@
 ## ppi() fitting tested with cppad_closed() tests
 
-test_that("testquadratictape passes on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
+test_that("testquadratic passes on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
   tapes <- buildsmotape(
      start = "sim",
      tran = "sqrt",
@@ -15,7 +15,7 @@ test_that("testquadratictape passes on PPI model with sqrt transformation, minsq
 
 
   # check only with pParameter()
-  expect_true(testquadratictape(ppismotape))
+  expect_true(testquadratic(ppismotape))
 
 
 
@@ -24,7 +24,7 @@ test_that("testquadratictape passes on PPI model with sqrt transformation, minsq
   dynparammat <- matrix(runif(10*2, min=0, max = 0.5), ncol = 2)
   dynparammat <- cbind(dynparammat, 1-rowSums(dynparammat))
 
-  expect_true(testquadratictape(ppismotape, xmat = xmat, dynparammat = dynparammat))
+  expect_true(testquadratic(ppismotape, xmat = xmat, dynparammat = dynparammat))
 })
 
   # manual tests
@@ -72,8 +72,8 @@ test_that("ppi ll tape is fails the quadratic test", {
                     tranobj = sqrtman$tran)
 
   # check only with pParameter()
-  expect_false(testquadratictape(ppitape))
-  expect_message(testquadratictape(ppitape, verbose = TRUE), "non-constant")
+  expect_false(testquadratic(ppitape))
+  expect_message(testquadratic(ppitape, verbose = TRUE), "non-constant")
 
   # check some values
 
@@ -82,8 +82,8 @@ test_that("ppi ll tape is fails the quadratic test", {
   xmat <- matrix(runif(10*2, min=0, max = 0.5), ncol = 2)
   xmat <- cbind(xmat, 1-rowSums(xmat))
 
-  expect_false(testquadratictape(ppitape, xmat = xmat, dynparammat = dynparammat))
-  testquadratictape(ppitape, xmat = xmat, dynparammat = dynparammat, verbose = TRUE) |> 
+  expect_false(testquadratic(ppitape, xmat = xmat, dynparammat = dynparammat))
+  testquadratic(ppitape, xmat = xmat, dynparammat = dynparammat, verbose = TRUE) |> 
     expect_message("non-constant") |>
     expect_message("non-zero")
 })

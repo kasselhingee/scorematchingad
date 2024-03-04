@@ -5,7 +5,7 @@
 #' Also estimates standard errors and covariance.
 #' Many score matching estimators have an objective function that has a quadratic form.
 #' @param Yapproxcentres A matrix of Taylor approximation centres for rows of Y that require approximation. `NA` for rows that do not require approximation.
-#' @param smotape A `CppAD` tape of a score matching discrepancy function that has *quadratic form*. Test for quadratic form using [`testquadratictape()`].
+#' @param smotape A `CppAD` tape of a score matching discrepancy function that has *quadratic form*. Test for quadratic form using [`testquadratic()`].
 #' The `smotape`'s independent variables are assumed to be the model parameters to fit
 #' and the `smotape`'s dynamic parameter is a (multivariate) measurement.
 #' @param Y A matrix of multivariate observations. Each row is an observation.

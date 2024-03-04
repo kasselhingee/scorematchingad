@@ -29,7 +29,7 @@
 quadratictape_parts <- function(tape, tmat, tcentres = NA * tmat, approxorder = 10){
   stopifnot(inherits(tape, "ADFun"))
   stopifnot(nrow(tmat) == nrow(tcentres))
-  stopifnot(testquadratictape(tape))
+  stopifnot(testquadratic(tape))
   toapprox <- !is.na(tcentres[, 1])
 
   Hesstape <- tapeHessian(tape)

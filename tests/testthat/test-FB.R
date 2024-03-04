@@ -110,7 +110,7 @@ test_that("smobjgrad at true parameters is poor for FB()", {
                         llname = "FB",
                         Y[1, ], 
                         usertheta = NA * theta)
-  smvals <- smvalues_tape_wsum(tapes$smotape, Y, theta)
+  smvals <- smvalues_wsum(tapes$smotape, Y, theta)
   expect_gt(sqrt(sum((smvals$grad/nrow(sample))^2)), 0.001)
 })
 
@@ -132,7 +132,7 @@ test_that("FB() with many fixed elements leads to small smobjgrad", {
                         llname = "FB",
                         sample[1, ], 
                         usertheta = intheta)
-  smvals <- smvalues_tape_wsum(tapes$smotape, sample, theta[is.na(intheta)])
+  smvals <- smvalues_wsum(tapes$smotape, sample, theta[is.na(intheta)])
   expect_gt(abs(smvals$grad/nrow(sample)), 0.001)
 })
 
