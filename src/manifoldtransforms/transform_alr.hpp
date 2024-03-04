@@ -1,5 +1,5 @@
-#ifndef mycpp_transform_alr
-#define mycpp_transform_alr
+#ifndef mantrans_transform_alr
+#define mantrans_transform_alr
 // code for various tools for the additive log ratio transform
 #include <RcppEigen.h>
 namespace mantran {//names space for manifold-transformation pair (triplets}

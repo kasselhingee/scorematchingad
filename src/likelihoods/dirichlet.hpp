@@ -1,5 +1,5 @@
-#ifndef mycpp_dirichlet
-#define mycpp_dirichlet
+#ifndef likelihoods_dirichlet
+#define likelihoods_dirichlet
 #include <RcppEigen.h>
 // # include <cppad/example/atomic_three/mat_mul.hpp> // for matrix multiplication tapesmo's matrix multiplication don't seem to need this though :S
 

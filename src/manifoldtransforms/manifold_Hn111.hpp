@@ -1,5 +1,5 @@
-#ifndef mycpp_manifold_Hn111
-#define mycpp_manifold_Hn111
+#ifndef mantrans_manifold_Hn111
+#define mantrans_manifold_Hn111
 // code for various tools for the additive log ratio transform
 #include <RcppEigen.h>
 #include <cppad/cppad.hpp> //for CppAD::log

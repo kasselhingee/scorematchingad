@@ -1,5 +1,5 @@
-#ifndef mycpp_manifold_sim
-#define mycpp_manifold_sim
+#ifndef mantrans_manifold_sim
+#define mantrans_manifold_sim
 #include <RcppEigen.h>
 namespace mantran {
 template <typename T>

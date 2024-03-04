@@ -1,5 +1,5 @@
-#ifndef mycpp_manifold_sph
-#define mycpp_manifold_sph
+#ifndef mantrans_manifold_sph
+#define mantrans_manifold_sph
 
 // code for various tools for the sphere, without transformation required
 #include <RcppEigen.h>

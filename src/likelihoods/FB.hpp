@@ -1,5 +1,5 @@
-#ifndef mycpp_FB
-#define mycpp_FB
+#ifndef likelihoods_FB
+#define likelihoods_FB
 
 #include <RcppEigen.h>
 

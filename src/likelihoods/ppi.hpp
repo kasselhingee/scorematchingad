@@ -1,5 +1,5 @@
-#ifndef mycpp_ppi
-#define mycpp_ppi
+#ifndef likelihoods_ppi
+#define likelihoods_ppi
 #include <RcppEigen.h>
 // # include <cppad/example/atomic_three/mat_mul.hpp> // for matrix multiplication tapesmo's matrix multiplication don't seem to need this though :S
 

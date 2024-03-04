@@ -1,5 +1,5 @@
-#ifndef mycpp_likelihoods
-#define mycpp_likelihoods
+#ifndef likelihoods_likelihoods
+#define likelihoods_likelihoods
 // include all the likelihood files
 
 #include "dirichlet.hpp"

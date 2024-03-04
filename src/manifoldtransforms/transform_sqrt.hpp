@@ -1,5 +1,5 @@
-#ifndef mycpp_transform_sqrt
-#define mycpp_transform_sqrt
+#ifndef mantrans_transform_sqrt
+#define mantrans_transform_sqrt
 // code for various tools for the positive quadrant of the sphere
 #include <RcppEigen.h>
 namespace mantran {

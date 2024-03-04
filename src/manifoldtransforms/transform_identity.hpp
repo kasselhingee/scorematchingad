@@ -1,5 +1,5 @@
-#ifndef mycpp_transform_identity
-#define mycpp_transform_identity
+#ifndef mantrans_transform_identity
+#define mantrans_transform_identity
 #include <RcppEigen.h>
 namespace mantran {
 template <typename T>

@@ -1,5 +1,5 @@
-# ifndef mycpp_approx
-# define mycpp_approx
+# ifndef utils_approx
+# define utils_approx
 #include <RcppEigen.h>
 #include <cppad/cppad.hpp> // the CppAD package
   template <class Type>

@@ -1,5 +1,5 @@
-#ifndef mycpp_vMF
-#define mycpp_vMF
+#ifndef likelihoods_vMF
+#define likelihoods_vMF
 # include <RcppEigen.h>
 
 namespace ll {

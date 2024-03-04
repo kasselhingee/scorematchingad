@@ -1,5 +1,5 @@
-#ifndef mycpp_hfuns
-#define mycpp_hfuns
+#ifndef mantrans_hfuns
+#define mantrans_hfuns
 
 # include <RcppEigen.h>
 # include <cppad/cppad.hpp> //for CondExpLe and similar below

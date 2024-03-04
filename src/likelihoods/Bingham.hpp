@@ -1,5 +1,5 @@
-#ifndef mycpp_Bingham
-#define mycpp_Bingham
+#ifndef likelihoods_Bingham
+#define likelihoods_Bingham
 
 # include <RcppEigen.h>
 

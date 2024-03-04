@@ -1,5 +1,5 @@
-#ifndef mycpp_manifold_Euc
-#define mycpp_manifold_Euc
+#ifndef mantrans_manifold_Euc
+#define mantrans_manifold_Euc
 // code for various tools for the additive log ratio transform
 #include <RcppEigen.h>
 namespace mantran {//names space for manifold-transformation pair (triplets}
