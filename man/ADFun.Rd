@@ -7,7 +7,7 @@
 \emph{This is a low level object useful for implementing score matching estimators.}
 An \code{R6} class for storing a 'pointer' to a \code{CppAD} tape in \verb{C++} (also called an \code{ADFun}) and associated information.
 Currently tools for modifying this information are not available in this package, however tools for creating new \code{ADFun} objects from an existing \code{ADFun} are available.
-Typically an \code{ADFun} object will be created by \code{\link[=buildsmotape]{buildsmotape()}}.
+Typically an \code{ADFun} object will be created by \code{\link[=buildsmdtape]{buildsmdtape()}}.
 }
 \section{Introduction to CppAD Tapes}{
 This package uses version 2022000.2 of the algorithmic differentiation library \code{CppAD} \insertCite{bell2023cp}{scorecompdir} to build score matching estimators.
@@ -26,7 +26,7 @@ Each time computations such as derivatives are performed the corresponding \verb
 }
 
 \examples{
-tapes <- buildsmotape(
+tapes <- buildsmdtape(
   "sim", "sqrt", "sph",
   llname = "ppi",
   ytape =  rep(1/3, 3),
@@ -34,10 +34,10 @@ tapes <- buildsmotape(
   bdryw = "minsq",
   acut = 0.01,
   verbose = FALSE)
-tapes$smotape$xtape
-tapes$smotape$dyntape
-tapes$smotape$name
-tapes$smotape$ptr
+tapes$smdtape$xtape
+tapes$smdtape$dyntape
+tapes$smdtape$name
+tapes$smdtape$ptr
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}

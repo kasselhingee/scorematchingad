@@ -80,6 +80,6 @@ and the dynamic parameters become independent values.
 \code{\link{ADFun}}
 
 Other tape builders: 
-\code{\link{buildsmotape}()}
+\code{\link{buildsmdtape}()}
 }
 \concept{tape builders}

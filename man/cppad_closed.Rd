@@ -5,7 +5,7 @@
 \title{Score Matching Estimator for Quadratic-Form Score-Matching Objective Functions}
 \usage{
 cppad_closed(
-  smotape,
+  smdtape,
   Y,
   Yapproxcentres = NA * Y,
   w = rep(1, nrow(Y)),
@@ -13,9 +13,9 @@ cppad_closed(
 )
 }
 \arguments{
-\item{smotape}{A \code{CppAD} tape of a score matching discrepancy function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratic]{testquadratic()}}.
-The \code{smotape}'s independent variables are assumed to be the model parameters to fit
-and the \code{smotape}'s dynamic parameter is a (multivariate) measurement.}
+\item{smdtape}{A \code{CppAD} tape of a score matching discrepancy function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratic]{testquadratic()}}.
+The \code{smdtape}'s independent variables are assumed to be the model parameters to fit
+and the \code{smdtape}'s dynamic parameter is a (multivariate) measurement.}
 
 \item{Y}{A matrix of multivariate observations. Each row is an observation.}
 
@@ -38,9 +38,9 @@ Both the Hessian and the gradient offset are constant with respect to the model 
 
 Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (\emph{would like a good reference for this here}).
 The sensitivity matrix \eqn{G} is estimated as
-the negative of the average over the Hessian of \code{smotape} evaluated at each observation in \code{Y}.
+the negative of the average over the Hessian of \code{smdtape} evaluated at each observation in \code{Y}.
 The variability matrix \eqn{J} is then estimated as
-the sample covariance (denominator of \eqn{n-1}) of the gradiant of \code{smotape} evaluated at each of the observations in \code{Y} for the estimated \eqn{\theta}.
+the sample covariance (denominator of \eqn{n-1}) of the gradiant of \code{smdtape} evaluated at each of the observations in \code{Y} for the estimated \eqn{\theta}.
 The variance of the estimator is then estimated as
 \eqn{G^{-1}JG^{-1}/n,}
 where \code{n} is the number of observations.
