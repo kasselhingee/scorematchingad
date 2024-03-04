@@ -1,21 +1,19 @@
-#' @name ppi_toAstar
+#' @rdname ppi_param
+#' @order 4
 #' @family PPI model tools
-#' @title Obtain AL and bL from Astar and Reverse
-#' @description \insertCite{scealy2022sc;textual}{scorecompdir} give two parameterisations of the PPI model. The function [`ppi()`] and most other PPI functions in this package use the parameterisation with matrix \eqn{A_L} and vector \eqn{b_L}. An alternative parameterisation uses a single matrix `Astar` instead of \eqn{A_L} and \eqn{b_L}.
+#' @param AL The `p-1` by `p-1` \eqn{A_L} matrix
+#' @param bL The vector \eqn{b_L} (length `p-1`).
 #' @details
 #' The `Astar` parametrisation rewrites the PPI density as proportional to 
 #' \deqn{\exp(u^TA^*u)\prod_{i=1}^p u_i^{\beta_i},}
 #' where \eqn{A^*} (`Astar`) is a \eqn{p} by \eqn{p} matrix.
-#' Because \eqn{u} lies in the simplex (in particular \eqn{\sum u_i = 1}), the density is the same regardless of the value of \eqn{1^T A^* 1}=`sum(Astar)`, where \eqn{1} is the vector of ones. Thus \eqn{A_L} and \eqn{b_L} specify \eqn{A^*} up to an additive factor. In the conversion `toAstar()`, \eqn{A^*} is returned such that \eqn{1^T A^* 1 = 0}.
+#' Because \eqn{u} lies in the simplex (in particular \eqn{\sum u_i = 1}), the density is the same regardless of the value of \eqn{1^T A^* 1}=`sum(Astar)`, where \eqn{1} is the vector of ones. Thus \eqn{A_L} and \eqn{b_L} specify \eqn{A^*} up to an additive factor. In the conversion `ppi_toAstar()`, \eqn{A^*} is returned such that \eqn{1^T A^* 1 = 0}.
+#' NA elements are not allowed for `ppi_toAstar()` and `ppi_fromAstar()`.
 #' @examples
 #'  Astar <- rWishart(1, 6, diag(3))[,,1]
 #'  ppi_fromAstar(Astar)
 #'  ppi_toAstar(ppi_fromAstar(Astar)$AL, ppi_fromAstar(Astar)$bL)
-NULL
-
-#' @param AL The `p-1` by `p-1` \eqn{A_L} matrix
-#' @param bL The vector \eqn{b_L} (length `p-1`).
-#' @describeIn ppi_toAstar Takes matrix `AL` and vector `bL` and returns the equivalent `Astar` with \eqn{1^T A^* 1 = }`sum(Astar) = 0`.
+#' @return `ppi_toAstar()`: The matrix \eqn{A^*}.
 #' @export
 ppi_toAstar <- function(AL, bL){
   # assumes DC = 0 initially
@@ -33,8 +31,10 @@ ppi_toAstar <- function(AL, bL){
   return(Astar)
 }
 
-#' @describeIn ppi_toAstar Takes matrix `Astar` and returns the correponding `AL` and `bL` that give the same PPI density. It also returns the constant remainder that can be ignored due to normalisation of the probability density, but is useful for checking.
+#' @rdname ppi_param
+#' @order 5
 #' @param Astar The \eqn{A^*} matrix (a p by p symmetric matrix)
+#' @return `ppi_fromAstar()`: A list of the matrix \eqn{A_L}, the vector \eqn{b_L} and a discarded constant.
 #' @export
 ppi_fromAstar <- function(Astar){
   stopifnot(isSymmetric(Astar))

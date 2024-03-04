@@ -1,9 +1,22 @@
-#' @title User friendly preparation of parameter vector for PPI model
+#' @title PPI Parameter Tools
+#' @order 1
 #' @family PPI model tools
-#' @description The PPI model is parametrised using a symmetric covariance-like matrix \eqn{A_L}, a location-like vector \eqn{b_L} and a set of Dirichlet exponents \eqn{\beta}. For `p` components, \eqn{A_L} has `p-1` rows, \eqn{b_L} is a vector with `p-1` elements and \eqn{\beta} is a vector with `p` elements.
-#' These are converted to a single vector using `ppi_paramvec()` that can then be used for fitting with [ppi()], where NA-valued elements are fitted and all other elements are fixed.
-#' @return
-#' A vector starting with the diagonal elements of \eqn{A_L}, then the off-diagonal elements extracted by [`upper.tri()`] (which extracts elements of \eqn{A_L} along each row, left to right, then top to bottom), then \eqn{b_L}, then \eqn{\beta}.
+#' @description The defualt parameterisation of the PPI model is a symmetric covariance-like matrix \eqn{A_L}, a location-like vector \eqn{b_L} and a set of Dirichlet exponents \eqn{\beta}. For `p` components, \eqn{A_L} has `p-1` rows, \eqn{b_L} is a vector with `p-1` elements and \eqn{\beta} is a vector with `p` elements.
+#' For score matching estimation this form of the parameters must be converted into a single parameter vector using `ppi_paramvec()`.
+#' `ppi_paramvec()` also includes easy methods to set parameters to `NA` for estimation with [`ppi()`] (in [`ppi()`] the NA-valued elements are estimated and all other elements are fixed).
+#' The reverse of `ppi_paramvec()` is `ppi_parammats()`.
+#' An alternative parametrisation of the PPI model uses a single `p` by `p`  matrix \eqn{A^*} instead of \eqn{A_L} and \eqn{b_L}, and for identifiability \eqn{A^*} is such that \eqn{1^T A^* 1 = 0} where \eqn{1=(1,1,...,1)} and \eqn{0=(0,0,...0)} \insertCite{scealy2022sc}{scorecompdir}.
+#' Convert between parametrisations using `ppi_toAstar()` and `ppi_fromAstar()`.
+#' @inheritSection ppi PPI Model
+#' @rdname ppi_param
+#' @name ppi_param
+NULL
+
+#' @rdname ppi_param
+#' @order 2
+#' @return `ppi_paramvec()`: a vector of length \eqn{p + (p-1)(2 + (p-1)/2)}.
+#' @details
+#' `ppi_paramvec()` returns a vector starting with the diagonal elements of \eqn{A_L}, then the off-diagonal elements extracted by [`upper.tri()`] (which extracts elements of \eqn{A_L} along each row, left to right, then top to bottom), then \eqn{b_L}, then \eqn{\beta}.
 #' @param AL Either `NULL`, a p-1 x p-1 symmetric matrix, a number, or "diag".
 #' If NULL then all \eqn{A_L} elements will be set to NA, and [ppi()] will estimate them.
 #' If a single number, then \eqn{A_L} will be fixed as a matrix of the given value.
