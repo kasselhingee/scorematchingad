@@ -54,7 +54,7 @@ Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y))){
   tapes <- buildsmdtape("sph","identity", "sph", "Bingham",
                            ytape, intheta,
                            bdryw = "ones")
-  out <- cppad_closed(tapes$smotape, Y = Y, w = w)
+  out <- cppad_closed(tapes$smdtape, Y = Y, w = w)
   theta <- intheta
   theta[is.na(intheta)] <- out$est
   A = Bingham_theta2Amat(theta)
@@ -90,7 +90,7 @@ Bingham_Mardia <- function(Y, w = rep(1, nrow(Y))){
                         rep(1, p) / sqrt(p), intheta,
                         bdryw = "ones")
 
-  sm <- cppad_closed(tapes$smotape, Y = Ystd, w = w)
+  sm <- cppad_closed(tapes$smdtape, Y = Ystd, w = w)
   theta <- intheta
   theta[is.na(intheta)] <- sm$est
   Astd <- Bingham_theta2Amat(theta)

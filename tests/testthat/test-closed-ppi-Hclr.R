@@ -33,7 +33,7 @@ test_that("Fitting ppi all parameters via clr transform can get close to true va
 })
 
 
-test_that("Fitting ppi smo values via clr transform is insensitive to bdrythreshold", {
+test_that("Fitting ppi smd values via clr transform is insensitive to bdrythreshold", {
   set.seed(12345)
   m <- rppi_egmodel(1000, maxden = 4)
   #add some zeroes
@@ -121,10 +121,10 @@ test_that("Hess + Offset match gradient for Hclr in interior", {
   # find boundary points and remove them - expect results pJacobian to give good results when no points need approximation
   isbdry <- simplex_isboundary(Y, 1E-5)
   Y <- Y[!isbdry, ]
-  values <- quadratictape_parts(tapes$smotape, Y)
+  values <- quadratictape_parts(tapes$smdtape, Y)
 
   # expect results to match for gradient
-  gradorig <- t(apply(Y, MARGIN = 1, function(x){pJacobian(tapes$smotape$ptr, mod$theta, x)}))
+  gradorig <- t(apply(Y, MARGIN = 1, function(x){pJacobian(tapes$smdtape$ptr, mod$theta, x)}))
 
   gradpoly <- lapply(1:nrow(values$offset), function(i){
     drop(matrix(values$Hessian[i, ], ncol = length(mod$theta)) %*% mod$theta + 
@@ -136,7 +136,7 @@ test_that("Hess + Offset match gradient for Hclr in interior", {
 
 
 test_that("W is symmetric for ppi with clr, fitting all parameters", {
-  # if W is symmetric then should equal the smo up to a constant wrt theta
+  # if W is symmetric then should equal the smd up to a constant wrt theta
   # and my expectation is that W is symmetric for ppi with Hclr
   set.seed(1245)
   mod <- rppi_egmodel(100)
@@ -150,26 +150,26 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
   tapes <- buildsmdtape("sim","clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
                         usertheta = usertheta)
 
-  values <- quadratictape_parts(tapes$smotape, Y)
+  values <- quadratictape_parts(tapes$smdtape, Y)
 
-  smoorig <- evaltape(tapes$smotape, pmat = Y, xmat = ftheta)
+  smdorig <- evaltape(tapes$smdtape, pmat = Y, xmat = ftheta)
 
-  smopoly <- lapply(1:nrow(values$offset), function(i){
+  smdpoly <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * ftheta %*% matrix(values$Hessian[i, ], ncol = length(ftheta)) %*% ftheta + 
       values$offset[i, , drop = FALSE] %*% ftheta)
   })
-  smopoly <- unlist(smopoly)
-  constant <- smoorig-smopoly
+  smdpoly <- unlist(smdpoly)
+  constant <- smdorig-smdpoly
   
   #test constant by trying another theta
   ftheta2 <- ftheta+1
-  smoorig2 <- evaltape(tapes$smotape, pmat = Y, xmat = ftheta2)
-  smopoly2 <- lapply(1:nrow(values$offset), function(i){
+  smdorig2 <- evaltape(tapes$smdtape, pmat = Y, xmat = ftheta2)
+  smdpoly2 <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * ftheta2 %*% matrix(values$Hessian[i, ], ncol = length(ftheta2)) %*% ftheta2 +
       values$offset[i, , drop = FALSE] %*% ftheta2)
   })
-  smopoly2 <- unlist(smopoly2)
-  expect_equal(smoorig2-smopoly2, constant)
+  smdpoly2 <- unlist(smdpoly2)
+  expect_equal(smdorig2-smdpoly2, constant)
 })
 
 

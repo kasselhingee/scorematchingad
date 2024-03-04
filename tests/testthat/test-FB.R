@@ -94,7 +94,7 @@ test_that("FB() fits with various fixed elements", {
   expect_equal(estobj$SE$km[!is.na(inkm)], 0 * thetamats$km[!is.na(inkm)])
 })
 
-test_that("smobjgrad at true parameters is poor for FB()", {
+test_that("smdbjgrad at true parameters is poor for FB()", {
   skip("Only for research.")
   p <- 3
   set.seed(111)
@@ -110,12 +110,12 @@ test_that("smobjgrad at true parameters is poor for FB()", {
                         llname = "FB",
                         Y[1, ], 
                         usertheta = NA * theta)
-  smvals <- smvalues_wsum(tapes$smotape, Y, theta)
+  smvals <- smvalues_wsum(tapes$smdtape, Y, theta)
   expect_gt(sqrt(sum((smvals$grad/nrow(sample))^2)), 0.001)
 })
 
-test_that("FB() with many fixed elements leads to small smobjgrad", {
-  skip("Fixing many of the elements doesn't improve smobjgrad")
+test_that("FB() with many fixed elements leads to small smdbjgrad", {
+  skip("Fixing many of the elements doesn't improve smdbjgrad")
   p <- 3
   set.seed(111)
   theta <- runif(p-1 + (p - 1) * p/2 + p, -10, 10)
@@ -132,7 +132,7 @@ test_that("FB() with many fixed elements leads to small smobjgrad", {
                         llname = "FB",
                         sample[1, ], 
                         usertheta = intheta)
-  smvals <- smvalues_wsum(tapes$smotape, sample, theta[is.na(intheta)])
+  smvals <- smvalues_wsum(tapes$smdtape, sample, theta[is.na(intheta)])
   expect_gt(abs(smvals$grad/nrow(sample)), 0.001)
 })
 

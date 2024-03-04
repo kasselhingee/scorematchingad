@@ -35,12 +35,12 @@ test_that("Score1ac estimator estimates beta0[0] and other consistently with cpp
                         samp3[1, ], intheta,
                         bdryw = "minsq",
                         acut = acut)
-  SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
+  SE <- sqrt(diag(sme_estvar(tapes$smdtape, drop(estimate1all), samp3)))
 
   expect_absdiff_lte_v(estimate1all, theta, 3 * SE)
 
   # compare to ppi via cppad
-  expect_lt(sum(smvalues_wsum(tapes$smotape, samp3, drop(estimate1all))$grad^2), 1E-14)
+  expect_lt(sum(smvalues_wsum(tapes$smdtape, samp3, drop(estimate1all))$grad^2), 1E-14)
   est2 <- ppi(samp3, trans = "sqrt", bdryw = "minsq", acut = acut, bdrythreshold = 1E-20, control = list(tol = 1E-12), method = "closed")
   expect_equal(est2$est$paramvec, drop(estimate1all), tolerance = 1E-2) #within 1% of each other roughly
   expect_absdiff_lte_v(drop(estimate1all), est2$est$paramvec, 2*est2$SE$paramvec)
@@ -72,7 +72,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] larger th
                         samp3[1, ], intheta,
                         bdryw = "minsq",
                         acut = acut)
-  SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
+  SE <- sqrt(diag(sme_estvar(tapes$smdtape, drop(estimate1all), samp3)))
 
   #3*SE bounds
   expect_absdiff_lte_v(estimate1all, theta[is.na(intheta)], 3 * SE)
@@ -103,7 +103,7 @@ test_that("Score1ac estimator can estimate beta0[1:(p-1)] for beta0[p] large but
                         samp3[1, ], intheta,
                         bdryw = "minsq",
                         acut = acut)
-  SE <- sqrt(diag(sme_estvar(tapes$smotape, drop(estimate1all), samp3)))
+  SE <- sqrt(diag(sme_estvar(tapes$smdtape, drop(estimate1all), samp3)))
 
   #3*SE bounds
   expect_absdiff_lte_v(estimate1all, theta[is.na(intheta)], 3 * SE)

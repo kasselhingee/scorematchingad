@@ -6,24 +6,24 @@
 #' @param acut The threshold \eqn{a_c} in the boundary weight function `bdryw`. Ignored for `bdryw = "ones"`.
 #' @param verbose If `TRUE`, some information about the tape is printed.
 #' @return 
-#' `tapesmo()` returns an [`ADFun`] object.  
+#' `tapesmd()` returns an [`ADFun`] object.  
 #' @examples 
 #' sqrtman <- manifoldtransform("sim", "sqrt", "sph")
 #' ppitape <- tapell(llname = "ppi",
 #'                   ytape = c(0.2, 0.3, 0.5),
 #'                   usertheta = ppi_paramvec(p = 3), 
 #'                   tranobj = sqrtman$tran)
-#' ppismotape <- tapesmo(lltape = ppitape,
+#' ppismdtape <- tapesmd(lltape = ppitape,
 #'                       tranobj = sqrtman$tran,
 #'                       man = sqrtman$man,
 #'                       bdryw = "minsq",
 #'                       acut = 0.1,
 #'                       verbose = FALSE)
-#' evaltape(ppismotape, 
+#' evaltape(ppismdtape, 
 #'   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(-0.1,-0.1,0.5)),
 #'   rep(1/3, 3)) 
 #' @export
-tapesmo <- function(lltape,
+tapesmd <- function(lltape,
                    tranobj,
                    man,
                    bdryw,
@@ -33,7 +33,7 @@ tapesmo <- function(lltape,
   inherits(man, "Rcpp_man_ad")
   stopifnot(is.numeric(acut))
   
-  smotape <- ptapesmo(attr(lltape, "ytape"),
+  smdtape <- ptapesmd(attr(lltape, "ytape"),
                       lltape$dyntape,
                       lltape$ptr,
                       tranobj,
@@ -41,8 +41,8 @@ tapesmo <- function(lltape,
                       bdryw, 
                       acut, 
                       verbose = verbose)
-  out <- ADFun$new(ptr = smotape,
-                   name = paste(lltape$name, "smo", sep = "-"),
+  out <- ADFun$new(ptr = smdtape,
+                   name = paste(lltape$name, "smd", sep = "-"),
                    xtape = as.numeric(lltape$dyntape),
                    dyntape = as.numeric(attr(lltape, "ytape")),
                    usertheta = as.numeric(lltape$usertheta))

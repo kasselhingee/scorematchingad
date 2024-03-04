@@ -16,43 +16,43 @@
 #'
 #' Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (*would like a good reference for this here*).
 #' The sensitivity matrix \eqn{G} is estimated as
-#' the negative of the average over the Hessian of `smotape` evaluated at each observation in `Y`.
-# \deqn{\hat{G(\theta)} = \hat{E} -H(smo(\theta;Y))),}
-# where \eqn{smo} is the score matching discrepancy function represented by `smotape`,
+#' the negative of the average over the Hessian of `smdtape` evaluated at each observation in `Y`.
+# \deqn{\hat{G(\theta)} = \hat{E} -H(smd(\theta;Y))),}
+# where \eqn{smd} is the score matching discrepancy function represented by `smdtape`,
 # \eqn{H} is the Hessian with respect to \eqn{\theta}, which is constant for quadratic-form functions,
 # 
 #' The variability matrix \eqn{J} is then estimated as
-#' the sample covariance (denominator of \eqn{n-1}) of the gradiant of `smotape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
-# \deqn{\hat{J}(\theta) = var(grad(w smo(\theta;Y))),}
+#' the sample covariance (denominator of \eqn{n-1}) of the gradiant of `smdtape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
+# \deqn{\hat{J}(\theta) = var(grad(w smd(\theta;Y))),}
 
 #' The variance of the estimator is then estimated as
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
 #' @export
-cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10, control = list(tol = 1E-15, checkgrad = TRUE)){
-  Jsmofun <- tapeJacobian(smotape)
-  Hsmofun <- tapeJacobian(Jsmofun)
+cppad_search <- function(smdtape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10, control = list(tol = 1E-15, checkgrad = TRUE)){
+  Jsmdfun <- tapeJacobian(smdtape)
+  Hsmdfun <- tapeJacobian(Jsmdfun)
   
-  smofun_u <- tapeSwap(smotape) #don't use a boundary point for taping here!
-  Jsmofun_u <- tapeSwap(Jsmofun)
+  smdfun_u <- tapeSwap(smdtape) #don't use a boundary point for taping here!
+  Jsmdfun_u <- tapeSwap(Jsmdfun)
 
-  smoobj <- function(atheta){
-    evaltape_wsum(smofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
+  smdobj <- function(atheta){
+    evaltape_wsum(smdfun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
-  smograd <- function(atheta){
-    evaltape_wsum(Jsmofun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
+  smdgrad <- function(atheta){
+    evaltape_wsum(Jsmdfun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)
   }
 
   # useful to debugging as Rcgmin hides the error codes
   #  and relatively cheap:
   # evaluating above functions at the start point
-  stopifnot(is.finite(smoobj(theta)))
-  stopifnot(all(is.finite(smograd(theta))))
+  stopifnot(is.finite(smdobj(theta)))
+  stopifnot(all(is.finite(smdgrad(theta))))
   # now do the search 
   out <- optimx::Rcgmin(par = theta,
-                        fn = smoobj,
-                        gr = smograd,
+                        fn = smdobj,
+                        gr = smdgrad,
                         control = control)
   if (out$convergence == 2){
     if (grepl("Initial point", out$message)){
@@ -68,9 +68,9 @@ cppad_search <- function(smotape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, 
 
   out$SE <- "Not calculated."
   if (isTRUE(all(w[[1]] == w))){
-    out$SE <- sqrt(diag(sme_estvar(smotape, estimate = out$par, Y = Y, Yapproxcentres = Yapproxcentres, approxorder = approxorder)))
+    out$SE <- sqrt(diag(sme_estvar(smdtape, estimate = out$par, Y = Y, Yapproxcentres = Yapproxcentres, approxorder = approxorder)))
   }
-  gradatest <- smograd(out$par) / sum(w)
+  gradatest <- smdgrad(out$par) / sum(w)
   out$sqgradsize <- sum(gradatest^2)
   out$est <- out$par
   out$par <- NULL

@@ -84,7 +84,7 @@ vMF_full <- function(sample, usertheta, w = NULL){
                         usertheta = usertheta,
                         bdryw = "ones",
                         verbose = FALSE)
-  out <- cppad_closed(tapes$smotape, Y = sample, w=w)
+  out <- cppad_closed(tapes$smdtape, Y = sample, w=w)
   theta <- t_fu2t(out$est, usertheta)
 
   if (isa(out$SE, "numeric")){

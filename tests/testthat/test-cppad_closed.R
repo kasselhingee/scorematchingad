@@ -12,15 +12,15 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
      usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
      bdryw = "ones",
      verbose = FALSE)
-  smotape <- tapes$smotape
+  smdtape <- tapes$smdtape
 
-  estobj <- cppad_closed(smotape, Y)
+  estobj <- cppad_closed(smdtape, Y)
 
-  grads <- t(apply(Y, MARGIN = 1, function(x) pJacobian(smotape$ptr, estobj$est, x))) 
+  grads <- t(apply(Y, MARGIN = 1, function(x) pJacobian(smdtape$ptr, estobj$est, x))) 
   totalgrad <- colSums(grads)
   expect_lt(sum(totalgrad^2), 1E-20)
 
-  numericalmin <- cppad_search(smotape, theta = estobj$est, Y = Y)
+  numericalmin <- cppad_search(smdtape, theta = estobj$est, Y = Y)
   expect_equal(numericalmin$est, estobj$est, ignore_attr = TRUE)
   expect_equal(numericalmin$SE, estobj$SE)
 })
@@ -48,7 +48,7 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
      bdryw = "ones",
      verbose = FALSE)
 
-  estobj <- cppad_closed(tapes$smotape, Y = dsample, Yapproxcentres, approxorder = 10)
+  estobj <- cppad_closed(tapes$smdtape, Y = dsample, Yapproxcentres, approxorder = 10)
 
   est_hardcode <- ppi(dsample, paramvec = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)),
       trans = "alr", method = "hardcoded")

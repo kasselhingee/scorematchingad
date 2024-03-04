@@ -29,10 +29,10 @@
 #'   bdryw = "minsq",
 #'   acut = 0.01,
 #'   verbose = FALSE)
-#' tapes$smotape$xtape
-#' tapes$smotape$dyntape
-#' tapes$smotape$name
-#' tapes$smotape$ptr
+#' tapes$smdtape$xtape
+#' tapes$smdtape$dyntape
+#' tapes$smdtape$name
+#' tapes$smdtape$ptr
 #' @export
 ADFun <- R6::R6Class("ADFun",
   private = list( #private == not modifiable

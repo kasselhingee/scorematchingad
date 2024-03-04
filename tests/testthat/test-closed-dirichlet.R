@@ -14,7 +14,7 @@ test_that("prodsq weights match estimator2", {
                rep(1/p, p), rep(NA, p),
                "prodsq", acut = acut)
 
-  out <- cppad_closed(tapes$smotape, Y = utabl)
+  out <- cppad_closed(tapes$smdtape, Y = utabl)
 
   hardcodedestimate <- dir_sqrt_prodh(utabl, acut)
   expect_equal(out$est, hardcodedestimate, ignore_attr = TRUE)
@@ -33,7 +33,7 @@ test_that("minsq weights match estimator2", {
   n = 10
   set.seed(134)
   utabl <- MCMCpack::rdirichlet(n, beta+1)
-  out <- cppad_closed(tapes$smotape, Y = utabl)
+  out <- cppad_closed(tapes$smdtape, Y = utabl)
 
   hardcodedestimate <- dir_sqrt_minimah(utabl, acut)
   expect_equal(out$est, hardcodedestimate, ignore_attr = TRUE)
@@ -52,7 +52,7 @@ test_that("minsq weights match estimator2 for d = 4", {
   set.seed(134)
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
-  out <- cppad_closed(tapes$smotape, Y = utabl)
+  out <- cppad_closed(tapes$smdtape, Y = utabl)
   hardcodedestimate <- dir_sqrt_minimah(utabl, acut)
   expect_equal(out$est, hardcodedestimate, ignore_attr = TRUE)
 })
@@ -68,7 +68,7 @@ test_that("fixed beta[p] with minsq weights match true value", {
   tapes <- buildsmdtape("sim", "sqrt", "sph", "dirichlet",
                         rep(1/p, p), c(NA, NA, beta[3]),
                         "minsq", acut = acut)
-  out <- cppad_closed(tapes$smotape, Y = utabl)
+  out <- cppad_closed(tapes$smdtape, Y = utabl)
 
   expect_absdiff_lte_v(out$est, beta[-p], 3 * out$SE)
 })
@@ -84,7 +84,7 @@ test_that("cppad-based Score2 estimate leads to a match for large number of obse
   n = 1000
   set.seed(134)
   utabl <- MCMCpack::rdirichlet(n, beta+1)
-  out <- cppad_closed(tapes$smotape, Y = utabl)
+  out <- cppad_closed(tapes$smdtape, Y = utabl)
   expect_absdiff_lte_v(out$est, beta, out$SE * 3)
 })
 
@@ -99,7 +99,7 @@ test_that("Simplex calculations are historically consistent", {
   set.seed(134)
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
-  smvals <- smvalues_wsum(tapes$smotape, utabl, beta+0.5)
+  smvals <- smvalues_wsum(tapes$smdtape, utabl, beta+0.5)
   expect_snapshot_value(smvals$obj/n, style = "json2", tolerance = 1E-5)
   expect_snapshot_value(smvals$grad/n, style = "json2", tolerance = 1E-5)
 })

@@ -59,7 +59,7 @@ estimatorall1 <- function(prop, acut, betap = NULL, w = rep(1, nrow(prop))){
   return(list(estimator1=quartic_sphere,W_est=Wnd$W, theta = theta))
 }
 
-estimatorall1_smo <- function(pi, prop,acut,betap = NULL, w = rep(1, nrow(prop))){
+estimatorall1_smd <- function(pi, prop,acut,betap = NULL, w = rep(1, nrow(prop))){
   Wnd <- estimatorall1_Wnd(prop,acut,betap, w = w)
   val <- 0.5 * t(pi) %*% Wnd$W %*% pi - t(Wnd$d) %*% pi
   return(drop(val))

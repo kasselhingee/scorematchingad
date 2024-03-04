@@ -62,7 +62,7 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
      bdryw = bdryw,
      acut = acut,
      verbose = FALSE)
-  smotape <- tapes$smotape
+  smdtape <- tapes$smdtape
 
   # find boundary points and their approximation centres
   isbdry <- simplex_isboundary(Y, bdrythreshold)
@@ -72,18 +72,18 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
 
   # gradient values
   if (average){
-    valgradhess <- smvalues_wsum(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
+    valgradhess <- smvalues_wsum(smdtape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
                               xcentres = Yapproxcentres,
                               w = w,
                               approxorder = approxorder)
   } else {
-    valgradhess <- smvalues(smotape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
+    valgradhess <- smvalues(smdtape, xmat = Y, pmat = t_ut2f(paramvec, evalparam), 
                                       xcentres = Yapproxcentres,
                                       approxorder = approxorder)
   }
 
   # quadratic simplification of divergence discrepancy
-  quadparts <- quadratictape_parts(smotape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
+  quadparts <- quadratictape_parts(smdtape, tmat = Y, tcentres = Yapproxcentres, approxorder = approxorder)
 
   # combine:
   if (average){

@@ -2,7 +2,7 @@
 #' @family tape evaluators
 #' @description Computes a range of relevant information for investigating score matching estimators.
 #' @inheritParams evaltape
-#' @param smotape A taped score matching discrepancy. Most easily created by [`buildsmdtape()`].
+#' @param smdtape A taped score matching discrepancy. Most easily created by [`buildsmdtape()`].
 #' @details The score matching discrepancy values are differ from the Hyv\"arinen Divergence by a constant, see ... .
 #' The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in `xmat` and `pmat`. 
 #' @examples
@@ -11,25 +11,25 @@
 #'               ytape = rep(1/m$p, m$p),
 #'               usertheta = ppi_paramvec(beta = m$beta),
 #'               bdryw = "minsq", acut = 0.01)
-#' smvalues(tapes$smotape, xmat = m$sample, pmat = m$theta[1:5])
+#' smvalues(tapes$smdtape, xmat = m$sample, pmat = m$theta[1:5])
 #' @export
-smvalues <- function(smotape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
-  stopifnot(inherits(smotape, "ADFun"))
+smvalues <- function(smdtape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
+  stopifnot(inherits(smdtape, "ADFun"))
   # prepare tapes
-  Jsmofun <- tapeJacobian(smotape)
-  Hsmofun <- tapeJacobian(Jsmofun)
+  Jsmdfun <- tapeJacobian(smdtape)
+  Hsmdfun <- tapeJacobian(Jsmdfun)
   
-  smofun_u <- tapeSwap(smotape) #don't use a boundary for taping!
-  Jsmofun_u <- tapeSwap(Jsmofun)
-  Hsmofun_u <- tapeSwap(Hsmofun)
+  smdfun_u <- tapeSwap(smdtape) #don't use a boundary for taping!
+  Jsmdfun_u <- tapeSwap(Jsmdfun)
+  Hsmdfun_u <- tapeSwap(Hsmdfun)
 
-  smovals <- evaltape(smofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
+  smdvals <- evaltape(smdfun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
 
-  gradvals <- evaltape(Jsmofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
-  hessvals <- evaltape(Hsmofun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
+  gradvals <- evaltape(Jsmdfun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
+  hessvals <- evaltape(Hsmdfun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
 
   return(list(
-    obj = smovals,
+    obj = smdvals,
     grad = gradvals,
     hess = hessvals
   ))

@@ -192,7 +192,7 @@ ppi <- function(Y, paramvec = NULL,
        bdryw = bdryw,
        acut = acut,
        verbose = FALSE)
-    smotape <- tapes$smotape
+    smdtape <- tapes$smdtape
   
     # find boundary points and their approximation centres
     isbdry <- simplex_isboundary(Y, bdrythreshold)
@@ -202,7 +202,7 @@ ppi <- function(Y, paramvec = NULL,
 
     fitobj <- list()
     if (method == "iterative"){ 
-      rawout <- cppad_search(smotape = smotape,
+      rawout <- cppad_search(smdtape = smdtape,
                    theta = t_si2f(stheta, isfixed),
                    Y = Y,
                    Yapproxcentres = Yapproxcentres,
@@ -214,7 +214,7 @@ ppi <- function(Y, paramvec = NULL,
       fitfun <- "iterative"
     }
     if (method == "closed"){
-      rawout <- cppad_closed(smotape = smotape,
+      rawout <- cppad_closed(smdtape = smdtape,
                    Y = Y,
                    Yapproxcentres = Yapproxcentres,
                    w = w,

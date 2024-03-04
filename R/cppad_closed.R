@@ -5,9 +5,9 @@
 #' Also estimates standard errors and covariance.
 #' Many score matching estimators have an objective function that has a quadratic form.
 #' @param Yapproxcentres A matrix of Taylor approximation centres for rows of Y that require approximation. `NA` for rows that do not require approximation.
-#' @param smotape A `CppAD` tape of a score matching discrepancy function that has *quadratic form*. Test for quadratic form using [`testquadratic()`].
-#' The `smotape`'s independent variables are assumed to be the model parameters to fit
-#' and the `smotape`'s dynamic parameter is a (multivariate) measurement.
+#' @param smdtape A `CppAD` tape of a score matching discrepancy function that has *quadratic form*. Test for quadratic form using [`testquadratic()`].
+#' The `smdtape`'s independent variables are assumed to be the model parameters to fit
+#' and the `smdtape`'s dynamic parameter is a (multivariate) measurement.
 #' @param Y A matrix of multivariate observations. Each row is an observation.
 #' @param w Weights for each observation.
 #' @param approxorder The order of Taylor approximation to use.
@@ -19,27 +19,27 @@
 #'
 #' Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (*would like a good reference for this here*).
 #' The sensitivity matrix \eqn{G} is estimated as
-#' the negative of the average over the Hessian of `smotape` evaluated at each observation in `Y`.
-# \deqn{\hat{G(\theta)} = \hat{E} -H(smo(\theta;Y))),}
-# where \eqn{smo} is the score matching discrepancy function represented by `smotape`,
+#' the negative of the average over the Hessian of `smdtape` evaluated at each observation in `Y`.
+# \deqn{\hat{G(\theta)} = \hat{E} -H(smd(\theta;Y))),}
+# where \eqn{smd} is the score matching discrepancy function represented by `smdtape`,
 # \eqn{H} is the Hessian with respect to \eqn{\theta}, which is constant for quadratic-form functions,
 # 
 #' The variability matrix \eqn{J} is then estimated as
-#' the sample covariance (denominator of \eqn{n-1}) of the gradiant of `smotape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
-# \deqn{\hat{J}(\theta) = var(grad(w smo(\theta;Y))),}
+#' the sample covariance (denominator of \eqn{n-1}) of the gradiant of `smdtape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
+# \deqn{\hat{J}(\theta) = var(grad(w smd(\theta;Y))),}
 
 #' The variance of the estimator is then estimated as
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
 #' @export
-cppad_closed <- function(smotape, Y, Yapproxcentres = NA * Y, 
+cppad_closed <- function(smdtape, Y, Yapproxcentres = NA * Y, 
                          w = rep(1, nrow(Y)),
                          approxorder = 10){
   stopifnot(nrow(Y) == length(w))
   stopifnot(nrow(Y) == nrow(Yapproxcentres))
   
-  parts <- quadratictape_parts(smotape, tmat = Y,
+  parts <- quadratictape_parts(smdtape, tmat = Y,
                                tcentres = Yapproxcentres,
                                approxorder = approxorder)
 

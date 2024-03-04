@@ -4,7 +4,7 @@
 #' @param verbose If `TRUE` more details are printed when taping.
 #' @description
 #' The function `buildsmdtape()` generates `CppAD` tapes (called `ADFun`) for the log-likelihood (without normalising constant) and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} from `vignette("scorematchingintro")` for a specified model faimly.
-#' Three steps are performed by `buildsmdtape()`: first an object that specifies the manifold and any transformation to another manifold is created using [`manifoldtransform()`]; then a tape of the log-likelihood (without normalising constant) is created using [`tapell()`]; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using [`tapesmo()`].
+#' Three steps are performed by `buildsmdtape()`: first an object that specifies the manifold and any transformation to another manifold is created using [`manifoldtransform()`]; then a tape of the log-likelihood (without normalising constant) is created using [`tapell()`]; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using [`tapesmd()`].
 #' @details
 #' The model log-likelihood without normalising constant must be implemented in `C++` and is selected by name. Similarly the transforms of the manifold must be implemented in `C++` and selected by name.
 #'
@@ -52,7 +52,7 @@
 #'               "ones", verbose = FALSE
 #'               )
 #' evaltape(tapes$lltape, u, runif(n = ltheta))
-#' evaltape(tapes$smotape, runif(n = ltheta), u)
+#' evaltape(tapes$smdtape, runif(n = ltheta), u)
 #' @export
 buildsmdtape <- function(start, tran, end, llname,
                          ytape, usertheta,
@@ -76,7 +76,7 @@ buildsmdtape <- function(start, tran, end, llname,
                     thetatape_creator = thetatape_creator,
                     tran = tranman$tran)
   stopifnot(is.numeric(acut))
-  smotape <- tapesmo(lltape = lltape,
+  smdtape <- tapesmd(lltape = lltape,
                         tran = tranman$tran,
                         man = tranman$man,
                         bdryw = bdryw,
@@ -84,7 +84,7 @@ buildsmdtape <- function(start, tran, end, llname,
                         verbose = verbose)
   return(list(
     lltape = lltape,
-    smotape = smotape,
+    smdtape = smdtape,
     info = list(
       name = llname,
       transform = tran,

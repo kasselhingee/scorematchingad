@@ -43,7 +43,7 @@ FB <- function(Y, km = NULL, A = NULL){
                bdryw = "ones",
                verbose = FALSE)
 
-  sminfo <- cppad_closed(tapes$smotape, Y)
+  sminfo <- cppad_closed(tapes$smdtape, Y)
   theta <- intheta
   theta[is.na(intheta)] <- sminfo$est
   thetamat <- FB_theta2mats(theta)

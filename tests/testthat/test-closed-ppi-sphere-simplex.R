@@ -18,7 +18,7 @@ test_that("ppi tape values do not effect ll values", {
 })
 
 
-test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", {
+test_that("ppi and dirichlet smd value match when AL and bL is zero and p = 3", {
   beta = c(-0.3, -0.1, 3)
   p = length(beta)
   ALs = matrix(0, nrow = p-1, ncol = p-1)
@@ -35,8 +35,8 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
                            rep(0.1, p), theta * NA,
                            bdryw = "minsq", acut = acut)
 
-  ppival <- pForward0(ppitapes$smotape$ptr, theta, utabl[2, ])
-  dirval <- pForward0(dirtapes$smotape$ptr, beta, utabl[2, ])
+  ppival <- pForward0(ppitapes$smdtape$ptr, theta, utabl[2, ])
+  dirval <- pForward0(dirtapes$smdtape$ptr, beta, utabl[2, ])
   expect_equal(ppival, dirval)
 })
 
@@ -61,11 +61,11 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
 
   # it looks like the taped function above is not altering bL or beta
   # potentially the ordering of the theta values is wrong??
-  out <- cppad_closed(ppitapes$smotape, Y = utabl)
+  out <- cppad_closed(ppitapes$smdtape, Y = utabl)
 
   expect_equal(pForward0(dirtapes$lltape$ptr, utabl[2, ], beta), pForward0(ppitapes$lltape$ptr, utabl[2, ], beta))
   expect_equal(pJacobian(dirtapes$lltape$ptr, utabl[2, ], beta), pJacobian(ppitapes$lltape$ptr, utabl[2, ], beta))
-  expect_equal(pForward0(dirtapes$smotape$ptr, beta, utabl[2, ]), pForward0(ppitapes$smotape$ptr, beta, utabl[2, ]))
+  expect_equal(pForward0(dirtapes$smdtape$ptr, beta, utabl[2, ]), pForward0(ppitapes$smdtape$ptr, beta, utabl[2, ]))
 
   hardcodedestimate <- dir_sqrt_minimah(utabl, acut)
 
@@ -214,14 +214,14 @@ test_that("ppi via cppad matches Score1 for p=5 and has SM discrepancy has small
   expect_equal(est_cppad$est$paramvec, est_hardcoded$est$paramvec,
                ignore_attr = TRUE)
 
-  #also it makes sense that the smo and gradient are v low at the hardcoded estimate
+  #also it makes sense that the smd and gradient are v low at the hardcoded estimate
   ppitapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
                            bdryw = "minsq", acut = acut)
-  smvals <- smvalues_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL))
+  smvals <- smvalues_wsum(ppitapes$smdtape, prop, fromsmatrix(est_hardcoded$est$AL))
   expect_lt(sum(smvals$grad^2), 1E-20)
 
   # check that rearrangement has large gradient
-  smvals <- smvalues_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL)[c(1:6, 8, 7, 9, 10)])
+  smvals <- smvalues_wsum(ppitapes$smdtape, prop, fromsmatrix(est_hardcoded$est$AL)[c(1:6, 8, 7, 9, 10)])
   expect_gt(sum(smvals$grad^2), 1E-2)
 })

@@ -24,7 +24,7 @@ vMF_kappa <- function(Y, w = rep(1, nrow(Y))){
     tapes <- buildsmdtape("sph","identity", "sph", "vMF",
                           ytape = rep(1, p)/sqrt(p),
                           usertheta = c(NA, rep(0, p-1)))
-    sminfo <- cppad_closed(tapes$smotape, Y, w = w)
+    sminfo <- cppad_closed(tapes$smdtape, Y, w = w)
     k <- sminfo$est
     SE <- sminfo$SE
   return(list(

@@ -163,7 +163,7 @@ ptapell <- function(z_ad, theta_ad, llname, tran, fixedtheta, verbose) {
 #' @param weightname The name of the weight function to use
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
-ptapesmo <- function(u_ad, theta_ad, pll, tran, man, weightname, acut, verbose) {
-    .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, tran, man, weightname, acut, verbose)
+ptapesmd <- function(u_ad, theta_ad, pll, tran, man, weightname, acut, verbose) {
+    .Call('_scorecompdir_ptapesmd', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, tran, man, weightname, acut, verbose)
 }
 

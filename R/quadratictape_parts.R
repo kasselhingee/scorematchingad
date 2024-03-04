@@ -34,7 +34,7 @@ quadratictape_parts <- function(tape, tmat, tcentres = NA * tmat, approxorder = 
 
   Hesstape <- tapeHessian(tape)
   OffsetTape <- tapeGradOffset(tape)
-  Hesstape_switched <- tapeSwap(Hesstape) #Hesstape is wrt to x (which in smo world is actually the model parameter set), but we want it to be wrt to the dynamic parameter like OffsetTape is
+  Hesstape_switched <- tapeSwap(Hesstape) #Hesstape is wrt to x (which in smd world is actually the model parameter set), but we want it to be wrt to the dynamic parameter like OffsetTape is
 
   #exact and approximat evalution of Hess
   fakeparametermat <- matrix(0, 
