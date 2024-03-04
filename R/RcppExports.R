@@ -2,6 +2,18 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' @noRd
+#' @describeIn evaltape_internal The value of a recorded function approximated by Taylor expansion.
+#' Returns the approximate value of `pfun` at `x`.
+#' @details
+#' # pTaylorApprox 
+#' Approximates the value of a `CppAD` tape at `x` using a Taylor approximation at `centre`. The dynamic parameters of the tape are set by `dynparam`.
+#' @param centre For pTaylorApprox. A vector in the domain of the taped function to approximate the value at `x` from.
+#' @param order For pTaylorApprox. The order of Taylor expansion to use.
+pTaylorApprox <- function(pfun, x, centre, dynparam, order) {
+    .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, x, centre, dynparam, order)
+}
+
+#' @noRd
 #' @name evaltape_internal
 #' @title Advanced: Evaluate `CppAD` Tapes via their Pointer
 #' @description The recommended method for evaluating tapes is [`evaltape()`].
@@ -153,17 +165,5 @@ ptapell <- function(z_ad, theta_ad, llname, tran, fixedtheta, verbose) {
 #' @return An RCpp::XPtr object pointing to the ADFun
 ptapesmo <- function(u_ad, theta_ad, pll, tran, man, weightname, acut, verbose) {
     .Call('_scorecompdir_ptapesmo', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, tran, man, weightname, acut, verbose)
-}
-
-#' @noRd
-#' @describeIn evaltape_internal The value of a recorded function approximated by Taylor expansion.
-#' Returns the approximate value of `pfun` at `x`.
-#' @details
-#' # pTaylorApprox 
-#' Approximates the value of a `CppAD` tape at `x` using a Taylor approximation at `centre`. The dynamic parameters of the tape are set by `dynparam`.
-#' @param centre For pTaylorApprox. A vector in the domain of the taped function to approximate the value at `x` from.
-#' @param order For pTaylorApprox. The order of Taylor expansion to use.
-pTaylorApprox <- function(pfun, x, centre, dynparam, order) {
-    .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, x, centre, dynparam, order)
 }
 
