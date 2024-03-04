@@ -13,7 +13,7 @@ cppad_closed(
 )
 }
 \arguments{
-\item{smotape}{A \code{CppAD} tape of a score matching discrepancy function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratictape]{testquadratictape()}}.
+\item{smotape}{A \code{CppAD} tape of a score matching discrepancy function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratic]{testquadratic()}}.
 The \code{smotape}'s independent variables are assumed to be the model parameters to fit
 and the \code{smotape}'s dynamic parameter is a (multivariate) measurement.}
 

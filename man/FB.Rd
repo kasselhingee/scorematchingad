@@ -42,8 +42,6 @@ FB(Y)
 \seealso{
 Other directional model estimators: 
 \code{\link{Bingham}()},
-\code{\link{vMF_kappa}()},
-\code{\link{vMF_m}()},
 \code{\link{vMF_robust}()},
 \code{\link{vMF}()}
 }

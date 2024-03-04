@@ -4,14 +4,14 @@
 \alias{vMF}
 \title{Score matching estimator for the von-Mises Fisher distribution}
 \usage{
-vMF(Y, paramvec = NULL, method = "smfull", w = rep(1, nrow(Y)))
+vMF(Y, paramvec = NULL, method = "Mardia", w = rep(1, nrow(Y)))
 }
 \arguments{
 \item{Y}{A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.}
 
-\item{paramvec}{\code{smfull} method only: Optional. A vector of same length as the dimension, representing the elements of the vector that is the element-wise (Hadamard) product \eqn{\kappa \mu}.}
+\item{paramvec}{\code{smfull} method only: Optional. A vector of same length as the dimension, representing the elements of the \eqn{\kappa \mu} vector.}
 
-\item{method}{Either "Mardia" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}.
+\item{method}{Either "Mardia" or "hybrid" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}
 or "smfull" for the full score matching estimator.}
 
 \item{w}{An optional vector of weights for each measurement in \code{Y}}
@@ -25,16 +25,16 @@ A list of \code{est}, \code{SE} and \code{info}.
 }
 }
 \description{
-We recommend using \code{\link[movMF:movMF]{movMF::movMF()}} over the function here, \code{vMF()}, for estimating the von Mises Fisher distribution.
-
-\insertCite{mardia2016sc;textual}{scorecompdir} suggest score matching for the von Mises Fisher distribution to avoid the difficult-to-compute normalising constant of the von Mises Fisher distributions.
-\insertCite{mardia2016sc;textual}{scorecompdir} suggested both full score matching and a hybrid estimator, where by the mean direction is estimated via the maximum-likelihood approach and the concentration is estimated via score matching.
-However, \insertCite{mardia2016sc;textual}{scorecompdir} found, that these score matching estimators were not as a efficient as the maximum likelihood estimators (e.g. \code{\link[movMF:movMF]{movMF::movMF()}} ) on the circle.
-Some of our own experiments suggest this is also the case for higher dimensions, despite the more complex approximations required for the maximum likelihood estimators.
+In general the normalising constant in von Mises Fisher distributions is hard to compute, so \insertCite{mardia2016sc;textual}{scorecompdir} suggested a hybrid method that uses maximum likelihood to estimate the mean direction and score matching for the concentration.
+We can also estimate all parameters using score matching (\code{smfull} method), although this estimator is likely to be less efficient than the hybrid estimator.
+On the circle the hybrid estimators were often nearly as efficient as maximum likelihood estimators \insertCite{mardia2016sc}{scorecompdir}.
+This may be the case for higher dimensions too, despite the more complex approximations required for the maximum likelihood estimators.
+For maximum likelihood estimators of the von Mises Fisher distribution, which all use approximations of the normalising constant, consider \code{\link[movMF:movMF]{movMF::movMF()}}.
 }
 \details{
-The method "smfull" uses score matching to estimate the vector \eqn{\kappa \mu}.
-The method "Mardia" uses \code{\link[=vMF_stdY]{vMF_stdY()}} and \code{\link[=vMF_kappa]{vMF_kappa()}} to estimate \eqn{\kappa} and \eqn{\mu} seperately.
+The full score matching estimator (\code{method = "smfull"}) estimates \eqn{\kappa \mu}.
+The hybrid estimator (\code{method = "Mardia"}) estimates \eqn{\kappa} and \eqn{\mu} separately.
+Both use \code{\link[=cppad_closed]{cppad_closed()}} for score matching estimation.
 }
 \section{von Mises Fisher Model}{
 
@@ -42,7 +42,7 @@ The von Mises Fisher density is proportional to
 \deqn{\exp(\kappa \mu^T z),}
 where \eqn{z} is on a unit sphere,
 \eqn{\kappa} is termed the \emph{concentration},
-and \eqn{\mu} is the \emph{mean direction vector}.
+and \eqn{\mu} is the \emph{mean direction unit vector}.
 The effect of the \eqn{\mu} and \eqn{\kappa} can be decoupled in a sense \insertCite{@p169, @mardia2000di}{scorecompdir}, allowing for estimating \eqn{\mu} and \eqn{\kappa} separately.
 }
 
@@ -52,6 +52,7 @@ Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
 movMF::movMF(Y, 1) #maximum likelihood estimate
 vMF(Y, method = "smfull")
 vMF(Y, method = "Mardia")
+vMF(Y, method = "hybrid")
 }
 \references{
 \insertAllCited{}
@@ -60,8 +61,6 @@ vMF(Y, method = "Mardia")
 Other directional model estimators: 
 \code{\link{Bingham}()},
 \code{\link{FB}()},
-\code{\link{vMF_kappa}()},
-\code{\link{vMF_m}()},
 \code{\link{vMF_robust}()}
 }
 \concept{directional model estimators}

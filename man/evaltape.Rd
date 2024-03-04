@@ -42,7 +42,7 @@ Approximation is via Taylor approximation of the independent variable around the
 \seealso{
 Other tape evaluators: 
 \code{\link{quadratictape_parts}()},
-\code{\link{smvalues_tape}()},
-\code{\link{testquadratictape}()}
+\code{\link{smvalues}()},
+\code{\link{testquadratic}()}
 }
 \concept{tape evaluators}

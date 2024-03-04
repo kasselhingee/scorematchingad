@@ -13,7 +13,7 @@ Bingham(Y, A = NULL, w = rep(1, nrow(Y)), method = "smfull")
 
 \item{w}{An optional vector of weights for each measurement in \code{Y}}
 
-\item{method}{Either "Mardia" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}.
+\item{method}{Either "Mardia" or "hybrid" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}
 or "smfull" for the full score matching estimator.}
 }
 \value{
@@ -54,8 +54,6 @@ Bingham(Y, method = "Mardia")
 \seealso{
 Other directional model estimators: 
 \code{\link{FB}()},
-\code{\link{vMF_kappa}()},
-\code{\link{vMF_m}()},
 \code{\link{vMF_robust}()},
 \code{\link{vMF}()}
 }

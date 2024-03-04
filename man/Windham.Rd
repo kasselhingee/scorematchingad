@@ -65,7 +65,6 @@ Other generic score matching tools:
 \code{\link{cppad_search}()}
 
 Other Windham robustness functions: 
-\code{\link{ppi_robust_alrgengamma}()},
 \code{\link{ppi_robust}()},
 \code{\link{vMF_robust}()}
 }

@@ -15,16 +15,6 @@ rppi_egmodel(n, maxden = 4)
 \item{...}{
   Arguments passed on to \code{\link[=ppi_paramvec]{ppi_paramvec}}
   \describe{
-    \item{\code{AL}}{Either \code{NULL}, a p-1 x p-1 symmetric matrix, a number, or "diag".
-If NULL then all \eqn{A_L} elements will be set to NA, and \code{\link[=ppi]{ppi()}} will estimate them.
-If a single number, then \eqn{A_L} will be fixed as a matrix of the given value.
-If "diag" then the non-diagonal elements of \eqn{A_L} will be fixed to 0, and the diagonal will be \code{NA} (and estimated by \code{\link[=ppi]{ppi()}}).}
-    \item{\code{bL}}{Either \code{NULL}, a number, or a vector of length p-1.
-If \code{NULL}, then all elements of \eqn{b_L} will be set to \code{NA}, and \code{\link[=ppi]{ppi()}} will estimate them.
-If a number, then \eqn{b_L} will be fixed at the supplied value.}
-    \item{\code{Astar}}{Either \code{NULL} or a p x p matrix.
-If non-null, then overrides \code{AL} and \code{bL}.
-If a matrix, all elements must be non-\code{NA} and \code{Astar} will be converted to \code{AL} and \code{bL} using \code{\link[=ppi_fromAstar]{ppi_fromAstar()}}.}
     \item{\code{beta}}{Either \code{NULL}, a number, or a vector of length p.
 If NULL then all elements of \eqn{\beta} will be set to \code{NA}, and \code{\link[=ppi]{ppi()}} will estimate them.
 If a number then the \eqn{\beta} elements will be fixed at the given number.}
@@ -35,6 +25,9 @@ If a number then the 1...(p-1)th \eqn{\beta} elements fixed at the given number.
 If \code{NULL} then the \code{p}th element of \eqn{\beta} will be set to \code{NA}, and \code{\link[=ppi]{ppi()}} will estimate it.
 If a number, then the pth element of \eqn{\beta} will be fixed at the given value.}
     \item{\code{p}}{The number of components. If \code{NULL} then \code{p} will be inferred from other inputs.}
+    \item{\code{AL}}{The \code{p-1} by \code{p-1} \eqn{A_L} matrix}
+    \item{\code{bL}}{The vector \eqn{b_L} (length \code{p-1}).}
+    \item{\code{Astar}}{The \eqn{A^*} matrix (a p by p symmetric matrix)}
   }}
 
 \item{paramvec}{The PPI parameter vector, created easily using \code{\link[=ppi_paramvec]{ppi_paramvec()}} and also returned by \code{\link[=ppi]{ppi()}}.}
@@ -87,12 +80,8 @@ rppi_egmodel(1000)
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_parammats}()},
-\code{\link{ppi_paramvec}()},
-\code{\link{ppi_robust_alrgengamma}()},
+\code{\link{ppi_param}},
 \code{\link{ppi_robust}()},
-\code{\link{ppi_smvalues}()},
-\code{\link{ppi_toAstar}()},
 \code{\link{ppi}()}
 }
 \concept{PPI model tools}
