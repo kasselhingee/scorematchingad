@@ -47,7 +47,7 @@ vMF <- function(Y, paramvec = NULL, method = "Mardia", w = rep(1, nrow(Y))){
     }
     fit <- vMF_full(Y, paramvec, w=w)
   }
-  if (method %in% c("Mardia")){
+  if (method %in% c("Mardia", "mardia", "hybrid", "Hybrid")){
     if (!is.null(paramvec)){if (any(!is.na(paramvec))){stop("Mardia estimator cannot fix any elements of paramvec")}}
     fit <- vMF_Mardia(Y, w=w)
   }
