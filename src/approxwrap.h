@@ -1,5 +1,5 @@
-#ifndef util
-#define util
+#ifndef approxwrap
+#define approxwrap
 
 #include "scorecompdir_types.h"
 #include "manifoldtransforms/manifolds.hpp"

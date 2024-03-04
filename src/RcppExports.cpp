@@ -12,6 +12,21 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// pTaylorApprox
+vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd centre, vecd dynparam, size_t order);
+RcppExport SEXP _scorecompdir_pTaylorApprox(SEXP pfunSEXP, SEXP xSEXP, SEXP centreSEXP, SEXP dynparamSEXP, SEXP orderSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
+    Rcpp::traits::input_parameter< vecd >::type centre(centreSEXP);
+    Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
+    Rcpp::traits::input_parameter< size_t >::type order(orderSEXP);
+    rcpp_result_gen = Rcpp::wrap(pTaylorApprox(pfun, x, centre, dynparam, order));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pForward0
 vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 RcppExport SEXP _scorecompdir_pForward0(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
@@ -161,25 +176,11 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pTaylorApprox
-vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd centre, vecd dynparam, size_t order);
-RcppExport SEXP _scorecompdir_pTaylorApprox(SEXP pfunSEXP, SEXP xSEXP, SEXP centreSEXP, SEXP dynparamSEXP, SEXP orderSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
-    Rcpp::traits::input_parameter< vecd >::type centre(centreSEXP);
-    Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
-    Rcpp::traits::input_parameter< size_t >::type order(orderSEXP);
-    rcpp_result_gen = Rcpp::wrap(pTaylorApprox(pfun, x, centre, dynparam, order));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 RcppExport SEXP _rcpp_module_boot_manifolds();
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_scorecompdir_pTaylorApprox", (DL_FUNC) &_scorecompdir_pTaylorApprox, 5},
     {"_scorecompdir_pForward0", (DL_FUNC) &_scorecompdir_pForward0, 3},
     {"_scorecompdir_pJacobian", (DL_FUNC) &_scorecompdir_pJacobian, 3},
     {"_scorecompdir_pHessian", (DL_FUNC) &_scorecompdir_pHessian, 3},
@@ -191,7 +192,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_swapDynamic", (DL_FUNC) &_scorecompdir_swapDynamic, 3},
     {"_scorecompdir_ptapell", (DL_FUNC) &_scorecompdir_ptapell, 6},
     {"_scorecompdir_ptapesmo", (DL_FUNC) &_scorecompdir_ptapesmo, 8},
-    {"_scorecompdir_pTaylorApprox", (DL_FUNC) &_scorecompdir_pTaylorApprox, 5},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
     {NULL, NULL, 0}
 };

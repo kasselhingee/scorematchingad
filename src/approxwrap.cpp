@@ -1,4 +1,4 @@
-# include "util.h"
+# include "approxwrap.h"
 
 vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                      vecd x, vecd centre,
