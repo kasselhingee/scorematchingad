@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Generate approximation centres for measurements on the boundary of the simplex
 #' @description 
 #' Move compositional measurements by `shiftsize` towards the centre of the simplex.
@@ -10,7 +11,6 @@
 #' @examples
 #' m <- rppi_egmodel(10)
 #' simplex_boundaryshift(m$sample, shiftsize = 1E-5)
-#' @export
 simplex_boundaryshift <- function(Y, shiftsize = 1E-4){
   p <- ncol(Y)
   middleofsimplex <- rep(1/p, p)
@@ -21,12 +21,12 @@ simplex_boundaryshift <- function(Y, shiftsize = 1E-4){
   return(approxcentre)
 }
 
+#' @noRd
 #' @title Determine whether points are on the simplex boundary
 #' @description Tests whether points are within `bdrythreshold` distance of the boundary, where distance is the size of minimum component. 
 #' @param Y Measurement matrix.
 #' @param bdrythreshold Measurements closer than `bdrythreshold` to the edge of the simplex will be considered boundary measurements.
 #' @return A vector of `TRUE` or `FALSE` values. Rows of `Y` corresponding to `TRUE` are on the boundary of the simplex.
-#' @export
 simplex_isboundary <- function(Y, bdrythreshold = 1E-15){
   isbdrypt <- apply(Y, MARGIN = 1, min) < bdrythreshold
   return(isbdrypt)

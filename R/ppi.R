@@ -50,8 +50,8 @@
 #' @param bdryw The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
 #' @param acut The threshold \eqn{a_c} in `bdryw` to avoid over-weighting measurements interior to the simplex
 #' @param control `iterative` only. Passed to [`optimx::Rcgmin()`] to control the iterative solver.
-#' @param bdrythreshold `iterative` or `closed` methods only. For measurements close to the boundary of the simplex Taylor approximation is applied. See [`simplex_isboundary()`].
-#' @param shiftsize `iterative` or `closed` methods only. For Taylor approximation, approximation centres are chosen based on `shiftsize`. See [`simplex_boundaryshift()`].
+#' @param bdrythreshold `iterative` or `closed` methods only. For measurements within `bdrythreshold` of the simlex boundary a Taylor approximation is applied by shifting the measurement `shiftsize` towards the center of the simplex.
+#' @param shiftsize `iterative` or `closed` methods only. For measurements within `bdrythreshold` of the simlex boundary a Taylor approximation is applied by shifting the measurement `shiftsize` towards the center of the simplex.
 #' @param approxorder `iterative` or `closed` methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.
 #' @param method "hardcoded" uses the hardcoded estimators by JS. "closed" uses `CppAD` to solve in closed form the a quadratic score matching discrepancy using [`cppad_closed()`]. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`optimx::Rcgmin()`]) to iteratively find the minimum of the weighted Hyv\"arinen divergence.
 #' @param paramvec_start `iterative` method only. The starting guess for `Rcgmin` with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec_start` easily using [`ppi_paramvec()`].
