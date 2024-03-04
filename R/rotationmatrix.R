@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Rotation Matrix From Two Vectors
 #' @description Creates a rotation matrix that rotates between two vectors. The matrix was specified by \insertCite{@@Section 3.2.1, @amaral2007pi;textual}{scorecompdir}, and is such that any vector perpendicular to the two vectors is unchanged (except when the two vectors are in exactly opposite directions).
 #' @param a The vector to rotate `b` to.
@@ -11,7 +12,6 @@
 #' a <- c(1,2,3,4,5)
 #' b <- c(0,3,4,1,2)
 #' rotationmatrix(a, b) %*% b
-#' @export
 rotationmatrix <- function(a, b){
   stopifnot(is.vector(a))
   stopifnot(is.vector(b))
