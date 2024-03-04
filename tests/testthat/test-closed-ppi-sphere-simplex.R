@@ -28,10 +28,10 @@ test_that("ppi and dirichlet smo value match when AL and bL is zero and p = 3", 
   utabl <- rppi(10,beta=beta,AL=ALs,bL=bL,maxden=4)
 
   acut = 0.1
-  dirtapes <- buildsmotape("sim","sqrt", "sph", "dirichlet",
+  dirtapes <- buildsmdtape("sim","sqrt", "sph", "dirichlet",
                            rep(0.1, p), rep(0.1, p) * NA,
                            bdryw = "minsq", acut = acut)
-  ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
+  ppitapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), theta * NA,
                            bdryw = "minsq", acut = acut)
 
@@ -52,10 +52,10 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   utabl <- rppi(100,beta=beta,AL=ALs,bL=bL,maxden=4)
 
   acut = 0.1
-  dirtapes <- buildsmotape("sim","sqrt", "sph", "dirichlet",
+  dirtapes <- buildsmdtape("sim","sqrt", "sph", "dirichlet",
                            rep(0.1, p), rep(0.1, p) * NA,
                            bdryw = "minsq", acut = acut)
-  ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
+  ppitapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), ppi_paramvec(AL = 0, bL=0, p = p),
                            bdryw = "minsq", acut = acut)
 
@@ -215,7 +215,7 @@ test_that("ppi via cppad matches Score1 for p=5 and has SM discrepancy has small
                ignore_attr = TRUE)
 
   #also it makes sense that the smo and gradient are v low at the hardcoded estimate
-  ppitapes <- buildsmotape("sim","sqrt", "sph", "ppi",
+  ppitapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
                            rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
                            bdryw = "minsq", acut = acut)
   smvals <- smvalues_wsum(ppitapes$smotape, prop, fromsmatrix(est_hardcoded$est$AL))

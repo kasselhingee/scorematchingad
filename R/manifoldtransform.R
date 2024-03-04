@@ -1,4 +1,4 @@
-#' @describeIn buildsmotape Build an object specifying the transformation to and from a manifold. 
+#' @describeIn buildsmdtape Build an object specifying the transformation to and from a manifold. 
 #' @param start The starting manifold. Used for checking that `tran` and `man` match.
 #' @param tran The name of a transformation. Available transformations are
 #'  + `srqt'

@@ -16,7 +16,7 @@
 #' If the results of the tests differ the returned value is `FALSE` and a message is printed indicating which test failed.
 #' @return `TRUE` or `FALSE`
 #' @examples
-#' tapes <- buildsmotape(
+#' tapes <- buildsmdtape(
 #'    "sim", "sqrt", "sph",
 #'    llname = "ppi",
 #'    ytape = c(0.2, 0.3, 0.5),

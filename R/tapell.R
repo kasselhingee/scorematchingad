@@ -4,7 +4,7 @@
 #' Please ensure that `ytape` is the interior of the manifold, and it is probably best if all components of `tranobj$toM(ytape)` are non-zero.
 #' @param usertheta A vector of parameter elements for the likelihood function. `NA` elements will become *dynamic parameters*. Other elements will be fixed at the provided value. The length of `usertheta` must be the correct length for the log-likelihood, no checking is conducted.
 #' @param thetatape_creator A function that accepts an integer `n`, and returns a vector of `n` length. The function is used to fill in the `NA` elements of `usertheta` when building the tapes. Please ensure that the values filled by `thetatape_creator` lead to plausible parameter vectors for the chosen log-likelihood.
-#' @describeIn buildsmotape Creates a `CppAD` tape of an improper log-likelihood as a function of values on the `end` manifold in `tranobj`. The Jacobian of the associated transformation is used to convert the log-likelihood on the natural manifold `start` of the log-likelihood to the `end` manifold.
+#' @describeIn buildsmdtape Creates a `CppAD` tape of an improper log-likelihood as a function of values on the `end` manifold in `tranobj`. The Jacobian of the associated transformation is used to convert the log-likelihood on the natural manifold `start` of the log-likelihood to the `end` manifold.
 #' This conversion is needed to account for the change in measure between the manifolds.
 #' @return 
 #' `tapell()` returns an [`ADFun`] object with two additional attributes accessed via `attr()`:  

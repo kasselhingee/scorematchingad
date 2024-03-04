@@ -52,7 +52,7 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
 
   if (is.null(paramvec)){paramvec <- rep(NA, ppithetalength(ncol(Y)))}
 
-  tapes <- buildsmotape(
+  tapes <- buildsmdtape(
      start = "sim",
      tran = trans,
      end = man,

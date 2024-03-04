@@ -2,12 +2,12 @@
 #' @family tape evaluators
 #' @description Computes a range of relevant information for investigating score matching estimators.
 #' @inheritParams evaltape
-#' @param smotape A taped score matching discrepancy. Most easily created by [`buildsmotape()`].
+#' @param smotape A taped score matching discrepancy. Most easily created by [`buildsmdtape()`].
 #' @details The score matching discrepancy values are differ from the Hyv\"arinen Divergence by a constant, see ... .
 #' The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in `xmat` and `pmat`. 
 #' @examples
 #' m <- rppi_egmodel(100)
-#' tapes <- buildsmotape("sim", "sqrt", "sph", "ppi",
+#' tapes <- buildsmdtape("sim", "sqrt", "sph", "ppi",
 #'               ytape = rep(1/m$p, m$p),
 #'               usertheta = ppi_paramvec(beta = m$beta),
 #'               bdryw = "minsq", acut = 0.01)

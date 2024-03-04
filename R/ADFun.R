@@ -7,7 +7,7 @@
 #' *This is a low level object useful for implementing score matching estimators.*
 #' An `R6` class for storing a 'pointer' to a `CppAD` tape in `C++` (also called an `ADFun`) and associated information. 
 #' Currently tools for modifying this information are not available in this package, however tools for creating new `ADFun` objects from an existing `ADFun` are available.
-#' Typically an `ADFun` object will be created by [`buildsmotape()`].
+#' Typically an `ADFun` object will be created by [`buildsmdtape()`].
 #' @field ptr A `Rcpp` external pointer to a `CppAD` `ADFun` object.
 #' @param ptr A `Rcpp` external pointer to a `CppAD` `ADFun` object.
 #' @field xtape The (numeric) vector of independent variable values used for taping.
@@ -18,10 +18,10 @@
 #' @param usertheta A (numeric) vector of `NA` values and fixed values specifying the inputs of the taped function that were considered independent variables or dynamic parameters respectively.
 #' @field name An easy to read name for the taped function
 #' @param name An easy to read name for the taped function
-#' @inheritSection buildsmotape Introduction to CppAD Tapes
-#' @inheritSection buildsmotape Warning: multiple CPU
+#' @inheritSection buildsmdtape Introduction to CppAD Tapes
+#' @inheritSection buildsmdtape Warning: multiple CPU
 #' @examples
-#' tapes <- buildsmotape(
+#' tapes <- buildsmdtape(
 #'   "sim", "sqrt", "sph",
 #'   llname = "ppi",
 #'   ytape =  rep(1/3, 3),

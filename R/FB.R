@@ -38,7 +38,7 @@ FB <- function(Y, km = NULL, A = NULL){
 
   intheta <- FB_mats2theta(1, km, A)
 
-  tapes <- buildsmotape("sph","identity", "sph", "FB",
+  tapes <- buildsmdtape("sph","identity", "sph", "FB",
                rep(1, p)/sqrt(p), intheta,
                bdryw = "ones",
                verbose = FALSE)

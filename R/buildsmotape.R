@@ -3,8 +3,8 @@
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
 #' @param verbose If `TRUE` more details are printed when taping.
 #' @description
-#' The function `buildsmotape()` generates `CppAD` tapes (called `ADFun`) for the log-likelihood (without normalising constant) and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} from `vignette("scorematchingintro")` for a specified model faimly.
-#' Three steps are performed by `buildsmotape()`: first an object that specifies the manifold and any transformation to another manifold is created using [`manifoldtransform()`]; then a tape of the log-likelihood (without normalising constant) is created using [`tapell()`]; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using [`tapesmo()`].
+#' The function `buildsmdtape()` generates `CppAD` tapes (called `ADFun`) for the log-likelihood (without normalising constant) and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} from `vignette("scorematchingintro")` for a specified model faimly.
+#' Three steps are performed by `buildsmdtape()`: first an object that specifies the manifold and any transformation to another manifold is created using [`manifoldtransform()`]; then a tape of the log-likelihood (without normalising constant) is created using [`tapell()`]; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using [`tapesmo()`].
 #' @details
 #' The model log-likelihood without normalising constant must be implemented in `C++` and is selected by name. Similarly the transforms of the manifold must be implemented in `C++` and selected by name.
 #'
@@ -35,7 +35,7 @@
 #' @references \insertAllCited{}
 
 #' @return
-#' `buildsmotape()` returns a list of:
+#' `buildsmdtape()` returns a list of:
 #'   + an [`ADFun`] object containing a log-likelihood tape with \eqn{z} on the `end` manifold as the independent variable
 #'   + an [`ADFun`] object containing a tape of the score matching discrepancy with the non-fixed parameter values as the independent variables
 #'   + some information used to generate the tapes
@@ -46,7 +46,7 @@
 #' u <- movMF::rmovMF(1, rep(1, p))
 #' ltheta <- p #length of vMF parameter vector
 #' intheta <- rep(NA, length.out = ltheta)
-#' tapes <- buildsmotape("sph", "identity", "sph", "vMF",
+#' tapes <- buildsmdtape("sph", "identity", "sph", "vMF",
 #'               ytape = u,
 #'               usertheta = intheta,
 #'               "ones", verbose = FALSE
@@ -54,7 +54,7 @@
 #' evaltape(tapes$lltape, u, runif(n = ltheta))
 #' evaltape(tapes$smotape, runif(n = ltheta), u)
 #' @export
-buildsmotape <- function(start, tran, end, llname,
+buildsmdtape <- function(start, tran, end, llname,
                          ytape, usertheta,
                          bdryw = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},

@@ -106,7 +106,7 @@ test_that("smobjgrad at true parameters is poor for FB()", {
   Y <- simdd::rFisherBingham(1E6, mu = thetamats$k * thetamats$m, Aplus = thetamats$A)
 
   # evaluate gradient
-  tapes <- buildsmotape("sph", "identity", "sph", 
+  tapes <- buildsmdtape("sph", "identity", "sph", 
                         llname = "FB",
                         Y[1, ], 
                         usertheta = NA * theta)
@@ -128,7 +128,7 @@ test_that("FB() with many fixed elements leads to small smobjgrad", {
   #many fixed elements
   intheta <- theta
   intheta[8] <- NA
-  tapes <- buildsmotape("sph", "identity", "sph", 
+  tapes <- buildsmdtape("sph", "identity", "sph", 
                         llname = "FB",
                         sample[1, ], 
                         usertheta = intheta)
