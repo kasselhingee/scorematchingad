@@ -1,7 +1,7 @@
-# include "tapesmo.h"
+# include "tapesmd.h"
 
 // function that tapes the score-matching objective
-CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement for taping
+CppAD::ADFun<double> tapesmd(veca1 u, //a vector. The composition measurement for taping
                              veca1 theta, //a vector of parameters for taping
                              CppAD::ADFun<double> & lltape,
                              transform<a1type> &tran,
@@ -86,20 +86,20 @@ CppAD::ADFun<double> tapesmo(veca1 u, //a vector. The composition measurement fo
     if (verbose){PrintForVec("\n(3)The value of ghPg is:", ghPg);}
 
     //combine components
-    veca1 smo(1);
-    smo = lapl + hgPg + ghPg;
-    if (verbose){PrintForVec("\n(END)The value of smo is:", smo);}
+    veca1 smd(1);
+    smd = lapl + hgPg + ghPg;
+    if (verbose){PrintForVec("\n(END)The value of smd is:", smd);}
 
     //finish taping
-    CppAD::ADFun<double> smofun;
-    smofun.Dependent(theta, smo);
-    smofun.optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
-    smofun.check_for_nan(false); //no error if some of the results of the Jacobian are nan.
-    return(smofun);
+    CppAD::ADFun<double> smdfun;
+    smdfun.Dependent(theta, smd);
+    smdfun.optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+    smdfun.check_for_nan(false); //no error if some of the results of the Jacobian are nan.
+    return(smdfun);
 }
 
 
-Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
+Rcpp::XPtr< CppAD::ADFun<double> > ptapesmd(veca1 u_ad,
                                       veca1 theta_ad,
                                       Rcpp::XPtr< CppAD::ADFun<double> > pll,
                                       transform_a1type & tran,
@@ -126,7 +126,7 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
     throw std::invalid_argument("Matching weight function not found");
   }
 
-  *out = tapesmo(u_ad,
+  *out = tapesmd(u_ad,
                  theta_ad,
                  *pll,
                  tran,

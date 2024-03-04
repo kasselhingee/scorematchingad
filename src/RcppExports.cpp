@@ -158,9 +158,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ptapesmo
-Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pll, transform_a1type& tran, manifold_a1type& man, std::string weightname, const double acut, bool verbose);
-RcppExport SEXP _scorecompdir_ptapesmo(SEXP u_adSEXP, SEXP theta_adSEXP, SEXP pllSEXP, SEXP tranSEXP, SEXP manSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
+// ptapesmd
+Rcpp::XPtr< CppAD::ADFun<double> > ptapesmd(veca1 u_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pll, transform_a1type& tran, manifold_a1type& man, std::string weightname, const double acut, bool verbose);
+RcppExport SEXP _scorecompdir_ptapesmd(SEXP u_adSEXP, SEXP theta_adSEXP, SEXP pllSEXP, SEXP tranSEXP, SEXP manSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -172,7 +172,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type weightname(weightnameSEXP);
     Rcpp::traits::input_parameter< const double >::type acut(acutSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapesmo(u_ad, theta_ad, pll, tran, man, weightname, acut, verbose));
+    rcpp_result_gen = Rcpp::wrap(ptapesmd(u_ad, theta_ad, pll, tran, man, weightname, acut, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -191,7 +191,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorecompdir_ptapelogdetJ", (DL_FUNC) &_scorecompdir_ptapelogdetJ, 3},
     {"_scorecompdir_swapDynamic", (DL_FUNC) &_scorecompdir_swapDynamic, 3},
     {"_scorecompdir_ptapell", (DL_FUNC) &_scorecompdir_ptapell, 6},
-    {"_scorecompdir_ptapesmo", (DL_FUNC) &_scorecompdir_ptapesmo, 8},
+    {"_scorecompdir_ptapesmd", (DL_FUNC) &_scorecompdir_ptapesmd, 8},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
     {NULL, NULL, 0}
 };
