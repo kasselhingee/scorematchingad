@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Estimate the concentration for a von Mises Fisher distribution
 #' @family directional model estimators
 #' @description Using score matching, estimates the concentration \eqn{\kappa} from a sample with mean direction of `c(1, 0, 0, ..., 0)`. 
@@ -16,7 +17,6 @@
 #' `info` contains a variety of information about the model fitting procedure.
 #' @param Y A data matrix, each row is an observation.
 #' @param w Weights corresponding to each row of `Y`.
-#' @export
 vMF_kappa <- function(Y, w = rep(1, nrow(Y))){
   # do estimate, where all but the first component of theta are fixed at zero
   # because kappa * e1 = (kappa, 0, 0, 0, ...)

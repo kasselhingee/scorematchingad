@@ -1,11 +1,10 @@
 #' @title Robust fitting of von Mises Fisher
 #' @family directional model estimators
 #' @description
-#' Robust fitting for von Mises Fisher distribution using [`Windham()`], 
-#' for the full parameter vector \eqn{\kappa\mu} with `vMF_robust()` or just the concentration with `vMF_kappa_robust()` assuming a mean direction of `c(1, 0, 0, ....)`.
+#' Robust estimation for von Mises Fisher distribution using [`Windham()`].
 #' @param cW Tuning constants for each parameter in the vMF parameter vector. If a single number then the constant is the same for each element of the parameter vector.
 #' @param Y A matrix of observations in Cartesian coordinates.
-#' @param ... Passed to [`Windham()`] and then passed onto either [`vMF()`] or [`vMF_kappa()`].
+#' @param ... Passed to [`Windham()`] and then passed onto [`vMF()`].
 #' @family Windham robustness functions
 #' @export
 vMF_robust <- function(Y, cW, ...){
@@ -39,8 +38,6 @@ vMF_robust <- function(Y, cW, ...){
   return(out)
 }
 
-#' @rdname vMF_robust 
-#' @export
 vMF_kappa_robust <- function(Y, cW, ...){
   extraargs <- list(...)
   Y <- vMF_stdY(Y, w = extraargs$w)
