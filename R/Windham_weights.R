@@ -1,3 +1,4 @@
+#' @noRd
 #' @title Windham weights for a given parameter vector
 #' @description Evaluates \eqn{f(z, c\circ\theta)}, which is the density \eqn{f} at observation \eqn{z}, given a parameter set \eqn{\theta} and vector of tuning constants \eqn{c}. The multiplication \eqn{\circ} is element-wise.
 #' These are the weights used by [`Windham()`].
@@ -9,7 +10,6 @@
 #' @return
 #' A vector of weights corresponding to the rows of `Y`.
 #' The weights are normalised to sum to 1.
-#' @export
 Windham_weights <- function(ldenfun, Y, theta, cW){
   if (is.null(ldenfun)){stop("ldenfun is NULL")}
   stopifnot(length(cW) == length(theta))
