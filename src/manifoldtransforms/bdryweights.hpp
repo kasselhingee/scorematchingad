@@ -4,7 +4,7 @@
 # include <RcppEigen.h>
 # include <cppad/cppad.hpp> //for CondExpLe and similar below
 
-namespace divweight { //namespace for divergence weight functions
+namespace bdryweight { //namespace for divergence weight functions
 
   //////////////////////////////////////////
   // weight function and grad(h^2) functions

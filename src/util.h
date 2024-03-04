@@ -2,8 +2,8 @@
 #define util
 
 #include "scorecompdir_types.h"
-#include "mycpp/manifolds.hpp"
-#include "mycpp/approx.hpp"
+#include "manifoldtransforms/manifolds.hpp"
+#include "utils/approx.hpp"
 #include <Rcpp.h>
 
 //' @noRd

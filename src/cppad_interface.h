@@ -5,7 +5,7 @@
 
 //for content that is Rcpp specific
 #include "scorecompdir_types.h"
-#include "mycpp/wrapas.hpp"  //needed because converting veca1 from R
+#include "utils/wrapas.hpp"  //needed because converting veca1 from R
 
 //' @noRd
 //' @name evaltape_internal

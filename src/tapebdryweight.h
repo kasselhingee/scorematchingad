@@ -1,5 +1,5 @@
-#ifndef tapedivweight
-#define tapedivweight
+#ifndef tapebdryweight
+#define tapebdryweight
 
 # include "scorecompdir_types.h"
 

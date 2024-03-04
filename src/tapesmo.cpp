@@ -112,13 +112,13 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapesmo(veca1 u_ad,
   //choose weight function
   a1type (*h2fun)(const veca1 &, const double &) = nullptr;
   if (weightname.compare("prodsq") == 0){
-    h2fun = divweight::prodsq;
+    h2fun = bdryweight::prodsq;
   }
   if (weightname.compare("minsq") == 0){
-    h2fun = divweight::minsq;
+    h2fun = bdryweight::minsq;
   }
   if (weightname.compare("ones") == 0){
-    h2fun = divweight::oneweights;
+    h2fun = bdryweight::oneweights;
   }
 
   //check weight function
