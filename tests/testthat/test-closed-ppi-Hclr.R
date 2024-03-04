@@ -54,7 +54,7 @@ test_that("Fitting ppi smd values via clr transform is insensitive to bdrythresh
   expect_equal(out, out2)
 })
 
-# method of moments from JASA paper supplementary
+# method of moments from Scealy and Wood 2022 supplementary
 dirichmom <- function(X) {
   # Method of Moments estimates of the Dirichlet Distribution
   temp <- dim(X); n <- temp[1]; m <- temp[2]
