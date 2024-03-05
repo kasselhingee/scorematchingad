@@ -101,7 +101,7 @@ Please ensure that \code{ytape} is the interior of the manifold, and it is proba
 \code{tapesmd()} returns an \code{\link{ADFun}} object.
 }
 \description{
-The function \code{buildsmdtape()} generates \code{CppAD} tapes (called \code{ADFun}) for the log-likelihood (without normalising constant) and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} from \code{vignette("scorematchingintro")} for a specified model faimly.
+The function \code{buildsmdtape()} generates \code{CppAD} tapes (called \code{ADFun}) for the log-likelihood (without normalising constant) and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} from \code{\link{scorematchingtheory}} for a specified model faimly.
 Three steps are performed by \code{buildsmdtape()}: first an object that specifies the manifold and any transformation to another manifold is created using \code{\link[=manifoldtransform]{manifoldtransform()}}; then a tape of the log-likelihood (without normalising constant) is created using \code{\link[=tapell]{tapell()}}; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using \code{\link[=tapesmd]{tapesmd()}}.
 }
 \details{
@@ -133,7 +133,7 @@ These combinations of \code{start}-\code{tran}-\code{end} are available:
 \item \code{tapell()}: Creates a \code{CppAD} tape of an improper log-likelihood as a function of values on the \code{end} manifold in \code{tranobj}. The Jacobian of the associated transformation is used to convert the log-likelihood on the natural manifold \code{start} of the log-likelihood to the \code{end} manifold.
 This conversion is needed to account for the change in measure between the manifolds.
 
-\item \code{tapesmd()}: Generates a \code{CppAD} tape of the empirical score matching discrepancy function for a single measurement (\eqn{\tilde\psi} in Score Matching vignette). Requires a tape of the log-likelihood function and the corresponding manifold with the transformation.
+\item \code{tapesmd()}: Generates a \code{CppAD} tape of the empirical score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (\code{\link{scorematchingtheory}}). Requires a tape of an improper log-likelihood function and the corresponding manifold with the transformation.
 
 }}
 \section{Introduction to CppAD Tapes}{

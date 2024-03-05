@@ -12,7 +12,7 @@ Score matching is a useful estimation technique when the normalising constant fo
 This package's major contributions are
 \itemize{
 \item A general capacity to implement score matching estimators that use algorithmic differentiation to avoid tedious manual algebra.
-The package uses \code{CppAD} and \code{Eigen} to differentiate model densities and compute the score matching discrepancy (the \eqn{\hat\psi(f, f_0)} in the Introduction to Score Matching vignette \href{../doc/scorematchingintro.pdf}{\code{vignette("scorematchingintro")}}.
+The package uses \code{CppAD} and \code{Eigen} to differentiate model densities and compute the score matching discrepancy function (see in \code{\link{scorematchingtheory}}).
 The score matching discrepancy is minimised by a modern implementation of conjugate gradient descent available through \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
 \item Score matching estimators for the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir}. See function \code{\link[=ppi]{ppi()}}.
 \item Score matching and hybrid score matching estimators for von Mises Fisher and Bingham directional distributions \insertCite{mardia2016sc}{scorecompdir}.
