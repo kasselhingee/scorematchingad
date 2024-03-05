@@ -12,7 +12,7 @@
 #'               usertheta = ppi_paramvec(beta = m$beta),
 #'               bdryw = "minsq", acut = 0.01)$smdtape
 #' smvalues(smdtape, xmat = m$sample, pmat = m$theta[1:5])
-#' smvalues_wsum(smdtape, m$sample, m$theta[1:5])$grad/nrow(Y$sample)
+#' smvalues_wsum(smdtape, m$sample, m$theta[1:5])$grad/nrow(m$sample)
 #' @export
 smvalues <- function(smdtape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
   stopifnot(inherits(smdtape, "ADFun"))
