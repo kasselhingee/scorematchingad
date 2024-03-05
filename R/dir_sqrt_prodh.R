@@ -4,7 +4,7 @@
 #' @param Y Compositional data (n by p matrix)
 #' @param acut \eqn{a_c} for \eqn{h} function.
 #' @return A vector of estimates.
-#' @describeIn estimator_dir The score matching estimator using the product-based Hyv\"arinen weight
+#' @describeIn estimator_dir The score matching estimator using the product-based Hyvärinen weight
 #' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2).}
 dir_sqrt_prodh <- function(Y,acut, w = rep(1, nrow(Y)))
 {

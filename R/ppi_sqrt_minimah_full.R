@@ -7,8 +7,8 @@
 #' @param betap the pth element of \eqn{\beta}{beta}, if NULL then this element is estimated.
 #' @details The PPI model is given in equation 3 of (Scealy and Wood, 2021). The matrix \eqn{A_L} and vectors \eqn{b_L} and \eqn{\beta}{beta} must be estimated.
 #' For details of the score matching estimator see equations 16 - 19 in (Scealy and Wood, 2021).
-#' If \eqn{a_c} is greater than or equal to 1 then this Hyv\"arinen weight function corresponds to (Scealy and Wood, 2021; eqn 11), if it is less than 1 then it corresponds to (Scealy and Wood, 2021; eqn 12).
-#' For more on the Hyv\"arinen weight (see equation 7 and Section 3.2 of (Scealy and Wood, 2021)).
+#' If \eqn{a_c} is greater than or equal to 1 then this Hyvärinen weight function corresponds to (Scealy and Wood, 2021; eqn 11), if it is less than 1 then it corresponds to (Scealy and Wood, 2021; eqn 12).
+#' For more on the Hyvärinen weight (see equation 7 and Section 3.2 of (Scealy and Wood, 2021)).
 
 #' @return A vector of the estimates for individual entries of \eqn{A_L}, \eqn{b_L}, and \eqn{\beta}{beta}, and the estimated \eqn{\hat{W}}{W}. The former first contains the diagonal of \eqn{A_L}, then the upper triangle of \eqn{A_L}, then the elements of \eqn{b_L}, and then finally the estimates of \eqn{\beta}{beta}.
 utheta_estimatorall1_betap_compatible <- function(usertheta){

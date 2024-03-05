@@ -43,7 +43,7 @@ ppi_smvalues(
 
 \item{trans}{The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".}
 
-\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching discrepancy using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) to iteratively find the minimum of the weighted Hyv\"arinen divergence.}
+\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching discrepancy using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) to iteratively find the minimum of the weighted Hyvärinen divergence.}
 
 \item{w}{Weights for each observation, if different observations have different importance. Used by \code{\link[=Windham]{Windham()}} and \code{\link[=ppi_robust]{ppi_robust()}} for robust estimation.}
 
@@ -81,12 +81,12 @@ A list of
 \description{
 Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir} for compositional data.
 For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2022sc}{scorecompdir}.
-In the other situations, the score matching estimate is found by iteratively minimising the \emph{weighted Hyv\"arinen divergence} \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (\code{CppAD}) and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
+In the other situations, the score matching estimate is found by iteratively minimising the \emph{weighted Hyvärinen divergence} \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (\code{CppAD}) and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
 
 For a given parameter vector \code{evalparam}, \code{ppi_smvalues()} computes the score matching discrepancy, the gradient and Hessian of the score matching discrepancy (see \code{\link[=smvalues]{smvalues()}}) and the gradient offset of the score matching discrepancy (see \code{\link[=quadratictape_parts]{quadratictape_parts()}}).
 }
 \details{
-Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyv\"arinen divergence} \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
+Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyvärinen divergence} \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
 
 There are three boundary weight functions available:
 \itemize{
@@ -101,7 +101,7 @@ where \eqn{z} is a point in the positive orthant of the p-dimensional unit spher
 and \eqn{z_j}{zj} is the jth component of z.
 }
 
-Scealy and Wood \insertCite{@Theorem 1, @scealy2022sc}{scorecompdir} prove that minimising the weighted Hyv\"arinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See \strong{Score Matching} in \code{\link{scorecompdir-package}})
+Scealy and Wood \insertCite{@Theorem 1, @scealy2022sc}{scorecompdir} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See \strong{Score Matching} in \code{\link{scorecompdir-package}})
 when the boundary weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
 
 Hard-coded estimators are available for the following situations:
