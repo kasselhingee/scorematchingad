@@ -32,6 +32,15 @@
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
+#' @examples
+#' smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+#'               ytape = rep(1/3, 3),
+#'               usertheta = ppi_paramvec(p = 3),
+#'               bdryw = "minsq", acut = 0.01,
+#'               verbose = FALSE
+#'               )$smdtape
+#' Y <- rppi_egmodel(100)
+#' cppad_closed(smdtape, Y$sample)
 #' @export
 cppad_closed <- function(smdtape, Y, Yapproxcentres = NA * Y, 
                          w = rep(1, nrow(Y)),

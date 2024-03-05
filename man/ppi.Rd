@@ -137,9 +137,9 @@ The \eqn{i}th component of \eqn{\beta} controls the concentration of density whe
 model <- rppi_egmodel(100)
 estalr <- ppi(model$sample,
               paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)),
-              trans = "alr", method = "closed")
+              trans = "alr")
 estsqrt <- ppi(model$sample,
-              trans = "sqrt", method = "closed",
+              trans = "sqrt",
               bdryw = "minsq", acut = 0.1)
 }
 \references{

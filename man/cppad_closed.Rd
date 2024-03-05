@@ -45,6 +45,16 @@ The variance of the estimator is then estimated as
 \eqn{G^{-1}JG^{-1}/n,}
 where \code{n} is the number of observations.
 }
+\examples{
+smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+              ytape = rep(1/3, 3),
+              usertheta = ppi_paramvec(p = 3),
+              bdryw = "minsq", acut = 0.01,
+              verbose = FALSE
+              )$smdtape
+Y <- rppi_egmodel(100)
+cppad_closed(smdtape, Y$sample)
+}
 \seealso{
 Other generic score matching tools: 
 \code{\link{Windham}()},

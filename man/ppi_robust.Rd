@@ -42,6 +42,16 @@ There are many arguments to the \code{\link[=ppi]{ppi()}} function and we highly
 The default convergence metric and threshold are different to the default for \code{\link[=ppi_robust]{ppi_robust()}} to match the original implementation: convergence is measured by the change in the first element of \eqn{\beta}, and convergence is reached when the change is smaller than \code{1E-6}. Override this behaviour by specifying the elements \code{ConvergenceMetric} and \code{ConvergenceMetricThreshold} in a list passed as \code{fpcontrol}.
 \code{\link[=Windham]{Windham()}} is called with \code{alternative_populationinverse = TRUE}.
 }
+\examples{
+model <- rppi_egmodel(100)
+estsqrt <- ppi_robust(model$sample,
+  cW = ppi_cW_auto(0.01, model$sample),
+  trans = "sqrt", bdryw = "minsq", acut = 0.1)
+model <- rppi_egmodel(100)
+ppi_robust_alrgengamma(model$sample,
+   cW = ppi_cW_auto(0.01, model$sample),
+   paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)))
+}
 \references{
 \insertAllCited{}
 }

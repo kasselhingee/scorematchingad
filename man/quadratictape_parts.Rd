@@ -7,9 +7,9 @@
 quadratictape_parts(tape, tmat, tcentres = NA * tmat, approxorder = 10)
 }
 \arguments{
-\item{tape}{A tape of a quadratic function (such as score matching discrepancy function)}
+\item{tape}{A tape of a quadratic function with \eqn{x} and \eqn{t} in \link{Details} below correspond to the independent and dynamic parameters of the tape respectively. For score matching this is a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in \code{\link{scorematchingintro}} with \eqn{z} the \emph{dynamic parameters} and the model parameters the \emph{independent parameters} (which is the usual from \code{\link[=buildsmdtape]{buildsmdtape()}}.}
 
-\item{tmat}{A matrix of \code{t} vectors. Each row corresponds to a vector.}
+\item{tmat}{A matrix of vectors corresponding to values of \eqn{t} (see details). Each row corresponds to a vector. For score matching, these vectors are measurements.}
 
 \item{tcentres}{A matrix of Taylor approximation centres for rows of \code{tmat} that require approximation. \code{NA} for rows that do not require approximation.}
 
@@ -19,13 +19,14 @@ quadratictape_parts(tape, tmat, tcentres = NA * tmat, approxorder = 10)
 A list of
 \itemize{
 \item \code{offset} Array of offsets \eqn{b(t)}, each row corresponding to a row in \code{tmat}
-\item \code{Hessian} Array of offsets \eqn{b(t)}, each row corresponding to a row in \code{tmat}
+\item \code{Hessian} Array of vectorised \eqn{H f(x; t)} (see \code{\link[=tapeHessian]{tapeHessian()}}), each row corresponding to a row in \code{tmat}. For each row, obtain the Hessian as matrix using \code{matrix(ncol = length(tape$xtape))}.
 }
 }
 \description{
 When the score matching discrepancy function is quadratic then the gradient of the score matching discrepancy function can be written using the Hessian and an offset term. This can be useful for solving for the situation when the gradient is zero.
 The Hessian and offset term are computed using \code{CppAD} tapes.
 Taylor approximation can be used for locations at removable singularities.
+\code{quadratictape_parts()} will error if \code{\link{testquadratic(tape)}} returns \code{FALSE}.
 }
 \details{
 A quadratic function can be written
@@ -41,6 +42,19 @@ The functions here evaluate the Hessian and offset \eqn{b(t)} for many values of
 Tapes of the Hessian and gradient offset are created using \code{\link[=tapeHessian]{tapeHessian()}} and \code{\link[=tapeGradOffset]{tapeGradOffset()}} respectively.
 These tapes are then evaluated for every row of \code{tmat}.
 When the \code{tcentres} row is not \code{NA}, then approximate results are calculated using \code{\link[=pTaylorApprox]{pTaylorApprox()}}
+
+For score matching often \eqn{x} is a set of model parameters and the vector \eqn{t} is measurement.
+}
+\examples{
+u <- rep(1/3, 3)
+smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+              ytape = u,
+              usertheta = ppi_paramvec(p = 3),
+              bdryw = "minsq", acut = 0.01,
+              verbose = FALSE
+              )$smdtape
+quadratictape_parts(smdtape, 
+  tmat = rbind(u, c(1/4, 1/4, 1/2)))
 }
 \seealso{
 Other tape evaluators: 

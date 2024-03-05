@@ -53,6 +53,7 @@ tapes <- buildsmdtape("sim", "sqrt", "sph", "ppi",
               usertheta = ppi_paramvec(beta = m$beta),
               bdryw = "minsq", acut = 0.01)
 smvalues(tapes$smdtape, xmat = m$sample, pmat = m$theta[1:5])
+smvalues_wsum(smdtape, m$sample, m$theta)$grad/nrow(Y$sample)
 }
 \seealso{
 Other tape evaluators: 

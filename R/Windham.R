@@ -35,6 +35,15 @@
 #' A list:
 #' * `theta` the estimated parameter vector
 #' * `optim` information about the fixed point iterations and opimisation process. Including a slot `finalweights` for the weights in the final iteration.
+#' @examples
+#' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+#' Windham(Y = Y,
+#'    estimator = vMF,
+#'    ldenfun = function(Y, theta){ #here theta is km
+#'      return(drop(Y %*% theta))
+#'    },
+#'    cW = c(0.01, 0.01),
+#'    method = "Mardia")
 #' @export
 Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1E-10), paramvec_start = NULL, alternative_populationinverse = FALSE){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)

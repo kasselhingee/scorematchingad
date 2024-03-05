@@ -16,6 +16,11 @@ vMF_robust(Y, cW, ...)
 \description{
 Robust estimation for von Mises Fisher distribution using \code{\link[=Windham]{Windham()}}.
 }
+\examples{
+Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+vMF_robust(Y, cW = c(0.01, 0.01), method = "smfull")
+vMF_robust(Y, cW = c(0.01, 0.01), method = "Mardia")
+}
 \seealso{
 Other directional model estimators: 
 \code{\link{Bingham}()},

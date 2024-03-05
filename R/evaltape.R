@@ -11,6 +11,19 @@
 #' Approximation is via Taylor approximation of the independent variable around the approximation centre provided in `xcentres`.
 #' @return
 #' A matrix, each row corresponding to the evaluation of the same row in `xmat`, `pmat` and the `xcentres`.
+#' @examples
+#' u <- rep(1/3, 3)
+#' tapes <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+#'               ytape = u,
+#'               usertheta = ppi_paramvec(p = 3),
+#'               bdryw = "minsq", acut = 0.01,
+#'               verbose = FALSE
+#'               )
+#' evaltape(tapes$lltape, u, rppi_egmodel(1)$theta)
+#' evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
+#' evaltape(tapes$lltape, rbind(c(0, 0, 1), c(0,0,1)), 
+#'          rppi_egmodel(1)$theta, 
+#'          xcentres = rbind(c(0.0005, 0.0005, 0.999), NA))
 #' @export
 evaltape <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
   if (R6::is.R6(tape) && inherits(tape, "ADFun")){

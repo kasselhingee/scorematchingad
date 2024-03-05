@@ -51,6 +51,21 @@ The variance of the estimator is then estimated as
 \eqn{G^{-1}JG^{-1}/n,}
 where \code{n} is the number of observations.
 }
+\section{Warning}{
+There appears to be floating point issues with evaluation of the gradient leading to slow or no convergence in many situations. Tweaking the convergence tolerance \code{tol} may be appropriate. If the closed form solution exists please use \code{cppad_closed()} instead.
+}
+
+\examples{
+smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+              ytape = rep(1/3, 3),
+              usertheta = ppi_paramvec(p = 3),
+              bdryw = "minsq", acut = 0.01,
+              verbose = FALSE
+              )$smdtape
+Y <- rppi_egmodel(100)
+cppad_search(smdtape, 0.9 * Y$theta, Y$sample)
+sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)
+}
 \seealso{
 Other generic score matching tools: 
 \code{\link{Windham}()},

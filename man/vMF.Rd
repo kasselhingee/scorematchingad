@@ -47,7 +47,6 @@ The effect of the \eqn{\mu} and \eqn{\kappa} can be decoupled in a sense \insert
 }
 
 \examples{
-set.seed(12342)
 Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
 movMF::movMF(Y, 1) #maximum likelihood estimate
 vMF(Y, method = "smfull")

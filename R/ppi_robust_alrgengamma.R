@@ -15,6 +15,11 @@
 #' [`Windham()`] is called with `alternative_populationinverse = TRUE`.
 #' @references
 #' \insertAllCited{}
+#' @examples
+#' model <- rppi_egmodel(100)
+#' ppi_robust_alrgengamma(model$sample,
+#'    cW = ppi_cW_auto(0.01, model$sample),
+#'    paramvec = ppi_paramvec(betap = -0.5, p = ncol(model$sample)))
 #' @export
 ppi_robust_alrgengamma <- function(Y, cW, ..., fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1E-10)){
   ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from

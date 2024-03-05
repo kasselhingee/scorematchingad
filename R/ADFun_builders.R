@@ -6,6 +6,15 @@
 #' @return An [`ADFun`] object.
 #' @details The information in the fields `xtape` and `dyntape` of `tape` are used for the taping.
 #' @seealso [`ADFun`]
+#' @examples
+#' tapes <- buildsmdtape("sph", "identity", "sph", "vMF",
+#'               ytape = rep(1, 3)/sqrt(3),
+#'               usertheta = rep(NA, 3)
+#'               ) 
+#' tapeJacobian(tapes$smdtape)
+#' tapeHessian(tapes$smdtape)
+#' tapeLogJacDet(tapes$smdtape)
+#' tapeSwap(tapes$smdtape)
 NULL
 
 #' @describeIn moretapebuilders Tape the Jacobian of a tape. The resulting tape returns the Jacobian as a vector.
@@ -29,7 +38,7 @@ tapeJacobian <- function(tape){
 #' Suppose the function represented by `tape` maps from \eqn{n}-dimensional space to \eqn{1}-dimensional space, then
 #' the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
 #' The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
-#' The Hessian as a matrix, can be obtained by using [`as.matrix()`] with `ncol = n`.
+#' The Hessian as a matrix, can be obtained by using [`matrix()`] with `ncol = n`.
 #' @export
 tapeHessian <- function(tape){
   stopifnot(inherits(tape, "ADFun"))

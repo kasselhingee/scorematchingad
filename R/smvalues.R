@@ -12,6 +12,7 @@
 #'               usertheta = ppi_paramvec(beta = m$beta),
 #'               bdryw = "minsq", acut = 0.01)
 #' smvalues(tapes$smdtape, xmat = m$sample, pmat = m$theta[1:5])
+#' smvalues_wsum(smdtape, m$sample, m$theta)$grad/nrow(Y$sample)
 #' @export
 smvalues <- function(smdtape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
   stopifnot(inherits(smdtape, "ADFun"))
@@ -42,6 +43,7 @@ smvalues <- function(smdtape, xmat, pmat, xcentres = NA * xmat, approxorder = 10
 
 #' @rdname smvalues
 #' @param w Weights to apply to each row of `xmat` for computing the weighted sum. If `NULL` then each row is given a weight of `1`.
+#' @export
 smvalues_wsum <- function(tape, xmat, pmat, w=NULL, xcentres = NA * xmat, approxorder = 10){
   evals_l <- smvalues(tape, xmat = xmat, pmat = pmat,
                      xcentres = xcentres, approxorder = approxorder)

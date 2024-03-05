@@ -37,6 +37,10 @@ The value calculated by \code{dppi} is
 \deqn{z_L^TA_Lz_L + b_L^Tz_L + \beta^T \log(z),}
 where \eqn{z} is the multivariate observation, and \eqn{z_L} ommits the final element of \eqn{z}.
 }
+\examples{
+m <- rppi_egmodel(10)
+dppi(m$sample, paramvec = m$theta)
+}
 \seealso{
 Other PPI model tools: 
 \code{\link{ppi_param}},

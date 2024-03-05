@@ -4,8 +4,8 @@
 #' @description 
 #' Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching discrepancy is within tolerance of zero.
 #' Also estimates standard errors and covariance.
-#' Useful when the score matching discrepancy function is not of quadratic form;
-#' for score matching discrepancy functions that are quadratic [`cppad_closed()`] will be usually be more accurate and faster.
+#' In practice conjugate gradient descent seems to fail to reach the requested tolerance or finish too early.
+#' However it still may be useful when the score matching discrepancy function is not of quadratic form (for score matching discrepancy functions that are quadratic it will be much better to use [`cppad_closed()`]).
 #' @inheritParams cppad_closed
 #' @param theta The starting parameter set
 #' @param control Control parameters passed to [`optimx::Rcgmin()`]
@@ -29,6 +29,18 @@
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
+#' # Warning
+#' There appears to be floating point issues with evaluation of the gradient leading to slow or no convergence in many situations. Tweaking the convergence tolerance `tol` may be appropriate. If the closed form solution exists please use `cppad_closed()` instead.
+#' @examples
+#' smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+#'               ytape = rep(1/3, 3),
+#'               usertheta = ppi_paramvec(p = 3),
+#'               bdryw = "minsq", acut = 0.01,
+#'               verbose = FALSE
+#'               )$smdtape
+#' Y <- rppi_egmodel(100)
+#' cppad_search(smdtape, 0.9 * Y$theta, Y$sample)
+#' sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)
 #' @export
 cppad_search <- function(smdtape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10, control = list(tol = 1E-15, checkgrad = TRUE)){
   Jsmdfun <- tapeJacobian(smdtape)

@@ -41,6 +41,7 @@
 #' 
 #'  When \eqn{n} independent observations from \eqn{f_0} are available, the integration in \eqn{\psi(f, f_0)} can be approximated by an average over the observations, 
 #'   \deqn{\psi(f, f_0) \approx \hat\psi(f, f_0) = \frac{1}{n} \sum_{i = 1}^n A(z_i) + B(z_i) + C(z_i).}
+#' We term \eqn{A(z) + B(z) + C(z)} the *score matching discrepancy function*.
 #' 
 #' If we parameterise a family of models \eqn{f_\theta} according to a vector of parameters \eqn{\theta}, then the *score matching estimate* is the \eqn{\theta} that minimises \eqn{\hat\psi(f_\theta, f_0)}.
 #' In general, the score matching estimate must be found via numerical optimisation techniques, such as in the function `cppad_search()`.

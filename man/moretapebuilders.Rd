@@ -41,7 +41,7 @@ The returned vector is ordered with the range elements iterating fastest, then t
 Suppose the function represented by \code{tape} maps from \eqn{n}-dimensional space to \eqn{1}-dimensional space, then
 the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
 The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
-The Hessian as a matrix, can be obtained by using \code{\link[=as.matrix]{as.matrix()}} with \code{ncol = n}.
+The Hessian as a matrix, can be obtained by using \code{\link[=matrix]{matrix()}} with \code{ncol = n}.
 }
 
 \subsection{tapeGradOffset}{
@@ -76,6 +76,16 @@ The function \code{tapeGradOffset} creates a tape of \eqn{b(\theta)} where \eqn{
 and the dynamic parameters become independent values.
 
 }}
+\examples{
+tapes <- buildsmdtape("sph", "identity", "sph", "vMF",
+              ytape = rep(1, 3)/sqrt(3),
+              usertheta = rep(NA, 3)
+              ) 
+tapeJacobian(tapes$smdtape)
+tapeHessian(tapes$smdtape)
+tapeLogJacDet(tapes$smdtape)
+tapeSwap(tapes$smdtape)
+}
 \seealso{
 \code{\link{ADFun}}
 

@@ -6,6 +6,10 @@
 #' @param Y A matrix of observations in Cartesian coordinates.
 #' @param ... Passed to [`Windham()`] and then passed onto [`vMF()`].
 #' @family Windham robustness functions
+#' @examples
+#' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+#' vMF_robust(Y, cW = c(0.01, 0.01), method = "smfull")
+#' vMF_robust(Y, cW = c(0.01, 0.01), method = "Mardia")
 #' @export
 vMF_robust <- function(Y, cW, ...){
   ellipsis::check_dots_used()

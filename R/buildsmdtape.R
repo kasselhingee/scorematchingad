@@ -53,6 +53,16 @@
 #'               )
 #' evaltape(tapes$lltape, u, runif(n = ltheta))
 #' evaltape(tapes$smdtape, runif(n = ltheta), u)
+#' 
+#' u <- rep(1/3, 3)
+#' tapes <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+#'               ytape = u,
+#'               usertheta = ppi_paramvec(p = 3),
+#'               bdryw = "minsq", acut = 0.01,
+#'               verbose = FALSE
+#'               )
+#' evaltape(tapes$lltape, u, rppi_egmodel(1)$theta)
+#' evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
 #' @export
 buildsmdtape <- function(start, tran, end, llname,
                          ytape, usertheta,
@@ -74,10 +84,10 @@ buildsmdtape <- function(start, tran, end, llname,
                     ytape = ytape,
                     usertheta = usertheta, 
                     thetatape_creator = thetatape_creator,
-                    tran = tranman$tran)
+                    tranobj = tranman$tran)
   stopifnot(is.numeric(acut))
   smdtape <- tapesmd(lltape = lltape,
-                        tran = tranman$tran,
+                        tranobj = tranman$tran,
                         man = tranman$man,
                         bdryw = bdryw,
                         acut = acut,

@@ -59,6 +59,16 @@ The estimate returned by \code{Windham()} is the parameter set \eqn{\hat{\theta}
 
 An exponential model with a base rate may be used with \code{Windham()} so long as the base rate is omitted from \code{ldenfun} (i.e. not used for weighting).
 }
+\examples{
+Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+Windham(Y = Y,
+   estimator = vMF,
+   ldenfun = function(Y, theta){ #here theta is km
+     return(drop(Y \%*\% theta))
+   },
+   cW = c(0.01, 0.01),
+   method = "Mardia")
+}
 \seealso{
 Other generic score matching tools: 
 \code{\link{cppad_closed}()},
