@@ -12,7 +12,9 @@ test_that("Inputs to ppi() are processed into the correct theta", {
                c(-166, -333, 117, rep(NA, p-1 + p)), ignore_attr = "names")
 
   # A check
-  Qin <- orthogmatwith111vec()
+  Qin <- matrix(c(0.03430724,  0.8157755, 0.5773503,
+                 -0.72363593, -0.3781768, 0.5773503,
+                  0.68932869, -0.4375987, 0.5773503), byrow = TRUE, ncol = 3)
   Astar <- Qin %*% diag(c(-100, -200, 0)) %*% t(Qin)
   expect_equal(ppi_paramvec(p, Astar = Astar)[(thetalength - p + 1):thetalength], rep(NA_real_, p), ignore_attr = "names")
   expect_warning(expect_error(ppi_paramvec(p, AL = 0, Astar = 0)))

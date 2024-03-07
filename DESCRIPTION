@@ -18,7 +18,6 @@ Suggests:
     testthat,
     ks,
     movMF,
-    mclust,
     knitr, rmarkdown,
 	cubature,
 	dplyr, 
