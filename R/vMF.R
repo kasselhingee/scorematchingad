@@ -27,8 +27,13 @@
 #' @references
 #' \insertAllCited{}
 #' @examples
-#' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
-#' movMF::movMF(Y, 1) #maximum likelihood estimate
+#' if (requireNamespace("movMF")){
+#'   Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+#'   movMF::movMF(Y, 1) #maximum likelihood estimate
+#' } else {
+#'   Y <- matrix(rnorm(1000 * 2, sd = 0.01), ncol = 2)
+#'   Y <- Y / sqrt(rowSums(Y^2))
+#' }
 #' vMF(Y, method = "smfull")
 #' vMF(Y, method = "Mardia")
 #' vMF(Y, method = "hybrid")

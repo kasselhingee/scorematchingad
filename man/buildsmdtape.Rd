@@ -158,7 +158,7 @@ Each time computations such as derivatives are performed the corresponding \verb
 
 \examples{
 p <- 3
-u <- movMF::rmovMF(1, rep(1, p))
+u <- rep(1/sqrt(p), p)
 ltheta <- p #length of vMF parameter vector
 intheta <- rep(NA, length.out = ltheta)
 tapes <- buildsmdtape("sph", "identity", "sph", "vMF",

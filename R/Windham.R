@@ -36,7 +36,12 @@
 #' * `theta` the estimated parameter vector
 #' * `optim` information about the fixed point iterations and opimisation process. Including a slot `finalweights` for the weights in the final iteration.
 #' @examples
-#' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+#' if (requireNamespace("movMF")){
+#'   Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+#' } else {
+#'   Y <- matrix(rnorm(1000 * 2, sd = 0.01), ncol = 2)
+#'   Y <- Y / sqrt(rowSums(Y^2))
+#' }
 #' Windham(Y = Y,
 #'    estimator = vMF,
 #'    ldenfun = function(Y, theta){ #here theta is km

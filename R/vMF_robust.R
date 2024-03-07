@@ -7,7 +7,12 @@
 #' @param ... Passed to [`Windham()`] and then passed onto [`vMF()`].
 #' @family Windham robustness functions
 #' @examples
-#' Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+#' if (requireNamespace("movMF")){
+#'   Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+#' } else {
+#'   Y <- matrix(rnorm(1000 * 2, sd = 0.01), ncol = 2)
+#'   Y <- Y / sqrt(rowSums(Y^2))
+#' }
 #' vMF_robust(Y, cW = c(0.01, 0.01), method = "smfull")
 #' vMF_robust(Y, cW = c(0.01, 0.01), method = "Mardia")
 #' @export

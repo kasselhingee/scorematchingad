@@ -1,6 +1,7 @@
 test_that("von-Mises Fisher likelihood runs and fits", {
   set.seed(123)
   theta <-  3 * c(1, -1) / sqrt(2)
+  if (!requireNamespace("movMF")){skip("Need movMF package")}
   sample <- movMF::rmovMF(1000, theta)
   thetatape <- c(1, -1)
 
@@ -20,6 +21,7 @@ test_that("vMF_Mardia() function works for data centred off the north pole", {
   k <- 3
   m <- c(1, -1) / sqrt(2)
   km <-  k * m
+  if (!requireNamespace("movMF")){skip("Need movMF package")}
   sample <- movMF::rmovMF(1000, km)
   out <- vMF(Y = sample, method = "Mardia")
   expect_equal(out$est$m , m, tolerance = 1E-1) #moment estimate part
@@ -31,6 +33,7 @@ test_that("vMF_Full() function works", {
   k <- 3
   m <- c(1, -1) / sqrt(2)
   km <-  k * m
+  if (!requireNamespace("movMF")){skip("Need movMF package")}
   sample <- movMF::rmovMF(100, km) #faithful to seed
   out <- vMF(Y = sample, method = "smfull")
   expect_lt_v(abs(out$est$paramvec - km), 3 * out$SE$paramvec)
@@ -50,6 +53,7 @@ test_that("vMF() fitting works on dimension 5", {
   m <- m / sqrt(sum(m^2))
   km <-  k * m
   set.seed(12412)
+  if (!requireNamespace("movMF")){skip("Need movMF package")}
   sample <- movMF::rmovMF(1000, m * k)
   #full method
   out <- vMF(Y = sample, method = "smfull")
@@ -76,6 +80,7 @@ test_that("vMF matches for simulated weights, ignoring SE, which shouldn't match
   m <- m / sqrt(sum(m^2))
   km <-  k * m
   set.seed(1231)
+  if (!requireNamespace("movMF")){skip("Need movMF package")}
   Y <- movMF::rmovMF(10, km)
   #simulate weights
   set.seed(1342)
@@ -106,6 +111,7 @@ test_that("vMF() robust fitting works on dimension 5 with direction outliers", {
   m <- m / sqrt(sum(m^2))
   km <-  k * m
   set.seed(121)
+  if (!requireNamespace("movMF")){skip("Need movMF package")}
   sample <- movMF::rmovMF(100, km)
   # add outliers
   set.seed(2151)
@@ -142,6 +148,7 @@ test_that("robust vMF() with concentration outliers: ok with full robust, better
   m <- m / sqrt(sum(m^2))
   km <-  k * m
   set.seed(121)
+  if (!requireNamespace("movMF")){skip("Need movMF package")}
   sample <- movMF::rmovMF(100, km)
   # add outliers in concentration only
   set.seed(2151)
@@ -174,6 +181,7 @@ test_that("controls of FixedPoint() are passed", {
   m <- m / sqrt(sum(m^2))
   km <-  k * m
   set.seed(123)
+  if (!requireNamespace("movMF")){skip("Need movMF package")}
   Y <- movMF::rmovMF(10, m * k)
 
   out_default <- vMF_robust(Y, cW = rep(0.1, ncol(Y)), method = "Mardia") #use this packages defaults this is pretty fussy!
@@ -189,6 +197,7 @@ test_that("vMF(), vMF_stdY() and vMF_m() differs when weights differ", {
   k <- 3
   m <- runif(p, min = -10, 10)
   m <- m / sqrt(sum(m^2))
+  if (!requireNamespace("movMF")){skip("Need movMF package")}
   Y <- movMF::rmovMF(100, k * m)
 
   m <- vMF_m(Y)

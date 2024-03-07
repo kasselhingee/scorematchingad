@@ -60,7 +60,12 @@ The estimate returned by \code{Windham()} is the parameter set \eqn{\hat{\theta}
 An exponential model with a base rate may be used with \code{Windham()} so long as the base rate is omitted from \code{ldenfun} (i.e. not used for weighting).
 }
 \examples{
-Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+if (requireNamespace("movMF")){
+  Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))
+} else {
+  Y <- matrix(rnorm(1000 * 2, sd = 0.01), ncol = 2)
+  Y <- Y / sqrt(rowSums(Y^2))
+}
 Windham(Y = Y,
    estimator = vMF,
    ldenfun = function(Y, theta){ #here theta is km
