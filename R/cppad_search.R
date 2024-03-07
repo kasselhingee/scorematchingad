@@ -5,23 +5,22 @@
 #' Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching discrepancy is within tolerance of zero.
 #' Also estimates standard errors and covariance.
 #' In practice conjugate gradient descent seems to fail to reach the requested tolerance or finish too early.
-#' However it still may be useful when the score matching discrepancy function is not of quadratic form (for score matching discrepancy functions that are quadratic it will be much better to use [`cppad_closed()`]).
+#' However, it still may be useful when the score matching discrepancy function is not of quadratic form (for score matching discrepancy functions that are quadratic it will be much better to use [`cppad_closed()`]).
 #' @inheritParams cppad_closed
 #' @param theta The starting parameter set
 #' @param control Control parameters passed to [`optimx::Rcgmin()`]
 #' @details
 #' The score matching discrepancy function and gradient of the score matching function are passed to [`optimx::Rcgmin()`]. 
-#' Taylor approximations are performed using [`pTaylorApprox()`] for measurements with non-`NA` rows in `Yapproxcentres`.
 #' The call to [`optimx::Rcgmin()`] uses the *sum* of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to `Rcgmin()` (e.g. `tol`). The results are converted into averages so the use of sums can be ignored when not setting control parameters, or studying the behaviour of Rcgmin. 
 #'
-#' Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (*would like a good reference for this here*).
-#' The sensitivity matrix \eqn{G} is estimated as
+#' Standard errors use the Godambe information matrix (aka sandwich method) and are only computed when the weights are constant.
+#' The estimate of the sensitivity matrix \eqn{G} is
 #' the negative of the average over the Hessian of `smdtape` evaluated at each observation in `Y`.
 # \deqn{\hat{G(\theta)} = \hat{E} -H(smd(\theta;Y))),}
 # where \eqn{smd} is the score matching discrepancy function represented by `smdtape`,
 # \eqn{H} is the Hessian with respect to \eqn{\theta}, which is constant for quadratic-form functions,
 # 
-#' The variability matrix \eqn{J} is then estimated as
+#' The estimate of the variability matrix \eqn{J} is then
 #' the sample covariance (denominator of \eqn{n-1}) of the gradiant of `smdtape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
 # \deqn{\hat{J}(\theta) = var(grad(w smd(\theta;Y))),}
 
@@ -29,6 +28,10 @@
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
+#'
+#' Taylor approximation is available because boundary weight functions and transformations of the measure in Hyvärinen divergence can remove singularities in the model log-likelihood, however evaluation at these singularities may still involve computing intermediate values that are unbounded.
+#' If the singularity is ultimately removed, then Taylor approximation from a nearby location will give a very accurate evaluation at the removed singularity.
+#'
 #' # Warning
 #' There appears to be floating point issues with evaluation of the gradient leading to slow or no convergence in many situations. Tweaking the convergence tolerance `tol` may be appropriate. If the closed form solution exists please use `cppad_closed()` instead.
 #' @examples

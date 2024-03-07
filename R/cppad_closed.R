@@ -1,9 +1,9 @@
-#' @title Score Matching Estimator for Quadratic-Form Score-Matching Objective Functions
+#' @title Score Matching Estimator for Quadratic-Form Score Matching Discrepancies
 #' @family generic score matching tools
 #' @description 
-#' For a `CppAD` tape of a quadratic-form score matching discrepancy function, calculates the vector of parameters such that the gradient of the score matching discrepancy is zero.
+#' For a tape (i.e. an `ADFun` object) of a quadratic-form score matching discrepancy function, calculates the vector of parameters such that the gradient of the score matching discrepancy is zero.
 #' Also estimates standard errors and covariance.
-#' Many score matching estimators have an objective function that has a quadratic form.
+#' Many score matching estimators have an objective function that has a quadratic form (see [`scorematchingtheory`]).
 #' @param Yapproxcentres A matrix of Taylor approximation centres for rows of Y that require approximation. `NA` for rows that do not require approximation.
 #' @param smdtape A `CppAD` tape of a score matching discrepancy function that has *quadratic form*. Test for quadratic form using [`testquadratic()`].
 #' The `smdtape`'s independent variables are assumed to be the model parameters to fit
@@ -12,19 +12,19 @@
 #' @param w Weights for each observation.
 #' @param approxorder The order of Taylor approximation to use.
 #' @details
-#' When the score matching function is of quadratic form, then the gradient is zero at \eqn{H^{-1}b}{solve(H) %*% b},
-#' where \eqn{H} is the average of the Hessian of the score matching function evaluated at each measurement and 
+#' When the score matching discrepancy function is of quadratic form, then the gradient of the score matching discrepancy is zero at \eqn{H^{-1}b}{solve(H) %*% b},
+#' where \eqn{H} is the average of the Hessian of the score matching discrepancy function evaluated at each measurement and 
 #' \eqn{b} is the average of the gradient offset (see [`quadratictape_parts()`]) evaluated at each measurement. 
-#' Both the Hessian and the gradient offset are constant with respect to the model parameters for quadratic-form score matching equations.
+#' Both the Hessian and the gradient offset are constant with respect to the model parameters for quadratic-form score matching discrepancy functions.
 #'
-#' Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (*would like a good reference for this here*).
-#' The sensitivity matrix \eqn{G} is estimated as
+#' Standard errors use the Godambe information matrix (aka sandwich method) and are only computed when the weights are constant.
+#' The estimate of the sensitivity matrix \eqn{G} is
 #' the negative of the average over the Hessian of `smdtape` evaluated at each observation in `Y`.
 # \deqn{\hat{G(\theta)} = \hat{E} -H(smd(\theta;Y))),}
 # where \eqn{smd} is the score matching discrepancy function represented by `smdtape`,
 # \eqn{H} is the Hessian with respect to \eqn{\theta}, which is constant for quadratic-form functions,
 # 
-#' The variability matrix \eqn{J} is then estimated as
+#' The estimate of the variability matrix \eqn{J} is then
 #' the sample covariance (denominator of \eqn{n-1}) of the gradiant of `smdtape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
 # \deqn{\hat{J}(\theta) = var(grad(w smd(\theta;Y))),}
 
@@ -32,6 +32,9 @@
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
+#'
+#' Taylor approximation is available because boundary weight functions and transformations of the measure in Hyvärinen divergence can remove singularities in the model log-likelihood, however evaluation at these singularities may still involve computing intermediate values that are unbounded.
+#' If the singularity is ultimately removed, then Taylor approximation from a nearby location will give a very accurate evaluation at the removed singularity.
 #' @examples
 #' smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
 #'               ytape = rep(1/3, 3),

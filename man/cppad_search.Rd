@@ -35,21 +35,23 @@ and the \code{smdtape}'s dynamic parameter is a (multivariate) measurement.}
 Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching discrepancy is within tolerance of zero.
 Also estimates standard errors and covariance.
 In practice conjugate gradient descent seems to fail to reach the requested tolerance or finish too early.
-However it still may be useful when the score matching discrepancy function is not of quadratic form (for score matching discrepancy functions that are quadratic it will be much better to use \code{\link[=cppad_closed]{cppad_closed()}}).
+However, it still may be useful when the score matching discrepancy function is not of quadratic form (for score matching discrepancy functions that are quadratic it will be much better to use \code{\link[=cppad_closed]{cppad_closed()}}).
 }
 \details{
 The score matching discrepancy function and gradient of the score matching function are passed to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
-Taylor approximations are performed using \code{\link[=pTaylorApprox]{pTaylorApprox()}} for measurements with non-\code{NA} rows in \code{Yapproxcentres}.
 The call to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}} uses the \emph{sum} of observations (as opposed to the mean) to reduce floating point inaccuracies. This has implications for the meaning of the control parameters passed to \code{Rcgmin()} (e.g. \code{tol}). The results are converted into averages so the use of sums can be ignored when not setting control parameters, or studying the behaviour of Rcgmin.
 
-Standard errors are only computed when the weights are constant, and use the Godambe information matrix (aka sandwich method) (\emph{would like a good reference for this here}).
-The sensitivity matrix \eqn{G} is estimated as
+Standard errors use the Godambe information matrix (aka sandwich method) and are only computed when the weights are constant.
+The estimate of the sensitivity matrix \eqn{G} is
 the negative of the average over the Hessian of \code{smdtape} evaluated at each observation in \code{Y}.
-The variability matrix \eqn{J} is then estimated as
+The estimate of the variability matrix \eqn{J} is then
 the sample covariance (denominator of \eqn{n-1}) of the gradiant of \code{smdtape} evaluated at each of the observations in \code{Y} for the estimated \eqn{\theta}.
 The variance of the estimator is then estimated as
 \eqn{G^{-1}JG^{-1}/n,}
 where \code{n} is the number of observations.
+
+Taylor approximation is available because boundary weight functions and transformations of the measure in Hyvärinen divergence can remove singularities in the model log-likelihood, however evaluation at these singularities may still involve computing intermediate values that are unbounded.
+If the singularity is ultimately removed, then Taylor approximation from a nearby location will give a very accurate evaluation at the removed singularity.
 }
 \section{Warning}{
 There appears to be floating point issues with evaluation of the gradient leading to slow or no convergence in many situations. Tweaking the convergence tolerance \code{tol} may be appropriate. If the closed form solution exists please use \code{cppad_closed()} instead.
