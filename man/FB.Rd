@@ -7,7 +7,7 @@
 FB(Y, km = NULL, A = NULL)
 }
 \arguments{
-\item{Y}{A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.}
+\item{Y}{A matrix of multivariate observations in Cartesian coordinates. Each row is a multivariate measurement (i.e. each row corresponds to an individual).}
 
 \item{km}{Optional. A vector of same length as the dimension, representing the parameter vector for the von Mises-Fisher component (i.e. the \eqn{\kappa \mu} see \code{\link[=vMF]{vMF()}}).
 If supplied, the non-NA elements are fixed.}

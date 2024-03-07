@@ -13,8 +13,9 @@
 #'
 #' The method by \insertCite{mardia2016sc;textual}{scorecompdir} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}. 
 #' The observations `Y` are then standardised to `Y`\eqn{G}. 
-#' After this standardisation, the non-diagonal elements of \eqn{A} are zero.
-#' The diagonal elements of \eqn{A} (which equals the eigenvalues of the pre-standadised \eqn{A}) are estimated using score matching, with the final element calculated from the sum of the other elements.
+#' This standardisation corresponds to diagonalising \eqn{A}
+#' where the eigenvalues of \eqn{A} become the diagonal elements of the new \eqn{A}.
+#' The diagonal elements of the new \eqn{A} are then estimated using score matching, with the final diagonal element calculated from the sum of the other elements.
 #' See \insertCite{mardia2016sc;textual}{scorecompdir} for details.
 #' @references \insertAllCited{}
 #' @examples
@@ -30,7 +31,7 @@
 #'  * `SE` contains estimates of the standard errors if computed.
 #'  * `info` contains a variety of information about the model fitting procedure and results.
 #' @export
-Bingham <- function(Y, A = NULL, w = rep(1, nrow(Y)), method = "smfull"){
+Bingham <- function(Y, A = NULL, w = rep(1, nrow(Y)), method = "Mardia"){
   if (method == "smfull"){
     out <- Bingham_full(Y, A = A, w = w)}
   if (method %in% c("Mardia", "hybrid")){

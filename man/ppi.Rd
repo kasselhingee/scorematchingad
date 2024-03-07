@@ -79,29 +79,29 @@ A list of
 }
 }
 \description{
-Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir} for compositional data.
-For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2022sc}{scorecompdir}.
-In the other situations, the score matching estimate is found by iteratively minimising the \emph{weighted Hyvärinen divergence} \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (\code{CppAD}) and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
+Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2023sc}{scorecompdir} for compositional data.
+For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2023sc}{scorecompdir}.
+In the other situations, the score matching estimate is found by iteratively minimising the \emph{weighted Hyvärinen divergence} \insertCite{@Equation 13, @scealy2023sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (\code{CppAD}) and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
 
 For a given parameter vector \code{evalparam}, \code{ppi_smvalues()} computes the score matching discrepancy, the gradient and Hessian of the score matching discrepancy (see \code{\link[=smvalues]{smvalues()}}) and the gradient offset of the score matching discrepancy (see \code{\link[=quadratictape_parts]{quadratictape_parts()}}).
 }
 \details{
-Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyvärinen divergence} \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
+Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyvärinen divergence} \insertCite{@Equation 7, @scealy2023sc}{scorecompdir} is used.
 
 There are three boundary weight functions available:
 \itemize{
 \item The function "ones" applies no weights and should be used whenever the manifold does not have a bounday.
-\item The function "minsq" is the minima-based boundary weight function for the PPI model \insertCite{@Equation 12, @scealy2022sc}{scorecompdir}
+\item The function "minsq" is the minima-based boundary weight function for the PPI model \insertCite{@Equation 12, @scealy2023sc}{scorecompdir}
 \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
 where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 and \eqn{z_j}{zj} is the jth component of z.
-\item The function "prodsq" is the product-based \insertCite{@Equation 9, @scealy2022sc}{scorecompdir}
+\item The function "prodsq" is the product-based \insertCite{@Equation 9, @scealy2023sc}{scorecompdir}
 \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2),}
 where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 and \eqn{z_j}{zj} is the jth component of z.
 }
 
-Scealy and Wood \insertCite{@Theorem 1, @scealy2022sc}{scorecompdir} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See \strong{Score Matching} in \code{\link{scorecompdir-package}})
+Scealy and Wood \insertCite{@Theorem 1, @scealy2023sc}{scorecompdir} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See \strong{Score Matching} in \code{\link{scorecompdir-package}})
 when the boundary weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
 
 Hard-coded estimators are available for the following situations:

@@ -14,7 +14,7 @@
 #' @param xtape The (numeric) vector of independent variables used for taping.
 #' @field dyntape The (numeric) vector of dynamic parameters used for taping.
 #' @param dyntape The (numeric) vector of dynamic parameters used for taping.
-#' @field usertheta A (numeric) vector of `NA` values and fixed values specifying the inputs of the taped function that were considered independent variables or dynamic parameters respectively.
+#' @field usertheta A (numeric) vector of `NA` values and fixed values specifying the parameters of taped function that were considered dynamic parameters or fixed parameters respectively.
 #' @param usertheta A (numeric) vector of `NA` values and fixed values specifying the inputs of the taped function that were considered independent variables or dynamic parameters respectively.
 #' @field name An easy to read name for the taped function
 #' @param name An easy to read name for the taped function

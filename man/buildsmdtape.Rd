@@ -43,34 +43,34 @@ tapesmd(lltape, tranobj, man, bdryw, acut = 1, verbose = FALSE)
 
 \item{tran}{The name of a transformation. Available transformations are
 \itemize{
-\item `srqt'
-\item `alr'
-\item `clr'
-\item \verb{none' (or }identity')
+\item ``srqt''
+\item ``alr''
+\item ``clr''
+\item \verb{none'' (or }identity'')
 }}
 
 \item{end}{The name of the manifold that \code{tran} maps \code{start} to. Available manifolds are:
 \itemize{
-\item `sph' unit sphere
-\item `Hn111' hyperplane normal to 1, 1, 1, 1, ...
-\item `sim' simplex
-\item `Euc' Euclidean space
+\item ``sph'' unit sphere
+\item ``Hn111'' hyperplane normal to the vector \eqn{1, 1, 1, 1, ...}
+\item ``sim'' simplex
+\item ``Euc'' Euclidean space
 }}
 
-\item{llname}{The name of the log-likelihood function to tape}
+\item{llname}{The name of an improper log-likelihood function to tape (which also specifies the parametric model family).}
 
-\item{ytape}{An example measurement value to use for creating the tape. In the natural manifold of the log-likelihood function. \code{ytape} will be converted to the manifold according to the \code{toM()} method for \code{tranobj} before taping.
+\item{ytape}{An example measurement value to use for creating the tapes. In the natural (i.e. \code{start}) manifold of the log-likelihood function. \code{ytape} will be converted to the \code{end} manifold according to the \code{toM()} method for \code{tranobj} before taping.
 Please ensure that \code{ytape} is the interior of the manifold, and it is probably best if all components of \code{tranobj$toM(ytape)} are non-zero.}
 
-\item{usertheta}{A vector of parameter elements for the likelihood function. \code{NA} elements will become \emph{dynamic parameters}. Other elements will be fixed at the provided value. The length of \code{usertheta} must be the correct length for the log-likelihood, no checking is conducted.}
+\item{usertheta}{A vector of parameter elements for the likelihood function. \code{NA} elements will become \emph{dynamic parameters}. Other elements will be fixed at the provided value. The length of \code{usertheta} must be the correct length for the log-likelihood - \strong{no checking is conducted}.}
 
-\item{bdryw}{The name of the boundary weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.}
+\item{bdryw}{The name of the boundary weight function. "ones" for manifolds without boundary. For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible - see \code{\link[=ppi]{ppi()}} for more information on these.}
 
-\item{acut}{The threshold \eqn{a_c} in the boundary weight function \code{bdryw}. Ignored for \code{bdryw = "ones"}.}
+\item{acut}{A parameter passed to the boundary weight function \code{bdryw}. Ignored for \code{bdryw = "ones"}.}
 
 \item{thetatape_creator}{A function that accepts an integer \code{n}, and returns a vector of \code{n} length. The function is used to fill in the \code{NA} elements of \code{usertheta} when building the tapes. Please ensure that the values filled by \code{thetatape_creator} lead to plausible parameter vectors for the chosen log-likelihood.}
 
-\item{verbose}{If \code{TRUE}, some information about the tape is printed.}
+\item{verbose}{If \code{TRUE} more details are printed when taping. These details are for debugging and will likely be comprehensible only to users familiar with the source code of this package.}
 
 \item{tranobj}{A transform object (of type \code{Rcpp_transform_ad}), typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
 
@@ -81,9 +81,9 @@ Please ensure that \code{ytape} is the interior of the manifold, and it is proba
 \value{
 \code{buildsmdtape()} returns a list of:
 \itemize{
-\item an \code{\link{ADFun}} object containing a log-likelihood tape with \eqn{z} on the \code{end} manifold as the independent variable
-\item an \code{\link{ADFun}} object containing a tape of the score matching discrepancy with the non-fixed parameter values as the independent variables
-\item some information used to generate the tapes
+\item an \code{\link{ADFun}} object containing a tape of an improper likelihood with \eqn{z} on the \code{end} manifold as the independent variable
+\item an \code{\link{ADFun}} object containing a tape of the score matching discrepancy function with the non-fixed parameters as the independent variable, and the measurements on the \code{end} manifold as the dynamic parameter.
+\item some information about the tapes
 }
 
 \code{manifoldtransform()} returns a named list with:
@@ -101,23 +101,23 @@ Please ensure that \code{ytape} is the interior of the manifold, and it is proba
 \code{tapesmd()} returns an \code{\link{ADFun}} object.
 }
 \description{
-The function \code{buildsmdtape()} generates \code{CppAD} tapes (called \code{ADFun}) for the log-likelihood (without normalising constant) and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} from \code{\link{scorematchingtheory}} for a specified model faimly.
+For a parametric model family, the function \code{buildsmdtape()} generates \code{CppAD} tapes (called \code{ADFun}s) for the improper log-likelihood (without normalising constant) of the family and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in \code{\link{scorematchingtheory}}).
 Three steps are performed by \code{buildsmdtape()}: first an object that specifies the manifold and any transformation to another manifold is created using \code{\link[=manifoldtransform]{manifoldtransform()}}; then a tape of the log-likelihood (without normalising constant) is created using \code{\link[=tapell]{tapell()}}; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using \code{\link[=tapesmd]{tapesmd()}}.
 }
 \details{
-The model log-likelihood without normalising constant must be implemented in \verb{C++} and is selected by name. Similarly the transforms of the manifold must be implemented in \verb{C++} and selected by name.
+The improper log-likelihood (without normalising constant) must be implemented in \verb{C++} and is selected by name. Similarly the transforms of the manifold must be implemented in \verb{C++} and selected by name.
 
 When using, \code{CppAD} one first creates \emph{tapes} of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
-The taping relies on specifying typical argument values for the functions, so the programming is simplest when the function is defined without conditions.
-Tapes can have both \emph{independent} variables and \emph{dynamic} variables.
+The taping relies on specifying typical argument values for the functions (see \strong{Introduction to CppAD Tapes} below).
+Tapes can have both \emph{independent} variables and \emph{dynamic} parameters.
 The differentiation with \code{CppAD} occurs with respect to the independent variables.
-Tapes of tapes are possible, including tapes that swap the independent and dynamic variables - this is how this package differentiates with respect to a dynamic variables (see \code{\link[=swapDynamic]{swapDynamic()}}).
+Tapes of tapes are possible, including tapes that swap the independent and dynamic variables - this is how this package differentiates with respect to a dynamic variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
 
-To build a tape for the score matching discrepancy function, the package first tapes the map from a point \eqn{z} on the \code{end} manifold to the value of the improper log-likelihood, where the independent variable is the \eqn{z}, and the dynamic variable is a vector of the parameters to estimate, and remaining parameters are fixed and not estimated.
-This tape is then used to generate a tape for the score matching discrepancy with the parameters to estimate are the independent variable.
+To build a tape for the score matching discrepancy function, the package first tapes the map from a point \eqn{z} on the \code{end} manifold to the value of the improper log-likelihood, where the independent variable is the \eqn{z}, the dynamic parameter is a vector of the parameters to estimate, and the remaining model parameters are fixed and not estimated.
+This tape is then used to generate a tape for the score matching discrepancy function where the parameters to estimate are the independent variable.
 
 Only some combinations of \code{start}, \code{tran} and \code{end} are available because \code{tran} must map between \code{start} and \code{end}.
-These combinations of \code{start}-\code{tran}-\code{end} are available:
+These combinations of \code{start}-\code{tran}-\code{end} are currently available:
 \itemize{
 \item sim-sqrt-sph
 \item sim-identity-sim
@@ -125,10 +125,22 @@ These combinations of \code{start}-\code{tran}-\code{end} are available:
 \item sim-clr-Hn111
 \item sph-identity-sph
 }
+
+Currently available improper log-likelihood functions are:
+\itemize{
+\item dirichlet
+\item ppi
+\item vMF
+\item Bingham
+\item FB
+}
 }
 \section{Functions}{
 \itemize{
-\item \code{manifoldtransform()}: Build an object specifying the transformation to and from a manifold.
+\item \code{buildsmdtape()}: Combines
+\code{\link[=manifoldtransform]{manifoldtransform()}}, \code{\link[=tapell]{tapell()}}, and \code{\link[=tapesmd]{tapesmd()}}.
+
+\item \code{manifoldtransform()}: Build an object specifying the transformation from the natural domain of log-likelihood to another manifold.
 
 \item \code{tapell()}: Creates a \code{CppAD} tape of an improper log-likelihood as a function of values on the \code{end} manifold in \code{tranobj}. The Jacobian of the associated transformation is used to convert the log-likelihood on the natural manifold \code{start} of the log-likelihood to the \code{end} manifold.
 This conversion is needed to account for the change in measure between the manifolds.
@@ -144,12 +156,12 @@ Differentiation proceeds by \emph{taping} the basic (\emph{atomic}) operations p
 Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and \code{CppAD} has \href{https://cppad.readthedocs.io/en/latest/CondExp.html}{special tools for this}.
 The result of taping is an \href{https://cppad.readthedocs.io/en/latest/ADFun.html}{\code{ADFun}} object, often called a \emph{tape}.
 This \code{ADFun} object can be evaluated, differentiated, used for further taping (see \href{https://cppad.readthedocs.io/en/latest/base2ad.html}{base2ad}), solving differential equations and more.
-The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new \code{ADFun} object where the dynamic parameters have become independent variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
-For the purposes of score matching, there is a third type of parameter: the \emph{fixed} parameters, which are the elements of the model's parameter vector that are given and not estimated.
+The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new \code{ADFun} object where the dynamic parameters become independent variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
+For the purposes of score matching, there are also \emph{fixed} parameters, which are the elements of the model's parameter vector that are given and not estimated.
 }
 
 \section{Warning: multiple CPU}{
-Each time computations such as derivatives are performed the corresponding \verb{C++} object is altered. Parallel use of the same \code{ADFun} object thus requires care and is not tested. For now I recommend creating a new \code{ADFun} object for each CPU.
+Each time a tape is evaluated the corresponding \verb{C++} object is altered. Parallel use of the same \code{ADFun} object thus requires care and is not tested. For now I recommend creating a new \code{ADFun} object for each CPU.
 }
 
 \section{Warning}{

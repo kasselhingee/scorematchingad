@@ -19,7 +19,7 @@
 #' The full score matching estimator (`method = "smfull"`) estimates \eqn{\kappa \mu}.
 #' The hybrid estimator (`method = "Mardia"`) estimates \eqn{\kappa} and \eqn{\mu} separately.
 #' Both use [`cppad_closed()`] for score matching estimation.
-#' @param Y A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.
+#' @param Y A matrix of multivariate observations in Cartesian coordinates. Each row is a multivariate measurement (i.e. each row corresponds to an individual).
 #' @param paramvec `smfull` method only: Optional. A vector of same length as the dimension, representing the elements of the \eqn{\kappa \mu} vector. 
 #' @param method Either "Mardia" or "hybrid" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}
 #'  or "smfull" for the full score matching estimator.

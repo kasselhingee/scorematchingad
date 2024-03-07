@@ -2,9 +2,9 @@
 #' @param tranobj A transform object (of type `Rcpp_transform_ad`), typically created by [`manifoldtransform()`].
 #' @param man A transform object (of type `Rcpp_man_ad`) matching `tranobj`, and typically created by [`manifoldtransform()`].
 #' @param lltape Tape of the log-likelihood function constructed using [`tapell()`].
-#' @param bdryw The name of the boundary weight function ("ones" for manifolds without boundary). For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible.
-#' @param acut The threshold \eqn{a_c} in the boundary weight function `bdryw`. Ignored for `bdryw = "ones"`.
-#' @param verbose If `TRUE`, some information about the tape is printed.
+#' @param bdryw The name of the boundary weight function. "ones" for manifolds without boundary. For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible - see [`ppi()`] for more information on these.
+#' @param acut A parameter passed to the boundary weight function `bdryw`. Ignored for `bdryw = "ones"`.
+#' @param verbose If `TRUE` more details are printed when taping. These details are for debugging and will likely be comprehensible only to users familiar with the source code of this package.
 #' @return 
 #' `tapesmd()` returns an [`ADFun`] object.  
 #' @examples 

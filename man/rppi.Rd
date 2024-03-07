@@ -55,7 +55,7 @@ Given parameters of the PPI model, generates independent samples.
 \details{
 We recommend running \code{rppi()} a number of times to ensure the choice of \code{maxden} is good. \code{rppi()} will error when \code{maxden} is too low.
 
-The simulation uses a rejection-sampling algorithm with Dirichlet proposal \insertCite{@Appendix A.1.3 @scealy2022sc}{scorecompdir}.
+The simulation uses a rejection-sampling algorithm with Dirichlet proposal \insertCite{@Appendix A.1.3 @scealy2023sc}{scorecompdir}.
 Initially \code{n} Dirichlet proposals are generated. After rejection there are fewer samples remaining, say \eqn{n^*}{n*}.
 The ratio \eqn{n^*/n}{n*/n} is used to guess the number of new Dirichlet proposals to generate until \code{n} samples of the PPI model are reached.
 
@@ -64,7 +64,7 @@ Larger \code{maxmemorysize} leads to faster simulation so long as \code{maxmemor
 }
 \section{Functions}{
 \itemize{
-\item \code{rppi_egmodel()}: Simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2022sc}{scorecompdir} and returns both simulations and model parameters.
+\item \code{rppi_egmodel()}: Simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2023sc}{scorecompdir} and returns both simulations and model parameters.
 
 }}
 \examples{

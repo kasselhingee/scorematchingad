@@ -17,12 +17,12 @@ Differentiation proceeds by \emph{taping} the basic (\emph{atomic}) operations p
 Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and \code{CppAD} has \href{https://cppad.readthedocs.io/en/latest/CondExp.html}{special tools for this}.
 The result of taping is an \href{https://cppad.readthedocs.io/en/latest/ADFun.html}{\code{ADFun}} object, often called a \emph{tape}.
 This \code{ADFun} object can be evaluated, differentiated, used for further taping (see \href{https://cppad.readthedocs.io/en/latest/base2ad.html}{base2ad}), solving differential equations and more.
-The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new \code{ADFun} object where the dynamic parameters have become independent variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
-For the purposes of score matching, there is a third type of parameter: the \emph{fixed} parameters, which are the elements of the model's parameter vector that are given and not estimated.
+The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new \code{ADFun} object where the dynamic parameters become independent variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
+For the purposes of score matching, there are also \emph{fixed} parameters, which are the elements of the model's parameter vector that are given and not estimated.
 }
 
 \section{Warning: multiple CPU}{
-Each time computations such as derivatives are performed the corresponding \verb{C++} object is altered. Parallel use of the same \code{ADFun} object thus requires care and is not tested. For now I recommend creating a new \code{ADFun} object for each CPU.
+Each time a tape is evaluated the corresponding \verb{C++} object is altered. Parallel use of the same \code{ADFun} object thus requires care and is not tested. For now I recommend creating a new \code{ADFun} object for each CPU.
 }
 
 \examples{
@@ -48,7 +48,7 @@ tapes$smdtape$ptr
 
 \item{\code{dyntape}}{The (numeric) vector of dynamic parameters used for taping.}
 
-\item{\code{usertheta}}{A (numeric) vector of \code{NA} values and fixed values specifying the inputs of the taped function that were considered independent variables or dynamic parameters respectively.}
+\item{\code{usertheta}}{A (numeric) vector of \code{NA} values and fixed values specifying the parameters of taped function that were considered dynamic parameters or fixed parameters respectively.}
 
 \item{\code{name}}{An easy to read name for the taped function}
 }

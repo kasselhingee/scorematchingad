@@ -7,7 +7,7 @@
 vMF(Y, paramvec = NULL, method = "Mardia", w = rep(1, nrow(Y)))
 }
 \arguments{
-\item{Y}{A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.}
+\item{Y}{A matrix of multivariate observations in Cartesian coordinates. Each row is a multivariate measurement (i.e. each row corresponds to an individual).}
 
 \item{paramvec}{\code{smfull} method only: Optional. A vector of same length as the dimension, representing the elements of the \eqn{\kappa \mu} vector.}
 

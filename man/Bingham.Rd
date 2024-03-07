@@ -4,10 +4,10 @@
 \alias{Bingham}
 \title{Score matching estimators for the Bingham distribution}
 \usage{
-Bingham(Y, A = NULL, w = rep(1, nrow(Y)), method = "smfull")
+Bingham(Y, A = NULL, w = rep(1, nrow(Y)), method = "Mardia")
 }
 \arguments{
-\item{Y}{A matrix of multivariate observations in Cartesian coordinates. Each row is a measurement.}
+\item{Y}{A matrix of multivariate observations in Cartesian coordinates. Each row is a multivariate measurement (i.e. each row corresponds to an individual).}
 
 \item{A}{For full score matching only: if supplied, then NA elements of \code{A} are estimated and the other elements are fixed. For identifiability the final element of \code{diag(A)} must be \code{NA}.}
 
@@ -36,8 +36,9 @@ The full score matching method estimates all elements of \eqn{A} directly except
 
 The method by \insertCite{mardia2016sc;textual}{scorecompdir} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}.
 The observations \code{Y} are then standardised to \code{Y}\eqn{G}.
-After this standardisation, the non-diagonal elements of \eqn{A} are zero.
-The diagonal elements of \eqn{A} (which equals the eigenvalues of the pre-standadised \eqn{A}) are estimated using score matching, with the final element calculated from the sum of the other elements.
+This standardisation corresponds to diagonalising \eqn{A}
+where the eigenvalues of \eqn{A} become the diagonal elements of the new \eqn{A}.
+The diagonal elements of the new \eqn{A} are then estimated using score matching, with the final diagonal element calculated from the sum of the other elements.
 See \insertCite{mardia2016sc;textual}{scorecompdir} for details.
 }
 \examples{
