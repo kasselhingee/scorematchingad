@@ -18,12 +18,8 @@ Suggests:
     testthat,
     ks,
     movMF,
-    knitr, rmarkdown,
-	cubature,
-	dplyr, 
-	ggplot2,
+    cubature,
     simdd,
-    ggtern,
     numDeriv
 Depends: 
     R (>= 3.5.0)
@@ -44,5 +40,4 @@ LinkingTo:
     Rcpp (>= 1.0.9),
     RcppEigen (>= 0.3.3.7)
 Config/testthat/edition: 3
-VignetteBuilder: knitr
 

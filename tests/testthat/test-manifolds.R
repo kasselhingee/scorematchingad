@@ -49,7 +49,8 @@ test_that("sqrt transform matches other calculations", {
     inunitcube <- (colSums(xmat < 0) == 0) * (colSums(xmat > 1) == 0)
     Jdets <- exp(apply(zmat, MARGIN = 2, sqrt$logdetJfromM))
     return(matrix(Jdets * inunitcube, nrow = 1))
-  } 
+  }
+  if (!requireNamespace("cubature")){skip("Need cubature package")}
   volumeviaM <- cubature::hcubature(
     f = integrand,
     lowerLimit = c(0, 0),
@@ -94,6 +95,7 @@ test_that("alr transform matches analytic results",{
     Jdets <- exp(apply(zmat, MARGIN = 2, alr$logdetJfromM))
     return(matrix(Jdets, nrow = 1))
   } 
+  if (!requireNamespace("cubature")){skip("Need cubature package")}
   volume <- cubature::hcubature(
     f = integrand,
     lowerLimit = c(-1, -1) * 1E2,
@@ -155,6 +157,7 @@ test_that("clr transform passes analytic tests",{
     Jdets <- exp(apply(zmat, MARGIN = 2, clr_cpp$logdetJfromM))
     return(matrix(Jdets, nrow = 1))
   } 
+  if (!requireNamespace("cubature")){skip("Need cubature package")}
   volume <- cubature::hcubature(
     f = integrand,
     lowerLimit = c(-1, -1) * 1E1,
