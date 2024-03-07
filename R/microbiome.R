@@ -1,7 +1,7 @@
 #' 16s Microbiome Data for Soil-Transmitted Helminths
 #'
 #' The `microbiome` data contains paired DNA samples from before treatment and 21 months after treatment for helminth infections \insertCite{martin2019mi}{scorecompdir}.
-#' This data was analysed by \insertCite{martin2019mi;textual}{scorecompdir} and a further subset was studied by \insertCite{scealy2022sc;textual}{scorecompdir}.
+#' This data was analysed by \insertCite{martin2019mi;textual}{scorecompdir} and a further subset was studied by \insertCite{scealy2023sc;textual}{scorecompdir}.
 #' The data come from a study into the effect of helminth infections on the course of malaria infections (ImmunoSPIN-Malaria) in the Nangapanda subdistrict, Indonesia \insertCite{wiria2010do}{scorecompdir}.
 #' As part of the study, some participants were given 400mg of albendazole every three months for 1.5 years,
 #' remaining participants were given a placebo
@@ -12,12 +12,12 @@
 #' Gut microbiome prevalence was measured using 16s rRNA 454 sequencing \insertCite{martin2019mi}{scorecompdir}.
 #' Helminth infections were detected by PCR or microscopy \insertCite{martin2019mi}{scorecompdir}.
 #' 
-#' The subset studied by  \insertCite{scealy2022sc;textual}{scorecompdir} contained only the measurements from before treatment, and only those individuals with a helminth infection.
+#' The subset studied by  \insertCite{scealy2023sc;textual}{scorecompdir} contained only the measurements from before treatment, and only those individuals with a helminth infection.
 #' These measurements can be obtained by running
 #' ```
 #' microbiome[(microbiome$Year == 2008) & microbiome$Helminth, ]
 #' ```
-#' Two further individuals (`IndividualID` of `2079` and `2280`) were deemed outliers by \insertCite{scealy2022sc;textual}{scorecompdir}, and removed in their analyses.
+#' Two further individuals (`IndividualID` of `2079` and `2280`) were deemed outliers by \insertCite{scealy2023sc;textual}{scorecompdir}, and removed in their analyses.
 #'
 #' # Modifications from the Source
 #' The `microbiome` data was created from the file `S1_Table.xlsx` hosted on [Nematode.net](http://nematode.net/Data/environmental_interaction/S1_Table.xlsx) using the below code.

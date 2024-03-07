@@ -2,9 +2,9 @@
 #' @order 1
 #' @family PPI model tools
 #' @description 
-#' Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2022sc}{scorecompdir} for compositional data.
-#' For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2022sc}{scorecompdir}.
-#' In the other situations, the score matching estimate is found by iteratively minimising the *weighted Hyvärinen divergence* \insertCite{@Equation 13, @scealy2022sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (`CppAD`) and [`optimx::Rcgmin()`].
+#' Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2023sc}{scorecompdir} for compositional data.
+#' For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2023sc}{scorecompdir}.
+#' In the other situations, the score matching estimate is found by iteratively minimising the *weighted Hyvärinen divergence* \insertCite{@Equation 13, @scealy2023sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (`CppAD`) and [`optimx::Rcgmin()`].
 
 #' @section PPI Model:
 #' The PPI model density is proportional to
@@ -15,20 +15,20 @@
 #' The \eqn{i}th component of \eqn{\beta} controls the concentration of density when the \eqn{i}th component is close to zero.
 #' 
 #' @details
-#' Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and *weighted Hyvärinen divergence* \insertCite{@Equation 7, @scealy2022sc}{scorecompdir} is used.
+#' Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and *weighted Hyvärinen divergence* \insertCite{@Equation 7, @scealy2023sc}{scorecompdir} is used.
 #'
 #' There are three boundary weight functions available:
 #' * The function "ones" applies no weights and should be used whenever the manifold does not have a bounday.
-#' * The function "minsq" is the minima-based boundary weight function for the PPI model \insertCite{@Equation 12, @scealy2022sc}{scorecompdir}
+#' * The function "minsq" is the minima-based boundary weight function for the PPI model \insertCite{@Equation 12, @scealy2023sc}{scorecompdir}
 #' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
 #' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 #' and \eqn{z_j}{zj} is the jth component of z.
-#' * The function "prodsq" is the product-based \insertCite{@Equation 9, @scealy2022sc}{scorecompdir}
+#' * The function "prodsq" is the product-based \insertCite{@Equation 9, @scealy2023sc}{scorecompdir}
 #' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2),}
 #' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 #' and \eqn{z_j}{zj} is the jth component of z.
 #'
-#' Scealy and Wood \insertCite{@Theorem 1, @scealy2022sc}{scorecompdir} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See __Score Matching__ in [`scorecompdir-package`])
+#' Scealy and Wood \insertCite{@Theorem 1, @scealy2023sc}{scorecompdir} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See __Score Matching__ in [`scorecompdir-package`])
 #' when the boundary weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
 #'
 #' Hard-coded estimators are available for the following situations:
