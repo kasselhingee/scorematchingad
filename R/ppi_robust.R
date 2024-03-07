@@ -18,6 +18,7 @@
 #'   trans = "sqrt", bdryw = "minsq", acut = 0.1)
 #' @export
 ppi_robust <- function(Y, cW, ...){
+  ellipsis::check_dots_used()
   ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
     return(drop(dppi(Y, paramvec = theta)))
   }

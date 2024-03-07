@@ -139,6 +139,7 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
 #' dppi(m$sample, paramvec = m$theta)
 #' @export
 dppi <- function(Y, ..., paramvec = NULL){
+  ellipsis::check_dots_used()
   #process inputs
   if (is.null(paramvec)){
     paramvec <- ppi_paramvec(...)
