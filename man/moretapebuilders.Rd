@@ -7,7 +7,7 @@
 \alias{tapeGradOffset}
 \alias{tapeLogJacDet}
 \alias{tapeSwap}
-\title{Build New \code{CppAD} Tapes from Existing Tapes}
+\title{Build New Tapes from Existing Tapes}
 \usage{
 tapeJacobian(tape)
 
@@ -26,10 +26,10 @@ tapeSwap(tape)
 An \code{\link{ADFun}} object.
 }
 \description{
-Build new \code{CppAD} tapes from existing tapes, including differentiation, swapping independent and dynamic variables, and Jacobian determinants.
+Build new tapes (i.e \code{\link{ADFun}} objects) from existing tapes, including differentiation, swapping independent variables and dynamic parameters, and Jacobian determinants.
 }
 \details{
-The information in the fields \code{xtape} and \code{dyntape} of \code{tape} are used for the taping.
+The information in the fields \code{xtape} and \code{dyntape} of \code{tape} are used to perform the taping.
 
 \subsection{tapeJacobian}{
 
@@ -38,16 +38,17 @@ The returned vector is ordered with the range elements iterating fastest, then t
 
 \subsection{tapeHessian}{
 
-Suppose the function represented by \code{tape} maps from \eqn{n}-dimensional space to \eqn{1}-dimensional space, then
-the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
-The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
-The Hessian as a matrix, can be obtained by using \code{\link[=matrix]{matrix()}} with \code{ncol = n}.
+Suppose the function represented by \code{tape} maps from \eqn{d}-dimensional space to \eqn{1}-dimensional space, then
+the first \eqn{d} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
+The next \eqn{d} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
+The Hessian as a matrix, can be obtained by using \code{\link[=matrix]{matrix()}} with \code{ncol = d}.
 }
 
 \subsection{tapeGradOffset}{
 
 A quadratic function can be written as
-\deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
+\deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c,}
+where the vector \eqn{x} is the independent variable of \code{tape} and the vector \eqn{\theta} is the dynamic parameter vector of \code{tape}.
 The gradient of \eqn{f(x; \theta)} with respect to \eqn{x} is
 \deqn{\Delta f(x; \theta) = \frac{1}{2}(W(\theta) + W(\theta)^T)x + b(\theta).}
 The Hessian is
@@ -72,8 +73,8 @@ The function \code{tapeGradOffset} creates a tape of \eqn{b(\theta)} where \eqn{
 
 \item \code{tapeLogJacDet()}: Creates a tape of the log of the Jacobian determinant of a function taped in \code{tape}.
 
-\item \code{tapeSwap()}: Convert an ADFun so that the independent values become dynamic parameters
-and the dynamic parameters become independent values.
+\item \code{tapeSwap()}: Convert an ADFun so that the independent variables become dynamic parameters
+and the dynamic parameters become independent variables.
 
 }}
 \examples{

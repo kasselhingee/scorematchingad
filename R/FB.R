@@ -10,10 +10,10 @@
 #' Y <- simdd::rFisherBingham(1000, 2 * m, A)
 #' FB(Y)
 #' @inheritParams vMF
-#' @param km Optional. A vector of same length as the dimension, representing the parameter vector for the von Mises-Fisher component (i.e. the \eqn{\kappa \mu} see [`vMF()`]).
+#' @param km Optional. A vector of the same length as the dimension, representing the parameter vector for the von Mises-Fisher component (i.e. the \eqn{\kappa \mu} see [`vMF()`]).
 #' If supplied, the non-NA elements are fixed.
 #' @param A Optional. The Bingham matrix. If supplied the non-NA elements of the Bingham matrix are fixed.
-#' The final element of the diagonal of `A` must be NA as the software calculates this value to ensure the trace is zero.
+#' The final element of the diagonal of `A` must be NA as the software calculates this value to ensure the trace of the Bingham matrix is zero.
 #' @details
 #' The density of the Fisher-Bingham distribution is proportional to 
 #' \deqn{\exp(z^TAz + \kappa\mu^Tz),}

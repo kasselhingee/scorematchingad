@@ -19,9 +19,9 @@ evaltape_wsum(
 \arguments{
 \item{tape}{An \code{\link{ADFun}} object (i.e. a tape of a function).}
 
-\item{xmat}{A matrix of (multivariate) independent variables. Each represents a single independent variable vector. Or a single vector of that is used for all rows of \code{pmat}.}
+\item{xmat}{A matrix of (multivariate) independent variables where each represents a single independent variable vector. Or a single independent variable vector that is used for all rows of \code{pmat}.}
 
-\item{pmat}{A matrix of dynamic parameters. Or a single vector of dynamic parameters to use for all rows of \code{xmat}.}
+\item{pmat}{A matrix of dynamic parameters where each row specifies a new set of values for the dynamic parameters of \code{tape}. Or a single vector of dynamic parameters to use for all rows of \code{xmat}.}
 
 \item{xcentres}{A matrix of approximation for Taylor approximation centres for \code{xmat}. Use values of \code{NA} for rows that do not require Taylor approximation.}
 
@@ -30,7 +30,7 @@ evaltape_wsum(
 \item{w}{Weights to apply to each row of \code{xmat} for computing the weighted sum. If \code{NULL} then each row is given a weight of \code{1}.}
 }
 \value{
-A matrix, each row corresponding to the evaluation of the same row in \code{xmat}, \code{pmat} and the \code{xcentres}.
+A matrix, each row corresponding to the evaluation of the same row in \code{xmat}, \code{pmat} and \code{xcentres}.
 }
 \description{
 Evaluates a tape exactly or approximately for an array of provided variable values and dynamic parameter values.

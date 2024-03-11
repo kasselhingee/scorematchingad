@@ -1,8 +1,8 @@
 #' @title Simple wrapper to evaluate CppAD tapes and derivatives many times
 #' @family tape evaluators
 #' @param tape An [`ADFun`] object (i.e. a tape of a function).
-#' @param xmat A matrix of (multivariate) independent variables. Each represents a single independent variable vector. Or a single vector of that is used for all rows of `pmat`.
-#' @param pmat A matrix of dynamic parameters. Or a single vector of dynamic parameters to use for all rows of `xmat`.
+#' @param xmat A matrix of (multivariate) independent variables where each represents a single independent variable vector. Or a single independent variable vector that is used for all rows of `pmat`.
+#' @param pmat A matrix of dynamic parameters where each row specifies a new set of values for the dynamic parameters of `tape`. Or a single vector of dynamic parameters to use for all rows of `xmat`.
 #' @param xcentres A matrix of approximation for Taylor approximation centres for `xmat`. Use values of `NA` for rows that do not require Taylor approximation.
 #' @param approxorder Order of Taylor approximation
 #' @description Evaluates a tape exactly or approximately for an array of provided variable values and dynamic parameter values.
@@ -10,7 +10,7 @@
 #' @details
 #' Approximation is via Taylor approximation of the independent variable around the approximation centre provided in `xcentres`.
 #' @return
-#' A matrix, each row corresponding to the evaluation of the same row in `xmat`, `pmat` and the `xcentres`.
+#' A matrix, each row corresponding to the evaluation of the same row in `xmat`, `pmat` and `xcentres`.
 #' @examples
 #' u <- rep(1/3, 3)
 #' tapes <- buildsmdtape("sim", "sqrt", "sph", "ppi",

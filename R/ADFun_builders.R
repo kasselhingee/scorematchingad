@@ -1,10 +1,10 @@
 #' @name moretapebuilders
-#' @title Build New `CppAD` Tapes from Existing Tapes
-#' @description Build new `CppAD` tapes from existing tapes, including differentiation, swapping independent and dynamic variables, and Jacobian determinants.
+#' @title Build New Tapes from Existing Tapes
+#' @description Build new tapes (i.e [`ADFun`] objects) from existing tapes, including differentiation, swapping independent variables and dynamic parameters, and Jacobian determinants.
 #' @family tape builders
 #' @param tape An [`ADFun`] object.
 #' @return An [`ADFun`] object.
-#' @details The information in the fields `xtape` and `dyntape` of `tape` are used for the taping.
+#' @details The information in the fields `xtape` and `dyntape` of `tape` are used to perform the taping.
 #' @seealso [`ADFun`]
 #' @examples
 #' tapes <- buildsmdtape("sph", "identity", "sph", "vMF",
@@ -35,10 +35,10 @@ tapeJacobian <- function(tape){
 #' @describeIn moretapebuilders Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see <https://cppad.readthedocs.io/en/latest/Hessian.html>).
 #' @details
 #' ## tapeHessian
-#' Suppose the function represented by `tape` maps from \eqn{n}-dimensional space to \eqn{1}-dimensional space, then
-#' the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
-#' The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
-#' The Hessian as a matrix, can be obtained by using [`matrix()`] with `ncol = n`.
+#' Suppose the function represented by `tape` maps from \eqn{d}-dimensional space to \eqn{1}-dimensional space, then
+#' the first \eqn{d} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
+#' The next \eqn{d} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
+#' The Hessian as a matrix, can be obtained by using [`matrix()`] with `ncol = d`.
 #' @export
 tapeHessian <- function(tape){
   stopifnot(inherits(tape, "ADFun"))
@@ -56,7 +56,8 @@ tapeHessian <- function(tape){
 #' @details
 #' ## tapeGradOffset
 #' A quadratic function can be written as
-#' \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
+#' \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c,}
+#' where the vector \eqn{x} is the independent variable of `tape` and the vector \eqn{\theta} is the dynamic parameter vector of `tape`.
 #' The gradient of \eqn{f(x; \theta)} with respect to \eqn{x} is
 #' \deqn{\Delta f(x; \theta) = \frac{1}{2}(W(\theta) + W(\theta)^T)x + b(\theta).}
 #' The Hessian is 
@@ -92,8 +93,8 @@ tapeLogJacDet <- function(tape){
 }
 
 #' @describeIn moretapebuilders
-#' Convert an ADFun so that the independent values become dynamic parameters
-#' and the dynamic parameters become independent values.
+#' Convert an ADFun so that the independent variables become dynamic parameters
+#' and the dynamic parameters become independent variables.
 #' @export
 tapeSwap <- function(tape){
   stopifnot(inherits(tape, "ADFun"))
