@@ -30,7 +30,7 @@ ppiltheta2p <- function(ltheta){#ltheta is length of theta
   return(p)
 }
 
-#' @rdname ppi_param
+#' @rdname ppi_param_tools
 #' @order 3
 #' @title Convert a PPI Parameter Vector to AL, bL and beta
 #' @family PPI model tools

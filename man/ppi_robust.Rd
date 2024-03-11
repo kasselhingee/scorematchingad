@@ -58,7 +58,7 @@ ppi_robust_alrgengamma(model$sample,
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_param}},
+\code{\link{ppi_param_tools}},
 \code{\link{ppi}()},
 \code{\link{rppi}()}
 
@@ -68,7 +68,7 @@ Other Windham robustness functions:
 
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_param}},
+\code{\link{ppi_param_tools}},
 \code{\link{ppi}()},
 \code{\link{rppi}()}
 

@@ -7,35 +7,40 @@
 dppi(Y, ..., paramvec = NULL)
 }
 \arguments{
-\item{Y}{A matrix of locations in the simplex. Each row is a location, each column a component.}
+\item{Y}{A matrix of measurements in the simplex. Each row is a multivariate measurement.}
 
 \item{...}{
   Arguments passed on to \code{\link[=ppi_paramvec]{ppi_paramvec}}
   \describe{
+    \item{\code{AL}}{Either \code{NULL}, a p-1 x p-1 symmetric matrix, a number, or "diag".
+If NULL then all \eqn{A_L} elements will be set to NA.
+If a single number, then \eqn{A_L} will be fixed as a matrix of the given value.
+If "diag" then the non-diagonal elements of \eqn{A_L} will be fixed to 0, and the diagonal will be \code{NA}.}
+    \item{\code{bL}}{Either \code{NULL}, a number, or a vector of length p-1.
+If \code{NULL}, then all elements of \eqn{b_L} will be set to \code{NA}.
+If a single number, then \eqn{b_L} will be fixed at the supplied value.}
     \item{\code{beta}}{Either \code{NULL}, a number, or a vector of length p.
-If NULL then all elements of \eqn{\beta} will be set to \code{NA}, and \code{\link[=ppi]{ppi()}} will estimate them.
-If a number then the \eqn{\beta} elements will be fixed at the given number.}
+If NULL then all elements of \eqn{\beta} will be set to \code{NA}.
+If a single number then the \eqn{\beta} elements will be fixed at the given number.}
     \item{\code{betaL}}{Either \code{NULL}, a number, or a vector of length p-1.
-If \code{NULL} then the 1...(p-1)th \eqn{\beta} elements will be set to \code{NA}, and \code{\link[=ppi]{ppi()}} will estimate them.
-If a number then the 1...(p-1)th \eqn{\beta} elements fixed at the given number.}
+If \code{NULL} then the 1...(p-1)th \eqn{\beta} elements will be set to \code{NA}.
+If a single number then the 1...(p-1)th \eqn{\beta} elements will be fixed at the given number.}
     \item{\code{betap}}{Either \code{NULL} or a number.
 If \code{NULL} then the \code{p}th element of \eqn{\beta} will be set to \code{NA}, and \code{\link[=ppi]{ppi()}} will estimate it.
 If a number, then the pth element of \eqn{\beta} will be fixed at the given value.}
     \item{\code{p}}{The number of components. If \code{NULL} then \code{p} will be inferred from other inputs.}
-    \item{\code{AL}}{The \code{p-1} by \code{p-1} \eqn{A_L} matrix}
-    \item{\code{bL}}{The vector \eqn{b_L} (length \code{p-1}).}
     \item{\code{Astar}}{The \eqn{A^*} matrix (a p by p symmetric matrix)}
   }}
 
-\item{paramvec}{The PPI parameter vector, created easily using \code{\link[=ppi_paramvec]{ppi_paramvec()}} and also returned by \code{\link[=ppi]{ppi()}}.}
+\item{paramvec}{The PPI parameter vector, created easily using \code{\link[=ppi_paramvec]{ppi_paramvec()}} and also returned by \code{\link[=ppi]{ppi()}}. Use \code{paramvec} instead of \code{...}.}
 }
 \description{
-Compute the \strong{natural logarithm} of the improper density for the PPI model for the given matrix of locations \code{Y}. Rows with negative values or with a sum that is more than \code{1E-15} from \code{1} are assigned a value of \code{-Inf}.
+Compute the \strong{natural logarithm} of the improper density for the PPI model for the given matrix of measurements \code{Y}. Rows with negative values or with a sum that differs from \code{1} by more than \code{1E-15} are assigned a value of \code{-Inf}.
 }
 \details{
 The value calculated by \code{dppi} is
 \deqn{z_L^TA_Lz_L + b_L^Tz_L + \beta^T \log(z),}
-where \eqn{z} is the multivariate observation, and \eqn{z_L} ommits the final element of \eqn{z}.
+where \eqn{z} is the multivariate observation (i.e. a row of \code{Y}), and \eqn{z_L} ommits the final element of \eqn{z}.
 }
 \examples{
 m <- rppi_egmodel(10)
@@ -43,7 +48,7 @@ dppi(m$sample, paramvec = m$theta)
 }
 \seealso{
 Other PPI model tools: 
-\code{\link{ppi_param}},
+\code{\link{ppi_param_tools}},
 \code{\link{ppi_robust}()},
 \code{\link{ppi}()},
 \code{\link{rppi}()}

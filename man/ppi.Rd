@@ -148,13 +148,13 @@ estsqrt <- ppi(model$sample,
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_param}},
+\code{\link{ppi_param_tools}},
 \code{\link{ppi_robust}()},
 \code{\link{rppi}()}
 
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_param}},
+\code{\link{ppi_param_tools}},
 \code{\link{ppi_robust}()},
 \code{\link{rppi}()}
 }

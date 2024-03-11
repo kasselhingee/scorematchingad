@@ -3,7 +3,7 @@
 #' @family PPI model tools
 #' @description Given parameters of the PPI model, generates independent samples.
 #' @param n Sample size
-#' @param paramvec The PPI parameter vector, created easily using [`ppi_paramvec()`] and also returned by [`ppi()`].
+#' @param paramvec The PPI parameter vector, created easily using [`ppi_paramvec()`] and also returned by [`ppi()`]. Use `paramvec` instead of `...`.
 #' @param maxden This is the constant \eqn{log(C)} in \insertCite{@Appendix A.1.3 @scealy2023sc}{scorecompdir}.
 #' @param maxmemorysize Advanced use. The maximum size, in bytes, for matrices containing simulated Dirchlet samples. The default of `1E5` corresponds to 100 mega bytes.
 #' @return A matrix with `n` rows and `p` columns. Each row is an independent draw from the specified PPI distribution.
@@ -127,13 +127,14 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
 
 #' @title Improper Log-Density of the PPI Model
 #' @family PPI model tools
-#' @description Compute the __natural logarithm__ of the improper density for the PPI model for the given matrix of locations `Y`. Rows with negative values or with a sum that is more than `1E-15` from `1` are assigned a value of `-Inf`.
-#' @param Y A matrix of locations in the simplex. Each row is a location, each column a component.
+#' @description Compute the __natural logarithm__ of the improper density for the PPI model for the given matrix of measurements `Y`. Rows with negative values or with a sum that differs from `1` by more than `1E-15` are assigned a value of `-Inf`.
+#' @param Y A matrix of measurements in the simplex. Each row is a multivariate measurement.
 #' @inheritParams rppi
+#' @param ... Arguments passed on to [`ppi_paramvec()`].
 #' @inheritDotParams ppi_paramvec
 #' @details The value calculated by `dppi` is
 #' \deqn{z_L^TA_Lz_L + b_L^Tz_L + \beta^T \log(z),}
-#' where \eqn{z} is the multivariate observation, and \eqn{z_L} ommits the final element of \eqn{z}.
+#' where \eqn{z} is the multivariate observation (i.e. a row of `Y`), and \eqn{z_L} ommits the final element of \eqn{z}.
 #' @examples
 #' m <- rppi_egmodel(10)
 #' dppi(m$sample, paramvec = m$theta)

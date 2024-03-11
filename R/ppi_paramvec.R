@@ -8,31 +8,31 @@
 #' An alternative parametrisation of the PPI model uses a single `p` by `p`  matrix \eqn{A^*} instead of \eqn{A_L} and \eqn{b_L}, and for identifiability \eqn{A^*} is such that \eqn{1^T A^* 1 = 0} where \eqn{1=(1,1,...,1)} and \eqn{0=(0,0,...0)} \insertCite{scealy2023sc}{scorecompdir}.
 #' Convert between parametrisations using `ppi_toAstar()` and `ppi_fromAstar()`.
 #' @inheritSection ppi PPI Model
-#' @rdname ppi_param
-#' @name ppi_param
+#' @rdname ppi_param_tools
+#' @name ppi_param_tools
 NULL
 
-#' @rdname ppi_param
+#' @rdname ppi_param_tools
 #' @order 2
 #' @return `ppi_paramvec()`: a vector of length \eqn{p + (p-1)(2 + (p-1)/2)}.
 #' @details
 #' `ppi_paramvec()` returns a vector starting with the diagonal elements of \eqn{A_L}, then the off-diagonal elements extracted by [`upper.tri()`] (which extracts elements of \eqn{A_L} along each row, left to right, then top to bottom), then \eqn{b_L}, then \eqn{\beta}.
 #' @param AL Either `NULL`, a p-1 x p-1 symmetric matrix, a number, or "diag".
-#' If NULL then all \eqn{A_L} elements will be set to NA, and [ppi()] will estimate them.
+#' If NULL then all \eqn{A_L} elements will be set to NA.
 #' If a single number, then \eqn{A_L} will be fixed as a matrix of the given value.
-#' If "diag" then the non-diagonal elements of \eqn{A_L} will be fixed to 0, and the diagonal will be `NA` (and estimated by [`ppi()`]).
+#' If "diag" then the non-diagonal elements of \eqn{A_L} will be fixed to 0, and the diagonal will be `NA`.
 #' @param bL Either `NULL`, a number, or a vector of length p-1.
-#' If `NULL`, then all elements of \eqn{b_L} will be set to `NA`, and [ppi()] will estimate them.
-#' If a number, then \eqn{b_L} will be fixed at the supplied value.
+#' If `NULL`, then all elements of \eqn{b_L} will be set to `NA`.
+#' If a single number, then \eqn{b_L} will be fixed at the supplied value.
 #' @param Astar  Either `NULL` or a p x p matrix.
 #' If non-null, then overrides `AL` and `bL`.
 #' If a matrix, all elements must be non-`NA` and `Astar` will be converted to `AL` and `bL` using [`ppi_fromAstar()`].
 #' @param beta Either `NULL`, a number, or a vector of length p.
-#' If NULL then all elements of \eqn{\beta} will be set to `NA`, and [`ppi()`] will estimate them.
-#' If a number then the \eqn{\beta} elements will be fixed at the given number.
+#' If NULL then all elements of \eqn{\beta} will be set to `NA`.
+#' If a single number then the \eqn{\beta} elements will be fixed at the given number.
 #' @param betaL Either `NULL`, a number, or a vector of length p-1.
-#' If `NULL` then the 1...(p-1)th \eqn{\beta} elements will be set to `NA`, and [`ppi()`] will estimate them.
-#' If a number then the 1...(p-1)th \eqn{\beta} elements fixed at the given number.
+#' If `NULL` then the 1...(p-1)th \eqn{\beta} elements will be set to `NA`.
+#' If a single number then the 1...(p-1)th \eqn{\beta} elements will be fixed at the given number.
 #' @param betap Either `NULL` or a number.
 #' If `NULL` then the `p`th element of \eqn{\beta} will be set to `NA`, and [`ppi()`] will estimate it.
 #' If a number, then the pth element of \eqn{\beta} will be fixed at the given value.
