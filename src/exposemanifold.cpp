@@ -19,7 +19,7 @@ manifold<a1type> * newmanifold(const std::string &manifoldname){
 }
 
 // manifold object finalizer (aka memory free-er)
-void delmanifold(const manifold<a1type> * ptr){
+void delmanifold(manifold<a1type> * ptr){
   delete ptr;
 }
 
@@ -42,7 +42,7 @@ transform<a1type> * newtransform(const std::string &name){
 }
 
 // transform object finalizer (aka memory free-er)
-void deltransform(const transform<a1type> * ptr){
+void deltransform(transform<a1type> * ptr){
   delete ptr;
 }
 
