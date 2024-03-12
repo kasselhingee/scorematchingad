@@ -4,16 +4,13 @@
 #' Uses [`pParameter()`] and derivatives [`tapeJacobian()`], [`pJacobian()`] to test whether
 #' the tape is quadratic.
 #' @param tape An `ADFun` object.
-#' @param xmat If passed, the third-order derivatives at values of the rows of `xmat` are tested.
-#' @param dynparammat The dynamic parameters for the tape. If passed, the rows of `dynparammat` are passed to the tape as `dynparam`.
-#' @param verbose If TRUE information about the failed tests is passed.
+#' @param xmat If non-`NULL` and `dynparamat` non-`NULL` then the third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynparammat` are tested.
+#' @param dynparammat If non-`NULL` and `xmat` non-`NULL` then the third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynparammat` are tested.
+#' @param verbose If TRUE information about the failed tests is printed.
 #' @details Uses the `xtape` and `dyntape` values stored in `tape` to create new tapes.
-#' A tape of Hessian is obtained by applying [`tapeJacobian()`] twice. Using [`tapeHessian()`] directly did not show the correct constant parameters via [`pParameter()`] in tests.
+#' A tape of the Hessian is obtained by applying [`tapeJacobian()`] twice, and then uses a [`CppAD` property](https://cppad.readthedocs.io/latest/fun_property.html#parameter) to test whether the Hessian is constant. A function of quadratic form should have constant Hessian.
 #'
-#' Two tests are conducted on the tape of the Hessian.
-#' For a function of quadratic form, [`pParameter()`] should return a vector of `TRUE` values.
-#' The other test evaluates the Jacobian at each row of `xmat` and `dynparammat` (if `xmat` and `dynparammat` are non-NULL). The result should be zero when `tape` represents a function of quadratic form.
-#' If the results of the tests differ the returned value is `FALSE` and a message is printed indicating which test failed.
+#' If `xmat` and `dynparammat` are non-`NULL` then `testquadratic()` also checks the Jacobian of the Hessian at `xmat` and `dynparammat` values. For quadratic form functions the Jacobian of the Hessian should be zero.
 #' @return `TRUE` or `FALSE`
 #' @examples
 #' tapes <- buildsmdtape(

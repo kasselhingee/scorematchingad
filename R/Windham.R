@@ -20,20 +20,19 @@
 
 #' @details
 #' For any family of models with density \eqn{f(z; \theta)}, Windham's method finds the parameter set \eqn{\hat\theta} such that the estimator applied to observations weighted by \eqn{f(z; \hat\theta)^c} returns an estimate that matches the theoretical effect of weighting the full population of the model.
-#' When \eqn{f} is proportional to \eqn{\exp(\eta(\theta) \cdot T(z))} and \eqn{\eta(\theta)} is linear, then these weights are equivalent to \eqn{f(z; c\hat\theta)} and the theoretical effect of the weighting on the full population is to scale the parameter vector \eqn{\theta} by \eqn{1+c}.
-#' The function `Windham()` assumes that this is the case, and allows a generalisation where \eqn{c} is a vector so the weight for an observation \eqn{z} is \deqn{f(z; c \circ \theta),} where \eqn{f} is the proposed model density function,  \eqn{\theta} is the parameter vector, \eqn{c} is a vector of tuning constants, and \eqn{\circ} is the element-wise product (Hadamard product).
+#' When \eqn{f} is proportional to \eqn{\exp(\eta(\theta) \cdot T(z))} and \eqn{\eta(\theta)} is linear, these weights are equivalent to \eqn{f(z; c\hat\theta)} and the theoretical effect of the weighting on the full population is to scale the parameter vector \eqn{\theta} by \eqn{1+c}.
+#'
+#' The function `Windham()` assumes that \eqn{f} is proportional to \eqn{\exp(\eta(\theta) \cdot T(z))} and \eqn{\eta(\theta)} is linear. It allows a generalisation where \eqn{c} is a vector so the weight for an observation \eqn{z} is \deqn{f(z; c \circ \theta),} where \eqn{\theta} is the parameter vector, \eqn{c} is a vector of tuning constants, and \eqn{\circ} is the element-wise product (Hadamard product).
 #'
 #' The solution is found iteratively \insertCite{windham1995ro}{scorecompdir}. 
 #' Given a parameter set \eqn{\theta_n}, `Windham()` first computes weights \eqn{f(z; c \circ \theta_n)} for each observation \eqn{z}.
 #' Then, a new parameter set \eqn{\tilde{\theta}_{n+1}} is estimated by `estimator` with the computed weights.
 #' This new parameter set is element-wise-multiplied by the (element-wise) reciprical of \eqn{1+c} to obtain an adjusted parameter set \eqn{\theta_{n+1}}.
 #' The estimate returned by `Windham()` is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n \approx \theta_{n+1}}.
-#'
-#' An exponential model with a base rate may be used with `Windham()` so long as the base rate is omitted from `ldenfun` (i.e. not used for weighting).
 #' @family Windham robustness functions
 #' @return
 #' A list:
-#' * `theta` the estimated parameter vector
+#' * `paramvec` the estimated parameter vector
 #' * `optim` information about the fixed point iterations and opimisation process. Including a slot `finalweights` for the weights in the final iteration.
 #' @examples
 #' if (requireNamespace("movMF")){
@@ -162,7 +161,8 @@ Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "S
     warning("More than 10% of weights are extremely small (smaller than 1E-10 / nrow(Y)) and are being treated like outliers. The fixed point search may have gone in an extreme direction. Are there too many parameters in the model?")
   }
 
-  return(list(theta = theta,
+  return(list(paramvec = theta,
+           theta = theta,
            optim = c(est, list(finalweights = weight_vec))))
 }
 
@@ -171,11 +171,11 @@ Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "S
 #' @param cW A vector of tuning constants for the Windham robustification method performed by [`Windham()`].
 #' @return A diagonal matrix with the same number of columns as `cW`.
 #' @details 
-#' In the Windham robustification method the effect of weighting a population plays a central role.
+#' In the Windham robustification method ([`Windham()`]) the effect of weighting a population plays a central role.
 #' When the 
-#' the model density is proportional to \eqn{\exp(\eta(\theta) \cdot t(u))},
-#' where \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u},
-#' and \eqn{\eta} a *linear* function,
+#' the model density is proportional to \eqn{\exp(\eta(\theta) \cdot T(u))},
+#' where \eqn{T(u)} is a vector of sufficient statistics for a measurement \eqn{u},
+#' and \eqn{\eta} is a *linear* function,
 #' Then weights proportional to 
 #' \eqn{\exp(\eta(c \circ \theta) \cdot t(u))},
 #' where \eqn{c} is a vector of tuning constants and \eqn{\circ} is the Hadamard (element-wise) product,

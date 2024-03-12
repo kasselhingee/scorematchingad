@@ -28,7 +28,6 @@ A list of \code{est}, \code{SE} and \code{info}.
 In general the normalising constant in von Mises Fisher distributions is hard to compute, so \insertCite{mardia2016sc;textual}{scorecompdir} suggested a hybrid method that uses maximum likelihood to estimate the mean direction and score matching for the concentration.
 We can also estimate all parameters using score matching (\code{smfull} method), although this estimator is likely to be less efficient than the hybrid estimator.
 On the circle the hybrid estimators were often nearly as efficient as maximum likelihood estimators \insertCite{mardia2016sc}{scorecompdir}.
-This may be the case for higher dimensions too, despite the more complex approximations required for the maximum likelihood estimators.
 For maximum likelihood estimators of the von Mises Fisher distribution, which all use approximations of the normalising constant, consider \code{\link[movMF:movMF]{movMF::movMF()}}.
 }
 \details{

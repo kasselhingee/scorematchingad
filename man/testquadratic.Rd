@@ -9,11 +9,11 @@ testquadratic(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE)
 \arguments{
 \item{tape}{An \code{ADFun} object.}
 
-\item{xmat}{If passed, the third-order derivatives at values of the rows of \code{xmat} are tested.}
+\item{xmat}{If non-\code{NULL} and \code{dynparamat} non-\code{NULL} then the third-order derivatives at independent variable values of the rows of \code{xmat} and dynamic parameters from the rows of \code{dynparammat} are tested.}
 
-\item{dynparammat}{The dynamic parameters for the tape. If passed, the rows of \code{dynparammat} are passed to the tape as \code{dynparam}.}
+\item{dynparammat}{If non-\code{NULL} and \code{xmat} non-\code{NULL} then the third-order derivatives at independent variable values of the rows of \code{xmat} and dynamic parameters from the rows of \code{dynparammat} are tested.}
 
-\item{verbose}{If TRUE information about the failed tests is passed.}
+\item{verbose}{If TRUE information about the failed tests is printed.}
 }
 \value{
 \code{TRUE} or \code{FALSE}
@@ -24,12 +24,9 @@ the tape is quadratic.
 }
 \details{
 Uses the \code{xtape} and \code{dyntape} values stored in \code{tape} to create new tapes.
-A tape of Hessian is obtained by applying \code{\link[=tapeJacobian]{tapeJacobian()}} twice. Using \code{\link[=tapeHessian]{tapeHessian()}} directly did not show the correct constant parameters via \code{\link[=pParameter]{pParameter()}} in tests.
+A tape of the Hessian is obtained by applying \code{\link[=tapeJacobian]{tapeJacobian()}} twice, and then uses a \href{https://cppad.readthedocs.io/latest/fun_property.html#parameter}{\code{CppAD} property} to test whether the Hessian is constant. A function of quadratic form should have constant Hessian.
 
-Two tests are conducted on the tape of the Hessian.
-For a function of quadratic form, \code{\link[=pParameter]{pParameter()}} should return a vector of \code{TRUE} values.
-The other test evaluates the Jacobian at each row of \code{xmat} and \code{dynparammat} (if \code{xmat} and \code{dynparammat} are non-NULL). The result should be zero when \code{tape} represents a function of quadratic form.
-If the results of the tests differ the returned value is \code{FALSE} and a message is printed indicating which test failed.
+If \code{xmat} and \code{dynparammat} are non-\code{NULL} then \code{testquadratic()} also checks the Jacobian of the Hessian at \code{xmat} and \code{dynparammat} values. For quadratic form functions the Jacobian of the Hessian should be zero.
 }
 \examples{
 tapes <- buildsmdtape(

@@ -36,7 +36,7 @@ It must have arguments \code{Y} that is a matrix of measurements and \code{w} th
 \value{
 A list:
 \itemize{
-\item \code{theta} the estimated parameter vector
+\item \code{paramvec} the estimated parameter vector
 \item \code{optim} information about the fixed point iterations and opimisation process. Including a slot \code{finalweights} for the weights in the final iteration.
 }
 }
@@ -48,16 +48,15 @@ The estimate is found iteratively through a fixed point method as suggested by \
 }
 \details{
 For any family of models with density \eqn{f(z; \theta)}, Windham's method finds the parameter set \eqn{\hat\theta} such that the estimator applied to observations weighted by \eqn{f(z; \hat\theta)^c} returns an estimate that matches the theoretical effect of weighting the full population of the model.
-When \eqn{f} is proportional to \eqn{\exp(\eta(\theta) \cdot T(z))} and \eqn{\eta(\theta)} is linear, then these weights are equivalent to \eqn{f(z; c\hat\theta)} and the theoretical effect of the weighting on the full population is to scale the parameter vector \eqn{\theta} by \eqn{1+c}.
-The function \code{Windham()} assumes that this is the case, and allows a generalisation where \eqn{c} is a vector so the weight for an observation \eqn{z} is \deqn{f(z; c \circ \theta),} where \eqn{f} is the proposed model density function,  \eqn{\theta} is the parameter vector, \eqn{c} is a vector of tuning constants, and \eqn{\circ} is the element-wise product (Hadamard product).
+When \eqn{f} is proportional to \eqn{\exp(\eta(\theta) \cdot T(z))} and \eqn{\eta(\theta)} is linear, these weights are equivalent to \eqn{f(z; c\hat\theta)} and the theoretical effect of the weighting on the full population is to scale the parameter vector \eqn{\theta} by \eqn{1+c}.
+
+The function \code{Windham()} assumes that \eqn{f} is proportional to \eqn{\exp(\eta(\theta) \cdot T(z))} and \eqn{\eta(\theta)} is linear. It allows a generalisation where \eqn{c} is a vector so the weight for an observation \eqn{z} is \deqn{f(z; c \circ \theta),} where \eqn{\theta} is the parameter vector, \eqn{c} is a vector of tuning constants, and \eqn{\circ} is the element-wise product (Hadamard product).
 
 The solution is found iteratively \insertCite{windham1995ro}{scorecompdir}.
 Given a parameter set \eqn{\theta_n}, \code{Windham()} first computes weights \eqn{f(z; c \circ \theta_n)} for each observation \eqn{z}.
 Then, a new parameter set \eqn{\tilde{\theta}_{n+1}} is estimated by \code{estimator} with the computed weights.
 This new parameter set is element-wise-multiplied by the (element-wise) reciprical of \eqn{1+c} to obtain an adjusted parameter set \eqn{\theta_{n+1}}.
 The estimate returned by \code{Windham()} is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n \approx \theta_{n+1}}.
-
-An exponential model with a base rate may be used with \code{Windham()} so long as the base rate is omitted from \code{ldenfun} (i.e. not used for weighting).
 }
 \examples{
 if (requireNamespace("movMF")){

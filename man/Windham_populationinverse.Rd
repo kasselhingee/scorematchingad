@@ -25,11 +25,11 @@ A diagonal matrix with the same number of columns as \code{cW}.
 Returns the matrix which reverses the effect of weights on a population for certain models.
 }
 \details{
-In the Windham robustification method the effect of weighting a population plays a central role.
+In the Windham robustification method (\code{\link[=Windham]{Windham()}}) the effect of weighting a population plays a central role.
 When the
-the model density is proportional to \eqn{\exp(\eta(\theta) \cdot t(u))},
-where \eqn{t(u)} a vector of sufficient statistics for a measurement \eqn{u},
-and \eqn{\eta} a \emph{linear} function,
+the model density is proportional to \eqn{\exp(\eta(\theta) \cdot T(u))},
+where \eqn{T(u)} is a vector of sufficient statistics for a measurement \eqn{u},
+and \eqn{\eta} is a \emph{linear} function,
 Then weights proportional to
 \eqn{\exp(\eta(c \circ \theta) \cdot t(u))},
 where \eqn{c} is a vector of tuning constants and \eqn{\circ} is the Hadamard (element-wise) product,
