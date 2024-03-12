@@ -1,7 +1,7 @@
 # include "exposemanifold.h"
 
 // manifold object 'factory'
-manifold<a1type> * newmantran(const std::string &manifoldname){
+manifold<a1type> * newmanifold(const std::string &manifoldname){
   manifold<a1type> * out;  //returning a pointer
   if (manifoldname.compare("sph") == 0){
     out = new mantran::sph<a1type>();
@@ -16,6 +16,11 @@ manifold<a1type> * newmantran(const std::string &manifoldname){
   }
 
   return(out);
+}
+
+// manifold object finalizer (aka memory free-er)
+void delmanifold(const manifold<a1type> * ptr){
+  delete ptr;
 }
 
 // transform factory
@@ -36,20 +41,27 @@ transform<a1type> * newtransform(const std::string &name){
   return(out);
 }
 
+// transform object finalizer (aka memory free-er)
+void deltransform(const transform<a1type> * ptr){
+  delete ptr;
+}
+
 RCPP_MODULE(manifolds) {
-  Rcpp::class_< manifold_a1type >("man_ad")
-      .factory<const std::string &>(newmantran)
+  Rcpp::class_< manifold_a1type >("man_ad") //manifold_a1type is a synonym with manifold<a1type> due to typedef in scorecompdir_types.h
+      .factory<const std::string &>(newmanifold)
       .method("Pmatfun", &manifold_a1type::Pmatfun, "Pmatfun(z) returns the matrix that orthogonally projects onto the manifold's tangent space at z")
       .method("dPmatfun", &manifold_a1type::dPmatfun, "dPmatfun(z, i) returns the element-wise derivative of Pmatfun() at location z with respect to the ith dimension")
       .method("name", &manifold_a1type::name)
+      .finalizer(&delmanifold)
   ;
   
-  Rcpp::class_< transform_a1type >("transform_ad")
+  Rcpp::class_< transform_a1type >("transform_ad") //transform_a1type is synonym with transform<a1type> due to typedef in  scorecompdir_types.h
       .factory<const std::string &>(newtransform)
       .method("toM", &transform_a1type::toM, "transform a vector to the manifold")
       .method("fromM", &transform_a1type::fromM, "reverse of toM()")
       .method("logdetJfromM", &transform_a1type::logdetJfromM, "compute the log of the determinant of the Jacobian of fromM()")
       .method("name", &transform_a1type::name)
+      .finalizer(&deltransform)
   ;
 }
 
