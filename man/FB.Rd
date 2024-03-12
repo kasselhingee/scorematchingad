@@ -2,7 +2,7 @@
 % Please edit documentation in R/FB.R
 \name{FB}
 \alias{FB}
-\title{Estimate the Fisher-Bingham distribution}
+\title{Estimate the Fisher-Bingham Distribution}
 \usage{
 FB(Y, km = NULL, A = NULL)
 }

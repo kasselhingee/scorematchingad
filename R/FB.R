@@ -1,4 +1,4 @@
-#' @title Estimate the Fisher-Bingham distribution
+#' @title Estimate the Fisher-Bingham Distribution
 #' @family directional model estimators
 #' @description Estimates parameters for the Fisher-Bingham distribution using score-matching.
 #' @examples

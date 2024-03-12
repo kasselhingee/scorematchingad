@@ -3,7 +3,7 @@
 \name{evaltape}
 \alias{evaltape}
 \alias{evaltape_wsum}
-\title{Simple wrapper to evaluate CppAD tapes and derivatives many times}
+\title{Evaluate a CppAD Tape Many Times}
 \usage{
 evaltape(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10)
 

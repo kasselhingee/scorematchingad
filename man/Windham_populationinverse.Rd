@@ -3,7 +3,7 @@
 \name{Windham_populationinverse}
 \alias{Windham_populationinverse}
 \alias{Windham_populationinverse_alternative}
-\title{Inverse transform for the population parameters under Windham weights}
+\title{Inverse Transform for the Population Parameters Under Windham Weights}
 \usage{
 Windham_populationinverse(cW)
 

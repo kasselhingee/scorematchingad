@@ -2,7 +2,7 @@
 % Please edit documentation in R/Bingham.R
 \name{Bingham}
 \alias{Bingham}
-\title{Score matching estimators for the Bingham distribution}
+\title{Score Matching Estimators for the Bingham Distribution}
 \usage{
 Bingham(Y, A = NULL, w = rep(1, nrow(Y)), method = "Mardia")
 }

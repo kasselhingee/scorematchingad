@@ -1,4 +1,4 @@
-#' @title Score matching estimators for the Bingham distribution
+#' @title Score Matching Estimators for the Bingham Distribution
 #' @family directional model estimators
 #' @inheritParams vMF
 #' @param A For full score matching only: if supplied, then NA elements of `A` are estimated and the other elements are fixed. For identifiability the final element of `diag(A)` must be `NA`.

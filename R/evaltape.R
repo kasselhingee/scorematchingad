@@ -1,4 +1,4 @@
-#' @title Simple wrapper to evaluate CppAD tapes and derivatives many times
+#' @title Evaluate a CppAD Tape Many Times
 #' @family tape evaluators
 #' @param tape An [`ADFun`] object (i.e. a tape of a function).
 #' @param xmat A matrix of (multivariate) independent variables where each represents a single independent variable vector. Or a single independent variable vector that is used for all rows of `pmat`.

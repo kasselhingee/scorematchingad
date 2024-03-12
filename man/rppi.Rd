@@ -3,7 +3,7 @@
 \name{rppi}
 \alias{rppi}
 \alias{rppi_egmodel}
-\title{Simulate from a PPI model}
+\title{Simulate from a PPI Model}
 \usage{
 rppi(n, ..., paramvec = NULL, maxden = 4, maxmemorysize = 1e+05)
 

@@ -165,7 +165,7 @@ Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "S
            optim = c(est, list(finalweights = weight_vec))))
 }
 
-#' @title Inverse transform for the population parameters under Windham weights
+#' @title Inverse Transform for the Population Parameters Under Windham Weights
 #' @description Returns the matrix which reverses the effect of weights on a population for certain models.
 #' @param cW A vector of tuning constants for the Windham robustification method performed by [`Windham()`].
 #' @return A diagonal matrix with the same number of columns as `cW`.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/vMF.R
 \name{vMF}
 \alias{vMF}
-\title{Score matching estimator for the von-Mises Fisher distribution}
+\title{Score Matching Estimator for the von-Mises Fisher Distribution}
 \usage{
 vMF(Y, paramvec = NULL, method = "Mardia", w = rep(1, nrow(Y)))
 }

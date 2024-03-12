@@ -3,7 +3,7 @@
 \name{ppi_cW}
 \alias{ppi_cW}
 \alias{ppi_cW_auto}
-\title{Quickly generate a vector of Windham exponents for the PPI model}
+\title{Quickly Generate a Vector of Windham Exponents for the PPI Model}
 \usage{
 ppi_cW(cW, ...)
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/vMF_robust.R
 \name{vMF_robust}
 \alias{vMF_robust}
-\title{Robust fitting of von Mises Fisher}
+\title{Robust Fitting of von Mises Fisher}
 \usage{
 vMF_robust(Y, cW, ...)
 }

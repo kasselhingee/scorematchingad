@@ -1,4 +1,4 @@
-#' @title Quickly generate a symmetric matrix for testing and examples
+#' @title Quickly Generate a Symmetric Matrix for Testing and Examples
 #' @description A simple function for generating a symmetric matrix for use in examples.
 #' The diagonal, and upper-triangular elements of the matrix are simulated independently from a uniform distribution. The lower-triangle of the output matrix is copied from the upper-triangle.
 #' These matrices __do not__ represent the full range of possible symmetric matrices.

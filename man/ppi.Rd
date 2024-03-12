@@ -3,7 +3,7 @@
 \name{ppi}
 \alias{ppi}
 \alias{ppi_smvalues}
-\title{Estimation of Polynomially-Tilted Pairwise Interaction (PPI) model}
+\title{Estimation of Polynomially-Tilted Pairwise Interaction (PPI) Model}
 \usage{
 ppi(
   Y,

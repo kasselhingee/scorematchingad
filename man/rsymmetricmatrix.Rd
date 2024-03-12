@@ -2,7 +2,7 @@
 % Please edit documentation in R/rsymmetricmatrix.R
 \name{rsymmetricmatrix}
 \alias{rsymmetricmatrix}
-\title{Quickly generate a symmetric matrix for testing and examples}
+\title{Quickly Generate a Symmetric Matrix for Testing and Examples}
 \usage{
 rsymmetricmatrix(p, min = 0, max = 1)
 }

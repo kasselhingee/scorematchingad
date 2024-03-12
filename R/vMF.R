@@ -1,4 +1,4 @@
-#' @title Score matching estimator for the von-Mises Fisher distribution
+#' @title Score Matching Estimator for the von-Mises Fisher Distribution
 #' @family directional model estimators
 #' @description
 #' In general the normalising constant in von Mises Fisher distributions is hard to compute, so \insertCite{mardia2016sc;textual}{scorecompdir} suggested a hybrid method that uses maximum likelihood to estimate the mean direction and score matching for the concentration.

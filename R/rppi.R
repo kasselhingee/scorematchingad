@@ -1,5 +1,5 @@
 #' @order 1
-#' @title Simulate from a PPI model
+#' @title Simulate from a PPI Model
 #' @family PPI model tools
 #' @description Given parameters of the PPI model, generates independent samples.
 #' @param n Number of samples to generate

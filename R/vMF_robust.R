@@ -1,4 +1,4 @@
-#' @title Robust fitting of von Mises Fisher
+#' @title Robust Fitting of von Mises Fisher
 #' @family directional model estimators
 #' @description
 #' Robust estimation for von Mises Fisher distribution using [`Windham()`].

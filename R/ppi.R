@@ -1,4 +1,4 @@
-#' @title Estimation of Polynomially-Tilted Pairwise Interaction (PPI) model
+#' @title Estimation of Polynomially-Tilted Pairwise Interaction (PPI) Model
 #' @order 1
 #' @family PPI model tools
 #' @description 

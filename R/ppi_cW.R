@@ -1,4 +1,4 @@
-#' @title Quickly generate a vector of Windham exponents for the PPI model
+#' @title Quickly Generate a Vector of Windham Exponents for the PPI Model
 #' @description These functions help to quickly generate a set of Windham exponents for use in [`ppi_robust()`] or [`Windham()`].
 #' Rows and columns of \eqn{A_L} and \eqn{b_L} corresponding to components with strong concentrations of probability mass near zero have non-zero constant tuning exponent, and all other elements have a tuning constant of zero.
 #' All elements of \eqn{\beta} have a tuning exponent of zero.
