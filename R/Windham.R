@@ -162,7 +162,6 @@ Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "S
   }
 
   return(list(paramvec = theta,
-           theta = theta,
            optim = c(est, list(finalweights = weight_vec))))
 }
 

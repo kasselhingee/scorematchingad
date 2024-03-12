@@ -40,7 +40,7 @@ vMF_robust <- function(Y, cW, ...){
                      cW = cW,
                      ...)
   out <- list(
-    est = c(list(paramvec = est$theta), vMF_fromparamvec(est$theta)),
+    est = c(list(paramvec = est$paramvec), vMF_fromparamvec(est$paramvec)),
     SE = "Not calculated.",
     info = est$optim
   )
@@ -60,7 +60,7 @@ vMF_kappa_robust <- function(Y, cW, ...){
                      cW = cW,
                      ...)
   out <- list(
-    est = list(paramvec = est$theta, k = est$theta),
+    est = list(paramvec = est$paramvec, k = est$paramvec),
     SE = "Not calculated.",
     info = est$optim
   )

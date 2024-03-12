@@ -49,7 +49,7 @@ ppi_robust_alrgengamma <- function(Y, cW, ..., fpcontrol = list(Method = "Simple
 
   #make results nicer and consistent with ppi()
   out <- list(
-    est = c(list(paramvec = est$theta), ppi_parammats(est$theta)),
+    est = c(list(paramvec = est$paramvec), ppi_parammats(est$paramvec)),
     SE = "Not calculated.",
     info = est$optim
   )
