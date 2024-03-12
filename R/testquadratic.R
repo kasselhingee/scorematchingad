@@ -1,7 +1,7 @@
 #' @title Test Whether a CppAD Tape is a Quadratic Function
 #' @family tape evaluators
 #' @description
-#' Uses [`pParameter()`] and derivatives [`tapeJacobian()`], [`pJacobian()`] to test whether
+#' Uses the [`CppAD` parameter property](https://cppad.readthedocs.io/latest/fun_property.html#parameter) and derivatives (via [`tapeJacobian()`]) to test whether
 #' the tape is quadratic.
 #' @param tape An `ADFun` object.
 #' @param xmat If non-`NULL` and `dynparamat` non-`NULL` then the third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynparammat` are tested.

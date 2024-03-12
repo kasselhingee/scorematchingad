@@ -91,12 +91,12 @@ Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) m
 By default \code{ppi()} uses \code{\link[=cppad_closed]{cppad_closed()}} to find estimate.
 For many situations a hard-coded implementation of the score matching estimator is also available.
 
-For a given parameter vector \code{evalparam}, \code{ppi_smvalues()} computes the score matching discrepancy, the gradient and the Hessian of the score matching discrepancy (see \code{\link[=smvalues]{smvalues()}}) and the gradient offset of the score matching discrepancy (see \code{\link[=quadratictape_parts]{quadratictape_parts()}} and \code{\link[=tapeGradientOffset]{tapeGradientOffset()}}).
+For a given parameter vector \code{evalparam}, \code{ppi_smvalues()} computes the score matching discrepancy, the gradient and the Hessian of the score matching discrepancy (see \code{\link[=smvalues]{smvalues()}}) and the gradient offset of the score matching discrepancy (see \code{\link[=quadratictape_parts]{quadratictape_parts()}} and \code{\link[=tapeGradOffset]{tapeGradOffset()}}).
 }
 \details{
 Estimation may be performed via transformation of the measure in Hyvärinen divergence from Euclidean space to the simplex (inverse of the additive log ratio transform), from a hyperplane to the simplex (inverse of the centred log ratio transform), from the positive quadrant of the sphere to the simplex (inverse of the square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyvärinen divergence} \insertCite{@Equation 7, @scealy2023sc}{scorecompdir} is used.
-Properties of the estimator using the square root transform were studied by \insertCite{scealy2023sc;textuan}{scorecompdir}.
-Properties of the estimator using the additive log ratio transfrom were studied by \insertCite{scealy2024ro;textuan}{scorecompdir}.
+Properties of the estimator using the square root transform were studied by \insertCite{scealy2023sc;textual}{scorecompdir}.
+Properties of the estimator using the additive log ratio transfrom were studied by \insertCite{scealy2024ro;textual}{scorecompdir}.
 
 There are three boundary weight functions available:
 \itemize{

@@ -7,7 +7,7 @@
 quadratictape_parts(tape, tmat, tcentres = NA * tmat, approxorder = 10)
 }
 \arguments{
-\item{tape}{A tape of a quadratic function where the independent and dynamic parameters correspond to the \eqn{x} and \eqn{t} in the details section, respectively. For score matching \code{tape} should be a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in \code{\link{scorematchingintro}} with \eqn{z} the \emph{dynamic parameters} and the model parameters the \emph{independent variable} (which is the usual for the return of \code{\link[=buildsmdtape]{buildsmdtape()}}).}
+\item{tape}{A tape of a quadratic function where the independent and dynamic parameters correspond to the \eqn{x} and \eqn{t} in the details section, respectively. For score matching \code{tape} should be a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in \code{\link{scorematchingtheory}} with \eqn{z} the \emph{dynamic parameters} and the model parameters the \emph{independent variable} (which is the usual for the return of \code{\link[=buildsmdtape]{buildsmdtape()}}).}
 
 \item{tmat}{A matrix of vectors corresponding to values of \eqn{t} (see details). Each row corresponds to a vector. For score matching, these vectors are measurements.}
 
@@ -26,7 +26,7 @@ A list of
 When the score matching discrepancy function is quadratic then the gradient of the score matching discrepancy function can be written using the Hessian and an offset term. This can be useful for solving for the situation when the gradient is zero.
 The Hessian and offset term are computed using \code{CppAD} tapes.
 Taylor approximation can be used for locations at removed singularities (i.e. where intermediate values are unbounded).
-\code{quadratictape_parts()} will error if \code{\link{testquadratic(tape)}} returns \code{FALSE}.
+\code{quadratictape_parts()} will error if \code{testquadratic(tape)} returns \code{FALSE}.
 }
 \details{
 A quadratic function can be written

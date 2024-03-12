@@ -19,7 +19,7 @@ testquadratic(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE)
 \code{TRUE} or \code{FALSE}
 }
 \description{
-Uses \code{\link[=pParameter]{pParameter()}} and derivatives \code{\link[=tapeJacobian]{tapeJacobian()}}, \code{\link[=pJacobian]{pJacobian()}} to test whether
+Uses the \href{https://cppad.readthedocs.io/latest/fun_property.html#parameter}{\code{CppAD} parameter property} and derivatives (via \code{\link[=tapeJacobian]{tapeJacobian()}}) to test whether
 the tape is quadratic.
 }
 \details{
