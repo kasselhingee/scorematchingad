@@ -1,10 +1,11 @@
-#' @title Compute score matching discrepancy value, gradient, and Hessian
+#' @title Compute Score Matching Discrepancy Value, Gradient, and Hessian
 #' @family tape evaluators
 #' @description Computes a range of relevant information for investigating score matching estimators.
 #' @inheritParams evaltape
 #' @param smdtape A taped score matching discrepancy. Most easily created by [`buildsmdtape()`].
-#' @details The score matching discrepancy values are differ from the Hyvärinen Divergence by a constant, see ... .
+#' @details Computes the score matching discrepancy function from [`scorematchingtheory`] or weighted sum of the score matching discrepancy function.
 #' The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in `xmat` and `pmat`. 
+#' Convert a Hessian row-vector to a matrix using `matrix(ncol = length(smdtape$xtape))`.
 #' @examples
 #' m <- rppi_egmodel(100)
 #' smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",

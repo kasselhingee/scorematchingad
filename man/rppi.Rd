@@ -37,7 +37,7 @@ If a number, then the pth element of \eqn{\beta} will be fixed at the given valu
 
 \item{paramvec}{The PPI parameter vector, created easily using \code{\link[=ppi_paramvec]{ppi_paramvec()}} and also returned by \code{\link[=ppi]{ppi()}}. Use \code{paramvec} instead of \code{...}.}
 
-\item{maxden}{the log(C) maximum in simulating a PPI model. See \code{\link[=rppi]{rppi()}}.}
+\item{maxden}{This is the constant \eqn{log(C)} in \insertCite{@Appendix A.1.3 @scealy2023sc}{scorecompdir}.}
 
 \item{maxmemorysize}{Advanced use. The maximum size, in bytes, for matrices containing simulated Dirchlet samples. The default of \code{1E5} corresponds to 100 mega bytes.}
 }
@@ -64,7 +64,7 @@ The simulation uses a rejection-sampling algorithm with Dirichlet proposal \inse
 Initially \code{n} Dirichlet proposals are generated. After rejection there are fewer samples remaining, say \eqn{n^*}{n*}.
 The ratio \eqn{n^*/n}{n*/n} is used to guess the number of new Dirichlet proposals to generate until \code{n} samples of the PPI model are reached.
 
-Advanced use: The number of Dirichlet proposals created at a time is limited such that the matrices storing the Dirchlet proposals are always smaller than \code{maxmemorysize} bytes (give or take a few bytes for wrapping), which reduces the use of virtual RAM.
+Advanced use: The number of Dirichlet proposals created at a time is limited such that the matrices storing the Dirchlet proposals are always smaller than \code{maxmemorysize} bytes (give or take a few bytes for wrapping).
 Larger \code{maxmemorysize} leads to faster simulation so long as \code{maxmemorysize} bytes are reliably contiguously available in RAM.
 }
 \section{Functions}{

@@ -51,12 +51,12 @@
 #' Note that when \eqn{M} has a few or more dimensions, the calculations of \eqn{A(z)}, \eqn{B(z)} and \eqn{C(z)} can become cumbersome. This package uses `CppAD` to automatically compute \eqn{A(z)}, \eqn{B(z)} and \eqn{C(z)}, and the quadratic simplification if it exists.
 #' 
 #' # Transformations
-#' Hyvärinen divergence \eqn{\phi(f, f_0)} is sensitive to transformations of the manifold.
+#' Hyvärinen divergence \eqn{\phi(f, f_0)} is sensitive to transformations of the measure \eqn{dM(z)}, including transforming the manifold.
 #' That is, transforming the manifold \eqn{M} changes the divergence between distributions and changes the minimum of \eqn{\hat\psi(f_\theta, f_0)}.
-#' The transformation changes the estimator and the divergence but does *not* transform the data.
+#' The transformation changes measure \eqn{dM(z)}, the divergence and the estimator but does *not* transform the data.
 #' 
 #' For example, many different transformations of the simplex (i.e. compositional data) are possible \insertCite{@Appendix A.3, @scealy2024ro}{scorecompdir}.
-#' Divergences that use the sphere, obtained from the simplex by a square root, have different behaviour to Hyvärinen divergence using Euclidean space obtained from the simplex using logarithms \insertCite{scealy2024ro}{scorecompdir}.
+#' Hyvärinen divergences that use the sphere, obtained from the simplex by a square root, have different behaviour to Hyvärinen divergence using Euclidean space obtained from the simplex using logarithms \insertCite{scealy2024ro}{scorecompdir}.
 #' The estimator for the latter does not apply logarithms to the observations, in fact the estimator involves only polynomials of the observed compositions \insertCite{scealy2024ro}{scorecompdir}.
 #' 
 #' The variety of estimator behaviour available through different transformations was a major motivator for this package as each transformation has different \eqn{A(z)}, \eqn{B(z)} and \eqn{C(z)}, and without automatic differentiation, implementation of the score matching estimator in each case would require a huge programming effort.

@@ -5,7 +5,7 @@
 #' For score matching estimation this form of the parameters must be converted into a single parameter vector using `ppi_paramvec()`.
 #' `ppi_paramvec()` also includes easy methods to set parameters to `NA` for estimation with [`ppi()`] (in [`ppi()`] the NA-valued elements are estimated and all other elements are fixed).
 #' The reverse of `ppi_paramvec()` is `ppi_parammats()`.
-#' An alternative parametrisation of the PPI model uses a single `p` by `p`  matrix \eqn{A^*} instead of \eqn{A_L} and \eqn{b_L}, and for identifiability \eqn{A^*} is such that \eqn{1^T A^* 1 = 0} where \eqn{1=(1,1,...,1)} and \eqn{0=(0,0,...0)} \insertCite{scealy2023sc}{scorecompdir}.
+#' An alternative parametrisation of the PPI model uses a single `p` by `p`  matrix \eqn{A^*} instead of \eqn{A_L} and \eqn{b_L}, and for identifiability \eqn{A^*} is such that \eqn{1^T A^* 1 = 0} where \eqn{1=(1,1,...,1)} and \eqn{0=(0,0,..., 0)} \insertCite{scealy2023sc}{scorecompdir}.
 #' Convert between parametrisations using `ppi_toAstar()` and `ppi_fromAstar()`.
 #' @inheritSection ppi PPI Model
 #' @rdname ppi_param_tools

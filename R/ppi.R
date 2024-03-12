@@ -3,19 +3,21 @@
 #' @family PPI model tools
 #' @description 
 #' Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2023sc}{scorecompdir} for compositional data.
-#' For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2023sc}{scorecompdir}.
-#' In the other situations, the score matching estimate is found by iteratively minimising the *weighted Hyvärinen divergence* \insertCite{@Equation 13, @scealy2023sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (`CppAD`) and [`optimx::Rcgmin()`].
+#' By default `ppi()` uses [`cppad_closed()`] to find estimate.
+#' For many situations a hard-coded implementation of the score matching estimator is also available.
 
 #' @section PPI Model:
 #' The PPI model density is proportional to
 #' \deqn{\exp(z_L^TA_Lz_L + b_L^Tz_L)\prod_{i=1}^p z_i^{\beta_i},}
-#' where \eqn{p} is the dimension of \eqn{z}, and \eqn{z_L} represents a multivariate measurement \eqn{z} without the final (\eqn{p}th) component.
+#' where \eqn{p} is the dimension of a compositional measurement \eqn{z}, and \eqn{z_L} is \eqn{z} without the final (\eqn{p}th) component.
 #' \eqn{A_L} is a \eqn{p-1 \times p-1} symmetric matrix that controls the covariance between components.
-#' \eqn{b_L} is \eqn{p-1} vector that controls the location within the simplex
-#' The \eqn{i}th component of \eqn{\beta} controls the concentration of density when the \eqn{i}th component is close to zero.
+#' \eqn{b_L} is a \eqn{p-1} vector that controls the location within the simplex.
+#' The \eqn{i}th component \eqn{\beta_i} of \eqn{\beta} controls the concentration of density when \eqn{z_i} is close to zero: when \eqn{\beta_i \geq 0} there is no concentration and \eqn{\beta_i} is hard to identify; when \eqn{\beta_i < 0} then the probability density of the PPI model increases unboundedly as \eqn{z_i} approaches zero, with the increasing occuring more rapidly and sharply the closer \eqn{\beta_i} is to \eqn{-1}.
 #' 
 #' @details
-#' Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and *weighted Hyvärinen divergence* \insertCite{@Equation 7, @scealy2023sc}{scorecompdir} is used.
+#' Estimation may be performed via transformation of the measure in Hyvärinen divergence from Euclidean space to the simplex (inverse of the additive log ratio transform), from a hyperplane to the simplex (inverse of the centred log ratio transform), from the positive quadrant of the sphere to the simplex (inverse of the square root transform), or without any transformation. In the latter two situations there is a boundary and *weighted Hyvärinen divergence* \insertCite{@Equation 7, @scealy2023sc}{scorecompdir} is used.
+#' Properties of the estimator using the square root transform were studied by \insertCite{scealy2023sc;textuan}{scorecompdir}.
+#' Properties of the estimator using the additive log ratio transfrom were studied by \insertCite{scealy2024ro;textuan}{scorecompdir}.
 #'
 #' There are three boundary weight functions available:
 #' * The function "ones" applies no weights and should be used whenever the manifold does not have a bounday.
@@ -28,7 +30,7 @@
 #' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
 #' and \eqn{z_j}{zj} is the jth component of z.
 #'
-#' Scealy and Wood \insertCite{@Theorem 1, @scealy2023sc}{scorecompdir} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See __Score Matching__ in [`scorecompdir-package`])
+#' Scealy and Wood \insertCite{@Theorem 1, @scealy2023sc}{scorecompdir} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See [`scorematchingtheory`])
 #' when the boundary weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
 #'
 #' Hard-coded estimators are available for the following situations:
@@ -44,19 +46,24 @@
 #'    + `paramvec` fixes \eqn{A_L=0} and \eqn{b_L=0}, leaving \eqn{\beta} to be fitted. 
 #'  + The additive log ratio transformation ("alr") using the final component on the denominator, with \eqn{b_L=0} and fixed final component of \eqn{\beta}.
 
-#' @param trans The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".
-#' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
-#' @param paramvec Optionally a vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate `paramvec` easily using [ppi_paramvec()].  If `NULL` then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.
+#' @param trans The name of the transformation of the manifold in Hyvärinen divergence (See [`scorematchingtheory`]): "clr" (centred log ratio), "alr" (additive log ratio), "sqrt" or "none".
+#' @param Y A matrix of measurements. Each row is a compositional measurement (i.e. each row sums to 1 and has non-negative elmenents).
+#' @param paramvec Optionally a vector of the PPI models parameters. `NA`-valued elements of this vector are estimated and non-`NA` values are fixed. Generate `paramvec` easily using [ppi_paramvec()].  If `NULL` then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.
 #' @param bdryw The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
 #' @param acut The threshold \eqn{a_c} in `bdryw` to avoid over-weighting measurements interior to the simplex
 #' @param control `iterative` only. Passed to [`optimx::Rcgmin()`] to control the iterative solver.
-#' @param bdrythreshold `iterative` or `closed` methods only. For measurements within `bdrythreshold` of the simlex boundary a Taylor approximation is applied by shifting the measurement `shiftsize` towards the center of the simplex.
+#' @param bdrythreshold `iterative` or `closed` methods only. For measurements within `bdrythreshold` of the simplex boundary a Taylor approximation is applied by shifting the measurement `shiftsize` towards the center of the simplex.
 #' @param shiftsize `iterative` or `closed` methods only. For measurements within `bdrythreshold` of the simlex boundary a Taylor approximation is applied by shifting the measurement `shiftsize` towards the center of the simplex.
 #' @param approxorder `iterative` or `closed` methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.
-#' @param method "hardcoded" uses the hardcoded estimators by JS. "closed" uses `CppAD` to solve in closed form the a quadratic score matching discrepancy using [`cppad_closed()`]. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`optimx::Rcgmin()`]) to iteratively find the minimum of the weighted Hyvärinen divergence.
-#' @param paramvec_start `iterative` method only. The starting guess for `Rcgmin` with possibly NA values for the fixed (not-estimated) elements. Generate `paramvec_start` easily using [`ppi_paramvec()`].
+#' @param method `"closed"` uses `CppAD` to solve in closed form the a quadratic score matching discrepancy using [`cppad_closed()`]. `"hardcoded"` uses hardcoded implementations. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`optimx::Rcgmin()`]) to iteratively find the minimum of the weighted Hyvärinen divergence.
+#' @param paramvec_start `iterative` method only. The starting guess for `Rcgmin`. Generate `paramvec_start` easily using [`ppi_paramvec()`].
 #' @param w Weights for each observation, if different observations have different importance. Used by [`Windham()`] and [`ppi_robust()`] for robust estimation.
 #' @param constrainbeta If `TRUE`, elements of \eqn{\beta} that are less than `-1` are converted to `-1 + 1E-7`.
+#' @return `ppi()` returns:
+#' A list of `est`, `SE` and `info`.
+#'  * `est` contains the estimates in vector form, `paramvec`, and as \eqn{A_L}, \eqn{b_L} and \eqn{\beta}.
+#'  * `SE` contains estimates of the standard errors if computed.
+#'  * `info` contains a variety of information about the model fitting procedure and results.
 
 #' @references
 #' \insertAllCited{}

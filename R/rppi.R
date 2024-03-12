@@ -2,7 +2,7 @@
 #' @title Simulate from a PPI model
 #' @family PPI model tools
 #' @description Given parameters of the PPI model, generates independent samples.
-#' @param n Sample size
+#' @param n Number of samples to generate
 #' @param paramvec The PPI parameter vector, created easily using [`ppi_paramvec()`] and also returned by [`ppi()`]. Use `paramvec` instead of `...`.
 #' @param maxden This is the constant \eqn{log(C)} in \insertCite{@Appendix A.1.3 @scealy2023sc}{scorecompdir}.
 #' @param maxmemorysize Advanced use. The maximum size, in bytes, for matrices containing simulated Dirchlet samples. The default of `1E5` corresponds to 100 mega bytes.
@@ -15,7 +15,7 @@
 #' Initially `n` Dirichlet proposals are generated. After rejection there are fewer samples remaining, say \eqn{n^*}{n*}.
 #' The ratio \eqn{n^*/n}{n*/n} is used to guess the number of new Dirichlet proposals to generate until `n` samples of the PPI model are reached. 
 #'
-#' Advanced use: The number of Dirichlet proposals created at a time is limited such that the matrices storing the Dirchlet proposals are always smaller than `maxmemorysize` bytes (give or take a few bytes for wrapping), which reduces the use of virtual RAM. 
+#' Advanced use: The number of Dirichlet proposals created at a time is limited such that the matrices storing the Dirchlet proposals are always smaller than `maxmemorysize` bytes (give or take a few bytes for wrapping). 
 #' Larger `maxmemorysize` leads to faster simulation so long as `maxmemorysize` bytes are reliably contiguously available in RAM.
 #' @examples
 #' beta0=c(-0.8, -0.8, -0.5)

@@ -1,7 +1,5 @@
 # @title Simulate from an example PPI model
 # @family PPI model tools
-#' @param n Number of samples to generate
-#' @param maxden the log(C) maximum in simulating a PPI model. See [`rppi()`].
 #' @return `rppi_egmodel` returns a list: 
 #'  * `sample` A matrix of the simulated samples (`n` rows)
 #'  * `p` The number of components of the model

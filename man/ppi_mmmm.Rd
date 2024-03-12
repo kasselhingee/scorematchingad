@@ -2,7 +2,7 @@
 % Please edit documentation in R/ppi_sqrt_multestimator.R
 \name{ppi_mmmm}
 \alias{ppi_mmmm}
-\title{A PPI score-matching Marginal Moment Matching estimator derived from moments of the Multinomial distribution (dimension=3 only)}
+\title{A PPI Score-Matching Marginal Moment Matching Estimator (dimension=3 only)}
 \usage{
 ppi_mmmm(Y, ni, beta0, w = rep(1, nrow(Y)))
 }
@@ -11,7 +11,7 @@ ppi_mmmm(Y, ni, beta0, w = rep(1, nrow(Y)))
 
 \item{ni}{The total for each sample (sum across rows)}
 
-\item{beta0}{\eqn{\beta=\beta_0}{beta=beta0} is the same for each category.}
+\item{beta0}{\eqn{\beta=\beta_0}{beta=beta0} is the same for each component.}
 
 \item{w}{Weights for each observation. Useful for weighted estimation in \code{\link[=Windham]{Windham()}}.}
 }
@@ -19,7 +19,7 @@ ppi_mmmm(Y, ni, beta0, w = rep(1, nrow(Y)))
 A vector of estimates for \eqn{A_L} entries (diagonal and off diagonal).
 }
 \description{
-Computes a marginal moment matching estimator \insertCite{@Section 6.2, @scealy2023sc}{scorecompdir}, which assumes \eqn{\beta} is a vector with the same value in each element, and \eqn{b_L = 0}.
+Computes a marginal moment matching estimator \insertCite{@Section 6.2, @scealy2023sc}{scorecompdir}, which assumes \eqn{\beta} is a known vector with the same value in each element, and \eqn{b_L = 0}.
 Only \eqn{A_L} is estimated.
 }
 \details{

@@ -1,16 +1,15 @@
 #' @rdname ppi_param_tools
 #' @order 4
-#' @family PPI model tools
 #' @details
 #' The `Astar` parametrisation rewrites the PPI density as proportional to 
-#' \deqn{\exp(u^TA^*u)\prod_{i=1}^p u_i^{\beta_i},}
+#' \deqn{\exp(z^TA^*z)\prod_{i=1}^p z_i^{\beta_i},}
 #' where \eqn{A^*} (`Astar`) is a \eqn{p} by \eqn{p} matrix.
-#' Because \eqn{u} lies in the simplex (in particular \eqn{\sum u_i = 1}), the density is the same regardless of the value of \eqn{1^T A^* 1}=`sum(Astar)`, where \eqn{1} is the vector of ones. Thus \eqn{A_L} and \eqn{b_L} specify \eqn{A^*} up to an additive factor. In the conversion `ppi_toAstar()`, \eqn{A^*} is returned such that \eqn{1^T A^* 1 = 0}.
+#' Because \eqn{z} lies in the simplex (in particular \eqn{\sum z_i = 1}), the density is the same regardless of the value of \eqn{1^T A^* 1}=`sum(Astar)`, where \eqn{1} is the vector of ones. Thus \eqn{A_L} and \eqn{b_L} specify \eqn{A^*} up to an additive factor. In the conversion `ppi_toAstar()`, \eqn{A^*} is returned such that \eqn{1^T A^* 1 = 0}.
 #' `NULL` values or `NA` elements are not allowed for `ppi_toAstar()` and `ppi_fromAstar()`.
 #' @examples
-#'  Astar <- rWishart(1, 6, diag(3))[,,1]
-#'  ppi_fromAstar(Astar)
-#'  ppi_toAstar(ppi_fromAstar(Astar)$AL, ppi_fromAstar(Astar)$bL)
+#' Astar <- rWishart(1, 6, diag(3))[,,1]
+#' ppi_fromAstar(Astar)
+#' ppi_toAstar(ppi_fromAstar(Astar)$AL, ppi_fromAstar(Astar)$bL)
 #' @return `ppi_toAstar()`: The matrix \eqn{A^*}.
 #' @export
 ppi_toAstar <- function(AL, bL){

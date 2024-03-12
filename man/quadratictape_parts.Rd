@@ -2,12 +2,12 @@
 % Please edit documentation in R/quadratictape_parts.R
 \name{quadratictape_parts}
 \alias{quadratictape_parts}
-\title{Evaluate the Hessian and gradient offset of a Taped Quadratic Function}
+\title{Evaluate the Hessian and Gradient Offset of a Taped Quadratic Function}
 \usage{
 quadratictape_parts(tape, tmat, tcentres = NA * tmat, approxorder = 10)
 }
 \arguments{
-\item{tape}{A tape of a quadratic function with \eqn{x} and \eqn{t} in \link{Details} below correspond to the independent and dynamic parameters of the tape respectively. For score matching this is a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in \code{\link{scorematchingintro}} with \eqn{z} the \emph{dynamic parameters} and the model parameters the \emph{independent parameters} (which is the usual from \code{\link[=buildsmdtape]{buildsmdtape()}}.}
+\item{tape}{A tape of a quadratic function where the independent and dynamic parameters correspond to the \eqn{x} and \eqn{t} in the details section, respectively. For score matching \code{tape} should be a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in \code{\link{scorematchingintro}} with \eqn{z} the \emph{dynamic parameters} and the model parameters the \emph{independent variable} (which is the usual for the return of \code{\link[=buildsmdtape]{buildsmdtape()}}).}
 
 \item{tmat}{A matrix of vectors corresponding to values of \eqn{t} (see details). Each row corresponds to a vector. For score matching, these vectors are measurements.}
 
@@ -19,13 +19,13 @@ quadratictape_parts(tape, tmat, tcentres = NA * tmat, approxorder = 10)
 A list of
 \itemize{
 \item \code{offset} Array of offsets \eqn{b(t)}, each row corresponding to a row in \code{tmat}
-\item \code{Hessian} Array of vectorised \eqn{H f(x; t)} (see \code{\link[=tapeHessian]{tapeHessian()}}), each row corresponding to a row in \code{tmat}. For each row, obtain the Hessian as matrix using \code{matrix(ncol = length(tape$xtape))}.
+\item \code{Hessian} Array of vectorised \eqn{H f(x; t)} (see \code{\link[=tapeHessian]{tapeHessian()}}), each row corresponding to a row in \code{tmat}. For each row, obtain the Hessian in matrix format by using \code{matrix(ncol = length(tape$xtape))}.
 }
 }
 \description{
 When the score matching discrepancy function is quadratic then the gradient of the score matching discrepancy function can be written using the Hessian and an offset term. This can be useful for solving for the situation when the gradient is zero.
 The Hessian and offset term are computed using \code{CppAD} tapes.
-Taylor approximation can be used for locations at removable singularities.
+Taylor approximation can be used for locations at removed singularities (i.e. where intermediate values are unbounded).
 \code{quadratictape_parts()} will error if \code{\link{testquadratic(tape)}} returns \code{FALSE}.
 }
 \details{
@@ -41,9 +41,9 @@ where the Hessian and offset \eqn{b(t)} depend only on \eqn{t}.
 The functions here evaluate the Hessian and offset \eqn{b(t)} for many values of \eqn{t}.
 Tapes of the Hessian and gradient offset are created using \code{\link[=tapeHessian]{tapeHessian()}} and \code{\link[=tapeGradOffset]{tapeGradOffset()}} respectively.
 These tapes are then evaluated for every row of \code{tmat}.
-When the \code{tcentres} row is not \code{NA}, then approximate results are calculated using \code{\link[=pTaylorApprox]{pTaylorApprox()}}
+When the corresponding \code{tcentres} row is not \code{NA}, then approximate (but very accurate) results are calculated using Taylor approximation around the location given by the row of \code{tcentres}.
 
-For score matching often \eqn{x} is a set of model parameters and the vector \eqn{t} is measurement.
+For score matching \eqn{x} is the set of model parameters and the vector \eqn{t} is a (multivariate) measurement.
 }
 \examples{
 u <- rep(1/3, 3)

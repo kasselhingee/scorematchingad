@@ -26,7 +26,7 @@ ppi_robust_alrgengamma(
 \value{
 A list:
 \itemize{
-\item \code{est} The estimated parameters as vector form (\code{paramvec}) and as \code{AL}, \code{bL} and \code{beta}.
+\item \code{est} The estimated parameters in vector form (\code{paramvec}) and as \code{AL}, \code{bL} and \code{beta}.
 \item \code{SE} "Not calculated." Returned for consistency with other estimators.
 \item \code{info} Information returned in the \code{optim} slot of \code{\link[=Windham]{Windham()}}. Includes the final weights in \code{finalweights}.
 }
@@ -38,8 +38,8 @@ There are many arguments to the \code{\link[=ppi]{ppi()}} function and we highly
 \code{ppi_robust_alrgengamma()} performs the Windham robustification algorithm exactly as described in \insertCite{scealy2024ro;textual}{scorecompdir} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}}.
 }
 \details{
-\code{ppi_robust_alrgengamma()}: must fit a PPI model via additive-log ratio transform with \eqn{b_L=0} fixed and the final element of \eqn{\beta} fixed.
-The default convergence metric and threshold are different to the default for \code{\link[=ppi_robust]{ppi_robust()}} to match the original implementation: convergence is measured by the change in the first element of \eqn{\beta}, and convergence is reached when the change is smaller than \code{1E-6}. Override this behaviour by specifying the elements \code{ConvergenceMetric} and \code{ConvergenceMetricThreshold} in a list passed as \code{fpcontrol}.
+\code{ppi_robust_alrgengamma()}: must fit a PPI model via additive-log ratio transform of the simplex with \eqn{b_L=0} fixed and the final element of \eqn{\beta} fixed.
+The default convergence metric and threshold are different to the default for \code{\link[=ppi_robust]{ppi_robust()}} to match the implementation in \insertCite{scealy2024ro}{scorecompdir}: convergence is measured by the change in the first element of \eqn{\beta}, and convergence is reached when the change is smaller than \code{1E-6}. Override this behaviour by specifying the elements \code{ConvergenceMetric} and \code{ConvergenceMetricThreshold} in a list passed as \code{fpcontrol}.
 \code{\link[=Windham]{Windham()}} is called with \code{alternative_populationinverse = TRUE}.
 }
 \examples{
@@ -56,16 +56,6 @@ ppi_robust_alrgengamma(model$sample,
 \insertAllCited{}
 }
 \seealso{
-Other PPI model tools: 
-\code{\link{dppi}()},
-\code{\link{ppi_param_tools}},
-\code{\link{ppi}()},
-\code{\link{rppi}()}
-
-Other Windham robustness functions: 
-\code{\link{Windham}()},
-\code{\link{vMF_robust}()}
-
 Other PPI model tools: 
 \code{\link{dppi}()},
 \code{\link{ppi_param_tools}},

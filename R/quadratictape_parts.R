@@ -1,9 +1,9 @@
-#' @title Evaluate the Hessian and gradient offset of a Taped Quadratic Function
+#' @title Evaluate the Hessian and Gradient Offset of a Taped Quadratic Function
 #' @family tape evaluators
 #' @description
 #' When the score matching discrepancy function is quadratic then the gradient of the score matching discrepancy function can be written using the Hessian and an offset term. This can be useful for solving for the situation when the gradient is zero.
 #' The Hessian and offset term are computed using `CppAD` tapes.
-#' Taylor approximation can be used for locations at removable singularities.
+#' Taylor approximation can be used for locations at removed singularities (i.e. where intermediate values are unbounded).
 #' `quadratictape_parts()` will error if [`testquadratic(tape)`] returns `FALSE`.
 #' @details
 #' A quadratic function can be written
@@ -18,16 +18,16 @@
 #' The functions here evaluate the Hessian and offset \eqn{b(t)} for many values of \eqn{t}.
 #' Tapes of the Hessian and gradient offset are created using [`tapeHessian()`] and [`tapeGradOffset()`] respectively.
 #' These tapes are then evaluated for every row of `tmat`.
-#' When the `tcentres` row is not `NA`, then approximate results are calculated using [`pTaylorApprox()`]
+#' When the corresponding `tcentres` row is not `NA`, then approximate (but very accurate) results are calculated using Taylor approximation around the location given by the row of `tcentres`.
 #' 
-#' For score matching often \eqn{x} is a set of model parameters and the vector \eqn{t} is measurement.
-#' @param tape A tape of a quadratic function with \eqn{x} and \eqn{t} in [Details] below correspond to the independent and dynamic parameters of the tape respectively. For score matching this is a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in [`scorematchingintro`] with \eqn{z} the *dynamic parameters* and the model parameters the *independent parameters* (which is the usual from [`buildsmdtape()`].
+#' For score matching \eqn{x} is the set of model parameters and the vector \eqn{t} is a (multivariate) measurement.
+#' @param tape A tape of a quadratic function where the independent and dynamic parameters correspond to the \eqn{x} and \eqn{t} in the details section, respectively. For score matching `tape` should be a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in [`scorematchingintro`] with \eqn{z} the *dynamic parameters* and the model parameters the *independent variable* (which is the usual for the return of [`buildsmdtape()`]).
 #' @param tmat A matrix of vectors corresponding to values of \eqn{t} (see details). Each row corresponds to a vector. For score matching, these vectors are measurements.
 #' @param tcentres A matrix of Taylor approximation centres for rows of `tmat` that require approximation. `NA` for rows that do not require approximation.
 #' @param approxorder The order of the Taylor approximation to use.
 #' @return A list of
 #'  + `offset` Array of offsets \eqn{b(t)}, each row corresponding to a row in `tmat`
-#'  + `Hessian` Array of vectorised \eqn{H f(x; t)} (see [`tapeHessian()`]), each row corresponding to a row in `tmat`. For each row, obtain the Hessian as matrix using `matrix(ncol = length(tape$xtape))`.
+#'  + `Hessian` Array of vectorised \eqn{H f(x; t)} (see [`tapeHessian()`]), each row corresponding to a row in `tmat`. For each row, obtain the Hessian in matrix format by using `matrix(ncol = length(tape$xtape))`.
 #' @examples
 #' u <- rep(1/3, 3)
 #' smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",

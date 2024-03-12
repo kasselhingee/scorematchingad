@@ -37,13 +37,13 @@ ppi_smvalues(
 )
 }
 \arguments{
-\item{Y}{A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.}
+\item{Y}{A matrix of measurements. Each row is a compositional measurement (i.e. each row sums to 1 and has non-negative elmenents).}
 
-\item{paramvec}{Optionally a vector of the PPI models parameters. Non-NA values are fixed, NA-valued elements are estimated. Generate \code{paramvec} easily using \code{\link[=ppi_paramvec]{ppi_paramvec()}}.  If \code{NULL} then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.}
+\item{paramvec}{Optionally a vector of the PPI models parameters. \code{NA}-valued elements of this vector are estimated and non-\code{NA} values are fixed. Generate \code{paramvec} easily using \code{\link[=ppi_paramvec]{ppi_paramvec()}}.  If \code{NULL} then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.}
 
-\item{trans}{The name of the transformation: "alr" (additive log ratio), "sqrt" or "none".}
+\item{trans}{The name of the transformation of the manifold in Hyvärinen divergence (See \code{\link{scorematchingtheory}}): "clr" (centred log ratio), "alr" (additive log ratio), "sqrt" or "none".}
 
-\item{method}{"hardcoded" uses the hardcoded estimators by JS. "closed" uses \code{CppAD} to solve in closed form the a quadratic score matching discrepancy using \code{\link[=cppad_closed]{cppad_closed()}}. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) to iteratively find the minimum of the weighted Hyvärinen divergence.}
+\item{method}{\code{"closed"} uses \code{CppAD} to solve in closed form the a quadratic score matching discrepancy using \code{\link[=cppad_closed]{cppad_closed()}}. \code{"hardcoded"} uses hardcoded implementations. "iterative" uses \code{\link[=cppad_search]{cppad_search()}} (which uses \code{CppAD} and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) to iteratively find the minimum of the weighted Hyvärinen divergence.}
 
 \item{w}{Weights for each observation, if different observations have different importance. Used by \code{\link[=Windham]{Windham()}} and \code{\link[=ppi_robust]{ppi_robust()}} for robust estimation.}
 
@@ -53,7 +53,7 @@ ppi_smvalues(
 
 \item{acut}{The threshold \eqn{a_c} in \code{bdryw} to avoid over-weighting measurements interior to the simplex}
 
-\item{bdrythreshold}{\code{iterative} or \code{closed} methods only. For measurements within \code{bdrythreshold} of the simlex boundary a Taylor approximation is applied by shifting the measurement \code{shiftsize} towards the center of the simplex.}
+\item{bdrythreshold}{\code{iterative} or \code{closed} methods only. For measurements within \code{bdrythreshold} of the simplex boundary a Taylor approximation is applied by shifting the measurement \code{shiftsize} towards the center of the simplex.}
 
 \item{shiftsize}{\code{iterative} or \code{closed} methods only. For measurements within \code{bdrythreshold} of the simlex boundary a Taylor approximation is applied by shifting the measurement \code{shiftsize} towards the center of the simplex.}
 
@@ -61,16 +61,24 @@ ppi_smvalues(
 
 \item{control}{\code{iterative} only. Passed to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}} to control the iterative solver.}
 
-\item{paramvec_start}{\code{iterative} method only. The starting guess for \code{Rcgmin} with possibly NA values for the fixed (not-estimated) elements. Generate \code{paramvec_start} easily using \code{\link[=ppi_paramvec]{ppi_paramvec()}}.}
+\item{paramvec_start}{\code{iterative} method only. The starting guess for \code{Rcgmin}. Generate \code{paramvec_start} easily using \code{\link[=ppi_paramvec]{ppi_paramvec()}}.}
 
 \item{evalparam}{The parameter set to evaluate the score matching values.
-This is different to \code{paramvec}, which \emph{fixes} parameters and constrains the estimation.
-All elements of \code{evalparam} must be non-NA, and if there are any parameters fixed by \code{paramvec} then \code{evalparam} must match them (and it will warn if not).}
+This is different to \code{paramvec}, which specifies which parameters to estimate.
+All elements of \code{evalparam} must be non-NA, and any parameters fixed by \code{paramvec} must have the same value in \code{evalparam}.}
 
 \item{average}{If TRUE return the (weighted average) of the measurements, otherwise return the values for each measurement.}
 }
 \value{
-A list of
+\code{ppi()} returns:
+A list of \code{est}, \code{SE} and \code{info}.
+\itemize{
+\item \code{est} contains the estimates in vector form, \code{paramvec}, and as \eqn{A_L}, \eqn{b_L} and \eqn{\beta}.
+\item \code{SE} contains estimates of the standard errors if computed.
+\item \code{info} contains a variety of information about the model fitting procedure and results.
+}
+
+\code{ppi_smvalues()} returns a list of
 \itemize{
 \item \code{obj} the score matching discrepancy value
 \item \code{grad} the gradient of the score matching discrepancy
@@ -80,13 +88,15 @@ A list of
 }
 \description{
 Estimates the parameters of the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2023sc}{scorecompdir} for compositional data.
-For many situations computes the closed-form solution of the score matching estimator has been hardcoded by JLS \insertCite{scealy2023sc}{scorecompdir}.
-In the other situations, the score matching estimate is found by iteratively minimising the \emph{weighted Hyvärinen divergence} \insertCite{@Equation 13, @scealy2023sc, @hyvarinen2005es}{scorecompdir} using algorithmic differentiation (\code{CppAD}) and \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
+By default \code{ppi()} uses \code{\link[=cppad_closed]{cppad_closed()}} to find estimate.
+For many situations a hard-coded implementation of the score matching estimator is also available.
 
-For a given parameter vector \code{evalparam}, \code{ppi_smvalues()} computes the score matching discrepancy, the gradient and Hessian of the score matching discrepancy (see \code{\link[=smvalues]{smvalues()}}) and the gradient offset of the score matching discrepancy (see \code{\link[=quadratictape_parts]{quadratictape_parts()}}).
+For a given parameter vector \code{evalparam}, \code{ppi_smvalues()} computes the score matching discrepancy, the gradient and the Hessian of the score matching discrepancy (see \code{\link[=smvalues]{smvalues()}}) and the gradient offset of the score matching discrepancy (see \code{\link[=quadratictape_parts]{quadratictape_parts()}} and \code{\link[=tapeGradientOffset]{tapeGradientOffset()}}).
 }
 \details{
-Estimation may be performed via transformation onto Euclidean space (additive log ratio transform), the positive quadrant of the sphere (square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyvärinen divergence} \insertCite{@Equation 7, @scealy2023sc}{scorecompdir} is used.
+Estimation may be performed via transformation of the measure in Hyvärinen divergence from Euclidean space to the simplex (inverse of the additive log ratio transform), from a hyperplane to the simplex (inverse of the centred log ratio transform), from the positive quadrant of the sphere to the simplex (inverse of the square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyvärinen divergence} \insertCite{@Equation 7, @scealy2023sc}{scorecompdir} is used.
+Properties of the estimator using the square root transform were studied by \insertCite{scealy2023sc;textuan}{scorecompdir}.
+Properties of the estimator using the additive log ratio transfrom were studied by \insertCite{scealy2024ro;textuan}{scorecompdir}.
 
 There are three boundary weight functions available:
 \itemize{
@@ -101,7 +111,7 @@ where \eqn{z} is a point in the positive orthant of the p-dimensional unit spher
 and \eqn{z_j}{zj} is the jth component of z.
 }
 
-Scealy and Wood \insertCite{@Theorem 1, @scealy2023sc}{scorecompdir} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See \strong{Score Matching} in \code{\link{scorecompdir-package}})
+Scealy and Wood \insertCite{@Theorem 1, @scealy2023sc}{scorecompdir} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See \code{\link{scorematchingtheory}})
 when the boundary weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
 
 Hard-coded estimators are available for the following situations:
@@ -127,10 +137,10 @@ Hard-coded estimators are available for the following situations:
 
 The PPI model density is proportional to
 \deqn{\exp(z_L^TA_Lz_L + b_L^Tz_L)\prod_{i=1}^p z_i^{\beta_i},}
-where \eqn{p} is the dimension of \eqn{z}, and \eqn{z_L} represents a multivariate measurement \eqn{z} without the final (\eqn{p}th) component.
+where \eqn{p} is the dimension of a compositional measurement \eqn{z}, and \eqn{z_L} is \eqn{z} without the final (\eqn{p}th) component.
 \eqn{A_L} is a \eqn{p-1 \times p-1} symmetric matrix that controls the covariance between components.
-\eqn{b_L} is \eqn{p-1} vector that controls the location within the simplex
-The \eqn{i}th component of \eqn{\beta} controls the concentration of density when the \eqn{i}th component is close to zero.
+\eqn{b_L} is a \eqn{p-1} vector that controls the location within the simplex.
+The \eqn{i}th component \eqn{\beta_i} of \eqn{\beta} controls the concentration of density when \eqn{z_i} is close to zero: when \eqn{\beta_i \geq 0} there is no concentration and \eqn{\beta_i} is hard to identify; when \eqn{\beta_i < 0} then the probability density of the PPI model increases unboundedly as \eqn{z_i} approaches zero, with the increasing occuring more rapidly and sharply the closer \eqn{\beta_i} is to \eqn{-1}.
 }
 
 \examples{
@@ -146,12 +156,6 @@ estsqrt <- ppi(model$sample,
 \insertAllCited{}
 }
 \seealso{
-Other PPI model tools: 
-\code{\link{dppi}()},
-\code{\link{ppi_param_tools}},
-\code{\link{ppi_robust}()},
-\code{\link{rppi}()}
-
 Other PPI model tools: 
 \code{\link{dppi}()},
 \code{\link{ppi_param_tools}},

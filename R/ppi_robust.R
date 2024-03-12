@@ -8,7 +8,7 @@
 #' @param ... Passed to [`Windham()`] then to [`ppi()`].
 #' @family Windham robustness functions
 #' @return A list:
-#'  * `est` The estimated parameters as vector form (`paramvec`) and as `AL`, `bL` and `beta`.
+#'  * `est` The estimated parameters in vector form (`paramvec`) and as `AL`, `bL` and `beta`.
 #'  * `SE` "Not calculated." Returned for consistency with other estimators.
 #'  * `info` Information returned in the `optim` slot of [`Windham()`]. Includes the final weights in `finalweights`.
 #' @examples

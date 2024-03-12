@@ -12,31 +12,24 @@ ppi_cW_auto(cW, Y)
 \arguments{
 \item{cW}{The value of the non-zero Windham tuning exponents.}
 
-\item{...}{Values of \code{TRUE} or \code{FALSE} in the same order of the components specifying that a component has a concentration near zero.}
+\item{...}{Values of \code{TRUE} or \code{FALSE} in the same order of the components specifying that a component has probability mass concentrated near zero.}
 
 \item{Y}{A matrix of observations}
 }
 \value{
-A vector of the same length as the parameter vector of the PPI model. Elements of \eqn{A_L}{A_L} will have a value of \code{cW} if both their row and column component has probability mass concentrated near zero. Similarly, elements of \eqn{b_L} will have a value of \code{cW} if their row corresponds to a component that has a concentration near zero. All other elements are zero.
+A vector of the same length as the parameter vector of the PPI model. Elements of \eqn{A_L}{A_L} will have a value of \code{cW} if both their row and column component has probability mass concentrated near zero. Similarly, elements of \eqn{b_L} will have a value of \code{cW} if their row corresponds to a component that has a probability mass concentrated near zero. All other elements are zero.
 }
 \description{
 These functions help to quickly generate a set of Windham exponents for use in \code{\link[=ppi_robust]{ppi_robust()}} or \code{\link[=Windham]{Windham()}}.
-Elements corresponding to \eqn{A_L} and \eqn{b_L} corresponding to components with strong concentrations have non-zero constant tuning exponent, and all other elements have a tuning constant of zero.
+Rows and columns of \eqn{A_L} and \eqn{b_L} corresponding to components with strong concentrations of probability mass near zero have non-zero constant tuning exponent, and all other elements have a tuning constant of zero.
 All elements of \eqn{\beta} have a tuning exponent of zero.
 
-The function \code{ppi_cW_auto()} automatically detects concentrations near zero by fitting a PPI distribution with \eqn{A_L=0} and \eqn{b_L=0} (i.e. a Dirichlet distribution) with the square root transformation and minima-based boundary weight function.
+The function \code{ppi_cW_auto()} automatically detects concentrations near zero by fitting a PPI distribution with \eqn{A_L=0} and \eqn{b_L=0} (i.e. a Dirichlet distribution) with the centred log-ratio transformation of the manifold.
 }
 \details{
 The Windham robustifying method involes weighting observations by a function of the proposed model density \insertCite{windham1995ro}{scorecompdir}.
-For discretised compositional observations (e.g. microbiome data),
-observed components with a value of zero are common,
-creating weights of infinity for models with concentrations at zero \insertCite{scealy2024ro}{scorecompdir}.
-\insertCite{scealy2024ro;textual}{scorecompdir} avoided these infinite-valued weights by setting some parameters of the PPI model to zero when calculating the weights, choosing tuning exponents of zero for:
-\itemize{
-\item elements of \eqn{\beta} corresponding to concentrations near zero, which avoids infinite weights
-\item any parameter elements corresponding to components that do not have a strong concentration, because outliers are not possible on the simplex if there isn't a strong concentration.
-}
-
+\insertCite{scealy2024ro;textual}{scorecompdir} found that only some of the tuning constants should be non-zero:
+the tuning exponents corresponding to \eqn{\beta} should be zero to avoid infinite weights;and to improve efficiency any rows or columns of \eqn{A_L} corresponding to components without concentrations of probability mass (i.e. outliers can't exist) should have exponents of zero.
 \insertCite{scealy2024ro;textual}{scorecompdir} set the remaining tuning exponents to a constant.
 }
 \examples{

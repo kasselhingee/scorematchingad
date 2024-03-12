@@ -3,7 +3,7 @@
 \name{smvalues}
 \alias{smvalues}
 \alias{smvalues_wsum}
-\title{Compute score matching discrepancy value, gradient, and Hessian}
+\title{Compute Score Matching Discrepancy Value, Gradient, and Hessian}
 \usage{
 smvalues(smdtape, xmat, pmat, xcentres = NA * xmat, approxorder = 10)
 
@@ -43,8 +43,9 @@ A list of
 Computes a range of relevant information for investigating score matching estimators.
 }
 \details{
-The score matching discrepancy values are differ from the Hyvärinen Divergence by a constant, see ... .
+Computes the score matching discrepancy function from \code{\link{scorematchingtheory}} or weighted sum of the score matching discrepancy function.
 The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in \code{xmat} and \code{pmat}.
+Convert a Hessian row-vector to a matrix using \code{matrix(ncol = length(smdtape$xtape))}.
 }
 \examples{
 m <- rppi_egmodel(100)

@@ -33,7 +33,6 @@ ppiltheta2p <- function(ltheta){#ltheta is length of theta
 #' @rdname ppi_param_tools
 #' @order 3
 #' @title Convert a PPI Parameter Vector to AL, bL and beta
-#' @family PPI model tools
 #' @param paramvec A PPI parameter vector, typically created by [`ppi_paramvec()`] or as an output of [`ppi()`].
 #' @return `ppi_parammats()`: A named list of \eqn{A_L}, \eqn{b_L}, and \eqn{\beta}.
 #' @examples
