@@ -10,6 +10,7 @@
 #'  * A general capacity to implement score matching estimators that use algorithmic differentiation to avoid tedious manual algebra.
 #' The package uses `CppAD` and `Eigen` to differentiate model densities and compute the score matching discrepancy function (see [`scorematchingtheory`]).
 #' The score matching discrepancy is usually minimised by solving a quadratic equation, but a method for solving numerically (through [`optimx::Rcgmin()`]) is also included.
+#' Currently new models, manifolds or transforms require additions to the source code of this package, eventually it would be nice to enable these additions interactively within the `R`.
 #'  * Score matching estimators for the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2023sc,scealy2024ro}{scorematchingad}. See function [`ppi()`].
 #'  * Score matching and hybrid score matching estimators for von Mises Fisher, Bingham and Fisher-Bingham directional distributions \insertCite{mardia2016sc}{scorematchingad}. See [`vMF()`], [`Bingham()`] and [`FB()`].
 #'  * Implementation of a modification of Windham's robustifying method \insertCite{windham1995ro}{scorematchingad} for many exponential family distributions. See [`Windham()`].
