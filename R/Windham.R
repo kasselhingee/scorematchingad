@@ -1,9 +1,9 @@
 #' @title Windham Robustification of Point Estimators for Exponential Family Distributions
 #' @family generic score matching tools
-#' @description Performs a generalisation of Windham's robustifying method \insertCite{windham1995ro}{scorecompdir} for exponential models with natural parameters that are a linear function of the parameters for estimation.
+#' @description Performs a generalisation of Windham's robustifying method \insertCite{windham1995ro}{scorematchingad} for exponential models with natural parameters that are a linear function of the parameters for estimation.
 #' Estimators must solve estimating equations of the form
 #' \deqn{\sum_{i = 1}^n U(z_i; \theta) = 0.}
-#' The estimate is found iteratively through a fixed point method as suggested by \insertCite{windham1995ro;textual}{scorecompdir}.
+#' The estimate is found iteratively through a fixed point method as suggested by \insertCite{windham1995ro;textual}{scorematchingad}.
 #'
 
 #' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
@@ -24,7 +24,7 @@
 #'
 #' The function `Windham()` assumes that \eqn{f} is proportional to \eqn{\exp(\eta(\theta) \cdot T(z))} and \eqn{\eta(\theta)} is linear. It allows a generalisation where \eqn{c} is a vector so the weight for an observation \eqn{z} is \deqn{f(z; c \circ \theta),} where \eqn{\theta} is the parameter vector, \eqn{c} is a vector of tuning constants, and \eqn{\circ} is the element-wise product (Hadamard product).
 #'
-#' The solution is found iteratively \insertCite{windham1995ro}{scorecompdir}. 
+#' The solution is found iteratively \insertCite{windham1995ro}{scorematchingad}. 
 #' Given a parameter set \eqn{\theta_n}, `Windham()` first computes weights \eqn{f(z; c \circ \theta_n)} for each observation \eqn{z}.
 #' Then, a new parameter set \eqn{\tilde{\theta}_{n+1}} is estimated by `estimator` with the computed weights.
 #' This new parameter set is element-wise-multiplied by the (element-wise) reciprical of \eqn{1+c} to obtain an adjusted parameter set \eqn{\theta_{n+1}}.
@@ -192,7 +192,7 @@ Windham_populationinverse <- function(cW){
   return(tauinv)
 }
 
-#' @describeIn Windham_populationinverse The transform implemented as described by \insertCite{scealy2024ro;textual}{scorecompdir}. It is mathematically equivalent to multiplication by the result of `Windham_populationinverse()` in the situation in \insertCite{scealy2024ro;textual}{scorecompdir}.
+#' @describeIn Windham_populationinverse The transform implemented as described by \insertCite{scealy2024ro;textual}{scorematchingad}. It is mathematically equivalent to multiplication by the result of `Windham_populationinverse()` in the situation in \insertCite{scealy2024ro;textual}{scorematchingad}.
 #' @export
 #' @param newtheta The parameter vector most recently estimated
 #' @param previoustheta The parameter vector estimated in the previous step

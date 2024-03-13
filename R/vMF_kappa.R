@@ -2,10 +2,10 @@
 #' @title Estimate the concentration for a von Mises Fisher distribution
 #' @family directional model estimators
 #' @description Using score matching, estimates the concentration \eqn{\kappa} from a sample with mean direction of `c(1, 0, 0, ..., 0)`. 
-#' Results by \insertCite{mardia2016sc;textual}{scorecompdir} and some experiments of our own suggest that good implementations of the maximum likelihood estimator (e.g. [`movMF::movMF()`] ) will out perform `vMF_kappa()`.
+#' Results by \insertCite{mardia2016sc;textual}{scorematchingad} and some experiments of our own suggest that good implementations of the maximum likelihood estimator (e.g. [`movMF::movMF()`] ) will out perform `vMF_kappa()`.
 #'
 #' Often a sample with mean direction of `c(1, 0, 0, ...., 0)` is created by estimating the mean direction and rotating the data such that the mean direction equals `c(1, 0, 0, ...)`.
-#' Performing this mean direction estimate, then rotation, then estimating concentration with score matching correponds to the hybrid estimator by \insertCite{mardia2016sc;textual}{scorecompdir}.
+#' Performing this mean direction estimate, then rotation, then estimating concentration with score matching correponds to the hybrid estimator by \insertCite{mardia2016sc;textual}{scorematchingad}.
 #' @inherit vMF sections
 #' @references \insertAllCited()
 #' @details

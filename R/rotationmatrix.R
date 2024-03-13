@@ -1,11 +1,11 @@
 #' @noRd
 #' @title Rotation Matrix From Two Vectors
-#' @description Creates a rotation matrix that rotates between two vectors. The matrix was specified by \insertCite{@@Section 3.2.1, @amaral2007pi;textual}{scorecompdir}, and is such that any vector perpendicular to the two vectors is unchanged (except when the two vectors are in exactly opposite directions).
+#' @description Creates a rotation matrix that rotates between two vectors. The matrix was specified by \insertCite{@@Section 3.2.1, @amaral2007pi;textual}{scorematchingad}, and is such that any vector perpendicular to the two vectors is unchanged (except when the two vectors are in exactly opposite directions).
 #' @param a The vector to rotate `b` to.
 #' @param b A vector that will be rotate to `a`.
 #' @details
 #' The return matrix \eqn{Q} is a rotation such that \eqn{Qb=a}, and for any vector \eqn{z} perpendicular to both `b` and `a`, \eqn{Qz=z}.
-#' In the extremely rare situation that `b` = -`a`, the \insertCite{amaral2007pi;textual}{scorecompdir} method does not apply. Instead `rotationmatrix()`, rotates `b` to the south pole, applies a rotation of `pi` that passes through the second basis vector and then reverses the first rotation.
+#' In the extremely rare situation that `b` = -`a`, the \insertCite{amaral2007pi;textual}{scorematchingad} method does not apply. Instead `rotationmatrix()`, rotates `b` to the south pole, applies a rotation of `pi` that passes through the second basis vector and then reverses the first rotation.
 #' The same method, without the case of `b = -a`, is also implemented in `rotation()` function of the [`Directional`](https://cran.r-project.org/package=Directional) package.
 #' @references \insertAllCited{}
 #' @examples

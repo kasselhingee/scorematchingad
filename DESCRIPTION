@@ -1,4 +1,4 @@
-Package: scorecompdir
+Package: scorematchingad
 Title: Score Matching Estimation by Automatic Differentiation
 Version: 0.0.0.50
 Authors@R: 

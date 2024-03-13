@@ -30,7 +30,7 @@ manifoldtransform <- function(start, tran = "identity", end = start){
   return(out)
 }
 
-mantranmodule <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+mantranmodule <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
 
 mantrancombos <- c(
   "sim-sqrt-sph",

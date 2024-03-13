@@ -1,9 +1,9 @@
 #' @title Score Matching Estimator for the von-Mises Fisher Distribution
 #' @family directional model estimators
 #' @description
-#' In general the normalising constant in von Mises Fisher distributions is hard to compute, so \insertCite{mardia2016sc;textual}{scorecompdir} suggested a hybrid method that uses maximum likelihood to estimate the mean direction and score matching for the concentration.
+#' In general the normalising constant in von Mises Fisher distributions is hard to compute, so \insertCite{mardia2016sc;textual}{scorematchingad} suggested a hybrid method that uses maximum likelihood to estimate the mean direction and score matching for the concentration.
 #' We can also estimate all parameters using score matching (`smfull` method), although this estimator is likely to be less efficient than the hybrid estimator.
-#' On the circle the hybrid estimators were often nearly as efficient as maximum likelihood estimators \insertCite{mardia2016sc}{scorecompdir}.
+#' On the circle the hybrid estimators were often nearly as efficient as maximum likelihood estimators \insertCite{mardia2016sc}{scorematchingad}.
 #' For maximum likelihood estimators of the von Mises Fisher distribution, which all use approximations of the normalising constant, consider [`movMF::movMF()`].
 
 #' @section von Mises Fisher Model: 
@@ -12,7 +12,7 @@
 #' where \eqn{z} is on a unit sphere,
 #' \eqn{\kappa} is termed the *concentration*,
 #' and \eqn{\mu} is the *mean direction unit vector*.
-#' The effect of the \eqn{\mu} and \eqn{\kappa} can be decoupled in a sense \insertCite{@p169, @mardia2000di}{scorecompdir}, allowing for estimating \eqn{\mu} and \eqn{\kappa} separately.
+#' The effect of the \eqn{\mu} and \eqn{\kappa} can be decoupled in a sense \insertCite{@p169, @mardia2000di}{scorematchingad}, allowing for estimating \eqn{\mu} and \eqn{\kappa} separately.
 
 #' @details
 #' The full score matching estimator (`method = "smfull"`) estimates \eqn{\kappa \mu}.
@@ -20,7 +20,7 @@
 #' Both use [`cppad_closed()`] for score matching estimation.
 #' @param Y A matrix of multivariate observations in Cartesian coordinates. Each row is a multivariate measurement (i.e. each row corresponds to an individual).
 #' @param paramvec `smfull` method only: Optional. A vector of same length as the dimension, representing the elements of the \eqn{\kappa \mu} vector. 
-#' @param method Either "Mardia" or "hybrid" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}
+#' @param method Either "Mardia" or "hybrid" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorematchingad}
 #'  or "smfull" for the full score matching estimator.
 #' @param w An optional vector of weights for each measurement in `Y`
 #' @references

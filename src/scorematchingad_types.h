@@ -1,5 +1,5 @@
-# ifndef scorecompdir_TYPES
-# define scorecompdir_TYPES
+# ifndef scorematchingad_TYPES
+# define scorematchingad_TYPES
 
 # include <RcppCommon.h> //don't use Rcpp.h until after the wraps and as declaration at the end of this file
 # include <iostream>        // standard input/output

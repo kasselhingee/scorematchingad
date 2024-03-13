@@ -4,7 +4,7 @@
 // things for manipulating and evaluating CppAD::ADFun objects from R
 
 //for content that is Rcpp specific
-#include "scorecompdir_types.h"
+#include "scorematchingad_types.h"
 #include "utils/wrapas.hpp"  //needed because converting veca1 from R
 
 //' @noRd

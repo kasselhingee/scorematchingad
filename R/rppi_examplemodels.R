@@ -10,7 +10,7 @@
 #' @examples
 #' rppi_egmodel(1000)
 #' @describeIn rppi 
-#' Simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2023sc}{scorecompdir} and returns both simulations and model parameters. 
+#' Simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2023sc}{scorematchingad} and returns both simulations and model parameters. 
 #' @order 2
 #' @references
 #' \insertAllCited{}

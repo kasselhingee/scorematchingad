@@ -10,7 +10,7 @@
 #' @param centre For pTaylorApprox. A vector in the domain of the taped function to approximate the value at `x` from.
 #' @param order For pTaylorApprox. The order of Taylor expansion to use.
 pTaylorApprox <- function(pfun, x, centre, dynparam, order) {
-    .Call('_scorecompdir_pTaylorApprox', PACKAGE = 'scorecompdir', pfun, x, centre, dynparam, order)
+    .Call('_scorematchingad_pTaylorApprox', PACKAGE = 'scorematchingad', pfun, x, centre, dynparam, order)
 }
 
 #' @noRd
@@ -33,19 +33,19 @@ NULL
 #' @param x A vector in the domain of the taped function
 #' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
 pForward0 <- function(pfun, x, dynparam) {
-    .Call('_scorecompdir_pForward0', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+    .Call('_scorematchingad_pForward0', PACKAGE = 'scorematchingad', pfun, x, dynparam)
 }
 
 #' @noRd
 #' @describeIn evaltape_internal Evaluates a the Jacobian of a tape using the `CppAD` `Jacobian` method <https://cppad.readthedocs.io/en/latest/Jacobian.html>. 
 pJacobian <- function(pfun, x, dynparam) {
-    .Call('_scorecompdir_pJacobian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+    .Call('_scorematchingad_pJacobian', PACKAGE = 'scorematchingad', pfun, x, dynparam)
 }
 
 #' @noRd
 #' @describeIn evaltape_internal Evaluates a the Hessian of a tape using the `CppAD` `Hessian` method <https://cppad.readthedocs.io/en/latest/Hessian.html>, assuming that range space of the taped function has dimension of `1`. 
 pHessian <- function(pfun, x, dynparam) {
-    .Call('_scorecompdir_pHessian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+    .Call('_scorematchingad_pHessian', PACKAGE = 'scorematchingad', pfun, x, dynparam)
 }
 
 #' @noRd
@@ -57,7 +57,7 @@ pHessian <- function(pfun, x, dynparam) {
 #' The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/en/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
 #' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/en/latest/glossary.html#dynamic> ).
 pParameter <- function(pfun) {
-    .Call('_scorecompdir_pParameter', PACKAGE = 'scorecompdir', pfun)
+    .Call('_scorematchingad_pParameter', PACKAGE = 'scorematchingad', pfun)
 }
 
 #' @noRd
@@ -77,7 +77,7 @@ pParameter <- function(pfun) {
 #' The Jacobian as a matrix, could then be obtained by [`as.matrix()`] with `byrow = TRUE` and `ncol = n`.
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 pTapeJacobian <- function(pfun, x, dynparam) {
-    .Call('_scorecompdir_pTapeJacobian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+    .Call('_scorematchingad_pTapeJacobian', PACKAGE = 'scorematchingad', pfun, x, dynparam)
 }
 
 #' @noRd
@@ -95,7 +95,7 @@ pTapeJacobian <- function(pfun, x, dynparam) {
 #' The Hessian as a matrix, can be obtained by using [`as.matrix()`] with `ncol = n`.
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 pTapeHessian <- function(pfun, x, dynparam) {
-    .Call('_scorecompdir_pTapeHessian', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+    .Call('_scorematchingad_pTapeHessian', PACKAGE = 'scorematchingad', pfun, x, dynparam)
 }
 
 #' @noRd
@@ -116,7 +116,7 @@ pTapeHessian <- function(pfun, x, dynparam) {
 #'  \deqn{b(\theta) = \Delta f(x;\theta) - H f(x; \theta) x,}
 #' which does not depend on \eqn{x}.
 pTapeGradOffset <- function(pfun, x, dynparam) {
-    .Call('_scorecompdir_pTapeGradOffset', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+    .Call('_scorematchingad_pTapeGradOffset', PACKAGE = 'scorematchingad', pfun, x, dynparam)
 }
 
 #' @noRd
@@ -129,7 +129,7 @@ pTapeGradOffset <- function(pfun, x, dynparam) {
 #' The `x` vector is used as the value to conduct the taping.
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 ptapelogdetJ <- function(pfun, x, dynparam) {
-    .Call('_scorecompdir_ptapelogdetJ', PACKAGE = 'scorecompdir', pfun, x, dynparam)
+    .Call('_scorematchingad_ptapelogdetJ', PACKAGE = 'scorematchingad', pfun, x, dynparam)
 }
 
 #' @noRd
@@ -142,7 +142,7 @@ ptapelogdetJ <- function(pfun, x, dynparam) {
 #' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
 #' @return A pointer to an ADFun
 swapDynamic <- function(pfun, newvalue, newdynparam) {
-    .Call('_scorecompdir_swapDynamic', PACKAGE = 'scorecompdir', pfun, newvalue, newdynparam)
+    .Call('_scorematchingad_swapDynamic', PACKAGE = 'scorematchingad', pfun, newvalue, newdynparam)
 }
 
 #' @noRd
@@ -152,7 +152,7 @@ swapDynamic <- function(pfun, newvalue, newdynparam) {
 #' @param llname name of the likelihood function
 #' @return An RCpp::XPtr object pointing to the ADFun
 ptapell <- function(z_ad, theta_ad, llname, tran, fixedtheta, verbose) {
-    .Call('_scorecompdir_ptapell', PACKAGE = 'scorecompdir', z_ad, theta_ad, llname, tran, fixedtheta, verbose)
+    .Call('_scorematchingad_ptapell', PACKAGE = 'scorematchingad', z_ad, theta_ad, llname, tran, fixedtheta, verbose)
 }
 
 #' @noRd
@@ -164,6 +164,6 @@ ptapell <- function(z_ad, theta_ad, llname, tran, fixedtheta, verbose) {
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
 ptapesmd <- function(u_ad, theta_ad, pll, tran, man, weightname, acut, verbose) {
-    .Call('_scorecompdir_ptapesmd', PACKAGE = 'scorecompdir', u_ad, theta_ad, pll, tran, man, weightname, acut, verbose)
+    .Call('_scorematchingad_ptapesmd', PACKAGE = 'scorematchingad', u_ad, theta_ad, pll, tran, man, weightname, acut, verbose)
 }
 

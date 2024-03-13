@@ -3,20 +3,20 @@
 #' @inheritParams vMF
 #' @param A For full score matching only: if supplied, then NA elements of `A` are estimated and the other elements are fixed. For identifiability the final element of `diag(A)` must be `NA`.
 #' @description
-#' Score matching estimators for the Bingham distribution's parameter matrix. Two methods are available: a full score matching method that estimates the parameter matrix directly and a hybrid method by \insertCite{mardia2016sc;textual}{scorecompdir} that uses score matching to estimate just the eigenvalues of the parameter matrix.
+#' Score matching estimators for the Bingham distribution's parameter matrix. Two methods are available: a full score matching method that estimates the parameter matrix directly and a hybrid method by \insertCite{mardia2016sc;textual}{scorematchingad} that uses score matching to estimate just the eigenvalues of the parameter matrix.
 #' @details
 #' The Bingham distribution has a density proportional to
 #' \deqn{\exp(z^T A z),}
-#' where \eqn{A} is a symmetric matrix and the trace (sum of the diagonals) of \eqn{A} is zero for identifiability \insertCite{@p181, @mardia2000di}{scorecompdir}.
+#' where \eqn{A} is a symmetric matrix and the trace (sum of the diagonals) of \eqn{A} is zero for identifiability \insertCite{@p181, @mardia2000di}{scorematchingad}.
 #'
 #' The full score matching method estimates all elements of \eqn{A} directly except the final element of the diagonal, which is calculated from the sum of the other diagonal elements to ensure that the trace of \eqn{A} is zero.
 #'
-#' The method by \insertCite{mardia2016sc;textual}{scorecompdir} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}. 
+#' The method by \insertCite{mardia2016sc;textual}{scorematchingad} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}. 
 #' The observations `Y` are then standardised to `Y`\eqn{G}. 
 #' This standardisation corresponds to diagonalising \eqn{A}
 #' where the eigenvalues of \eqn{A} become the diagonal elements of the new \eqn{A}.
 #' The diagonal elements of the new \eqn{A} are then estimated using score matching, with the final diagonal element calculated from the sum of the other elements.
-#' See \insertCite{mardia2016sc;textual}{scorecompdir} for details.
+#' See \insertCite{mardia2016sc;textual}{scorematchingad} for details.
 #' @references \insertAllCited{}
 #' @examples
 #' p <- 4

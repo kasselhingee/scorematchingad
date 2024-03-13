@@ -1,9 +1,9 @@
 #' @title A PPI Score-Matching Marginal Moment Matching Estimator (dimension=3 only)
-#' @description Computes a marginal moment matching estimator \insertCite{@Section 6.2, @scealy2023sc}{scorecompdir}, which assumes \eqn{\beta} is a known vector with the same value in each element, and \eqn{b_L = 0}.
+#' @description Computes a marginal moment matching estimator \insertCite{@Section 6.2, @scealy2023sc}{scorematchingad}, which assumes \eqn{\beta} is a known vector with the same value in each element, and \eqn{b_L = 0}.
 #' Only \eqn{A_L} is estimated. 
 #' @details
 #' \eqn{\beta=\beta_0} is fixed and not estimated. \eqn{b_L} is fixed at zero.
-#' See \insertCite{@Section 6.2 and A.8 of @scealy2023sc}{scorecompdir}.
+#' See \insertCite{@Section 6.2 and A.8 of @scealy2023sc}{scorematchingad}.
 #' The boundary weight function in the score matching discrepancy is the unthresholded product weight function
 #' \deqn{h(z)^2 = \min\left(\prod_{j=1}^{p} z_j^2, a_c^2\right).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2).}
 #' @param Y Count data, each row is a multivariate observation.
