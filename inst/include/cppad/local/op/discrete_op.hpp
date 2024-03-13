@@ -1,121 +1,187 @@
 # ifndef CPPAD_LOCAL_OP_DISCRETE_OP_HPP
 # define CPPAD_LOCAL_OP_DISCRETE_OP_HPP
-/* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
+// SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
+// SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// ----------------------------------------------------------------------------
+/*
+{xrst_begin discrete_op dev}
+{xrst_spell
+   ataylor
+   tpv
+}
 
-CppAD is distributed under the terms of the
-             Eclipse Public License Version 2.0.
+Forward Mode Result for Discrete Functions
+##########################################
 
-This Source Code may also be made available under the following
-Secondary License when the conditions for such availability set forth
-in the Eclipse Public License, Version 2.0 are satisfied:
-      GNU General Public License, Version 2.0 or later.
----------------------------------------------------------------------------- */
+Syntax
+******
 
+| ``forward_dis_op`` (
+| |tab| *p* , *q* , *r* , *i_z* , *arg* , *cap_order* , *taylor*
+| ) ``forward_dis_op`` (
+| |tab| *p* , *q* , *r* , *i_z* , *arg* , *cap_order* , *ataylor*
+| )
 
-namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
-/*!
-\file discrete_op.hpp
-Forward mode for z = f(x) where f is piecewise constant.
-*/
+Prototype
+*********
+{xrst_literal
+   // BEGIN_PROTOTYPE
+   // END_PROTOTYPE
+}
 
-
-/*!
-forward mode Taylor coefficient for result of op = DisOp.
-
+Usage
+*****
 The C++ source code corresponding to this operation is
-\verbatim
-    z = f(x)
-\endverbatim
-where f is a piecewise constant function (and it's derivative is always
-calculated as zero).
 
-\tparam Base
-base type for the operator; i.e., this operation was recorded
-using AD< Base > and computations by this routine are done using type
- Base .
+   *az* = *f* ( *ax* )
 
-\param p
+where *f* is a piecewise constant function and it's derivative is
+always calculated as zero.
+
+RecBase
+*******
+Is the Base type when this function was recorded; i.e.,
+*ax* and *az* have type ``AD`` < *RecBase* > .
+
+p
+*
 is the lowest order Taylor coefficient that will be calculated.
 
-\param q
+q
+*
 is the highest order Taylor coefficient that will be calculated.
 
-\param r
+r
+*
 is the number of directions, for each order,
-that will be calculated (except for order zero wich only has one direction).
+that will be calculated (except for order zero which only has one direction).
 
-\param i_z
+i_z
+***
 variable index corresponding to the result for this operation;
-i.e. the row index in taylor corresponding to z.
+i.e. the row index in *taylor* or *ataylor* corresponding to
+*z* .
 
-\param arg
- arg[0]
-\n
+arg
+***
+
+arg[0]
+======
 is the index, in the order of the discrete functions defined by the user,
 for this discrete function.
-\n
-\n
- arg[1]
-variable index corresponding to the argument for this operator;
-i.e. the row index in taylor corresponding to x.
 
-\param cap_order
+arg[1]
+======
+variable index corresponding to the argument for this operator;
+i.e. the row index in *taylor* or *ataylor* corresponding to x.
+
+cap_order
+*********
 maximum number of orders that will fit in the taylor array.
 
-\par tpv
+tpv
+***
 We use the notation
-<code>tpv = (cap_order-1) * r + 1</code>
+
+   *tpv* = ( *cap_order* ``-1`` ) * *r*  + 1
+
 which is the number of Taylor coefficients per variable
 
-\param taylor
-\b Input: <code>taylor [ arg[1] * tpv + 0 ]</code>
+taylor
+******
+The type of this parameter is *RecBase* .
+
+Input
+=====
+The value taylor[ arg[1] * tpv + 0 ]
 is the zero order Taylor coefficient corresponding to x.
-\n
-\b Output: if <code>p == 0</code>
-<code>taylor [ i_z * tpv + 0 ]</code>
+
+Output
+======
+If *p* is zero,
+taylor[ i_z * tpv + 0 ]
 is the zero order Taylor coefficient corresponding to z.
 For k = max(p, 1), ... , q,
-<code>taylor [ i_z * tpv + (k-1)*r + 1 + ell ]</code>
+taylor[ i_z * tpv + (k-1)*r + 1 + ell ]
 is the k-th order Taylor coefficient corresponding to z
 (which is zero).
 
-\par Checked Assertions where op is the unary operator with one result:
-\li NumArg(op) == 2
-\li NumRes(op) == 1
-\li q < cap_order
-\li 0 < r
+ataylor
+*******
+The type of this parameter is ``AD`` < *RecBase* > .
+Otherwise, it has the same description as *taylor* .
+
+Asserts
+*******
+NumArg(op) == 2, NumRes(op) == 1,  q < cap_order, 0 < r
+
+{xrst_end discrete_op}
 */
-template <class Base>
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
+
+// ---------------------------------------------------------------------------
+// BEGIN_PROTOTYPE
+template <class RecBase>
 void forward_dis_op(
-    size_t        p           ,
-    size_t        q           ,
-    size_t        r           ,
-    size_t        i_z         ,
-    const addr_t* arg         ,
-    size_t        cap_order   ,
-    Base*         taylor      )
+   size_t        p           ,
+   size_t        q           ,
+   size_t        r           ,
+   size_t        i_z         ,
+   const addr_t* arg         ,
+   size_t        cap_order   ,
+   RecBase*      taylor      )
+// END_PROTOTYPE
 {
-    // check assumptions
-    CPPAD_ASSERT_UNKNOWN( NumArg(DisOp) == 2 );
-    CPPAD_ASSERT_UNKNOWN( NumRes(DisOp) == 1 );
-    CPPAD_ASSERT_UNKNOWN( q < cap_order );
-    CPPAD_ASSERT_UNKNOWN( 0 < r );
+   // check assumptions
+   CPPAD_ASSERT_UNKNOWN( NumArg(DisOp) == 2 );
+   CPPAD_ASSERT_UNKNOWN( NumRes(DisOp) == 1 );
+   CPPAD_ASSERT_UNKNOWN( q < cap_order );
+   CPPAD_ASSERT_UNKNOWN( 0 < r );
 
-    // Taylor coefficients corresponding to argument and result
-    size_t num_taylor_per_var = (cap_order-1) * r + 1;
-    Base* x = taylor + size_t(arg[1]) * num_taylor_per_var;
-    Base* z = taylor +    i_z * num_taylor_per_var;
+   // Taylor coefficients corresponding to argument and result
+   size_t num_taylor_per_var = (cap_order-1) * r + 1;
+   RecBase* x = taylor + size_t(arg[1]) * num_taylor_per_var;
+   RecBase* z = taylor +    i_z * num_taylor_per_var;
 
-    if( p == 0 )
-    {   z[0]  = discrete<Base>::eval(size_t(arg[0]), x[0]);
-        p++;
-    }
-    for(size_t ell = 0; ell < r; ell++)
-        for(size_t k = p; k <= q; k++)
-            z[ (k-1) * r + 1 + ell ] = Base(0.0);
+   if( p == 0 )
+   {  z[0]  = discrete<RecBase>::eval(size_t(arg[0]), x[0]);
+      p++;
+   }
+   for(size_t ell = 0; ell < r; ell++)
+      for(size_t k = p; k <= q; k++)
+         z[ (k-1) * r + 1 + ell ] = RecBase(0.0);
 }
+// ---------------------------------------------------------------------------
+template <class RecBase>
+void forward_dis_op(
+   size_t        p           ,
+   size_t        q           ,
+   size_t        r           ,
+   size_t        i_z         ,
+   const addr_t* arg         ,
+   size_t        cap_order   ,
+   AD<RecBase>*  ataylor     )
+{
+   // check assumptions
+   CPPAD_ASSERT_UNKNOWN( NumArg(DisOp) == 2 );
+   CPPAD_ASSERT_UNKNOWN( NumRes(DisOp) == 1 );
+   CPPAD_ASSERT_UNKNOWN( q < cap_order );
+   CPPAD_ASSERT_UNKNOWN( 0 < r );
 
+   // Taylor coefficients corresponding to argument and result
+   size_t num_taylor_per_var = (cap_order-1) * r + 1;
+   AD<RecBase>* ax = ataylor + size_t(arg[1]) * num_taylor_per_var;
+   AD<RecBase>* az = ataylor +    i_z * num_taylor_per_var;
+
+   if( p == 0 )
+   {  az[0]  = discrete<RecBase>::ad_eval(size_t(arg[0]), ax[0]);
+      p++;
+   }
+   for(size_t ell = 0; ell < r; ell++)
+      for(size_t k = p; k <= q; k++)
+         az[ (k-1) * r + 1 + ell ] = AD<RecBase>(0.0);
+}
 
 } } // END_CPPAD_LOCAL_NAMESPACE
 # endif
