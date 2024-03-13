@@ -7,8 +7,10 @@
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
 #' m <- runif(p, -10, 10)
 #' m <- m / sqrt(sum(m^2))
-#' Y <- simdd::rFisherBingham(1000, 2 * m, A)
-#' FB(Y)
+#' if (requireNamespace("simdd"){
+#'   Y <- simdd::rFisherBingham(1000, 2 * m, A)
+#'   FB(Y)
+#' }
 #' @inheritParams vMF
 #' @param km Optional. A vector of the same length as the dimension, representing the parameter vector for the von Mises-Fisher component (i.e. the \eqn{\kappa \mu} see [`vMF()`]).
 #' If supplied, the non-NA elements are fixed.

@@ -15,7 +15,9 @@ vMF_m <- function(Y, w = NULL){
 #' @details `vMF_m()` Rotates a set of observations on a sphere to have mean direction of \eqn{(1, 0, 0, ..., 0)}.
 #' @param m Mean direction. If omitted then it will be computed using `vMF_m()`.
 #' @examples
-#' Y <- simdd::rFisherBingham(nsim = 10, mu = c(1,2,3))
+#' if (requireNamespace("simdd"){
+#'   Y <- simdd::rFisherBingham(nsim = 10, mu = c(1,2,3))
+#' }
 vMF_stdY <- function(Y, m = NULL, w = NULL){
   if(is.null(m)){
     m <- vMF_m(Y, w = w)

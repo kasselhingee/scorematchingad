@@ -22,9 +22,10 @@
 #' p <- 4
 #' A <- rsymmetricmatrix(p)
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
-#' Y <- simdd::rBingham(100, A)
-#'
-#' Bingham(Y, method = "Mardia")
+#' if (requireNamespace("simdd"){
+#'   Y <- simdd::rBingham(100, A)
+#'   Bingham(Y, method = "Mardia")
+#' }
 #' @return
 #' A list of `est`, `SE` and `info`.
 #'  * `est` contains the estimated matrix `A` and a vector form, `paramvec`, of `A` (ordered according to `c(diag(A)[1:(p-1)], A[upper.tri(A)])` ). For the Mardia method, the estimated eigenvalues of `A` (named `evals`) and eigenvectors of `A` (named `G`) are also returned.

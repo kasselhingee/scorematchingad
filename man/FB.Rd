@@ -36,8 +36,10 @@ A <- rsymmetricmatrix(p, -10, 10)
 A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
 m <- runif(p, -10, 10)
 m <- m / sqrt(sum(m^2))
-Y <- simdd::rFisherBingham(1000, 2 * m, A)
-FB(Y)
+if (requireNamespace("simdd"){
+  Y <- simdd::rFisherBingham(1000, 2 * m, A)
+  FB(Y)
+}
 }
 \seealso{
 Other directional model estimators: 
