@@ -27,10 +27,10 @@ All elements of \eqn{\beta} have a tuning exponent of zero.
 The function \code{ppi_cW_auto()} automatically detects concentrations near zero by fitting a PPI distribution with \eqn{A_L=0} and \eqn{b_L=0} (i.e. a Dirichlet distribution) with the centred log-ratio transformation of the manifold.
 }
 \details{
-The Windham robustifying method involes weighting observations by a function of the proposed model density \insertCite{windham1995ro}{scorecompdir}.
-\insertCite{scealy2024ro;textual}{scorecompdir} found that only some of the tuning constants should be non-zero:
+The Windham robustifying method involes weighting observations by a function of the proposed model density \insertCite{windham1995ro}{scorematchingad}.
+\insertCite{scealy2024ro;textual}{scorematchingad} found that only some of the tuning constants should be non-zero:
 the tuning exponents corresponding to \eqn{\beta} should be zero to avoid infinite weights;and to improve efficiency any rows or columns of \eqn{A_L} corresponding to components without concentrations of probability mass (i.e. outliers can't exist) should have exponents of zero.
-\insertCite{scealy2024ro;textual}{scorecompdir} set the remaining tuning exponents to a constant.
+\insertCite{scealy2024ro;textual}{scorematchingad} set the remaining tuning exponents to a constant.
 }
 \examples{
 Y <- rppi_egmodel(100)$sample

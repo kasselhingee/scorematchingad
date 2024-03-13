@@ -35,11 +35,11 @@ A list:
 \code{ppi_robust()} uses \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}} to estimate a PPI distribution robustly.
 There are many arguments to the \code{\link[=ppi]{ppi()}} function and we highly recommend trialling your arguments on \code{\link[=ppi]{ppi()}} first before running \code{ppi_robust()}.
 
-\code{ppi_robust_alrgengamma()} performs the Windham robustification algorithm exactly as described in \insertCite{scealy2024ro;textual}{scorecompdir} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}}.
+\code{ppi_robust_alrgengamma()} performs the Windham robustification algorithm exactly as described in \insertCite{scealy2024ro;textual}{scorematchingad} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}}.
 }
 \details{
 \code{ppi_robust_alrgengamma()}: must fit a PPI model via additive-log ratio transform of the simplex with \eqn{b_L=0} fixed and the final element of \eqn{\beta} fixed.
-The default convergence metric and threshold are different to the default for \code{\link[=ppi_robust]{ppi_robust()}} to match the implementation in \insertCite{scealy2024ro}{scorecompdir}: convergence is measured by the change in the first element of \eqn{\beta}, and convergence is reached when the change is smaller than \code{1E-6}. Override this behaviour by specifying the elements \code{ConvergenceMetric} and \code{ConvergenceMetricThreshold} in a list passed as \code{fpcontrol}.
+The default convergence metric and threshold are different to the default for \code{\link[=ppi_robust]{ppi_robust()}} to match the implementation in \insertCite{scealy2024ro}{scorematchingad}: convergence is measured by the change in the first element of \eqn{\beta}, and convergence is reached when the change is smaller than \code{1E-6}. Override this behaviour by specifying the elements \code{ConvergenceMetric} and \code{ConvergenceMetricThreshold} in a list passed as \code{fpcontrol}.
 \code{\link[=Windham]{Windham()}} is called with \code{alternative_populationinverse = TRUE}.
 }
 \examples{

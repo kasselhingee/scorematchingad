@@ -41,10 +41,10 @@ A list:
 }
 }
 \description{
-Performs a generalisation of Windham's robustifying method \insertCite{windham1995ro}{scorecompdir} for exponential models with natural parameters that are a linear function of the parameters for estimation.
+Performs a generalisation of Windham's robustifying method \insertCite{windham1995ro}{scorematchingad} for exponential models with natural parameters that are a linear function of the parameters for estimation.
 Estimators must solve estimating equations of the form
 \deqn{\sum_{i = 1}^n U(z_i; \theta) = 0.}
-The estimate is found iteratively through a fixed point method as suggested by \insertCite{windham1995ro;textual}{scorecompdir}.
+The estimate is found iteratively through a fixed point method as suggested by \insertCite{windham1995ro;textual}{scorematchingad}.
 }
 \details{
 For any family of models with density \eqn{f(z; \theta)}, Windham's method finds the parameter set \eqn{\hat\theta} such that the estimator applied to observations weighted by \eqn{f(z; \hat\theta)^c} returns an estimate that matches the theoretical effect of weighting the full population of the model.
@@ -52,7 +52,7 @@ When \eqn{f} is proportional to \eqn{\exp(\eta(\theta) \cdot T(z))} and \eqn{\et
 
 The function \code{Windham()} assumes that \eqn{f} is proportional to \eqn{\exp(\eta(\theta) \cdot T(z))} and \eqn{\eta(\theta)} is linear. It allows a generalisation where \eqn{c} is a vector so the weight for an observation \eqn{z} is \deqn{f(z; c \circ \theta),} where \eqn{\theta} is the parameter vector, \eqn{c} is a vector of tuning constants, and \eqn{\circ} is the element-wise product (Hadamard product).
 
-The solution is found iteratively \insertCite{windham1995ro}{scorecompdir}.
+The solution is found iteratively \insertCite{windham1995ro}{scorematchingad}.
 Given a parameter set \eqn{\theta_n}, \code{Windham()} first computes weights \eqn{f(z; c \circ \theta_n)} for each observation \eqn{z}.
 Then, a new parameter set \eqn{\tilde{\theta}_{n+1}} is estimated by \code{estimator} with the computed weights.
 This new parameter set is element-wise-multiplied by the (element-wise) reciprical of \eqn{1+c} to obtain an adjusted parameter set \eqn{\theta_{n+1}}.

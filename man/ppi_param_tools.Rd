@@ -66,7 +66,7 @@ The defualt parameterisation of the PPI model is a symmetric covariance-like mat
 For score matching estimation this form of the parameters must be converted into a single parameter vector using \code{ppi_paramvec()}.
 \code{ppi_paramvec()} also includes easy methods to set parameters to \code{NA} for estimation with \code{\link[=ppi]{ppi()}} (in \code{\link[=ppi]{ppi()}} the NA-valued elements are estimated and all other elements are fixed).
 The reverse of \code{ppi_paramvec()} is \code{ppi_parammats()}.
-An alternative parametrisation of the PPI model uses a single \code{p} by \code{p}  matrix \eqn{A^*} instead of \eqn{A_L} and \eqn{b_L}, and for identifiability \eqn{A^*} is such that \eqn{1^T A^* 1 = 0} where \eqn{1=(1,1,...,1)} and \eqn{0=(0,0,..., 0)} \insertCite{scealy2023sc}{scorecompdir}.
+An alternative parametrisation of the PPI model uses a single \code{p} by \code{p}  matrix \eqn{A^*} instead of \eqn{A_L} and \eqn{b_L}, and for identifiability \eqn{A^*} is such that \eqn{1^T A^* 1 = 0} where \eqn{1=(1,1,...,1)} and \eqn{0=(0,0,..., 0)} \insertCite{scealy2023sc}{scorematchingad}.
 Convert between parametrisations using \code{ppi_toAstar()} and \code{ppi_fromAstar()}.
 }
 \details{

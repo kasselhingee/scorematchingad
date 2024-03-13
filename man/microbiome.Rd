@@ -22,31 +22,31 @@ A dataframe with 300 rows (two rows per individual) and 31 columns:
 }
 \source{
 \href{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx}{S1_Table.xlsx} from \href{http://nematode.net/NN3_frontpage.cgi?navbar_selection=environmental_interaction&subnav_selection=Indonesia_16s}{http://nematode.net}.
-\href{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx}{S1_Table.xlsx} was created by Dr. Bruce A Rosa for \insertCite{martin2019mi;textual}{scorecompdir}. Permission to share this data was obtained from Dr. Bruce Rosa and Dr. Ivonne Martin.
+\href{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx}{S1_Table.xlsx} was created by Dr. Bruce A Rosa for \insertCite{martin2019mi;textual}{scorematchingad}. Permission to share this data was obtained from Dr. Bruce Rosa and Dr. Ivonne Martin.
 }
 \usage{
 microbiome
 }
 \description{
-The \code{microbiome} data contains paired DNA samples from before treatment and 21 months after treatment for helminth infections \insertCite{martin2019mi}{scorecompdir}.
-This data was analysed by \insertCite{martin2019mi;textual}{scorecompdir} and a further subset was studied by \insertCite{scealy2023sc;textual}{scorecompdir}.
-The data are from a study into the effect of helminth infections on the course of malaria infections (ImmunoSPIN-Malaria) in the Nangapanda subdistrict, Indonesia \insertCite{wiria2010do}{scorecompdir}.
+The \code{microbiome} data contains paired DNA samples from before treatment and 21 months after treatment for helminth infections \insertCite{martin2019mi}{scorematchingad}.
+This data was analysed by \insertCite{martin2019mi;textual}{scorematchingad} and a further subset was studied by \insertCite{scealy2023sc;textual}{scorematchingad}.
+The data are from a study into the effect of helminth infections on the course of malaria infections (ImmunoSPIN-Malaria) in the Nangapanda subdistrict, Indonesia \insertCite{wiria2010do}{scorematchingad}.
 As part of the study, some participants were given 400mg of albendazole every three months for 1.5 years,
 remaining participants were given a placebo
-\insertCite{wiria2010do}{scorecompdir}.
+\insertCite{wiria2010do}{scorematchingad}.
 }
 \details{
 The measurements in the data come from stool samples before and after treatment.
-Gut microbiome prevalence was measured using 16s rRNA 454 sequencing \insertCite{martin2019mi}{scorecompdir}.
-Helminth infections were detected by PCR or microscopy \insertCite{martin2019mi}{scorecompdir}.
+Gut microbiome prevalence was measured using 16s rRNA 454 sequencing \insertCite{martin2019mi}{scorematchingad}.
+Helminth infections were detected by PCR or microscopy \insertCite{martin2019mi}{scorematchingad}.
 
-The subset studied by  \insertCite{scealy2023sc;textual}{scorecompdir} contained only the measurements from before treatment, and only those individuals with a helminth infection.
+The subset studied by  \insertCite{scealy2023sc;textual}{scorematchingad} contained only the measurements from before treatment, and only those individuals with a helminth infection.
 These measurements can be obtained by running
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{microbiome[(microbiome$Year == 2008) & microbiome$Helminth, ]
 }\if{html}{\out{</div>}}
 
-Two further individuals (\code{IndividualID} of \code{2079} and \code{2280}) were deemed outliers by \insertCite{scealy2023sc;textual}{scorecompdir}.
+Two further individuals (\code{IndividualID} of \code{2079} and \code{2280}) were deemed outliers by \insertCite{scealy2023sc;textual}{scorematchingad}.
 }
 \section{Modifications from the Source}{
 The \code{microbiome} data was created from the file \code{S1_Table.xlsx} hosted on \href{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx}{Nematode.net} using the below code.

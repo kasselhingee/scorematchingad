@@ -13,7 +13,7 @@ Bingham(Y, A = NULL, w = rep(1, nrow(Y)), method = "Mardia")
 
 \item{w}{An optional vector of weights for each measurement in \code{Y}}
 
-\item{method}{Either "Mardia" or "hybrid" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorecompdir}
+\item{method}{Either "Mardia" or "hybrid" for the hybrid score matching estimator from \insertCite{mardia2016sc;textual}{scorematchingad}
 or "smfull" for the full score matching estimator.}
 }
 \value{
@@ -25,21 +25,21 @@ A list of \code{est}, \code{SE} and \code{info}.
 }
 }
 \description{
-Score matching estimators for the Bingham distribution's parameter matrix. Two methods are available: a full score matching method that estimates the parameter matrix directly and a hybrid method by \insertCite{mardia2016sc;textual}{scorecompdir} that uses score matching to estimate just the eigenvalues of the parameter matrix.
+Score matching estimators for the Bingham distribution's parameter matrix. Two methods are available: a full score matching method that estimates the parameter matrix directly and a hybrid method by \insertCite{mardia2016sc;textual}{scorematchingad} that uses score matching to estimate just the eigenvalues of the parameter matrix.
 }
 \details{
 The Bingham distribution has a density proportional to
 \deqn{\exp(z^T A z),}
-where \eqn{A} is a symmetric matrix and the trace (sum of the diagonals) of \eqn{A} is zero for identifiability \insertCite{@p181, @mardia2000di}{scorecompdir}.
+where \eqn{A} is a symmetric matrix and the trace (sum of the diagonals) of \eqn{A} is zero for identifiability \insertCite{@p181, @mardia2000di}{scorematchingad}.
 
 The full score matching method estimates all elements of \eqn{A} directly except the final element of the diagonal, which is calculated from the sum of the other diagonal elements to ensure that the trace of \eqn{A} is zero.
 
-The method by \insertCite{mardia2016sc;textual}{scorecompdir} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}.
+The method by \insertCite{mardia2016sc;textual}{scorematchingad} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}.
 The observations \code{Y} are then standardised to \code{Y}\eqn{G}.
 This standardisation corresponds to diagonalising \eqn{A}
 where the eigenvalues of \eqn{A} become the diagonal elements of the new \eqn{A}.
 The diagonal elements of the new \eqn{A} are then estimated using score matching, with the final diagonal element calculated from the sum of the other elements.
-See \insertCite{mardia2016sc;textual}{scorecompdir} for details.
+See \insertCite{mardia2016sc;textual}{scorematchingad} for details.
 }
 \examples{
 p <- 4
