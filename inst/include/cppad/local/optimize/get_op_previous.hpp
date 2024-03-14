@@ -11,6 +11,7 @@ Secondary License when the conditions for such availability set forth
 in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
+# include <RcppCommon.h>
 # include <cppad/local/optimize/match_op.hpp>
 # include <cppad/local/optimize/usage.hpp>
 
@@ -260,7 +261,7 @@ bool get_op_previous(
     {   size_t size = hash_table_op.number_elements(code);
         ++count[size];
     }
-    std::cout << "count = " << count << "\n";
+    Rcpp::Rcout << "count = " << count << "\n";
     --------------------------------------------------------------------- */
     return exceed_collision_limit;
 }

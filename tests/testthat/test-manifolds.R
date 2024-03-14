@@ -1,5 +1,5 @@
 test_that("Manifold objects can be created, and member functions run", {
-  mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+  mod <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
   Euc <- new(mod$man_ad, "Euc")
   expect_s4_class(Euc, "Rcpp_man_ad")
   z <- c(0.1, 0.5)
@@ -9,7 +9,7 @@ test_that("Manifold objects can be created, and member functions run", {
 })
 
 test_that("Transform objects can be created, and member functions run", {
-  mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+  mod <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
   obj <- mod$transform_ad
   alr <- new(obj, "alr")
   expect_s4_class(alr, "Rcpp_transform_ad")
@@ -19,7 +19,7 @@ test_that("Transform objects can be created, and member functions run", {
   expect_true(is.finite(alr$logdetJfromM(z)))
 })
 
-mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+mod <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
 
 test_that("Sphere manifold object matches analytic results", {
   sph <- new(mod$man_ad, "sph")

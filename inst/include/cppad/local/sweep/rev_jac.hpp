@@ -12,6 +12,7 @@ in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
 
+# include <RcppCommon.h>
 # include <cppad/local/play/atom_op_info.hpp>
 # include <cppad/local/sweep/call_atomic.hpp>
 
@@ -197,7 +198,7 @@ void rev_jac(
     itr.op_info(op, arg, i_var);
     CPPAD_ASSERT_UNKNOWN( op == EndOp );
 # if CPPAD_REV_JAC_TRACE
-    std::cout << std::endl;
+    Rcpp::Rcout << std::endl;
     CppAD::vectorBool z_value(limit);
 # endif
     bool more_operators = true;
@@ -779,7 +780,7 @@ void rev_jac(
             j          = *(++itr);
         }
         printOp<Base, RecBase>(
-            std::cout,
+            Rcpp::Rcout,
             play,
             itr.op_index(),
             i_var,
@@ -789,15 +790,15 @@ void rev_jac(
         // Note that sparsity for FunrvOp are computed before call to
         // atomic function so no need to delay printing (as in forward mode)
         if( NumRes(op) > 0 && op != BeginOp ) printOpResult(
-            std::cout,
+            Rcpp::Rcout,
             0,
             (CppAD::vectorBool *) nullptr,
             1,
             &z_value
         );
-        std::cout << std::endl;
+        Rcpp::Rcout << std::endl;
     }
-    std::cout << std::endl;
+    Rcpp::Rcout << std::endl;
 # else
     }
 # endif

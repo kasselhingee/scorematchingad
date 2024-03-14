@@ -11,6 +11,7 @@ Secondary License when the conditions for such availability set forth
 in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
+# include <RcppCommon.h>
 # include <cppad/local/define.hpp>
 # include <cppad/local/is_pod.hpp>
 
@@ -1596,15 +1597,15 @@ $end
 
 // Implemented after list_setvec_const_iterator so can use it
 inline void list_setvec::print(void) const
-{   std::cout << "list_setvec:\n";
+{   Rcpp::Rcout << "list_setvec:\n";
     for(size_t i = 0; i < n_set(); i++)
-    {   std::cout << "set[" << i << "] = {";
+    {   Rcpp::Rcout << "set[" << i << "] = {";
         const_iterator itr(*this, i);
         while( *itr != end() )
-        {   std::cout << *itr;
-            if( *(++itr) != end() ) std::cout << ",";
+        {   Rcpp::Rcout << *itr;
+            if( *(++itr) != end() ) Rcpp::Rcout << ",";
         }
-        std::cout << "}\n";
+        Rcpp::Rcout << "}\n";
     }
     return;
 }

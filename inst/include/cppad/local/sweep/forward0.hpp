@@ -12,6 +12,7 @@ in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
 
+# include <RcppCommon.h>
 # include <cppad/local/play/atom_op_info.hpp>
 # include <cppad/local/sweep/call_atomic.hpp>
 
@@ -254,7 +255,7 @@ void forward0(
     CPPAD_ASSERT_UNKNOWN( op == BeginOp );
     //
 # if CPPAD_FORWARD0_TRACE
-    std::cout << std::endl;
+    Rcpp::Rcout << std::endl;
 # endif
     bool flag; // a temporary flag to use in switch cases
     bool more_operators = true;
@@ -945,7 +946,7 @@ void forward0(
             for(size_t i = 0; i < atom_m; i++) if( atom_iy[i] > 0 )
             {   size_t i_tmp   = (itr.op_index() + i) - atom_m;
                 printOp<Base, RecBase>(
-                    std::cout,
+                    Rcpp::Rcout,
                     play,
                     i_tmp,
                     atom_iy[i],
@@ -954,20 +955,20 @@ void forward0(
                 );
                 Base* Z_tmp = taylor + atom_iy[i] * J;
                 printOpResult(
-                    std::cout,
+                    Rcpp::Rcout,
                     d + 1,
                     Z_tmp,
                     0,
                     (Base *) nullptr
                 );
-                std::cout << std::endl;
+                Rcpp::Rcout << std::endl;
             }
         }
         Base*           Z_tmp   = taylor + i_var * J;
         if( op != FunrvOp )
         {
             printOp<Base, RecBase>(
-                std::cout,
+                Rcpp::Rcout,
                 play,
                 itr.op_index(),
                 i_var,
@@ -975,16 +976,16 @@ void forward0(
                 arg
             );
             if( NumRes(op) > 0 ) printOpResult(
-                std::cout,
+                Rcpp::Rcout,
                 d + 1,
                 Z_tmp,
                 0,
                 (Base *) nullptr
             );
-            std::cout << std::endl;
+            Rcpp::Rcout << std::endl;
         }
     }
-    std::cout << std::endl;
+    Rcpp::Rcout << std::endl;
 # else
     }
 # endif

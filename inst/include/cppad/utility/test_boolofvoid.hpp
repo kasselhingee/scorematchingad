@@ -87,6 +87,7 @@ $code example/ipopt_solve.cpp$$.
 $end
 */
 
+# include <RcppCommon.h>
 # include <cppad/core/cppad_assert.hpp>
 # include <string>
 
@@ -112,27 +113,27 @@ public:
     width_(width) ,
     n_ok_(0)      ,
     n_error_(0)
-    {   std::cout << "Begin test group " << group_ << std::endl; }
+    {   Rcpp::Rcout << "Begin test group " << group_ << std::endl; }
     /// destructor
     ~test_boolofvoid(void)
-    {   std::cout << "End test group " << group_ << std::endl; }
+    {   Rcpp::Rcout << "End test group " << group_ << std::endl; }
     /// run one test
     bool operator()(bool test(void), const std::string& name)
     {   CPPAD_ASSERT_KNOWN(
             name.size() < width_ ,
             "test_boolofvoid: name does not have less characters than width"
         );
-        std::cout.width( int(width_) );
-        std::cout.setf( std::ios_base::left );
-        std::cout << name;
+        Rcpp::Rcout.width( int(width_) );
+        Rcpp::Rcout.setf( std::ios_base::left );
+        Rcpp::Rcout << name;
         //
         bool ok = test();
         if( ok )
-        {   std::cout << "OK" << std::endl;
+        {   Rcpp::Rcout << "OK" << std::endl;
             n_ok_++;
         }
         else
-        {   std::cout << "Error" << std::endl;
+        {   Rcpp::Rcout << "Error" << std::endl;
             n_error_++;
         }
         return ok;
@@ -146,22 +147,22 @@ public:
     /// summary
     bool summary(bool memory_ok )
     {
-        std::cout.width( int(width_) );
-        std::cout.setf( std::ios_base::left );
-        std::cout << "memory_leak";
+        Rcpp::Rcout.width( int(width_) );
+        Rcpp::Rcout.setf( std::ios_base::left );
+        Rcpp::Rcout << "memory_leak";
         //
         if( memory_ok  )
-        {   std::cout << "OK" << std::endl;
+        {   Rcpp::Rcout << "OK" << std::endl;
             n_ok_++;
         }
         else
-        {   std::cout << "Error" << std::endl;
+        {   Rcpp::Rcout << "Error" << std::endl;
             n_error_++;
         }
         if( n_error_ == 0 )
-            std::cout << "All " << n_ok_ << " tests passed." << std::endl;
+            Rcpp::Rcout << "All " << n_ok_ << " tests passed." << std::endl;
         else
-            std::cout << n_error_ << " tests failed." << std::endl;
+            Rcpp::Rcout << n_error_ << " tests failed." << std::endl;
         //
         return n_error_ == 0;
     }
