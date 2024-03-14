@@ -80,7 +80,7 @@ tapeGradOffset <- function(tape){
 }
 
 #' @describeIn moretapebuilders
-#' Creates a tape of the log of the Jacobian determinant of a function taped in `tape`.
+#' Creates a tape of the log of the Jacobian determinant of a function taped in `tape`. The dimensions of the domain (length of independent variable) and range (length of output variable) of `tape` must be equal for computation of the determinant.
 #' @export
 tapeLogJacDet <- function(tape){
   stopifnot(inherits(tape, "ADFun"))
