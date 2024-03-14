@@ -14,8 +14,6 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 
 # include <RcppCommon.h>
 # include <RcppCommon.h>
-# include <RcppCommon.h>
-# include <RcppCommon.h>
 # include <set>
 # include <cppad/local/pod_vector.hpp>
 # include <cppad/local/play/atom_op_info.hpp>

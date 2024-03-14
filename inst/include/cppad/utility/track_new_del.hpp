@@ -228,8 +228,6 @@ $end
 */
 # include <RcppCommon.h>
 # include <RcppCommon.h>
-# include <RcppCommon.h>
-# include <RcppCommon.h>
 # include <cppad/local/define.hpp>
 # include <cppad/core/cppad_assert.hpp>
 # include <cppad/utility/thread_alloc.hpp>

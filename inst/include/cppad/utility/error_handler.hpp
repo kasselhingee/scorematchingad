@@ -124,8 +124,6 @@ $end
 
 # include <RcppCommon.h>
 # include <RcppCommon.h>
-# include <RcppCommon.h>
-# include <RcppCommon.h>
 # include <iostream>
 
 # include <cppad/configure.hpp>

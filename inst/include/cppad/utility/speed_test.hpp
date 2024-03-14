@@ -148,8 +148,6 @@ $end
 
 # include <RcppCommon.h>
 # include <RcppCommon.h>
-# include <RcppCommon.h>
-# include <RcppCommon.h>
 # include <cstddef>
 # include <cmath>
 
