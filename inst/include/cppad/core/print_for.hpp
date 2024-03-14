@@ -19,7 +19,7 @@ $spell
     var
     VecAD
     std
-    cout
+    Rcout
     const
 $$
 
@@ -73,7 +73,7 @@ The argument $icode before$$ has prototype
 $codei%
     const char* %before%
 %$$
-This text is written to $code std::cout$$ before $icode value$$.
+This text is written to $code Rcpp::Rcout$$ before $icode value$$.
 
 $head value$$
 The argument $icode value$$ has one of the following prototypes
@@ -82,7 +82,7 @@ $codei%
     const VecAD<%Base%>::reference& %value%
 %$$
 The $icode value$$, that corresponds to $icode x$$,
-is written to $code std::cout$$ during the execution of
+is written to $code Rcpp::Rcout$$ during the execution of
 $codei%
     %f%.Forward(0, %x%)
 %$$
@@ -98,7 +98,7 @@ The argument $icode after$$ has prototype
 $codei%
     const char* %after%
 %$$
-This text is written to $code std::cout$$ after $icode value$$.
+This text is written to $code Rcpp::Rcout$$ after $icode value$$.
 
 $head s$$
 You can redirect this output to any standard output stream using the syntax
@@ -132,6 +132,7 @@ $end
 ------------------------------------------------------------------------------
 */
 
+# include <RcppCommon.h>
 # include <cstring>
 
 namespace CppAD {

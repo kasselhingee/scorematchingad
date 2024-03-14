@@ -130,6 +130,7 @@ contains an example and test of these operations.
 $end
 */
 
+# include <RcppCommon.h>
 # include <cppad/utility/vector.hpp>
 # include <cppad/configure.hpp>
 # include <fstream>
@@ -191,7 +192,7 @@ void put_check_for_nan(const CppAD::vector<Base>& vec, std::string& file_name)
     file_name = pattern;
     ssize_t flag = write(fd, char_ptr, char_size);
     if( flag < 0 )
-    {   std::cerr << "put_check_nan: write error\n";
+    {   Rcpp::Rcerr << "put_check_nan: write error\n";
         std::exit(1);
     }
     close(fd);

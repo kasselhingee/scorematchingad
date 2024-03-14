@@ -11,6 +11,7 @@ Secondary License when the conditions for such availability set forth
 in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
+# include <RcppCommon.h>
 # include <cppad/local/define.hpp>
 # include <cppad/local/is_pod.hpp>
 # include <list>
@@ -1415,16 +1416,16 @@ public:
 Print the vector of sets (used for debugging)
 */
 inline void svec_setvec::print(void) const
-{   std::cout << "svec_setvec:\n";
+{   Rcpp::Rcout << "svec_setvec:\n";
     for(size_t i = 0; i < n_set(); i++)
-    {   std::cout << "set[" << i << "] = {";
+    {   Rcpp::Rcout << "set[" << i << "] = {";
         const_iterator itr(*this, i);
         while( *itr != end() )
-        {   std::cout << *itr;
+        {   Rcpp::Rcout << *itr;
             if( *(++itr) != end() )
-                std::cout << ",";
+                Rcpp::Rcout << ",";
         }
-        std::cout << "}\n";
+        Rcpp::Rcout << "}\n";
     }
     return;
 }

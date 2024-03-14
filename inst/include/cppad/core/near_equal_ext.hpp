@@ -14,7 +14,7 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 /*
 $begin NearEqualExt$$
 $spell
-    cout
+    Rcout
     endl
     Microsoft
     std
