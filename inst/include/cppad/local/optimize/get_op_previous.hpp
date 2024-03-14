@@ -13,6 +13,8 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 ---------------------------------------------------------------------------- */
 # include <RcppCommon.h>
 # include <RcppCommon.h>
+# include <RcppCommon.h>
+# include <RcppCommon.h>
 # include <cppad/local/optimize/match_op.hpp>
 # include <cppad/local/optimize/usage.hpp>
 

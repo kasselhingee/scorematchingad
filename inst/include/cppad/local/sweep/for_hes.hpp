@@ -14,6 +14,8 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 
 # include <RcppCommon.h>
 # include <RcppCommon.h>
+# include <RcppCommon.h>
+# include <RcppCommon.h>
 # include <cppad/local/play/atom_op_info.hpp>
 
 /*

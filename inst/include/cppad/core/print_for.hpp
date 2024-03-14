@@ -134,6 +134,8 @@ $end
 
 # include <RcppCommon.h>
 # include <RcppCommon.h>
+# include <RcppCommon.h>
+# include <RcppCommon.h>
 # include <cstring>
 
 namespace CppAD {

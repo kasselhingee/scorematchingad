@@ -110,6 +110,8 @@ $end
 */
 # include <RcppCommon.h>
 # include <RcppCommon.h>
+# include <RcppCommon.h>
+# include <RcppCommon.h>
 # include <iostream>
 # include <cppad/local/define.hpp>
 # include <cppad/utility/omp_alloc.hpp>

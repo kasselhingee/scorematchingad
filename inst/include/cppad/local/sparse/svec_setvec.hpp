@@ -13,6 +13,8 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 ---------------------------------------------------------------------------- */
 # include <RcppCommon.h>
 # include <RcppCommon.h>
+# include <RcppCommon.h>
+# include <RcppCommon.h>
 # include <cppad/local/define.hpp>
 # include <cppad/local/is_pod.hpp>
 # include <list>
