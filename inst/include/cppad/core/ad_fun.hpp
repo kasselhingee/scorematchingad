@@ -47,7 +47,6 @@ $childtable%
 
 $end
 */
-# include <RcppCommon.h>
 # include <cppad/core/graph/cpp_graph.hpp>
 # include <cppad/local/subgraph/info.hpp>
 # include <cppad/local/graph/cpp_graph_op.hpp>
@@ -355,7 +354,7 @@ public:
     /// forward mode user API, multiple orders one direction.
     template <class BaseVector>
     BaseVector Forward(
-        size_t q, const BaseVector& xq, std::ostream& s = Rcpp::Rcout
+        size_t q, const BaseVector& xq, std::ostream& s = std::cout
     );
 
     /// reverse mode sweep

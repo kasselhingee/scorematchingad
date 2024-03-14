@@ -207,7 +207,6 @@ $tend
 $end
 -----------------------------------------------------------------------------
 */
-# include <RcppCommon.h>
 # include <cppad/local/optimize/optimize_run.hpp>
 /*!
 \file optimize.hpp
@@ -366,7 +365,7 @@ void ADFun<Base,RecBase>::optimize(const std::string& options)
 # if CPPAD_CORE_OPTIMIZE_PRINT_RESULT
     // size of operation sequence after optimizatiton
     size_t size_op_after = size_op();
-    Rcpp::Rcout << "optimize: size_op:  before = " <<
+    std::cout << "optimize: size_op:  before = " <<
     size_op_before << ", after = " << size_op_after << "\n";
 # endif
 }

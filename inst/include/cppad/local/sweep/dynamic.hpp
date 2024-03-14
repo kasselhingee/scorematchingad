@@ -12,7 +12,6 @@ in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
 
-# include <RcppCommon.h>
 # include <cppad/local/play/atom_op_info.hpp>
 
 // BEGIN_CPPAD_LOCAL_SWEEP_NAMESPACE
@@ -110,7 +109,7 @@ void dynamic(
         "CondExpGt",
         "CondExpNe"
     };
-    Rcpp::Rcout
+    std::cout
     << std::endl
     << std::setw(10) << std::left << "index"
     << std::setw(10) << std::left << "old"
@@ -354,7 +353,7 @@ void dynamic(
                 all_par_vec[ dyn_par_arg[i_arg + 1] ]   // argument
             );
 # if CPPAD_DYNAMIC_TRACE
-            Rcpp::Rcout
+            std::cout
             << std::setw(10) << std::left << i_par
             << std::setw(10) << std::left << old_value
             << std::setw(10) << std::left << all_par_vec[i_par]
@@ -364,14 +363,14 @@ void dynamic(
             << std::setw(12) << std::right <<
                 discrete<Base>::name( size_t( dyn_par_arg[i_arg + 0] ) );
             if( dyn_par_is[ dyn_par_arg[i_arg + 1] ] )
-            {   Rcpp::Rcout << ", i=" << std::setw(10) << std::right
+            {   std::cout << ", i=" << std::setw(10) << std::right
                 << dyn_par_arg[i_arg + 1];
             }
             else
-            {   Rcpp::Rcout << ", v=" << std::setw(10) << std::right
+            {   std::cout << ", v=" << std::setw(10) << std::right
                 << all_par_vec[ dyn_par_arg[i_arg + 1] ];
             }
-            Rcpp::Rcout << ")" << std::endl;
+            std::cout << ")" << std::endl;
 # endif
             break;
 
@@ -388,7 +387,7 @@ void dynamic(
                 all_par_vec[ dyn_par_arg[i_arg + 4] ]   // if_false
             );
 # if CPPAD_DYNAMIC_TRACE
-            Rcpp::Rcout
+            std::cout
             << std::setw(10) << std::left << i_par
             << std::setw(10) << std::left << old_value
             << std::setw(10) << std::left << all_par_vec[i_par]
@@ -398,17 +397,17 @@ void dynamic(
             << "(";
             for(size_t i = 1; i < 5; ++i)
             {   if( dyn_par_is[ dyn_par_arg[i_arg + i] ] )
-                {   Rcpp::Rcout << "i=" << std::setw(10) << std::right
+                {   std::cout << "i=" << std::setw(10) << std::right
                     << dyn_par_arg[i_arg + i];
                 }
                 else
-                {   Rcpp::Rcout << "v=" << std::setw(10) << std::right
+                {   std::cout << "v=" << std::setw(10) << std::right
                     << all_par_vec[ dyn_par_arg[i_arg + i] ];
                 }
                 if( i < 4 )
-                    Rcpp::Rcout << ",";
+                    std::cout << ",";
             }
-            Rcpp::Rcout << ")" << std::endl;
+            std::cout << ")" << std::endl;
 # endif
             break;
             // ---------------------------------------------------------------
@@ -464,12 +463,12 @@ void dynamic(
                 atomic_index<RecBase>(
                     set_null, atom_index, type, &name, v_ptr
                 );
-                Rcpp::Rcout << "atom_dyn " << name << " arguments\n";
+                std::cout << "atom_dyn " << name << " arguments\n";
                 for(size_t j = 0; j < n; ++j)
-                {   Rcpp::Rcout << "index = " << j
+                {   std::cout << "index = " << j
                     << ", value = " << taylor_x[j] << std::endl;
                 }
-                Rcpp::Rcout << "atom_dyn " << name << " results\n";
+                std::cout << "atom_dyn " << name << " results\n";
 # endif
 # ifndef NDEBUG
                 size_t count_dyn = 0;
@@ -483,7 +482,7 @@ void dynamic(
                         ++count_dyn;
 # endif
 # if CPPAD_DYNAMIC_TRACE
-                        Rcpp::Rcout
+                        std::cout
                         << std::setw(10) << std::left << i_par
                         << std::setw(10) << std::left << old_value
                         << std::setw(10) << std::left << all_par_vec[i_par]
@@ -493,14 +492,14 @@ void dynamic(
                 }
                 CPPAD_ASSERT_UNKNOWN( count_dyn == n_dyn );
 # if CPPAD_DYNAMIC_TRACE
-                Rcpp::Rcout << "end atomic dynamic parameter results\n";
+                std::cout << "end atomic dynamic parameter results\n";
 # endif
             }
             break;
 
             // ---------------------------------------------------------------
             default:
-            Rcpp::Rcerr << "op_code_dyn = " << op_name_dyn(op) << std::endl;
+            std::cerr << "op_code_dyn = " << op_name_dyn(op) << std::endl;
             CPPAD_ASSERT_UNKNOWN(false);
             break;
         }
@@ -511,7 +510,7 @@ void dynamic(
             (op != atom_dyn )    &
             (op != result_dyn )  )
         {
-            Rcpp::Rcout
+            std::cout
             << std::setw(10) << std::left << i_par
             << std::setw(10) << std::left << old_value
             << std::setw(10) << std::left << all_par_vec[i_par]
@@ -520,25 +519,25 @@ void dynamic(
             << "(";
             if( 0 < n_arg )
             {   if( dyn_par_is[ dyn_par_arg[i_arg + 0] ] )
-                {   Rcpp::Rcout << "i=" << std::setw(10) << std::right
+                {   std::cout << "i=" << std::setw(10) << std::right
                     << dyn_par_arg[i_arg + 0];
                 }
                 else
-                {   Rcpp::Rcout << "v=" << std::setw(10) << std::right
+                {   std::cout << "v=" << std::setw(10) << std::right
                     << all_par_vec[ dyn_par_arg[i_arg + 0] ];
                 }
             }
             if( 1 < n_arg )
             {   if( dyn_par_is[ dyn_par_arg[i_arg + 1] ] )
-                {   Rcpp::Rcout << ", i=" << std::setw(10) << std::right
+                {   std::cout << ", i=" << std::setw(10) << std::right
                     << dyn_par_arg[i_arg + 1];
                 }
                 else
-                {   Rcpp::Rcout << ", v=" << std::setw(10) << std::right
+                {   std::cout << ", v=" << std::setw(10) << std::right
                     << all_par_vec[ dyn_par_arg[i_arg + 1] ];
                 }
             }
-            Rcpp::Rcout << ")" << std::endl;
+            std::cout << ")" << std::endl;
         }
 # endif
         i_arg += n_arg;

@@ -226,7 +226,6 @@ Use the $cref thread_alloc$$ routines instead.
 $end
 ------------------------------------------------------------------------------
 */
-# include <RcppCommon.h>
 # include <cppad/local/define.hpp>
 # include <cppad/core/cppad_assert.hpp>
 # include <cppad/utility/thread_alloc.hpp>
@@ -287,30 +286,30 @@ public:
     static void Print(TrackElement* E)
     {
         CPPAD_ASSERT_UNKNOWN( ! thread_alloc::in_parallel() );
-        using Rcpp::Rcout;
-        Rcout << "E = "         << E;
-        Rcout << ", E->next = " << E->next;
-        Rcout << ", E->ptr  = " << E->ptr;
-        Rcout << ", E->line = " << E->line;
-        Rcout << ", E->file = " << E->file;
-        Rcout << std::endl;
+        using std::cout;
+        cout << "E = "         << E;
+        cout << ", E->next = " << E->next;
+        cout << ", E->ptr  = " << E->ptr;
+        cout << ", E->line = " << E->line;
+        cout << ", E->file = " << E->file;
+        cout << std::endl;
     }
 
     // Print the linked list for a thread
     static void Print(void)
     {
         CPPAD_ASSERT_UNKNOWN( ! thread_alloc::in_parallel() );
-        using Rcpp::Rcout;
+        using std::cout;
         using std::endl;
         TrackElement *E = Root();
         // convert int(size_t) to avoid warning on _MSC_VER systems
-        Rcout << "Begin Track List" << endl;
+        cout << "Begin Track List" << endl;
         while( E->next != nullptr )
         {   E = E->next;
             Print(E);
         }
-        Rcout << "End Track List:" << endl;
-        Rcout << endl;
+        cout << "End Track List:" << endl;
+        cout << endl;
     }
 };
 
@@ -350,7 +349,7 @@ Type *TrackNewVec(
 # if CPPAD_TRACK_DEBUG
     static bool first = true;
     if( first )
-    {   Rcpp::Rcout << "NDEBUG is defined for TrackNewVec" << std::endl;
+    {   std::cout << "NDEBUG is defined for TrackNewVec" << std::endl;
         first = false;
     }
 # endif
@@ -392,7 +391,7 @@ Type *TrackNewVec(
     root->next = E;
 
 # if CPPAD_TRACK_DEBUG
-    Rcpp::Rcout << "TrackNewVec: ";
+    std::cout << "TrackNewVec: ";
     TrackElement::Print(E);
 # endif
 
@@ -409,7 +408,7 @@ void TrackDelVec(const char *file, int line, Type *oldptr)
 # if CPPAD_TRACK_DEBUG
     static bool first = true;
     if( first )
-    {   Rcpp::Rcout << "NDEBUG is defined in TrackDelVec" << std::endl;
+    {   std::cout << "NDEBUG is defined in TrackDelVec" << std::endl;
         first = false;
     }
 # endif
@@ -448,7 +447,7 @@ void TrackDelVec(
     );
 
 # if CPPAD_TRACK_DEBUG
-    Rcpp::Rcout << "TrackDelVec: ";
+    std::cout << "TrackDelVec: ";
     TrackElement::Print(E);
 # endif
 
@@ -481,13 +480,13 @@ Type *TrackExtend(
     );
 
 # if CPPAD_TRACK_DEBUG
-    using Rcpp::Rcout;
-    Rcout << "TrackExtend: file = " << file;
-    Rcout << ", line = " << line;
-    Rcout << ", newlen = " << newlen;
-    Rcout << ", ncopy = " << ncopy;
-    Rcout << ", oldptr = " << oldptr;
-    Rcout << std::endl;
+    using std::cout;
+    cout << "TrackExtend: file = " << file;
+    cout << ", line = " << line;
+    cout << ", newlen = " << newlen;
+    cout << ", ncopy = " << ncopy;
+    cout << ", oldptr = " << oldptr;
+    cout << std::endl;
 # endif
     CPPAD_ASSERT_KNOWN(
         ncopy <= newlen,

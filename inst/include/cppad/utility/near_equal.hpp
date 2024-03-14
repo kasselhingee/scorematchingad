@@ -17,7 +17,7 @@ $begin NearEqual$$
 $spell
     cppad.hpp
     sqrt
-    Rcout
+    cout
     endl
     Microsoft
     std
@@ -123,7 +123,7 @@ $head Exercise$$
 Create and run a program that contains the following code:
 $codep
     using std::complex;
-    using Rcpp::Rcout;
+    using std::cout;
     using std::endl;
 
     complex<double> one(1., 0), i(0., 1);
@@ -133,16 +133,15 @@ $codep
     double          a = 0;
     bool           ok = CppAD::NearEqual(x, y, r, a);
     if( ok )
-        Rcout << "Ok"    << endl;
+        cout << "Ok"    << endl;
     else
-        Rcout << "Error" << endl;
+        cout << "Error" << endl;
 $$
 
 $end
 
 */
 
-# include <RcppCommon.h>
 # include <limits>
 # include <complex>
 # include <cppad/core/cppad_assert.hpp>

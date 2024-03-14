@@ -13,7 +13,7 @@
 #'               ) 
 #' tapeJacobian(tapes$smdtape)
 #' tapeHessian(tapes$smdtape)
-#' tapeLogJacDet(tapeJacobian(tapes$smdtape))
+#' tapeLogJacDet(tapes$smdtape)
 #' tapeSwap(tapes$smdtape)
 NULL
 

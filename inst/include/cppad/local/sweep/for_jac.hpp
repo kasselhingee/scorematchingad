@@ -12,7 +12,6 @@ in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
 
-# include <RcppCommon.h>
 # include <set>
 # include <cppad/local/pod_vector.hpp>
 # include <cppad/local/play/atom_op_info.hpp>
@@ -157,7 +156,7 @@ void for_jac(
     //
 # if CPPAD_FOR_JAC_TRACE
     vector<size_t>    atom_funrp; // parameter index for FunrpOp operators
-    Rcpp::Rcout << std::endl;
+    std::cout << std::endl;
     CppAD::vectorBool z_value(limit);
 # endif
 
@@ -774,7 +773,7 @@ void for_jac(
                 }
                 // j_var is zero when there is no result.
                 printOp<Base, RecBase>(
-                    Rcpp::Rcout,
+                    std::cout,
                     play,
                     itr.op_index() - atom_m + i,
                     j_var,
@@ -782,13 +781,13 @@ void for_jac(
                     arg_tmp
                 );
                 if( j_var > 0 ) printOpResult(
-                    Rcpp::Rcout,
+                    std::cout,
                     1,
                     &z_value,
                     0,
                     (CppAD::vectorBool *) nullptr
                 );
-                Rcpp::Rcout << std::endl;
+                std::cout << std::endl;
             }
         }
         // value for this variable
@@ -805,7 +804,7 @@ void for_jac(
         delay_print     |= op == FunrvOp;
         if( ! delay_print )
         {    printOp<Base, RecBase>(
-                Rcpp::Rcout,
+                std::cout,
                 play,
                 itr.op_index(),
                 i_var,
@@ -813,16 +812,16 @@ void for_jac(
                 arg
             );
             if( NumRes(op) > 0 && (! delay_print) ) printOpResult(
-                Rcpp::Rcout,
+                std::cout,
                 1,
                 &z_value,
                 0,
                 (CppAD::vectorBool *) nullptr
             );
-            Rcpp::Rcout << std::endl;
+            std::cout << std::endl;
         }
     }
-    Rcpp::Rcout << std::endl;
+    std::cout << std::endl;
 # else
     }
 # endif

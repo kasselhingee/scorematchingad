@@ -22,7 +22,7 @@ $spell
     namespace
     std
     const
-    Rcout
+    cout
     ctime
     ifdef
     const

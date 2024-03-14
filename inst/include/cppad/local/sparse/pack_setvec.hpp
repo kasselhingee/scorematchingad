@@ -11,7 +11,6 @@ Secondary License when the conditions for such availability set forth
 in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
-# include <RcppCommon.h>
 # include <cppad/core/cppad_assert.hpp>
 # include <cppad/local/pod_vector.hpp>
 
@@ -805,16 +804,16 @@ $end
 
 // Implemented after pack_setvec_const_iterator so can use it
 inline void pack_setvec::print(void) const
-{   Rcpp::Rcout << "pack_setvec:\n";
+{   std::cout << "pack_setvec:\n";
     for(size_t i = 0; i < n_set(); i++)
-    {   Rcpp::Rcout << "set[" << i << "] = {";
+    {   std::cout << "set[" << i << "] = {";
         const_iterator itr(*this, i);
         while( *itr != end() )
-        {   Rcpp::Rcout << *itr;
+        {   std::cout << *itr;
             if( *(++itr) != end() )
-                Rcpp::Rcout << ",";
+                std::cout << ",";
         }
-        Rcpp::Rcout << "}\n";
+        std::cout << "}\n";
     }
     return;
 }

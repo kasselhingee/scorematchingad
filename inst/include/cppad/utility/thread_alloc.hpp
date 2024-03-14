@@ -12,7 +12,6 @@ in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
 
-# include <RcppCommon.h>
 # include <sstream>
 # include <limits>
 # include <memory>
@@ -773,7 +772,7 @@ $end
         );
 
         size_t num_cap = capacity_info()->number;
-        using Rcpp::Rcout;
+        using std::cout;
         using std::endl;
 
         // determine the capacity for this request
@@ -795,9 +794,9 @@ $end
         static bool first_trace = true;
         if( cap_bytes == CPPAD_TRACE_CAPACITY &&
              thread    ==  CPPAD_TRACE_THREAD  && first_trace )
-        {   Rcout << endl;
-            Rcout << "thread_alloc: Trace for Thread = " << thread;
-            Rcout << " and capacity = " << cap_bytes << endl;
+        {   cout << endl;
+            cout << "thread_alloc: Trace for Thread = " << thread;
+            cout << " and capacity = " << cap_bytes << endl;
             if( first_trace )
                 first_trace = false;
         }
@@ -831,7 +830,7 @@ $end
             // trace allocation
             if( cap_bytes == CPPAD_TRACE_CAPACITY &&
                  thread    ==  CPPAD_TRACE_THREAD   )
-            {   Rcout << "get_memory:    v_ptr = " << v_ptr << endl; }
+            {   cout << "get_memory:    v_ptr = " << v_ptr << endl; }
 # endif
 
             // adjust counts
@@ -861,7 +860,7 @@ $end
         // trace allocation
         if( cap_bytes == CPPAD_TRACE_CAPACITY &&
             thread    == CPPAD_TRACE_THREAD    )
-        {   Rcout << "get_memory:    v_ptr = " << v_ptr << endl; }
+        {   cout << "get_memory:    v_ptr = " << v_ptr << endl; }
 # endif
 
         // adjust counts
@@ -981,7 +980,7 @@ $end
 # endif
         // trace option
         if( capacity==CPPAD_TRACE_CAPACITY && thread==CPPAD_TRACE_THREAD )
-        {   Rcpp::Rcout << "return_memory: v_ptr = " << v_ptr << std::endl; }
+        {   std::cout << "return_memory: v_ptr = " << v_ptr << std::endl; }
 
 # endif
         // capacity bytes are removed from the inuse pool

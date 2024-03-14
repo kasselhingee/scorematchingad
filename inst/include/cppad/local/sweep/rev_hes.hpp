@@ -12,7 +12,6 @@ in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
 
-# include <RcppCommon.h>
 # include <cppad/local/play/atom_op_info.hpp>
 # include <cppad/local/sweep/call_atomic.hpp>
 
@@ -190,7 +189,7 @@ void rev_hes(
     itr.op_info(op, arg, i_var);
     CPPAD_ASSERT_UNKNOWN( op == EndOp );
 # if CPPAD_REV_HES_TRACE
-    Rcpp::Rcout << std::endl;
+    std::cout << std::endl;
     CppAD::vectorBool zf_value(limit);
     CppAD::vectorBool zh_value(limit);
 # endif
@@ -768,7 +767,7 @@ void rev_hes(
             j = *(++itr_hes);
         }
         printOp<Base, RecBase>(
-            Rcpp::Rcout,
+            std::cout,
             play,
             itr.op_index(),
             i_var,
@@ -778,15 +777,15 @@ void rev_hes(
         // should also print RevJac[i_var], but printOpResult does not
         // yet allow for this
         if( NumRes(op) > 0 && op != BeginOp ) printOpResult(
-            Rcpp::Rcout,
+            std::cout,
             1,
             &zf_value,
             1,
             &zh_value
         );
-        Rcpp::Rcout << std::endl;
+        std::cout << std::endl;
     }
-    Rcpp::Rcout << std::endl;
+    std::cout << std::endl;
 # else
     }
 # endif

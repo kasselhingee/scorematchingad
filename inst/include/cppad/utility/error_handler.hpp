@@ -122,7 +122,6 @@ $end
 ---------------------------------------------------------------------------
 */
 
-# include <RcppCommon.h>
 # include <iostream>
 
 # include <cppad/configure.hpp>
@@ -188,20 +187,20 @@ private:
         const char *file ,
         const char *exp  ,
         const char *msg  )
-    {   using Rcpp::Rcerr;
+    {   using std::cerr;
         using std::endl;
 
-        Rcerr << CPPAD_PACKAGE_STRING;
+        cerr << CPPAD_PACKAGE_STRING;
         if( known )
-            Rcerr << " error from a known source:" << endl;
+            cerr << " error from a known source:" << endl;
         else
-            Rcerr << " error from unknown source"  << endl;
+            cerr << " error from unknown source"  << endl;
         if( msg[0] != '\0' )
-            Rcerr << msg << endl;
-        Rcerr << "Error detected by false result for"  << endl;
-        Rcerr << "    "     << exp                     << endl;
-        Rcerr << "at line " << line << " in the file " << endl;
-        Rcerr << "    "     << file                    << endl;
+            cerr << msg << endl;
+        cerr << "Error detected by false result for"  << endl;
+        cerr << "    "     << exp                     << endl;
+        cerr << "at line " << line << " in the file " << endl;
+        cerr << "    "     << file                    << endl;
 
         // terminate program execution
         assert(false);

@@ -13,7 +13,6 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 ---------------------------------------------------------------------------- */
 
 
-# include <RcppCommon.h>
 # include <cppad/local/play/atom_op_info.hpp>
 
 // BEGIN_CPPAD_LOCAL_SWEEP_NAMESPACE
@@ -220,7 +219,7 @@ void reverse(
 
     // Initialize
 # if CPPAD_REVERSE_TRACE
-    Rcpp::Rcout << std::endl;
+    std::cout << std::endl;
 # endif
     OpCode        op;
     const Addr*   arg;
@@ -264,7 +263,7 @@ void reverse(
         const Base*  Z_tmp  = Taylor + i_var * J;
         const Base*  pZ_tmp = Partial + i_var * K;
         printOp<Base, RecBase>(
-            Rcpp::Rcout,
+            std::cout,
             play,
             i_op,
             i_tmp,
@@ -272,13 +271,13 @@ void reverse(
             arg
         );
         if( NumRes(op) > 0 && op != BeginOp ) printOpResult(
-            Rcpp::Rcout,
+            std::cout,
             d + 1,
             Z_tmp,
             d + 1,
             pZ_tmp
         );
-        Rcpp::Rcout << std::endl;
+        std::cout << std::endl;
 # endif
         switch( op )
         {
@@ -809,7 +808,7 @@ void reverse(
         }
     }
 # if CPPAD_REVERSE_TRACE
-    Rcpp::Rcout << std::endl;
+    std::cout << std::endl;
 # endif
 }
 
