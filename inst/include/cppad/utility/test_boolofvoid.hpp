@@ -88,6 +88,7 @@ $end
 */
 
 # include <RcppCommon.h>
+# include <RcppCommon.h>
 # include <cppad/core/cppad_assert.hpp>
 # include <string>
 

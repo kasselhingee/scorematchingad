@@ -131,6 +131,7 @@ $end
 */
 
 # include <RcppCommon.h>
+# include <RcppCommon.h>
 # include <cppad/utility/vector.hpp>
 # include <cppad/configure.hpp>
 # include <fstream>

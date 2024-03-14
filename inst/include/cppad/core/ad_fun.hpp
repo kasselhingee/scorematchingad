@@ -48,6 +48,7 @@ $childtable%
 $end
 */
 # include <RcppCommon.h>
+# include <RcppCommon.h>
 # include <cppad/core/graph/cpp_graph.hpp>
 # include <cppad/local/subgraph/info.hpp>
 # include <cppad/local/graph/cpp_graph_op.hpp>
