@@ -7,7 +7,7 @@ ppitape <- tapell(llname = "ppi",
 expect_s3_class(tapeJacobian(ppitape), "ADFun")
 expect_s3_class(tapeHessian(ppitape), "ADFun")
 expect_s3_class(tapeGradOffset(ppitape), "ADFun")
-expect_error(tapeLogJacDet(ppitape), "ADFun")
+expect_condition(tapeLogJacDet(ppitape), class = "Rcpp::exception", regexp = "equal")
 expect_s3_class(tapeLogJacDet(tapeJacobian(ppitape)), "ADFun")
 expect_s3_class(tapeSwap(ppitape), "ADFun")
 })
