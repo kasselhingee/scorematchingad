@@ -84,7 +84,7 @@ tapes <- buildsmdtape("sph", "identity", "sph", "vMF",
               ) 
 tapeJacobian(tapes$smdtape)
 tapeHessian(tapes$smdtape)
-tapeLogJacDet(tapes$smdtape)
+tapeLogJacDet(tapeJacobian(tapes$smdtape))
 tapeSwap(tapes$smdtape)
 }
 \seealso{
