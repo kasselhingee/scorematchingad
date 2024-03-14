@@ -1,3 +1,3 @@
 library(testthat)
 
-test_check("scorecompdir")
+test_check("scorematchingad")
