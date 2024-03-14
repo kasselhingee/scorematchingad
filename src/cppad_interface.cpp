@@ -175,6 +175,8 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<dou
 
 Rcpp::XPtr< CppAD::ADFun<double> >  ptapelogdetJ(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
                     veca1 x, veca1 dynparam){
+  // domain and range must have equal size for the determinant of the Jacobian to make sense
+  if (pfun->Domain() != pfun->Range()){Rcpp::stop("Domain (size %i) and range (size %i) need to be equal for determinant of Jacobian.", pfun->Domain(), pfun->Range());}
   // x and dynparam must have elements of a1type so that taping can proceed
   //check inputs and tape match
   if (pfun->Domain() != x.size()){Rcpp::stop("Size of input vector %i does not match domain size %i of taped function.", x.size(), pfun->Domain());}
