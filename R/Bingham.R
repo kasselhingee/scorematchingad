@@ -22,7 +22,7 @@
 #' p <- 4
 #' A <- rsymmetricmatrix(p)
 #' A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
-#' if (requireNamespace("simdd"){
+#' if (requireNamespace("simdd")){
 #'   Y <- simdd::rBingham(100, A)
 #'   Bingham(Y, method = "Mardia")
 #' }
