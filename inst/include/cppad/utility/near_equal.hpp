@@ -143,7 +143,6 @@ $end
 */
 
 # include <RcppCommon.h>
-# include <RcppCommon.h>
 # include <limits>
 # include <complex>
 # include <cppad/core/cppad_assert.hpp>

@@ -12,7 +12,6 @@ in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
 # include <RcppCommon.h>
-# include <RcppCommon.h>
 # include <cppad/local/define.hpp>
 # include <cppad/local/is_pod.hpp>
 

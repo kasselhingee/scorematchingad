@@ -208,7 +208,6 @@ $end
 -----------------------------------------------------------------------------
 */
 # include <RcppCommon.h>
-# include <RcppCommon.h>
 # include <cppad/local/optimize/optimize_run.hpp>
 /*!
 \file optimize.hpp
