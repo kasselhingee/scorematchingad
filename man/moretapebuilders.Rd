@@ -71,7 +71,7 @@ which does not depend on \eqn{x}.
 \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
 The function \code{tapeGradOffset} creates a tape of \eqn{b(\theta)} where \eqn{\theta} is the independent variable.
 
-\item \code{tapeLogJacDet()}: Creates a tape of the log of the Jacobian determinant of a function taped in \code{tape}.
+\item \code{tapeLogJacDet()}: Creates a tape of the log of the Jacobian determinant of a function taped in \code{tape}. The dimensions of the domain (length of independent variable) and range (length of output variable) of \code{tape} must be equal for computation of the determinant.
 
 \item \code{tapeSwap()}: Convert an ADFun so that the independent variables become dynamic parameters
 and the dynamic parameters become independent variables.
