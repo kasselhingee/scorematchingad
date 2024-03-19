@@ -8,6 +8,11 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
                                Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
                                bool verbose
                                ){
+
+  // replace the cppad assert and other errors with Rcpp::Rcout
+  CppAD::ErrorHandler cppadhandler(Rcout_handler);
+
+
   if (theta.size() != fixedtheta.size()){
     Rcpp::stop("theta and fixedtheta must have the same length");
   }

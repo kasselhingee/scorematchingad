@@ -7,6 +7,7 @@
 # include "scorematchingad_types.h"
 # include "likelihoods/likelihoods.hpp"
 # include "utils/PrintFor.hpp"
+# include "utils/Rcout_handler.h"
 
 // declare a function that tapes a log likelihood
 CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manifold
