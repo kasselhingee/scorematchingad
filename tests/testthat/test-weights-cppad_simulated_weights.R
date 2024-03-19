@@ -6,6 +6,7 @@ vw <- virtualweights(m$sample)
 acut = 0.1
 
 test_that("cppad_closed() w = rep(1, nrow(Y)) is near the result as if w omitted", {
+  p <- ncol(m$sample)
   tapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
                         ytape = rep(1/p, m$p),
                         usertheta = rep(NA, length(m$theta)),
