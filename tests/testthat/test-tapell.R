@@ -27,6 +27,12 @@ test_that("tapell for ppi errors when theta isn't of the correct length", {
                   ytape = c(0.2, 0.3, 0.3, 0.2),
                   usertheta = ppi_paramvec(p = 3),
                   tranobj = maninfo$tran), class = "Rcpp::exception", regexp = "length")
+
+ # and that the taping was aborted too
+ ppitape <- tapell(llname = "ppi",
+                  ytape = c(0.2, 0.3, 0.3, 0.2),
+                  usertheta = ppi_paramvec(p = 4),
+                  tranobj = maninfo$tran)
 })
 
 
