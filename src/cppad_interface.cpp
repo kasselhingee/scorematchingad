@@ -23,7 +23,7 @@ Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> 
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   out->Dependent(newvalue, y);
-  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  //out->optimize(); //meant to remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore. But asserts errors.
   out->check_for_nan(false);
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
@@ -88,7 +88,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeJacobian(Rcpp::XPtr< CppAD::ADFun<doubl
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   out->Dependent(x, jac);
-  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  //out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.  But asserts errors.
   out->check_for_nan(false);
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
@@ -119,7 +119,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeHessian(Rcpp::XPtr< CppAD::ADFun<double
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   out->Dependent(x, hess);
-  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  //out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore. But asserts errors.
   out->check_for_nan(false);
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
@@ -166,7 +166,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<dou
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   out->Dependent(dynparam, gradoffset);
-  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  //out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.  But asserts errors.
   out->check_for_nan(false);
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
@@ -197,7 +197,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  ptapelogdetJ(Rcpp::XPtr< CppAD::ADFun<double
   //end taping
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
   out->Dependent(x, logdet);
-  out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+  //out->optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.  But asserts errors.
   out->check_for_nan(false);
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
