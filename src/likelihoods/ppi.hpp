@@ -12,6 +12,8 @@ namespace ll { // namespace for log-likelihood functions
         //assume the parameter vector theta is encoded as:
         //c(diag(ALs), ALs[upper.tri(ALs)], bL, beta)
         if (theta.rows() != d + (d-1) + (d-2) * (d-1)/2 + (d-1)){
+          a1type::abort_recording(); //if an ADFUN is recording, then abort
+          a2type::abort_recording(); //if an ADFUN is recording, then abort
           Rcpp::stop("length of parameter vector does not match length of a measurement");
         }
         Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Amat(d, d);
