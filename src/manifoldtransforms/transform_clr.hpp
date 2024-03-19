@@ -16,8 +16,8 @@ struct clr : public transform<Type> {
   Eigen::Matrix<Type, Eigen::Dynamic, 1> toM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x) override {
      Eigen::Matrix<Type, Eigen::Dynamic, 1> out(x.size());
      out = x.array().log(); //log all elements of x
-     Eigen::Matrix<Type, 1, 1> sumlog; //use a matrix so that -= is a known operation
-     sumlog << out.mean(); //sum logged values - mean would work just as well, but sum has fewer operations (except maybe when dimensions are very large?)
+     Eigen::Matrix<Type, Eigen::Dynamic, 1> sumlog(x.size());//use a matrix so that -= is a known operation
+     sumlog.setConstant(out.mean()); //sum logged values - mean would work just as well, but sum has fewer operations (except maybe when dimensions are very large?)
      out -= sumlog; //take the sumlog away from each element
      return(out);
   }
