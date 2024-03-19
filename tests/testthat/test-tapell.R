@@ -37,7 +37,7 @@ test_that("tapell for ppi errors when theta isn't of the correct length", {
 
 
 test_that("tapell for vMF errors if NDEBUG not defined when theta isn't of the correct length", {
-  skip("temporary skip")
+  skip("C++ assert errors not yet translated to R")
   # should get an assert error and R aborts
   maninfo <- manifoldtransform("sph")
   expect_condition(vmftape <- tapell(llname = "vMF",
