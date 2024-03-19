@@ -33,8 +33,8 @@ test_that("tapell for ppi errors when theta isn't of the correct length", {
 test_that("tapell for vMF errors if NDEBUG not defined when theta isn't of the correct length", {
   # should get an assert error and R aborts
   maninfo <- manifoldtransform("sph")
-  vmftape <- tapell(llname = "vMF",
+  expect_condition(vmftape <- tapell(llname = "vMF",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = c(NA, NA),
-                  tranobj = maninfo$tran)
+                  tranobj = maninfo$tran))
 })
