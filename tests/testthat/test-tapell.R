@@ -20,3 +20,20 @@ expect_error({tapell(llname = "error",
                   usertheta = ppi_paramvec(p = 3), 
                   tranobj = maninfo$tran)}, "function")
 })
+
+test_that("tapell for ppi errors when theta isn't of the correct length", {
+  maninfo <- manifoldtransform("sim", "sqrt", "sph")
+  expect_condition(ppitape <- tapell(llname = "ppi",
+                  ytape = c(0.2, 0.3, 0.3, 0.2),
+                  usertheta = ppi_paramvec(p = 3),
+                  tranobj = maninfo$tran), class = "Rcpp::exception", regexp = "length")
+})
+
+
+test_that("tapell for vMF errors if NDEBUG not defined when theta isn't of the correct length", {
+  maninfo <- manifoldtransform("sph")
+  vmftape <- tapell(llname = "vMF",
+                  ytape = c(0.2, 0.3, 0.5),
+                  usertheta = c(NA, NA),
+                  tranobj = maninfo$tran)
+})
