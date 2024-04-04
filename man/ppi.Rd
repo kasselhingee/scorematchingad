@@ -74,7 +74,7 @@ All elements of \code{evalparam} must be non-NA, and any parameters fixed by \co
 A list of \code{est}, \code{SE} and \code{info}.
 \itemize{
 \item \code{est} contains the estimates in vector form, \code{paramvec}, and as \eqn{A_L}, \eqn{b_L} and \eqn{\beta}.
-\item \code{SE} contains estimates of the standard errors if computed.
+\item \code{SE} contains estimates of the standard errors if computed. See \code{\link[=cppad_closed]{cppad_closed()}}.
 \item \code{info} contains a variety of information about the model fitting procedure and results.
 }
 

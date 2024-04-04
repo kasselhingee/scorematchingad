@@ -62,7 +62,7 @@
 #' @return `ppi()` returns:
 #' A list of `est`, `SE` and `info`.
 #'  * `est` contains the estimates in vector form, `paramvec`, and as \eqn{A_L}, \eqn{b_L} and \eqn{\beta}.
-#'  * `SE` contains estimates of the standard errors if computed.
+#'  * `SE` contains estimates of the standard errors if computed. See [`cppad_closed()`].
 #'  * `info` contains a variety of information about the model fitting procedure and results.
 
 #' @references

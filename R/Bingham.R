@@ -29,7 +29,7 @@
 #' @return
 #' A list of `est`, `SE` and `info`.
 #'  * `est` contains the estimated matrix `A` and a vector form, `paramvec`, of `A` (ordered according to `c(diag(A)[1:(p-1)], A[upper.tri(A)])` ). For the Mardia method, the estimated eigenvalues of `A` (named `evals`) and eigenvectors of `A` (named `G`) are also returned.
-#'  * `SE` contains estimates of the standard errors if computed.
+#'  * `SE` contains estimates of the standard errors if computed. See [`cppad_closed()`].
 #'  * `info` contains a variety of information about the model fitting procedure and results.
 #' @export
 Bingham <- function(Y, A = NULL, w = rep(1, nrow(Y)), method = "Mardia"){

@@ -20,7 +20,7 @@ or "smfull" for the full score matching estimator.}
 A list of \code{est}, \code{SE} and \code{info}.
 \itemize{
 \item \code{est} contains the estimated matrix \code{A} and a vector form, \code{paramvec}, of \code{A} (ordered according to \code{c(diag(A)[1:(p-1)], A[upper.tri(A)])} ). For the Mardia method, the estimated eigenvalues of \code{A} (named \code{evals}) and eigenvectors of \code{A} (named \code{G}) are also returned.
-\item \code{SE} contains estimates of the standard errors if computed.
+\item \code{SE} contains estimates of the standard errors if computed. See \code{\link[=cppad_closed]{cppad_closed()}}.
 \item \code{info} contains a variety of information about the model fitting procedure and results.
 }
 }

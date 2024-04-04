@@ -39,7 +39,7 @@
 #' @return
 #' A list of `est`, `SE` and `info`.
 #'  * `est` contains the estimates in vector form, `paramvec`, and with user friendly names `k` and `m`.
-#'  * `SE` contains estimates of the standard errors if computed.
+#'  * `SE` contains estimates of the standard errors if computed. See [`cppad_closed()`].
 #'  * `info` contains a variety of information about the model fitting procedure and results.
 #' @export
 vMF <- function(Y, paramvec = NULL, method = "Mardia", w = rep(1, nrow(Y))){

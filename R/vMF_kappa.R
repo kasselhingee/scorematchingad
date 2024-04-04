@@ -13,7 +13,7 @@
 #' @return
 #' A list of `est`, `SE` and `info`.
 #' `est` contains the estimate of the concentration in the slot `k` for easy use and `paramvec` for compatibility with other functions in this package.
-#' `SE` contains estimates of the standard errors if computed by the estimating method.
+#' `SE` contains estimates of the standard errors if computed by the estimating method. See [`cppad_closed()`].
 #' `info` contains a variety of information about the model fitting procedure.
 #' @param Y A data matrix, each row is an observation.
 #' @param w Weights corresponding to each row of `Y`.
