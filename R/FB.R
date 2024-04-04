@@ -23,7 +23,7 @@
 #' \eqn{\kappa} and \eqn{\mu} are the concentration and mean direction, respectively, as in the von Mises-Fisher distribution.
 #' 
 #' # Warning: Slow Convergence with Sample Size
-#' The score matching estimate converges slowly for the Fisher-Bingham distribution.
+#' Score matching estimates of all elements of \eqn{A} and \eqn{\kappa\mu} converge slowly with sample size.
 #' Even with a million simulated measurements,
 #'  the gradient of the score matching discrepancy at the true parameters can have size (L2 Euclidean norm) more than 0.001, which is substantially non-zero.
 #' @export
