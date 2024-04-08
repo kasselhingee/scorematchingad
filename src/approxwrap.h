@@ -1,7 +1,7 @@
 #ifndef approxwrap
 #define approxwrap
 
-#include "scorematchingad_types.h"
+#include "scorematchingad.h"
 #include "manifoldtransforms/manifolds.hpp"
 #include "utils/approx.hpp"
 #include <Rcpp.h>

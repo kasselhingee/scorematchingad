@@ -4,7 +4,7 @@
 # include <RcppEigen.h>
 # include <Rcpp.h>
 # include <cppad/cppad.hpp>
-# include "scorematchingad_types.h"
+# include "scorematchingad.h"
 # include "likelihoods/likelihoods.hpp"
 # include "utils/PrintFor.hpp"
 
