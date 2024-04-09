@@ -131,3 +131,24 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the
   return(pout);
 }
 
+Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, //data measurement on the M manifold
+                                     veca1 theta_ad,
+                                     SEXP llfXPtr, //the log likelihood function
+                                     transform_a1type & tran,
+                                     Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
+                                     bool verbose
+                                     ){
+  // unwrap likelihood function
+  llPtr func = *Rcpp::XPtr<llPtr>(llfXPtr);
+
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  *out = tapellcpp(z_ad,
+                theta_ad,
+                func,
+                tran,
+                fixedtheta,
+                verbose);
+
+  Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+}

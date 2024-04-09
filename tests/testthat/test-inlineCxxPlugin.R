@@ -52,6 +52,24 @@ a1type dirichlet(const veca1 &u, const veca1 &beta) {
 RcppXPtrUtils::checkXPtr(ptr, type = "a1type", args = c("const veca1&", "const veca1&")) |> expect_no_error()
 })
 
+test_that("I can pass a point to ptapell2", {
+ptr <- RcppXPtrUtils::cppXPtr("
+a1type dirichlet(const veca1 &u, const veca1 &beta) {
+        size_t d  = u.size();
+        a1type y(0.);  // initialize summation
+        for(size_t i = 0; i < d; i++)
+        {   y   += beta[i] * log(u[i]);
+        }
+        return y;
+}
+", depends = c("RcppEigen", "scorematchingad"), verbose = TRUE, showOutput = FALSE) |> expect_no_error()
+RcppXPtrUtils::checkXPtr(ptr, type = "a1type", args = c("const veca1&", "const veca1&")) |> expect_no_error()
+
+psimplex <- manifoldtransform("sim", "identity", "sim")
+lltape <- ptapell2(rep(1/3, 3), rep(-0.5, 3), llfXPtr = ptr, tran = psimplex$tran, fixedtheta = rep(FALSE, 3))
+
+expect_equal(3 * (-0.5 * log(1/3)), pForward0(lltape, rep(1/3, 3), rep(-0.5, 3)))
+})
 
 ########################33
 

@@ -48,6 +48,8 @@ struct transform { //exactly like a class, but with default public members https
   transform(){};
 };
 
+typedef a1type (*llPtr)(const veca1&, const veca1&);
+
 typedef manifold<a1type> manifold_a1type;
 RCPP_EXPOSED_CLASS_NODECL(manifold_a1type)
 typedef transform<a1type> transform_a1type;
