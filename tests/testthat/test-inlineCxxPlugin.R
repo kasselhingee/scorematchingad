@@ -14,12 +14,12 @@ test_that("Rcpp::cppFunction() accesses Eigen and wraps automatically", {
 # Rcpp::cppFunction() allows for automatic use of wrap and as!
 # note it is using the inline plugin
 fxptr <- Rcpp::cppFunction("
-double foo(Eigen::Matrix<double, Eigen::Dynamic, 1> x) {
+double foo(vecd x) {
  double out;
  out = x.sum();
  return out;
 }
-", depends = c("RcppEigen"))
+", depends = c("RcppEigen", "scorematchingad"))
   expect_equal(fxptr(c(1, 2)), 3)
 })
 
@@ -27,13 +27,13 @@ double foo(Eigen::Matrix<double, Eigen::Dynamic, 1> x) {
 test_that("RcppXPtrUtils accesses Eigen and wraps automatically", {
 # Rcpp::cppFunction() allows for automatic use of wrap and as!
 # note it is using the inline plugin
-ptr <- RcppXPtrUtils::cppXPtr("
-double foo(Eigen::Matrix<double, Eigen::Dynamic, 1> x) {
+{ptr <- RcppXPtrUtils::cppXPtr("
+double foo(vecd x) {
  double out;
  out = x.sum();
  return out;
 }
-", depends = c("RcppEigen"), verbose = TRUE) |> expect_no_error()
+", depends = c("RcppEigen", "scorematchingad"), verbose = TRUE, showOutput = FALSE)} |> expect_no_error()
   # can't checkXPtr because argument type has commas in it
 })
 
