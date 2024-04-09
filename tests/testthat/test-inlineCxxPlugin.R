@@ -38,6 +38,7 @@ double foo(vecd x) {
 })
 
 
+test_that("RcppXPtrUtils can compile a ll function", {
 ptr <- RcppXPtrUtils::cppXPtr("
 a1type dirichlet(const veca1 &u, const veca1 &beta) {
         size_t d  = u.size();
@@ -47,7 +48,9 @@ a1type dirichlet(const veca1 &u, const veca1 &beta) {
         }
         return y;
 }
-", depends = c("RcppEigen", "scorematchingad"), verbose = TRUE, showOutput = FALSE)
+", depends = c("RcppEigen", "scorematchingad"), verbose = TRUE, showOutput = FALSE) |> expect_no_error()
+RcppXPtrUtils::checkXPtr(ptr, type = "a1type", args = c("const veca1&", "const veca1&")) |> expect_no_error()
+})
 
 
 ########################33
