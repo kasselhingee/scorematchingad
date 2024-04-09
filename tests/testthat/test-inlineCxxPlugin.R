@@ -38,6 +38,18 @@ double foo(vecd x) {
 })
 
 
+ptr <- RcppXPtrUtils::cppXPtr("
+double foo(vecd x, transform<a1type> & tran) {
+ double out;
+ tran.fromM(x);
+ out = x.sum();
+ return out;
+}
+", depends = c("RcppEigen", "scorematchingad"), verbose = TRUE, showOutput = FALSE)
+
+
+########################33
+
 Rcpp::cppFunction("
 veca1 foo(transform<a1type> & tran, veca1 z) {
  veca1 u(0);
