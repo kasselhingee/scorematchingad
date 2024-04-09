@@ -39,11 +39,13 @@ double foo(vecd x) {
 
 
 ptr <- RcppXPtrUtils::cppXPtr("
-double foo(vecd x, transform<a1type> & tran) {
- double out;
- tran.fromM(x);
- out = x.sum();
- return out;
+a1type dirichlet(const veca1 &u, const veca1 &beta) {
+        size_t d  = u.size();
+        a1type y(0.);  // initialize summation
+        for(size_t i = 0; i < d; i++)
+        {   y   += beta[i] * log(u[i]);
+        }
+        return y;
 }
 ", depends = c("RcppEigen", "scorematchingad"), verbose = TRUE, showOutput = FALSE)
 
