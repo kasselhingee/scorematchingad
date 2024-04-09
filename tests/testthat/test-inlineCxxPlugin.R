@@ -11,3 +11,4 @@ test_that("simple cxx compiles and runs", {
   expect_no_error(fx(2L, 5))
   #write(strsplit(fx@code, "\n")[[1]], file = "tmp.cpp")
 })
+
