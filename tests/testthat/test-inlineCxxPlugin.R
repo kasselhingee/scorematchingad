@@ -1,3 +1,4 @@
+# for interactive testing load_all() with install doesn't include scorematchingad.h properly
 test_that("getting inline plugin passes", {
   expect_no_error(inline::getPlugin("scorematchingad"))
 })
@@ -33,7 +34,7 @@ double foo(vecd x) {
  out = x.sum();
  return out;
 }
-", depends = c("RcppEigen", "scorematchingad"), verbose = TRUE, showOutput = FALSE)} |> expect_no_error()
+", depends = c("RcppEigen", "scorematchingad"), verbose = FALSE, showOutput = FALSE)} |> expect_no_error()
   # can't checkXPtr because argument type has commas in it
 })
 
@@ -48,7 +49,7 @@ a1type dirichlet(const veca1 &u, const veca1 &beta) {
         }
         return y;
 }
-", depends = c("RcppEigen", "scorematchingad"), verbose = TRUE, showOutput = FALSE) |> expect_no_error()
+", depends = c("RcppEigen", "scorematchingad"), verbose = FALSE, showOutput = FALSE) |> expect_no_error()
 RcppXPtrUtils::checkXPtr(ptr, type = "a1type", args = c("const veca1&", "const veca1&")) |> expect_no_error()
 })
 
@@ -62,13 +63,14 @@ a1type dirichlet(const veca1 &u, const veca1 &beta) {
         }
         return y;
 }
-", depends = c("RcppEigen", "scorematchingad"), verbose = TRUE, showOutput = FALSE) |> expect_no_error()
+", depends = c("RcppEigen", "scorematchingad")) |> expect_no_error()
 RcppXPtrUtils::checkXPtr(ptr, type = "a1type", args = c("const veca1&", "const veca1&")) |> expect_no_error()
 
 psimplex <- manifoldtransform("sim", "identity", "sim")
-lltape <- ptapell2(rep(1/3, 3), rep(-0.5, 3), llfXPtr = ptr, tran = psimplex$tran, fixedtheta = rep(FALSE, 3))
+lltape <- ptapell2(rep(1/3, 3), rep(-0.5, 3), llfXPtr = ptr, tran = psimplex$tran, fixedtheta = rep(FALSE, 3), verbose = FALSE)
 
 expect_equal(3 * (-0.5 * log(1/3)), pForward0(lltape, rep(1/3, 3), rep(-0.5, 3)))
+expect_equal(rep(-0.5 * 3, 3), pJacobian(lltape, rep(1/3, 3), rep(-0.5, 3)))
 })
 
 ########################33
@@ -87,7 +89,7 @@ veca1 foo(transform<a1type> & tran, veca1 z) {
 test_that("returning pointer can be used elsewhere", {
   expect_no_error({
 fx <- inline::cxxfunction(
-signature(z_ad = "numeric", theta_ad = "numeric", llname = "string", 
+signature(z_ad = "numeric", theta_ad = "numeric", llname = "string"), 
 body = "
 
 a1type (*ll)(const veca1 &, const veca1 &) = nullptr;
