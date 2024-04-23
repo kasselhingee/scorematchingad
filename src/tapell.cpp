@@ -177,6 +177,6 @@ Rcpp::XPtr<llPtr> getllptr(std::string llname){
     throw std::invalid_argument("Matching ll function not found");
   }
 
-  Rcpp::XPtr< llPtr > pout(&ll, true);
+  Rcpp::XPtr< llPtr > pout(new llPtr(ll), true);
   return(pout);
 }

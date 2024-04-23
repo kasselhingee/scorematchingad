@@ -47,14 +47,14 @@ test_that("tapell for vMF errors if NDEBUG not defined when theta isn't of the c
 })
 
 test_that("llptr() internal function returns points like RcppXPtrUtils", {
-  ppiXPtr <- getllptr("ppi")
-  expect_type(ppiXPtr, "externalptr")
+  dirichletPtr <- getllptr("dirichlet")
+  expect_type(dirichletPtr, "externalptr")
 
 
   #evaluate ppiXPtr (rather complicated at the moment)
 
 psimplex <- manifoldtransform("sim", "identity", "sim")
-lltape <- ptapell2(rep(1/3, 3), rep(-0.5, 3), llfXPtr = ppiXPtr, tran = psimplex$tran, fixedtheta = rep(FALSE, 3), verbose = FALSE)
+lltape <- ptapell2(rep(1/3, 3), rep(-0.5, 3), llfXPtr = dirichletPtr, tran = psimplex$tran, fixedtheta = rep(FALSE, 3), verbose = FALSE)
 
 expect_equal(3 * (-0.5 * log(1/3)), pForward0(lltape, rep(1/3, 3), rep(-0.5, 3)))
 expect_equal(rep(-0.5 * 3, 3), pJacobian(lltape, rep(1/3, 3), rep(-0.5, 3)))
