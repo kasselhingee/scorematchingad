@@ -39,13 +39,23 @@ tapell <- function(llname,
   stopifnot(inherits(tranobj, "Rcpp_transform_ad"))
   starttheta <- t_u2s(usertheta, filler = thetatape_creator)
   ztape <- tranobj$toM(ytape) #the value of ytape transformed to the manifold
-  lltape <- ptapell(ztape, starttheta,
-                    llname = llname, 
+
+  # choose between a canned log-likelihood or a custom log-likelihood
+  if (typeof(llname) == "character"){
+    llptr <- getllptr(llname)
+    name <- llname
+  } else if (typeof(llname) == "externalptr"){
+    llptr <- llname
+    name <- "custom"
+  }
+
+  lltape <- ptapell2(ztape, starttheta,
+                    llfXPtr = llptr, 
                     tran = tranobj,
                     fixedtheta = t_u2i(usertheta),
                     verbose = verbose)
   out <- ADFun$new(ptr = lltape,
-                   name = paste(tranobj$name(), llname, sep = "-"),
+                   name = paste(tranobj$name(), name, sep = "-"),
                    xtape = ztape,
                    dyntape =  as.numeric(starttheta[!t_u2i(usertheta)]),
                    usertheta = as.numeric(usertheta))
