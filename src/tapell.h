@@ -41,7 +41,7 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the
 // [[Rcpp::export]]
 Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
-                                     SEXP llfXPtr, //the log likelihood function
+                                     Rcpp::XPtr<llPtr> llfXPtr, //the log likelihood function
                                      transform_a1type & tran,
                                      Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
                                      bool verbose

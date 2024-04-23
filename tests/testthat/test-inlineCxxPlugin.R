@@ -73,31 +73,3 @@ expect_equal(3 * (-0.5 * log(1/3)), pForward0(lltape, rep(1/3, 3), rep(-0.5, 3))
 expect_equal(rep(-0.5 * 3, 3), pJacobian(lltape, rep(1/3, 3), rep(-0.5, 3)))
 })
 
-########################33
-
-Rcpp::cppFunction("
-veca1 foo(transform<a1type> & tran, veca1 z) {
- veca1 u(0);
- //u = tran.fromM(z);
- return u;
-}
-", depends = c("RcppEigen", "scorematchingad"))
-
-
-#RcppXPtrUtils looks like exactly what I want
-
-test_that("returning pointer can be used elsewhere", {
-  expect_no_error({
-fx <- inline::cxxfunction(
-signature(z_ad = "numeric", theta_ad = "numeric", llname = "string"), 
-body = "
-
-a1type (*ll)(const veca1 &, const veca1 &) = nullptr;
-ll = ll::ll_ppi;
-return Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
-",
-                             plugin = "scorematchingad" )
-})
-  expect_no_error(fx(2L, 5))
-  #write(strsplit(fx@code, "\n")[[1]], file = "tmp.cpp")
-})
