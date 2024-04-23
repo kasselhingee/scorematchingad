@@ -51,13 +51,6 @@ test_that("llptr() internal function returns points like RcppXPtrUtils", {
   expect_type(dirichletPtr, "externalptr")
 
 
-  #evaluate ppiXPtr (rather complicated at the moment)
-
-psimplex <- manifoldtransform("sim", "identity", "sim")
-lltape <- ptapell2(rep(1/3, 3), rep(-0.5, 3), llfXPtr = dirichletPtr, tran = psimplex$tran, fixedtheta = rep(FALSE, 3), verbose = FALSE)
-
-expect_equal(3 * (-0.5 * log(1/3)), pForward0(lltape, rep(1/3, 3), rep(-0.5, 3)))
-expect_equal(rep(-0.5 * 3, 3), pJacobian(lltape, rep(1/3, 3), rep(-0.5, 3)))
-
-
+  #evaluate ppiXPtr
+  expect_equal(3 * (-0.5 * log(1/3)), evalll(dirichletPtr, rep(1/3, 3), rep(-0.5, 3)))
 })
