@@ -158,19 +158,19 @@ Rcpp::XPtr<llPtr> getllptr(std::string llname){
   //choose ll function
   llPtr ll = nullptr;
   if (llname.compare("dirichlet") == 0){
-    ll = &ll::ll_dirichlet;
+    ll = ll::ll_dirichlet;
   }
   if (llname.compare("ppi") == 0){
-    ll = &ll::ll_ppi;
+    ll = ll::ll_ppi;
   }
   if (llname.compare("vMF") == 0){
-    ll = &ll::ll_vMF;
+    ll = ll::ll_vMF;
   }
   if (llname.compare("Bingham") == 0){
-    ll = &ll::ll_Bingham;
+    ll = ll::ll_Bingham;
   }
   if (llname.compare("FB") == 0){
-    ll = &ll::ll_FB;
+    ll = ll::ll_FB;
   }
   //check ll function
   if (ll == nullptr){
