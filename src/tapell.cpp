@@ -152,3 +152,31 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, //data measurement on th
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
+
+
+Rcpp::XPtr<llPtr> getllptr(std::string llname){
+  //choose ll function
+  llPtr ll = nullptr;
+  if (llname.compare("dirichlet") == 0){
+    ll = &ll::ll_dirichlet;
+  }
+  if (llname.compare("ppi") == 0){
+    ll = &ll::ll_ppi;
+  }
+  if (llname.compare("vMF") == 0){
+    ll = &ll::ll_vMF;
+  }
+  if (llname.compare("Bingham") == 0){
+    ll = &ll::ll_Bingham;
+  }
+  if (llname.compare("FB") == 0){
+    ll = &ll::ll_FB;
+  }
+  //check ll function
+  if (ll == nullptr){
+    throw std::invalid_argument("Matching ll function not found");
+  }
+
+  Rcpp::XPtr< llPtr > pout(&ll, true);
+  return(pout);
+}

@@ -47,4 +47,11 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, //data measurement on th
                                      bool verbose
                                      );
 
+//' @noRd
+//' @title Get an XPtr to a named log-likelihood function in source code of package
+//' @param llname name of the likelihood function
+//' @return An RCpp::XPtr object pointing to a `llPtr` object of the log-likelihood function. Since `llPtr` is itself a pointer object, we have an XPtr pointing to a pointer that points to a function.
+// [[Rcpp::export]]
+Rcpp::XPtr<llPtr> getllptr(std::string llname);
+
 #endif
