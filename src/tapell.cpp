@@ -88,49 +88,6 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
 }
 
 
-Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, //data measurement on the M manifold
-                                     veca1 theta_ad,
-                                     std::string llname,
-                                     transform_a1type & tran,
-                                     Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
-                                     bool verbose
-                                     ){
-
-  //choose ll function
-  a1type (*ll)(const veca1 &, const veca1 &) = nullptr;
-  if (llname.compare("dirichlet") == 0){
-    ll = ll::ll_dirichlet;
-  }
-  if (llname.compare("ppi") == 0){
-    ll = ll::ll_ppi;
-  }
-  if (llname.compare("vMF") == 0){
-    ll = ll::ll_vMF;
-  }
-  if (llname.compare("Bingham") == 0){
-    ll = ll::ll_Bingham;
-  }
-  if (llname.compare("FB") == 0){
-    ll = ll::ll_FB;
-  }
-  //check ll function
-  if (ll == nullptr){
-    throw std::invalid_argument("Matching ll function not found");
-  }
-
-
-  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapellcpp(z_ad,
-                theta_ad,
-                ll,
-                tran,
-                fixedtheta,
-                verbose);
-
-  Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
-  return(pout);
-}
-
 Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
                                      Rcpp::XPtr<llPtr> llfXPtr, //the log likelihood function

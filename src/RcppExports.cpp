@@ -142,22 +142,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ptapell
-Rcpp::XPtr< CppAD::ADFun<double> > ptapell(veca1 z_ad, veca1 theta_ad, std::string llname, transform_a1type& tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
-RcppExport SEXP _scorematchingad_ptapell(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llnameSEXP, SEXP tranSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< veca1 >::type z_ad(z_adSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type theta_ad(theta_adSEXP);
-    Rcpp::traits::input_parameter< std::string >::type llname(llnameSEXP);
-    Rcpp::traits::input_parameter< transform_a1type& >::type tran(tranSEXP);
-    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type fixedtheta(fixedthetaSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapell(z_ad, theta_ad, llname, tran, fixedtheta, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
 // ptapell2
 Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, veca1 theta_ad, Rcpp::XPtr<llPtr> llfXPtr, transform_a1type& tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
 RcppExport SEXP _scorematchingad_ptapell2(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llfXPtrSEXP, SEXP tranSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
@@ -230,7 +214,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_pTapeGradOffset", (DL_FUNC) &_scorematchingad_pTapeGradOffset, 3},
     {"_scorematchingad_ptapelogdetJ", (DL_FUNC) &_scorematchingad_ptapelogdetJ, 3},
     {"_scorematchingad_swapDynamic", (DL_FUNC) &_scorematchingad_swapDynamic, 3},
-    {"_scorematchingad_ptapell", (DL_FUNC) &_scorematchingad_ptapell, 6},
     {"_scorematchingad_ptapell2", (DL_FUNC) &_scorematchingad_ptapell2, 6},
     {"_scorematchingad_getllptr", (DL_FUNC) &_scorematchingad_getllptr, 1},
     {"_scorematchingad_evalll", (DL_FUNC) &_scorematchingad_evalll, 3},

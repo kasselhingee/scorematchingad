@@ -146,16 +146,6 @@ swapDynamic <- function(pfun, newvalue, newdynparam) {
 }
 
 #' @noRd
-#' @title Tape of a log-likelihood calculation
-#' @param p dimension of measurements
-#' @param bd dimension of the parameter vector
-#' @param llname name of the likelihood function
-#' @return An RCpp::XPtr object pointing to the ADFun
-ptapell <- function(z_ad, theta_ad, llname, tran, fixedtheta, verbose) {
-    .Call('_scorematchingad_ptapell', PACKAGE = 'scorematchingad', z_ad, theta_ad, llname, tran, fixedtheta, verbose)
-}
-
-#' @noRd
 #' @title Tape of a log-likelihood calculation 2
 #' @param p dimension of measurements
 #' @param bd dimension of the parameter vector
