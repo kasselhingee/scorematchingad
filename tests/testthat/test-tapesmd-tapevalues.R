@@ -5,68 +5,55 @@ test_that("Dirichlet with smd values and derivatives independent of tape", {
   theta2 = rep(0, 3)
   fixedtheta = rep(FALSE, 3)
   acut = 0.1
-
-  psphere <- manifoldtransform("sim", "sqrt", "sph")
-
-  #Sphere
-  pdir1 <- ptapell(u1, theta1, "dirichlet", psphere$tran, fixedtheta = fixedtheta, verbose = FALSE)
-  pdir2 <- ptapell(u2, theta2, "dirichlet", psphere$tran, fixedtheta = fixedtheta, verbose = FALSE)
-  pdir1smd <- ptapesmd(u1, theta1, pdir1, psphere$tran, psphere$man, "minsq", acut = acut, verbose = FALSE)
-  pdir2smd <- ptapesmd(u2, theta2, pdir2, psphere$tran, psphere$man, "minsq", acut = acut, verbose = FALSE)
-
   ueval <- matrix(c(0.4, 0.011, 1 - 0.4 - 0.011), nrow = 1)
   thetaeval <- c(-0.1, -0.5, 2)
-  expect_equal(pForward0(pdir1, ueval, thetaeval), pForward0(pdir2, ueval, thetaeval))
-  expect_equal(pJacobian(pdir1, ueval, thetaeval), pJacobian(pdir2, ueval, thetaeval))
-  expect_equal(pHessian(pdir1, ueval, thetaeval), pHessian(pdir2, ueval, thetaeval))
 
-  expect_equal(pForward0(pdir1smd, thetaeval, ueval), pForward0(pdir2smd, thetaeval, ueval))
-  expect_equal(pJacobian(pdir1smd, thetaeval, ueval), pJacobian(pdir2smd, thetaeval, ueval))
-  expect_equal(pHessian(pdir1smd, thetaeval, ueval), pHessian(pdir2smd, thetaeval, ueval))
+  compare <- function(uval, thetaeval, tapes1, tapes2){
+  expect_equal(pForward0(tapes1$lltape$ptr, ueval, thetaeval), pForward0(tapes2$lltape$ptr, ueval, thetaeval))
+  expect_equal(pJacobian(tapes1$lltape$ptr, ueval, thetaeval), pJacobian(tapes2$lltape$ptr, ueval, thetaeval))
+  expect_equal(pHessian(tapes1$lltape$ptr, ueval, thetaeval), pHessian(tapes2$lltape$ptr, ueval, thetaeval))
+
+  expect_equal(pForward0(tapes1$smdtape$ptr, thetaeval, ueval), pForward0(tapes2$smdtape$ptr, thetaeval, ueval))
+  expect_equal(pJacobian(tapes1$smdtape$ptr, thetaeval, ueval), pJacobian(tapes2$smdtape$ptr, thetaeval, ueval))
+  expect_equal(pHessian(tapes1$smdtape$ptr, thetaeval, ueval), pHessian(tapes2$smdtape$ptr, thetaeval, ueval))
+  return(NULL)
+  }
+
+  #Sphere with minsq
+  tapes1 <- buildsmdtape("sim", "sqrt", "sph",
+               "dirichlet", u1, rep(NA, 3), thetatape_creator = function(n){theta1},
+               bdryw = "minsq", acut = acut)
+  tapes2 <- buildsmdtape("sim", "sqrt", "sph",
+               "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
+               bdryw = "minsq", acut = acut)
+
+  compare(ueval, thetaeval, tapes1, tapes2)
 
   #Sphere, prodsq
-  pdir1 <- ptapell(u1, theta1, "dirichlet", psphere$tran, fixedtheta = fixedtheta, verbose = FALSE)
-  pdir2 <- ptapell(u2, theta2, "dirichlet", psphere$tran, fixedtheta = fixedtheta, verbose = FALSE)
-  pdir1smd <- ptapesmd(u1, theta1, pdir1, psphere$tran, psphere$man, "prodsq", acut = acut, verbose = FALSE)
-  pdir2smd <- ptapesmd(u2, theta2, pdir2, psphere$tran, psphere$man, "prodsq", acut = acut, verbose = FALSE)
-
-  ueval <- matrix(c(0.4, 0.011, 1 - 0.4 - 0.011), nrow = 1)
-  thetaeval <- c(-0.1, -0.5, 2)
-  expect_equal(pForward0(pdir1, ueval, thetaeval), pForward0(pdir2, ueval, thetaeval))
-  expect_equal(pJacobian(pdir1, ueval, thetaeval), pJacobian(pdir2, ueval, thetaeval))
-  expect_equal(pHessian(pdir1, ueval, thetaeval), pHessian(pdir2, ueval, thetaeval))
-
-  expect_equal(pForward0(pdir1smd, thetaeval, ueval), pForward0(pdir2smd, thetaeval, ueval))
-  expect_equal(pJacobian(pdir1smd, thetaeval, ueval), pJacobian(pdir2smd, thetaeval, ueval))
-  expect_equal(pHessian(pdir1smd, thetaeval, ueval), pHessian(pdir2smd, thetaeval, ueval))
+  tapes1 <- buildsmdtape("sim", "sqrt", "sph",
+               "dirichlet", u1, rep(NA, 3), thetatape_creator = function(n){theta1},
+               bdryw = "prodsq", acut = acut)
+  tapes2 <- buildsmdtape("sim", "sqrt", "sph",
+               "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
+               bdryw = "prodsq", acut = acut)
+  compare(ueval, thetaeval, tapes1, tapes2)
 
   #Simplex
-  psimplex <- manifoldtransform("sim", "identity", "sim")
-  pdir1 <- ptapell(u1, theta1, "dirichlet", psimplex$tran, fixedtheta = fixedtheta, verbose = FALSE)
-  pdir2 <- ptapell(u2, theta2, "dirichlet", psimplex$tran, fixedtheta = fixedtheta, verbose = FALSE)
-  pdir1smd <- ptapesmd(u1, theta1, pdir1, psimplex$tran, psimplex$man, "minsq", acut = acut, verbose = FALSE)
-  pdir2smd <- ptapesmd(u2, theta2, pdir2, psimplex$tran, psimplex$man, "minsq", acut = acut, verbose = FALSE)
-
-  expect_equal(pForward0(pdir1, ueval, thetaeval), pForward0(pdir2, ueval, thetaeval))
-  expect_equal(pJacobian(pdir1, ueval, thetaeval), pJacobian(pdir2, ueval, thetaeval))
-  expect_equal(pHessian(pdir1, ueval, thetaeval), pHessian(pdir2, ueval, thetaeval))
-
-  expect_equal(pForward0(pdir1smd, thetaeval, ueval), pForward0(pdir2smd, thetaeval, ueval))
-  expect_equal(pJacobian(pdir1smd, thetaeval, ueval), pJacobian(pdir2smd, thetaeval, ueval))
-  expect_equal(pHessian(pdir1smd, thetaeval, ueval), pHessian(pdir2smd, thetaeval, ueval))
+  tapes1 <- buildsmdtape("sim", "identity", "sim",
+               "dirichlet", u1, rep(NA, 3), thetatape_creator = function(n){theta1},
+               bdryw = "minsq", acut = acut)
+  tapes2 <- buildsmdtape("sim", "identity", "sim",
+               "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
+               bdryw = "minsq", acut = acut)
+  compare(ueval, thetaeval, tapes1, tapes2)
 
   #Simplex, prodsq
-  pdir1 <- ptapell(u1, theta1, "dirichlet", psimplex$tran, fixedtheta = fixedtheta, verbose = FALSE)
-  pdir2 <- ptapell(u2, theta2, "dirichlet", psimplex$tran, fixedtheta = fixedtheta, verbose = FALSE)
-  pdir1smd <- ptapesmd(u1, theta1, pdir1, psimplex$tran, psimplex$man, "prodsq", acut = acut, verbose = FALSE)
-  pdir2smd <- ptapesmd(u2, theta2, pdir2, psimplex$tran, psimplex$man, "prodsq", acut = acut, verbose = FALSE)
-
-  expect_equal(pForward0(pdir1, ueval, thetaeval), pForward0(pdir2, ueval, thetaeval))
-  expect_equal(pJacobian(pdir1, ueval, thetaeval), pJacobian(pdir2, ueval, thetaeval))
-  expect_equal(pHessian(pdir1, ueval, thetaeval), pHessian(pdir2, ueval, thetaeval))
-
-  expect_equal(pForward0(pdir1smd, thetaeval, ueval), pForward0(pdir2smd, thetaeval, ueval))
-  expect_equal(pJacobian(pdir1smd, thetaeval, ueval), pJacobian(pdir2smd, thetaeval, ueval))
-  expect_equal(pHessian(pdir1smd, thetaeval, ueval), pHessian(pdir2smd, thetaeval, ueval))
+  tapes1 <- buildsmdtape("sim", "identity", "sim",
+               "dirichlet", u1, rep(NA, 3), thetatape_creator = function(n){theta1},
+               bdryw = "prodsq", acut = acut)
+  tapes2 <- buildsmdtape("sim", "identity", "sim",
+               "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
+               bdryw = "prodsq", acut = acut)
+  compare(ueval, thetaeval, tapes1, tapes2)
 })
 
