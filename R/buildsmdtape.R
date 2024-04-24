@@ -73,6 +73,8 @@ buildsmdtape <- function(start, tran, end, llname,
 
   if(all(!is.na(usertheta))){stop("All elements of theta are fixed")}
 
+  tranman <- manifoldtransform(start, tran, end)
+
   if (!(all(c(tran, end) == c("sqrt", "sph")) | all(c(tran, end) == c("identity", "sim")))){
     if (bdryw != "ones"){warning("Manifold supplied has no boundary. Using bdryw = 'ones' is strongly recommended.")}
   }
@@ -80,7 +82,6 @@ buildsmdtape <- function(start, tran, end, llname,
     warning("The value of 'acut' is ignored for bdryw == 'ones'")
   }
 
-  tranman <- manifoldtransform(start, tran, end)
   lltape <- tapell(llname = llname,
                     ytape = ytape,
                     usertheta = usertheta, 
