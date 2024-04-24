@@ -75,6 +75,7 @@ buildsmdtape <- function(start, tran, end, llname,
 
   tranman <- manifoldtransform(start, tran, end)
 
+  # check bdryw and associated acut
   if (!(all(c(tran, end) == c("sqrt", "sph")) | all(c(tran, end) == c("identity", "sim")))){
     if (bdryw != "ones"){warning("Manifold supplied has no boundary. Using bdryw = 'ones' is strongly recommended.")}
   }
