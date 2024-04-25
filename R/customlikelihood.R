@@ -70,7 +70,7 @@ new_adloglikelihood <- function(ptr, fname = NULL){
 }
 validate_adloglikelihood <- function(ll){
   ll_a <- unclass(ll)
-  if (typeof(ll_a) != externalptr){
+  if (typeof(ll_a) != "externalptr"){
     stop("adloglikelihood is not an 'externalptr'")
   }
   if (is.null(attr(ll_a, "fname", exact = TRUE))){
