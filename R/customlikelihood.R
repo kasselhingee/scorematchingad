@@ -4,7 +4,18 @@
 #' @param rebuild passed to [`Rcpp::cppFunction()`].
 #' @param showOutput passed to [`Rcpp::cppFunction()`].
 #' @param verbose passed to [`Rcpp::cppFunction()`].
+#' @param code `C++` code for a log-likehood function (with normalising constant omitted if desired). See details for more.
 #' @details
+#' # code 
+#' `code` must be `C++` that uses only `CppAD` and `Eigen`, which makes it very similar to the requirements of the input to [`TMB::compile()`] (which also uses `CppAD` and `Eigen`).
+#' 
+#' The start of `code` should always be "`a1type fname(const veca1 &x, const veca1 &theta){`" where `fname` is your chosen name of the log-likelihood function, `x` represents a point in the data space and `theta` is a vector of parameters for the log-likelihood. This specifies that the function will have two vector arguments (of type `veca1`) and will return a single numeric value (`a1type`).
+#' 
+#' The type `a1type` is a double with special ability for being taped by `CppAD`. The `veca1` type is a vector of `a1type` elements, with the vector wrapping supplied by the `Eigen` C++ package (that is an `Eigen` matrix with 1 column and dynamic number of rows).
+#' 
+#' The body of the function must use operations from Eigen and/or CppAD, prefixed by `Eigen::` and `CppAD::` respectively. The operations should all be smooth for the purposes of score matching.
+#' There are no easy intsructions for writing these as it is genuine `C++` code, which can be very opaque to those unfamiliar with `C++`.
+#' 
 #' Can ommit normalising constant.
 #' Like TMB, which also uses CppAD with CppAD
 #' Must have two inputs and one output. That is first line must look like:
