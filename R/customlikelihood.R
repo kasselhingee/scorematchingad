@@ -11,7 +11,7 @@
 #' @details
 #' The function uses `RcppXPtrUtils::cppXPtr()` and `Rcpp::cppFunction()`. 
 #' It is good practice to check the returned object using [`evalll()`].
-#' 
+#' The first compilation in a session can be very slow.
 #' # code 
 #' `code` must be `C++` that uses only `CppAD` and `Eigen`, which makes it very similar to the requirements of the input to [`TMB::compile()`] (which also uses `CppAD` and `Eigen`).
 #' 
@@ -39,7 +39,14 @@ customll <- function(code, rebuild = FALSE,
                      cacheDir = getOption("rcpp.cache.dir", tempdir()), 
                      showOutput = verbose, verbose = getOption("verbose")){
   ptr <- RcppXPtrUtils::cppXPtr(code, depends = c("RcppEigen", "scorematchingad"), rebuild = rebuild, cacheDir = cacheDir, showOutput = showOutput, verbose = verbose)
-  RcppXPtrUtils::checkXPtr(ptr, type = "a1type", args = c("const veca1&", "const veca1&"))
+  
+  # in the spirit of RcppXPtrUtils::checkXPtr check output and arguments. Rewritten here for bespoke error messages.
+  if (!all(grepl("^const veca1", attr(ptr, "args", exact = TRUE)))){
+    stop("Arguments incorrect. There should be two arguments, both of type 'const veca1'")
+  }
+  if (attr(ptr, "type", exact = TRUE) != "a1type"){
+    stop(sprintf("The return type is %s but should be a1type", attr(ptr, "type", exact = TRUE)))
+  }
   ptr <- new_adloglikelihood(ptr)
   return(ptr)
 }
@@ -67,6 +74,7 @@ validate_adloglikelihood <- function(ll){
   }
   return(ll)
 }
+#' @export
 print.adloglikelihood <- function(x, ...){
   print(sprintf("log-likelihood function '%s' for automatic differentiation", attr(x, "fname", exact = TRUE)))
 }

@@ -1,75 +1,32 @@
 # for interactive testing load_all() with install doesn't include scorematchingad.h properly
-test_that("getting inline plugin passes", {
-  expect_no_error(inline::getPlugin("scorematchingad"))
+test_that("customll can compile a ll function that is evaluated by evalll and taping later", {
+  dirll <- customll("
+  a1type dirichlet(const veca1 &u, const veca1 &beta) {
+          size_t d  = u.size();
+          a1type y(0.);  // initialize summation
+          for(size_t i = 0; i < d; i++)
+          {   y   += beta[i] * log(u[i]);
+          }
+          return y;
+  }")
+  expect_equal(3 * (-0.5 * log(1/3)), evalll(dirll, rep(1/3, 3), rep(-0.5, 3)))
+  
+  psimplex <- manifoldtransform("sim", "identity", "sim")
+  lltape <- tapell(dirll, rep(1/3, 3), rep(NA, 3), psimplex$tran, verbose = FALSE)
+
+  expect_equal(3 * (-0.5 * log(1/3)), pForward0(lltape, rep(1/3, 3), rep(-0.5, 3)))
+  expect_equal(rep(-0.5 * 3, 3), pJacobian(lltape, rep(1/3, 3), rep(-0.5, 3)))
 })
 
-test_that("simple cxx compiles and runs", {
-  expect_no_error({fx <- inline::cxxfunction(signature(x = "integer", y = "numeric"), 
-                             "return wrap( as<int>(x) * as<double>(y));",
-                             plugin = "scorematchingad" )})
-  expect_no_error(fx(2L, 5))
-  #write(strsplit(fx@code, "\n")[[1]], file = "tmp.cpp")
-})
-
-test_that("Rcpp::cppFunction() accesses Eigen and wraps automatically", {
-# Rcpp::cppFunction() allows for automatic use of wrap and as!
-# note it is using the inline plugin
-fxptr <- Rcpp::cppFunction("
-double foo(vecd x) {
- double out;
- out = x.sum();
- return out;
-}
-", depends = c("RcppEigen", "scorematchingad"))
-  expect_equal(fxptr(c(1, 2)), 3)
-})
-
-
-test_that("RcppXPtrUtils accesses Eigen and wraps automatically", {
-# Rcpp::cppFunction() allows for automatic use of wrap and as!
-# note it is using the inline plugin
-{ptr <- RcppXPtrUtils::cppXPtr("
-double foo(vecd x) {
- double out;
- out = x.sum();
- return out;
-}
-", depends = c("RcppEigen", "scorematchingad"), verbose = FALSE, showOutput = FALSE)} |> expect_no_error()
-  # can't checkXPtr because argument type has commas in it
-})
-
-
-test_that("RcppXPtrUtils can compile a ll function", {
-ptr <- RcppXPtrUtils::cppXPtr("
-a1type dirichlet(const veca1 &u, const veca1 &beta) {
+test_that("customll errors correctly with wrong signature", {
+  expect_error({dirll <- customll("
+a1type dirichlet(const vecd &u, const veca1 &beta) {
         size_t d  = u.size();
         a1type y(0.);  // initialize summation
         for(size_t i = 0; i < d; i++)
         {   y   += beta[i] * log(u[i]);
         }
         return y;
-}
-", depends = c("RcppEigen", "scorematchingad"), verbose = FALSE, showOutput = FALSE) |> expect_no_error()
-RcppXPtrUtils::checkXPtr(ptr, type = "a1type", args = c("const veca1&", "const veca1&")) |> expect_no_error()
-})
-
-test_that("I can pass a point to ptapell2", {
-ptr <- RcppXPtrUtils::cppXPtr("
-a1type dirichlet(const veca1 &u, const veca1 &beta) {
-        size_t d  = u.size();
-        a1type y(0.);  // initialize summation
-        for(size_t i = 0; i < d; i++)
-        {   y   += beta[i] * log(u[i]);
-        }
-        return y;
-}
-", depends = c("RcppEigen", "scorematchingad")) |> expect_no_error()
-RcppXPtrUtils::checkXPtr(ptr, type = "a1type", args = c("const veca1&", "const veca1&")) |> expect_no_error()
-
-psimplex <- manifoldtransform("sim", "identity", "sim")
-lltape <- ptapell2(rep(1/3, 3), rep(-0.5, 3), llfXPtr = ptr, tran = psimplex$tran, fixedtheta = rep(FALSE, 3), verbose = FALSE)
-
-expect_equal(3 * (-0.5 * log(1/3)), pForward0(lltape, rep(1/3, 3), rep(-0.5, 3)))
-expect_equal(rep(-0.5 * 3, 3), pJacobian(lltape, rep(1/3, 3), rep(-0.5, 3)))
+}")})
 })
 
