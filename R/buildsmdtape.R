@@ -65,7 +65,7 @@
 #' evaltape(tapes$lltape, u, rppi_egmodel(1)$theta)
 #' evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
 #' @export
-buildsmdtape <- function(start, tran, end, llname,
+buildsmdtape <- function(start, tran, end, ll,
                          ytape, usertheta,
                          bdryw = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
@@ -83,7 +83,7 @@ buildsmdtape <- function(start, tran, end, llname,
     warning("The value of 'acut' is ignored for bdryw == 'ones'")
   }
 
-  lltape <- tapell(llname = llname,
+  lltape <- tapell(ll = ll,
                     ytape = ytape,
                     usertheta = usertheta, 
                     thetatape_creator = thetatape_creator,
@@ -99,9 +99,8 @@ buildsmdtape <- function(start, tran, end, llname,
     lltape = lltape,
     smdtape = smdtape,
     info = list(
-      name = llname,
       transform = tran,
-      manifold = end,
+      endmanifold = end,
       ulength = length(ytape),
       bdryw = bdryw,
       acut = acut

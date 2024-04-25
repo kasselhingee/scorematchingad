@@ -42,7 +42,7 @@ customll <- function(code, rebuild = FALSE,
   
   # in the spirit of RcppXPtrUtils::checkXPtr check output and arguments. Rewritten here for bespoke error messages.
   if (!all(grepl("^const veca1", attr(ptr, "args", exact = TRUE)))){
-    stop("Arguments incorrect. There should be two arguments, both of type 'const veca1'")
+    stop("Arguments incorrect. There should be two arguments, both of type 'const veca1'.")
   }
   if (attr(ptr, "type", exact = TRUE) != "a1type"){
     stop(sprintf("The return type is %s but should be a1type", attr(ptr, "type", exact = TRUE)))

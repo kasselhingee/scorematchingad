@@ -14,8 +14,8 @@ test_that("customll can compile a ll function that is evaluated by evalll and ta
   psimplex <- manifoldtransform("sim", "identity", "sim")
   lltape <- tapell(dirll, rep(1/3, 3), rep(NA, 3), psimplex$tran, verbose = FALSE)
 
-  expect_equal(3 * (-0.5 * log(1/3)), pForward0(lltape, rep(1/3, 3), rep(-0.5, 3)))
-  expect_equal(rep(-0.5 * 3, 3), pJacobian(lltape, rep(1/3, 3), rep(-0.5, 3)))
+  expect_equal(3 * (-0.5 * log(1/3)), pForward0(lltape$ptr, rep(1/3, 3), rep(-0.5, 3)))
+  expect_equal(rep(-0.5 * 3, 3), pJacobian(lltape$ptr, rep(1/3, 3), rep(-0.5, 3)))
 })
 
 test_that("customll errors correctly with wrong signature", {
