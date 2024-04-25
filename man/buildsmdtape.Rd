@@ -12,7 +12,7 @@ buildsmdtape(
   start,
   tran,
   end,
-  llname,
+  ll,
   ytape,
   usertheta,
   bdryw = "ones",
@@ -26,7 +26,7 @@ buildsmdtape(
 manifoldtransform(start, tran = "identity", end = start)
 
 tapell(
-  llname,
+  ll,
   ytape,
   usertheta,
   tranobj,
@@ -57,7 +57,7 @@ tapesmd(lltape, tranobj, man, bdryw, acut = 1, verbose = FALSE)
 \item ``Euc'' Euclidean space
 }}
 
-\item{llname}{The name of an improper log-likelihood function to tape (which also specifies the parametric model family).}
+\item{ll}{The name of an inbuilt improper log-likelihood function to tape (which also specifies the parametric model family) or a custom log-likehood function created by \code{\link[=customll]{customll()}}. The \code{ll} should operate on the untransformed (i.e. starting) manifold.}
 
 \item{ytape}{An example measurement value to use for creating the tapes. In the natural (i.e. \code{start}) manifold of the log-likelihood function. \code{ytape} will be converted to the \code{end} manifold according to the \code{toM()} method for \code{tranobj} before taping.
 Please ensure that \code{ytape} is the interior of the manifold, and it is probably best if all components of \code{tranobj$toM(ytape)} are non-zero.}
@@ -192,7 +192,7 @@ evaltape(tapes$lltape, u, rppi_egmodel(1)$theta)
 evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
 manifoldtransform("sim", "alr", "Euc")
 maninfo <- manifoldtransform("sim", "sqrt", "sph")
-ppitape <- tapell(llname = "ppi",
+ppitape <- tapell(ll = "ppi",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
                   tranobj = maninfo$tran) 
@@ -203,7 +203,7 @@ evaltape(tapeJacobian(ppitape),
   sqrt(rep(1/3, 3)), 
   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
 sqrtman <- manifoldtransform("sim", "sqrt", "sph")
-ppitape <- tapell(llname = "ppi",
+ppitape <- tapell(ll = "ppi",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
                   tranobj = sqrtman$tran)

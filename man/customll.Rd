@@ -33,6 +33,7 @@ For score matching the normalising constant of the log-likelihood can be omitted
 \details{
 The function uses \code{RcppXPtrUtils::cppXPtr()} and \code{Rcpp::cppFunction()}.
 It is good practice to check the returned object using \code{\link[=evalll]{evalll()}}.
+The first compilation in a session can be very slow.
 }
 \section{code}{
 \code{code} must be \verb{C++} that uses only \code{CppAD} and \code{Eigen}, which makes it very similar to the requirements of the input to \code{\link[TMB:compile]{TMB::compile()}} (which also uses \code{CppAD} and \code{Eigen}).
@@ -57,4 +58,8 @@ myll <- customll("a1type dirichlet(const veca1 &u, const veca1 &beta) {
   return y;
 }")
 evalll(myll, rep(1/3, 3), rep(-0.5, 3))
+buildsmdtape("sim", "identity", "sim", 
+ myll, rep(1/3, 3), rep(NA, 3), 
+ bdryw="minsq", acut = 0.01)
+
 }
