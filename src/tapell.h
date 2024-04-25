@@ -40,13 +40,15 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, //data measurement on th
 // [[Rcpp::export]]
 Rcpp::XPtr<llPtr> getllptr(std::string llname);
 
-//' @noRd
-//' @title Evaluate, without taping, a log-likelihood function
-//' @param llfXPtr An XPtr to a llPtr object that points to a log-likelihood function.
+//' @name evalll
+//' @title Evaluate a log-likelihood function
+//' @param ll A compiled log-likelihood function created by [`customll()`].
+// ( ll is an XPtr to a llPtr object that points to a log-likelihood function )
 //' @param u A vector of measurements for an individual
 //' @param theta A vector of parameters
 //' @return The value of the log-likelihood at `u` with parameters `theta`.
+//' @export
 // [[Rcpp::export]]
-a1type evalll(Rcpp::XPtr<llPtr> llfXPtr, const veca1& u, const veca1& theta);
+a1type evalll(Rcpp::XPtr<llPtr> ll, const veca1& u, const veca1& theta);
 
 #endif

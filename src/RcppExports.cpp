@@ -170,15 +170,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // evalll
-a1type evalll(Rcpp::XPtr<llPtr> llfXPtr, const veca1& u, const veca1& theta);
-RcppExport SEXP _scorematchingad_evalll(SEXP llfXPtrSEXP, SEXP uSEXP, SEXP thetaSEXP) {
+a1type evalll(Rcpp::XPtr<llPtr> ll, const veca1& u, const veca1& theta);
+RcppExport SEXP _scorematchingad_evalll(SEXP llSEXP, SEXP uSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<llPtr> >::type llfXPtr(llfXPtrSEXP);
+    Rcpp::traits::input_parameter< Rcpp::XPtr<llPtr> >::type ll(llSEXP);
     Rcpp::traits::input_parameter< const veca1& >::type u(uSEXP);
     Rcpp::traits::input_parameter< const veca1& >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(evalll(llfXPtr, u, theta));
+    rcpp_result_gen = Rcpp::wrap(evalll(ll, u, theta));
     return rcpp_result_gen;
 END_RCPP
 }

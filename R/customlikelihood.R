@@ -5,7 +5,13 @@
 #' @param showOutput passed to [`Rcpp::cppFunction()`].
 #' @param verbose passed to [`Rcpp::cppFunction()`].
 #' @param code `C++` code for a log-likehood function (with normalising constant omitted if desired). See details for more.
+#' @description
+#' Supply `C++` code to specify a custom log-likelihood, much like `TMB::compile()` is passed `C++` code that formulate models.
+#' For score matching the normalising constant of the log-likelihood can be omitted.
 #' @details
+#' The function uses `RcppXPtrUtils::cppXPtr()` and `Rcpp::cppFunction()`. 
+#' It is good practice to check the returned object using [`evalll()`].
+#' 
 #' # code 
 #' `code` must be `C++` that uses only `CppAD` and `Eigen`, which makes it very similar to the requirements of the input to [`TMB::compile()`] (which also uses `CppAD` and `Eigen`).
 #' 
@@ -13,20 +19,11 @@
 #' 
 #' The type `a1type` is a double with special ability for being taped by `CppAD`. The `veca1` type is a vector of `a1type` elements, with the vector wrapping supplied by the `Eigen` C++ package (that is an `Eigen` matrix with 1 column and dynamic number of rows).
 #' 
-#' The body of the function must use operations from Eigen and/or CppAD, prefixed by `Eigen::` and `CppAD::` respectively. The operations should all be smooth for the purposes of score matching.
-#' There are no easy intsructions for writing these as it is genuine `C++` code, which can be very opaque to those unfamiliar with `C++`.
-#' 
-#' Can ommit normalising constant.
-#' Like TMB, which also uses CppAD with CppAD
-#' Must have two inputs and one output. That is first line must look like:
-#' 
-#' Uses `RcppXPtrUtils::cppXPtr()`
-#' 
-#' a1type, veca1
-#' 
-#' It is good practice to check the function is behaving properly using [`evalll()`].
+#' The body of the function must use operations from Eigen and/or CppAD, prefixed by `Eigen::` and `CppAD::` respectively. 
+#' There are no easy instructions for writing these as it is genuine `C++` code, which can be very opaque to those unfamiliar with `C++`.
+#' See [https://eigen.tuxfamily.org/dox/group__QuickRefPage.html] for quick reference to available operations from Eigen. Limited operations are available directly from `CppAD` without `Eigen`. They can be found [https://cppad.readthedocs.io/latest/unary_standard_math.html] and [https://cppad.readthedocs.io/latest/binary_math.html]. 
+#' For the purposes of score matching the operations should all be smooth to create a smooth log-likelihood and the normalising constant may be omitted.
 #' @examples
-#' 
 #' myll <- customll("a1type dirichlet(const veca1 &u, const veca1 &beta) {
 #'   size_t d  = u.size();
 #'   a1type y(0.);  // initialize summation at 0
@@ -36,7 +33,6 @@
 #'   return y;
 #' }")
 #' evalll(myll, rep(1/3, 3), rep(-0.5, 3))
-
 #' @returns An `adloglikelood` object (which is just an `externalptr` with attributes) for the compiled log-likelihood function. The returned object has an attribute `fname`.
 #' @export
 customll <- function(code, rebuild = FALSE, 

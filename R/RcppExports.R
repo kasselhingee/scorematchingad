@@ -145,6 +145,11 @@ swapDynamic <- function(pfun, newvalue, newdynparam) {
     .Call('_scorematchingad_swapDynamic', PACKAGE = 'scorematchingad', pfun, newvalue, newdynparam)
 }
 
+#' @name evalll
+#' @title Evaluate a log-likelihood function
+#' @param ll A compiled log-likelihood function created by [`customll()`].
+NULL
+
 #' @noRd
 #' @title Tape of a log-likelihood calculation 2
 #' @param p dimension of measurements
@@ -163,14 +168,12 @@ getllptr <- function(llname) {
     .Call('_scorematchingad_getllptr', PACKAGE = 'scorematchingad', llname)
 }
 
-#' @noRd
-#' @title Evaluate, without taping, a log-likelihood function
-#' @param llfXPtr An XPtr to a llPtr object that points to a log-likelihood function.
 #' @param u A vector of measurements for an individual
 #' @param theta A vector of parameters
 #' @return The value of the log-likelihood at `u` with parameters `theta`.
-evalll <- function(llfXPtr, u, theta) {
-    .Call('_scorematchingad_evalll', PACKAGE = 'scorematchingad', llfXPtr, u, theta)
+#' @export
+evalll <- function(ll, u, theta) {
+    .Call('_scorematchingad_evalll', PACKAGE = 'scorematchingad', ll, u, theta)
 }
 
 #' @noRd
