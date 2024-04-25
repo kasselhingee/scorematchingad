@@ -50,7 +50,7 @@ tapell <- function(ll,
   }
 
   lltape <- ptapell2(ztape, starttheta,
-                    llfXPtr = llptr, 
+                    llfXPtr = ll, 
                     tran = tranobj,
                     fixedtheta = t_u2i(usertheta),
                     verbose = verbose)
