@@ -9,7 +9,7 @@
 #' `tapesmd()` returns an [`ADFun`] object.  
 #' @examples 
 #' sqrtman <- manifoldtransform("sim", "sqrt", "sph")
-#' ppitape <- tapell(llname = "ppi",
+#' ppitape <- tapell(ll = "ppi",
 #'                   ytape = c(0.2, 0.3, 0.5),
 #'                   usertheta = ppi_paramvec(p = 3), 
 #'                   tranobj = sqrtman$tran)

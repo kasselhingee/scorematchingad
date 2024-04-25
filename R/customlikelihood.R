@@ -33,6 +33,10 @@
 #'   return y;
 #' }")
 #' evalll(myll, rep(1/3, 3), rep(-0.5, 3))
+#' buildsmdtape("sim", "identity", "sim", 
+#'  myll, rep(1/3, 3), rep(NA, 3), 
+#'  bdryw="minsq", acut = 0.01)
+#' 
 #' @returns An `adloglikelood` object (which is just an `externalptr` with attributes) for the compiled log-likelihood function. The returned object has an attribute `fname`.
 #' @export
 customll <- function(code, rebuild = FALSE, 

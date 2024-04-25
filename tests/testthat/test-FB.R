@@ -106,7 +106,7 @@ test_that("smdbjgrad at true parameters is poor for FB()", {
 
   # evaluate gradient
   tapes <- buildsmdtape("sph", "identity", "sph", 
-                        llname = "FB",
+                        ll = "FB",
                         Y[1, ], 
                         usertheta = NA * theta)
   smvals <- smvalues_wsum(tapes$smdtape, Y, theta)
@@ -128,7 +128,7 @@ test_that("FB() with many fixed elements leads to small smdbjgrad", {
   intheta <- theta
   intheta[8] <- NA
   tapes <- buildsmdtape("sph", "identity", "sph", 
-                        llname = "FB",
+                        ll = "FB",
                         sample[1, ], 
                         usertheta = intheta)
   smvals <- smvalues_wsum(tapes$smdtape, sample, theta[is.na(intheta)])

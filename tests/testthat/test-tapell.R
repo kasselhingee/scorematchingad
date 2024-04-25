@@ -1,13 +1,13 @@
 test_that("tapell generates correct objects", {
 maninfo <- manifoldtransform("sim", "sqrt", "sph")
-ppitape <- tapell(llname = "ppi",
+ppitape <- tapell(ll = "ppi",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
                   tranobj = maninfo$tran) 
 expect_true(R6::is.R6(ppitape))
 
 # and verbose works too
-expect_output({ppitape <- tapell(llname = "ppi",
+expect_output({ppitape <- tapell(ll = "ppi",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
                   tranobj = maninfo$tran,
@@ -15,7 +15,7 @@ expect_output({ppitape <- tapell(llname = "ppi",
               "pattern.*tape.*dynamic")
 expect_true(R6::is.R6(ppitape))
 
-expect_error({tapell(llname = "error",
+expect_error({tapell(ll = "error",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
                   tranobj = maninfo$tran)}, "function")
@@ -23,13 +23,13 @@ expect_error({tapell(llname = "error",
 
 test_that("tapell for ppi errors when theta isn't of the correct length", {
   maninfo <- manifoldtransform("sim", "sqrt", "sph")
-  expect_condition(ppitape <- tapell(llname = "ppi",
+  expect_condition(ppitape <- tapell(ll = "ppi",
                   ytape = c(0.2, 0.3, 0.3, 0.2),
                   usertheta = ppi_paramvec(p = 3),
                   tranobj = maninfo$tran), class = "Rcpp::exception", regexp = "length")
 
  # and that the taping was aborted too
- ppitape <- tapell(llname = "ppi",
+ ppitape <- tapell(ll = "ppi",
                   ytape = c(0.2, 0.3, 0.3, 0.2),
                   usertheta = ppi_paramvec(p = 4),
                   tranobj = maninfo$tran)
@@ -40,7 +40,7 @@ test_that("tapell for vMF errors if NDEBUG not defined when theta isn't of the c
   skip("C++ assert errors not yet translated to R")
   # should get an assert error and R aborts
   maninfo <- manifoldtransform("sph")
-  expect_condition(vmftape <- tapell(llname = "vMF",
+  expect_condition(vmftape <- tapell(ll = "vMF",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = c(NA, NA),
                   tranobj = maninfo$tran))
