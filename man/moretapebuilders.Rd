@@ -33,7 +33,7 @@ The information in the fields \code{xtape} and \code{dyntape} of \code{tape} are
 
 \subsection{tapeJacobian}{
 
-The returned vector is ordered with the range elements iterating fastest, then the domain elements. See \url{https://cppad.readthedocs.io/en/latest/Jacobian.html}.
+The returned vector is ordered with the range elements iterating fastest, then the domain elements. See \url{https://cppad.readthedocs.io/latest/Jacobian.html}.
 }
 
 \subsection{tapeHessian}{
@@ -65,7 +65,7 @@ which does not depend on \eqn{x}.
 \itemize{
 \item \code{tapeJacobian()}: Tape the Jacobian of a tape. The resulting tape returns the Jacobian as a vector.
 
-\item \code{tapeHessian()}: Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see \url{https://cppad.readthedocs.io/en/latest/Hessian.html}).
+\item \code{tapeHessian()}: Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see \url{https://cppad.readthedocs.io/latest/Hessian.html}).
 
 \item \code{tapeGradOffset()}: A quadratic function can be written as
 \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
