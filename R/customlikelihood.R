@@ -13,7 +13,7 @@
 #' It is good practice to check the returned object using [`evalll()`].
 #' The first compilation in a session can be very slow.
 #' # code 
-#' `code` must be `C++` that uses only `CppAD` and `Eigen`, which makes it very similar to the requirements of the input to [`TMB::compile()`] (which also uses `CppAD` and `Eigen`).
+#' `code` must be `C++` that uses only `CppAD` and `Eigen`, which makes it very similar to the requirements of the input to `TMB::compile()` (which also uses `CppAD` and `Eigen`).
 #' 
 #' The start of `code` should always be "`a1type fname(const veca1 &x, const veca1 &theta){`" where `fname` is your chosen name of the log-likelihood function, `x` represents a point in the data space and `theta` is a vector of parameters for the log-likelihood. This specifies that the function will have two vector arguments (of type `veca1`) and will return a single numeric value (`a1type`).
 #' 
