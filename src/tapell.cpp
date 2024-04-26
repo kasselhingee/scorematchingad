@@ -49,7 +49,7 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
     Rcpp::Rcout << "x on end manifold is: " << z.transpose() << std::endl;
-    PrintForVec("\n x on end manifold is: ", u);
+    PrintForVec("\n x on end manifold is: ", z);
     Rcpp::Rcout << "dynamic theta elements are: " << thetavar.transpose() << std::endl;
     PrintForVec("\n dynamic theta elements are: ", thetavar);
   }
