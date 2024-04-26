@@ -48,8 +48,10 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
   //tape relationship between x and log-likelihood
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
-    Rcpp::Rcout << "thetavar is: " << thetavar.transpose() << std::endl;
-    PrintForVec("\n thetavar is: ", thetavar);
+    Rcpp::Rcout << "x on end manifold is: " << z.transpose() << std::endl;
+    PrintForVec("\n x on end manifold is: ", u);
+    Rcpp::Rcout << "dynamic theta elements are: " << thetavar.transpose() << std::endl;
+    PrintForVec("\n dynamic theta elements are: ", thetavar);
   }
 
   //combine fixed and variable theta
@@ -64,14 +66,18 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
     }
   }
   if (verbose){
-    Rcpp::Rcout << "thetarecom is: " << thetarecom.transpose() << std::endl;
-    PrintForVec("\n thetarecom is: ", thetarecom);
+    Rcpp::Rcout << "full theta is: " << thetarecom.transpose() << std::endl;
+    PrintForVec("\n full theta is: ", thetarecom);
   }
 
   // range space vector
   veca1 y(1); // vector of ranges space variables
   veca1 u(0); //0 here because size dictated by fromM
   u = tran.fromM(z);
+  if (verbose){
+    Rcpp::Rcout << "x on start manifold is: " << u.transpose() << std::endl;
+    PrintForVec("\n x on start manifold is: ", u);
+  }
   y.setZero();
   y[0] += llf(u, thetarecom);
 
