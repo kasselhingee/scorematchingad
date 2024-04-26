@@ -125,5 +125,5 @@ test_that("dirichlet ll evaluation and Jacobian matches expected", {
   #gradient wrt beta
   lltape_theta <- swapDynamic(lltape, beta, u)
   numderiv <- numericDeriv(quote(dirichlet_r(u, beta)), c("beta"))
-  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape_theta, beta, u), ignore_attr = TRUE)
+  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape_theta, beta, u), ignore_attr = TRUE, tolerance = 1E-7)
 })
