@@ -20,7 +20,7 @@ NULL
 #' @describeIn moretapebuilders Tape the Jacobian of a tape. The resulting tape returns the Jacobian as a vector.
 #' @details
 #' ## tapeJacobian 
-#' The returned vector is ordered with the range elements iterating fastest, then the domain elements. See <https://cppad.readthedocs.io/en/latest/Jacobian.html>.
+#' The returned vector is ordered with the range elements iterating fastest, then the domain elements. See <https://cppad.readthedocs.io/latest/Jacobian.html>.
 #' @export
 tapeJacobian <- function(tape){
   stopifnot(inherits(tape, "ADFun"))
@@ -32,7 +32,7 @@ tapeJacobian <- function(tape){
             usertheta = tape$usertheta)
 }
 
-#' @describeIn moretapebuilders Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see <https://cppad.readthedocs.io/en/latest/Hessian.html>).
+#' @describeIn moretapebuilders Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see <https://cppad.readthedocs.io/latest/Hessian.html>).
 #' @details
 #' ## tapeHessian
 #' Suppose the function represented by `tape` maps from \eqn{d}-dimensional space to \eqn{1}-dimensional space, then
