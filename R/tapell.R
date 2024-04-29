@@ -96,8 +96,7 @@ tapell <- function(ll,
     
     # create taping function
     tapecustom <- Rcpp::cppFunction(
-      depends =  c("RcppEigen", "scorematchingad", "Rcpp"),
-      includes = c("#include <utils/PrintFor.hpp>", "#include <tapellcpp.h>", "#include <manifoldtransforms/transforms.hpp>", "#include <utils/wrapas.hpp>"),
+      depends =  c("RcppEigen", "scorematchingad"),
       verbose = verbose,
       code = code
     )
