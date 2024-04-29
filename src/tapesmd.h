@@ -19,7 +19,6 @@ CppAD::ADFun<double> tapesmd(veca1 u, //a vector. The composition measurement fo
                              );
 
 // convert a ll tape to be a ll from the end manifold
-// [[Rcpp::export]]
 CppAD::ADFun<double> tapellman(veca1 x, //a vector. The measurement for taping in the interior of the domain of lltape
                              veca1 thetavar, //a vector of the dynamic parameters for taping
                              CppAD::ADFun<double> & lltape,
