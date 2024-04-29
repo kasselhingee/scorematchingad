@@ -28,6 +28,15 @@
 #' evaltape(tapeJacobian(ppitape), 
 #'   sqrt(rep(1/3, 3)), 
 #'   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
+#' 
+#' ll <- "a1type dirichlet(const veca1 &u, const veca1 &beta) {
+#'   size_t d  = u.size();
+#'   a1type y(0.);  // initialize summation at 0
+#'   for(size_t i = 0; i < d; i++)
+#'   {   y   += beta[i] * log(u[i]);
+#'   }
+#'   return y;
+#' }"
 #' @section Warning: There is limited checking of the inputs.
 #' @export
 tapell <- function(ll,
@@ -40,22 +49,71 @@ tapell <- function(ll,
   starttheta <- t_u2s(usertheta, filler = thetatape_creator)
   ztape <- tranobj$toM(ytape) #the value of ytape transformed to the manifold
 
-  # choose between a canned log-likelihood or a custom log-likelihood
-  if (typeof(ll) == "character"){
+  # if a canned log-likelihood 
+  if (ll %in% llnames){
     llname <- ll
     ll <- getllptr(ll)
-    ll <- new_adloglikelihood(ll, fname = llname)
-  } else if (!inherits(ll, "adloglikelihood")){
-    stop("ll must be a name or a custom adloglikelihood")
-  }
-
   lltape <- ptapell2(ztape, starttheta,
                     llfXPtr = ll, 
                     tran = tranobj,
                     fixedtheta = t_u2i(usertheta),
                     verbose = verbose)
+  } else {
+  ###### or a custom log-likelihood
+    # check provided code
+    if (!grepl("^[[:space:]]*a1type", ll)){stop("ll isn't a known log-likelihood function name but C++ code for custom log likelihoods must start with a1type")}
+    inputsloc <- regexpr("^[[:space:]]*a1type (?<fname>[^[:space:]]+)\\((?<arg1>[^,]+),[[:space:]]*(?<arg2>[^\\)]+)", ll, perl = TRUE)
+    starts <- attr(inputsloc, "capture.start")
+    lengths <- attr(inputsloc, "capture.length")
+    if (lengths[, "fname"] < 1){stop("Could not find log-likelihood name")}
+    if (lengths[, "arg1"] < 1){stop("Could not find first argument")}
+    if (lengths[, "arg2"] < 1){stop("Could not find second argument")}
+    arg1 <- substr(ll, starts[, "arg1"], starts[, "arg1"] + lengths[, "arg1"] - 1)
+    if (!grepl("^const +veca1 *&", arg1)){stop(sprintf("First argument should have type 'const veca1 &', instead it is %s", arg1))}
+    arg2 <- substr(ll, starts[, "arg2"], starts[, "arg2"] + lengths[, "arg2"] - 1)
+    if (!grepl("^const +veca1 *&", arg2)){stop(sprintf("First argument should have type 'const veca1 &', instead it is %s", arg2))}
+    
+    # extract function name
+    llname <- substr(ll, starts[, "fname"], starts[, "fname"] + lengths[, "fname"] - 1)
+    
+    # prepare taping code
+    code <- paste0("Rcpp::XPtr< CppAD::ADFun<double> > tapecustom(veca1 z, veca1 theta, transform_a1type & tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);",
+    "\n\n",
+    ll,
+    "\n\n",
+    "Rcpp::XPtr< CppAD::ADFun<double> > tapecustom(veca1 z, veca1 theta, transform_a1type & tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose){
+      CppAD::ADFun<double>* out = new CppAD::ADFun<double>;
+      *out = tapellcpp(z,
+                       theta,", "\n",
+"                       *",llname, ",\n",
+                       "tran,
+                       fixedtheta,
+                       verbose);
+      
+      Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
+      return(pout);
+    }")
+    
+    # create taping function
+    tapecustom <- Rcpp::cppFunction(
+      depends =  c("RcppEigen", "scorematchingad", "Rcpp"),
+      includes = c("#include <utils/PrintFor.hpp>", "#include <tapellcpp.h>", "#include <manifoldtransforms/transforms.hpp>", "#include <utils/wrapas.hpp>"),
+      verbose = verbose,
+      code = code
+    )
+    
+    # now apply the taping function
+    lltape <- tapecustom(ztape, starttheta,
+                         tran = tranobj,
+                         fixedtheta = t_u2i(usertheta),
+                         verbose = verbose)
+  }
+  
+  
+  
+  
   out <- ADFun$new(ptr = lltape,
-                   name = paste(tranobj$name(), attr(ll, "fname", exact = TRUE), sep = "-"),
+                   name = paste(tranobj$name(), llname, sep = "-"),
                    xtape = ztape,
                    dyntape =  as.numeric(starttheta[!t_u2i(usertheta)]),
                    usertheta = as.numeric(usertheta))
