@@ -3,7 +3,7 @@
 // function that tapes the score-matching objective
 CppAD::ADFun<double> tapesmd(veca1 u, //a vector. The composition measurement for taping
                              veca1 theta, //a vector of parameters for taping
-                             CppAD::ADFun<double> & lltape,
+                             CppAD::ADFun<double> & lltape, //tape of ll on the *start* manifold
                              transform<a1type> &tran,
                              manifold<a1type> &M,
                              a1type (*h2fun)(const veca1 &, const double &), // the weight function h^2
@@ -15,20 +15,28 @@ CppAD::ADFun<double> tapesmd(veca1 u, //a vector. The composition measurement fo
     //Projection matrix
     mata1 Pmat(d, d);
 
-    //get h2 tape
-    CppAD::ADFun<double> dh2tape;
-    veca1 z(d); //size of z changed by toM result below
-    z = tran.toM(u); //transform u to the manifold
-    CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
-    h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
-
     //check inputs and ll tape match
-    if (lltape.Domain() != (unsigned)z.size()){Rcpp::stop("Dimension of z (the input measurement on the manifold) is %i, which does not match domain size of log likelihood function of %i.", z.size(), lltape.Domain());}
-    if (lltape.size_dyn_ind() != theta.size()){Rcpp::stop("Size of parameter vector theta (=%i) does not match parameter size of log likelihood function (=%i).", theta.size(), lltape.size_dyn_ind());}
+    if (lltape.Domain() != (unsigned)u.size()){Rcpp::stop("Dimension of x is %i, which does not match domain size of log likelihood function of %i.", u.size(), lltape.Domain());}
+    if (lltape.size_dyn_ind() != theta.size()){Rcpp::stop("Size of dynamic parameter vector (=%i) does not match parameter size of log likelihood tape (=%i).", theta.size(), lltape.size_dyn_ind());}
+
+    //convert to tape from manifold
+    CppAD::ADFun<double> lltapeman;
+    lltapeman = tapellman(u, //a vector. The measurement for taping in the interior of the domain of lltape
+                           theta, //a vector of the dynamic parameters for taping
+                           lltape,
+                           tran,
+                           verbose);
 
     // make ll tape higher order (i.e. as if it was taped using a2type instead of a1type)
     CppAD::ADFun<a1type, double> lltapehigher;
-    lltapehigher = lltape.base2ad();
+    lltapehigher = lltapeman.base2ad();
+
+    //get h2 tape
+    CppAD::ADFun<double> dh2tape;
+    veca1 z(d); //size of z changed by toM result below
+    z = tran.toM(u); //transform u to the end manifold
+    CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
+    h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
 
     //START TAPING
     CppAD::Independent(theta, u); //differentiate wrt beta, dynamic parameter is u
@@ -137,4 +145,60 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapesmd(veca1 u_ad,
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
+}
+
+// function that combines a ll tape with a manifold transformation
+CppAD::ADFun<double> tapellman(veca1 x, //a vector. The measurement for taping in the interior of the domain of lltape
+                             veca1 thetavar, //a vector of the dynamic parameters for taping
+                             CppAD::ADFun<double> & lltape,
+                             transform<a1type> &tran,
+                             bool verbose
+                             ){
+  // convert taping specified by x to the new manifold
+  veca1 z(0); //0 here because size dictated by toM
+  z = tran.toM(x);
+  if (verbose){
+    Rcpp::Rcout << "z=toM(x) is: " << z.transpose() << std::endl;
+  }
+
+  // make ll tape higher order (i.e. as if it was taped using a2type instead of a1type)
+  CppAD::ADFun<a1type, double> lltapehigher;
+  lltapehigher = lltape.base2ad();
+  
+  //tape relationship between z and log-likelihood
+  CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
+  if (verbose){
+    Rcpp::Rcout << "x on end manifold is: " << z.transpose() << std::endl;
+    PrintForVec("\n x on end manifold is: ", z);
+    Rcpp::Rcout << "dynamic theta elements are: " << thetavar.transpose() << std::endl;
+    PrintForVec("\n dynamic theta elements are: ", thetavar);
+  }
+
+  veca1 u(0); //0 here because size dictated by fromM
+  u = tran.fromM(z);
+  if (verbose){
+    Rcpp::Rcout << "x on start manifold is: " << u.transpose() << std::endl;
+    PrintForVec("\n x on start manifold is: ", u);
+  }
+  
+  veca1 y(1); // vector of ranges space variables
+  y.setZero();
+  
+  //Now evaluate
+  //update parameters ('dynamic' values) of lltape
+  lltapehigher.new_dynamic(theta);
+  y[0] += lltapehigher.forward(0, u);
+
+  //get log determinant of fromM
+  y[0] += tran.logdetJfromM(z);
+
+  //finish taping
+  CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
+  tape.Dependent(z, y);
+  if (verbose){
+    Rcpp::Rcout << "tape has " << tape.size_dyn_ind() << " independent dynamic parameters" << std::endl;
+    Rcpp::Rcout << "tape requires vectors of length " << tape.Domain() << std::endl;
+    Rcpp::Rcout << "tape returns vectors of length " << tape.Range() << std::endl;
+  }
+  return(tape);
 }

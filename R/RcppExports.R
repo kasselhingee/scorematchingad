@@ -176,6 +176,10 @@ evalll <- function(ll, u, theta) {
     .Call('_scorematchingad_evalll', PACKAGE = 'scorematchingad', ll, u, theta)
 }
 
+tapellman <- function(x, thetavar, lltape, tran, verbose) {
+    .Call('_scorematchingad_tapellman', PACKAGE = 'scorematchingad', x, thetavar, lltape, tran, verbose)
+}
+
 #' @noRd
 #' @title The score matching objective calculator.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
