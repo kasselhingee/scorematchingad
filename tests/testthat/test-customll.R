@@ -63,7 +63,7 @@ code = "
   ")
 
   maninfo <- manifoldtransform("sim", "identity", "sim")
-  mytape <- myfun(c(0.1, 0.4, 0.5), c(1,1,1), maninfo$tran, rep(FALSE, 3), verbose = TRUE)
+  mytape <- myfun(c(0.1, 0.4, 0.5), c(10,10,10), maninfo$tran, rep(FALSE, 3), verbose = TRUE)
 
   expect_equal(pForward0(mytape, rep(1/3, 3), rep(-0.5, 3)), 3 * (-0.5 * log(1/3)))
   expect_equal(pJacobian(mytape, rep(1/3, 3), rep(-0.5, 3)), rep(-0.5 * 3, 3))
