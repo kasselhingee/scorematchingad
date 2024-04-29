@@ -193,3 +193,21 @@ CppAD::ADFun<double> tapellman(veca1 x, //a vector. The measurement for taping i
   }
   return(tape);
 }
+
+Rcpp::XPtr< CppAD::ADFun<double> > ptapellman(veca1 x, //a vector. The measurement for taping in the interior of the domain of lltape
+                             veca1 thetavar, //a vector of the dynamic parameters for taping
+                             Rcpp::XPtr< CppAD::ADFun<double> > plltape,
+                             transform<a1type> &tran,
+                             bool verbose
+                             ){
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  *out = tapellman(x,
+                 thetavar,
+                 *plltape,
+                 tran,
+                 verbose);
+
+  Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
+
+}

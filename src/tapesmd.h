@@ -19,9 +19,17 @@ CppAD::ADFun<double> tapesmd(veca1 u, //a vector. The composition measurement fo
                              );
 
 // convert a ll tape to be a ll from the end manifold
+// Tapes the log-likelihood as if it is on the end manifold by taping ll(x) + logdetJfromM(toM(x)).
 CppAD::ADFun<double> tapellman(veca1 x, //a vector. The measurement for taping in the interior of the domain of lltape
                              veca1 thetavar, //a vector of the dynamic parameters for taping
                              CppAD::ADFun<double> & lltape,
+                             transform<a1type> &tran,
+                             bool verbose
+                             );
+// [[Rcpp::export]]
+Rcpp::XPtr< CppAD::ADFun<double> > ptapellman(veca1 x, //a vector. The measurement for taping in the interior of the domain of lltape
+                             veca1 thetavar, //a vector of the dynamic parameters for taping
+                             Rcpp::XPtr< CppAD::ADFun<double> > plltape,
                              transform<a1type> &tran,
                              bool verbose
                              );
