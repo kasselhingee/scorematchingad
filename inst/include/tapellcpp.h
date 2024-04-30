@@ -9,8 +9,8 @@
 # include "utils/PrintFor.hpp"
 
 // define a function that tapes a log likelihood
-CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manifold
-                            veca1 theta, //theta parameter
+CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement in domain of llf 
+                            veca1 theta, //theta parameter including fixed values
                                a1type (*llf)(const veca1 &, const veca1 &), //the log likelihood function
                                transform<a1type> & tran, //it seems pointer or references must be passed for abstract classes (note error when compiling without the *, and Stefan's demo)
                                Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
@@ -56,8 +56,8 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
   //tape relationship between x and log-likelihood
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
-    Rcpp::Rcout << "x on end manifold is: " << z.transpose() << std::endl;
-    PrintForVec("\n x on end manifold is: ", z);
+    Rcpp::Rcout << "x is: " << z.transpose() << std::endl;
+    PrintForVec("\n x is: ", z);
     Rcpp::Rcout << "dynamic theta elements are: " << thetavar.transpose() << std::endl;
     PrintForVec("\n dynamic theta elements are: ", thetavar);
   }
@@ -80,17 +80,9 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
 
   // range space vector
   veca1 y(1); // vector of ranges space variables
-  veca1 u(0); //0 here because size dictated by fromM
-  u = tran.fromM(z);
-  if (verbose){
-    Rcpp::Rcout << "x on start manifold is: " << u.transpose() << std::endl;
-    PrintForVec("\n x on start manifold is: ", u);
-  }
   y.setZero();
-  y[0] += llf(u, thetarecom);
+  y[0] += llf(z, thetarecom);
 
-  //get log determinant of fromM
-  y[0] += tran.logdetJfromM(z);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
   if (verbose){
