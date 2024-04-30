@@ -68,7 +68,8 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
 # test Jacobian of ll function using numerical differentiation
 test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estimates", {
   psphere <- manifoldtransform("sim", "sqrt", "sph")
-  lltape <- tapell("ppi", u, NA * theta, tran = psphere$tran, function(n){theta})$ptr
+  lltape_S <- tapell("ppi", u, NA * theta, tran = psphere$tran, function(n){theta})$ptr
+  lltape <- ptapellman(u, theta+1, lltape_S, tran = psphere$tran, verbose = FALSE)
 
   # wrt u
   expect_equal(ppill_r_S(u, beta0, AL, bL), pForward0(lltape, u, theta), ignore_attr = TRUE)
