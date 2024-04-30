@@ -47,7 +47,7 @@ ADFun <- R6::R6Class("ADFun",
     initialize = function(ptr, name = NULL, xtape = vector("numeric"), dyntape = vector("numeric"), usertheta = rep(NA_real_, length(dyntape))){
       stopifnot(isa(ptr, "externalptr"))
       stopifnot(is.null(name) | isa(name, "character"))
-      stopifnot(typeof(xtape) == "numeric")
+      stopifnot(typeof(xtape) == "double")
       stopifnot(isa(dyntape, "numeric"))
       stopifnot(isa(usertheta, "numeric"))
       private$.ptr <- ptr
