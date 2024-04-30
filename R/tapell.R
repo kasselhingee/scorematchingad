@@ -47,13 +47,12 @@ tapell <- function(ll,
                    verbose = FALSE){
   stopifnot(inherits(tranobj, "Rcpp_transform_ad"))
   starttheta <- t_u2s(usertheta, filler = thetatape_creator)
-  ztape <- tranobj$toM(ytape) #the value of ytape transformed to the manifold
 
   # if a canned log-likelihood 
   if (ll %in% llnames){
     llname <- ll
     ll <- getllptr(ll)
-  lltape <- ptapell2(ztape, starttheta,
+  lltape <- ptapell2(ytape, starttheta,
                     llfXPtr = ll, 
                     tran = tranobj,
                     fixedtheta = t_u2i(usertheta),
@@ -102,7 +101,7 @@ tapell <- function(ll,
     )
     
     # now apply the taping function
-    lltape <- tapecustom(ztape, starttheta,
+    lltape <- tapecustom(ytape, starttheta,
                          tran = tranobj,
                          fixedtheta = t_u2i(usertheta),
                          verbose = verbose)
@@ -113,7 +112,7 @@ tapell <- function(ll,
   
   out <- ADFun$new(ptr = lltape,
                    name = paste(tranobj$name(), llname, sep = "-"),
-                   xtape = ztape,
+                   xtape = ytape,
                    dyntape =  as.numeric(starttheta[!t_u2i(usertheta)]),
                    usertheta = as.numeric(usertheta))
 
