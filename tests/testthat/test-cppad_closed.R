@@ -9,7 +9,7 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
      end = "Euc",
      ll = "ppi",
      ytape = c(0.2, 0.3, 0.5),
-     usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
+     usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(mod$beta, 1)),
      bdryw = "ones",
      verbose = FALSE)
   smdtape <- tapes$smdtape
@@ -23,6 +23,10 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
   numericalmin <- cppad_search(smdtape, theta = estobj$est, Y = Y)
   expect_equal(numericalmin$est, estobj$est, ignore_attr = TRUE)
   expect_equal(numericalmin$SE, estobj$SE)
+
+  est_hardcoded <- ppi(Y, ppi_paramvec(p = 3, bL = 0, betap = tail(mod$beta, 1)),
+                       trans = "alr", method = "hardcoded")
+  expect_equal(estobj$est, est_hardcoded$est$paramvec[c(1:3, 6,7)])
 })
 
 test_that("Closed-from solution with boundary points matches hard-coded version", {
