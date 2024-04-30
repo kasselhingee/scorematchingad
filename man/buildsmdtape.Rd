@@ -33,7 +33,8 @@ tapell(
   thetatape_creator = function(n) {
      seq(length.out = n)
  },
-  verbose = FALSE
+  verbose = FALSE,
+  ...
 )
 
 tapesmd(lltape, tranobj, man, bdryw, acut = 1, verbose = FALSE)
@@ -57,7 +58,7 @@ tapesmd(lltape, tranobj, man, bdryw, acut = 1, verbose = FALSE)
 \item ``Euc'' Euclidean space
 }}
 
-\item{ll}{The name of an inbuilt improper log-likelihood function to tape (which also specifies the parametric model family) or a custom log-likehood function created by \code{\link[=customll]{customll()}}. The \code{ll} should operate on the untransformed (i.e. starting) manifold.}
+\item{ll}{The name of an inbuilt improper log-likelihood function to tape (which also specifies the parametric model family) or \verb{C++} code for a custom log-likehood function. The \verb{C++} code has special requirements, similar to \code{TMB::compile()} - see 'Taping a Custom Log-Likelihood Function' below.}
 
 \item{ytape}{An example measurement value to use for creating the tapes. In the natural (i.e. \code{start}) manifold of the log-likelihood function. \code{ytape} will be converted to the \code{end} manifold according to the \code{toM()} method for \code{tranobj} before taping.
 Please ensure that \code{ytape} is the interior of the manifold, and it is probably best if all components of \code{tranobj$toM(ytape)} are non-zero.}
@@ -73,6 +74,8 @@ Please ensure that \code{ytape} is the interior of the manifold, and it is proba
 \item{verbose}{If \code{TRUE} more details are printed when taping. These details are for debugging and will likely be comprehensible only to users familiar with the source code of this package.}
 
 \item{tranobj}{A transform object (of type \code{Rcpp_transform_ad}), typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
+
+\item{...}{Options passed to \code{\link[Rcpp:cppFunction]{Rcpp::cppFunction()}} for compiling a custom log-likelihood.}
 
 \item{lltape}{Tape of the log-likelihood function constructed using \code{\link[=tapell]{tapell()}}.}
 
@@ -126,7 +129,7 @@ These combinations of \code{start}-\code{tran}-\code{end} are currently availabl
 \item sph-identity-sph
 }
 
-Currently available improper log-likelihood functions are:
+Inbuilt log-likelihood functions (without normalising constants) are:
 \itemize{
 \item dirichlet
 \item ppi
@@ -162,6 +165,24 @@ For the purposes of score matching, there are also \emph{fixed} parameters, whic
 
 \section{Warning: multiple CPU}{
 Each time a tape is evaluated the corresponding \verb{C++} object is altered. Parallel use of the same \code{ADFun} object thus requires care and is not tested. For now I recommend creating a new \code{ADFun} object for each CPU.
+}
+
+\section{Taping a Custom Log-Likelihood Function}{
+Much care is needed when creating a custom log-likelihood function by passing \verb{C++} code as \code{ll}.
+The code must be \verb{C++} that uses only \code{CppAD} and \code{Eigen}, which makes it very similar to the requirements of the input to \code{TMB::compile()} (which also uses \code{CppAD} and \code{Eigen}).
+The start of \code{code} should always be "\verb{a1type fname(const veca1 &x, const veca1 &theta)\{}" where \code{fname} is your chosen name of the log-likelihood function, \code{x} represents a point in the data space and \code{theta} is a vector of parameters for the log-likelihood. This specifies that the function will have two vector arguments (of type \code{veca1}) and will return a single numeric value (\code{a1type}).
+
+The type \code{a1type} is a double with special ability for being taped by \code{CppAD}. The \code{veca1} type is a vector of \code{a1type} elements, with the vector wrapping supplied by the \code{Eigen} C++ package (that is an \code{Eigen} matrix with 1 column and dynamic number of rows).
+
+The body of the function must use operations from Eigen and/or CppAD, prefixed by \verb{Eigen::} and \verb{CppAD::} respectively.
+There are no easy instructions for writing these as it is genuine \verb{C++} code, which can be very opaque to those unfamiliar with \verb{C++}.
+See the \href{https://eigen.tuxfamily.org/dox/group__QuickRefPage.html}{Eigen documentation} for quick reference to available operations from Eigen. Limited operations are available directly from \code{CppAD} without \code{Eigen}: \href{https://cppad.readthedocs.io/latest/unary_standard_math.html}{unary operations} and \href{https://cppad.readthedocs.io/latest/binary_math.html}{binary operations}.
+For the purposes of score matching the operations should all be smooth to create a smooth log-likelihood and the normalising constant may be omitted.
+The function \code{\link[Rcpp:cppFunction]{Rcpp::cppFunction()}} is used to compile the custom likelihood function.
+Compilation can be very slow.
+
+The custom log-likelihood should operate on the starting manifold corresponding to \code{tran}.
+It is good practice to check that the taping is giving correct answers by applying \code{\link[=evaltape]{evaltape()}} to a few known situations.
 }
 
 \section{Warning}{
@@ -202,6 +223,19 @@ evaltape(ppitape,
 evaltape(tapeJacobian(ppitape), 
   sqrt(rep(1/3, 3)), 
   ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
+
+ll <- "a1type dirichlet(const veca1 &u, const veca1 &beta) {
+  size_t d  = u.size();
+  a1type y(0.);  // initialize summation at 0
+  for(size_t i = 0; i < d; i++)
+  {   y   += beta[i] * log(u[i]);
+  }
+  return y;
+}"
+dirichlettape <- tapell(ll, 
+                        ytape = rep(1/3, 3), 
+                        usertheta = rep(NA, 3),
+                        tranobj = manifoldtransform("sim", "identity", "sim")$tran)
 sqrtman <- manifoldtransform("sim", "sqrt", "sph")
 ppitape <- tapell(ll = "ppi",
                   ytape = c(0.2, 0.3, 0.5),
