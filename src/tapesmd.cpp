@@ -1,7 +1,7 @@
 # include "tapesmd.h"
 
 // function that tapes the score-matching objective
-CppAD::ADFun<double> tapesmd(veca1 u, //a vector. The composition measurement for taping
+CppAD::ADFun<double> tapesmd(veca1 u, //a vector. A measurement in the domain of lltape (i.e. on the start manifold) 
                              veca1 theta, //a vector of parameters for taping
                              CppAD::ADFun<double> & lltape, //tape of ll on the *start* manifold
                              transform<a1type> &tran,
