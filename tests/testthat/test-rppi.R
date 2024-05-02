@@ -63,5 +63,8 @@ test_that("dppi() produces -Inf results outside simplex", {
 
 test_that("rppi() passed a zero value for bL works", {
   set.seed(1)
-  expect_silent(rppi(1, AL = rsymmetricmatrix(5-1), beta = runif(5), bL = 0))
+  expect_equal(rppi(1, AL = rsymmetricmatrix(5-1), beta = runif(5), bL = 0),
+  c(0.1580301, 0.2347493, 0.2087618, 0.3172094, 0.0812494),
+  ignore_attr = TRUE,
+  tolerance = 1E-5)
 })
