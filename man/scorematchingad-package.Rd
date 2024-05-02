@@ -14,7 +14,8 @@ This package's main features are
 \item A general capacity to implement score matching estimators that use algorithmic differentiation to avoid tedious manual algebra.
 The package uses \code{CppAD} and \code{Eigen} to differentiate model densities and compute the score matching discrepancy function (see \code{\link{scorematchingtheory}}).
 The score matching discrepancy is usually minimised by solving a quadratic equation, but a method for solving numerically (through \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}) is also included.
-Currently new models, new manifolds or new transforms require small additions to the source code of this package; eventually it would be nice to enable these additions interactively within \code{R}.
+On Linux platforms new models can be fitted with the help of \code{\link[=customll]{customll()}}, in a similar fashion to models in the \code{TMB} package.
+New manifolds or new transforms require currently require small alterations to the source code of this package.
 \item Score matching estimators for the Polynomially-Tilted Pairwise Interaction (PPI) model \insertCite{scealy2023sc,scealy2024ro}{scorematchingad}. See function \code{\link[=ppi]{ppi()}}.
 \item Score matching and hybrid score matching estimators for von Mises Fisher, Bingham and Fisher-Bingham directional distributions \insertCite{mardia2016sc}{scorematchingad}. See \code{\link[=vMF]{vMF()}}, \code{\link[=Bingham]{Bingham()}} and \code{\link[=FB]{FB()}}.
 \item Implementation of a modification of Windham's robustifying method \insertCite{windham1995ro}{scorematchingad} for many exponential family distributions. See \code{\link[=Windham]{Windham()}}.

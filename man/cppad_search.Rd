@@ -34,8 +34,6 @@ and the \code{smdtape}'s dynamic parameter is a (multivariate) measurement.}
 \description{
 Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching discrepancy is within tolerance of zero.
 Also estimates standard errors and covariance.
-In practice conjugate gradient descent seems to fail to reach the requested tolerance or finish too early.
-However, it still may be useful when the score matching discrepancy function is not of quadratic form (for score matching discrepancy functions that are quadratic it will be much better to use \code{\link[=cppad_closed]{cppad_closed()}}).
 }
 \details{
 The score matching discrepancy function and gradient of the score matching function are passed to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.

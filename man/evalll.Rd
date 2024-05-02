@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{evalll}
 \alias{evalll}
-\title{Evaluate a log-likelihood function}
+\title{Evaluate a custom log-likelihood function}
 \usage{
 evalll(ll, u, theta)
 }
@@ -17,5 +17,6 @@ evalll(ll, u, theta)
 The value of the log-likelihood at \code{u} with parameters \code{theta}.
 }
 \description{
-Evaluate a log-likelihood function
+Evaluates a custom log-likelihood function from \code{\link[=customll]{customll()}} without taping. This is useful to check that the custom log-likelihood is behaving.
+To check a tape of the custom log-likelihood use \code{\link[=tapell]{tapell()}} then \code{\link[=evaltape]{evaltape()}}.
 }

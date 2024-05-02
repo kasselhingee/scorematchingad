@@ -57,7 +57,7 @@ tapesmd(lltape, tranobj, man, bdryw, acut = 1, verbose = FALSE)
 \item ``Euc'' Euclidean space
 }}
 
-\item{ll}{The name of an inbuilt improper log-likelihood function to tape (which also specifies the parametric model family) or a custom log-likehood function created by \code{\link[=customll]{customll()}}. The \code{ll} should operate on the untransformed (i.e. starting) manifold.}
+\item{ll}{The name of an inbuilt improper log-likelihood function to tape (which also specifies the parametric model family). On Linux operating systems a custom log-likehood function created by \code{\link[=customll]{customll()}} can also be used; the \code{ll} should operate on the untransformed (i.e. starting) manifold.}
 
 \item{ytape}{An example measurement value to use for creating the tapes. In the natural (i.e. \code{start}) manifold of the log-likelihood function. \code{ytape} will be converted to the \code{end} manifold according to the \code{toM()} method for \code{tranobj} before taping.
 Please ensure that \code{ytape} is the interior of the manifold, and it is probably best if all components of \code{tranobj$toM(ytape)} are non-zero.}

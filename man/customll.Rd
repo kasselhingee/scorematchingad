@@ -7,6 +7,7 @@
 customll(
   code,
   rebuild = FALSE,
+  includes = character(),
   cacheDir = getOption("rcpp.cache.dir", tempdir()),
   showOutput = verbose,
   verbose = getOption("verbose")
@@ -16,6 +17,8 @@ customll(
 \item{code}{\verb{C++} code for a log-likehood function (with normalising constant omitted if desired). See details for more.}
 
 \item{rebuild}{passed to \code{\link[Rcpp:cppFunction]{Rcpp::cppFunction()}}.}
+
+\item{includes}{passed to \code{\link[Rcpp:cppFunction]{Rcpp::cppFunction()}}. For internal use.}
 
 \item{cacheDir}{passed to \code{\link[Rcpp:cppFunction]{Rcpp::cppFunction()}}.}
 
@@ -27,16 +30,17 @@ customll(
 An \code{adloglikelood} object (which is just an \code{externalptr} with attributes) for the compiled log-likelihood function. The returned object has an attribute \code{fname}.
 }
 \description{
-Supply \verb{C++} code to specify a custom log-likelihood, much like \code{TMB::compile()} is passed \verb{C++} code that formulate models.
+In a linux operating platform, supply \verb{C++} code to specify a custom log-likelihood, much like \code{TMB::compile()} is passed \verb{C++} code that formulate models.
 For score matching the normalising constant of the log-likelihood can be omitted.
+Taping of function using \code{CppAD} is platform dependent and currently only works on Linux.
 }
 \details{
-The function uses \code{RcppXPtrUtils::cppXPtr()} and \code{Rcpp::cppFunction()}.
+The function uses \code{\link[RcppXPtrUtils:cppXPtr]{RcppXPtrUtils::cppXPtr()}} and \code{\link[Rcpp:cppFunction]{Rcpp::cppFunction()}}.
 It is good practice to check the returned object using \code{\link[=evalll]{evalll()}}.
 The first compilation in a session can be very slow.
 }
 \section{code}{
-\code{code} must be \verb{C++} that uses only \code{CppAD} and \code{Eigen}, which makes it very similar to the requirements of the input to \code{\link[TMB:compile]{TMB::compile()}} (which also uses \code{CppAD} and \code{Eigen}).
+\code{code} must be \verb{C++} that uses only \code{CppAD} and \code{Eigen}, which makes it very similar to the requirements of the input to \code{TMB::compile()} (which also uses \code{CppAD} and \code{Eigen}).
 
 The start of \code{code} should always be "\verb{a1type fname(const veca1 &x, const veca1 &theta)\{}" where \code{fname} is your chosen name of the log-likelihood function, \code{x} represents a point in the data space and \code{theta} is a vector of parameters for the log-likelihood. This specifies that the function will have two vector arguments (of type \code{veca1}) and will return a single numeric value (\code{a1type}).
 
@@ -58,6 +62,9 @@ myll <- customll("a1type dirichlet(const veca1 &u, const veca1 &beta) {
   return y;
 }")
 evalll(myll, rep(1/3, 3), rep(-0.5, 3))
+lltape <- tapell(dirll, c(0.1, 0.4, 0.5), rep(NA, 3), manifoldtransform("sim", "identity", "sim")$tran, verbose = FALSE)
+evaltape(lltape, rep(1/3, 3), rep(-0.5, 3))
+
 buildsmdtape("sim", "identity", "sim", 
  myll, rep(1/3, 3), rep(NA, 3), 
  bdryw="minsq", acut = 0.01)
