@@ -35,7 +35,8 @@
 #'   return y;
 #' }")
 #' evalll(myll, rep(1/3, 3), rep(-0.5, 3))
-#' lltape <- tapell(myll, c(0.1, 0.4, 0.5), rep(NA, 3), manifoldtransform("sim", "identity", "sim")$tran, verbose = FALSE)
+#' lltape <- tapell(myll, c(0.1, 0.4, 0.5), rep(NA, 3), 
+#'                  manifoldtransform("sim", "identity", "sim")$tran)
 #' evaltape(lltape, rep(1/3, 3), rep(-0.5, 3))
 #'
 #' buildsmdtape("sim", "identity", "sim", 

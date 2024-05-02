@@ -8,4 +8,5 @@
 cout2Rcout.sh
 CONTRIBUTING
 data-raw
+^.github
 
