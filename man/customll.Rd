@@ -62,7 +62,7 @@ myll <- customll("a1type dirichlet(const veca1 &u, const veca1 &beta) {
   return y;
 }")
 evalll(myll, rep(1/3, 3), rep(-0.5, 3))
-lltape <- tapell(dirll, c(0.1, 0.4, 0.5), rep(NA, 3), manifoldtransform("sim", "identity", "sim")$tran, verbose = FALSE)
+lltape <- tapell(myll, c(0.1, 0.4, 0.5), rep(NA, 3), manifoldtransform("sim", "identity", "sim")$tran, verbose = FALSE)
 evaltape(lltape, rep(1/3, 3), rep(-0.5, 3))
 
 buildsmdtape("sim", "identity", "sim", 
