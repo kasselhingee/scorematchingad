@@ -1,4 +1,5 @@
-# for interactive testing load_all() with install doesn't include scorematchingad.h properly
+# warning: for interactive testing load_all() with install doesn't include scorematchingad.h properly
+skip_on_os(c("windows", "mac"))
 test_that("customll can compile a ll function that is evaluated by evalll and taping later", {
   dirll <- customll("
   a1type dirichlet(const veca1 &u, const veca1 &beta) {
@@ -30,3 +31,39 @@ a1type dirichlet(const vecd &u, const veca1 &beta) {
 }")})
 })
 
+test_that("a customll gets all the way to the correct score matching estimate", {
+  ll <- customll("
+  a1type customppi(const veca1 &u, const veca1 &theta) {
+          a1type y;
+          y = ll::ll_ppi(u, theta);
+          return y;
+  }")
+  set.seed(13411)
+  mod <- rppi_egmodel(100)
+  tran <- manifoldtransform("sim", "sqrt", "sph")$tran
+  Y <- mod$sample
+
+  tapes_custom <- buildsmdtape(
+     start = "sim",
+     tran = "alr",
+     end = "Euc",
+     ll = ll,
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
+     bdryw = "ones",
+     verbose = FALSE)
+  tapes <- buildsmdtape(
+     start = "sim",
+     tran = "alr",
+     end = "Euc",
+     ll = "ppi",
+     ytape = c(0.2, 0.3, 0.5),
+     usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
+     bdryw = "ones",
+     verbose = FALSE)
+
+  est_custom <- cppad_closed(tapes_custom$smdtape, Y) 
+  est <- cppad_closed(tapes$smdtape, Y) 
+  expect_equal(est_custom$est, est$est)
+  expect_equal(est_custom$covar, est$covar)
+})
