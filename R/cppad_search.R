@@ -4,8 +4,6 @@
 #' @description 
 #' Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching discrepancy is within tolerance of zero.
 #' Also estimates standard errors and covariance.
-#' In practice conjugate gradient descent seems to fail to reach the requested tolerance or finish too early.
-#' However, it still may be useful when the score matching discrepancy function is not of quadratic form (for score matching discrepancy functions that are quadratic it will be much better to use [`cppad_closed()`]).
 #' @inheritParams cppad_closed
 #' @param theta The starting parameter set
 #' @param control Control parameters passed to [`optimx::Rcgmin()`]

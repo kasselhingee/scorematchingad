@@ -7,10 +7,11 @@
 #' @param verbose passed to [`Rcpp::cppFunction()`].
 #' @param code `C++` code for a log-likehood function (with normalising constant omitted if desired). See details for more.
 #' @description
-#' Supply `C++` code to specify a custom log-likelihood, much like `TMB::compile()` is passed `C++` code that formulate models.
+#' In a linux operating platform, supply `C++` code to specify a custom log-likelihood, much like `TMB::compile()` is passed `C++` code that formulate models.
 #' For score matching the normalising constant of the log-likelihood can be omitted.
+#' Taping of function using `CppAD` is platform dependent and currently only works on Linux.
 #' @details
-#' The function uses `RcppXPtrUtils::cppXPtr()` and `Rcpp::cppFunction()`. 
+#' The function uses [`RcppXPtrUtils::cppXPtr()`] and [`Rcpp::cppFunction()`]. 
 #' It is good practice to check the returned object using [`evalll()`].
 #' The first compilation in a session can be very slow.
 #' # code 
@@ -34,6 +35,9 @@
 #'   return y;
 #' }")
 #' evalll(myll, rep(1/3, 3), rep(-0.5, 3))
+#' lltape <- tapell(dirll, c(0.1, 0.4, 0.5), rep(NA, 3), manifoldtransform("sim", "identity", "sim")$tran, verbose = FALSE)
+#' evaltape(lltape, rep(1/3, 3), rep(-0.5, 3))
+#'
 #' buildsmdtape("sim", "identity", "sim", 
 #'  myll, rep(1/3, 3), rep(NA, 3), 
 #'  bdryw="minsq", acut = 0.01)

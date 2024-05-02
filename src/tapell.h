@@ -41,7 +41,9 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, //data measurement on th
 Rcpp::XPtr<llPtr> getllptr(std::string llname);
 
 //' @name evalll
-//' @title Evaluate a log-likelihood function
+//' @title Evaluate a custom log-likelihood function
+//' @description Evaluates a custom log-likelihood function from [`customll()`] without taping. This is useful to check that the custom log-likelihood is behaving.
+//' To check a tape of the custom log-likelihood use [`tapell()`] then [`evaltape()`].
 //' @param ll A compiled log-likelihood function created by [`customll()`].
 // ( ll is an XPtr to a llPtr object that points to a log-likelihood function )
 //' @param u A vector of measurements for an individual
