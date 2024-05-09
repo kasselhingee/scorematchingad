@@ -2,6 +2,7 @@
 % Please edit documentation in R/customlikelihood.R
 \name{customll}
 \alias{customll}
+\alias{customll_test}
 \title{Compile a custom log-likelihood function.}
 \usage{
 customll(
@@ -12,6 +13,8 @@ customll(
   showOutput = verbose,
   verbose = getOption("verbose")
 )
+
+customll_test()
 }
 \arguments{
 \item{code}{\verb{C++} code for a log-likehood function (with normalising constant omitted if desired). See details for more.}
@@ -30,15 +33,20 @@ customll(
 An \code{adloglikelood} object (which is just an \code{externalptr} with attributes) for the compiled log-likelihood function. The returned object has an attribute \code{fname}.
 }
 \description{
-In a linux operating platform, supply \verb{C++} code to specify a custom log-likelihood, much like \code{TMB::compile()} is passed \verb{C++} code that formulate models.
+In a linux operating platform using the \code{gcc} compiler, supply \verb{C++} code to specify a custom log-likelihood, much like \code{TMB::compile()} is passed \verb{C++} code that formulate models.
 For score matching the normalising constant of the log-likelihood can be omitted.
-Taping of function using \code{CppAD} is platform dependent and currently only works on Linux.
+Taping of the function currently only works with the \code{gcc} compiler. You can see if taping works by running \code{customll_test()}.
 }
 \details{
 The function uses \code{\link[RcppXPtrUtils:cppXPtr]{RcppXPtrUtils::cppXPtr()}} and \code{\link[Rcpp:cppFunction]{Rcpp::cppFunction()}}.
 It is good practice to check the returned object using \code{\link[=evalll]{evalll()}}.
 The first compilation in a session can be very slow.
 }
+\section{Functions}{
+\itemize{
+\item \code{customll_test()}: Returns \code{TRUE} if taping works in your \code{R} session. Otherwise it will return \code{FALSE} and generate warnings.
+
+}}
 \section{code}{
 \code{code} must be \verb{C++} that uses only \code{CppAD} and \code{Eigen}, which makes it very similar to the requirements of the input to \code{TMB::compile()} (which also uses \code{CppAD} and \code{Eigen}).
 
