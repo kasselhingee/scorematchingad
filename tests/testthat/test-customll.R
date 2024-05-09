@@ -1,5 +1,10 @@
+test_that("customll_test() returns TRUE or FALSE", {
+  suppressWarnings({out <- customll_test()})
+  expect_true(out %in% c(TRUE, FALSE))
+})
+
 # warning: for interactive testing load_all() with install doesn't include scorematchingad.h properly
-skip_on_os(c("windows", "mac"))
+skip_on_cran()
 test_that("customll can compile a ll function that is evaluated by evalll and taping later", {
   dirll <- customll("
   a1type dirichlet(const veca1 &u, const veca1 &beta) {
