@@ -30,7 +30,7 @@ customll_test()
 \item{verbose}{passed to \code{\link[Rcpp:cppFunction]{Rcpp::cppFunction()}}.}
 }
 \value{
-An \code{adloglikelood} object (which is just an \code{externalptr} with attributes) for the compiled log-likelihood function. The returned object has an attribute \code{fname}.
+\code{customll()} returns an \code{adloglikelood} object (which is just an \code{externalptr} with attributes) for the compiled log-likelihood function. The returned object has an attribute \code{fname}.
 
 \code{customll_test()} returns \code{TRUE} if taping works in your \code{R} session. Otherwise it will return \code{FALSE} and generate warnings.
 }
