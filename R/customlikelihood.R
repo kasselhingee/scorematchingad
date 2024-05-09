@@ -7,9 +7,9 @@
 #' @param verbose passed to [`Rcpp::cppFunction()`].
 #' @param code `C++` code for a log-likehood function (with normalising constant omitted if desired). See details for more.
 #' @description
-#' In a linux operating platform, supply `C++` code to specify a custom log-likelihood, much like `TMB::compile()` is passed `C++` code that formulate models.
+#' In a linux operating platform using the `gcc` compiler, supply `C++` code to specify a custom log-likelihood, much like `TMB::compile()` is passed `C++` code that formulate models.
 #' For score matching the normalising constant of the log-likelihood can be omitted.
-#' Taping of function using `CppAD` is platform dependent and currently only works on Linux.
+#' Taping of the function currently only works with the `gcc` compiler. You can see if taping works by running `customll_test()`.
 #' @details
 #' The function uses [`RcppXPtrUtils::cppXPtr()`] and [`Rcpp::cppFunction()`]. 
 #' It is good practice to check the returned object using [`evalll()`].
@@ -88,4 +88,32 @@ validate_adloglikelihood <- function(ll){
 #' @export
 print.adloglikelihood <- function(x, ...){
   print(sprintf("log-likelihood function '%s' for automatic differentiation", attr(x, "fname", exact = TRUE)))
+}
+
+#' @describeIn customll Returns `TRUE` if taping works in your `R` session. Otherwise it will return `FALSE` and generate warnings.
+#' @export
+customll_test <- function(){
+  myll <- customll("a1type test(const veca1 &u, const veca1 &beta) {
+  size_t d  = u.size();
+  a1type y(0.);  // initialize summation at 0
+  y = u[0] * beta[0];
+  return y;
+  }")
+  tape <- tapell(myll, 0.1, NA, 
+                   manifoldtransform("sim", "identity", "sim")$tran,
+                 thetatape_creator = function(n){c(1)})
+  t1 <- (abs(drop(evaltape(tape, 2, 5)) - 2*5) < sqrt(.Machine$double.eps))
+  if (!t1){
+    warning("taping fails")
+    return(FALSE)
+  }
+
+  Jtape <- tapeJacobian(tape)
+  t2 <- (abs(drop(evaltape(Jtape, 2, 10)) - 10) < sqrt(.Machine$double.eps))
+  if (!t2){
+    warning("taping of Jacobian fails")
+    return(FALSE)
+  }
+
+  return(TRUE)
 }
