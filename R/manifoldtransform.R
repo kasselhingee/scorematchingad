@@ -21,6 +21,7 @@
 NULL
 
 manifoldtransform <- function(start, tran = "identity", end = start){
+  if (tran == "none"){tran <- "identity"}
   stopifnot(paste(start, tran, end, sep = "-") %in% mantrancombos)
   out <- list(tran = methods::new(mantranmodule$transform_ad, tran),
        man = methods::new(mantranmodule$man_ad, end))
@@ -35,10 +36,9 @@ mantranmodule <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
 mantrancombos <- c(
   "sim-sqrt-sph",
   "sim-identity-sim",
-  "sim-none-sim",
   "sim-alr-Euc",
   "sim-clr-Hn111",
-  "sph-none-sph",
-  "Euc-none-Euc"
+  "sph-identity-sph",
+  "Euc-identity-Euc"
 )
 
