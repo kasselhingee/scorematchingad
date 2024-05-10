@@ -6,6 +6,8 @@
 #' @param bdryw The name of the boundary weight function. "ones" for manifolds without boundary. For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible - see [`ppi()`] for more information on these.
 #' @param acut A parameter passed to the boundary weight function `bdryw`. Ignored for `bdryw = "ones"`.
 #' @param verbose If `TRUE` more details are printed when taping. These details are for debugging and will likely be comprehensible only to users familiar with the source code of this package.
+NULL
+
 tapesmd <- function(lltape,
                    tranobj,
                    man,

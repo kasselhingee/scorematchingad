@@ -3,14 +3,12 @@
 %   R/tapell.R, R/tapesmo.R
 \name{buildsmdtape}
 \alias{buildsmdtape}
-\alias{tapell}
-\alias{tapesmd}
 \title{Build CppAD Tapes for Score Matching}
 \usage{
 buildsmdtape(
   start,
-  tran,
-  end,
+  tran = "identity",
+  end = start,
   ll,
   ytape,
   usertheta,
@@ -21,19 +19,6 @@ buildsmdtape(
  },
   verbose = FALSE
 )
-
-tapell(
-  ll,
-  ytape,
-  usertheta,
-  tranobj,
-  thetatape_creator = function(n) {
-     seq(length.out = n)
- },
-  verbose = FALSE
-)
-
-tapesmd(lltape, tranobj, man, bdryw, acut = 1, verbose = FALSE)
 }
 \arguments{
 \item{start}{The starting manifold. Used for checking that \code{tran} and \code{man} match.}
@@ -56,8 +41,8 @@ tapesmd(lltape, tranobj, man, bdryw, acut = 1, verbose = FALSE)
 
 \item{ll}{The name of an inbuilt improper log-likelihood function to tape (which also specifies the parametric model family). On Linux operating systems a custom log-likehood function created by \code{\link[=customll]{customll()}} can also be used; the \code{ll} should operate on the untransformed (i.e. starting) manifold.}
 
-\item{ytape}{An example measurement value to use for creating the tapes. In the natural (i.e. \code{start}) manifold of the log-likelihood function. \code{ytape} will be converted to the \code{end} manifold according to the \code{toM()} method for \code{tranobj} before taping.
-Please ensure that \code{ytape} is the interior of the manifold, and it is probably best if all components of \code{tranobj$toM(ytape)} are non-zero.}
+\item{ytape}{An example measurement value to use for creating the tapes. In the natural (i.e. \code{start}) manifold of the log-likelihood function.
+Please ensure that \code{ytape} is the interior of the manifold and non-zero.}
 
 \item{usertheta}{A vector of parameter elements for the likelihood function. \code{NA} elements will become \emph{dynamic parameters}. Other elements will be fixed at the provided value. The length of \code{usertheta} must be the correct length for the log-likelihood - \strong{no checking is conducted}.}
 
