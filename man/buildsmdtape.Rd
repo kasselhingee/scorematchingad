@@ -83,11 +83,10 @@ These combinations of \code{start}-\code{tran}-\code{end} are currently availabl
 \itemize{
 \item sim-sqrt-sph
 \item sim-identity-sim
-\item sim-none-sim
 \item sim-alr-Euc
 \item sim-clr-Hn111
-\item sph-none-sph
-\item Euc-none-Euc
+\item sph-identity-sph
+\item Euc-identity-Euc
 }
 
 Currently available improper log-likelihood functions are:

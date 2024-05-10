@@ -18,5 +18,5 @@ The value of the log-likelihood at \code{u} with parameters \code{theta}.
 }
 \description{
 Evaluates a custom log-likelihood function from \code{\link[=customll]{customll()}} without taping. This is useful to check that the custom log-likelihood is behaving.
-To check a tape of the custom log-likelihood use \code{\link[=tapell]{tapell()}} then \code{\link[=evaltape]{evaltape()}}.
+To check a tape of the custom log-likelihood use \code{\link[=buildsmdtape]{buildsmdtape()}} then \code{\link[=evaltape]{evaltape()}}.
 }
