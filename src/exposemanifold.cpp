@@ -29,6 +29,8 @@ transform<a1type> * newtransform(const std::string &name){
     out = new mantran::sqrt<a1type>();
   } else if (name.compare("identity") == 0){
     out = new mantran::identity<a1type>();
+  } else if (name.compare("none") == 0){
+    out = new mantran::identity<a1type>();
   } else {
     Rcpp::stop("Transform not found");
   }

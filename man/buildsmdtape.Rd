@@ -46,7 +46,7 @@ tapesmd(lltape, tranobj, man, bdryw, acut = 1, verbose = FALSE)
 \item ``srqt''
 \item ``alr''
 \item ``clr''
-\item \verb{none'' (or }identity'')
+\item ``none'' or `identity'
 }}
 
 \item{end}{The name of the manifold that \code{tran} maps \code{start} to. Available manifolds are:
@@ -121,9 +121,11 @@ These combinations of \code{start}-\code{tran}-\code{end} are currently availabl
 \itemize{
 \item sim-sqrt-sph
 \item sim-identity-sim
+\item sim-none-sim
 \item sim-alr-Euc
 \item sim-clr-Hn111
-\item sph-identity-sph
+\item sph-none-sph
+\item Euc-none-Euc
 }
 
 Currently available improper log-likelihood functions are:

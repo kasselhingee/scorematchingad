@@ -4,14 +4,14 @@
 #'  + ``srqt''
 #'  + ``alr''
 #'  + ``clr''
-#'  + ``none'' (or ``identity'')
+#'  + ``none'' or `identity'
 #' @param end The name of the manifold that `tran` maps `start` to. Available manifolds are:
 #'  + ``sph'' unit sphere
 #'  + ``Hn111'' hyperplane normal to the vector \eqn{1, 1, 1, 1, ...}
 #'  + ``sim'' simplex
 #'  + ``Euc'' Euclidean space
 #' @return `manifoldtransform()` returns a named list with:
-#'  + `tran` A object of type `Rcpp_transform_ad` representing the transform
+#'  + `tran` A object of type `Rcpp_transform_ad` representing the transform.
 #'  + `man` A object of type `Rcpp_man_ad` representing the end manifold
 #' @details
 #' Only some combinations of `start`, `tran` and `end` are available because `tran` must map between `start` and `end`.
@@ -35,8 +35,10 @@ mantranmodule <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
 mantrancombos <- c(
   "sim-sqrt-sph",
   "sim-identity-sim",
+  "sim-none-sim",
   "sim-alr-Euc",
   "sim-clr-Hn111",
-  "sph-identity-sph"
+  "sph-none-sph",
+  "Euc-none-Euc"
 )
 
