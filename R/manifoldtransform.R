@@ -1,4 +1,5 @@
-#' @describeIn buildsmdtape Build an object specifying the transformation from the natural domain of log-likelihood to another manifold.
+#' @name buildsmdtape
+# Build an object specifying the transformation from the natural domain of log-likelihood to another manifold.
 #' @param start The starting manifold. Used for checking that `tran` and `man` match.
 #' @param tran The name of a transformation. Available transformations are
 #'  + ``srqt''
@@ -10,9 +11,6 @@
 #'  + ``Hn111'' hyperplane normal to the vector \eqn{1, 1, 1, 1, ...}
 #'  + ``sim'' simplex
 #'  + ``Euc'' Euclidean space
-#' @return `manifoldtransform()` returns a named list with:
-#'  + `tran` A object of type `Rcpp_transform_ad` representing the transform.
-#'  + `man` A object of type `Rcpp_man_ad` representing the end manifold
 #' @details
 #' Only some combinations of `start`, `tran` and `end` are available because `tran` must map between `start` and `end`.
 #' These combinations of `start`-`tran`-`end` are currently available:
@@ -20,9 +18,8 @@
 #' ```{r mantrans, results = "asis", echo = FALSE}
 #' cat(paste(" +", mantrancombos), sep = "\n")
 #' ```
-#' @examples
-#' manifoldtransform("sim", "alr", "Euc")
-#' @export
+NULL
+
 manifoldtransform <- function(start, tran = "identity", end = start){
   stopifnot(paste(start, tran, end, sep = "-") %in% mantrancombos)
   out <- list(tran = methods::new(mantranmodule$transform_ad, tran),
@@ -31,6 +28,9 @@ manifoldtransform <- function(start, tran = "identity", end = start){
 }
 
 mantranmodule <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
+# documentation can be found in: mantranmodule$transform_ad$help("toM"), but it is pretty poor.
+# also mantranmodule$transform_ad@methods will list all the methods of the transform class
+# documenting these classes looks like a major headache at the moment and they are only used internally
 
 mantrancombos <- c(
   "sim-sqrt-sph",

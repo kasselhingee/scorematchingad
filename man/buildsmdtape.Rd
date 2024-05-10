@@ -3,7 +3,6 @@
 %   R/tapell.R, R/tapesmo.R
 \name{buildsmdtape}
 \alias{buildsmdtape}
-\alias{manifoldtransform}
 \alias{tapell}
 \alias{tapesmd}
 \title{Build CppAD Tapes for Score Matching}
@@ -22,8 +21,6 @@ buildsmdtape(
  },
   verbose = FALSE
 )
-
-manifoldtransform(start, tran = "identity", end = start)
 
 tapell(
   ll,
@@ -71,38 +68,18 @@ Please ensure that \code{ytape} is the interior of the manifold, and it is proba
 \item{thetatape_creator}{A function that accepts an integer \code{n}, and returns a vector of \code{n} length. The function is used to fill in the \code{NA} elements of \code{usertheta} when building the tapes. Please ensure that the values filled by \code{thetatape_creator} lead to plausible parameter vectors for the chosen log-likelihood.}
 
 \item{verbose}{If \code{TRUE} more details are printed when taping. These details are for debugging and will likely be comprehensible only to users familiar with the source code of this package.}
-
-\item{tranobj}{A transform object (of type \code{Rcpp_transform_ad}), typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
-
-\item{lltape}{Tape of the log-likelihood function constructed using \code{\link[=tapell]{tapell()}}.}
-
-\item{man}{A transform object (of type \code{Rcpp_man_ad}) matching \code{tranobj}, and typically created by \code{\link[=manifoldtransform]{manifoldtransform()}}.}
 }
 \value{
-\code{buildsmdtape()} returns a list of:
+A list of:
 \itemize{
 \item an \code{\link{ADFun}} object containing a tape of an improper likelihood with \eqn{z} on the \code{end} manifold as the independent variable
 \item an \code{\link{ADFun}} object containing a tape of the score matching discrepancy function with the non-fixed parameters as the independent variable, and the measurements on the \code{end} manifold as the dynamic parameter.
 \item some information about the tapes
 }
-
-\code{manifoldtransform()} returns a named list with:
-\itemize{
-\item \code{tran} A object of type \code{Rcpp_transform_ad} representing the transform
-\item \code{man} A object of type \code{Rcpp_man_ad} representing the end manifold
-}
-
-\code{tapell()} returns an \code{\link{ADFun}} object with two additional attributes accessed via \code{attr()}:
-\itemize{
-\item \code{ytape} The value of \code{ytape}
-\item \code{tran} The name of the transform specified in \code{tranobj}.
-}
-
-\code{tapesmd()} returns an \code{\link{ADFun}} object.
 }
 \description{
 For a parametric model family, the function \code{buildsmdtape()} generates \code{CppAD} tapes (called \code{ADFun}s) for the improper log-likelihood (without normalising constant) of the family and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in \code{\link{scorematchingtheory}}).
-Three steps are performed by \code{buildsmdtape()}: first an object that specifies the manifold and any transformation to another manifold is created using \code{\link[=manifoldtransform]{manifoldtransform()}}; then a tape of the log-likelihood (without normalising constant) is created using \code{\link[=tapell]{tapell()}}; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using \code{\link[=tapesmd]{tapesmd()}}.
+Three steps are performed by \code{buildsmdtape()}: first an object that specifies the manifold and any transformation to another manifold is created; then a tape of the log-likelihood (without normalising constant) is created; finally a tape of \eqn{A(z) + B(z) + C(z)} is created.
 }
 \details{
 The improper log-likelihood (without normalising constant) must be implemented in \verb{C++} and is selected by name. Similarly the transforms of the manifold must be implemented in \verb{C++} and selected by name.
@@ -137,19 +114,6 @@ Currently available improper log-likelihood functions are:
 \item FB
 }
 }
-\section{Functions}{
-\itemize{
-\item \code{buildsmdtape()}: Combines
-\code{\link[=manifoldtransform]{manifoldtransform()}}, \code{\link[=tapell]{tapell()}}, and \code{\link[=tapesmd]{tapesmd()}}.
-
-\item \code{manifoldtransform()}: Build an object specifying the transformation from the natural domain of log-likelihood to another manifold.
-
-\item \code{tapell()}: Creates a \code{CppAD} tape of an improper log-likelihood as a function of values on the \code{end} manifold in \code{tranobj}. The Jacobian of the associated transformation is used to convert the log-likelihood on the natural manifold \code{start} of the log-likelihood to the \code{end} manifold.
-This conversion is needed to account for the change in measure between the manifolds.
-
-\item \code{tapesmd()}: Generates a \code{CppAD} tape of the empirical score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (\code{\link{scorematchingtheory}}). Requires a tape of an improper log-likelihood function and the corresponding manifold with the transformation.
-
-}}
 \section{Introduction to CppAD Tapes}{
 This package uses version 2022000.2 of the algorithmic differentiation library \code{CppAD} \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
 Full help for \code{CppAD} can be found at \url{https://cppad.readthedocs.io/}.
@@ -167,7 +131,7 @@ Each time a tape is evaluated the corresponding \verb{C++} object is altered. Pa
 }
 
 \section{Warning}{
- There is limited checking of the inputs.
+ There is no checking of the inputs \code{ytape} and \code{usertheta}.
 }
 
 \examples{
@@ -192,32 +156,6 @@ tapes <- buildsmdtape("sim", "sqrt", "sph", "ppi",
               )
 evaltape(tapes$lltape, u, rppi_egmodel(1)$theta)
 evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
-manifoldtransform("sim", "alr", "Euc")
-maninfo <- manifoldtransform("sim", "sqrt", "sph")
-ppitape <- tapell(ll = "ppi",
-                  ytape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3), 
-                  tranobj = maninfo$tran) 
-evaltape(ppitape, 
-  sqrt(rep(1/3, 3)), 
-  ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
-evaltape(tapeJacobian(ppitape), 
-  sqrt(rep(1/3, 3)), 
-  ppi_paramvec(p = 3, AL=0, bL=0, beta=c(0,0,0.5)))
-sqrtman <- manifoldtransform("sim", "sqrt", "sph")
-ppitape <- tapell(ll = "ppi",
-                  ytape = c(0.2, 0.3, 0.5),
-                  usertheta = ppi_paramvec(p = 3), 
-                  tranobj = sqrtman$tran)
-ppismdtape <- tapesmd(lltape = ppitape,
-                      tranobj = sqrtman$tran,
-                      man = sqrtman$man,
-                      bdryw = "minsq",
-                      acut = 0.1,
-                      verbose = FALSE)
-evaltape(ppismdtape, 
-  ppi_paramvec(p = 3, AL=0, bL=0, beta=c(-0.1,-0.1,0.5)),
-  rep(1/3, 3)) 
 }
 \references{
 \insertAllCited{}
