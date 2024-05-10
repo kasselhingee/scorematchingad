@@ -4,7 +4,7 @@ test_that("customll_test() returns TRUE or FALSE", {
 })
 
 # warning: for interactive testing load_all() with install doesn't include scorematchingad.h properly
-skip_on_cran()
+skip_if_not(suppressWarnings(customll_test()), "Taping customll not available on this system")
 test_that("customll can compile a ll function that is evaluated by evalll and taping later", {
   dirll <- customll("
   a1type dirichlet(const veca1 &u, const veca1 &beta) {
