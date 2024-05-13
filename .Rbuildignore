@@ -9,4 +9,5 @@ cout2Rcout.sh
 CONTRIBUTING
 data-raw
 ^.github
+cran-comments.md
 
