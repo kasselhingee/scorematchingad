@@ -19,6 +19,9 @@ Suggests:
     cubature,
     simdd,
     numDeriv
+Enhances:
+    RcppEigen (>= 0.3.3.7),
+    RcppXPtrUtils
 Depends: 
     R (>= 3.5.0)
 Imports:
@@ -27,15 +30,12 @@ Imports:
     FixedPoint,
     Rdpack,
     Rcpp (>= 1.0.9),
-    RcppXPtrUtils,
     methods,
     stats,
     R6,
     utils,
     rlang,
     ellipsis
-Suggests:
-    RcppEigen (>= 0.3.3.7)
 RdMacros: Rdpack
 LinkingTo: 
     Rcpp (>= 1.0.9),

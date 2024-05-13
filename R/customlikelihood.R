@@ -49,6 +49,7 @@ customll <- function(code, rebuild = FALSE,
                      includes = character(),
                      cacheDir = getOption("rcpp.cache.dir", tempdir()), 
                      showOutput = verbose, verbose = getOption("verbose")){
+  if (!requireNamespace("RcppXPtrUtils", quietly = TRUE)){stop("Package RcppXPtrUtils must be installed for customll() to operate")} 
   if (!requireNamespace("RcppEigen", quietly = TRUE)){stop("Package RcppEigen must be installed for customll() to operate")} 
   ptr <- RcppXPtrUtils::cppXPtr(code, depends = c("RcppEigen", "scorematchingad"), includes = includes, rebuild = rebuild, cacheDir = cacheDir, showOutput = showOutput, verbose = verbose)
   
@@ -97,6 +98,10 @@ print.adloglikelihood <- function(x, ...){
 customll_test <- function(){
   if (!requireNamespace("RcppEigen", quietly = TRUE)){
     warning("Package RcppEigen must be installed for customll() to operate")
+    return(FALSE)
+  } 
+  if (!requireNamespace("RcppXPtrUtils", quietly = TRUE)){
+    warning("Package RcppXPtrUtils must be installed for customll() to operate")
     return(FALSE)
   } 
   myll <- customll("a1type test(const veca1 &u, const veca1 &beta) {
