@@ -27,7 +27,6 @@ Imports:
     FixedPoint,
     Rdpack,
     Rcpp (>= 1.0.9),
-    RcppEigen (>= 0.3.3.7),
     RcppXPtrUtils,
     methods,
     stats,
@@ -35,6 +34,8 @@ Imports:
     utils,
     rlang,
     ellipsis
+Suggests:
+    RcppEigen (>= 0.3.3.7)
 RdMacros: Rdpack
 LinkingTo: 
     Rcpp (>= 1.0.9),

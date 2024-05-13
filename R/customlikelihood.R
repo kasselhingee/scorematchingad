@@ -49,6 +49,7 @@ customll <- function(code, rebuild = FALSE,
                      includes = character(),
                      cacheDir = getOption("rcpp.cache.dir", tempdir()), 
                      showOutput = verbose, verbose = getOption("verbose")){
+  if (!requireNamespace("RcppEigen", quietly = TRUE)){stop("Package RcppEigen must be installed for customll() to operate")} 
   ptr <- RcppXPtrUtils::cppXPtr(code, depends = c("RcppEigen", "scorematchingad"), includes = includes, rebuild = rebuild, cacheDir = cacheDir, showOutput = showOutput, verbose = verbose)
   
   # in the spirit of RcppXPtrUtils::checkXPtr check output and arguments. Rewritten here for bespoke error messages.
@@ -94,6 +95,10 @@ print.adloglikelihood <- function(x, ...){
 #' @returns `customll_test()` returns `TRUE` if taping works in your `R` session. Otherwise it will return `FALSE` and generate warnings.
 #' @export
 customll_test <- function(){
+  if (!requireNamespace("RcppEigen", quietly = TRUE)){
+    warning("Package RcppEigen must be installed for customll() to operate")
+    return(FALSE)
+  } 
   myll <- customll("a1type test(const veca1 &u, const veca1 &beta) {
   size_t d  = u.size();
   a1type y(0.);  // initialize summation at 0
