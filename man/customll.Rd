@@ -58,8 +58,6 @@ For the purposes of score matching the operations should all be smooth to create
 }
 
 \examples{
-customll_test()
-
 myll <- customll("a1type dirichlet(const veca1 &u, const veca1 &beta) {
   size_t d  = u.size();
   a1type y(0.);  // initialize summation at 0
