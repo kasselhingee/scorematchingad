@@ -126,7 +126,7 @@ ppi <- function(Y, paramvec = NULL,
   if (method == "hardcoded"){
     if (trans == "alr"){
       if (usertheta_ppi_alr_gengamma_compatible(usertheta)){
-        fitobj <- ppi_alr_gengamma(Y, betap = stats::tail(usertheta, 1), w = w) #any theta is fine
+        fitobj <- ppi_alr_gengamma(Y, betap = utils::tail(usertheta, 1), w = w) #any theta is fine
         fitfun <- "ppi_alr_gengamma"
       }
     }
@@ -150,7 +150,7 @@ ppi <- function(Y, paramvec = NULL,
                             w= w, computeSE = TRUE)
           fitfun <- "estimator1_incb"
         } else if (utheta_estimatorall1_betap_compatible(usertheta)){
-          fitobj <- ppi_sqrt_minimah_full(Y, acut, stats::tail(ppi_parammats(usertheta)$beta, 1),
+          fitobj <- ppi_sqrt_minimah_full(Y, acut, utils::tail(ppi_parammats(usertheta)$beta, 1),
                                             w)
           fitfun <- "ppi_sqrt_minimah_betap"
         } else if (utheta_estimatorall1_full_compatible(usertheta)){
