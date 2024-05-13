@@ -49,7 +49,7 @@ customll <- function(code, rebuild = FALSE,
                      includes = character(),
                      cacheDir = getOption("rcpp.cache.dir", tempdir()), 
                      showOutput = verbose, verbose = getOption("verbose")){
-  ptr <- RcppXPtrUtils::cppXPtr(code, depends = c("scorematchingad"), includes = includes, rebuild = rebuild, cacheDir = cacheDir, showOutput = showOutput, verbose = verbose)
+  ptr <- RcppXPtrUtils::cppXPtr(code, depends = c("RcppEigen", "scorematchingad"), includes = includes, rebuild = rebuild, cacheDir = cacheDir, showOutput = showOutput, verbose = verbose)
   
   # in the spirit of RcppXPtrUtils::checkXPtr check output and arguments. Rewritten here for bespoke error messages.
   if (!all(grepl("^const veca1", attr(ptr, "args", exact = TRUE)))){
