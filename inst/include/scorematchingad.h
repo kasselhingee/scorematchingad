@@ -7,7 +7,6 @@
 # include <cppad/example/cppad_eigen.hpp>  //load eigen
 # include <cppad/cppad.hpp> // the CppAD package
 
-// [[Rcpp::depends(RcppEigen)]] //include RcppEigen here so that Eigen:: below makes sense
 #include <RcppEigen.h>
 
 typedef std::vector<double> svecd;
