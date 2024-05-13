@@ -1,7 +1,6 @@
 # functions for building custom likelihoods: build, evaluate (to check it). (Then use tapell and check it more!)
 #' @title Compile a custom log-likelihood function.
 # the following is because RcppEigen is needed in imports for cppFunction() below, but package checking thinks RcppEigen isn't imported
-#' @import RcppEigen
 #' @param includes passed to [`Rcpp::cppFunction()`]. For internal use.
 #' @param cacheDir passed to [`Rcpp::cppFunction()`].
 #' @param rebuild passed to [`Rcpp::cppFunction()`].
