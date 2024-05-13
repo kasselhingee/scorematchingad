@@ -7,7 +7,7 @@
 #' @param rebuild passed to [`Rcpp::cppFunction()`].
 #' @param showOutput passed to [`Rcpp::cppFunction()`].
 #' @param verbose passed to [`Rcpp::cppFunction()`].
-#' @param code `C++` code for a log-likehood function (with normalising constant omitted if desired). See details for more.
+#' @param code `C++` code for a log-likelihood function (with normalising constant omitted if desired). See details for more.
 #' @description
 #' Supply `C++` code to specify a custom log-likelihood, much like `TMB::compile()` is passed `C++` code that formulate models.
 #' For score matching the normalising constant of the log-likelihood can be omitted.

@@ -1,6 +1,6 @@
 #' @name buildsmdtape
 # @param tranobj A transform object (of type `Rcpp_transform_ad`), typically created by [`manifoldtransform()`].
-#' @param ll The name of an inbuilt improper log-likelihood function to tape (which also specifies the parametric model family). On Linux operating systems a custom log-likehood function created by [`customll()`] can also be used; the `ll` should operate on the untransformed (i.e. starting) manifold.
+#' @param ll The name of an inbuilt improper log-likelihood function to tape (which also specifies the parametric model family). On Linux operating systems a custom log-likelihood function created by [`customll()`] can also be used; the `ll` should operate on the untransformed (i.e. starting) manifold.
 #' @param ytape An example measurement value to use for creating the tapes. In the natural (i.e. `start`) manifold of the log-likelihood function. 
 # `ytape` will be converted to the `end` manifold according to the `toM()` method for `tranobj` before taping. 
 #' Please ensure that `ytape` is the interior of the manifold and non-zero.

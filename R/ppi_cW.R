@@ -6,7 +6,7 @@
 #' @param ... Values of `TRUE` or `FALSE` in the same order of the components specifying that a component has probability mass concentrated near zero.
 #' @return A vector of the same length as the parameter vector of the PPI model. Elements of \eqn{A_L}{A_L} will have a value of `cW` if both their row and column component has probability mass concentrated near zero. Similarly, elements of \eqn{b_L} will have a value of `cW` if their row corresponds to a component that has a probability mass concentrated near zero. All other elements are zero.
 #' @details
-#' The Windham robustifying method involes weighting observations by a function of the proposed model density \insertCite{windham1995ro}{scorematchingad}.
+#' The Windham robustifying method involves weighting observations by a function of the proposed model density \insertCite{windham1995ro}{scorematchingad}.
 #' \insertCite{scealy2024ro;textual}{scorematchingad} found that only some of the tuning constants should be non-zero:
 #' the tuning exponents corresponding to \eqn{\beta} should be zero to avoid infinite weights;and to improve efficiency any rows or columns of \eqn{A_L} corresponding to components without concentrations of probability mass (i.e. outliers can't exist) should have exponents of zero.
 #' \insertCite{scealy2024ro;textual}{scorematchingad} set the remaining tuning exponents to a constant.

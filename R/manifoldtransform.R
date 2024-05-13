@@ -2,7 +2,7 @@
 # Build an object specifying the transformation from the natural domain of log-likelihood to another manifold.
 #' @param start The starting manifold. Used for checking that `tran` and `man` match.
 #' @param tran The name of a transformation. Available transformations are
-#'  + ``srqt''
+#'  + ``sqrt''
 #'  + ``alr''
 #'  + ``clr''
 #'  + ``none'' or `identity'

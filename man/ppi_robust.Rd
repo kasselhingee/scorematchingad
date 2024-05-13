@@ -33,7 +33,7 @@ A list:
 }
 \description{
 \code{ppi_robust()} uses \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}} to estimate a PPI distribution robustly.
-There are many arguments to the \code{\link[=ppi]{ppi()}} function and we highly recommend trialling your arguments on \code{\link[=ppi]{ppi()}} first before running \code{ppi_robust()}.
+There are many arguments to the \code{\link[=ppi]{ppi()}} function and we highly recommend testing your arguments on \code{\link[=ppi]{ppi()}} first before running \code{ppi_robust()}.
 
 \code{ppi_robust_alrgengamma()} performs the Windham robustification algorithm exactly as described in \insertCite{scealy2024ro;textual}{scorematchingad} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}}.
 }

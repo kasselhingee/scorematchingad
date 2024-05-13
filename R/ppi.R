@@ -17,10 +17,10 @@
 #' @details
 #' Estimation may be performed via transformation of the measure in Hyvärinen divergence from Euclidean space to the simplex (inverse of the additive log ratio transform), from a hyperplane to the simplex (inverse of the centred log ratio transform), from the positive quadrant of the sphere to the simplex (inverse of the square root transform), or without any transformation. In the latter two situations there is a boundary and *weighted Hyvärinen divergence* \insertCite{@Equation 7, @scealy2023sc}{scorematchingad} is used.
 #' Properties of the estimator using the square root transform were studied by \insertCite{scealy2023sc;textual}{scorematchingad}.
-#' Properties of the estimator using the additive log ratio transfrom were studied by \insertCite{scealy2024ro;textual}{scorematchingad}.
+#' Properties of the estimator using the additive log ratio transform were studied by \insertCite{scealy2024ro;textual}{scorematchingad}.
 #'
 #' There are three boundary weight functions available:
-#' * The function "ones" applies no weights and should be used whenever the manifold does not have a bounday.
+#' * The function "ones" applies no weights and should be used whenever the manifold does not have a boundary.
 #' * The function "minsq" is the minima-based boundary weight function for the PPI model \insertCite{@Equation 12, @scealy2023sc}{scorematchingad}
 #' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
 #' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
@@ -47,13 +47,13 @@
 #'  + The additive log ratio transformation ("alr") using the final component on the denominator, with \eqn{b_L=0} and fixed final component of \eqn{\beta}.
 
 #' @param trans The name of the transformation of the manifold in Hyvärinen divergence (See [`scorematchingtheory`]): "clr" (centred log ratio), "alr" (additive log ratio), "sqrt" or "none".
-#' @param Y A matrix of measurements. Each row is a compositional measurement (i.e. each row sums to 1 and has non-negative elmenents).
+#' @param Y A matrix of measurements. Each row is a compositional measurement (i.e. each row sums to 1 and has non-negative elements).
 #' @param paramvec Optionally a vector of the PPI models parameters. `NA`-valued elements of this vector are estimated and non-`NA` values are fixed. Generate `paramvec` easily using [ppi_paramvec()].  If `NULL` then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.
 #' @param bdryw The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
 #' @param acut The threshold \eqn{a_c} in `bdryw` to avoid over-weighting measurements interior to the simplex
 #' @param control `iterative` only. Passed to [`optimx::Rcgmin()`] to control the iterative solver.
 #' @param bdrythreshold `iterative` or `closed` methods only. For measurements within `bdrythreshold` of the simplex boundary a Taylor approximation is applied by shifting the measurement `shiftsize` towards the center of the simplex.
-#' @param shiftsize `iterative` or `closed` methods only. For measurements within `bdrythreshold` of the simlex boundary a Taylor approximation is applied by shifting the measurement `shiftsize` towards the center of the simplex.
+#' @param shiftsize `iterative` or `closed` methods only. For measurements within `bdrythreshold` of the simplex boundary a Taylor approximation is applied by shifting the measurement `shiftsize` towards the center of the simplex.
 #' @param approxorder `iterative` or `closed` methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.
 #' @param method `"closed"` uses `CppAD` to solve in closed form the a quadratic score matching discrepancy using [`cppad_closed()`]. `"hardcoded"` uses hardcoded implementations. "iterative" uses [`cppad_search()`] (which uses `CppAD` and [`optimx::Rcgmin()`]) to iteratively find the minimum of the weighted Hyvärinen divergence.
 #' @param paramvec_start `iterative` method only. The starting guess for `Rcgmin`. Generate `paramvec_start` easily using [`ppi_paramvec()`].

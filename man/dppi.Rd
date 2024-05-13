@@ -40,7 +40,7 @@ Compute the \strong{natural logarithm} of the improper density for the PPI model
 \details{
 The value calculated by \code{dppi} is
 \deqn{z_L^TA_Lz_L + b_L^Tz_L + \beta^T \log(z),}
-where \eqn{z} is the multivariate observation (i.e. a row of \code{Y}), and \eqn{z_L} ommits the final element of \eqn{z}.
+where \eqn{z} is the multivariate observation (i.e. a row of \code{Y}), and \eqn{z_L} omits the final element of \eqn{z}.
 }
 \examples{
 m <- rppi_egmodel(10)

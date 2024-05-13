@@ -21,7 +21,7 @@ Windham(
 \item{estimator}{A function that estimates parameters from weighted observations.
 It must have arguments \code{Y} that is a matrix of measurements and \code{w} that are weights associated with each row of \code{Y}. If it accepts arguments \code{paramvec} or \code{paramvec_start} then these will be used to specify fixed elements of the parameter vector and the starting guess of the parameter vector, respectively. The estimated parameter vector, including any fixed elements, must be the returned object, or the first element of a returned list, or as the \code{paramvec} slot within the \code{est} slot of the returned object.}
 
-\item{ldenfun}{A function that returns a vector of values propotional to the log-density for a matrix of observations \code{Y} and parameter vector \code{theta}.}
+\item{ldenfun}{A function that returns a vector of values proportional to the log-density for a matrix of observations \code{Y} and parameter vector \code{theta}.}
 
 \item{cW}{A vector of robustness tuning constants. When computing the weight for an observation the parameter vector is multiplied element-wise with \code{cW}. For the PPI model, generate \code{cW} easily using \code{\link[=ppi_cW]{ppi_cW()}} and \code{\link[=ppi_cW_auto]{ppi_cW_auto()}}.}
 
@@ -37,7 +37,7 @@ It must have arguments \code{Y} that is a matrix of measurements and \code{w} th
 A list:
 \itemize{
 \item \code{paramvec} the estimated parameter vector
-\item \code{optim} information about the fixed point iterations and opimisation process. Including a slot \code{finalweights} for the weights in the final iteration.
+\item \code{optim} information about the fixed point iterations and optimisation process. Including a slot \code{finalweights} for the weights in the final iteration.
 }
 }
 \description{
@@ -55,7 +55,7 @@ The function \code{Windham()} assumes that \eqn{f} is proportional to \eqn{\exp(
 The solution is found iteratively \insertCite{windham1995ro}{scorematchingad}.
 Given a parameter set \eqn{\theta_n}, \code{Windham()} first computes weights \eqn{f(z; c \circ \theta_n)} for each observation \eqn{z}.
 Then, a new parameter set \eqn{\tilde{\theta}_{n+1}} is estimated by \code{estimator} with the computed weights.
-This new parameter set is element-wise-multiplied by the (element-wise) reciprical of \eqn{1+c} to obtain an adjusted parameter set \eqn{\theta_{n+1}}.
+This new parameter set is element-wise-multiplied by the (element-wise) reciprocal of \eqn{1+c} to obtain an adjusted parameter set \eqn{\theta_{n+1}}.
 The estimate returned by \code{Windham()} is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n \approx \theta_{n+1}}.
 }
 \examples{

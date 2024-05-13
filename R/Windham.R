@@ -9,7 +9,7 @@
 #' @param Y A matrix of measurements. Each row is a measurement, each component is a dimension of the measurement.
 #' @param estimator A function that estimates parameters from weighted observations.
 #' It must have arguments `Y` that is a matrix of measurements and `w` that are weights associated with each row of `Y`. If it accepts arguments `paramvec` or `paramvec_start` then these will be used to specify fixed elements of the parameter vector and the starting guess of the parameter vector, respectively. The estimated parameter vector, including any fixed elements, must be the returned object, or the first element of a returned list, or as the `paramvec` slot within the `est` slot of the returned object.
-#' @param ldenfun A function that returns a vector of values propotional to the log-density for a matrix of observations `Y` and parameter vector `theta`.
+#' @param ldenfun A function that returns a vector of values proportional to the log-density for a matrix of observations `Y` and parameter vector `theta`.
 #' @param ... Arguments passed to `estimator`.
 #' @param paramvec_start
 #' Initially used to check the function `estimator`. If `estimator` accepts a `paramvec_start`, then the current estimate of the parameter vector is passed as `paramvec_start` to `estimator` in each iteration.
@@ -27,13 +27,13 @@
 #' The solution is found iteratively \insertCite{windham1995ro}{scorematchingad}. 
 #' Given a parameter set \eqn{\theta_n}, `Windham()` first computes weights \eqn{f(z; c \circ \theta_n)} for each observation \eqn{z}.
 #' Then, a new parameter set \eqn{\tilde{\theta}_{n+1}} is estimated by `estimator` with the computed weights.
-#' This new parameter set is element-wise-multiplied by the (element-wise) reciprical of \eqn{1+c} to obtain an adjusted parameter set \eqn{\theta_{n+1}}.
+#' This new parameter set is element-wise-multiplied by the (element-wise) reciprocal of \eqn{1+c} to obtain an adjusted parameter set \eqn{\theta_{n+1}}.
 #' The estimate returned by `Windham()` is the parameter set \eqn{\hat{\theta}} such that \eqn{\theta_n \approx \theta_{n+1}}.
 #' @family Windham robustness functions
 #' @return
 #' A list:
 #' * `paramvec` the estimated parameter vector
-#' * `optim` information about the fixed point iterations and opimisation process. Including a slot `finalweights` for the weights in the final iteration.
+#' * `optim` information about the fixed point iterations and optimisation process. Including a slot `finalweights` for the weights in the final iteration.
 #' @examples
 #' if (requireNamespace("movMF")){
 #'   Y <- movMF::rmovMF(1000, 100 * c(1, 1) / sqrt(2))

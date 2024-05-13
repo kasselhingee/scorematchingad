@@ -17,7 +17,7 @@ customll(
 customll_test()
 }
 \arguments{
-\item{code}{\verb{C++} code for a log-likehood function (with normalising constant omitted if desired). See details for more.}
+\item{code}{\verb{C++} code for a log-likelihood function (with normalising constant omitted if desired). See details for more.}
 
 \item{rebuild}{passed to \code{\link[Rcpp:cppFunction]{Rcpp::cppFunction()}}.}
 

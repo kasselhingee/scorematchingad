@@ -40,7 +40,7 @@ Standard errors use the Godambe information matrix (aka sandwich method) and are
 The estimate of the negative of the sensitivity matrix \eqn{-G} is
 the average of the Hessian of \code{smdtape} evaluated at each observation in \code{Y}.
 The estimate of the variability matrix \eqn{J} is
-the sample covariance (denominator of \eqn{n-1}) of the gradiant of \code{smdtape} evaluated at each of the observations in \code{Y} for the estimated \eqn{\theta}.
+the sample covariance (denominator of \eqn{n-1}) of the gradient of \code{smdtape} evaluated at each of the observations in \code{Y} for the estimated \eqn{\theta}.
 The estimated variance of the estimator is then as
 \eqn{G^{-1}JG^{-1}/n,}
 where \code{n} is the number of observations.
