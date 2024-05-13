@@ -11,8 +11,8 @@
 #' @export
 rsymmetricmatrix <- function(p, min = 0, max = 1){
   A <- matrix(NA, ncol = p, nrow = p)
-  A[upper.tri(A)] <- runif(sum(upper.tri(A)), max = max, min = min)
+  A[upper.tri(A)] <- stats::runif(sum(upper.tri(A)), max = max, min = min)
   A[lower.tri(A)] <- t(A)[lower.tri(A)]
-  diag(A) <- runif(p, min = min, max = max)
+  diag(A) <- stats::runif(p, min = min, max = max)
   return(A)
 }

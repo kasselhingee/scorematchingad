@@ -1,9 +1,4 @@
-#' @import Rcpp
-#' @importFrom Rcpp evalCpp
-#' @importFrom Rdpack reprompt
-#' @importFrom methods formalArgs
-#' @importFrom stats cov runif var weighted.mean
-#' @importFrom utils tail
+#' @importFrom stats weighted.mean
 #' @useDynLib scorematchingad
 #' @details
 #' This package's main features are

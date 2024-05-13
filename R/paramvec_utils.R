@@ -23,7 +23,7 @@ t_u2s <- function(usertheta, filler = function(n){seq(length.out = n)}){
 #' @noRd
 #' @describeIn t_u2i Convert `usertheta` to a `starttheta` by filling in the `NA` elements with numbers between 0 and 1 from `runif()`.
 t_u2s_runif <- function(usertheta){
-  t_u2s(usertheta, filler = runif)
+  t_u2s(usertheta, filler = stats::runif)
 }
 
 #' @noRd

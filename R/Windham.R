@@ -84,7 +84,7 @@ Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "S
   # Correction of parameter preparation
   # use the WindhamCorrection(), the alternative is Scealy's original additive method in the draft paper
   if (alternative_populationinverse){
-   if (length(cW) > 1){ if (var(cW[cW > 1E-10]) > (1E-10)^2){ #require constant cW (or zero) because I'm not sure what Scealy's correction method should be in the presence of a different tuning constants per value
+   if (length(cW) > 1){ if (stats::var(cW[cW > 1E-10]) > (1E-10)^2){ #require constant cW (or zero) because I'm not sure what Scealy's correction method should be in the presence of a different tuning constants per value
      stop("Non-zero cW values vary, which is not supported by 'additive' correction of the parameter estimate.")
    }}
    inWW <- (cW > 1E-10)
@@ -138,7 +138,7 @@ Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "S
   tmp <- fpiterator(starttheta[!isfixed])
 
   # do the main computation, first check control args
-  noncontrolargs <- setdiff(names(fpcontrol), formalArgs(FixedPoint::FixedPoint)) 
+  noncontrolargs <- setdiff(names(fpcontrol), methods::formalArgs(FixedPoint::FixedPoint)) 
   if (length(noncontrolargs) > 0){
     stop(paste("The follow arguments are not accepted by FixedPoint():", paste0(noncontrolargs, collapse = ", ")))
   }

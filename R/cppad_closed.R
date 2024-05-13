@@ -95,7 +95,7 @@ cppad_closed_estvar <- function(Y, theta, offsets, Hesss){
       t(offsets[i, , drop = FALSE]))
   })
   grads <- do.call(rbind, grads)
-  variability <- cov(grads)
+  variability <- stats::cov(grads)
 
   Ginfinv <- sensinv %*% variability %*% sensinv / nrow(offsets) #inverse of the Godambe information matrix, also called the sandwich information matrix
   return(Ginfinv) 
