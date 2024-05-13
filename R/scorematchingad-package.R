@@ -1,4 +1,5 @@
 #' @importFrom stats weighted.mean
+#' @importFrom Rdpack reprompt
 #' @useDynLib scorematchingad
 #' @details
 #' This package's main features are
