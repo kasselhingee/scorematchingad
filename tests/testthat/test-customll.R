@@ -1,3 +1,5 @@
+if (!requireNamespace("RcppXPtrUtils", quietly = TRUE)){skip("Need RcppXPtrUtils package")}
+if (!requireNamespace("RcppEigen", quietly = TRUE)){skip("Need RcppEigen package")}
 test_that("customll_test() returns TRUE or FALSE", {
   skip_on_cran()
   suppressWarnings({out <- customll_test()})
