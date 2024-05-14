@@ -41,7 +41,7 @@ returns true iff x is identically a parameter.
 */
 template <class Base>
 bool IdenticalCon(const AD<Base> &x)
-{   return Constant(x) & IdenticalCon(x.value_); }
+{   return Constant(x) && IdenticalCon(x.value_); }
 // Zero ==============================================================
 /*!
 Determine if an AD<Base> is equal to zero,
@@ -56,7 +56,7 @@ returns true if and only if
 */
 template <class Base>
 bool IdenticalZero(const AD<Base> &x)
-{   return Constant(x) & IdenticalZero(x.value_); }
+{   return Constant(x) && IdenticalZero(x.value_); }
 // One ==============================================================
 /*!
 Determine if an AD<Base> is equal to one,
