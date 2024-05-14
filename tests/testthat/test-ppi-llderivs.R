@@ -38,7 +38,7 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
   expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, theta), ignore_attr = TRUE, tolerance = 1E-3)
 
   #Hessian
-  if (!requireNamespace("numDeriv")){skip("Need numDeriv package")}
+  if (!requireNamespace("numDeriv", quietly = TRUE)){skip("Need numDeriv package")}
   numderiv <- numDeriv::hessian(ppill_r, u, beta0 = beta0, AL = AL, bL = bL)
   hess <- pHessian(lltape, u, theta)
   dim(hess) <- c(p, p)
@@ -58,7 +58,7 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
                ignore_attr = TRUE, tolerance = 1E-7)
 
   #Hessian
-  if (!requireNamespace("numDeriv")){skip("Need numDeriv package")}
+  if (!requireNamespace("numDeriv", quietly = TRUE)){skip("Need numDeriv package")}
   numderiv <- numDeriv::hessian(ppill_r_swap, theta, u = u)
   hess <- pHessian(lltape_theta, theta, u)
   dim(hess) <- c(length(theta), length(theta))
@@ -78,7 +78,7 @@ test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estima
   expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, theta), ignore_attr = TRUE, tolerance = 1E-3)
 
   #Hessian
-  if (!requireNamespace("numDeriv")){skip("Need numDeriv package")}
+  if (!requireNamespace("numDeriv", quietly = TRUE)){skip("Need numDeriv package")}
   numderiv <- numDeriv::hessian(ppill_r_S, u, beta0 = beta0, AL = AL, bL = bL)
   hess <- pHessian(lltape, u, theta)
   dim(hess) <- c(p, p)
@@ -98,7 +98,7 @@ test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estima
                ignore_attr = TRUE, tolerance = 1E-7)
 
   #Hessian
-  if (!requireNamespace("numDeriv")){skip("Need numDeriv package")}
+  if (!requireNamespace("numDeriv", quietly = TRUE)){skip("Need numDeriv package")}
   numderiv <- numDeriv::hessian(ppill_r_S_swap, theta, z = u)
   hess <- pHessian(lltape_theta, theta, u)
   dim(hess) <- c(length(theta), length(theta))

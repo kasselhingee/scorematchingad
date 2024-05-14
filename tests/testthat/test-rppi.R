@@ -10,7 +10,7 @@ test_that("current PPI simulation method gives samples with similar empirical de
   skip_on_cran() #accuracy of the method is tested by all the estimators
   # simulate using old method
   time_historic <- system.time(samp2 <- rppi_singly(n,m$p,m$beta,m$AL,m$bL,4))
-  if (!requireNamespace("ks")){skip("Need ks package")}
+  if (!requireNamespace("ks", quietly = TRUE)){skip("Need ks package")}
   H <- ks::Hpi(samp2$samp3[, -m$p])
   kde_historic <- ks::kde(samp2$samp3[, -m$p], H)
   #simulate sample from PPI model
