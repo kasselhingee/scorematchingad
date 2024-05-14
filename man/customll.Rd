@@ -58,7 +58,9 @@ For the purposes of score matching the operations should all be smooth to create
 }
 
 \examples{
-myll <- customll("a1type dirichlet(const veca1 &u, const veca1 &beta) {
+\dontrun{customll_test()}
+
+\dontrun{myll <- customll("a1type dirichlet(const veca1 &u, const veca1 &beta) {
   size_t d  = u.size();
   a1type y(0.);  // initialize summation at 0
   for(size_t i = 0; i < d; i++)
@@ -71,6 +73,6 @@ evalll(myll, rep(1/3, 3), rep(-0.5, 3))
 tapes <- buildsmdtape("sim", "identity", "sim", 
  myll, rep(1/3, 3), rep(NA, 3), 
  bdryw="minsq", acut = 0.01)
-evaltape(tapes$lltape, rep(1/3, 3), rep(-0.5, 3))
+evaltape(tapes$lltape, rep(1/3, 3), rep(-0.5, 3))}
 
 }
