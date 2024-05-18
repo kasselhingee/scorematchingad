@@ -11,6 +11,7 @@
 #' Supply `C++` code to specify a custom log-likelihood, much like `TMB::compile()` is passed `C++` code that formulate models.
 #' For score matching the normalising constant of the log-likelihood can be omitted.
 #' Taping of the function currently only works with the `gcc` compiler, typically on Linux; taping works if `customll_test()` returns `TRUE`.
+#' Packages `RcppEigen` and `RcppXPtrUtils` must be installed.
 #' @details
 #' The function uses [`RcppXPtrUtils::cppXPtr()`] and [`Rcpp::cppFunction()`]. 
 #' It is good practice to check the returned object using [`evalll()`].

@@ -38,6 +38,7 @@ customll_test()
 Supply \verb{C++} code to specify a custom log-likelihood, much like \code{TMB::compile()} is passed \verb{C++} code that formulate models.
 For score matching the normalising constant of the log-likelihood can be omitted.
 Taping of the function currently only works with the \code{gcc} compiler, typically on Linux; taping works if \code{customll_test()} returns \code{TRUE}.
+Packages \code{RcppEigen} and \code{RcppXPtrUtils} must be installed.
 }
 \details{
 The function uses \code{\link[RcppXPtrUtils:cppXPtr]{RcppXPtrUtils::cppXPtr()}} and \code{\link[Rcpp:cppFunction]{Rcpp::cppFunction()}}.

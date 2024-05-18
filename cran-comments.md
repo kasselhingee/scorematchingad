@@ -1,6 +1,16 @@
 Dear CRAN Team,
 
-Please find attached my an R package for Hyvarinen score matching estimators by automatic differentiation. There are a few quirks that you might spot when looking through the package:
+Please find attached a revised R package for Hyvarinen score matching estimators by automatic differentiation. I have made the following changes in response to Konstanze Lauseker's review:
+
++ "In the description of the DESCRIPTION file ... please write year in parentheses." Thank you for picking this up. We have now followed the Author-Year style more closely with years, including years for the two references you asked about. For references without doi or similar we have switched to the [https:...]<https:...>.
+
++ "Please always write package names, software names and API (application programming interface) names in single quotes in title and description." I have written 'CppAD'.
+
++ "It seems like you have too many spaces in your description field. Probably because linebreaks count as spaces too. Please remove unecassary ones." There are no linebreaks, no extra spaces in the description. Could the too many spaces be due to formatting of URLs in the pdf version of the manual?
+
++ "\dontrun{} should only be used if the example really cannot be executed (e.g. because of missing additional software, missing API keys, ...) by the user. That's why wrapping examples in \dontrun{} adds the comment ("# Not run:") as a warning for the user. Please replace \dontrun with \donttest where possible. Please unwrap the examples if they are executable in < 5 sec, or replace dontrun{} with \donttest{}". The examples for customll() require additional software in the Enhances field of the DESCRIPTION - they can only be run if RcppEigen and RcppXPtrUtils is installed, and I've now added a comment as such to the help. The other use of dontrun{} has been changed to donttest{}.
+
+The following are the comments I included in my first submission:
 
 0. The RcppEigen package is listed in the Enhances section of DESCRIPTION because it is needed for calling Rcpp::cppFunction() (via RcppXPtrUtils::cppXPtr) with an RcppEigen dependency.
 
