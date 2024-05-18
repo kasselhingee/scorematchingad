@@ -63,7 +63,7 @@ smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
               verbose = FALSE
               )$smdtape
 Y <- rppi_egmodel(100)
-\dontrun{cppad_search(smdtape, 0.9 * Y$theta, Y$sample)
+\donttest{cppad_search(smdtape, 0.9 * Y$theta, Y$sample)
 sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)}
 }
 \seealso{
