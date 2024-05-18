@@ -40,7 +40,7 @@
 #'               verbose = FALSE
 #'               )$smdtape
 #' Y <- rppi_egmodel(100)
-#' \dontrun{cppad_search(smdtape, 0.9 * Y$theta, Y$sample)
+#' \donttest{cppad_search(smdtape, 0.9 * Y$theta, Y$sample)
 #' sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)}
 #' @export
 cppad_search <- function(smdtape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10, control = list(tol = 1E-15, checkgrad = TRUE)){

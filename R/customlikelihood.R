@@ -27,9 +27,9 @@
 #' See the [Eigen documentation](https://eigen.tuxfamily.org/dox/group__QuickRefPage.html) for quick reference to available operations from Eigen. Limited operations are available directly from `CppAD` without `Eigen`: [unary operations](https://cppad.readthedocs.io/latest/unary_standard_math.html) and [binary operations](https://cppad.readthedocs.io/latest/binary_math.html). 
 #' For the purposes of score matching the operations should all be smooth to create a smooth log-likelihood and the normalising constant may be omitted.
 #' @examples
-#' \dontrun{customll_test()}
+#' \donttest{customll_test()}
 #'
-#' \dontrun{myll <- customll("a1type dirichlet(const veca1 &u, const veca1 &beta) {
+#' \donttest{myll <- customll("a1type dirichlet(const veca1 &u, const veca1 &beta) {
 #'   size_t d  = u.size();
 #'   a1type y(0.);  // initialize summation at 0
 #'   for(size_t i = 0; i < d; i++)
