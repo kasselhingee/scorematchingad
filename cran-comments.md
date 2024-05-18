@@ -6,9 +6,11 @@ Please find attached a revised R package for Hyvarinen score matching estimators
 
 + "Please always write package names, software names and API (application programming interface) names in single quotes in title and description." I have written 'CppAD'.
 
-+ "It seems like you have too many spaces in your description field. Probably because linebreaks count as spaces too. Please remove unecassary ones." There are no linebreaks, no extra spaces in the description. Could the too many spaces be due to formatting of URLs in the pdf version of the manual?
++ "It seems like you have too many spaces in your description field. Probably because linebreaks count as spaces too. Please remove unecassary ones." There were a few extra spaces that I have now removed and the field contains no linebreaks. Could it be that you are referring to a rendering of the description field with fixed-width (these tend to include blank space due to the formatting of URLs)?
 
 + "\dontrun{} should only be used if the example really cannot be executed (e.g. because of missing additional software, missing API keys, ...) by the user. That's why wrapping examples in \dontrun{} adds the comment ("# Not run:") as a warning for the user. Please replace \dontrun with \donttest where possible. Please unwrap the examples if they are executable in < 5 sec, or replace dontrun{} with \donttest{}". The examples for customll() require additional software in the Enhances field of the DESCRIPTION - they can only be run if RcppEigen and RcppXPtrUtils is installed, and I've now added a comment as such to the help. The other use of dontrun{} has been changed to donttest{}.
+
+---
 
 The following are the comments I included in my first submission:
 
