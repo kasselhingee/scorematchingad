@@ -12,9 +12,11 @@
 #'  * `SE` "Not calculated." Returned for consistency with other estimators.
 #'  * `info` Information returned in the `optim` slot of [`Windham()`]. Includes the final weights in `finalweights`.
 #' @examples
+#' set.seed(7)
 #' model <- rppi_egmodel(100)
 #' estsqrt <- ppi_robust(model$sample,
 #'   cW = ppi_cW_auto(0.01, model$sample),
+#'   paramvec_start = model$theta,
 #'   trans = "sqrt", bdryw = "minsq", acut = 0.1)
 #' @export
 ppi_robust <- function(Y, cW, ...){
