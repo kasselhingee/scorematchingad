@@ -1,3 +1,8 @@
+# Version 0.0.61
+
++ Bug fix to passing `paramvec_start` to `ppi_robust()`
++ Faster examples
+
 # Version 0.0.60
 Again, tiny polish of description.
 
