@@ -43,10 +43,13 @@ The default convergence metric and threshold are different to the default for \c
 \code{\link[=Windham]{Windham()}} is called with \code{alternative_populationinverse = TRUE}.
 }
 \examples{
+set.seed(7)
 model <- rppi_egmodel(100)
 estsqrt <- ppi_robust(model$sample,
   cW = ppi_cW_auto(0.01, model$sample),
+  paramvec_start = model$theta,
   trans = "sqrt", bdryw = "minsq", acut = 0.1)
+set.seed(14)
 model <- rppi_egmodel(100)
 ppi_robust_alrgengamma(model$sample,
    cW = ppi_cW_auto(0.01, model$sample),
