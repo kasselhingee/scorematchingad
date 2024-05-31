@@ -14,6 +14,7 @@
 #' @references
 #' \insertAllCited{}
 #' @examples
+#' set.seed(14)
 #' model <- rppi_egmodel(100)
 #' ppi_robust_alrgengamma(model$sample,
 #'    cW = ppi_cW_auto(0.01, model$sample),
