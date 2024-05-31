@@ -40,7 +40,7 @@ Windham_assess_estimator <- function(estimator, Y, ..., w = NULL){
 
   #check that fixing works, but only when paramvec is passed
   if (paramvec){
-    if (!is.null(estargs$paramvec)){ 
+    if (!is.null(estargs[["paramvec"]])){ #this [[ doesn't seem to do partial matching compared to $paramvec
       if (any(abs(newparamvec[t_u2i(estargs$paramvec)] - estargs$paramvec[t_u2i(estargs$paramvec)]) > sqrt(.Machine$double.eps))){
         stop("Fixed elements of the parameter vector are altered by estimator.")
     }}
