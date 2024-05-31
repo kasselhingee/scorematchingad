@@ -1,6 +1,7 @@
 # Version 0.0.61
 
 + Bug fix to passing `paramvec_start` to `ppi_robust()`
++ More generous limit for equality for a M1Mac equality error
 + Faster examples
 
 # Version 0.0.60

@@ -1,4 +1,4 @@
-Dear CRAN Team,
 
-The change in this resubmission is:  URLs use only angle brackets in the description field as per Uwe Ligges' request; I removed duplicate urls that were in square brackets.
+Primarily to fix test failure on M1mac due to floating point inaccuracy found in CRAN checks.
+Also a bug fix and faster examples.
 
