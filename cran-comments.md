@@ -1,4 +1,3 @@
 
-Primarily to fix test failure on M1mac due to floating point inaccuracy found in CRAN checks.
-Also a bug fix and faster examples.
+Thanks to Uwe, test failure on M1mac actually due to eigen decomposition sign identifiability. A change so that only the non-decomposed matrix is tested for equality should make it pass.
 

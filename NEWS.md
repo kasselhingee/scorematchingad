@@ -1,3 +1,7 @@
+# Version 0.0.62
+
++ Bug for M1Mac test not floating point but actually because sign eigenvectors of Bingham A matrix are undetermined.
+
 # Version 0.0.61
 
 + Bug fix to passing `paramvec_start` to `ppi_robust()`
