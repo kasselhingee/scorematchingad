@@ -33,7 +33,7 @@ A list:
 }
 \description{
 \code{ppi_robust()} uses \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}} to estimate a PPI distribution robustly.
-There are many arguments to the \code{\link[=ppi]{ppi()}} function and we highly recommend trialling your arguments on \code{\link[=ppi]{ppi()}} first before running \code{ppi_robust()}.
+There are many arguments to the \code{\link[=ppi]{ppi()}} function and we highly recommend testing your arguments on \code{\link[=ppi]{ppi()}} first before running \code{ppi_robust()}.
 
 \code{ppi_robust_alrgengamma()} performs the Windham robustification algorithm exactly as described in \insertCite{scealy2024ro;textual}{scorematchingad} for score matching via log-ratio transform of the PPI model with \eqn{b_L = 0}. This function calls the more general \code{\link[=Windham]{Windham()}} and \code{\link[=ppi]{ppi()}}.
 }
@@ -43,10 +43,13 @@ The default convergence metric and threshold are different to the default for \c
 \code{\link[=Windham]{Windham()}} is called with \code{alternative_populationinverse = TRUE}.
 }
 \examples{
+set.seed(7)
 model <- rppi_egmodel(100)
 estsqrt <- ppi_robust(model$sample,
   cW = ppi_cW_auto(0.01, model$sample),
+  paramvec_start = model$theta,
   trans = "sqrt", bdryw = "minsq", acut = 0.1)
+set.seed(14)
 model <- rppi_egmodel(100)
 ppi_robust_alrgengamma(model$sample,
    cW = ppi_cW_auto(0.01, model$sample),
@@ -58,8 +61,8 @@ ppi_robust_alrgengamma(model$sample,
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_param_tools}},
 \code{\link{ppi}()},
+\code{\link{ppi_param_tools}},
 \code{\link{rppi}()}
 
 Other Windham robustness functions: 

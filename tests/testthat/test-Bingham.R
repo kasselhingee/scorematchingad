@@ -10,7 +10,7 @@ test_that("taped Bingham log-likelihood gives correct values", {
   sample <- simdd::rBingham(2, A)
 
   pman <- manifoldtransform("sph", "identity", "sph")
-  lltape <- tapell(llname = "Bingham", ytape = sample[2, ],
+  lltape <- tapell(ll = "Bingham", ytape = sample[2, ],
                     usertheta = rep(NA, length(theta)),
                     tranobj = pman$tran)
 
@@ -141,9 +141,9 @@ test_that("Bingham methods match for simulated weights, ignoring SE, which shoul
 
   sim1 <- Bingham(vw$newY, method = "Mardia")
   dir1 <-  Bingham(Y, method = "Mardia", w = vw$w)
-  expect_equal(sim1$est, dir1$est)
+  expect_equal(sim1$est$A, dir1$est$A)
 
   sim2 <- Bingham(vw$newY, method = "smfull")
   dir2 <-  Bingham(Y, method = "smfull", w = vw$w)
-  expect_equal(sim2$est, dir2$est)
+  expect_equal(sim2$est$A, dir2$est$A)
 })

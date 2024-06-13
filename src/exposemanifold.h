@@ -1,7 +1,7 @@
 #ifndef exposemanifold 
 #define exposemanifold
 
-#include "scorematchingad_types.h"
+#include "scorematchingad.h"
 #include "manifoldtransforms/manifolds.hpp"
 #include "manifoldtransforms/transforms.hpp"
 #include <Rcpp.h>

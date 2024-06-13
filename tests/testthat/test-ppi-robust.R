@@ -1,3 +1,14 @@
+test_that("ppi_robust() can be passed starting guesses", {
+  set.seed(68797)
+  model <- rppi_egmodel(100)
+  estsqrt <- ppi_robust(model$sample,
+    cW = ppi_cW_auto(0.01, model$sample),
+    paramvec_start = model$theta,
+    fpcontrol = list(MaxIter = 0, Method = "Simple"),
+    trans = "sqrt", bdryw = "minsq", acut = 0.1)
+  expect_equal(estsqrt$info$Inputs, model$theta, ignore_attr = TRUE)
+})
+
 test_that("ppi including betaL with cW gives correct params on simulated data, with two outliers. p=3", {
   set.seed(1273)
   m <- rppi_egmodel(1000, maxden = 4)

@@ -34,8 +34,6 @@ and the \code{smdtape}'s dynamic parameter is a (multivariate) measurement.}
 \description{
 Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching discrepancy is within tolerance of zero.
 Also estimates standard errors and covariance.
-In practice conjugate gradient descent seems to fail to reach the requested tolerance or finish too early.
-However, it still may be useful when the score matching discrepancy function is not of quadratic form (for score matching discrepancy functions that are quadratic it will be much better to use \code{\link[=cppad_closed]{cppad_closed()}}).
 }
 \details{
 The score matching discrepancy function and gradient of the score matching function are passed to \code{\link[optimx:Rcgmin]{optimx::Rcgmin()}}.
@@ -45,7 +43,7 @@ Standard errors use the Godambe information matrix (aka sandwich method) and are
 The estimate of the sensitivity matrix \eqn{G} is
 the negative of the average over the Hessian of \code{smdtape} evaluated at each observation in \code{Y}.
 The estimate of the variability matrix \eqn{J} is then
-the sample covariance (denominator of \eqn{n-1}) of the gradiant of \code{smdtape} evaluated at each of the observations in \code{Y} for the estimated \eqn{\theta}.
+the sample covariance (denominator of \eqn{n-1}) of the gradient of \code{smdtape} evaluated at each of the observations in \code{Y} for the estimated \eqn{\theta}.
 The variance of the estimator is then estimated as
 \eqn{G^{-1}JG^{-1}/n,}
 where \code{n} is the number of observations.
@@ -65,8 +63,8 @@ smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
               verbose = FALSE
               )$smdtape
 Y <- rppi_egmodel(100)
-cppad_search(smdtape, 0.9 * Y$theta, Y$sample)
-sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)
+\donttest{cppad_search(smdtape, 0.9 * Y$theta, Y$sample)
+sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)}
 }
 \seealso{
 Other generic score matching tools: 

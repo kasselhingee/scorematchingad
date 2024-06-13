@@ -29,7 +29,7 @@ test_that("Fitting ppi all parameters via clr transform can get close to true va
 
   expect_absdiff_lte_v(out$est$paramvec, model$theta, out$SE$paramvec * 3)
   # and that the SE are small
-  scorecompdir:::expect_lte_v(abs(out$SE$paramvec), c(rep(20, 5), 0.05, 0.05, 20))
+  expect_lte_v(abs(out$SE$paramvec), c(rep(20, 5), 0.05, 0.05, 20))
 })
 
 

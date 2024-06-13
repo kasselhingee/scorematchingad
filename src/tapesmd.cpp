@@ -93,7 +93,7 @@ CppAD::ADFun<double> tapesmd(veca1 u, //a vector. The composition measurement fo
     //finish taping
     CppAD::ADFun<double> smdfun;
     smdfun.Dependent(theta, smd);
-    smdfun.optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore.
+    //smdfun.optimize(); //remove some of the extra variables that were used for recording the ADFun f above, but aren't needed anymore. But asserts errors.
     smdfun.check_for_nan(false); //no error if some of the results of the Jacobian are nan.
     return(smdfun);
 }

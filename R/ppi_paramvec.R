@@ -1,7 +1,7 @@
 #' @title PPI Parameter Tools
 #' @order 1
 #' @family PPI model tools
-#' @description The defualt parameterisation of the PPI model is a symmetric covariance-like matrix \eqn{A_L}, a location-like vector \eqn{b_L} and a set of Dirichlet exponents \eqn{\beta}. For `p` components, \eqn{A_L} has `p-1` rows, \eqn{b_L} is a vector with `p-1` elements and \eqn{\beta} is a vector with `p` elements.
+#' @description The default parameterisation of the PPI model is a symmetric covariance-like matrix \eqn{A_L}, a location-like vector \eqn{b_L} and a set of Dirichlet exponents \eqn{\beta}. For `p` components, \eqn{A_L} has `p-1` rows, \eqn{b_L} is a vector with `p-1` elements and \eqn{\beta} is a vector with `p` elements.
 #' For score matching estimation this form of the parameters must be converted into a single parameter vector using `ppi_paramvec()`.
 #' `ppi_paramvec()` also includes easy methods to set parameters to `NA` for estimation with [`ppi()`] (in [`ppi()`] the NA-valued elements are estimated and all other elements are fixed).
 #' The reverse of `ppi_paramvec()` is `ppi_parammats()`.

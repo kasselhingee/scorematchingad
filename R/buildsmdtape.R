@@ -3,9 +3,7 @@
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
 #' @description
 #' For a parametric model family, the function `buildsmdtape()` generates `CppAD` tapes (called `ADFun`s) for the improper log-likelihood (without normalising constant) of the family and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in [`scorematchingtheory`]).
-#' Three steps are performed by `buildsmdtape()`: first an object that specifies the manifold and any transformation to another manifold is created using [`manifoldtransform()`]; then a tape of the log-likelihood (without normalising constant) is created using [`tapell()`]; finally a tape of \eqn{A(z) + B(z) + C(z)} is created using [`tapesmd()`].
-#' @describeIn buildsmdtape Combines 
-#' [`manifoldtransform()`], [`tapell()`], and [`tapesmd()`].
+#' Three steps are performed by `buildsmdtape()`: first an object that specifies the manifold and any transformation to another manifold is created; then a tape of the log-likelihood (without normalising constant) is created; finally a tape of \eqn{A(z) + B(z) + C(z)} is created.
 #' @details
 #' The improper log-likelihood (without normalising constant) must be implemented in `C++` and is selected by name. Similarly the transforms of the manifold must be implemented in `C++` and selected by name.
 #'
@@ -23,10 +21,10 @@
 #' Full help for `CppAD` can be found at <https://cppad.readthedocs.io/>.
 #' 
 #' Differentiation proceeds by *taping* the basic (*atomic*) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
-#' Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and `CppAD` has [special tools for this](https://cppad.readthedocs.io/en/latest/CondExp.html).
+#' Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and `CppAD` has [special tools for this](https://cppad.readthedocs.io/latest/CondExp.html).
 
-#' The result of taping is an [`ADFun`](https://cppad.readthedocs.io/en/latest/ADFun.html) object, often called a *tape*.
-#' This `ADFun` object can be evaluated, differentiated, used for further taping (see [base2ad](https://cppad.readthedocs.io/en/latest/base2ad.html)), solving differential equations and more.
+#' The result of taping is an [`ADFun`](https://cppad.readthedocs.io/latest/ADFun.html) object, often called a *tape*.
+#' This `ADFun` object can be evaluated, differentiated, used for further taping (see [base2ad](https://cppad.readthedocs.io/latest/base2ad.html)), solving differential equations and more.
 #' The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new `ADFun` object where the dynamic parameters become independent variables (see [`tapeSwap()`]).
 #' For the purposes of score matching, there are also *fixed* parameters, which are the elements of the model's parameter vector that are given and not estimated.
 #' 
@@ -36,7 +34,7 @@
 #' @references \insertAllCited{}
 
 #' @return
-#' `buildsmdtape()` returns a list of:
+#' A list of:
 #'   + an [`ADFun`] object containing a tape of an improper likelihood with \eqn{z} on the `end` manifold as the independent variable
 #'   + an [`ADFun`] object containing a tape of the score matching discrepancy function with the non-fixed parameters as the independent variable, and the measurements on the `end` manifold as the dynamic parameter.
 #'   + some information about the tapes
@@ -65,7 +63,7 @@
 #' evaltape(tapes$lltape, u, rppi_egmodel(1)$theta)
 #' evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
 #' @export
-buildsmdtape <- function(start, tran, end, llname,
+buildsmdtape <- function(start, tran = "identity", end = start, ll,
                          ytape, usertheta,
                          bdryw = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
@@ -73,6 +71,9 @@ buildsmdtape <- function(start, tran, end, llname,
 
   if(all(!is.na(usertheta))){stop("All elements of theta are fixed")}
 
+  tranman <- manifoldtransform(start, tran, end)
+
+  # check bdryw and associated acut
   if (!(all(c(tran, end) == c("sqrt", "sph")) | all(c(tran, end) == c("identity", "sim")))){
     if (bdryw != "ones"){warning("Manifold supplied has no boundary. Using bdryw = 'ones' is strongly recommended.")}
   }
@@ -80,8 +81,7 @@ buildsmdtape <- function(start, tran, end, llname,
     warning("The value of 'acut' is ignored for bdryw == 'ones'")
   }
 
-  tranman <- manifoldtransform(start, tran, end)
-  lltape <- tapell(llname = llname,
+  lltape <- tapell(ll = ll,
                     ytape = ytape,
                     usertheta = usertheta, 
                     thetatape_creator = thetatape_creator,
@@ -97,9 +97,8 @@ buildsmdtape <- function(start, tran, end, llname,
     lltape = lltape,
     smdtape = smdtape,
     info = list(
-      name = llname,
       transform = tran,
-      manifold = end,
+      endmanifold = end,
       ulength = length(ytape),
       bdryw = bdryw,
       acut = acut

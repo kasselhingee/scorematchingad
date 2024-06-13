@@ -7,7 +7,6 @@
 # include <cppad/example/cppad_eigen.hpp>  //load eigen
 # include <cppad/cppad.hpp> // the CppAD package
 
-// [[Rcpp::depends(RcppEigen)]] //include RcppEigen here so that Eigen:: below makes sense
 #include <RcppEigen.h>
 
 typedef std::vector<double> svecd;
@@ -47,6 +46,10 @@ struct transform { //exactly like a class, but with default public members https
   };
   transform(){};
 };
+
+
+// the following is for passing around likelihood functions
+typedef a1type (*llPtr)(const veca1&, const veca1&);
 
 typedef manifold<a1type> manifold_a1type;
 RCPP_EXPOSED_CLASS_NODECL(manifold_a1type)

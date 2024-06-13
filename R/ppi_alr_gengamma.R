@@ -149,9 +149,9 @@ ppi_alr_gengamma <- function(Y,betap,w)
 }
 
 usertheta_ppi_alr_gengamma_compatible <- function(usertheta){
-  if (is.na(tail(ppi_parammats(usertheta)$beta, 1))){return(FALSE)}
+  if (is.na(utils::tail(ppi_parammats(usertheta)$beta, 1))){return(FALSE)}
   p <- ppiltheta2p(length(usertheta))
-  d_utheta <- ppi_paramvec(p, bL = 0, betap = tail(ppi_parammats(usertheta)$beta, 1))
+  d_utheta <- ppi_paramvec(p, bL = 0, betap = utils::tail(ppi_parammats(usertheta)$beta, 1))
   if (isTRUE(all((d_utheta == usertheta)[!is.na(d_utheta)])) &&
       all(is.na(usertheta[is.na(d_utheta)])) ){return(TRUE)}
   else (return(FALSE))

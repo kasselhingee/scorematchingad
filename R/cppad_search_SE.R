@@ -14,7 +14,7 @@ sme_estvar <- function(smdfun, estimate, Y, Yapproxcentres = NA * Y, approxorder
   sensinv <- solve(sens)
 
   grads <- evaltape(Jsmdfun_u, xmat = Y, pmat = estimate, xcentres = Yapproxcentres, approxorder = 10)
-  variability <- cov(grads)
+  variability <- stats::cov(grads)
 
   Ginfinv <- sensinv %*% variability %*% sensinv /nrow(Y) #inverse of the Godambe information matrix, also called the sandwich information matrix
   return(Ginfinv) 

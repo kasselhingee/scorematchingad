@@ -24,8 +24,7 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
   stopifnot(all(abs(sqrt(rowSums(sample^2)) - 1) < 1E-5))
 
   pman <- manifoldtransform("sph", "identity", "sph")
-  lltape <- ptapell(sample[1,], seq.int(1, length.out = length(theta)), llname = "FB", pman$tran,
-                    fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
+  lltape <- tapell("FB", sample[1,], rep(NA, length(theta)), pman$tran, function(n){rep(1, n)})$ptr
 
   expect_equal(pForward0(lltape, sample[1, ], theta), log(qdFB(sample[1, ], k, m, A)),
                ignore_attr = TRUE)## very important to check a tape
@@ -107,7 +106,7 @@ test_that("smdbjgrad at true parameters is poor for FB()", {
 
   # evaluate gradient
   tapes <- buildsmdtape("sph", "identity", "sph", 
-                        llname = "FB",
+                        ll = "FB",
                         Y[1, ], 
                         usertheta = NA * theta)
   smvals <- smvalues_wsum(tapes$smdtape, Y, theta)
@@ -129,7 +128,7 @@ test_that("FB() with many fixed elements leads to small smdbjgrad", {
   intheta <- theta
   intheta[8] <- NA
   tapes <- buildsmdtape("sph", "identity", "sph", 
-                        llname = "FB",
+                        ll = "FB",
                         sample[1, ], 
                         usertheta = intheta)
   smvals <- smvalues_wsum(tapes$smdtape, sample, theta[is.na(intheta)])

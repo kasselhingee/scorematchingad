@@ -134,7 +134,7 @@ rppi_block <- function(n,p,beta,AL,bL,maxden){
 #' @inheritDotParams ppi_paramvec
 #' @details The value calculated by `dppi` is
 #' \deqn{z_L^TA_Lz_L + b_L^Tz_L + \beta^T \log(z),}
-#' where \eqn{z} is the multivariate observation (i.e. a row of `Y`), and \eqn{z_L} ommits the final element of \eqn{z}.
+#' where \eqn{z} is the multivariate observation (i.e. a row of `Y`), and \eqn{z_L} omits the final element of \eqn{z}.
 #' @examples
 #' m <- rppi_egmodel(10)
 #' dppi(m$sample, paramvec = m$theta)

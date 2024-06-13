@@ -37,7 +37,7 @@ ppi_smvalues(
 )
 }
 \arguments{
-\item{Y}{A matrix of measurements. Each row is a compositional measurement (i.e. each row sums to 1 and has non-negative elmenents).}
+\item{Y}{A matrix of measurements. Each row is a compositional measurement (i.e. each row sums to 1 and has non-negative elements).}
 
 \item{paramvec}{Optionally a vector of the PPI models parameters. \code{NA}-valued elements of this vector are estimated and non-\code{NA} values are fixed. Generate \code{paramvec} easily using \code{\link[=ppi_paramvec]{ppi_paramvec()}}.  If \code{NULL} then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.}
 
@@ -55,7 +55,7 @@ ppi_smvalues(
 
 \item{bdrythreshold}{\code{iterative} or \code{closed} methods only. For measurements within \code{bdrythreshold} of the simplex boundary a Taylor approximation is applied by shifting the measurement \code{shiftsize} towards the center of the simplex.}
 
-\item{shiftsize}{\code{iterative} or \code{closed} methods only. For measurements within \code{bdrythreshold} of the simlex boundary a Taylor approximation is applied by shifting the measurement \code{shiftsize} towards the center of the simplex.}
+\item{shiftsize}{\code{iterative} or \code{closed} methods only. For measurements within \code{bdrythreshold} of the simplex boundary a Taylor approximation is applied by shifting the measurement \code{shiftsize} towards the center of the simplex.}
 
 \item{approxorder}{\code{iterative} or \code{closed} methods only. Order of the Taylor approximation for measurements on the boundary of the simplex.}
 
@@ -74,7 +74,7 @@ All elements of \code{evalparam} must be non-NA, and any parameters fixed by \co
 A list of \code{est}, \code{SE} and \code{info}.
 \itemize{
 \item \code{est} contains the estimates in vector form, \code{paramvec}, and as \eqn{A_L}, \eqn{b_L} and \eqn{\beta}.
-\item \code{SE} contains estimates of the standard errors if computed.
+\item \code{SE} contains estimates of the standard errors if computed. See \code{\link[=cppad_closed]{cppad_closed()}}.
 \item \code{info} contains a variety of information about the model fitting procedure and results.
 }
 
@@ -96,11 +96,11 @@ For a given parameter vector \code{evalparam}, \code{ppi_smvalues()} computes th
 \details{
 Estimation may be performed via transformation of the measure in Hyvärinen divergence from Euclidean space to the simplex (inverse of the additive log ratio transform), from a hyperplane to the simplex (inverse of the centred log ratio transform), from the positive quadrant of the sphere to the simplex (inverse of the square root transform), or without any transformation. In the latter two situations there is a boundary and \emph{weighted Hyvärinen divergence} \insertCite{@Equation 7, @scealy2023sc}{scorematchingad} is used.
 Properties of the estimator using the square root transform were studied by \insertCite{scealy2023sc;textual}{scorematchingad}.
-Properties of the estimator using the additive log ratio transfrom were studied by \insertCite{scealy2024ro;textual}{scorematchingad}.
+Properties of the estimator using the additive log ratio transform were studied by \insertCite{scealy2024ro;textual}{scorematchingad}.
 
 There are three boundary weight functions available:
 \itemize{
-\item The function "ones" applies no weights and should be used whenever the manifold does not have a bounday.
+\item The function "ones" applies no weights and should be used whenever the manifold does not have a boundary.
 \item The function "minsq" is the minima-based boundary weight function for the PPI model \insertCite{@Equation 12, @scealy2023sc}{scorematchingad}
 \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
 where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere

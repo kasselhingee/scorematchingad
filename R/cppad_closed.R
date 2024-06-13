@@ -18,17 +18,17 @@
 #' Both the Hessian and the gradient offset are constant with respect to the model parameters for quadratic-form score matching discrepancy functions.
 #'
 #' Standard errors use the Godambe information matrix (aka sandwich method) and are only computed when the weights are constant.
-#' The estimate of the sensitivity matrix \eqn{G} is
-#' the negative of the average over the Hessian of `smdtape` evaluated at each observation in `Y`.
+#' The estimate of the negative of the sensitivity matrix \eqn{-G} is
+#' the average of the Hessian of `smdtape` evaluated at each observation in `Y`.
 # \deqn{\hat{G(\theta)} = \hat{E} -H(smd(\theta;Y))),}
 # where \eqn{smd} is the score matching discrepancy function represented by `smdtape`,
 # \eqn{H} is the Hessian with respect to \eqn{\theta}, which is constant for quadratic-form functions,
 # 
-#' The estimate of the variability matrix \eqn{J} is then
-#' the sample covariance (denominator of \eqn{n-1}) of the gradiant of `smdtape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
+#' The estimate of the variability matrix \eqn{J} is 
+#' the sample covariance (denominator of \eqn{n-1}) of the gradient of `smdtape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
 # \deqn{\hat{J}(\theta) = var(grad(w smd(\theta;Y))),}
 
-#' The variance of the estimator is then estimated as
+#' The estimated variance of the estimator is then as
 #' \eqn{G^{-1}JG^{-1}/n,}
 # \deqn{\hat{G}(\theta)^{-1}\hat{J}(\theta)\hat{G}(\theta)^{-1}/n,}
 #' where `n` is the number of observations.
@@ -95,7 +95,7 @@ cppad_closed_estvar <- function(Y, theta, offsets, Hesss){
       t(offsets[i, , drop = FALSE]))
   })
   grads <- do.call(rbind, grads)
-  variability <- cov(grads)
+  variability <- stats::cov(grads)
 
   Ginfinv <- sensinv %*% variability %*% sensinv / nrow(offsets) #inverse of the Godambe information matrix, also called the sandwich information matrix
   return(Ginfinv) 

@@ -37,25 +37,25 @@ pForward0 <- function(pfun, x, dynparam) {
 }
 
 #' @noRd
-#' @describeIn evaltape_internal Evaluates a the Jacobian of a tape using the `CppAD` `Jacobian` method <https://cppad.readthedocs.io/en/latest/Jacobian.html>. 
+#' @describeIn evaltape_internal Evaluates a the Jacobian of a tape using the `CppAD` `Jacobian` method <https://cppad.readthedocs.io/latest/Jacobian.html>. 
 pJacobian <- function(pfun, x, dynparam) {
     .Call('_scorematchingad_pJacobian', PACKAGE = 'scorematchingad', pfun, x, dynparam)
 }
 
 #' @noRd
-#' @describeIn evaltape_internal Evaluates a the Hessian of a tape using the `CppAD` `Hessian` method <https://cppad.readthedocs.io/en/latest/Hessian.html>, assuming that range space of the taped function has dimension of `1`. 
+#' @describeIn evaltape_internal Evaluates a the Hessian of a tape using the `CppAD` `Hessian` method <https://cppad.readthedocs.io/latest/Hessian.html>, assuming that range space of the taped function has dimension of `1`. 
 pHessian <- function(pfun, x, dynparam) {
     .Call('_scorematchingad_pHessian', PACKAGE = 'scorematchingad', pfun, x, dynparam)
 }
 
 #' @noRd
 #' @describeIn evaltape_internal Test whether the returned values are constant with respect to the independent values using 
-#' `CppAD`'s `Parameter` method <https://cppad.readthedocs.io/en/latest/fun_property.html>.
+#' `CppAD`'s `Parameter` method <https://cppad.readthedocs.io/latest/fun_property.html>.
 #' Returns A vector of logical values. `TRUE` indicates that element of the tape result is constant.
 #' @details 
 #' # pParameter
-#' The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/en/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
-#' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/en/latest/glossary.html#dynamic> ).
+#' The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
+#' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/latest/glossary.html#dynamic> ).
 pParameter <- function(pfun) {
     .Call('_scorematchingad_pParameter', PACKAGE = 'scorematchingad', pfun)
 }
@@ -70,7 +70,7 @@ pParameter <- function(pfun) {
 #' When the function returns a real value (as is the case for densities and the score matching objective) the Jacobian is equivalent to the gradient.
 #' The `x` vector is used as the value to conduct the taping.
 #' @details
-#' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Jacobian in long format (see <https://cppad.readthedocs.io/en/latest/Jacobian.html>).
+#' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Jacobian in long format (see <https://cppad.readthedocs.io/latest/Jacobian.html>).
 #' Suppose the function represented by `pfun` maps from \eqn{n}-dimensional space to \eqn{m}-dimensional space, then
 #' the first \eqn{n} elements of vector is the gradient of the first component of function output.
 #' The next \eqn{n} elements of the vector is the gradient of the second component of the function output.
@@ -88,7 +88,7 @@ pTapeJacobian <- function(pfun, x, dynparam) {
 #' The taped function represented by `pfun` must be scalar-valued (i.e. a vector of length 1).
 #' The `x` vector and `dynparam` are used as the values to conduct the taping.
 #' @details
-#' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Hessian in long format (see <https://cppad.readthedocs.io/en/latest/Hessian.html>).
+#' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Hessian in long format (see <https://cppad.readthedocs.io/latest/Hessian.html>).
 #' Suppose the function represented by `pfun` maps from \eqn{n}-dimensional space to \eqn{1}-dimensional space, then
 #' the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
 #' The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
@@ -145,14 +145,37 @@ swapDynamic <- function(pfun, newvalue, newdynparam) {
     .Call('_scorematchingad_swapDynamic', PACKAGE = 'scorematchingad', pfun, newvalue, newdynparam)
 }
 
+#' @name evalll
+#' @title Evaluate a custom log-likelihood function
+#' @description Evaluates a custom log-likelihood function from [`customll()`] without taping. This is useful to check that the custom log-likelihood is behaving.
+#' To check a tape of the custom log-likelihood use [`buildsmdtape()`] then [`evaltape()`].
+#' @param ll A compiled log-likelihood function created by [`customll()`].
+NULL
+
 #' @noRd
-#' @title Tape of a log-likelihood calculation
+#' @title Tape of a log-likelihood calculation 2
 #' @param p dimension of measurements
 #' @param bd dimension of the parameter vector
 #' @param llname name of the likelihood function
 #' @return An RCpp::XPtr object pointing to the ADFun
-ptapell <- function(z_ad, theta_ad, llname, tran, fixedtheta, verbose) {
-    .Call('_scorematchingad_ptapell', PACKAGE = 'scorematchingad', z_ad, theta_ad, llname, tran, fixedtheta, verbose)
+ptapell2 <- function(z_ad, theta_ad, llfXPtr, tran, fixedtheta, verbose) {
+    .Call('_scorematchingad_ptapell2', PACKAGE = 'scorematchingad', z_ad, theta_ad, llfXPtr, tran, fixedtheta, verbose)
+}
+
+#' @noRd
+#' @title Get an XPtr to a named log-likelihood function in source code of package
+#' @param llname name of the likelihood function
+#' @return An RCpp::XPtr object pointing to a `llPtr` object of the log-likelihood function. Since `llPtr` is itself a pointer object, we have an XPtr pointing to a pointer that points to a function.
+getllptr <- function(llname) {
+    .Call('_scorematchingad_getllptr', PACKAGE = 'scorematchingad', llname)
+}
+
+#' @param u A vector of measurements for an individual
+#' @param theta A vector of parameters
+#' @return The value of the log-likelihood at `u` with parameters `theta`.
+#' @export
+evalll <- function(ll, u, theta) {
+    .Call('_scorematchingad_evalll', PACKAGE = 'scorematchingad', ll, u, theta)
 }
 
 #' @noRd

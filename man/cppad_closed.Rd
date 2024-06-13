@@ -37,11 +37,11 @@ where \eqn{H} is the average of the Hessian of the score matching discrepancy fu
 Both the Hessian and the gradient offset are constant with respect to the model parameters for quadratic-form score matching discrepancy functions.
 
 Standard errors use the Godambe information matrix (aka sandwich method) and are only computed when the weights are constant.
-The estimate of the sensitivity matrix \eqn{G} is
-the negative of the average over the Hessian of \code{smdtape} evaluated at each observation in \code{Y}.
-The estimate of the variability matrix \eqn{J} is then
-the sample covariance (denominator of \eqn{n-1}) of the gradiant of \code{smdtape} evaluated at each of the observations in \code{Y} for the estimated \eqn{\theta}.
-The variance of the estimator is then estimated as
+The estimate of the negative of the sensitivity matrix \eqn{-G} is
+the average of the Hessian of \code{smdtape} evaluated at each observation in \code{Y}.
+The estimate of the variability matrix \eqn{J} is
+the sample covariance (denominator of \eqn{n-1}) of the gradient of \code{smdtape} evaluated at each of the observations in \code{Y} for the estimated \eqn{\theta}.
+The estimated variance of the estimator is then as
 \eqn{G^{-1}JG^{-1}/n,}
 where \code{n} is the number of observations.
 

@@ -1,5 +1,5 @@
 test_that("Manifold objects can be created, and member functions run", {
-  mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+  mod <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
   Euc <- new(mod$man_ad, "Euc")
   expect_s4_class(Euc, "Rcpp_man_ad")
   z <- c(0.1, 0.5)
@@ -9,7 +9,7 @@ test_that("Manifold objects can be created, and member functions run", {
 })
 
 test_that("Transform objects can be created, and member functions run", {
-  mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+  mod <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
   obj <- mod$transform_ad
   alr <- new(obj, "alr")
   expect_s4_class(alr, "Rcpp_transform_ad")
@@ -19,7 +19,7 @@ test_that("Transform objects can be created, and member functions run", {
   expect_true(is.finite(alr$logdetJfromM(z)))
 })
 
-mod <- Rcpp::Module("manifolds", PACKAGE="scorecompdir")
+mod <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
 
 test_that("Sphere manifold object matches analytic results", {
   sph <- new(mod$man_ad, "sph")
@@ -50,7 +50,7 @@ test_that("sqrt transform matches other calculations", {
     Jdets <- exp(apply(zmat, MARGIN = 2, sqrt$logdetJfromM))
     return(matrix(Jdets * inunitcube, nrow = 1))
   }
-  if (!requireNamespace("cubature")){skip("Need cubature package")}
+  if (!requireNamespace("cubature", quietly = TRUE)){skip("Need cubature package")}
   volumeviaM <- cubature::hcubature(
     f = integrand,
     lowerLimit = c(0, 0),
@@ -95,7 +95,7 @@ test_that("alr transform matches analytic results",{
     Jdets <- exp(apply(zmat, MARGIN = 2, alr$logdetJfromM))
     return(matrix(Jdets, nrow = 1))
   } 
-  if (!requireNamespace("cubature")){skip("Need cubature package")}
+  if (!requireNamespace("cubature", quietly = TRUE)){skip("Need cubature package")}
   volume <- cubature::hcubature(
     f = integrand,
     lowerLimit = c(-1, -1) * 1E2,
@@ -157,7 +157,7 @@ test_that("clr transform passes analytic tests",{
     Jdets <- exp(apply(zmat, MARGIN = 2, clr_cpp$logdetJfromM))
     return(matrix(Jdets, nrow = 1))
   } 
-  if (!requireNamespace("cubature")){skip("Need cubature package")}
+  if (!requireNamespace("cubature", quietly = TRUE)){skip("Need cubature package")}
   volume <- cubature::hcubature(
     f = integrand,
     lowerLimit = c(-1, -1) * 1E1,

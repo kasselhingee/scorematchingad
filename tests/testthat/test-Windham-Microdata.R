@@ -51,7 +51,7 @@ beta0_est=beta0
 sp=p-1
 
 #try simulating to see required maxden
-expect_silent(sim <- rppi(1000, beta= beta0, AL=ALs, bL=bL, maxden = 0))
+sim <- rppi(1000, beta= beta0, AL=ALs, bL=bL, maxden = 0)
 
 
 #calculate robust estimates

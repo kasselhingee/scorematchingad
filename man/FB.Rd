@@ -25,7 +25,7 @@ where \eqn{A} is a matrix as in the Bingham distribution, and
 \eqn{\kappa} and \eqn{\mu} are the concentration and mean direction, respectively, as in the von Mises-Fisher distribution.
 }
 \section{Warning: Slow Convergence with Sample Size}{
-The score matching estimate converges slowly for the Fisher-Bingham distribution.
+Score matching estimates of all elements of \eqn{A} and \eqn{\kappa\mu} converge slowly with sample size.
 Even with a million simulated measurements,
 the gradient of the score matching discrepancy at the true parameters can have size (L2 Euclidean norm) more than 0.001, which is substantially non-zero.
 }
@@ -36,7 +36,7 @@ A <- rsymmetricmatrix(p, -10, 10)
 A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
 m <- runif(p, -10, 10)
 m <- m / sqrt(sum(m^2))
-if (requireNamespace("simdd"){
+if (requireNamespace("simdd")){
   Y <- simdd::rFisherBingham(1000, 2 * m, A)
   FB(Y)
 }
@@ -44,7 +44,7 @@ if (requireNamespace("simdd"){
 \seealso{
 Other directional model estimators: 
 \code{\link{Bingham}()},
-\code{\link{vMF_robust}()},
-\code{\link{vMF}()}
+\code{\link{vMF}()},
+\code{\link{vMF_robust}()}
 }
 \concept{directional model estimators}

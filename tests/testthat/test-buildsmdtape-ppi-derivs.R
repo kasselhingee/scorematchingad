@@ -3,10 +3,10 @@ test_that("Gradient of smd for ppi wrt u is CLOSE TO CORRECT for interior points
   m <- rppi_egmodel(2)
   acut <- 0.1
 
-  psphere <- manifoldtransform("sim", "sqrt", "sph") #because above ppill_r is for the simplex
-  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smdppi <- ptapesmd(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$tran, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function
-  smdppi_u <- swapDynamic(smdppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
+  tapes <- buildsmdtape("sim", "sqrt", "sph",
+               "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
+               bdryw = "minsq", acut = acut)
+  smdppi_u <- tapeSwap(tapes$smdtape)$ptr
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
   testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
@@ -20,7 +20,7 @@ test_that("Gradient of smd for ppi wrt u is CLOSE TO CORRECT for interior points
   gradu_cppad <- pJacobian(smdppi_u, m$sample[1, ], testtheta)
   u <- m$sample[1, , drop = FALSE]
   gradu_hardcoded <- numericDeriv(quote(estimatorall1_smd(testcanntheta, u, acut)), c("u"))
-  gradu_cppad_numerical1 <- numericDeriv(quote(pForward0(smdppi, testtheta, u)), c("u"))
+  gradu_cppad_numerical1 <- numericDeriv(quote(pForward0(tapes$smdtape$ptr, testtheta, u)), c("u"))
   gradu_cppad_numerical2 <- numericDeriv(quote(pForward0(smdppi_u, u, testtheta)), c("u"))
   expect_equal(gradu_cppad, attr(gradu_hardcoded,"gradient"), tolerance = 1E-2, ignore_attr = TRUE)
   expect_equal(attr(gradu_cppad_numerical1, "gradient"), attr(gradu_hardcoded,"gradient"),
@@ -33,25 +33,25 @@ test_that("Gradient of smd for ppi wrt theta is correct for interior points", {
   m <- rppi_egmodel(2)
   acut <- 0.1
 
-  psphere <- manifoldtransform("sim", "sqrt", "sph") #because above ppill_r is for the simplex
-  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smdppi <- ptapesmd(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$tran, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function #this line fails when testing after devtools::load_all()
+  tapes <- buildsmdtape("sim", "sqrt", "sph",
+               "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
+               bdryw = "minsq", acut = acut)
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
   testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
 
   # double check that smd values are equal
   hardcodedsmdval <- estimatorall1_smd(testcanntheta, m$sample[1, , drop = FALSE], acut)
-  cppadsmdval <- pForward0(smdppi, testtheta, m$sample[1, ])
+  cppadsmdval <- pForward0(tapes$smdtape$ptr, testtheta, m$sample[1, ])
   stopifnot(abs(hardcodedsmdval -cppadsmdval) < 1E-10)
 
   # test gradients wrt theta
-  gradt_cppad <- pJacobian(smdppi, testtheta, m$sample[1, ])
+  gradt_cppad <- pJacobian(tapes$smdtape$ptr, testtheta, m$sample[1, ])
   u <- m$sample[1, , drop = FALSE]
   gradt_hardcoded <- numericDeriv(quote(estimatorall1_smd(testcanntheta, u, acut)), c("testcanntheta"))
   gradt_components <- ppi_parammats(attr(gradt_hardcoded, "gradient"))
   gradt_components$beta <- gradt_components$beta * 2 #to account for cannonical exponential form
-  gradt_cppad_numerical <- numericDeriv(quote(pForward0(smdppi, testtheta, u)), c("testtheta"))
+  gradt_cppad_numerical <- numericDeriv(quote(pForward0(tapes$smdtape$ptr, testtheta, u)), c("testtheta"))
   expect_equal(gradt_cppad, do.call(ppi_paramvec, gradt_components), tolerance = 1E-5, ignore_attr = "names")
   expect_equal(attr(gradt_cppad_numerical, "gradient"), do.call(ppi_paramvec, gradt_components),
                tolerance = 1E-5, ignore_attr = TRUE)
@@ -64,10 +64,10 @@ test_that("Gradient of smd approxcentre for ppi wrt theta is correct", {
   acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-15)
   acut <- 0.1
 
-  psphere <- manifoldtransform("sim", "sqrt", "sph") #because above ppill_r is for the simplex
-  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smdppi <- ptapesmd(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$tran, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function
-  smdppi_u <- swapDynamic(smdppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
+  tapes <- buildsmdtape("sim", "sqrt", "sph",
+               "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
+               bdryw = "minsq", acut = acut)
+  smdppi_u <- tapeSwap(tapes$smdtape)$ptr
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
   testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
@@ -78,7 +78,7 @@ test_that("Gradient of smd approxcentre for ppi wrt theta is correct", {
   stopifnot(abs(hardcodedsmdval -cppadsmdval) < 1E-10)
 
   # test gradients wrt theta
-  gradt_cppad <- pJacobian(smdppi, testtheta, m$sample[1, ])
+  gradt_cppad <- pJacobian(tapes$smdtape$ptr, testtheta, m$sample[1, ])
   u <- m$sample[1, , drop = FALSE]
   gradt_hardcoded <- numericDeriv(quote(estimatorall1_smd(testcanntheta, u, acut)), c("testcanntheta"))
   gradt_components <- ppi_parammats(attr(gradt_hardcoded, "gradient"))
@@ -90,13 +90,13 @@ test_that("Gradient of smd approxcentre for ppi wrt theta is correct", {
                tolerance = 1E-5, ignore_attr = TRUE)
 
   # check that gradient is close at the approximation centre
-  expect_equal(pJacobian(smdppi, testtheta, acentres[1, ]), do.call(ppi_paramvec, gradt_components),
+  expect_equal(pJacobian(tapes$smdtape$ptr, testtheta, acentres[1, ]), do.call(ppi_paramvec, gradt_components),
                tolerance = 1E-5, ignore_attr = TRUE)
 
   # check that Hessian is close too (and hopefully close to zero)
   hesst_hardcoded <- numDeriv::hessian(function(ctheta) {estimatorall1_smd(ctheta, u, acut)},
                                     testcanntheta)
-  expect_equal(pHessian(smdppi, testtheta, acentres[1, ]), hesst_hardcoded,
+  expect_equal(pHessian(tapes$smdtape$ptr, testtheta, acentres[1, ]), hesst_hardcoded,
                ignore_attr = TRUE, tolerance = 1E-1)
 
   # Hessian matches at acentre:
@@ -107,7 +107,7 @@ test_that("Gradient of smd approxcentre for ppi wrt theta is correct", {
   hesst_hardcoded_acentre[betaindx, ] <- hesst_hardcoded_acentre[betaindx, ] * 2
   hesst_hardcoded_acentre[, betaindx] <- hesst_hardcoded_acentre[, betaindx] * 2
 
-  expect_equal(pHessian(smdppi, testtheta, acentres[1, ]), hesst_hardcoded_acentre,
+  expect_equal(pHessian(tapes$smdtape$ptr, testtheta, acentres[1, ]), hesst_hardcoded_acentre,
                ignore_attr = TRUE, tolerance = 1E-5)
 })
 
@@ -118,10 +118,10 @@ test_that("Gradient of smd approxcentre for ppi wrt u is close", {
   acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-3)
   acut <- 0.1
 
-  psphere <- manifoldtransform("sim", "sqrt", "sph") #because above ppill_r is for the simplex
-  lltape <- ptapell(c(0.1,0.1,0.1), m$theta, llname = "ppi", tran = psphere$tran, fixedtheta = rep(FALSE, length(m$theta)), verbose = FALSE)
-  smdppi <- ptapesmd(c(0.1,0.1,0.1), m$theta, pll = lltape, tran = psphere$tran, man = psphere$man, "minsq", acut = acut, verbose = FALSE) #tape of the score function
-  smdppi_u <- swapDynamic(smdppi, c(0.1,0.1,0.1), m$theta) #don't use a boundary point here!
+  tapes <- buildsmdtape("sim", "sqrt", "sph",
+               "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
+               bdryw = "minsq", acut = acut)
+  smdppi_u <- tapeSwap(tapes$smdtape)$ptr
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
   testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)

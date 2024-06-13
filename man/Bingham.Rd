@@ -20,7 +20,7 @@ or "smfull" for the full score matching estimator.}
 A list of \code{est}, \code{SE} and \code{info}.
 \itemize{
 \item \code{est} contains the estimated matrix \code{A} and a vector form, \code{paramvec}, of \code{A} (ordered according to \code{c(diag(A)[1:(p-1)], A[upper.tri(A)])} ). For the Mardia method, the estimated eigenvalues of \code{A} (named \code{evals}) and eigenvectors of \code{A} (named \code{G}) are also returned.
-\item \code{SE} contains estimates of the standard errors if computed.
+\item \code{SE} contains estimates of the standard errors if computed. See \code{\link[=cppad_closed]{cppad_closed()}}.
 \item \code{info} contains a variety of information about the model fitting procedure and results.
 }
 }
@@ -45,7 +45,7 @@ See \insertCite{mardia2016sc;textual}{scorematchingad} for details.
 p <- 4
 A <- rsymmetricmatrix(p)
 A[p,p] <- -sum(diag(A)[1:(p-1)]) #to satisfy the trace = 0 constraint
-if (requireNamespace("simdd"){
+if (requireNamespace("simdd")){
   Y <- simdd::rBingham(100, A)
   Bingham(Y, method = "Mardia")
 }
@@ -56,7 +56,7 @@ if (requireNamespace("simdd"){
 \seealso{
 Other directional model estimators: 
 \code{\link{FB}()},
-\code{\link{vMF_robust}()},
-\code{\link{vMF}()}
+\code{\link{vMF}()},
+\code{\link{vMF_robust}()}
 }
 \concept{directional model estimators}

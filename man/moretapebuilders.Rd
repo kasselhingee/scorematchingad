@@ -33,7 +33,7 @@ The information in the fields \code{xtape} and \code{dyntape} of \code{tape} are
 
 \subsection{tapeJacobian}{
 
-The returned vector is ordered with the range elements iterating fastest, then the domain elements. See \url{https://cppad.readthedocs.io/en/latest/Jacobian.html}.
+The returned vector is ordered with the range elements iterating fastest, then the domain elements. See \url{https://cppad.readthedocs.io/latest/Jacobian.html}.
 }
 
 \subsection{tapeHessian}{
@@ -65,13 +65,13 @@ which does not depend on \eqn{x}.
 \itemize{
 \item \code{tapeJacobian()}: Tape the Jacobian of a tape. The resulting tape returns the Jacobian as a vector.
 
-\item \code{tapeHessian()}: Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see \url{https://cppad.readthedocs.io/en/latest/Hessian.html}).
+\item \code{tapeHessian()}: Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see \url{https://cppad.readthedocs.io/latest/Hessian.html}).
 
 \item \code{tapeGradOffset()}: A quadratic function can be written as
 \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
 The function \code{tapeGradOffset} creates a tape of \eqn{b(\theta)} where \eqn{\theta} is the independent variable.
 
-\item \code{tapeLogJacDet()}: Creates a tape of the log of the Jacobian determinant of a function taped in \code{tape}.
+\item \code{tapeLogJacDet()}: Creates a tape of the log of the Jacobian determinant of a function taped in \code{tape}. The dimensions of the domain (length of independent variable) and range (length of output variable) of \code{tape} must be equal for computation of the determinant.
 
 \item \code{tapeSwap()}: Convert an ADFun so that the independent variables become dynamic parameters
 and the dynamic parameters become independent variables.
@@ -84,7 +84,7 @@ tapes <- buildsmdtape("sph", "identity", "sph", "vMF",
               ) 
 tapeJacobian(tapes$smdtape)
 tapeHessian(tapes$smdtape)
-tapeLogJacDet(tapes$smdtape)
+tapeLogJacDet(tapeJacobian(tapes$smdtape))
 tapeSwap(tapes$smdtape)
 }
 \seealso{

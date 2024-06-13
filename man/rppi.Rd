@@ -85,8 +85,8 @@ rppi_egmodel(1000)
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
+\code{\link{ppi}()},
 \code{\link{ppi_param_tools}},
-\code{\link{ppi_robust}()},
-\code{\link{ppi}()}
+\code{\link{ppi_robust}()}
 }
 \concept{PPI model tools}

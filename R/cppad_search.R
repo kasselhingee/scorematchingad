@@ -4,8 +4,6 @@
 #' @description 
 #' Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching discrepancy is within tolerance of zero.
 #' Also estimates standard errors and covariance.
-#' In practice conjugate gradient descent seems to fail to reach the requested tolerance or finish too early.
-#' However, it still may be useful when the score matching discrepancy function is not of quadratic form (for score matching discrepancy functions that are quadratic it will be much better to use [`cppad_closed()`]).
 #' @inheritParams cppad_closed
 #' @param theta The starting parameter set
 #' @param control Control parameters passed to [`optimx::Rcgmin()`]
@@ -21,7 +19,7 @@
 # \eqn{H} is the Hessian with respect to \eqn{\theta}, which is constant for quadratic-form functions,
 # 
 #' The estimate of the variability matrix \eqn{J} is then
-#' the sample covariance (denominator of \eqn{n-1}) of the gradiant of `smdtape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
+#' the sample covariance (denominator of \eqn{n-1}) of the gradient of `smdtape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
 # \deqn{\hat{J}(\theta) = var(grad(w smd(\theta;Y))),}
 
 #' The variance of the estimator is then estimated as
@@ -42,8 +40,8 @@
 #'               verbose = FALSE
 #'               )$smdtape
 #' Y <- rppi_egmodel(100)
-#' cppad_search(smdtape, 0.9 * Y$theta, Y$sample)
-#' sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)
+#' \donttest{cppad_search(smdtape, 0.9 * Y$theta, Y$sample)
+#' sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)}
 #' @export
 cppad_search <- function(smdtape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10, control = list(tol = 1E-15, checkgrad = TRUE)){
   Jsmdfun <- tapeJacobian(smdtape)

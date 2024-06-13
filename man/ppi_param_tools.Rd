@@ -62,7 +62,7 @@ If a number, then the pth element of \eqn{\beta} will be fixed at the given valu
 \code{ppi_fromAstar()}: A list of the matrix \eqn{A_L}, the vector \eqn{b_L} and a discarded constant.
 }
 \description{
-The defualt parameterisation of the PPI model is a symmetric covariance-like matrix \eqn{A_L}, a location-like vector \eqn{b_L} and a set of Dirichlet exponents \eqn{\beta}. For \code{p} components, \eqn{A_L} has \code{p-1} rows, \eqn{b_L} is a vector with \code{p-1} elements and \eqn{\beta} is a vector with \code{p} elements.
+The default parameterisation of the PPI model is a symmetric covariance-like matrix \eqn{A_L}, a location-like vector \eqn{b_L} and a set of Dirichlet exponents \eqn{\beta}. For \code{p} components, \eqn{A_L} has \code{p-1} rows, \eqn{b_L} is a vector with \code{p-1} elements and \eqn{\beta} is a vector with \code{p} elements.
 For score matching estimation this form of the parameters must be converted into a single parameter vector using \code{ppi_paramvec()}.
 \code{ppi_paramvec()} also includes easy methods to set parameters to \code{NA} for estimation with \code{\link[=ppi]{ppi()}} (in \code{\link[=ppi]{ppi()}} the NA-valued elements are estimated and all other elements are fixed).
 The reverse of \code{ppi_paramvec()} is \code{ppi_parammats()}.
@@ -99,8 +99,8 @@ ppi_toAstar(ppi_fromAstar(Astar)$AL, ppi_fromAstar(Astar)$bL)
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi_robust}()},
 \code{\link{ppi}()},
+\code{\link{ppi_robust}()},
 \code{\link{rppi}()}
 }
 \concept{PPI model tools}

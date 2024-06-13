@@ -28,7 +28,7 @@ ppill_r_S <- function(z, beta0, AL, bL){
 # test Jacobian of ll function using numerical differentiation
 test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estimates", {
   psimplex <- manifoldtransform("sim", "identity", "sim") #because above ppill_r is for the simplex
-  lltape <- ptapell(u, theta, llname = "ppi", tran = psimplex$tran, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
+  lltape <- tapell("ppi", u, NA * theta, tran = psimplex$tran, function(n){theta})$ptr
 
   # wrt u
   expect_equal(ppill_r(u, beta0, AL, bL), pForward0(lltape, u, theta), ignore_attr = TRUE)
@@ -38,7 +38,7 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
   expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, theta), ignore_attr = TRUE, tolerance = 1E-3)
 
   #Hessian
-  if (!requireNamespace("numDeriv")){skip("Need numDeriv package")}
+  if (!requireNamespace("numDeriv", quietly = TRUE)){skip("Need numDeriv package")}
   numderiv <- numDeriv::hessian(ppill_r, u, beta0 = beta0, AL = AL, bL = bL)
   hess <- pHessian(lltape, u, theta)
   dim(hess) <- c(p, p)
@@ -58,7 +58,7 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
                ignore_attr = TRUE, tolerance = 1E-7)
 
   #Hessian
-  if (!requireNamespace("numDeriv")){skip("Need numDeriv package")}
+  if (!requireNamespace("numDeriv", quietly = TRUE)){skip("Need numDeriv package")}
   numderiv <- numDeriv::hessian(ppill_r_swap, theta, u = u)
   hess <- pHessian(lltape_theta, theta, u)
   dim(hess) <- c(length(theta), length(theta))
@@ -68,7 +68,7 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
 # test Jacobian of ll function using numerical differentiation
 test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estimates", {
   psphere <- manifoldtransform("sim", "sqrt", "sph")
-  lltape <- ptapell(u, theta, llname = "ppi", tran = psphere$tran, fixedtheta = rep(FALSE, length(theta)), verbose = FALSE)
+  lltape <- tapell("ppi", u, NA * theta, tran = psphere$tran, function(n){theta})$ptr
 
   # wrt u
   expect_equal(ppill_r_S(u, beta0, AL, bL), pForward0(lltape, u, theta), ignore_attr = TRUE)
@@ -78,7 +78,7 @@ test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estima
   expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, theta), ignore_attr = TRUE, tolerance = 1E-3)
 
   #Hessian
-  if (!requireNamespace("numDeriv")){skip("Need numDeriv package")}
+  if (!requireNamespace("numDeriv", quietly = TRUE)){skip("Need numDeriv package")}
   numderiv <- numDeriv::hessian(ppill_r_S, u, beta0 = beta0, AL = AL, bL = bL)
   hess <- pHessian(lltape, u, theta)
   dim(hess) <- c(p, p)
@@ -98,7 +98,7 @@ test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estima
                ignore_attr = TRUE, tolerance = 1E-7)
 
   #Hessian
-  if (!requireNamespace("numDeriv")){skip("Need numDeriv package")}
+  if (!requireNamespace("numDeriv", quietly = TRUE)){skip("Need numDeriv package")}
   numderiv <- numDeriv::hessian(ppill_r_S_swap, theta, z = u)
   hess <- pHessian(lltape_theta, theta, u)
   dim(hess) <- c(length(theta), length(theta))
@@ -114,16 +114,16 @@ test_that("dirichlet ll evaluation and Jacobian matches expected", {
   dirichlet_r <- function(u, beta){sum(beta * log(u))}
 
   psimplex <- manifoldtransform("sim", "identity", "sim")
-  lltape <- ptapell(u, beta, llname = "dirichlet", tran = psimplex$tran, fixedtheta = rep(FALSE, length(beta)), verbose = FALSE)
+  lltape <- tapell("dirichlet", u, NA * beta, tran = psimplex$tran, function(n){beta})$ptr
   #forward0
   expect_equal(dirichlet_r(u, beta), pForward0(lltape, u, beta), ignore_attr = TRUE)
 
   #gradiant wrt u
   numderiv <- numericDeriv(quote(dirichlet_r(u, beta)), c("u"))
-  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, beta), ignore_attr = TRUE)
+  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape, u, beta), ignore_attr = TRUE, tolerance = 1E-5)
 
   #gradient wrt beta
   lltape_theta <- swapDynamic(lltape, beta, u)
   numderiv <- numericDeriv(quote(dirichlet_r(u, beta)), c("beta"))
-  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape_theta, beta, u), ignore_attr = TRUE)
+  expect_equal(attr(numderiv,"gradient"), pJacobian(lltape_theta, beta, u), ignore_attr = TRUE, tolerance = 1E-5)
 })

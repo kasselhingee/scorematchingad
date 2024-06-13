@@ -1,7 +1,7 @@
 # ifndef MYCPP_WRAPAS
 # define MYCPP_WRAPAS
 
-# include "../scorematchingad_types.h"
+# include "../scorematchingad.h"
 # include <Rcpp.h>
 # include <cppad/cppad.hpp>
 

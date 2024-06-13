@@ -23,7 +23,7 @@
 #' @examples
 #' tapes <- buildsmdtape(
 #'   "sim", "sqrt", "sph",
-#'   llname = "ppi",
+#'   ll = "ppi",
 #'   ytape =  rep(1/3, 3),
 #'   usertheta = ppi_paramvec(p=3),
 #'   bdryw = "minsq",

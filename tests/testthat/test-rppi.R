@@ -10,7 +10,7 @@ test_that("current PPI simulation method gives samples with similar empirical de
   skip_on_cran() #accuracy of the method is tested by all the estimators
   # simulate using old method
   time_historic <- system.time(samp2 <- rppi_singly(n,m$p,m$beta,m$AL,m$bL,4))
-  if (!requireNamespace("ks")){skip("Need ks package")}
+  if (!requireNamespace("ks", quietly = TRUE)){skip("Need ks package")}
   H <- ks::Hpi(samp2$samp3[, -m$p])
   kde_historic <- ks::kde(samp2$samp3[, -m$p], H)
   #simulate sample from PPI model
@@ -63,5 +63,8 @@ test_that("dppi() produces -Inf results outside simplex", {
 
 test_that("rppi() passed a zero value for bL works", {
   set.seed(1)
-  expect_silent(rppi(1, AL = rsymmetricmatrix(5-1), beta = runif(5), bL = 0))
+  expect_equal(rppi(1, AL = rsymmetricmatrix(5-1), beta = runif(5), bL = 0),
+  c(0.1580301, 0.2347493, 0.2087618, 0.3172094, 0.0812494),
+  ignore_attr = TRUE,
+  tolerance = 1E-5)
 })

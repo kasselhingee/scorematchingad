@@ -13,14 +13,14 @@
 #'               ) 
 #' tapeJacobian(tapes$smdtape)
 #' tapeHessian(tapes$smdtape)
-#' tapeLogJacDet(tapes$smdtape)
+#' tapeLogJacDet(tapeJacobian(tapes$smdtape))
 #' tapeSwap(tapes$smdtape)
 NULL
 
 #' @describeIn moretapebuilders Tape the Jacobian of a tape. The resulting tape returns the Jacobian as a vector.
 #' @details
 #' ## tapeJacobian 
-#' The returned vector is ordered with the range elements iterating fastest, then the domain elements. See <https://cppad.readthedocs.io/en/latest/Jacobian.html>.
+#' The returned vector is ordered with the range elements iterating fastest, then the domain elements. See <https://cppad.readthedocs.io/latest/Jacobian.html>.
 #' @export
 tapeJacobian <- function(tape){
   stopifnot(inherits(tape, "ADFun"))
@@ -32,7 +32,7 @@ tapeJacobian <- function(tape){
             usertheta = tape$usertheta)
 }
 
-#' @describeIn moretapebuilders Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see <https://cppad.readthedocs.io/en/latest/Hessian.html>).
+#' @describeIn moretapebuilders Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see <https://cppad.readthedocs.io/latest/Hessian.html>).
 #' @details
 #' ## tapeHessian
 #' Suppose the function represented by `tape` maps from \eqn{d}-dimensional space to \eqn{1}-dimensional space, then
@@ -80,7 +80,7 @@ tapeGradOffset <- function(tape){
 }
 
 #' @describeIn moretapebuilders
-#' Creates a tape of the log of the Jacobian determinant of a function taped in `tape`.
+#' Creates a tape of the log of the Jacobian determinant of a function taped in `tape`. The dimensions of the domain (length of independent variable) and range (length of output variable) of `tape` must be equal for computation of the determinant.
 #' @export
 tapeLogJacDet <- function(tape){
   stopifnot(inherits(tape, "ADFun"))
