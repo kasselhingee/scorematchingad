@@ -1,4 +1,4 @@
 
-PKG_CXXFLAGS = -I../inst/include -Wno-ignored-attributes
+PKG_CXXFLAGS = -I../inst/include -I../inst/cppad/include -Wno-ignored-attributes
 
 

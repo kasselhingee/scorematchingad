@@ -1,0 +1,91 @@
+Performing C++ SOURCE FILE Test cppad_has_tmpnam_s failed with the following output:
+Change Dir: /home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_70e1c/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_70e1c.dir/build.make CMakeFiles/cmTC_70e1c.dir/build
+gmake[1]: Entering directory '/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_70e1c.dir/src.cxx.o
+/usr/bin/c++ -Dcppad_has_tmpnam_s   -o CMakeFiles/cmTC_70e1c.dir/src.cxx.o -c /home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx
+/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx: In function ‘int main()’:
+/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx:4:18: error: ‘L_tmpnam_s’ was not declared in this scope; did you mean ‘L_tmpnam’?
+    4 | {  char filename[L_tmpnam_s ];
+      |                  ^~~~~~~~~~
+      |                  L_tmpnam
+/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx:5:17: error: ‘filename’ was not declared in this scope; did you mean ‘rename’?
+    5 |    if( tmpnam_s(filename, L_tmpnam_s ) != 0 )
+      |                 ^~~~~~~~
+      |                 rename
+/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx:5:8: error: ‘tmpnam_s’ was not declared in this scope; did you mean ‘tmpnam_r’?
+    5 |    if( tmpnam_s(filename, L_tmpnam_s ) != 0 )
+      |        ^~~~~~~~
+      |        tmpnam_r
+gmake[1]: *** [CMakeFiles/cmTC_70e1c.dir/build.make:78: CMakeFiles/cmTC_70e1c.dir/src.cxx.o] Error 1
+gmake[1]: Leaving directory '/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_70e1c/fast] Error 2
+
+
+Source file was:
+
+# include <stdio.h>
+int main(void)
+{  char filename[L_tmpnam_s ];
+   if( tmpnam_s(filename, L_tmpnam_s ) != 0 )
+      return 1;
+   return 0;
+}
+
+Performing C++ SOURCE FILE Test cppad_is_same_unsigned_int_size_t failed with the following output:
+Change Dir: /home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_87c19/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_87c19.dir/build.make CMakeFiles/cmTC_87c19.dir/build
+gmake[1]: Entering directory '/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_87c19.dir/src.cxx.o
+/usr/bin/c++ -Dcppad_is_same_unsigned_int_size_t   -o CMakeFiles/cmTC_87c19.dir/src.cxx.o -c /home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx
+/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx: In function ‘int main()’:
+/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx:6:43: error: static assertion failed: message not needed with C++17 or later
+    6 |       std::is_same<unsigned int, size_t>::value ,
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+gmake[1]: *** [CMakeFiles/cmTC_87c19.dir/build.make:78: CMakeFiles/cmTC_87c19.dir/src.cxx.o] Error 1
+gmake[1]: Leaving directory '/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_87c19/fast] Error 2
+
+
+Source file was:
+
+# include <cstddef>
+# include <type_traits>
+int main(void)
+{  static_assert(
+      std::is_same<unsigned int, size_t>::value ,
+      "message not needed with C++17 or later"  
+   );
+   return 0;
+}
+
+Performing C++ SOURCE FILE Test cppad_is_same_tape_addr_type_size_t failed with the following output:
+Change Dir: /home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_78716/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_78716.dir/build.make CMakeFiles/cmTC_78716.dir/build
+gmake[1]: Entering directory '/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_78716.dir/src.cxx.o
+/usr/bin/c++ -Dcppad_is_same_tape_addr_type_size_t   -o CMakeFiles/cmTC_78716.dir/src.cxx.o -c /home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx
+/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx: In function ‘int main()’:
+/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp/src.cxx:6:43: error: static assertion failed: message not needed with C++17 or later
+    6 |       std::is_same<unsigned int, size_t>::value ,
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+gmake[1]: *** [CMakeFiles/cmTC_78716.dir/build.make:78: CMakeFiles/cmTC_78716.dir/src.cxx.o] Error 1
+gmake[1]: Leaving directory '/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_78716/fast] Error 2
+
+
+Source file was:
+
+# include <cstddef>
+# include <type_traits>
+int main(void)
+{  static_assert(
+      std::is_same<unsigned int, size_t>::value ,
+      "message not needed with C++17 or later"  
+   );
+   return 0;
+}
+

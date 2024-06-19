@@ -1,0 +1,43 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/example_graph.dir/add_op.cpp.o"
+  "CMakeFiles/example_graph.dir/add_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/atom4_op.cpp.o"
+  "CMakeFiles/example_graph.dir/atom4_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/atom_op.cpp.o"
+  "CMakeFiles/example_graph.dir/atom_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/azmul_op.cpp.o"
+  "CMakeFiles/example_graph.dir/azmul_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/cexp_op.cpp.o"
+  "CMakeFiles/example_graph.dir/cexp_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/comp_op.cpp.o"
+  "CMakeFiles/example_graph.dir/comp_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/discrete_op.cpp.o"
+  "CMakeFiles/example_graph.dir/discrete_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/div_op.cpp.o"
+  "CMakeFiles/example_graph.dir/div_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/graph.cpp.o"
+  "CMakeFiles/example_graph.dir/graph.cpp.o.d"
+  "CMakeFiles/example_graph.dir/mul_op.cpp.o"
+  "CMakeFiles/example_graph.dir/mul_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/pow_op.cpp.o"
+  "CMakeFiles/example_graph.dir/pow_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/print_graph.cpp.o"
+  "CMakeFiles/example_graph.dir/print_graph.cpp.o.d"
+  "CMakeFiles/example_graph.dir/print_op.cpp.o"
+  "CMakeFiles/example_graph.dir/print_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/sub_op.cpp.o"
+  "CMakeFiles/example_graph.dir/sub_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/sum_op.cpp.o"
+  "CMakeFiles/example_graph.dir/sum_op.cpp.o.d"
+  "CMakeFiles/example_graph.dir/switch_var_dyn.cpp.o"
+  "CMakeFiles/example_graph.dir/switch_var_dyn.cpp.o.d"
+  "CMakeFiles/example_graph.dir/unary_op.cpp.o"
+  "CMakeFiles/example_graph.dir/unary_op.cpp.o.d"
+  "example_graph"
+  "example_graph.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/example_graph.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()
