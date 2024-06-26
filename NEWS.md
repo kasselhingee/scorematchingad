@@ -1,3 +1,7 @@
+# Version 0.0.64
+
+URLs to CppAD and Eigen help pages, data locations and even paper locations are breaking frequently enough for CRAN testing to pick up. So I've removed a few urls in this version.
+
 # Version 0.0.63
 
 No change.
