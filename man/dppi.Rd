@@ -48,9 +48,9 @@ dppi(m$sample, paramvec = m$theta)
 }
 \seealso{
 Other PPI model tools: 
-\code{\link{ppi}()},
 \code{\link{ppi_param_tools}},
 \code{\link{ppi_robust}()},
+\code{\link{ppi}()},
 \code{\link{rppi}()}
 }
 \concept{PPI model tools}

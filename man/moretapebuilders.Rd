@@ -63,20 +63,20 @@ which does not depend on \eqn{x}.
 }
 \section{Functions}{
 \itemize{
-\item \code{tapeJacobian()}: Tape the Jacobian of a tape. The resulting tape returns the Jacobian as a vector.
+\item \code{tapeJacobian}: Tape the Jacobian of a tape. The resulting tape returns the Jacobian as a vector.
 
-\item \code{tapeHessian()}: Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see \url{https://cppad.readthedocs.io/latest/Hessian.html}).
+\item \code{tapeHessian}: Tape the Hessian of a tape. The resulting tape returns the Jacobian as a vector (see \url{https://cppad.readthedocs.io/latest/Hessian.html}).
 
-\item \code{tapeGradOffset()}: A quadratic function can be written as
+\item \code{tapeGradOffset}: A quadratic function can be written as
 \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
 The function \code{tapeGradOffset} creates a tape of \eqn{b(\theta)} where \eqn{\theta} is the independent variable.
 
-\item \code{tapeLogJacDet()}: Creates a tape of the log of the Jacobian determinant of a function taped in \code{tape}. The dimensions of the domain (length of independent variable) and range (length of output variable) of \code{tape} must be equal for computation of the determinant.
+\item \code{tapeLogJacDet}: Creates a tape of the log of the Jacobian determinant of a function taped in \code{tape}. The dimensions of the domain (length of independent variable) and range (length of output variable) of \code{tape} must be equal for computation of the determinant.
 
-\item \code{tapeSwap()}: Convert an ADFun so that the independent variables become dynamic parameters
+\item \code{tapeSwap}: Convert an ADFun so that the independent variables become dynamic parameters
 and the dynamic parameters become independent variables.
-
 }}
+
 \examples{
 tapes <- buildsmdtape("sph", "identity", "sph", "vMF",
               ytape = rep(1, 3)/sqrt(3),

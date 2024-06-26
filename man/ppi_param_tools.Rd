@@ -99,8 +99,8 @@ ppi_toAstar(ppi_fromAstar(Astar)$AL, ppi_fromAstar(Astar)$bL)
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi}()},
 \code{\link{ppi_robust}()},
+\code{\link{ppi}()},
 \code{\link{rppi}()}
 }
 \concept{PPI model tools}
