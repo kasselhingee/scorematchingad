@@ -1,4 +1,13 @@
 
 PKG_CXXFLAGS = -I../inst/include -I../inst/cppad/include -Wno-ignored-attributes
 
+$(SHLIB): cppad
+
+cppad:
+	(cd ../inst/cppad; \
+	cmake . \
+	-D CMAKE_BUILD_TYPE=minsizerel \
+	-DBUILD_SHARED_LIBS:bool=OFF \
+	-DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON)
+
 
