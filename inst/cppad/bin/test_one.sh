@@ -152,9 +152,9 @@ include_flags=$(echo $include_flags | \
 include_flags="-I $original_dir/include $include_flags"
 if [ 1 ==  '1' ]
 then
-   cppad_lib_path='/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/cppad_lib/libcppad_lib.so'
+   cppad_lib_path='/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/cppad_lib/libcppad_lib.so'
 else
-   cppad_lib_path='/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/cppad_lib/libcppad_lib.a'
+   cppad_lib_path='/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/cppad_lib/libcppad_lib.a'
 fi
 library_flags="$library_flags $cppad_lib_path -lpthread"
 #
@@ -205,7 +205,7 @@ then
 fi
 # --------------------------------------------------------------------------
 # LD_LIBRARY_PATH
-my_path='/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/build/cppad_lib'
+my_path='/home/kassel/Documents/professional/ANU_Compositional/scorecompdir/versioned/inst/cppad/cppad_lib'
 if ! echo $LD_LIBRARY_PATH | grep "$my_path" > /dev/null
 then
    if [ "$LD_LIBRARY_PATH" == '' ]

@@ -1,5 +1,5 @@
 
-PKG_CXXFLAGS = -I../inst/include -I../inst/cppad/include -Wno-ignored-attributes
+PKG_CXXFLAGS = -I../inst/include -Wno-ignored-attributes
 
 $(SHLIB): cppad
 
@@ -8,6 +8,8 @@ cppad:
 	cmake . \
 	-D CMAKE_BUILD_TYPE=minsizerel \
 	-DBUILD_SHARED_LIBS:bool=OFF \
-	-DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON)
+	-DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON; \
+	"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e 'file.copy("./include/cppad", "../include/", recursive = TRUE)')
+
 
 
