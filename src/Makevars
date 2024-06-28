@@ -1,17 +1,12 @@
 
 PKG_CPPFLAGS = -I../inst/include -Wno-ignored-attributes
 
-$(SHLIB): RcppExports.o
+.PHONY: all cppad
 
-approxwrap.o: cppadconfig
-cppad_interface.o: cppadconfig
-exposemanifold.o: cppadconfig
-RcppExports.o: cppadconfig
-tapebdryweight.o: cppadconfig
-tapell.o: cppadconfig
-tapesmd.o: cppadconfig
+all: $(SHLIB)
+$(SHLIB): cppad
 
-cppadconfig:
+cppad:
 	(cd ../inst/cppad; \
 	cmake . \
 	-D CMAKE_BUILD_TYPE=minsizerel \
