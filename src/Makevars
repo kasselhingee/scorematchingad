@@ -1,6 +1,9 @@
 
 PKG_CPPFLAGS = -I../inst/include -Wno-ignored-attributes
 
+.PHONY: all cppad
+
+all: $(SHLIB)
 $(SHLIB): cppad
 
 cppad:
