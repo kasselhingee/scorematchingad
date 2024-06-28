@@ -1,18 +1,4 @@
 
 PKG_CPPFLAGS = -I../inst/include -Wno-ignored-attributes
 
-.PHONY: all cppad
-
-all: $(SHLIB)
-$(SHLIB): cppad
-
-cppad:
-	(cd ../inst/cppad; \
-	cmake . \
-	-D CMAKE_BUILD_TYPE=minsizerel \
-	-DBUILD_SHARED_LIBS:bool=OFF \
-	-DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON; \
-	"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e 'file.copy("./include/cppad", "../include/", recursive = TRUE)')
-
-
 
