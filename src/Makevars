@@ -1,7 +1,7 @@
 
 PKG_CPPFLAGS = -I../inst/include -Wno-ignored-attributes
 
-$(SHLIB): RcppExports.o
+$(SHLIB): approxwrap.o cppad_interface.o exposemanifold.o RcppExports.o tapebdryweight.o tapell.o tapesmd.o
 
 approxwrap.o: cppadconfig
 cppad_interface.o: cppadconfig
