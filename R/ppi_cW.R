@@ -13,7 +13,7 @@
 #' @references \insertAllCited{}
 #' @export
 ppi_cW <- function(cW, ...){
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   bools <- unlist(list(...))
   bools <- as.logical(bools)
   if (any(is.na(bools))){stop("An argument after 'cW' is neither TRUE nor FALSE")}
