@@ -17,7 +17,7 @@
 #' vMF_robust(Y, cW = c(0.01, 0.01), method = "Mardia")
 #' @export
 vMF_robust <- function(Y, cW, ...){
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   extraargs <- list(...)
 
   # user friendly cW
@@ -50,7 +50,7 @@ vMF_robust <- function(Y, cW, ...){
 vMF_kappa_robust <- function(Y, cW, ...){
   extraargs <- list(...)
   Y <- vMF_stdY(Y, w = extraargs$w)
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   ldenfun <- function(Y, theta){ #here theta is k and m is c(1, 0, ...)
     return(drop(theta * Y[, 1]))
   }

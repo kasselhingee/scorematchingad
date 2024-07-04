@@ -34,10 +34,11 @@ Imports:
     stats,
     R6,
     utils,
-    rlang,
-    ellipsis
+    rlang (>= 1.1.0)
 RdMacros: Rdpack
 LinkingTo: 
     Rcpp (>= 1.0.9),
     RcppEigen (>= 0.3.3.7)
 Config/testthat/edition: 3
+URL: https://github.com/kasselhingee/scorematchingad
+BugReports: https://github.com/kasselhingee/scorematchingad/issues

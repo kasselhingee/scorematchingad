@@ -51,7 +51,7 @@
 #' @export
 Windham <- function(Y, estimator, ldenfun, cW, ..., fpcontrol = list(Method = "Simple", ConvergenceMetricThreshold = 1E-10), paramvec_start = NULL, alternative_populationinverse = FALSE){#... earlier so that fpcontrol and paramvec_start can only be passed by being named
   extraargs <- list(...)
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   # assuming estimator has arguments: Y, paramvec, w, and optionally paramvec_start.
   # and assume that the return vector can be extracted using `extract_paramvec()` and similar and that this is the full model parameter vector, including the fixed elements (this is important for computing density).
   estargs <- c(list(Y = Y), extraargs)
