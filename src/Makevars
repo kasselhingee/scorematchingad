@@ -13,7 +13,7 @@ tapesmd.o: cppadconfig
 
 cppadconfig:
 	(cd ../inst/cppad; \
-	cmake . \
+	$(CMAKE) . \
 	-D CMAKE_BUILD_TYPE=minsizerel \
 	-DBUILD_SHARED_LIBS:bool=OFF \
 	-DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON; \
