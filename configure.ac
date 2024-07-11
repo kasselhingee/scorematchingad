@@ -1,3 +1,4 @@
+# Process this file with autoconf to produce a configure script.
 
 AC_INIT([scorematchingad], [0.0.62], [kassel.hingee@anu.edu.au])
 
@@ -27,21 +28,25 @@ if test "$CMAKE" = "no"; then
   AC_MSG_ERROR([CMake is required but was not found. Please install CMake.])
 fi
 
-# configure cppad
-cd inst/cppad
-$CMAKE . \
-	-DCMAKE_BUILD_TYPE=minsizerel \
-	-DBUILD_SHARED_LIBS:bool=OFF \
-	-DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON
-# error if cmake above errors
+# Set the path to the C++ library
+CPPAD_PATH="`pwd`/inst/cppad"
+
+# Run CMake with the appropriate flags
+AC_MSG_NOTICE([Running CMake...])
+mkdir -p $CPPAD_PATH/build
+cd $CPPAD_PATH/build
+$CMAKE .. -D CMAKE_BUILD_TYPE=minsizerel -DBUILD_SHARED_LIBS:bool=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=bool=ON
 if test $? -ne 0; then
   AC_MSG_ERROR([CMake configuration failed])
 fi
-# copy the generated cppad files into a different directory
-"${R_HOME}/bin/Rscript" -e 'file.copy("./include/cppad", "../include/", recursive = TRUE)'
 cd -
 
-# add more CPPFLAGS via the Makevars file (Could they be added earlier than this?)
-echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
+# Copy the include files to the appropriate directory
+"$R_HOME/bin/Rscript" -e 'file.copy("inst/cppad/include/cppad", "inst/include/", recursive = TRUE)'
 
+# Create the Makevars file with the necessary compilation flags
+echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
+echo "PKG_LIBS=-L$CPPAD_PATH/build -lCppAD" >> src/Makevars
+
+# Output files
 AC_OUTPUT
