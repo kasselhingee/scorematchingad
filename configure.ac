@@ -22,23 +22,26 @@ CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 AC_LANG(C++)
 
 # find cmake looking in the usual macos location too
-CMAKE_PATH="$PATH:/Applications/CMake.app/Contents/bin/cmake"
-AC_PATH_PROG([CMAKE], [cmake], [no], [$CMAKE_PATH])
+AC_PATH_PROG([CMAKE], [cmake], [no], [$PATH:/Applications/CMake.app/Contents/bin/cmake])
 if test "$CMAKE" = "no"; then
   AC_MSG_ERROR([CMake is required but was not found. Please install CMake.])
 fi
 
 # configure cppad
-cd ../inst/cppad
+cd inst/cppad
 $CMAKE . \
 	-DCMAKE_BUILD_TYPE=minsizerel \
 	-DBUILD_SHARED_LIBS:bool=OFF \
 	-DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON
+# error if cmake above errors
+if test $? -ne 0; then
+  AC_MSG_ERROR([CMake configuration failed])
+fi
 # copy the generated cppad files into a different directory
 "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e 'file.copy("./include/cppad", "../include/", recursive = TRUE)'
+cd -
 
 # add more CPPFLAGS via the Makevars file (Could they be added earlier than this?)
 echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
 
-AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
