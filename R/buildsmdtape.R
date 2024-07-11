@@ -21,10 +21,10 @@
 #' Full help for `CppAD` can be found at <https://cppad.readthedocs.io/>.
 #' 
 #' Differentiation proceeds by *taping* the basic (*atomic*) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
-#' Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and `CppAD` has [special tools for this](https://cppad.readthedocs.io/latest/CondExp.html).
+#' Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and [`CppAD`](https://cppad.readthedocs.io/) has a special tool for this called `CondExp` (short for `conditional expressions`).
 
-#' The result of taping is an [`ADFun`](https://cppad.readthedocs.io/latest/ADFun.html) object, often called a *tape*.
-#' This `ADFun` object can be evaluated, differentiated, used for further taping (see [base2ad](https://cppad.readthedocs.io/latest/base2ad.html)), solving differential equations and more.
+#' The result of taping is an object of class `ADFun` in `CppAD` and is often called a *tape*.
+#' This `ADFun` object can be evaluated, differentiated, used for further taping (via `CppAD`'s `base2ad()`), solving differential equations and more.
 #' The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new `ADFun` object where the dynamic parameters become independent variables (see [`tapeSwap()`]).
 #' For the purposes of score matching, there are also *fixed* parameters, which are the elements of the model's parameter vector that are given and not estimated.
 #' 

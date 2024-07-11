@@ -1,6 +1,6 @@
 Package: scorematchingad
 Title: Score Matching Estimation by Automatic Differentiation
-Version: 0.0.62
+Version: 0.0.64
 Authors@R: 
     c(person(given = "Kassel Liam", family = "Hingee", email = "kassel.hingee@anu.edu.au", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9894-2407")),
     person("Janice", "Scealy", role = c("aut"), comment = c(ORCID = "0000-0002-9718-869X")),
@@ -34,10 +34,11 @@ Imports:
     stats,
     R6,
     utils,
-    rlang,
-    ellipsis
+    rlang (>= 1.1.0)
 RdMacros: Rdpack
 LinkingTo: 
     Rcpp (>= 1.0.9),
     RcppEigen (>= 0.3.3.7)
 Config/testthat/edition: 3
+URL: https://github.com/kasselhingee/scorematchingad
+BugReports: https://github.com/kasselhingee/scorematchingad/issues

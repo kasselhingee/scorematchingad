@@ -54,7 +54,7 @@ The type \code{a1type} is a double with special ability for being taped by \code
 
 The body of the function must use operations from Eigen and/or CppAD, prefixed by \verb{Eigen::} and \verb{CppAD::} respectively.
 There are no easy instructions for writing these as it is genuine \verb{C++} code, which can be very opaque to those unfamiliar with \verb{C++}.
-See the \href{https://eigen.tuxfamily.org/dox/group__QuickRefPage.html}{Eigen documentation} for quick reference to available operations from Eigen. Limited operations are available directly from \code{CppAD} without \code{Eigen}: \href{https://cppad.readthedocs.io/latest/unary_standard_math.html}{unary operations} and \href{https://cppad.readthedocs.io/latest/binary_math.html}{binary operations}.
+I've found the quick reference pages for for \href{https://eigen.tuxfamily.org/dox/}{\code{Eigen}} useful. Limited unary and binray operations are available directly from \href{https://cppad.readthedocs.io}{\code{CppAD}} without \code{Eigen}.
 For the purposes of score matching the operations should all be smooth to create a smooth log-likelihood and the normalising constant may be omitted.
 }
 

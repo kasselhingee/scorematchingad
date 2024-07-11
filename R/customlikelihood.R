@@ -25,7 +25,7 @@
 #' 
 #' The body of the function must use operations from Eigen and/or CppAD, prefixed by `Eigen::` and `CppAD::` respectively. 
 #' There are no easy instructions for writing these as it is genuine `C++` code, which can be very opaque to those unfamiliar with `C++`.
-#' See the [Eigen documentation](https://eigen.tuxfamily.org/dox/group__QuickRefPage.html) for quick reference to available operations from Eigen. Limited operations are available directly from `CppAD` without `Eigen`: [unary operations](https://cppad.readthedocs.io/latest/unary_standard_math.html) and [binary operations](https://cppad.readthedocs.io/latest/binary_math.html). 
+#' I've found the quick reference pages for for [`Eigen`](https://eigen.tuxfamily.org/dox/) useful. Limited unary and binray operations are available directly from [`CppAD`](https://cppad.readthedocs.io) without `Eigen`. 
 #' For the purposes of score matching the operations should all be smooth to create a smooth log-likelihood and the normalising constant may be omitted.
 #' @examples
 #' \dontrun{customll_test()

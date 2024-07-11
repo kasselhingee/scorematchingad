@@ -69,9 +69,9 @@ Larger \code{maxmemorysize} leads to faster simulation so long as \code{maxmemor
 }
 \section{Functions}{
 \itemize{
-\item \code{rppi_egmodel()}: Simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2023sc}{scorematchingad} and returns both simulations and model parameters.
-
+\item \code{rppi_egmodel}: Simulates the 3-component PPI model from \insertCite{@Section 2.3, @scealy2023sc}{scorematchingad} and returns both simulations and model parameters.
 }}
+
 \examples{
 beta0=c(-0.8, -0.8, -0.5)
 AL = diag(nrow = 2)
@@ -85,8 +85,8 @@ rppi_egmodel(1000)
 \seealso{
 Other PPI model tools: 
 \code{\link{dppi}()},
-\code{\link{ppi}()},
 \code{\link{ppi_param_tools}},
-\code{\link{ppi_robust}()}
+\code{\link{ppi_robust}()},
+\code{\link{ppi}()}
 }
 \concept{PPI model tools}

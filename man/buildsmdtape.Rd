@@ -14,9 +14,7 @@ buildsmdtape(
   usertheta,
   bdryw = "ones",
   acut = 1,
-  thetatape_creator = function(n) {
-     seq(length.out = n)
- },
+  thetatape_creator = function(n) {     seq(length.out = n) },
   verbose = FALSE
 )
 }
@@ -103,9 +101,9 @@ This package uses version 2022000.2 of the algorithmic differentiation library \
 Full help for \code{CppAD} can be found at \url{https://cppad.readthedocs.io/}.
 
 Differentiation proceeds by \emph{taping} the basic (\emph{atomic}) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
-Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and \code{CppAD} has \href{https://cppad.readthedocs.io/latest/CondExp.html}{special tools for this}.
-The result of taping is an \href{https://cppad.readthedocs.io/latest/ADFun.html}{\code{ADFun}} object, often called a \emph{tape}.
-This \code{ADFun} object can be evaluated, differentiated, used for further taping (see \href{https://cppad.readthedocs.io/latest/base2ad.html}{base2ad}), solving differential equations and more.
+Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and \href{https://cppad.readthedocs.io/}{\code{CppAD}} has a special tool for this called \code{CondExp} (short for \verb{conditional expressions}).
+The result of taping is an object of class \code{ADFun} in \code{CppAD} and is often called a \emph{tape}.
+This \code{ADFun} object can be evaluated, differentiated, used for further taping (via \code{CppAD}'s \code{base2ad()}), solving differential equations and more.
 The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new \code{ADFun} object where the dynamic parameters become independent variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
 For the purposes of score matching, there are also \emph{fixed} parameters, which are the elements of the model's parameter vector that are given and not estimated.
 }

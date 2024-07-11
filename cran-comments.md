@@ -1,3 +1,4 @@
+I've reduced the number of different urls in the help. The URLs in the help seem to fail intermittently (four different ones so far), but the package has enough of them that the failure keeps being picked up. 
 
-Thanks to Uwe, test failure on M1mac actually due to eigen decomposition sign identifiability. A change so that only the non-decomposed matrix is tested for equality should make it pass.
+Currently `urlchecker::url_check()` tells me that one of the urls in the DESCRIPTION is failing. However I have checked them all today manually and they are all working.
 
