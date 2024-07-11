@@ -38,7 +38,7 @@ if test $? -ne 0; then
   AC_MSG_ERROR([CMake configuration failed])
 fi
 # copy the generated cppad files into a different directory
-"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e 'file.copy("./include/cppad", "../include/", recursive = TRUE)'
+"${R_HOME}/bin/Rscript" -e 'file.copy("./include/cppad", "../include/", recursive = TRUE)'
 cd -
 
 # add more CPPFLAGS via the Makevars file (Could they be added earlier than this?)
