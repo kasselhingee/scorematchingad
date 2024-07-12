@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# Initialize R_HOME
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  echo "could not determine R_HOME"
+  exit 1
+fi
+
+# Get compiler information
+CC=`"${R_HOME}/bin/R" CMD config CC`
+CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+CXX=`"${R_HOME}/bin/R" CMD config CXX`
+if test -z "$CXX"; then
+  echo "No C++ compiler is available"
+  exit 1
+fi
+CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
+CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+
+# Find CMake
+CMAKE_PATH="$PATH:/c/Program Files/CMake/bin"
+CMAKE=`which cmake 2>/dev/null`
+if test -z "$CMAKE"; then
+  echo "CMake is required but was not found. Please install CMake."
+  exit 1
+fi
+
+# Set the path to the C++ library
+CPPAD_PATH="$(pwd)/inst/cppad"
+
+# Run CMake
+echo "Running CMake..."
+mkdir -p "$CPPAD_PATH/build"
+cd "$CPPAD_PATH/build"
+"$CMAKE" .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=minsizerel -DBUILD_SHARED_LIBS:bool=OFF -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON
+if [ $? -ne 0 ]; then
+  echo "CMake configuration failed"
+  exit 1
+fi
+cd -
+
+# Copy include files
+"${R_HOME}/bin/Rscript" -e "file.copy('inst/cppad/include/cppad', 'inst/include/', recursive = TRUE)"
+
+# Copy temp_file.cpp to ./src
+"${R_HOME}/bin/Rscript" -e "file.copy('inst/cppad/cppad_lib/temp_files.cpp', './src/')"
+
+# Create Makevars.win
+echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars.win
+
+echo "Configuration completed successfully."
