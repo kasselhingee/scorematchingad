@@ -44,7 +44,7 @@ cd -
 "${R_HOME}/bin/Rscript" -e "file.copy('inst/cppad/include/cppad', 'inst/include/', recursive = TRUE)"
 
 # Copy temp_file.cpp to ./src
-"${R_HOME}/bin/Rscript" -e "file.copy('inst/cppad/cppad_lib/temp_files.cpp', './src/')"
+"${R_HOME}/bin/Rscript" -e "file.copy('inst/cppad/cppad_lib/temp_file.cpp', './src/')"
 
 # Create Makevars.win
 echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
