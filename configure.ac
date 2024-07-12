@@ -46,7 +46,7 @@ cd -
 
 # Create the Makevars file with the necessary compilation flags
 echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
-echo "PKG_LIBS=-L$CPPAD_PATH/build -lCppAD" >> src/Makevars
+echo "PKG_LIBS=-L$CPPAD_PATH/build" >> src/Makevars
 
 # Output files
 AC_OUTPUT
