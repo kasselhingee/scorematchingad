@@ -39,17 +39,11 @@ $CMAKE .. -D CMAKE_BUILD_TYPE=minsizerel -DBUILD_SHARED_LIBS:bool=OFF -DCMAKE_PO
 if test $? -ne 0; then
   AC_MSG_ERROR([CMake configuration failed])
 fi
-# build library related to cppad_lib
-make cppad_lib
-# Verify the library exists
-if test ! -f "cppad_lib/libcppad_lib.so"; then
-  AC_MSG_ERROR([libcppad_lib.so was not found])
-fi
 cd -
 
 # Copy the include files to the appropriate directory
 "$R_HOME/bin/Rscript" -e 'file.copy("inst/cppad/include/cppad", "inst/include/", recursive = TRUE)'
-# Copy temp_files.cpp to ./src
+# Copy temp_file.cpp to ./src
 "$R_HOME/bin/Rscript" -e 'file.copy("inst/cppad/cppad_lib/temp_files.cpp", "./src/")'
 
 # Create the Makevars file with the necessary compilation flags
