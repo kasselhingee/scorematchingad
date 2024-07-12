@@ -39,6 +39,8 @@ $CMAKE .. -D CMAKE_BUILD_TYPE=minsizerel -DBUILD_SHARED_LIBS:bool=OFF -DCMAKE_PO
 if test $? -ne 0; then
   AC_MSG_ERROR([CMake configuration failed])
 fi
+# build library related to cppad_lib
+make cppad_lib
 cd -
 
 # Copy the include files to the appropriate directory
@@ -46,7 +48,7 @@ cd -
 
 # Create the Makevars file with the necessary compilation flags
 echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
-echo "PKG_LIBS=-L$CPPAD_PATH/build" >> src/Makevars
+echo "PKG_LIBS=-L$CPPAD_PATH/build/cppad_lib -lCppAD" >> src/Makevars
 
 # Output files
 AC_OUTPUT
