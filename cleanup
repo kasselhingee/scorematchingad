@@ -1,0 +1,7 @@
+rm -f src/*.o src/*.so
+rm -f src/Makevars
+rm -f -r inst/include/cppad src/temp_file.cpp
+rm -f -r inst/cppad/build
+rm -f inst/cppad/bin/test_one.sh
+rm -f inst/cppad/include/cppad/configure.hpp
+

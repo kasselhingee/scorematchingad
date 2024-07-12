@@ -41,14 +41,19 @@ if test $? -ne 0; then
 fi
 # build library related to cppad_lib
 make cppad_lib
+# Verify the library exists
+if test ! -f "cppad_lib/libcppad_lib.so"; then
+  AC_MSG_ERROR([libcppad_lib.so was not found])
+fi
 cd -
 
 # Copy the include files to the appropriate directory
 "$R_HOME/bin/Rscript" -e 'file.copy("inst/cppad/include/cppad", "inst/include/", recursive = TRUE)'
+# Copy temp_files.cpp to ./src
+"$R_HOME/bin/Rscript" -e 'file.copy("inst/cppad/cppad_lib/temp_files.cpp", "./src/")'
 
 # Create the Makevars file with the necessary compilation flags
 echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
-echo "PKG_LIBS=-L$CPPAD_PATH/build/cppad_lib -lcppad_lib" >> src/Makevars
 
 # Output files
 AC_OUTPUT
