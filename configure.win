@@ -46,6 +46,9 @@ cd -
 # Copy temp_file.cpp to ./src
 "${R_HOME}/bin/Rscript" -e "file.copy('inst/cppad/cppad_lib/temp_file.cpp', './src/')"
 
+# Cleanup build directory so that CRAN doesn't see any make files
+rm -r -f ./inst/cppad/build
+
 # Create Makevars.win
 echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
 

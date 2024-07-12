@@ -45,6 +45,8 @@ cd -
 "$R_HOME/bin/Rscript" -e 'file.copy("inst/cppad/include/cppad", "inst/include/", recursive = TRUE)'
 # Copy temp_file.cpp to ./src
 "$R_HOME/bin/Rscript" -e 'file.copy("inst/cppad/cppad_lib/temp_files.cpp", "./src/")'
+# Cleanup build directory so that CRAN doesn't see any make files
+rm -r -f ./inst/cppad/build
 
 # Create the Makevars file with the necessary compilation flags
 echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
