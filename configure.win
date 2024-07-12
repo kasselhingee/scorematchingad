@@ -33,7 +33,7 @@ CPPAD_PATH="$(pwd)/inst/cppad"
 echo "Running CMake..."
 mkdir -p "$CPPAD_PATH/build"
 cd "$CPPAD_PATH/build"
-"$CMAKE" .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=minsizerel -DBUILD_SHARED_LIBS:bool=OFF -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON
+"$CMAKE" .. -DCMAKE_BUILD_TYPE=minsizerel -DBUILD_SHARED_LIBS:bool=OFF -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON
 if [ $? -ne 0 ]; then
   echo "CMake configuration failed"
   exit 1
@@ -47,6 +47,6 @@ cd -
 "${R_HOME}/bin/Rscript" -e "file.copy('inst/cppad/cppad_lib/temp_files.cpp', './src/')"
 
 # Create Makevars.win
-echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars.win
+echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
 
 echo "Configuration completed successfully."
