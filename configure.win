@@ -50,6 +50,6 @@ cd -
 rm -r -f ./inst/cppad/build
 
 # Create Makevars.win
-echo "PKG_CPPFLAGS=-I../inst/include -Wno-ignored-attributes" > src/Makevars
+echo "PKG_CPPFLAGS=-I../inst/include" > src/Makevars
 
 echo "Configuration completed successfully."
