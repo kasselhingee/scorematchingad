@@ -142,6 +142,7 @@ of ``speed_test`` .
 -----------------------------------------------------------------------
 */
 
+# include <RcppCommon.h>
 # include <cstddef>
 # include <cmath>
 
@@ -174,7 +175,7 @@ Vector speed_test(
       {  if( 2 * repeat < repeat )
          {  // Can't use an assert here because this happens
             // in release mode first.
-            std::cerr << "speed_test: test function is too fast to time\n";
+            Rcpp::Rcerr << "speed_test: test function is too fast to time\n";
             std::exit(1);
          }
          repeat = 2 * repeat;
@@ -194,7 +195,7 @@ Vector speed_test(
 /*
 {xrst_begin SpeedTest}
 {xrst_spell
-   cout
+   Rcout
    ctime
 }
 
@@ -216,7 +217,7 @@ Purpose
 *******
 The ``SpeedTest`` function executes a speed test
 for various sized problems
-and reports the results on standard output; i.e. ``std::cout`` .
+and reports the results on standard output; i.e. ``Rcpp::Rcout`` .
 The size of each test problem is included in its report
 (unless *first* is equal to *last* ).
 
@@ -271,7 +272,7 @@ The *Test* result *name* has prototype
 
    ``std::string`` *name*
 
-The results for this test are reported on ``std::cout``
+The results for this test are reported on ``Rcpp::Rcout``
 with *name* as an identifier for the test.
 It is assumed that,
 for the duration of this call to ``SpeedTest`` ,
@@ -320,7 +321,7 @@ satisfy the relation
 
 rate
 ****
-The value displayed in the ``rate`` column on ``std::cout``
+The value displayed in the ``rate`` column on ``Rcpp::Rcout``
 is defined as the value of *repeat* divided by the
 corresponding elapsed execution time in seconds.
 The elapsed execution time is measured by the difference in
@@ -377,7 +378,7 @@ inline void SpeedTest(
 )
 {
 
-   using std::cout;
+   using Rcpp::Rcout;
    using std::endl;
 
    size_t    size;
@@ -429,7 +430,7 @@ inline void SpeedTest(
       {  if( 2 * repeat < repeat )
          {  // Can't use an assert here because this happens
             // in release mode first.
-            std::cerr << "SpeedTest: test function is too fast to time\n";
+            Rcpp::Rcerr << "SpeedTest: test function is too fast to time\n";
             std::exit(1);
          }
          repeat = 2 * repeat;
@@ -442,22 +443,22 @@ inline void SpeedTest(
       rate     = static_cast<size_t>( static_cast<float>( r ) );
 
       if( size == first && name != "" )
-         cout << name << endl;
+         Rcout << name << endl;
 
       if( first != last )
       {
          // convert int(size_t) to avoid warning on _MSC_VER sys
-         std::cout << "size = "  << int(size);
+         Rcpp::Rcout << "size = "  << int(size);
 
          SpeedTestNdigit(size, ndigit, pow10);
          while( ndigit < maxSizeDigit )
-         {  cout << " ";
+         {  Rcout << " ";
             ndigit++;
          }
-         cout << " ";
+         Rcout << " ";
       }
 
-      cout << "rate = ";
+      Rcout << "rate = ";
       SpeedTestNdigit(rate, ndigit, pow10);
       while( ndigit > 0 )
       {
@@ -465,15 +466,15 @@ inline void SpeedTest(
          digit  = rate / pow10;
 
          // convert int(size_t) to avoid warning on _MSC_VER sys
-         std::cout << int(digit);
+         Rcpp::Rcout << int(digit);
 
          rate    = rate % pow10;
          ndigit -= 1;
 
          if( (ndigit > 0) && (ndigit % 3 == 0) )
-            cout << ",";
+            Rcout << ",";
       }
-      cout << endl;
+      Rcout << endl;
 
       // next size
       if( int(size) + inc > 0 )

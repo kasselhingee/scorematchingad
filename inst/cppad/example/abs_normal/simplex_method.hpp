@@ -104,6 +104,7 @@ The file :ref:`simplex_method.cpp-name` contains an example and test of
 {xrst_end simplex_method}
 -----------------------------------------------------------------------------
 */
+# include <RcppCommon.h>
 # include <cmath>
 # include <cppad/utility/error_handler.hpp>
 # include "abs_print_mat.hpp"
@@ -129,7 +130,7 @@ bool simplex_method(
    CPPAD_ASSERT_UNKNOWN( level <= 2 );
    //
    if( level > 0 )
-   {  std::cout << "start simplex_method\n";
+   {  Rcpp::Rcout << "start simplex_method\n";
       CppAD::abs_print_mat("A", ne, nx, A);
       CppAD::abs_print_mat("b", ne,  1, b);
       CppAD::abs_print_mat("c", nx, 1, c);
@@ -253,12 +254,12 @@ bool simplex_method(
          CppAD::abs_print_mat("T", nr, nc, T);
       if( level > 0 )
       {  CppAD::abs_print_mat("x", nx, 1, xout);
-         std::cout << "itr = " << itr;
+         Rcpp::Rcout << "itr = " << itr;
          if( iobj > ne )
-            std::cout << ", auxillary objective w = ";
+            Rcpp::Rcout << ", auxillary objective w = ";
          else
-            std::cout << ", objective z = ";
-         std::cout << T[iobj * nc + (nc - 1)] << "\n";
+            Rcpp::Rcout << ", objective z = ";
+         Rcpp::Rcout << T[iobj * nc + (nc - 1)] << "\n";
       }
       //
       // number of variables depends on objective
@@ -291,11 +292,11 @@ bool simplex_method(
       if( jmax == nv )
       {  if( iobj == ne )
          {  if( level > 0 )
-               std::cout << "end simplex_method\n";
+               Rcpp::Rcout << "end simplex_method\n";
             return true;
          }
          if( level > 0 )
-            std::cout << "end_simples_method: no feasible solution\n";
+            Rcpp::Rcout << "end_simples_method: no feasible solution\n";
          return false;
       }
       //
@@ -315,7 +316,7 @@ bool simplex_method(
       if( imin == ne )
       {  // not auxillary objective
          CPPAD_ASSERT_UNKNOWN( iobj == ne );
-         if( level > 0 ) std::cout
+         if( level > 0 ) Rcpp::Rcout
             << "end simplex_method: objective is unbounded below\n";
          return false;
       }
@@ -353,7 +354,7 @@ bool simplex_method(
       basic[ basic2not ] = false;
       basic[ jmax ]      = true;
    }
-   if( level > 0 ) std::cout
+   if( level > 0 ) Rcpp::Rcout
       << "end simplex_method: maximum # iterations without solution\n";
    return false;
 }

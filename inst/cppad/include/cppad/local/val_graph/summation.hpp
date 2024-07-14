@@ -4,6 +4,7 @@
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 // SPDX-FileContributor: 2023-23 Bradley M. Bell
 // ---------------------------------------------------------------------------
+# include <RcppCommon.h>
 # include <cppad/local/val_graph/tape.hpp>
 # include <cppad/local/val_graph/rev_depend.hpp>
 namespace CppAD { namespace local { namespace val_graph {
@@ -436,7 +437,7 @@ void tape_t<Value>::summation(void)
 # if CPPAD_VAL_GRAPH_TAPE_TRACE
    // inuse
    size_t final_inuse = thread_alloc::inuse(thread);
-   std::cout << "summation:  inuse = " << final_inuse - initial_inuse << "\n";
+   Rcpp::Rcout << "summation:  inuse = " << final_inuse - initial_inuse << "\n";
 # endif
 }
 

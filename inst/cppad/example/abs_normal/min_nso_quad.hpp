@@ -157,6 +157,7 @@ The file :ref:`min_nso_quad.cpp-name` contains an example and test of
 {xrst_end min_nso_quad}
 -----------------------------------------------------------------------------
 */
+# include <RcppCommon.h>
 # include <cppad/cppad.hpp>
 # include "abs_min_quad.hpp"
 # include "abs_eval.hpp"
@@ -243,8 +244,8 @@ bool min_nso_quad(
       "min_nso_quad: b_in <= epsilon[0]"
    );
    if( level > 0 )
-   {  std::cout << "start min_nso_quad\n";
-      std::cout << "b_in = " << b_in << "\n";
+   {  Rcpp::Rcout << "start min_nso_quad\n";
+      Rcpp::Rcout << "b_in = " << b_in << "\n";
       CppAD::abs_print_mat("x_in", n, 1, x_in);
    }
    // level in abs_min_quad sub-problem
@@ -297,7 +298,7 @@ bool min_nso_quad(
       );
       if( ! ok )
       {  if( level > 0 )
-            std::cout << "end min_nso_quad: abs_min_quad failed\n";
+            Rcpp::Rcout << "end min_nso_quad: abs_min_quad failed\n";
          return false;
       }
       //
@@ -311,7 +312,7 @@ bool min_nso_quad(
       //
       if( max_delta_x < 0.75 * b_cur && max_delta_x < epsilon[0] )
       {  if( level > 0 )
-            std::cout << "end min_nso_quad: delta_x is near zero\n";
+            Rcpp::Rcout << "end min_nso_quad: delta_x is near zero\n";
          return true;
       }
       // value of abs-normal approximation at minimizer
@@ -321,7 +322,7 @@ bool min_nso_quad(
       CPPAD_ASSERT_UNKNOWN( derivative <= 0.0 )
       if( - epsilon[1] < derivative )
       {  if( level > 0 )
-            std::cout << "end min_nso_quad: derivative near zero\n";
+            Rcpp::Rcout << "end min_nso_quad: derivative near zero\n";
          return true;
       }
       //
@@ -340,7 +341,7 @@ bool min_nso_quad(
       {  // did not get sufficient descent
          b_cur /= 2.0;
          if( level > 0 )
-            std::cout << "itr = " << itr
+            Rcpp::Rcout << "itr = " << itr
             << ", rate_new = " << rate_new
             << ", b_cur = " << b_cur << "\n";
          //
@@ -353,7 +354,7 @@ bool min_nso_quad(
          xu_cur = xu_new;
          //
          if( level >  0 )
-         {  std::cout << "itr = " << itr
+         {  Rcpp::Rcout << "itr = " << itr
             << ", derivative = "<< derivative
             << ", max_delta_x = "<< max_delta_x
             << ", objective = " << g_cur[0] << "\n";
@@ -362,7 +363,7 @@ bool min_nso_quad(
       }
    }
    if( level > 0 )
-      std::cout << "end min_nso_quad: maximum number of iterations exceeded\n";
+      Rcpp::Rcout << "end min_nso_quad: maximum number of iterations exceeded\n";
    return false;
 }
 } // END_CPPAD_NAMESPACE

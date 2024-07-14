@@ -4,6 +4,7 @@
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 // SPDX-FileContributor: 2023-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
+# include <RcppCommon.h>
 # include <cppad/local/val_graph/base_op.hpp>
 
 // define CPPAD_ASSERT_FIRST_CALL_NOT_PARALLEL
@@ -179,7 +180,7 @@ public:
       const Value&       flag    = val_vec[ arg[2] ];
       const Value&       value   = val_vec[ arg[3] ];
       if( flag <= Value(0) )
-         std::cout << before << value << after;
+         Rcpp::Rcout << before << value << after;
    }
 };
 

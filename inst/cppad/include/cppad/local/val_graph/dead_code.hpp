@@ -4,6 +4,7 @@
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 // SPDX-FileContributor: 2023-23 Bradley M. Bell
 // ---------------------------------------------------------------------------
+# include <RcppCommon.h>
 # include <cppad/local/val_graph/tape.hpp>
 # include <cppad/local/val_graph/rev_depend.hpp>
 namespace CppAD { namespace local { namespace val_graph {
@@ -224,7 +225,7 @@ vectorBool tape_t<Value>::dead_code(void)
 # if CPPAD_VAL_GRAPH_TAPE_TRACE
    // inuse
    size_t final_inuse = thread_alloc::inuse(thread);
-   std::cout << "dead_code:  inuse = " << final_inuse - initial_inuse << "\n";
+   Rcpp::Rcout << "dead_code:  inuse = " << final_inuse - initial_inuse << "\n";
 # endif
    // BEGIN_RETURN
    CPPAD_ASSERT_UNKNOWN( size_t( n_val() ) == new_use_val.size() );

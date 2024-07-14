@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 
+# include <RcppCommon.h>
 # include <cppad/local/play/atom_op_info.hpp>
 
 // BEGIN_CPPAD_LOCAL_SWEEP_NAMESPACE
@@ -213,7 +214,7 @@ void reverse(
 
    // Initialize
 # if CPPAD_REVERSE_TRACE
-   std::cout << std::endl;
+   Rcpp::Rcout << std::endl;
 # endif
    OpCode        op;
    const Addr*   arg;
@@ -257,7 +258,7 @@ void reverse(
       const Base*  Z_tmp  = Taylor + i_var * J;
       const Base*  pZ_tmp = Partial + i_var * K;
       printOp<Base, RecBase>(
-         std::cout,
+         Rcpp::Rcout,
          play,
          i_op,
          i_tmp,
@@ -265,13 +266,13 @@ void reverse(
          arg
       );
       if( NumRes(op) > 0 && op != BeginOp ) printOpResult(
-         std::cout,
+         Rcpp::Rcout,
          d + 1,
          Z_tmp,
          d + 1,
          pZ_tmp
       );
-      std::cout << std::endl;
+      Rcpp::Rcout << std::endl;
 # endif
       switch( op )
       {
@@ -806,7 +807,7 @@ void reverse(
       }
    }
 # if CPPAD_REVERSE_TRACE
-   std::cout << std::endl;
+   Rcpp::Rcout << std::endl;
 # endif
 }
 

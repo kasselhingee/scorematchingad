@@ -4,6 +4,7 @@
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 // SPDX-FileContributor: 2003-22 Bradley M. Bell
 // ----------------------------------------------------------------------------
+# include <RcppCommon.h>
 # include <cppad/local/optimize/match_op.hpp>
 # include <cppad/local/optimize/usage.hpp>
 
@@ -261,7 +262,7 @@ bool get_op_previous(
    {  size_t size = hash_table_op.number_elements(code);
       ++count[size];
    }
-   std::cout << "count = " << count << "\n";
+   Rcpp::Rcout << "count = " << count << "\n";
    --------------------------------------------------------------------- */
    return exceed_collision_limit;
 }

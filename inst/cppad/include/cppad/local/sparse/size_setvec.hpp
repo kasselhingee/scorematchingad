@@ -4,6 +4,7 @@
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 // SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
+# include <RcppCommon.h>
 # include <cppad/local/pod_vector.hpp>
 /*
 {xrst_begin_parent size_setvec dev}
@@ -1721,15 +1722,15 @@ public:
 // Implemented after size_setvec_const_iterator so can use it
 template <class s_type>
 inline void size_setvec<s_type>::print(void) const
-{  std::cout << "size_setvec:\n";
+{  Rcpp::Rcout << "size_setvec:\n";
    for(s_type i = 0; i < n_set(); i++)
-   {  std::cout << "set[" << i << "] = {";
+   {  Rcpp::Rcout << "set[" << i << "] = {";
       const_iterator itr(*this, i);
       while( *itr != end() )
-      {  std::cout << *itr;
-         if( *(++itr) != end() ) std::cout << ",";
+      {  Rcpp::Rcout << *itr;
+         if( *(++itr) != end() ) Rcpp::Rcout << ",";
       }
-      std::cout << "}\n";
+      Rcpp::Rcout << "}\n";
    }
    return;
 }

@@ -198,6 +198,7 @@ The file :ref:`qp_box.cpp-name` contains an example and test of
 {xrst_end qp_box}
 -----------------------------------------------------------------------------
 */
+# include <RcppCommon.h>
 # include "qp_interior.hpp"
 
 // BEGIN C++
@@ -237,7 +238,7 @@ bool qp_box(
       size_t(G.size()) == n * n, "qp_box: size of G is not n * n"
    );
    if( level > 0 )
-   {  std::cout << "start qp_box\n";
+   {  Rcpp::Rcout << "start qp_box\n";
       CppAD::abs_print_mat("a", n, 1, a);
       CppAD::abs_print_mat("b", n, 1, b);
       CppAD::abs_print_mat("c", m, 1, c);
@@ -294,9 +295,9 @@ bool qp_box(
    {  if( level < 2 )
          CppAD::abs_print_mat("xout", n, 1, xout);
       if( ok )
-         std::cout << "end q_box: ok = true\n";
+         Rcpp::Rcout << "end q_box: ok = true\n";
       else
-         std::cout << "end q_box: ok = false\n";
+         Rcpp::Rcout << "end q_box: ok = false\n";
    }
    return ok;
 }

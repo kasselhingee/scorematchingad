@@ -7,7 +7,7 @@
 /*
 {xrst_begin abs_print_mat}
 {xrst_spell
-   cout
+   Rcout
    nr
 }
 abs_normal: Print a Vector or Matrix
@@ -51,13 +51,14 @@ This is a
 of the matrix (hence a :ref:`SimpleVector-name` ).
 The syntax
 
-   *std::cout <<* ``mat`` [ ``i`` ]
+   *Rcpp::Rcout <<* ``mat`` [ ``i`` ]
 
 must output the *i*-th element of the simple vector *mat* .
 
 {xrst_end abs_print_mat}
 -----------------------------------------------------------------------------
 */
+# include <RcppCommon.h>
 # include <cppad/cppad.hpp>
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
@@ -76,41 +77,41 @@ void abs_print_mat(
       "abs_print_mat: size of mat is not nr * nc"
    );
    // output name
-   std::cout << name << " =";
+   Rcpp::Rcout << name << " =";
    //
    // handel empty case
    if( nr == 0 || nc == 0 )
-   {  std::cout << " " << nr << " by " << nc << " empty matrix\n";
+   {  Rcpp::Rcout << " " << nr << " by " << nc << " empty matrix\n";
       return;
    }
    //
    // handle vector case
    if( nr == 1 || nc == 1 )
-   {  std::cout << " [";
+   {  Rcpp::Rcout << " [";
       for(size_t i = 0; i < nr * nc; i++)
       {  if( i > 0 )
-            std::cout << ", ";
-         std::cout << mat[i];
+            Rcpp::Rcout << ", ";
+         Rcpp::Rcout << mat[i];
       }
-      std::cout << "]";
+      Rcpp::Rcout << "]";
       //
       // column vectors are printed as row vectors with a transpose at end
       if( nr > 1 )
-         std::cout << "^T";
+         Rcpp::Rcout << "^T";
       //
-      std::cout << "\n";
+      Rcpp::Rcout << "\n";
       return;
    }
    // non-empty matrix
-   std::cout << "\n";
+   Rcpp::Rcout << "\n";
    for(size_t i = 0; i < nr; i++)
-   {  std::cout << "[";
+   {  Rcpp::Rcout << "[";
       for(size_t j = 0; j < nc; j++)
       {  if( j > 0 )
-            std::cout << ", ";
-         std::cout << mat[i * nc + j];
+            Rcpp::Rcout << ", ";
+         Rcpp::Rcout << mat[i * nc + j];
       }
-      std::cout << "]\n";
+      Rcpp::Rcout << "]\n";
    }
    return;
 }

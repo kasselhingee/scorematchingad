@@ -30,6 +30,7 @@ Contents
 
 {xrst_end ADFun}
 */
+# include <RcppCommon.h>
 # include <cppad/core/graph/cpp_graph.hpp>
 # include <cppad/local/subgraph/info.hpp>
 # include <cppad/local/graph/cpp_graph_op.hpp>
@@ -355,7 +356,7 @@ public:
    /// forward mode user API, multiple orders one direction.
    template <class BaseVector>
    BaseVector Forward(
-      size_t q, const BaseVector& xq, std::ostream& s = std::cout
+      size_t q, const BaseVector& xq, std::ostream& s = Rcpp::Rcout
    );
 
    /// reverse mode sweep

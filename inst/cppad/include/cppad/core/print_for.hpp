@@ -8,7 +8,7 @@
 /*
 {xrst_begin PrintFor}
 {xrst_spell
-   cout
+   Rcout
    notpos
 }
 
@@ -65,7 +65,7 @@ The argument *before* has prototype
 
    ``const char`` * *before*
 
-This text is written to ``std::cout`` before *value* .
+This text is written to ``Rcpp::Rcout`` before *value* .
 
 value
 *****
@@ -75,7 +75,7 @@ The argument *value* has one of the following prototypes
 | |tab| ``const VecAD`` < *Base* >:: ``reference&`` *value*
 
 The *value* , that corresponds to *x* ,
-is written to ``std::cout`` during the execution of
+is written to ``Rcpp::Rcout`` during the execution of
 
    *f* . ``Forward`` (0, *x* )
 
@@ -92,7 +92,7 @@ The argument *after* has prototype
 
    ``const char`` * *after*
 
-This text is written to ``std::cout`` after *value* .
+This text is written to ``Rcpp::Rcout`` after *value* .
 
 s
 *
@@ -129,6 +129,7 @@ This function automatically check for correct output.
 ------------------------------------------------------------------------------
 */
 
+# include <RcppCommon.h>
 # include <cstring>
 
 namespace CppAD {

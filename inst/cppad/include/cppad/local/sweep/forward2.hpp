@@ -5,6 +5,7 @@
 // SPDX-FileContributor: 2003-22 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
+# include <RcppCommon.h>
 # include <cppad/local/play/atom_op_info.hpp>
 # include <cppad/local/sweep/call_atomic.hpp>
 
@@ -178,7 +179,7 @@ void forward2(
    CPPAD_ASSERT_UNKNOWN( op == BeginOp );
 # if CPPAD_FORWARD2_TRACE
    bool atom_trace  = false;
-   std::cout << std::endl;
+   Rcpp::Rcout << std::endl;
    CppAD::vector<Base> Z_vec(q+1);
 # endif
    bool flag; // a temporary flag to use in switch cases
@@ -718,7 +719,7 @@ void forward2(
          for(i = 0; i < atom_m; i++) if( atom_iy[i] > 0 )
          {  size_t i_tmp   = (itr.op_index() + i) - atom_m;
             printOp<Base, RecBase>(
-               std::cout,
+               Rcpp::Rcout,
                play,
                i_tmp,
                atom_iy[i],
@@ -728,11 +729,11 @@ void forward2(
             Base* Z_tmp = taylor + atom_iy[i]*((J-1) * r + 1);
             {  Z_vec[0]    = Z_tmp[0];
                for(ell = 0; ell < r; ell++)
-               {  std::cout << std::endl << "     ";
+               {  Rcpp::Rcout << std::endl << "     ";
                   for(size_t p_tmp = 1; p_tmp <= q; p_tmp++)
                      Z_vec[p_tmp] = Z_tmp[(p_tmp-1)*r+ell+1];
                   printOpResult(
-                     std::cout,
+                     Rcpp::Rcout,
                      q + 1,
                      Z_vec.data(),
                      0,
@@ -740,12 +741,12 @@ void forward2(
                   );
                }
             }
-            std::cout << std::endl;
+            Rcpp::Rcout << std::endl;
          }
       }
       if( op != FunrvOp )
       {  printOp<Base, RecBase>(
-            std::cout,
+            Rcpp::Rcout,
             play,
             itr.op_index(),
             i_var,
@@ -760,11 +761,11 @@ void forward2(
          if( Z_tmp != nullptr )
          {  Z_vec[0]    = Z_tmp[0];
             for(ell = 0; ell < r; ell++)
-            {  std::cout << std::endl << "     ";
+            {  Rcpp::Rcout << std::endl << "     ";
                for(size_t p_tmp = 1; p_tmp <= q; p_tmp++)
                   Z_vec[p_tmp] = Z_tmp[ (p_tmp-1)*r + ell + 1];
                printOpResult(
-                  std::cout,
+                  Rcpp::Rcout,
                   q + 1,
                   Z_vec.data(),
                   0,
@@ -772,10 +773,10 @@ void forward2(
                );
             }
          }
-         std::cout << std::endl;
+         Rcpp::Rcout << std::endl;
       }
    }
-   std::cout << std::endl;
+   Rcpp::Rcout << std::endl;
 # else
    }
 # endif

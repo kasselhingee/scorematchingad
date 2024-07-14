@@ -214,6 +214,7 @@ The file :ref:`abs_min_quad.cpp-name` contains an example and test of
 {xrst_end abs_min_quad}
 -----------------------------------------------------------------------------
 */
+# include <RcppCommon.h>
 # include <cppad/cppad.hpp>
 # include "qp_box.hpp"
 # include "abs_eval.hpp"
@@ -281,7 +282,7 @@ bool abs_min_quad(
       "abs_min_quad: size of bound is not equal to n"
    );
    if( level > 0 )
-   {  std::cout << "start abs_min_quad\n";
+   {  Rcpp::Rcout << "start abs_min_quad\n";
       CppAD::abs_print_mat("g_hat", m + s, 1, g_hat);
       CppAD::abs_print_mat("g_jac", m + s, n + s, g_jac);
       CppAD::abs_print_mat("hessian", n, n, hessian);
@@ -333,7 +334,7 @@ bool abs_min_quad(
    size_t n_plane = 0;
    //
    if( level > 0 )
-   {  std::cout << "obj = " << obj_cur << "\n";
+   {  Rcpp::Rcout << "obj = " << obj_cur << "\n";
       CppAD::abs_print_mat("delta_x", n, 1, delta_x);
    }
    for(size_t itr = 0; itr < maxitr[0]; itr++)
@@ -381,7 +382,7 @@ bool abs_min_quad(
          near_zero &= std::fabs( dq_dx[j] + dy_dx[j] ) < epsilon[1];
       if( near_zero )
       {  if( level > 0 )
-            std::cout << "end abs_min_quad: local derivative near zero\n";
+            Rcpp::Rcout << "end abs_min_quad: local derivative near zero\n";
          return true;
       }
       // value of hyperplane at delta_x
@@ -463,7 +464,7 @@ bool abs_min_quad(
       if( ! ok )
       {  if( level > 0 )
          {  CppAD::abs_print_mat("delta_x", n, 1, delta_x);
-            std::cout << "end abs_min_quad: qp_box failed\n";
+            Rcpp::Rcout << "end abs_min_quad: qp_box failed\n";
          }
          return false;
       }
@@ -490,7 +491,7 @@ bool abs_min_quad(
       delta_x = delta_new;
       //
       if( level > 0 )
-      {  std::cout << "itr = " << itr << ", max_diff = " << max_diff
+      {  Rcpp::Rcout << "itr = " << itr << ", max_diff = " << max_diff
             << ", obj_cur = " << obj_cur << "\n";
          CppAD::abs_print_mat("delta_x", n, 1, delta_x);
       }
@@ -501,12 +502,12 @@ bool abs_min_quad(
       //
       if( max_diff < epsilon[0] )
       {  if( level > 0 )
-            std::cout << "end abs_min_quad: change in delta_x near zero\n";
+            Rcpp::Rcout << "end abs_min_quad: change in delta_x near zero\n";
          return true;
       }
    }
    if( level > 0 )
-      std::cout << "end abs_min_quad: maximum number of iterations exceeded\n";
+      Rcpp::Rcout << "end abs_min_quad: maximum number of iterations exceeded\n";
    return false;
 }
 } // END_CPPAD_NAMESPACE

@@ -66,6 +66,7 @@ is an example and test of tape.fold_con().
 {xrst_end val_tape_fold_con}
 -------------------------------------------------------------------------------
 */
+# include <RcppCommon.h>
 # include <cppad/local/val_graph/tape.hpp>
 # include <cppad/local/val_graph/call_atomic.hpp>
 
@@ -256,7 +257,7 @@ void tape_t<Value>::fold_con(void)
 # if CPPAD_VAL_GRAPH_TAPE_TRACE
    // inuse
    size_t final_inuse = thread_alloc::inuse(thread);
-   std::cout << "fold_con:  inuse = " << final_inuse - initial_inuse << "\n";
+   Rcpp::Rcout << "fold_con:  inuse = " << final_inuse - initial_inuse << "\n";
 # endif
    return;
 }

@@ -159,6 +159,7 @@ The file :ref:`min_nso_linear.cpp-name` contains an example and test of
 {xrst_end min_nso_linear}
 -----------------------------------------------------------------------------
 */
+# include <RcppCommon.h>
 # include <cppad/cppad.hpp>
 # include "abs_min_linear.hpp"
 # include "abs_eval.hpp"
@@ -238,8 +239,8 @@ bool min_nso_linear(
       "min_nso_linear: b_in <= epsilon[0]"
    );
    if( level > 0 )
-   {  std::cout << "start min_nso_linear\n";
-      std::cout << "b_in = " << b_in << "\n";
+   {  Rcpp::Rcout << "start min_nso_linear\n";
+      Rcpp::Rcout << "b_in = " << b_in << "\n";
       CppAD::abs_print_mat("x_in", n, 1, x_in);
    }
    // level in abs_min_linear sub-problem
@@ -289,7 +290,7 @@ bool min_nso_linear(
       );
       if( ! ok )
       {  if( level > 0 )
-            std::cout << "end min_nso_linear: abs_min_linear failed\n";
+            Rcpp::Rcout << "end min_nso_linear: abs_min_linear failed\n";
          return false;
       }
       //
@@ -303,7 +304,7 @@ bool min_nso_linear(
       //
       if( max_delta_x < b_cur && max_delta_x < epsilon[0] )
       {  if( level > 0 )
-            std::cout << "end min_nso_linear: delta_x is near zero\n";
+            Rcpp::Rcout << "end min_nso_linear: delta_x is near zero\n";
          return true;
       }
       // value of abs-normal approximation at minimizer
@@ -313,7 +314,7 @@ bool min_nso_linear(
       CPPAD_ASSERT_UNKNOWN( derivative <= 0.0 )
       if( - epsilon[1] < derivative )
       {  if( level > 0 )
-            std::cout << "end min_nso_linear: derivative near zero\n";
+            Rcpp::Rcout << "end min_nso_linear: derivative near zero\n";
          return true;
       }
       //
@@ -333,7 +334,7 @@ bool min_nso_linear(
       {  // did not get sufficient descent
          b_cur /= 2.0;
          if( level > 0 )
-            std::cout << "itr = " << itr
+            Rcpp::Rcout << "itr = " << itr
             << ", rate_new = " << rate_new
             << ", b_cur = " << b_cur << "\n";
          //
@@ -346,7 +347,7 @@ bool min_nso_linear(
          xu_cur = xu_new;
          //
          if( level >  0 )
-         {  std::cout << "itr = " << itr
+         {  Rcpp::Rcout << "itr = " << itr
             << ", derivative = "<< derivative
             << ", max_delta_x = "<< max_delta_x
             << ", objective = " << g_cur[0] << "\n";
@@ -355,7 +356,7 @@ bool min_nso_linear(
       }
    }
    if( level > 0 )
-      std::cout << "end min_nso_linear: maximum number of iterations exceeded\n";
+      Rcpp::Rcout << "end min_nso_linear: maximum number of iterations exceeded\n";
    return false;
 }
 } // END_CPPAD_NAMESPACE

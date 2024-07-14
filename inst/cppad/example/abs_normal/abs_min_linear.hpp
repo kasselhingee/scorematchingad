@@ -207,6 +207,7 @@ The file :ref:`abs_min_linear.cpp-name` contains an example and test of
 {xrst_end abs_min_linear}
 -----------------------------------------------------------------------------
 */
+# include <RcppCommon.h>
 # include <cppad/cppad.hpp>
 # include "lp_box.hpp"
 # include "abs_eval.hpp"
@@ -269,7 +270,7 @@ bool abs_min_linear(
       "abs_min_linear: size of bound is not equal to n"
    );
    if( level > 0 )
-   {  std::cout << "start abs_min_linear\n";
+   {  Rcpp::Rcout << "start abs_min_linear\n";
       CppAD::abs_print_mat("bound", n, 1, bound);
       CppAD::abs_print_mat("g_hat", m + s, 1, g_hat);
       CppAD::abs_print_mat("g_jac", m + s, n + s, g_jac);
@@ -353,7 +354,7 @@ bool abs_min_linear(
          near_zero &= std::fabs( dy_dx[j] ) < epsilon[1];
       if( near_zero )
       {  if( level > 0 )
-            std::cout << "end abs_min_linear: local derivative near zero\n";
+            Rcpp::Rcout << "end abs_min_linear: local derivative near zero\n";
          return true;
       }
 
@@ -408,7 +409,7 @@ bool abs_min_linear(
       if( ! ok )
       {  if( level > 0 )
          {  CppAD::abs_print_mat("delta_x", n, 1, delta_x);
-            std::cout << "end abs_min_linear: lp_box failed\n";
+            Rcpp::Rcout << "end abs_min_linear: lp_box failed\n";
          }
          return false;
       }
@@ -426,7 +427,7 @@ bool abs_min_linear(
          delta_new[j] = xout_box[j];
       DblVector g_new = CppAD::abs_eval(n, m, s, g_hat, g_jac, delta_new);
       if( level > 0 )
-      {  std::cout << "itr = " << itr << ", max_diff = " << max_diff
+      {  Rcpp::Rcout << "itr = " << itr << ", max_diff = " << max_diff
             << ", y_cur = " << g_tilde[0] << ", y_new = " << g_new[0]
             << "\n";
          CppAD::abs_print_mat("delta_new", n, 1, delta_new);
@@ -441,12 +442,12 @@ bool abs_min_linear(
       //
       if( max_diff < epsilon[0] )
       {  if( level > 0 )
-            std::cout << "end abs_min_linear: change in delta_x near zero\n";
+            Rcpp::Rcout << "end abs_min_linear: change in delta_x near zero\n";
          return true;
       }
    }
    if( level > 0 )
-      std::cout << "end abs_min_linear: maximum number of iterations exceeded\n";
+      Rcpp::Rcout << "end abs_min_linear: maximum number of iterations exceeded\n";
    return false;
 }
 } // END_CPPAD_NAMESPACE

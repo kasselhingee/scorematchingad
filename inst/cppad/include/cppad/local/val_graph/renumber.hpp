@@ -4,6 +4,7 @@
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 // SPDX-FileContributor: 2023-23 Bradley M. Bell
 // ---------------------------------------------------------------------------
+# include <RcppCommon.h>
 # include <cppad/local/val_graph/op_hash_table.hpp>
 
 /*
@@ -165,11 +166,11 @@ void tape_t<Value>::renumber(void)
    // A set size more than one represents a collision
    Vector<addr_t> size_count = op_hash_table.size_count();
    for(size_t i = 0; i < size_count.size(); ++i)
-      std::cout << "size = " << i << ", count = " << size_count[i] << "\n";
+      Rcpp::Rcout << "size = " << i << ", count = " << size_count[i] << "\n";
    //
    // inuse
    size_t final_inuse = thread_alloc::inuse(thread);
-   std::cout << "renumber:   inuse = " << final_inuse - initial_inuse << "\n";
+   Rcpp::Rcout << "renumber:   inuse = " << final_inuse - initial_inuse << "\n";
 # endif
    return;
 }

@@ -5,6 +5,7 @@
 // SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
+# include <RcppCommon.h>
 # include <cppad/local/play/atom_op_info.hpp>
 
 /*
@@ -232,7 +233,7 @@ void for_hes(
    CPPAD_ASSERT_UNKNOWN( op == BeginOp );
 # if CPPAD_FOR_HES_TRACE
    vector<Addr> atom_funrp; // parameter index for FunrpOp operators
-   std::cout << std::endl;
+   Rcpp::Rcout << std::endl;
    CppAD::vectorBool zf_value(np1);
    CppAD::vectorBool zh_value(np1 * np1);
 # endif
@@ -609,7 +610,7 @@ void for_hes(
             }
             // k_var is zero when there is no result
             printOp<Base, RecBase>(
-               std::cout,
+               Rcpp::Rcout,
                play,
                itr.op_index() - atom_m + k,
                k_var,
@@ -617,13 +618,13 @@ void for_hes(
                arg_tmp
             );
             if( k_var > 0 ) printOpResult(
-               std::cout,
+               Rcpp::Rcout,
                1,
                &zf_value,
                1,
                &zh_value
             );
-            std::cout << std::endl;
+            Rcpp::Rcout << std::endl;
          }
       }
       for(size_t i = 0; i < np1; i++)
@@ -650,7 +651,7 @@ void for_hes(
       delay_print     |= op == FunrvOp;
       if( ! delay_print )
       {    printOp<Base, RecBase>(
-            std::cout,
+            Rcpp::Rcout,
             play,
             itr.op_index(),
             i_var,
@@ -658,16 +659,16 @@ void for_hes(
             arg
          );
          if( NumRes(op) > 0 && (! delay_print) ) printOpResult(
-            std::cout,
+            Rcpp::Rcout,
             1,
             &zf_value,
             1,
             &zh_value
          );
-         std::cout << std::endl;
+         Rcpp::Rcout << std::endl;
       }
    }
-   std::cout << std::endl;
+   Rcpp::Rcout << std::endl;
 # else
    }
 # endif

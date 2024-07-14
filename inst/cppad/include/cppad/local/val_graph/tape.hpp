@@ -4,6 +4,7 @@
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 // SPDX-FileContributor: 2023-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
+# include <RcppCommon.h>
 # include <cppad/local/val_graph/op_iterator.hpp>
 # include <cppad/local/val_graph/op_enum2class.hpp>
 # include <cppad/local/val_graph/val_type.hpp>
@@ -309,7 +310,7 @@ public :
       );
       using std::setw;
       using std::right;
-      using std::cout;
+      using Rcpp::Rcout;
       //
       // ind_vec_vec
       // Only the vector_op routines use this eval argument
@@ -318,11 +319,11 @@ public :
       // trace
       if( trace )
       {  // no operators for independent variables
-         std::cout << "independent vector\n";
+         Rcpp::Rcout << "independent vector\n";
          for(addr_t res_index = 0; res_index < n_ind_; ++res_index)
          {  Value res = val_vec[res_index];
-            cout << right << setw(5) << res_index;
-            cout << " " << right << setw(10) << res << "\n";
+            Rcout << right << setw(5) << res_index;
+            Rcout << " " << right << setw(10) << res << "\n";
          }
          std::printf("operators\n");
       }
@@ -353,12 +354,12 @@ public :
       // trace
       if( trace )
       {  // no operators for dependent variables
-         std::cout << "dependent vector\n";
+         Rcpp::Rcout << "dependent vector\n";
          for(size_t i = 0; i < dep_vec_.size(); ++i)
          {  addr_t res_index = dep_vec_[i];
             Value res        = val_vec[res_index];
-            cout << right << setw(5) << res_index;
-            cout << " " << right << setw(10) << res << "\n";
+            Rcout << right << setw(5) << res_index;
+            Rcout << " " << right << setw(10) << res << "\n";
          }
          // space after end of this tape
          std::printf("\n");

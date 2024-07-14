@@ -4,6 +4,7 @@
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 // SPDX-FileContributor: 2023-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
+# include <RcppCommon.h>
 # include <iostream>
 # include <iomanip>
 /*
@@ -69,38 +70,38 @@ void print_op(
    size_t n_res = res_value.size();
    using std::setw;
    using std::right;
-   using std::cout;
+   using Rcpp::Rcout;
    //
    // One result
    if( n_res == 1 )
-   {  cout << right << setw(5) << res_index;
-      cout << " " << right << setw(10) << res_value[0];
-      cout << " = " << right << setw(5)  << name << "(";
+   {  Rcout << right << setw(5) << res_index;
+      Rcout << " " << right << setw(10) << res_value[0];
+      Rcout << " = " << right << setw(5)  << name << "(";
       for(size_t i = 0; i < n_arg; ++i)
-      {  cout << right << setw(5) << std::right << val_arg[i];
+      {  Rcout << right << setw(5) << std::right << val_arg[i];
          if( i + 1 < n_arg )
-            cout << ",";
+            Rcout << ",";
       }
-      cout << ")" << std::endl;
+      Rcout << ")" << std::endl;
       return;
    }
    //
    // Multiple results
    CPPAD_ASSERT_UNKNOWN( n_res > 1 );
-   cout << right << setw(5) << name << "(";
+   Rcout << right << setw(5) << name << "(";
    for(size_t i = 0; i < n_arg; ++i)
-   {  cout << right << setw(5) << val_arg[i];
+   {  Rcout << right << setw(5) << val_arg[i];
       if( i + 1 < n_arg )
-            cout << ",";
+            Rcout << ",";
       else
-            cout << ")";
+            Rcout << ")";
    }
    for(addr_t i = 0; i < addr_t( n_res ); ++i)
-   {  cout << std::endl;
-      cout << right << setw(5) << res_index + i;
-      cout << " " << setw(10) << res_value[i];
+   {  Rcout << std::endl;
+      Rcout << right << setw(5) << res_index + i;
+      Rcout << " " << setw(10) << res_value[i];
    }
-   cout << std::endl;
+   Rcout << std::endl;
 }
 /*
 ------------------------------------------------------------------------------
@@ -141,12 +142,12 @@ void print_con_op(
    CPPAD_ASSERT_UNKNOWN( res_value.size() == 1 );
    using std::setw;
    using std::right;
-   using std::cout;
-   {  cout << right << setw(5) << res_index;
-      cout << " " << right << setw(10) << res_value[0];
-      cout << " = " << right << setw(5)  << "con" << "[";
-      cout << right << setw(5) << std::right << arg[0] << "]";
-      cout << std::endl;
+   using Rcpp::Rcout;
+   {  Rcout << right << setw(5) << res_index;
+      Rcout << " " << right << setw(10) << res_value[0];
+      Rcout << " = " << right << setw(5)  << "con" << "[";
+      Rcout << right << setw(5) << std::right << arg[0] << "]";
+      Rcout << std::endl;
       return;
    }
 }
@@ -189,7 +190,7 @@ void print_csum_op(
    //
    using std::setw;
    using std::right;
-   using std::cout;
+   using Rcpp::Rcout;
    //
    // n_add, n_sub
    addr_t n_add = arg[0];
@@ -197,35 +198,35 @@ void print_csum_op(
    //
    CPPAD_ASSERT_UNKNOWN( arg.size() == size_t(3 + n_add + n_sub ) );
    //
-   cout << right << setw(5) << res_index;
-   cout << " " << right << setw(10) << res_value[0] << " = ";
+   Rcout << right << setw(5) << res_index;
+   Rcout << " " << right << setw(10) << res_value[0] << " = ";
    if( n_add > 0 )
-   {  cout << right << setw(5)  << "csum+" << "(";
+   {  Rcout << right << setw(5)  << "csum+" << "(";
       for(addr_t i = 0; i < n_add; ++i)
-      {  cout << right << setw(5) << arg[2 + i];
+      {  Rcout << right << setw(5) << arg[2 + i];
          if( i + 1 < n_add )
-            cout << ",";
+            Rcout << ",";
       }
-      cout << ")" << std::endl;
+      Rcout << ")" << std::endl;
       if( n_sub > 0 )
-      {  cout << setw(19) << "" << right << setw(5)  << "csum-" << "(";
+      {  Rcout << setw(19) << "" << right << setw(5)  << "csum-" << "(";
          for(addr_t i = 0; i < n_sub; ++i)
-         {  cout << right << setw(5) << arg[2 + n_add + i];
+         {  Rcout << right << setw(5) << arg[2 + n_add + i];
             if( i + 1 < n_sub )
-               cout << ",";
+               Rcout << ",";
          }
-         cout << ")" << std::endl;
+         Rcout << ")" << std::endl;
       }
    }
    else
    {  CPPAD_ASSERT_UNKNOWN( n_sub > 0 );
-      cout << right << setw(5)  << "csum-" << "(";
+      Rcout << right << setw(5)  << "csum-" << "(";
       for(addr_t i = 0; i < n_sub; ++i)
-      {  cout << right << setw(5) << arg[2 + n_add + i];
+      {  Rcout << right << setw(5) << arg[2 + n_add + i];
          if( i + 1 < n_sub )
-            cout << ",";
+            Rcout << ",";
       }
-      cout << ")" << std::endl;
+      Rcout << ")" << std::endl;
    }
 }
 /*
@@ -270,7 +271,7 @@ inline void print_comp_op(
 {  //
    using std::setw;
    using std::right;
-   using std::cout;
+   using Rcpp::Rcout;
    //
    const char* res_str;
    if( result )
@@ -278,10 +279,10 @@ inline void print_comp_op(
    else
       res_str = "false";
    //
-   cout << setw(19) << "" << right << setw(5)  << comp_name << "(";
-   cout << right << setw(5) << left_index  << ",";
-   cout << right << setw(5) << right_index << ") = ";
-   cout << right << setw(5) << res_str << std::endl;
+   Rcout << setw(19) << "" << right << setw(5)  << comp_name << "(";
+   Rcout << right << setw(5) << left_index  << ",";
+   Rcout << right << setw(5) << right_index << ") = ";
+   Rcout << right << setw(5) << res_str << std::endl;
 }
 /*
 ------------------------------------------------------------------------------
@@ -330,13 +331,13 @@ inline void print_pri_op(
 {  //
    using std::setw;
    using std::right;
-   using std::cout;
+   using Rcpp::Rcout;
    //
-   cout << setw(19) << "" << right << setw(5)  << "pri" << "[";
-   cout << right << setw(5) << before_index  << ",";
-   cout << right << setw(5) << after_index   << "](";
-   cout << right << setw(5) << flag_index    << ",";
-   cout << right << setw(5) << value_index << ")" << std::endl;
+   Rcout << setw(19) << "" << right << setw(5)  << "pri" << "[";
+   Rcout << right << setw(5) << before_index  << ",";
+   Rcout << right << setw(5) << after_index   << "](";
+   Rcout << right << setw(5) << flag_index    << ",";
+   Rcout << right << setw(5) << value_index << ")" << std::endl;
 }
 /*
 ------------------------------------------------------------------------------
@@ -376,12 +377,12 @@ inline void print_store_op(
 {  //
    using std::setw;
    using std::right;
-   using std::cout;
+   using Rcpp::Rcout;
    //
-   cout << setw(19) << "" << right << setw(5)  << "store" << "[";
-   cout << right << setw(5) << which_vector  << "](";
-   cout << right << setw(5) << vector_index  << ",";
-   cout << right << setw(5) << value_index << ")" << std::endl;
+   Rcout << setw(19) << "" << right << setw(5)  << "store" << "[";
+   Rcout << right << setw(5) << which_vector  << "](";
+   Rcout << right << setw(5) << vector_index  << ",";
+   Rcout << right << setw(5) << value_index << ")" << std::endl;
 }
 /*
 ------------------------------------------------------------------------------
@@ -422,13 +423,13 @@ inline void print_load_op(
 {  //
    using std::setw;
    using std::right;
-   using std::cout;
+   using Rcpp::Rcout;
    //
-   cout << right << setw(5) << res_index;
-   cout << " " << right << setw(10) << res_value;
-   cout << " = " << setw(5)  << "load" << "[";
-   cout << right << setw(5) << which_vector  << "](";
-   cout << right << setw(5) << vector_index << ")" << std::endl;
+   Rcout << right << setw(5) << res_index;
+   Rcout << " " << right << setw(10) << res_value;
+   Rcout << " = " << setw(5)  << "load" << "[";
+   Rcout << right << setw(5) << which_vector  << "](";
+   Rcout << right << setw(5) << vector_index << ")" << std::endl;
 }
 /*
 ------------------------------------------------------------------------------
@@ -463,16 +464,16 @@ inline void print_vec_op(
 {  //
    using std::setw;
    using std::right;
-   using std::cout;
+   using Rcpp::Rcout;
    //
-   cout << setw(19) << "" << right << setw(5)  << "vec" << "[";
-   cout << right << setw(5) << which_vector  << "](";
+   Rcout << setw(19) << "" << right << setw(5)  << "vec" << "[";
+   Rcout << right << setw(5) << which_vector  << "](";
    for(size_t i = 0; i < initial.size(); ++i)
-   {  cout << right << setw(5) << initial[i];
+   {  Rcout << right << setw(5) << initial[i];
       if( i + 1 < initial.size() )
-         cout << ",";
+         Rcout << ",";
    }
-   cout << ")" << std::endl;
+   Rcout << ")" << std::endl;
 }
 
 } } } // END_CPPAD_LOCAL_VAL_GRAPH_NAMESPACE

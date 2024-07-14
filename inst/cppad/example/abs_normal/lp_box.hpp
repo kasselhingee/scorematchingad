@@ -115,6 +115,7 @@ The file :ref:`lp_box.cpp-name` contains an example and test of
 {xrst_end lp_box}
 -----------------------------------------------------------------------------
 */
+# include <RcppCommon.h>
 # include "simplex_method.hpp"
 
 // BEGIN C++
@@ -145,7 +146,7 @@ bool lp_box(
       size_t(d.size()) == n, "lp_box: size of d is not n"
    );
    if( level > 0 )
-   {  std::cout << "start lp_box\n";
+   {  Rcpp::Rcout << "start lp_box\n";
       CppAD::abs_print_mat("A", m, n, A);
       CppAD::abs_print_mat("b", m, 1, b);
       CppAD::abs_print_mat("c", n, 1, c);
@@ -211,9 +212,9 @@ bool lp_box(
    if( level > 0 )
    {  CppAD::abs_print_mat("xout", n, 1, xout);
       if( ok )
-         std::cout << "end lp_box: ok = true\n";
+         Rcpp::Rcout << "end lp_box: ok = true\n";
       else
-         std::cout << "end lp_box: ok = false\n";
+         Rcpp::Rcout << "end lp_box: ok = false\n";
    }
    return ok;
 }

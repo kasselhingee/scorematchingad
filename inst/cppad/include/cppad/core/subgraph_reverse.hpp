@@ -355,13 +355,13 @@ void ADFun<Base,RecBase>::subgraph_reverse_helper(
    CPPAD_ASSERT_UNKNOWN( subgraph[subgraph.size()-1] == i_op_end_op );
    /*
    // Use this printout for debugging
-   std::cout << "{ ";
+   Rcpp::Rcout << "{ ";
    for(size_t k = 0; k < subgraph.size(); k++)
    {  if( k > 0 )
-         std::cout << ", ";
-      std::cout << subgraph[k];
+         Rcpp::Rcout << ", ";
+      Rcpp::Rcout << subgraph[k];
    }
-   std::cout << "}\n";
+   Rcpp::Rcout << "}\n";
    */
 
    // initialize subgraph_partial_ matrix to zero on subgraph

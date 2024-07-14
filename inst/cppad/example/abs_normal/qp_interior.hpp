@@ -313,6 +313,7 @@ The file :ref:`qp_interior.cpp-name` contains an example and test of
 {xrst_end qp_interior}
 -----------------------------------------------------------------------------
 */
+# include <RcppCommon.h>
 # include <cmath>
 # include <cppad/utility/lu_solve.hpp>
 # include "abs_print_mat.hpp"
@@ -435,7 +436,7 @@ bool qp_interior(
       "qp_interior: size of G is not n * n"
    );
    if( level > 0 )
-   {  std::cout << "start qp_interior\n";
+   {  Rcpp::Rcout << "start qp_interior\n";
       CppAD::abs_print_mat("c", m, 1, c);
       CppAD::abs_print_mat("C", m, n, C);
       CppAD::abs_print_mat("g", n, 1, g);
@@ -458,7 +459,7 @@ bool qp_interior(
    //
    if( max_element == 0.0 )
    {  if( level > 0 )
-         std::cout << "end qp_interior: line_search failed\n";
+         Rcpp::Rcout << "end qp_interior: line_search failed\n";
       return false;
    }
    //
@@ -469,7 +470,7 @@ bool qp_interior(
       for(size_t j = 0; j < n; j++)
          sum += C[ i * n + j ] * xout[j];
       if( sum > 0.0 )
-      {  if( level > 0 ) std::cout <<
+      {  if( level > 0 ) Rcpp::Rcout <<
             "end qp_interior: xin is not in interior of feasible set\n";
          return false;
       }
@@ -486,11 +487,11 @@ bool qp_interior(
       // check for convergence
       if( F_max_abs <= epsilon )
       {  if( level > 0 )
-            std::cout << "end qp_interior: ok = true\n";
+            Rcpp::Rcout << "end qp_interior: ok = true\n";
          return true;
       }
       if( itr == maxitr )
-      {  if( level > 0 ) std::cout <<
+      {  if( level > 0 ) Rcpp::Rcout <<
             "end qp_interior: max # iterations without convergence\n";
          return false;
       }
@@ -593,7 +594,7 @@ bool qp_interior(
       }
       if( ! lam_ok )
       {  if( level > 0 )
-            std::cout << "end qp_interior: line search failed\n";
+            Rcpp::Rcout << "end qp_interior: line search failed\n";
          return false;
       }
       //
@@ -610,7 +611,7 @@ bool qp_interior(
       if( F_max_abs <= 1e1 *  mu )
          mu = mu / 1e2;
       if( level > 0 )
-      {  std::cout << "itr = " << itr
+      {  Rcpp::Rcout << "itr = " << itr
             << ", mu = " << mu
             << ", lam = " << lam
             << ", F_max_abs = " << F_max_abs << "\n";
@@ -618,7 +619,7 @@ bool qp_interior(
       }
    }
    if( level > 0 )
-      std::cout << "end qp_interior: progam error\n";
+      Rcpp::Rcout << "end qp_interior: progam error\n";
    return false;
 }
 } // END_CPPAD_NAMESPACE
