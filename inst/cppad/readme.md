@@ -1,5 +1,8 @@
 # CppAD: A Package for Differentiation of C++ Algorithms
 
+*Note by Kassel Liam Hingee:*  This directory contains a modified version of CppAD 20240000.5 for use within an R package.  I have removed directories and files in the root directory that I didn't appear to need (xrst, xrst.toml, user_guide.xrst, .travis.yml, .readthedocs.yml, appveyor.yml, appendix/. batch_edit.sed, bug/ .circleci, .coin-or, .github, .gitignore) and much of bin/.  I have also replaced all use of std::cout with Rcpp::Rcout (similary for std::cerr) and added an include directive to RcppCommon for any file containing such changes.  The copyright for CppAD is held by Bradley M. Bell (Copyright (C) 2003-18). The CppAD source code is available at https://github.com/coin-or/CppAD.git .
+
+
 ## Documentation
 [users guide](https://cppad.readthedocs.io/en/latest/user_guide.html)
 
