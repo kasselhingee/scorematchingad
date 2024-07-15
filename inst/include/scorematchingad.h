@@ -65,5 +65,7 @@ namespace Rcpp {
   template <> SEXP wrap(const mata1&);
 }
 
+# include "utils/wrapas.hpp"
+
 # endif
 
