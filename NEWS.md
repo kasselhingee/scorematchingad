@@ -1,3 +1,8 @@
+# Version 0.0.65
+Moved to a recent version of `CppAD` (version 20240000.5), which contains some macros defined in `./inst/cppad/include/cppad/configure.hpp` via a call to `cmake`. Thus this package builds via a configure script for installation. The `CppAD` source code is now in `./inst/cppad`. After `cmake` the `./inst/cppad/include/cppad` directory is moved to `./inst/include/cppad/`. One `cpp` file is also moved to `./src/`
+
+Also moved to using `rlang` instead of `ellipsis` to `check_dots_used()`
+
 # Version 0.0.64
 
 URLs to CppAD and Eigen help pages, data locations and even paper locations are breaking frequently enough for CRAN testing to pick up. So I've removed a few urls in this version.
