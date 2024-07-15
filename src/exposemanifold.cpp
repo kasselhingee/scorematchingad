@@ -39,14 +39,14 @@ transform<a1type> * newtransform(const std::string &name){
 }
 
 RCPP_MODULE(manifolds) {
-  Rcpp::class_< manifold_a1type >("man_ad") //manifold_a1type is a synonym with manifold<a1type> due to typedef in scorematchingad.h
+  Rcpp::class_< manifold_a1type >("man_ad") //manifold_a1type is a synonym with manifold<a1type> due to typedef in scorematchingad_forward.h
       .factory<const std::string &>(newmanifold)
       .method("Pmatfun", &manifold_a1type::Pmatfun, "Pmatfun(z) returns the matrix that orthogonally projects onto the manifold's tangent space at z")
       .method("dPmatfun", &manifold_a1type::dPmatfun, "dPmatfun(z, i) returns the element-wise derivative of Pmatfun() at location z with respect to the ith dimension")
       .method("name", &manifold_a1type::name)
   ;
   
-  Rcpp::class_< transform_a1type >("transform_ad") //transform_a1type is synonym with transform<a1type> due to typedef in  scorematchingad.h
+  Rcpp::class_< transform_a1type >("transform_ad") //transform_a1type is synonym with transform<a1type> due to typedef in  scorematchingad_forward.h
       .factory<const std::string &>(newtransform)
       .method("toM", &transform_a1type::toM, "transform a vector to the manifold")
       .method("fromM", &transform_a1type::fromM, "reverse of toM()")

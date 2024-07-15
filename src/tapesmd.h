@@ -1,7 +1,8 @@
 #ifndef tapesmd_h
 #define tapesmd_h
 
-# include "scorematchingad.h"
+# include "scorematchingad_forward.h"
+# include <Rcpp.h>
 # include <cppad/cppad.hpp>
 # include "tapebdryweight.h"
 # include "manifoldtransforms/bdryweights.hpp"

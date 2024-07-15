@@ -4,7 +4,8 @@
 // things for manipulating and evaluating CppAD::ADFun objects from R
 
 //for content that is Rcpp specific
-#include "scorematchingad.h"
+#include "scorematchingad_forward.h"
+#include <Rcpp.h>
 
 //' @noRd
 //' @name evaltape_internal
