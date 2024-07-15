@@ -5,7 +5,6 @@
 
 //for content that is Rcpp specific
 #include "scorematchingad.h"
-#include "utils/wrapas.hpp"  //needed because converting veca1 from R
 
 //' @noRd
 //' @name evaltape_internal
