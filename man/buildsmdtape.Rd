@@ -97,7 +97,7 @@ Currently available improper log-likelihood functions are:
 }
 }
 \section{Introduction to CppAD Tapes}{
-This package uses version 2022000.2 of the algorithmic differentiation library \code{CppAD} \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
+This package uses version 2024000.5 of the algorithmic differentiation library \code{CppAD} \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
 Full help for \code{CppAD} can be found at \url{https://cppad.readthedocs.io/}.
 
 Differentiation proceeds by \emph{taping} the basic (\emph{atomic}) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.

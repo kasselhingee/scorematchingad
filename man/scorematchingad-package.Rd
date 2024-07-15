@@ -32,6 +32,14 @@ We developed this package on Ngunnawal and Ngambri Country. We thank the Country
 \references{
 \insertAllCited{}
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/kasselhingee/scorematchingad}
+  \item Report bugs at \url{https://github.com/kasselhingee/scorematchingad/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Kassel Liam Hingee \email{kassel.hingee@anu.edu.au} (\href{https://orcid.org/0000-0001-9894-2407}{ORCID})
 

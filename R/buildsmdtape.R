@@ -17,7 +17,7 @@
 #' This tape is then used to generate a tape for the score matching discrepancy function where the parameters to estimate are the independent variable.
 #' 
 #' # Introduction to CppAD Tapes
-#' This package uses version 2024000.4 of the algorithmic differentiation library `CppAD` \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
+#' This package uses version 2024000.5 of the algorithmic differentiation library `CppAD` \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
 #' Full help for `CppAD` can be found at <https://cppad.readthedocs.io/>.
 #' 
 #' Differentiation proceeds by *taping* the basic (*atomic*) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
