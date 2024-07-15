@@ -49,7 +49,7 @@ cd -
 rm -r -f ./inst/cppad/build
 
 # Create the Makevars file with the necessary compilation flags
-echo "PKG_CPPFLAGS=-I../inst/include" > src/Makevars
+echo "PKG_CPPFLAGS=-I../inst/include -Wno-bitwise-instead-of-logical" > src/Makevars
 
 # Output files
 AC_OUTPUT
