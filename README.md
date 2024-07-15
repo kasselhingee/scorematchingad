@@ -48,3 +48,7 @@ tapes <- buildsmdtape("sim", "identity", "sim",
  bdryw="minsq", acut = 0.01)
 ```
 
+## Using scorematchingad in Other Packages [draft notes]
+
++ Avoid including the implementations of `wrap` and `as` for `veca1`, `mata1` etc except in `RcppExports.cpp`. This makes sure that the speciailsations definitions are not duplicated for each `.cpp` file in your `./src` directory. In practise you can get the `scorematchingad` types by including just the `_forward.h` header file.
+
