@@ -1,3 +1,10 @@
+# Version 0.0.67
+changed source code to use && or || for boolean objects
+
+# Version 0.0.66
++ Deleted many unneeded files from original CppAD source.
++ Rearranged calling of wrapas.hpp. Now much of the types are declared in `scorematchingad_forward.h`. Then, following RcppEigen, `scorematchingad.h` includes `scorematchingad_forward.h`, then `Rcpp.h` then `wrapas.hpp`
+
 # Version 0.0.65
 Moved to a recent version of `CppAD` (version 20240000.5), which contains some macros defined in `./inst/cppad/include/cppad/configure.hpp` via a call to `cmake`. Thus this package builds via a configure script for installation. The `CppAD` source code is now in `./inst/cppad`. After `cmake` the `./inst/cppad/include/cppad` directory is moved to `./inst/include/cppad/`. One `cpp` file is also moved to `./src/`
 
