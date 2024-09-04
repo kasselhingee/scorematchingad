@@ -149,6 +149,10 @@ set_cppad_error_handler <- function() {
     invisible(.Call('_scorematchingad_set_cppad_error_handler', PACKAGE = 'scorematchingad'))
 }
 
+test_Rcpphandler <- function() {
+    invisible(.Call('_scorematchingad_test_Rcpphandler', PACKAGE = 'scorematchingad'))
+}
+
 #' @name evalll
 #' @title Evaluate a custom log-likelihood function
 #' @description Evaluates a custom log-likelihood function from [`customll()`] without taping. This is useful to check that the custom log-likelihood is behaving.

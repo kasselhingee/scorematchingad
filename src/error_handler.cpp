@@ -24,7 +24,18 @@ void Rcpphandler(
 // function to set the global error handler
 // [[Rcpp::export]]
 void set_cppad_error_handler() {
-    CppAD::ErrorHandler::ErrorHandler info(Rcpphandler);
+  static CppAD::ErrorHandler RcppErrors(Rcpphandler);
 }
 
+// the following should use Rcpphandler if the global initiation worked
+// [[Rcpp::export]]
+void test_Rcpphandler(){
+      CppAD::ErrorHandler::Call(
+         true     , // reason for the error is known
+         __LINE__ , // current source code line number
+         __FILE__ , // current source code file name
+         "1 > 0"  , // an intentional error condition
+         "Testing ErrorHandler"     // reason for error
+      );
+}
 
