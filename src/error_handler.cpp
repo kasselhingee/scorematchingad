@@ -12,12 +12,14 @@ void Rcpphandler(
    const char *msg  )
 {  // error handler must not return, so throw an exception
    std::ostringstream oss;
-   oss << "CppAD Error: " << msg << "\n";
+   if (known) {
+       oss << "CppAD error from a known source: ";
+   } else {
+       oss << "CppAD Error: " 
+   }
+   oss << msg << "\n";
    oss << "Expression: " << exp << "\n";
    oss << "File: " << file << " Line: " << line << "\n";
-   if (known) {
-       oss << "This error is known and expected.\n";
-   }
    Rcpp::stop(oss.str());
 }
 
