@@ -142,6 +142,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// set_cppad_error_handler
+void set_cppad_error_handler();
+RcppExport SEXP _scorematchingad_set_cppad_error_handler() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    set_cppad_error_handler();
+    return R_NilValue;
+END_RCPP
+}
 // ptapell2
 Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, veca1 theta_ad, Rcpp::XPtr<llPtr> llfXPtr, transform_a1type& tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
 RcppExport SEXP _scorematchingad_ptapell2(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llfXPtrSEXP, SEXP tranSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
@@ -214,6 +223,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_pTapeGradOffset", (DL_FUNC) &_scorematchingad_pTapeGradOffset, 3},
     {"_scorematchingad_ptapelogdetJ", (DL_FUNC) &_scorematchingad_ptapelogdetJ, 3},
     {"_scorematchingad_swapDynamic", (DL_FUNC) &_scorematchingad_swapDynamic, 3},
+    {"_scorematchingad_set_cppad_error_handler", (DL_FUNC) &_scorematchingad_set_cppad_error_handler, 0},
     {"_scorematchingad_ptapell2", (DL_FUNC) &_scorematchingad_ptapell2, 6},
     {"_scorematchingad_getllptr", (DL_FUNC) &_scorematchingad_getllptr, 1},
     {"_scorematchingad_evalll", (DL_FUNC) &_scorematchingad_evalll, 3},
