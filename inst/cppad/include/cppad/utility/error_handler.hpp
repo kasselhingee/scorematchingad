@@ -207,7 +207,7 @@ private:
       assert(false);
 
       // termination when NDEBUG is defined
-      std::exit(1);
+      Rcpp::stop("An error occurred");
    }
 
    // current error handler

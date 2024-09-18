@@ -176,7 +176,7 @@ Vector speed_test(
          {  // Can't use an assert here because this happens
             // in release mode first.
             Rcpp::Rcerr << "speed_test: test function is too fast to time\n";
-            std::exit(1);
+            Rcpp::stop("An error occurred");
          }
          repeat = 2 * repeat;
          s0     = elapsed_seconds();
@@ -431,7 +431,7 @@ inline void SpeedTest(
          {  // Can't use an assert here because this happens
             // in release mode first.
             Rcpp::Rcerr << "SpeedTest: test function is too fast to time\n";
-            std::exit(1);
+            Rcpp::stop("An error occurred");
          }
          repeat = 2 * repeat;
          s0     = elapsed_seconds();
