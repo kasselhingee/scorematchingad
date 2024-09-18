@@ -1,5 +1,5 @@
 test_that("inlinedirichtape.cpp can generate a working tape", {
-  Rcpp::sourceCpp(system.file("inst/inlinedirichtape.cpp", package = "scorematchingad"))
+  Rcpp::sourceCpp(system.file("inlinedirichtape.cpp", package = "scorematchingad"))
   ptr <- tapedirich(rep(0.2, 5), rep(-0.1, 5))
   newu <- c(0.3, 0.1, rep(0.2, 3))
   newbeta <- c(-0.5, -0.2, rep(-0.1, 3))
