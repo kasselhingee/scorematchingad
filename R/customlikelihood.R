@@ -108,7 +108,7 @@ customll_test <- function(){
   } 
   myll <- customll("a1type test(const veca1 &u, const veca1 &beta) {
   size_t d  = u.size();
-  a1type y(0.);  // initialize summation at 0
+  a1type y;  
   y = u[0] * beta[0];
   return y;
   }")
