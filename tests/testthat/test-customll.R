@@ -1,3 +1,13 @@
+test_that("inlinedirichtape.cpp can generate a working tape", {
+  Rcpp::sourceCpp(system.file("inst/inlinedirichtape.cpp", package = "scorematchingad"))
+  ptr <- tapedirich(rep(0.2, 5), rep(-0.1, 5))
+  newu <- c(0.3, 0.1, rep(0.2, 3))
+  newbeta <- c(-0.5, -0.2, rep(-0.1, 3))
+  expect_equal(scorematchingad:::pForward0(ptr, newu, newbeta), dirich(newu, newbeta))
+  expect_equal(scorematchingad:::pJacobian(ptr, newu, newbeta), newbeta/newu)
+})
+
+
 if (!requireNamespace("RcppXPtrUtils", quietly = TRUE)){skip("Need RcppXPtrUtils package")}
 if (!requireNamespace("RcppEigen", quietly = TRUE)){skip("Need RcppEigen package")}
 test_that("customll_test() returns TRUE or FALSE", {
@@ -75,3 +85,4 @@ test_that("a customll gets all the way to the correct score matching estimate", 
   expect_equal(est_custom$est, est$est)
   expect_equal(est_custom$covar, est$covar)
 })
+
