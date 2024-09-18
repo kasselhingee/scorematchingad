@@ -20,11 +20,11 @@ Suggests:
     simdd,
     numDeriv
 Enhances:
-    RcppEigen (>= 0.3.3.7),
     RcppXPtrUtils
 Depends: 
     R (>= 3.5.0)
 Imports:
+    RcppEigen (>= 0.3.3.7),
     MCMCpack,
     optimx,
     FixedPoint,
