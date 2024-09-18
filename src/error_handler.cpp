@@ -15,7 +15,7 @@ void Rcpphandler(
    if (known) {
        oss << "CppAD error from a known source: ";
    } else {
-       oss << "CppAD Error: " 
+       oss << "CppAD Error: " ;
    }
    oss << msg << "\n";
    oss << "Expression: " << exp << "\n";
