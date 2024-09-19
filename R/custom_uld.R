@@ -1,11 +1,12 @@
 #' Generate a tape of custom unnormalised log-density
-#' @description Use Rcpp::sourceCpp to generate a tape of a function defined in C++
+#' @description Use Rcpp::sourceCpp to generate a tape of a function defined in C++. The result is NOT safe to save or pass to other CPUs in a parallel operation.
 #' @param file A character string giving the path name of a file containing the unnormalised log-density definition.
 #' @param Cppopt List of named options passed to `Rcpp::sourceCpp()`
 #' @param x Value of `x` for taping.
 #' @param theta Value of the parameter vector for taping.
 #' @examples
 #' tape_uld("inst/demo_custom_uld.cpp", rep(0.2, 5), rep(-0.1, 5))
+#' @return A list of the tape and the function itself
 #' @export
 tape_uld <- function(file = "", x, theta, Cppopt = NULL){
   # check provided code
@@ -22,7 +23,7 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
   arg2 <- substr(filelines[1], starts[, "arg2"], starts[, "arg2"] + lengths[, "arg2"] - 1)
   if (!grepl("^const +veca1 *&", arg2)){stop(sprintf("First argument should have type 'const veca1 &', instead it is %s", arg2))}
   fname <- substr(filelines[1], starts[, "fname"], starts[, "fname"] + lengths[, "fname"] - 1)
-
+  if(fname == "tapeld"){stop("Please choose a name that is not 'tapeld' - tapeld is used internally")}
 
 
   # set up C++ code
@@ -34,7 +35,8 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
 "#include <Rcpp.h>",
 "#include <scorematchingad.h>",
 "// [[Rcpp::depends(RcppEigen)]]",
-"// [[Rcpp::depends(scorematchingad)]]"
+"// [[Rcpp::depends(scorematchingad)]]",
+"// [[Rcpp::export]]"
 ), file = expandedfile, append = FALSE, sep = "\n")
   ## add in file
   cat(filelines, file = expandedfile, append = TRUE, sep = "\n")
@@ -42,14 +44,16 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
   ## taping addendum
   cat(gsub("__FNAME__", fname, tapingboilerplate), file = expandedfile, append = TRUE, sep = "\n")
 
+  funs <- new.env()
   # compile
-  compileout <- do.call(Rcpp::sourceCpp, c(list(file = expandedfile, env = environment()), Cppopt))
+  compileout <- do.call(Rcpp::sourceCpp, c(list(file = expandedfile, env = funs), Cppopt))
 
   # execute exported tape-generating function
   tapeptr <- tapeld(x, theta)
   
-  # return tape
-  tapeptr
+  # return tape and function
+  list(fun = funs[[compileout$functions[[1]]]],
+       tape = tapeptr)
 }
 
     
