@@ -18,7 +18,7 @@ test_that("inlinedirichtape.cpp can generate a working tape", {
                   usertheta = c(NA, NA, NA, NA, -0.1), 
                   tranobj = maninfo$tran) 
   expect_equal(pForward0(dirichwrtsph, sqrt(newu), newbeta[-5]), pForward0(hardwired$ptr, sqrt(newu), newbeta[-5]))
-
+  expect_equal(pJacobian(dirichwrtsph, sqrt(newu), newbeta[-5]), pJacobian(hardwired$ptr, sqrt(newu), newbeta[-5]))
 })
 
 
