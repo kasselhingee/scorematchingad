@@ -2,6 +2,7 @@
 #define tapelltape_h
 
 #include "scorematchingad_forward.h" //includes RcppEigenForward.h
+#include <Rcpp.h>
 
 // define a function that converts a plain taped likelihood to:
 // + have a different metric

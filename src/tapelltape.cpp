@@ -78,7 +78,7 @@ CppAD::ADFun<double> tapelltape(veca1 z, //data measurement tranformed to M mani
   u = tran.fromM(z);
   y.setZero();
   llfhigher.new_dynamic(thetarecom);
-  y[0] += llfhigher(0, u);
+  y[0] += llfhigher.Forward(0, u)[0];
 
   //get log determinant of fromM
   y[0] += tran.logdetJfromM(z);
@@ -101,7 +101,7 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapelltape(veca1 z_ad, //data measurement on
                                      bool verbose
                                      ){
   CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapellcpp(z_ad,
+  *out = tapelltape(z_ad,
                 theta_ad,
                 *pllf,
                 tran,
