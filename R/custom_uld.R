@@ -49,7 +49,7 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
   compileout <- do.call(Rcpp::sourceCpp, c(list(file = expandedfile, env = funs), Cppopt))
 
   # execute exported tape-generating function
-  tapeptr <- tapeld(x, theta)
+  tapeptr <- funs$tapeld(x, theta)
   
   # return tape and function
   list(fun = funs[[compileout$functions[[1]]]],
