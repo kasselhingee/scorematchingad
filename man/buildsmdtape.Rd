@@ -14,7 +14,9 @@ buildsmdtape(
   usertheta,
   bdryw = "ones",
   acut = 1,
-  thetatape_creator = function(n) {     seq(length.out = n) },
+  thetatape_creator = function(n) {
+     seq(length.out = n)
+ },
   verbose = FALSE
 )
 }

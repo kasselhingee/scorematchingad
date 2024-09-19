@@ -41,13 +41,17 @@ Gut microbiome prevalence was measured using 16s rRNA 454 sequencing \insertCite
 Helminth infections were detected by PCR or microscopy \insertCite{martin2019mi}{scorematchingad}.
 
 The subset studied by  \insertCite{scealy2023sc;textual}{scorematchingad} contained only the measurements from before treatment, and only those individuals with a helminth infection.
-These measurements can be obtained by running\preformatted{microbiome[(microbiome$Year == 2008) & microbiome$Helminth, ]
-}
+These measurements can be obtained by running
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{microbiome[(microbiome$Year == 2008) & microbiome$Helminth, ]
+}\if{html}{\out{</div>}}
 
 Two further individuals (\code{IndividualID} of \code{2079} and \code{2280}) were deemed outliers by \insertCite{scealy2023sc;textual}{scorematchingad}.
 }
 \section{Modifications from the Source}{
-The \code{microbiome} data was created from the file \code{S1_Table.xlsx} hosted on \code{Nematode.net} at \verb{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx} using the below code.\preformatted{microbiome <- readxl::read_excel("S1_Table.xlsx",
+The \code{microbiome} data was created from the file \code{S1_Table.xlsx} hosted on \code{Nematode.net} at \verb{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx} using the below code.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{microbiome <- readxl::read_excel("S1_Table.xlsx",
   range = "A3:AE303") #avoids the genus data, keeping - only phyla
 metacolnames <- readxl::read_excel("S1_Table.xlsx",
   range = "A2:J2", 
@@ -64,7 +68,7 @@ microbiome <- microbiome |>
                 Treatment = as.logical(Treatment)) |>
   dplyr::rename(IndividualID = `Individual ID`)
 microbiome <- as.data.frame(microbiome)
-}
+}\if{html}{\out{</div>}}
 }
 
 \references{

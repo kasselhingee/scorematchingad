@@ -40,8 +40,8 @@ The inverse of this change to the parameter vector is then a matrix multiplicati
 }
 \section{Functions}{
 \itemize{
-\item \code{Windham_populationinverse}: The matrix with diagonal elements \eqn{1/(1+c_i)}
+\item \code{Windham_populationinverse()}: The matrix with diagonal elements \eqn{1/(1+c_i)}
 
-\item \code{Windham_populationinverse_alternative}: The transform implemented as described by \insertCite{scealy2024ro;textual}{scorematchingad}. It is mathematically equivalent to multiplication by the result of \code{Windham_populationinverse()} in the situation in \insertCite{scealy2024ro;textual}{scorematchingad}.
+\item \code{Windham_populationinverse_alternative()}: The transform implemented as described by \insertCite{scealy2024ro;textual}{scorematchingad}. It is mathematically equivalent to multiplication by the result of \code{Windham_populationinverse()} in the situation in \insertCite{scealy2024ro;textual}{scorematchingad}.
+
 }}
-

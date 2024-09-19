@@ -44,7 +44,7 @@ if (requireNamespace("simdd")){
 \seealso{
 Other directional model estimators: 
 \code{\link{Bingham}()},
-\code{\link{vMF_robust}()},
-\code{\link{vMF}()}
+\code{\link{vMF}()},
+\code{\link{vMF_robust}()}
 }
 \concept{directional model estimators}

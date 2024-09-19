@@ -57,12 +57,12 @@ tapes$smdtape$ptr
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{ADFun$new()}}
+\item \href{#method-ADFun-new}{\code{ADFun$new()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-ADFun-new"></a>}}
+\if{latex}{\out{\hypertarget{method-ADFun-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new \code{ADFun} object from an external pointer to a \code{CppAD} \code{ADFun} object.
 \subsection{Usage}{
