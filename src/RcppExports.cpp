@@ -200,6 +200,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ptapelltape
+Rcpp::XPtr< CppAD::ADFun<double> > ptapelltape(veca1 z_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pllf, transform_a1type& tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
+RcppExport SEXP _scorematchingad_ptapelltape(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP pllfSEXP, SEXP tranSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< veca1 >::type z_ad(z_adSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type theta_ad(theta_adSEXP);
+    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pllf(pllfSEXP);
+    Rcpp::traits::input_parameter< transform_a1type& >::type tran(tranSEXP);
+    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type fixedtheta(fixedthetaSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(ptapelltape(z_ad, theta_ad, pllf, tran, fixedtheta, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ptapesmd
 Rcpp::XPtr< CppAD::ADFun<double> > ptapesmd(veca1 u_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pll, transform_a1type& tran, manifold_a1type& man, std::string weightname, const double acut, bool verbose);
 RcppExport SEXP _scorematchingad_ptapesmd(SEXP u_adSEXP, SEXP theta_adSEXP, SEXP pllSEXP, SEXP tranSEXP, SEXP manSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
@@ -237,6 +253,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_ptapell2", (DL_FUNC) &_scorematchingad_ptapell2, 6},
     {"_scorematchingad_getllptr", (DL_FUNC) &_scorematchingad_getllptr, 1},
     {"_scorematchingad_evalll", (DL_FUNC) &_scorematchingad_evalll, 3},
+    {"_scorematchingad_ptapelltape", (DL_FUNC) &_scorematchingad_ptapelltape, 6},
     {"_scorematchingad_ptapesmd", (DL_FUNC) &_scorematchingad_ptapesmd, 8},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
     {NULL, NULL, 0}

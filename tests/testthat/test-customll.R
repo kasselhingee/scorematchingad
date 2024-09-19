@@ -5,6 +5,20 @@ test_that("inlinedirichtape.cpp can generate a working tape", {
   newbeta <- c(-0.5, -0.2, rep(-0.1, 3))
   expect_equal(scorematchingad:::pForward0(ptr, newu, newbeta), dirich(newu, newbeta))
   expect_equal(scorematchingad:::pJacobian(ptr, newu, newbeta), newbeta/newu)
+
+  # try further taping
+  maninfo <- manifoldtransform("sim", "sqrt", "sph")
+  dirichwrtsph <- ptapelltape(sqrt(rep(0.2, 5)), rep(-0.1, 5),
+               pllf = ptr,
+               tran = maninfo$tran, 
+               fixedtheta = c(0,0,0,0,1),
+               verbose = TRUE)
+  hardwired <- tapell(ll = "dirichlet",
+                  ytape = rep(0.2, 5),
+                  usertheta = c(NA, NA, NA, NA, -0.1), 
+                  tranobj = maninfo$tran) 
+  expect_equal(pForward0(dirichwrtsph, sqrt(newu), newbeta[-5]), pForward0(hardwired$ptr, sqrt(newu), newbeta[-5]))
+
 })
 
 

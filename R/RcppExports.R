@@ -186,6 +186,10 @@ evalll <- function(ll, u, theta) {
     .Call('_scorematchingad_evalll', PACKAGE = 'scorematchingad', ll, u, theta)
 }
 
+ptapelltape <- function(z_ad, theta_ad, pllf, tran, fixedtheta, verbose) {
+    .Call('_scorematchingad_ptapelltape', PACKAGE = 'scorematchingad', z_ad, theta_ad, pllf, tran, fixedtheta, verbose)
+}
+
 #' @noRd
 #' @title The score matching objective calculator.
 #' @param xbetain a concatenated vector of sqrt(x) and beta
