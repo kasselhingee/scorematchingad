@@ -5,7 +5,7 @@
 #' @param x Value of `x` for taping.
 #' @param theta Value of the parameter vector for taping.
 #' @examples
-#' tape_uld("inst/demo_custom_uld.cpp", rep(0.2, 5), rep(-0.1, 5))
+#' tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"), rep(0.2, 5), rep(-0.1, 5))
 #' @return A list of the tape and the function itself
 #' @export
 tape_uld <- function(file = "", x, theta, Cppopt = NULL){
