@@ -14,7 +14,7 @@ public:
   pADFun();
 
   // Constructor taking tape
-  pADFun(CppAD::ADFun<double> tape);
+  pADFun(CppAD::ADFun<double> & tape);
 
   // Constructor taking pADFundouble
   pADFun(const Rcpp::XPtr<CppAD::ADFun<double>> & p);
@@ -22,5 +22,7 @@ public:
   size_t size_order() const;
 
 };
+
+RCPP_EXPOSED_CLASS_NODECL(pADFun)
 
 #endif

@@ -100,7 +100,7 @@ pADFun ptapelltape(veca1 z_ad, //data measurement on the M manifold
                                      Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
                                      bool verbose
                                      ){
-  CppAD::ADFun<double> out;
+  CppAD::ADFun<double> tape;
   tape = tapelltape(z_ad,
                 theta_ad,
                 *pllf,

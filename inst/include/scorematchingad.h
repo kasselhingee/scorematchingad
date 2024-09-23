@@ -5,6 +5,7 @@
 # include <Rcpp.h>
 # include <RcppEigenWrap.h>
 # include <utils/wrapas.hpp>
+# include <utils/pADFun.h>
 
 # endif
 

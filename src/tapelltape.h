@@ -3,7 +3,7 @@
 
 #include "scorematchingad_forward.h" //includes RcppEigenForward.h
 #include <Rcpp.h>
-#include "ADFun_module.h"
+#include "utils/pADFun.h"
 
 // define a function that converts a plain taped likelihood to:
 // + have a different metric
