@@ -201,7 +201,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapelltape
-CppAD::ADFun<double> ptapelltape(veca1 z_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pllf, transform_a1type& tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
+Rcpp::XPtr< CppAD::ADFun<double> > ptapelltape(veca1 z_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pllf, transform_a1type& tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
 RcppExport SEXP _scorematchingad_ptapelltape(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP pllfSEXP, SEXP tranSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
