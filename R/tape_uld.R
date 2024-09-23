@@ -48,7 +48,7 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
   funs <- new.env()
   # compile
   compileout <- do.call(Rcpp::sourceCpp, c(list(file = expandedfile, env = funs), Cppopt))},
-    e = function(e){stop("Could not sourceCpp ", expandedfile, ".", e$message)})
+    error = function(e){stop("Could not sourceCpp() ", expandedfile, ".", e$message)})
 
   # execute exported tape-generating function
   tapeptr <- funs$tapeld(x, theta)
