@@ -68,8 +68,7 @@ namespace Rcpp {
 }
 
 
-typedef Rcpp::XPtr<CppAD::ADFun<double>> pADFundouble; //specialisation of ADFun to make exposing to R easier
-RCPP_EXPOSED_CLASS_NODECL(pADFundouble)
+typedef CppAD::ADFun<double> ADFundouble; //specialisation of ADFun to make exposing to R easier
 
 # endif
 
