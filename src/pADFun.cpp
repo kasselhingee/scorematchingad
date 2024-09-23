@@ -4,9 +4,9 @@
 //So exposing pointers of ADFun objects to make interrogation possible
 //Hopefully the wrapping for Rcpp::XPtr won't override anything I try here
 
+//MOVES the tape to a spot with memory management. The previous version of the tape will NOT be available because it this is a MOVE. Move needed because copy operation of ADFun not allowed
 Rcpp::XPtr < CppAD::ADFun<double> > pADFun::movetoXPtr(CppAD::ADFun<double> & tape){
-  CppAD::ADFun<double> * out = new CppAD::ADFun<double>;//reserve memory for a tape
-  *out = tape;
+  CppAD::ADFun<double> * out = new CppAD::ADFun<double>(std::move(tape));//reserve memory for a tape
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
