@@ -11,8 +11,6 @@ Rcpp::XPtr < CppAD::ADFun<double> > movetoXPtr(CppAD::ADFun<double> & tape){
   return(pout);
 }
 
-pADFun::pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p): ptr(p) {}
-
 // Default constructor
 pADFun::pADFun() : ptr(Rcpp::XPtr< CppAD::ADFun<double> >(nullptr, false)) {}
 

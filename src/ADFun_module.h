@@ -10,8 +10,6 @@ private:
 
 
 public:
-  pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p);
-
   // Default constructor
   pADFun();
 
