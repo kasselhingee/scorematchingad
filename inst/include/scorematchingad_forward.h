@@ -69,6 +69,7 @@ namespace Rcpp {
 
 
 typedef CppAD::ADFun<double> ADFundouble; //specialisation of ADFun to make exposing to R easier
+RCPP_EXPOSED_WRAP(ADFundouble) //only do wrap which put pointers around class. Rcpp::as() does copying so I will be avoiding it - I'll have to do something bespoke
 
 # endif
 

@@ -19,7 +19,7 @@ CppAD::ADFun<double> tapelltape(veca1 z, //data measurement tranformed to M mani
 
 //same as above but for pointers
 // [[Rcpp::export]]
-Rcpp::XPtr< CppAD::ADFun<double> > ptapelltape(veca1 z_ad, //data measurement on the M manifold
+CppAD::ADFun<double> ptapelltape(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
                                      Rcpp::XPtr< CppAD::ADFun<double> > pllf, //the log likelihood function
                                      transform_a1type & tran,
