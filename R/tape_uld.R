@@ -44,16 +44,19 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
   ## taping addendum
   cat(gsub("__FNAME__", fname, tapingboilerplate), file = expandedfile, append = TRUE, sep = "\n")
 
+  tryCatch({
   funs <- new.env()
   # compile
-  compileout <- do.call(Rcpp::sourceCpp, c(list(file = expandedfile, env = funs), Cppopt))
+  compileout <- do.call(Rcpp::sourceCpp, c(list(file = expandedfile, env = funs), Cppopt))},
+    e = function(e){stop("Could not sourceCpp ", expandedfile, ".", e$message)})
 
   # execute exported tape-generating function
   tapeptr <- funs$tapeld(x, theta)
   
   # return tape and function
   list(fun = funs[[compileout$functions[[1]]]],
-       tape = tapeptr)
+       tape = tapeptr,
+       file = expandedfile)
 }
 
     
@@ -61,13 +64,14 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
   ## boiler plate for taping
 tapingboilerplate <- c(
 "// [[Rcpp::export]]",
-"ADFundouble tapeld(veca1 & x, veca1 & theta){",
-"  ADFundouble tape;",
+"pADFun tapeld(veca1 & x, veca1 & theta){",
+"  CppAD::ADFun<double> tape;",
 "  CppAD::Independent(x, theta);",
 "  veca1 y(1);",
 "  y(0) = __FNAME__(x, theta);",
 "  tape.Dependent(x, y);",
-"  return(tape);",
+"  pADFun out(tape);",
+"  return(out);",
 "}"
 )
 

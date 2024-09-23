@@ -4,7 +4,7 @@
 //So exposing pointers of ADFun objects to make interrogation possible
 //Hopefully the wrapping for Rcpp::XPtr won't override anything I try here
 
-Rcpp::XPtr < CppAD::ADFun<double> > movetoXPtr(CppAD::ADFun<double> & tape){
+Rcpp::XPtr < CppAD::ADFun<double> > pADFun::movetoXPtr(CppAD::ADFun<double> & tape){
   CppAD::ADFun<double> * out = new CppAD::ADFun<double>;//reserve memory for a tape
   *out = tape;
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);

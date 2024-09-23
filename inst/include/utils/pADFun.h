@@ -8,6 +8,7 @@ class pADFun {
 private:
   Rcpp::XPtr < CppAD::ADFun<double> > ptr;
 
+  static Rcpp::XPtr < CppAD::ADFun<double> > movetoXPtr(CppAD::ADFun<double> & tape);
 
 public:
   // Default constructor
