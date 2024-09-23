@@ -61,14 +61,13 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
   ## boiler plate for taping
 tapingboilerplate <- c(
 "// [[Rcpp::export]]",
-"Rcpp::XPtr< CppAD::ADFun<double> > tapeld(veca1 & x, veca1 & theta){",
-"  CppAD::ADFun<double> * ptape = new CppAD::ADFun<double>;",
+"ADFundouble tapeld(veca1 & x, veca1 & theta){",
+"  ADFundouble tape;",
 "  CppAD::Independent(x, theta);",
 "  veca1 y(1);",
 "  y(0) = __FNAME__(x, theta);",
-"  ptape -> Dependent(x, y);",
-"  Rcpp::XPtr< CppAD::ADFun<double> > pout(ptape, true);",
-"  return(pout);",
+"  tape.Dependent(x, y);",
+"  return(tape);",
 "}"
 )
 

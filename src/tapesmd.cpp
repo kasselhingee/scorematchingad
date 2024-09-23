@@ -99,7 +99,7 @@ CppAD::ADFun<double> tapesmd(veca1 u, //a vector. The composition measurement fo
 }
 
 
-Rcpp::XPtr< CppAD::ADFun<double> > ptapesmd(veca1 u_ad,
+CppAD::ADFun<double> ptapesmd(veca1 u_ad,
                                       veca1 theta_ad,
                                       Rcpp::XPtr< CppAD::ADFun<double> > pll,
                                       transform_a1type & tran,
@@ -136,5 +136,5 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapesmd(veca1 u_ad,
                  verbose);
 
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
-  return(pout);
+  return(*out);
 }

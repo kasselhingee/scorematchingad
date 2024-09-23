@@ -29,7 +29,7 @@ CppAD::ADFun<double> tapesmd(veca1 u, //a vector. The composition measurement fo
 //' @param acut The constraint a_c in the weight function
 //' @return An RCpp::XPtr object pointing to the ADFun
 // [[Rcpp::export]]
-Rcpp::XPtr< CppAD::ADFun<double> > ptapesmd(veca1 u_ad,
+CppAD::ADFun<double> ptapesmd(veca1 u_ad,
                                       veca1 theta_ad,
                                       Rcpp::XPtr< CppAD::ADFun<double> > pll,
                                       transform_a1type & tran,
