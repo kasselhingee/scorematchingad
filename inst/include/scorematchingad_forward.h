@@ -67,6 +67,10 @@ namespace Rcpp {
   template <> SEXP wrap(const mata1&);
 }
 
+
+typedef CppAD::ADFun<double> ADFundouble; //specialisation of ADFun to make exposing to R easier
+RCPP_EXPOSED_CLASS_NODECL(ADFundouble)  //Tells Rcpp to use the RCPP_MODULE wrap and as
+
 # endif
 
 
