@@ -64,18 +64,6 @@ namespace Rcpp {
     return(Rcpp::wrap(out)); //returns SEXP
   } 
 
-  // wrap ADFun objects in XPtr. Because ADFun doesn't have a copy constructor, passing pointers around instead
-  template <> Rcpp::XPtr<ADFundouble> as(SEXP x){
-    return Rcpp::XPtr<ADFundouble>(x, true);
-  }
-  template <> SEXP wrap (const ADFundouble& obj){
-    ADFundouble * out = new ADFundouble;
-    out = &obj;
-    Rcpp::XPtr<ADFundouble> pout(out, true);
-    return pout;
-  }
-
-
 }
 
 # endif

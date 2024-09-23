@@ -217,7 +217,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // ptapesmd
-CppAD::ADFun<double> ptapesmd(veca1 u_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pll, transform_a1type& tran, manifold_a1type& man, std::string weightname, const double acut, bool verbose);
+Rcpp::XPtr< CppAD::ADFun<double> > ptapesmd(veca1 u_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pll, transform_a1type& tran, manifold_a1type& man, std::string weightname, const double acut, bool verbose);
 RcppExport SEXP _scorematchingad_ptapesmd(SEXP u_adSEXP, SEXP theta_adSEXP, SEXP pllSEXP, SEXP tranSEXP, SEXP manSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -235,6 +235,7 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _rcpp_module_boot_cppad_module();
 RcppExport SEXP _rcpp_module_boot_manifolds();
 
 static const R_CallMethodDef CallEntries[] = {
@@ -255,6 +256,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_evalll", (DL_FUNC) &_scorematchingad_evalll, 3},
     {"_scorematchingad_ptapelltape", (DL_FUNC) &_scorematchingad_ptapelltape, 6},
     {"_scorematchingad_ptapesmd", (DL_FUNC) &_scorematchingad_ptapesmd, 8},
+    {"_rcpp_module_boot_cppad_module", (DL_FUNC) &_rcpp_module_boot_cppad_module, 0},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
     {NULL, NULL, 0}
 };
