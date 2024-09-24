@@ -75,3 +75,10 @@ tapingboilerplate <- c(
 "}"
 )
 
+cppad_module <- Rcpp::Module("cppad_module", PACKAGE="scorematchingad")
+#need to run something from cppad_module to avoid lazy loading. loadModule should work here, but clashes with use of Module for the manifolds module
+#otherwise returns of pADFun get error: Error in .getClassesFromCache(Class) : 
+# class should be either a character-string name or a class definition
+.onLoad <- function(libname, pkgname){
+  cppad_module$empty()
+}
