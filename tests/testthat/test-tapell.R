@@ -1,11 +1,14 @@
 test_that("tapell generates correct objects", {
-cppad_module <- Rcpp::Module("cppad_module", PACKAGE = "scorematchingad")
 maninfo <- manifoldtransform("sim", "sqrt", "sph")
 ppitape <- tapell(ll = "ppi",
                   ytape = c(0.2, 0.3, 0.5),
                   usertheta = ppi_paramvec(p = 3), 
                   tranobj = maninfo$tran) 
 expect_true(R6::is.R6(ppitape))
+
+cppad_module <- Rcpp::Module("cppad_module", PACKAGE = "scorematchingad")
+newADFun <- methods::new(cppad_module$ADFun, ppitape$ptr)
+newADFun$size_order
 
 # and verbose works too
 expect_output({ppitape <- tapell(ll = "ppi",

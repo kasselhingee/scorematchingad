@@ -3,7 +3,6 @@
 
 #include "scorematchingad_forward.h" //includes RcppEigenForward.h
 #include <Rcpp.h>
-#include "utils/pADFun.h"
 
 // define a function that converts a plain taped likelihood to:
 // + have a different metric
@@ -20,7 +19,7 @@ CppAD::ADFun<double> tapelltape(veca1 z, //data measurement tranformed to M mani
 
 //same as above but for pointers
 // [[Rcpp::export]]
-pADFun ptapelltape(veca1 z_ad, //data measurement on the M manifold
+Rcpp::XPtr< CppAD::ADFun<double> > ptapelltape(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
                                      Rcpp::XPtr< CppAD::ADFun<double> > pllf, //the log likelihood function
                                      transform_a1type & tran,

@@ -93,21 +93,22 @@ CppAD::ADFun<double> tapelltape(veca1 z, //data measurement tranformed to M mani
 }
 
 
-pADFun ptapelltape(veca1 z_ad, //data measurement on the M manifold
+Rcpp::XPtr< CppAD::ADFun<double> > ptapelltape(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
                                      Rcpp::XPtr< CppAD::ADFun<double> > pllf, //the log likelihood function
                                      transform_a1type & tran,
                                      Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta,
                                      bool verbose
                                      ){
-  CppAD::ADFun<double> tape;
-  tape = tapelltape(z_ad,
+  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
+  *out = tapelltape(z_ad,
                 theta_ad,
                 *pllf,
                 tran,
                 fixedtheta,
                 verbose);
-  pADFun out(tape);
-  return(out);
+
+  Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
+  return(pout);
 }
 

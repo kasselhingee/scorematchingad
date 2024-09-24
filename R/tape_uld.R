@@ -44,19 +44,16 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
   ## taping addendum
   cat(gsub("__FNAME__", fname, tapingboilerplate), file = expandedfile, append = TRUE, sep = "\n")
 
-  tryCatch({
   funs <- new.env()
   # compile
-  compileout <- do.call(Rcpp::sourceCpp, c(list(file = expandedfile, env = funs), Cppopt))},
-    error = function(e){stop("Could not sourceCpp() ", expandedfile, ".", e$message)})
+  compileout <- do.call(Rcpp::sourceCpp, c(list(file = expandedfile, env = funs), Cppopt))
 
   # execute exported tape-generating function
   tapeptr <- funs$tapeld(x, theta)
   
   # return tape and function
   list(fun = funs[[compileout$functions[[1]]]],
-       tape = tapeptr,
-       file = expandedfile)
+       tape = tapeptr)
 }
 
     
@@ -64,15 +61,14 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
   ## boiler plate for taping
 tapingboilerplate <- c(
 "// [[Rcpp::export]]",
-"pADFun tapeld(veca1 & x, veca1 & theta){",
-"  CppAD::ADFun<double> tape;",
+"Rcpp::XPtr< CppAD::ADFun<double> > tapeld(veca1 & x, veca1 & theta){",
+"  CppAD::ADFun<double> * ptape = new CppAD::ADFun<double>;",
 "  CppAD::Independent(x, theta);",
 "  veca1 y(1);",
 "  y(0) = __FNAME__(x, theta);",
-"  tape.Dependent(x, y);",
-"  pADFun out(tape);",
-"  return(out);",
+"  ptape -> Dependent(x, y);",
+"  Rcpp::XPtr< CppAD::ADFun<double> > pout(ptape, true);",
+"  return(pout);",
 "}"
 )
 
-Rcpp::loadModule("cppad_module", TRUE)
