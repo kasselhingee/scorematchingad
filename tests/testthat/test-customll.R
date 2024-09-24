@@ -1,9 +1,4 @@
 test_that("custom_uld() can generate a working tape", {
-  cppad_module <- Rcpp::Module("cppad_module", PACKAGE = "scorematchingad")
-  #need to run a methods::new(cppad_module$ADFun, ppitape$ptr) to initialize cppad_module, then below will return an ADFun object finally!
-  #otherwise get error: Error in .getClassesFromCache(Class) : 
-  # class should be either a character-string name or a class definition
-
   dirichlet <- tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"),
                         rep(0.2, 5), rep(-0.1, 5))
   expect_equal(dirichlet$tape$size_order, 0)
