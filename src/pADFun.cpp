@@ -7,7 +7,7 @@ void empty(){}
 
 
 RCPP_MODULE(cppad_module) {
-    function("empty", &empty);
+    Rcpp::function("empty", &empty);
 
     Rcpp::class_<pADFun>("ADFun")
         .constructor<Rcpp::XPtr<CppAD::ADFun<double>>>()
