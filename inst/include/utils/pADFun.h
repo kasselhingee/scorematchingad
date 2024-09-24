@@ -11,7 +11,7 @@
 
 class pADFun {
 private:
-  Rcpp::XPtr < CppAD::ADFun<double> > ptr;
+  Rcpp::XPtr < CppAD::ADFun<double> > ptr; //Using Rcpp::XPtr here for automatic management of memory. I could using something Cpp specific for probably faster results
 
 //MOVES the tape to a spot with memory management. The previous version of the tape will NOT be available because it this is a MOVE. Move needed because copy operation of ADFun not allowed
 Rcpp::XPtr < CppAD::ADFun<double> > movetoXPtr(CppAD::ADFun<double> & tape){
