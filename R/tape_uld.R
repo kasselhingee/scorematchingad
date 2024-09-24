@@ -75,4 +75,3 @@ tapingboilerplate <- c(
 "}"
 )
 
-Rcpp::loadModule("cppad_module", TRUE)
