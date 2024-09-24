@@ -6,9 +6,8 @@ ppitape <- tapell(ll = "ppi",
                   tranobj = maninfo$tran) 
 expect_true(R6::is.R6(ppitape))
 
-cppad_module <- Rcpp::Module("cppad_module", PACKAGE = "scorematchingad")
 newADFun <- methods::new(cppad_module$ADFun, ppitape$ptr)
-newADFun$size_order
+expect_equal(newADFun$Domain, 3)
 
 # and verbose works too
 expect_output({ppitape <- tapell(ll = "ppi",
