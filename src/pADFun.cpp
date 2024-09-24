@@ -1,7 +1,5 @@
 #include "utils/pADFun.h"
 
-using namespace Rcpp;
-
 //small function to run that will force Module to initialise as
 //I'm seeing strange loading when using both the manifolds module
 //and the cppad_module
