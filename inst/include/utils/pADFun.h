@@ -33,6 +33,7 @@ pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p) : ptr(p) {}
 size_t size_order() const {
    return ptr->size_order();
 }
+size_t Domain() const { return ptr->Domain(); }
 
 };
 
