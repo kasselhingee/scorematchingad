@@ -30,10 +30,17 @@ pADFun(CppAD::ADFun<double> & tape) : ptr(movetoXPtr(tape)) {}
 // Constructor taking XPtr - and copying it
 pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p) : ptr(p) {}
 
-size_t size_order() const {
-   return ptr->size_order();
-}
+size_t size_order() const { return ptr->size_order(); }
 size_t Domain() const { return ptr->Domain(); }
+size_t Range() const { return ptr->Domain(); }
+size_t size_var() const { return ptr->size_var(); }
+size_t size_par() const { return ptr->size_par(); }
+size_t size_op() const { return ptr->size_op(); }
+size_t size_op_arg() const { return ptr->size_op_arg(); }
+size_t size_dyn_ind() const { return ptr->size_dyn_ind(); }
+bool Parameter(size_t i) const { return ptr->Parameter(i); }
+
+vecd Forward(size_t q, const vecd & xq) {ptr->Forward(q, xq);}
 
 };
 
