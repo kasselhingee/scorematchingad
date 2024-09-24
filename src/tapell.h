@@ -7,6 +7,7 @@
 # include "scorematchingad_forward.h"
 # include "likelihoods/likelihoods.hpp"
 # include "utils/PrintFor.hpp"
+# include "utils/pADFun.h"
 
 // declare a function that tapes a log likelihood
 CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manifold
@@ -25,7 +26,7 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
 //' @param llname name of the likelihood function
 //' @return An RCpp::XPtr object pointing to the ADFun
 // [[Rcpp::export]]
-Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, //data measurement on the M manifold
+pADFun ptapell2(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
                                      Rcpp::XPtr<llPtr> llfXPtr, //the log likelihood function
                                      transform_a1type & tran,

@@ -1,4 +1,5 @@
 test_that("tapell generates correct objects", {
+cppad_module <- Rcpp::Module("cppad_module", PACKAGE = "scorematchingad")
 maninfo <- manifoldtransform("sim", "sqrt", "sph")
 ppitape <- tapell(ll = "ppi",
                   ytape = c(0.2, 0.3, 0.5),

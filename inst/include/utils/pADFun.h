@@ -36,6 +36,6 @@ size_t size_order() const {
 
 };
 
-RCPP_EXPOSED_CLASS_NODECL(pADFun)
+RCPP_EXPOSED_CLASS(pADFun)
 
 #endif
