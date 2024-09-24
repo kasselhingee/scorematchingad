@@ -27,8 +27,8 @@ pADFun() : ptr(Rcpp::XPtr< CppAD::ADFun<double> >(nullptr, false)) {}
 // Constructor taking tape
 pADFun(CppAD::ADFun<double> & tape) : ptr(movetoXPtr(tape)) {}
 
-// Constructor taking pADFundouble
-pADFun(Rcpp::XPtr<CppAD::ADFun<double>> & p) : ptr(p) {}
+// Constructor taking XPtr - and copying it
+pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p) : ptr(p) {}
 
 size_t size_order() const {
    return ptr->size_order();
