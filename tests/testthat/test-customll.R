@@ -7,7 +7,7 @@ test_that("custom_uld() can generate a working tape", {
   newu <- c(0.3, 0.1, rep(0.2, 3))
   newbeta <- c(-0.5, -0.2, rep(-0.1, 3))
   expect_equal(dirichlet$tape$eval(newu, newbeta), dirichlet$fun(newu, newbeta))
-  expect_equal(pJacobian(dirichlet$tape, newu, newbeta), newbeta/newu)
+  expect_equal(dirichlet$tape$Jac(newu, newbeta), newbeta/newu)
 
   # try further taping
   maninfo <- manifoldtransform("sim", "sqrt", "sph")
