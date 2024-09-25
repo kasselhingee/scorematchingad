@@ -13,19 +13,19 @@ RCPP_MODULE(cppad_module) {
     Rcpp::class_<pADFun>("ADFun")
         .constructor<Rcpp::XPtr<CppAD::ADFun<double>>>()
         .property("size_order", &pADFun::size_order, "Number of Taylor coefficient orders, per variable,direction, currently calculated and stored")
-        .property("Domain", &pADFun::Domain, "Dimension of domain space (i.e. length of independent variables vector).")
-        .property("Range", &pADFun::Range, "Dimension of range space.")
+        .property("domain", &pADFun::Domain, "Dimension of domain space (i.e. length of independent variables vector).")
+        .property("range", &pADFun::Range, "Dimension of range space.")
         .property("size_dyn_ind", &pADFun::size_dyn_ind, "Number of (independent) dynamic parameters.")
 
         .method("new_dynamic", &pADFun::new_dynamic, "Specify new values of the dynamic parameters.")
-        .method("Eval", &pADFun::Eval, "Evaluation without any differentiation (i.e. zeroth order).")
-        .method("Forward", &pADFun::Forward, "Forward mode evaluation.")
+        .method("eval", &pADFun::Eval, "Evaluation without any differentiation (i.e. zeroth order).")
+        .method("forward", &pADFun::Forward, "Forward mode evaluation.")
         .method("Jacobian", &pADFun::Jacobian, "Evaluate Jacobian.")
         .method("Hessiani", &pADFun::Hessiani, "Evaluate Hessian for ith element of range i = 0, 1, ...")
         .method("Hessian0", &pADFun::Hessian0, "Evaluate Hessian for first element of range.")
         .method("Hessianw", &pADFun::Hessianw, "Evaluate Hessian for weighted sum of range.")
         
-        .method("Parameter", &pADFun::Parameter, "Returns true if the ith component of the range space corresponds to a 'Parameter' and is thus constant.");
+        .method("parameter", &pADFun::Parameter, "Returns true if the ith component of the range space corresponds to a 'Parameter' and is thus constant.");
 
 
 }
