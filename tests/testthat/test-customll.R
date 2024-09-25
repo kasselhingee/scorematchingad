@@ -2,11 +2,11 @@ test_that("custom_uld() can generate a working tape", {
   dirichlet <- tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"),
                         rep(0.2, 5), rep(-0.1, 5))
   expect_equal(dirichlet$tape$size_order, 0)
-  expect_equal(dirichlet$tape$Domain, 5)
+  expect_equal(dirichlet$tape$domain, 5)
 
   newu <- c(0.3, 0.1, rep(0.2, 3))
   newbeta <- c(-0.5, -0.2, rep(-0.1, 3))
-  expect_equal(pForward0(dirichlet$tape, newu, newbeta), dirichlet$fun(newu, newbeta))
+  expect_equal(dirichlet$tape$eval(newu, newbeta), dirichlet$fun(newu, newbeta))
   expect_equal(pJacobian(dirichlet$tape, newu, newbeta), newbeta/newu)
 
   # try further taping
