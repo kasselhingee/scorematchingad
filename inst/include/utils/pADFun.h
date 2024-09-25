@@ -40,7 +40,13 @@ size_t size_op_arg() const { return ptr->size_op_arg(); }
 size_t size_dyn_ind() const { return ptr->size_dyn_ind(); }
 bool Parameter(size_t i) const { return ptr->Parameter(i); }
 
-vecd Forward(size_t q, const vecd & xq) {ptr->Forward(q, xq);}
+void new_dynamic(const vecd & dynamic) {ptr->new_dynamic(dynamic);}
+vecd Forward(size_t q, const vecd & xq) {return ptr->Forward(q, xq);}
+vecd Eval(const vecd & xq) {return ptr->Forward(0, xq);}  //bespoke method just for this package
+vecd Jacobian(const vecd & x) {return ptr->Jacobian(x);}
+vecd Hessiani(const vecd & x, size_t i) {return ptr->Hessian(x, i);}
+vecd Hessian0(const vecd & x) {return ptr->Hessian(x, 0);}
+vecd Hessianw(const vecd & x, const vecd & w) {return ptr->Hessian(x, w);}
 
 };
 
