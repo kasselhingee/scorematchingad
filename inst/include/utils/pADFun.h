@@ -31,8 +31,8 @@ pADFun(CppAD::ADFun<double> & tape, vecd & xtape, vecd & dyntape, std::string & 
 
 // Constructor taking XPtr - and copying it
 pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p) : ptr(p) {}
-pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p, vecd & xtape, vecd & dyntape) : ptr(p), xtape(xtape), dyntape(dyntape) {}
-pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p, vecd & xtape, vecd & dyntape, std::string & name) : ptr(p), xtape(xtape), dyntape(dyntape), name(name) {}
+pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p, vecd xtape, vecd dyntape) : ptr(p), xtape(xtape), dyntape(dyntape) {}
+pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p, vecd xtape, vecd dyntape, std::string name) : ptr(p), xtape(xtape), dyntape(dyntape), name(name) {}
 
 // Properties
 size_t size_order() const { return ptr->size_order(); }
