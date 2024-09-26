@@ -26,13 +26,13 @@ pADFun() : ptr(Rcpp::XPtr< CppAD::ADFun<double> >(nullptr, false)) {}
 
 // Constructor taking tape
 pADFun(CppAD::ADFun<double> & tape) : ptr(movetoXPtr(tape)) {}
-pADFun(CppAD::ADFun<double> & tape, vecd & xtape, vecd & dyntape) : ptr(movetoXPtr(tape)), xtape(xtape), dyntape(dyntape) {}
-pADFun(CppAD::ADFun<double> & tape, vecd & xtape, vecd & dyntape, std::string & name) : ptr(movetoXPtr(tape)), xtape(xtape), dyntape(dyntape), name(name) {}
+pADFun(CppAD::ADFun<double> & tape, veca1 xtape, veca1 dyntape) : ptr(movetoXPtr(tape)), xtape(xtape), dyntape(dyntape) {}
+pADFun(CppAD::ADFun<double> & tape, veca1 xtape, veca1 dyntape, std::string name) : ptr(movetoXPtr(tape)), xtape(xtape), dyntape(dyntape), name(name) {}
 
 // Constructor taking XPtr - and copying it
 pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p) : ptr(p) {}
-pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p, vecd xtape, vecd dyntape) : ptr(p), xtape(xtape), dyntape(dyntape) {}
-pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p, vecd xtape, vecd dyntape, std::string name) : ptr(p), xtape(xtape), dyntape(dyntape), name(name) {}
+pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p, veca1 xtape, veca1 dyntape) : ptr(p), xtape(xtape), dyntape(dyntape) {}
+pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p, veca1 xtape, veca1 dyntape, std::string name) : ptr(p), xtape(xtape), dyntape(dyntape), name(name) {}
 
 // Properties
 size_t size_order() const { return ptr->size_order(); }
@@ -68,8 +68,8 @@ vecd Hes(const vecd & x, const vecd & dyn) {
 
 //Optional fields for use in R: name, xtape, dyntape
 std::string name = "";
-vecd xtape = vecd(0);
-vecd dyntape = vecd(0);
+veca1 xtape = veca1(0);
+veca1 dyntape = veca1(0);
 
 };
 
