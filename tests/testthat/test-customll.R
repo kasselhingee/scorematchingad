@@ -1,6 +1,11 @@
 test_that("custom_uld() can generate a working tape", {
+  utape = rep(0.2, 5)
+  dyntape = rep(-0.1, 5)
   dirichlet <- tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"),
-                        rep(0.2, 5), rep(-0.1, 5))
+                        utape, dyntape)
+  expect_equal(dirichlet$tape$name, "dirich")
+  expect_equal(dirichlet$tape$xtape, utape)
+  expect_equal(dirichlet$tape$dyntape, dyntape)
   expect_equal(dirichlet$tape$size_order, 0)
   expect_equal(dirichlet$tape$domain, 5)
 
