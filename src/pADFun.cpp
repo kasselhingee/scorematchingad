@@ -35,7 +35,7 @@ RCPP_MODULE(cppad_module) {
 
         .field("name", &pADFun::name, "An optional name for the tape.")
         .field("xtape", &pADFun::xtape, "The values of the independent variables used for taping.")
-        .field("dyntape", &pADFun::xtape, "The values of the dynamic variables used for taping.")
+        .field("dyntape", &pADFun::dyntape, "The values of the dynamic variables used for taping.")
         
         .method("parameter", &pADFun::Parameter, "Returns true if the ith component of the range space corresponds to a 'Parameter' and is thus constant.");
 
