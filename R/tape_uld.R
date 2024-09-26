@@ -70,7 +70,7 @@ tapingboilerplate <- c(
 "  veca1 y(1);",
 "  y(0) = __FNAME__(x, theta);",
 "  tape.Dependent(x, y);",
-"  pADFun out(tape);",
+"  pADFun out(tape, x, theta, \"__FNAME__\");",
 "  return(out);",
 "}"
 )
