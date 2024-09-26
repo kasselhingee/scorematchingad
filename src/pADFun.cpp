@@ -12,6 +12,8 @@ RCPP_MODULE(cppad_module) {
 
     Rcpp::class_<pADFun>("ADFun")
         .constructor<Rcpp::XPtr<CppAD::ADFun<double>>>()
+        .constructor<Rcpp::XPtr<CppAD::ADFun<double>>, vecd &, vecd &>()
+        .constructor<Rcpp::XPtr<CppAD::ADFun<double>>, vecd &, vecd &, std::string &>()
         .property("size_order", &pADFun::size_order, "Number of Taylor coefficient orders, per variable,direction, currently calculated and stored")
         .property("domain", &pADFun::Domain, "Dimension of domain space (i.e. length of independent variables vector).")
         .property("range", &pADFun::Range, "Dimension of range space.")
