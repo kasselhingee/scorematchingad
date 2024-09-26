@@ -23,10 +23,16 @@ RCPP_MODULE(cppad_module) {
         .method("Hessiani", &pADFun::Hessiani, "Evaluate Hessian for ith element of range i = 0, 1, ...")
         .method("Hessian0", &pADFun::Hessian0, "Evaluate Hessian for first element of range.")
         .method("Hessianw", &pADFun::Hessianw, "Evaluate Hessian for weighted sum of range.")
+        .method("set_check_for_nan", &pADFun::set_check_for_nan, "Set the tape to check for nan values when C++ debugging enabled.")
+        .method("get_check_for_nan", &pADFun::set_check_for_nan, "Return whethe the tape will check for nan values when C++ debugging enabled.")
         
         .method("eval", &pADFun::eval, "Evaluation with new dynamic.")
         .method("Jac", &pADFun::Jac, "Jacobian with new dynamic.")
         .method("Hes", &pADFun::Hes, "Hessian with new dynamic.")
+
+        .field("name", &pADFun::name, "An optional name for the tape.")
+        .field("xtape", &pADFun::xtape, "The values of the independent variables used for taping.")
+        .field("dyntape", &pADFun::xtape, "The values of the dynamic variables used for taping.")
         
         .method("parameter", &pADFun::Parameter, "Returns true if the ith component of the range space corresponds to a 'Parameter' and is thus constant.");
 

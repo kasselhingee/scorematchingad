@@ -30,6 +30,7 @@ pADFun(CppAD::ADFun<double> & tape) : ptr(movetoXPtr(tape)) {}
 // Constructor taking XPtr - and copying it
 pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p) : ptr(p) {}
 
+// Properties
 size_t size_order() const { return ptr->size_order(); }
 size_t Domain() const { return ptr->Domain(); }
 size_t Range() const { return ptr->Domain(); }
@@ -40,14 +41,17 @@ size_t size_op_arg() const { return ptr->size_op_arg(); }
 size_t size_dyn_ind() const { return ptr->size_dyn_ind(); }
 bool Parameter(size_t i) const { return ptr->Parameter(i); }
 
+//Methods
 void new_dynamic(const vecd & dynamic) {ptr->new_dynamic(dynamic);}
 vecd Forward(size_t q, const vecd & xq) {return ptr->Forward(q, xq);}
 vecd Jacobian(const vecd & x) {return ptr->Jacobian(x);}
 vecd Hessiani(const vecd & x, size_t i) {return ptr->Hessian(x, i);}
 vecd Hessian0(const vecd & x) {return ptr->Hessian(x, 0);}
 vecd Hessianw(const vecd & x, const vecd & w) {return ptr->Hessian(x, w);}
+void set_check_for_nan(const bool b) {ptr->check_for_nan(b);}
+bool get_check_for_nan() {return ptr->check_for_nan();}
 
-//methods to simplify use
+//Methods to simplify use
 vecd eval(const vecd & x, const vecd & dyn) {
   ptr->new_dynamic(dyn);
   return ptr->Forward(0, x);}
@@ -58,7 +62,10 @@ vecd Hes(const vecd & x, const vecd & dyn) {
   ptr->new_dynamic(dyn);
   return ptr->Hessian(x, 0);}
 
-
+//Optional fields for use in R: name, xtape, dyntape
+std::string name = "";
+vecd xtape;
+vecd dyntape;
 
 };
 
