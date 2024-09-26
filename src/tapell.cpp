@@ -88,7 +88,7 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
 }
 
 
-Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, //data measurement on the M manifold
+pADFun ptapell2(veca1 z_ad, //data measurement on the M manifold
                                      veca1 theta_ad,
                                      Rcpp::XPtr<llPtr> llfXPtr, //the log likelihood function
                                      transform_a1type & tran,
@@ -98,16 +98,16 @@ Rcpp::XPtr< CppAD::ADFun<double> > ptapell2(veca1 z_ad, //data measurement on th
   // unwrap likelihood function
   llPtr func = *Rcpp::XPtr<llPtr>(llfXPtr);
 
-  CppAD::ADFun<double>* out = new CppAD::ADFun<double>; //returning a pointer
-  *out = tapellcpp(z_ad,
+  CppAD::ADFun<double> tape; //returning a pointer
+  tape = tapellcpp(z_ad,
                 theta_ad,
                 func,
                 tran,
                 fixedtheta,
                 verbose);
-
-  Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
-  return(pout);
+  
+  pADFun out(tape, z_ad, theta_ad);
+  return(out);
 }
 
 
