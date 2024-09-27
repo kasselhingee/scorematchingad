@@ -157,6 +157,10 @@ fixdynamic <- function(uld, theta, fixedtheta) {
     .Call('_scorematchingad_fixdynamic', PACKAGE = 'scorematchingad', uld, theta, fixedtheta)
 }
 
+reembed <- function(uld, tran) {
+    .Call('_scorematchingad_reembed', PACKAGE = 'scorematchingad', uld, tran)
+}
+
 #' @name evalll
 #' @title Evaluate a custom log-likelihood function
 #' @description Evaluates a custom log-likelihood function from [`customll()`] without taping. This is useful to check that the custom log-likelihood is behaving.

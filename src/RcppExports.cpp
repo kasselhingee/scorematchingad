@@ -173,6 +173,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// reembed
+pADFun reembed(pADFun& uld, transform<a1type>& tran);
+RcppExport SEXP _scorematchingad_reembed(SEXP uldSEXP, SEXP tranSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< pADFun& >::type uld(uldSEXP);
+    Rcpp::traits::input_parameter< transform<a1type>& >::type tran(tranSEXP);
+    rcpp_result_gen = Rcpp::wrap(reembed(uld, tran));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ptapell2
 pADFun ptapell2(veca1 z_ad, veca1 theta_ad, Rcpp::XPtr<llPtr> llfXPtr, transform_a1type& tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
 RcppExport SEXP _scorematchingad_ptapell2(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llfXPtrSEXP, SEXP tranSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
@@ -265,6 +277,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_set_cppad_error_handler", (DL_FUNC) &_scorematchingad_set_cppad_error_handler, 0},
     {"_scorematchingad_test_Rcpphandler", (DL_FUNC) &_scorematchingad_test_Rcpphandler, 0},
     {"_scorematchingad_fixdynamic", (DL_FUNC) &_scorematchingad_fixdynamic, 3},
+    {"_scorematchingad_reembed", (DL_FUNC) &_scorematchingad_reembed, 2},
     {"_scorematchingad_ptapell2", (DL_FUNC) &_scorematchingad_ptapell2, 6},
     {"_scorematchingad_getllptr", (DL_FUNC) &_scorematchingad_getllptr, 1},
     {"_scorematchingad_evalll", (DL_FUNC) &_scorematchingad_evalll, 3},

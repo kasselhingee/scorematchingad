@@ -60,3 +60,28 @@ pADFun fixdynamic(pADFun & uld, // the unnormalised log density tape
 }
 
 
+pADFun reembed(pADFun & uld, 
+               transform<a1type> & tran){
+  //convert taped object to execute on a1type (not double)
+  CppAD::ADFun<a1type, double> uldhigher;
+  uldhigher = (uld.get_ptr())->base2ad();
+
+  veca1 z = tran.toM(uld.xtape);
+  veca1 theta = uld.dyntape;
+  veca1 y(uld.Range());
+  veca1 u(uld.xtape.size());
+
+
+  CppAD::Independent(z, theta);
+  u = tran.fromM(z);
+  uldhigher.new_dynamic(theta);
+  y = uldhigher.Forward(0, u).array() + tran.logdetJfromM(z);
+
+  CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
+  tape.Dependent(z, y);
+
+  pADFun out(tape, z, theta);
+  return out;
+}
+
+
