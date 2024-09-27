@@ -1,3 +1,12 @@
+test_that("fixdynamic() reduces the dimension of the dynamic parameters", {
+maninfo <- manifoldtransform("sim", "sqrt", "sph")
+ppitape <- tapell(ll = "ppi",
+                  ytape = c(0.2, 0.3, 0.5),
+                  usertheta = ppi_paramvec(p = 3), 
+                  tranobj = maninfo$tran) 
+fixedtape <- fixdynamic(ppitape$lltape, ppitape$lltape$dyntape, ppi_paramvec(p = 3, AL = TRUE, beta = TRUE))
+})
+
 test_that("tapell generates correct objects", {
 maninfo <- manifoldtransform("sim", "sqrt", "sph")
 ppitape <- tapell(ll = "ppi",
