@@ -41,6 +41,9 @@ pADFun ptapell2(veca1 z_ad, //data measurement on the M manifold
 // [[Rcpp::export]]
 Rcpp::XPtr<llPtr> getllptr(std::string llname);
 
+// [[Rcpp::export]]
+pADFun tape_uld_inbuilt(std::string name, veca1 x, veca1 theta);
+
 //' @name evalll
 //' @title Evaluate a custom log-likelihood function
 //' @description Evaluates a custom log-likelihood function from [`customll()`] without taping. This is useful to check that the custom log-likelihood is behaving.

@@ -138,6 +138,18 @@ Rcpp::XPtr<llPtr> getllptr(std::string llname){
   return(pout);
 }
 
+pADFun tape_uld_inbuilt(std::string name, veca1 x, veca1 theta){
+  Rcpp::XPtr < llPtr > ptr = getllptr(name); 
+  llPtr func = *ptr;
+  CppAD::ADFun<double> tape;
+  CppAD::Independent(x, theta);
+  veca1 y(1);
+  y(0) = func(x, theta);
+  tape.Dependent(x, y);
+  pADFun out(tape, x, theta, name);
+  return(out);
+}
+
  
 a1type evalll(Rcpp::XPtr<llPtr> llfXPtr, const veca1& u, const veca1& theta){
   llPtr func = *Rcpp::XPtr<llPtr>(llfXPtr);

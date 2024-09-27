@@ -186,6 +186,10 @@ getllptr <- function(llname) {
     .Call('_scorematchingad_getllptr', PACKAGE = 'scorematchingad', llname)
 }
 
+tape_uld_inbuilt <- function(name, x, theta) {
+    .Call('_scorematchingad_tape_uld_inbuilt', PACKAGE = 'scorematchingad', name, x, theta)
+}
+
 #' @param u A vector of measurements for an individual
 #' @param theta A vector of parameters
 #' @return The value of the log-likelihood at `u` with parameters `theta`.
