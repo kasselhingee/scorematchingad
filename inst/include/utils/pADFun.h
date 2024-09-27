@@ -71,6 +71,9 @@ std::string name = "";
 veca1 xtape = veca1(0);
 veca1 dyntape = veca1(0);
 
+//access pointer
+Rcpp::XPtr < CppAD::ADFun<double> > get_ptr(){return ptr;}
+
 };
 
 RCPP_EXPOSED_CLASS(pADFun)
