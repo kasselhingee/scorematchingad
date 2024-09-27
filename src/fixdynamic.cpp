@@ -55,7 +55,7 @@ pADFun fixdynamic(pADFun & uld, // the unnormalised log density tape
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(x, y);
 
-  pADFun out(tape, x, thetavar);
+  pADFun out(tape, x, thetavar, uld.name);
   return out;
 }
 
@@ -80,7 +80,7 @@ pADFun reembed(pADFun & uld,
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(z, y);
 
-  pADFun out(tape, z, theta);
+  pADFun out(tape, z, theta, uld.name+tran.name());
   return out;
 }
 
