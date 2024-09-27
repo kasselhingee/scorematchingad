@@ -14,8 +14,12 @@ test_that("custom_uld() can generate a working tape", {
   expect_equal(fixedtape$size_dyn_ind, 4)
   expect_equal(fixedtape$dyntape, dyntape[-2])
 
-  newu <- c(0.3, 0.1, rep(0.2, 3))
-  newbeta <- c(-0.5, -0.2, rep(-0.1, 3))
+  #temporarily test reembed()
+  maninfo <- manifoldtransform("sim", "sqrt", "sph")
+  dirichwrtsph <- reembed(dirichlet$tape, maninfo$tran)
+  expect_equal(dirichwrtsph$xtape, sqrt(utape))
+  expect_equal(dirichwrtsph$dyntape, dyntape)
+
   expect_equal(dirichlet$tape$eval(newu, newbeta), dirichlet$fun(newu, newbeta))
   expect_equal(dirichlet$tape$Jac(newu, newbeta), newbeta/newu)
 
