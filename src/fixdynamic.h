@@ -1,7 +1,8 @@
 #ifndef FIXDYNAMIC_H
 #define FIXDYNAMIC_H
 
-# include "scorematchingad.h"
+#include <scorematchingad_forward.h>
+#include <utils/pADFun.h>
 
 
 // [[Rcpp::export]]

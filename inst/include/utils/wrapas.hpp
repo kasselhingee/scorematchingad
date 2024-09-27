@@ -1,5 +1,5 @@
-# ifndef MYCPP_WRAPAS
-# define MYCPP_WRAPAS
+#ifndef MYCPP_WRAPAS
+#define MYCPP_WRAPAS
 
 # include <cppad/cppad.hpp>
 
@@ -66,4 +66,4 @@ namespace Rcpp {
 
 }
 
-# endif
+#endif
