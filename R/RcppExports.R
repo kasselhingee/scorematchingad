@@ -210,7 +210,7 @@ ptapelltape <- function(z_ad, theta_ad, pllf, tran, fixedtheta, verbose) {
 #' @param weightname The name of the weight function to use
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
-ptapesmd <- function(u_ad, theta_ad, pll, tran, man, weightname, acut, verbose) {
-    .Call('_scorematchingad_ptapesmd', PACKAGE = 'scorematchingad', u_ad, theta_ad, pll, tran, man, weightname, acut, verbose)
+tapesmd <- function(uldtape, tran, M, weightname, acut, verbose) {
+    .Call('_scorematchingad_tapesmd', PACKAGE = 'scorematchingad', uldtape, tran, M, weightname, acut, verbose)
 }
 

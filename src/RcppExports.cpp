@@ -254,21 +254,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ptapesmd
-Rcpp::XPtr< CppAD::ADFun<double> > ptapesmd(veca1 u_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pll, transform_a1type& tran, manifold_a1type& man, std::string weightname, const double acut, bool verbose);
-RcppExport SEXP _scorematchingad_ptapesmd(SEXP u_adSEXP, SEXP theta_adSEXP, SEXP pllSEXP, SEXP tranSEXP, SEXP manSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
+// tapesmd
+pADFun tapesmd(pADFun& uldtape, transform<a1type>& tran, manifold<a1type>& M, std::string weightname, const double& acut, bool verbose);
+RcppExport SEXP _scorematchingad_tapesmd(SEXP uldtapeSEXP, SEXP tranSEXP, SEXP MSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< veca1 >::type u_ad(u_adSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type theta_ad(theta_adSEXP);
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pll(pllSEXP);
-    Rcpp::traits::input_parameter< transform_a1type& >::type tran(tranSEXP);
-    Rcpp::traits::input_parameter< manifold_a1type& >::type man(manSEXP);
+    Rcpp::traits::input_parameter< pADFun& >::type uldtape(uldtapeSEXP);
+    Rcpp::traits::input_parameter< transform<a1type>& >::type tran(tranSEXP);
+    Rcpp::traits::input_parameter< manifold<a1type>& >::type M(MSEXP);
     Rcpp::traits::input_parameter< std::string >::type weightname(weightnameSEXP);
-    Rcpp::traits::input_parameter< const double >::type acut(acutSEXP);
+    Rcpp::traits::input_parameter< const double& >::type acut(acutSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapesmd(u_ad, theta_ad, pll, tran, man, weightname, acut, verbose));
+    rcpp_result_gen = Rcpp::wrap(tapesmd(uldtape, tran, M, weightname, acut, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -296,7 +294,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_tape_uld_inbuilt", (DL_FUNC) &_scorematchingad_tape_uld_inbuilt, 3},
     {"_scorematchingad_evalll", (DL_FUNC) &_scorematchingad_evalll, 3},
     {"_scorematchingad_ptapelltape", (DL_FUNC) &_scorematchingad_ptapelltape, 6},
-    {"_scorematchingad_ptapesmd", (DL_FUNC) &_scorematchingad_ptapesmd, 8},
+    {"_scorematchingad_tapesmd", (DL_FUNC) &_scorematchingad_tapesmd, 6},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
     {"_rcpp_module_boot_cppad_module", (DL_FUNC) &_rcpp_module_boot_cppad_module, 0},
     {NULL, NULL, 0}
