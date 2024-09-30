@@ -20,8 +20,7 @@ tapell <- function(ll,
                    ytape,
                    usertheta,
                    tranobj,
-                   thetatape_creator = function(n){seq(length.out = n)},
-                   verbose = FALSE){
+                   thetatape_creator = function(n){seq(length.out = n)}){
   stopifnot(inherits(tranobj, "Rcpp_transform_ad"))
 
   starttheta <- t_u2s(usertheta, filler = thetatape_creator)
