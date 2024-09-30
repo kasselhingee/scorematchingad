@@ -23,32 +23,20 @@ tapell <- function(ll,
                    thetatape_creator = function(n){seq(length.out = n)},
                    verbose = FALSE){
   stopifnot(inherits(tranobj, "Rcpp_transform_ad"))
+
   starttheta <- t_u2s(usertheta, filler = thetatape_creator)
   ztape <- tranobj$toM(ytape) #the value of ytape transformed to the manifold
 
   # choose between a canned log-likelihood or a custom log-likelihood
   if (typeof(ll) == "character"){
-    llname <- ll
-    ll <- getllptr(ll)
-    ll <- new_adloglikelihood(ll, fname = llname)
-  } else if (!inherits(ll, "adloglikelihood")){
-    stop("ll must be a name or a custom adloglikelihood")
+    ll <- tape_uld_inbuilt(ll, ytape, starttheta)
+  } else if (!inherits(ll, "Rcpp_ADFun")){
+    stop("ll must be a name or a taped unnormalised log-density")
   }
 
-  lltape <- ptapell2(ztape, starttheta,
-                    llfXPtr = ll, 
-                    tran = tranobj,
-                    fixedtheta = t_u2i(usertheta),
-                    verbose = verbose)
-  out <- ADFun$new(ptr = lltape,
-                   name = paste(tranobj$name(), attr(ll, "fname", exact = TRUE), sep = "-"),
-                   xtape = ztape,
-                   dyntape =  as.numeric(starttheta[!t_u2i(usertheta)]),
-                   usertheta = as.numeric(usertheta))
-
-  attr(out, "ytape") <- ytape
-  attr(out, "tran") <- tranobj$name()
-  return(out)
+  uld_dynfixed <- fixdynamic(ll, starttheta, fixedtheta = t_u2i(usertheta)) # fix some of the model parameters if applicable
+  uld_reembed <- reembed(uld_dynfixed, tran = tranobj) #change the underlying metric of the manifold by using a different isometric embedding
+  return(uld_reembed)
 }
 
 
