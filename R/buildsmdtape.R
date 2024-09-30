@@ -87,10 +87,10 @@ buildsmdtape <- function(start, tran = "identity", end = start, ll,
                     thetatape_creator = thetatape_creator,
                     tranobj = tranman$tran)
   stopifnot(is.numeric(acut))
-  smdtape <- tapesmd(lltape = lltape,
-                        tranobj = tranman$tran,
-                        man = tranman$man,
-                        bdryw = bdryw,
+  smdtape <- tapesmd(uldtape = lltape,
+                        tran = tranman$tran,
+                        M = tranman$man,
+                        weightname = bdryw,
                         acut = acut,
                         verbose = verbose)
   return(list(

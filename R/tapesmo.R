@@ -8,7 +8,7 @@
 #' @param verbose If `TRUE` more details are printed when taping. These details are for debugging and will likely be comprehensible only to users familiar with the source code of this package.
 NULL
 
-tapesmd <- function(lltape,
+oldtapesmd <- function(lltape,
                    tranobj,
                    man,
                    bdryw,

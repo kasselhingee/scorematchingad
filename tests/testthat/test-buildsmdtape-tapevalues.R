@@ -9,13 +9,13 @@ test_that("Dirichlet with smd values and derivatives independent of tape", {
   thetaeval <- c(-0.1, -0.5, 2)
 
   compare <- function(uval, thetaeval, tapes1, tapes2){
-  expect_equal(pForward0(tapes1$lltape$ptr, ueval, thetaeval), pForward0(tapes2$lltape$ptr, ueval, thetaeval))
-  expect_equal(pJacobian(tapes1$lltape$ptr, ueval, thetaeval), pJacobian(tapes2$lltape$ptr, ueval, thetaeval))
-  expect_equal(pHessian(tapes1$lltape$ptr, ueval, thetaeval), pHessian(tapes2$lltape$ptr, ueval, thetaeval))
+  expect_equal(tapes1$lltape$eval(ueval, thetaeval), tapes2$lltape$eval(ueval, thetaeval))
+  expect_equal(tapes1$lltape$Jac(ueval, thetaeval), tapes2$lltape$Jac(ueval, thetaeval))
+  expect_equal(tapes1$lltape$Hes(ueval, thetaeval), tapes2$lltape$Hes(ueval, thetaeval))
 
-  expect_equal(pForward0(tapes1$smdtape$ptr, thetaeval, ueval), pForward0(tapes2$smdtape$ptr, thetaeval, ueval))
-  expect_equal(pJacobian(tapes1$smdtape$ptr, thetaeval, ueval), pJacobian(tapes2$smdtape$ptr, thetaeval, ueval))
-  expect_equal(pHessian(tapes1$smdtape$ptr, thetaeval, ueval), pHessian(tapes2$smdtape$ptr, thetaeval, ueval))
+  expect_equal(tapes1$smdtape$eval(thetaeval, ueval), tapes2$smdtape$eval(thetaeval, ueval))
+  expect_equal(tapes1$smdtape$Jac(thetaeval, ueval), tapes2$smdtape$Jac(thetaeval, ueval))
+  expect_equal(tapes1$smdtape$Hes(thetaeval, ueval), tapes2$smdtape$Hes(thetaeval, ueval))
   return(NULL)
   }
 
