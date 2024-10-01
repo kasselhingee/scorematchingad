@@ -9,12 +9,12 @@ test_that("ppi tape values do not effect ll values", {
   thetaeval <- model1$theta + 1
 
   psphere <- manifoldtransform("sim", "sqrt", "sph")
-  pppi1 <- tapell("ppi", ytape = u1, usertheta = NA * thetaeval, tranobj = psphere$tran, function(n){model1$theta})$ptr
-  pppi2 <- tapell("ppi", ytape = u0, usertheta = NA * thetaeval, tranobj = psphere$tran, function(n){model0$theta})$ptr
+  pppi1 <- tapell("ppi", ytape = u1, usertheta = NA * thetaeval, tranobj = psphere$tran, function(n){model1$theta})
+  pppi2 <- tapell("ppi", ytape = u0, usertheta = NA * thetaeval, tranobj = psphere$tran, function(n){model0$theta})
 
-  expect_equal(pForward0(pppi1, ueval, thetaeval), pForward0(pppi2, ueval, thetaeval))
-  expect_equal(pJacobian(pppi1, ueval, thetaeval), pJacobian(pppi2, ueval, thetaeval))
-  expect_equal(pHessian(pppi1, ueval, thetaeval), pHessian(pppi2, ueval, thetaeval))
+  expect_equal(pppi1$eval(ueval, thetaeval), pppi2$eval(ueval, thetaeval))
+  expect_equal(pppi1$Jac(ueval, thetaeval), pppi2$Jac(ueval, thetaeval))
+  expect_equal(pppi1$Hes(ueval, thetaeval), pppi2$Hes(ueval, thetaeval))
 })
 
 

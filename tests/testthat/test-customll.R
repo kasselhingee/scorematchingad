@@ -20,8 +20,8 @@ test_that("custom_uld() can generate a working tape", {
                   ytape = rep(0.2, 5),
                   usertheta = c(NA, NA, NA, NA, -0.1), 
                   tranobj = maninfo$tran) 
-  expect_equal(pForward0(dirichwrtsph, sqrt(newu), newbeta[-5]), hardwired$eval(sqrt(newu), newbeta[-5]))
-  expect_equal(pJacobian(dirichwrtsph, sqrt(newu), newbeta[-5]), hardwired$Jac(sqrt(newu), newbeta[-5]))
+  expect_equal(dirichwrtsph$eval(sqrt(newu), newbeta[-5]), hardwired$eval(sqrt(newu), newbeta[-5]))
+  expect_equal(dirichwrtsph$Jac(sqrt(newu), newbeta[-5]), hardwired$Jac(sqrt(newu), newbeta[-5]))
 })
 
 

@@ -24,13 +24,13 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
   stopifnot(all(abs(sqrt(rowSums(sample^2)) - 1) < 1E-5))
 
   pman <- manifoldtransform("sph", "identity", "sph")
-  lltape <- tapell("FB", sample[1,], rep(NA, length(theta)), pman$tran, function(n){rep(1, n)})$ptr
+  lltape <- tapell("FB", sample[1,], rep(NA, length(theta)), pman$tran, function(n){rep(1, n)})
 
-  expect_equal(pForward0(lltape, sample[1, ], theta), log(qdFB(sample[1, ], k, m, A)),
+  expect_equal(lltape$eval(sample[1, ], theta), log(qdFB(sample[1, ], k, m, A)),
                ignore_attr = TRUE)## very important to check a tape
   #deriv wrt u
   u <- sample[1, ]
-  expect_equal(pJacobian(lltape, sample[1, ], theta),
+  expect_equal(lltape$Jac(sample[1, ], theta),
                attr(numericDeriv(quote(log(qdFB(u, k, m, A))), "u"), "gradient"),
                ignore_attr = TRUE, tolerance = 1E-5)
   #deriv wrt theta
@@ -39,7 +39,7 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
     mats <- FB_theta2mats(theta)
     qdFB(u, mats$k, mats$m, mats$A)
   }
-  expect_equal(pJacobian(lltape_theta, theta, u),
+  expect_equal(lltape_theta$Jac(theta, u),
     attr(numericDeriv(quote(log(qdFB_theta(u, theta))), "theta"), "gradient"),
     ignore_attr = TRUE, tolerance = 1E-5)
 })
