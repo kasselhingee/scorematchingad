@@ -12,18 +12,32 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// pTaylorApprox
-vecd pTaylorApprox(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd centre, vecd dynparam, size_t order);
-RcppExport SEXP _scorematchingad_pTaylorApprox(SEXP pfunSEXP, SEXP xSEXP, SEXP centreSEXP, SEXP dynparamSEXP, SEXP orderSEXP) {
+// taylorApprox_currentdynparam
+vecd taylorApprox_currentdynparam(pADFun& pfun, vecd x, vecd centre, const size_t order);
+RcppExport SEXP _scorematchingad_taylorApprox_currentdynparam(SEXP pfunSEXP, SEXP xSEXP, SEXP centreSEXP, SEXP orderSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
+    Rcpp::traits::input_parameter< vecd >::type centre(centreSEXP);
+    Rcpp::traits::input_parameter< const size_t >::type order(orderSEXP);
+    rcpp_result_gen = Rcpp::wrap(taylorApprox_currentdynparam(pfun, x, centre, order));
+    return rcpp_result_gen;
+END_RCPP
+}
+// taylorApprox
+vecd taylorApprox(pADFun& pfun, vecd x, vecd centre, vecd dynparam, const size_t order);
+RcppExport SEXP _scorematchingad_taylorApprox(SEXP pfunSEXP, SEXP xSEXP, SEXP centreSEXP, SEXP dynparamSEXP, SEXP orderSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
     Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
     Rcpp::traits::input_parameter< vecd >::type centre(centreSEXP);
     Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
-    Rcpp::traits::input_parameter< size_t >::type order(orderSEXP);
-    rcpp_result_gen = Rcpp::wrap(pTaylorApprox(pfun, x, centre, dynparam, order));
+    Rcpp::traits::input_parameter< const size_t >::type order(orderSEXP);
+    rcpp_result_gen = Rcpp::wrap(taylorApprox(pfun, x, centre, dynparam, order));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -215,7 +229,8 @@ RcppExport SEXP _rcpp_module_boot_manifolds();
 RcppExport SEXP _rcpp_module_boot_cppad_module();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_scorematchingad_pTaylorApprox", (DL_FUNC) &_scorematchingad_pTaylorApprox, 5},
+    {"_scorematchingad_taylorApprox_currentdynparam", (DL_FUNC) &_scorematchingad_taylorApprox_currentdynparam, 4},
+    {"_scorematchingad_taylorApprox", (DL_FUNC) &_scorematchingad_taylorApprox, 5},
     {"_scorematchingad_tapeJacobian", (DL_FUNC) &_scorematchingad_tapeJacobian, 1},
     {"_scorematchingad_tapeHessian", (DL_FUNC) &_scorematchingad_tapeHessian, 1},
     {"_scorematchingad_tapeGradOffset", (DL_FUNC) &_scorematchingad_tapeGradOffset, 1},
