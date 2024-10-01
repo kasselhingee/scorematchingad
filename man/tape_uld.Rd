@@ -4,16 +4,16 @@
 \alias{tape_uld}
 \title{Generate a tape of custom unnormalised log-density}
 \usage{
-tape_uld(file = "", x, theta, Cppopt = NULL)
+tape_uld(fileORcode = "", x, theta, Cppopt = NULL)
 }
 \arguments{
-\item{file}{A character string giving the path name of a file containing the unnormalised log-density definition.}
-
 \item{x}{Value of \code{x} for taping.}
 
 \item{theta}{Value of the parameter vector for taping.}
 
 \item{Cppopt}{List of named options passed to \code{Rcpp::sourceCpp()}}
+
+\item{file}{A character string giving the path name of a file containing the unnormalised log-density definition.}
 }
 \value{
 A list of the tape and the function itself

@@ -144,8 +144,4 @@ evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
 \references{
 \insertAllCited{}
 }
-\seealso{
-Other tape builders: 
-\code{\link{moretapebuilders}}
-}
 \concept{tape builders}
