@@ -11,15 +11,14 @@ test_that("custom_uld() can generate a working tape", {
 
   # try further taping
   maninfo <- manifoldtransform("sim", "sqrt", "sph")
-  dirichwrtsph <- ptapelltape(sqrt(rep(0.2, 5)), rep(-0.1, 5),
-               pllf = dirichlet$tape,
-               tran = maninfo$tran, 
-               fixedtheta = c(0,0,0,0,1),
-               verbose = FALSE)
+  dirichwrtsph <- reembed(dirichlet$tape, maninfo$tran)
+  dirichwrtsph <- fixdynamic(dirichwrtsph, dirichwrtsph$dyntape, c(rep(FALSE, 4), TRUE))
   hardwired <- tapell(ll = "dirichlet",
                   ytape = rep(0.2, 5),
-                  usertheta = c(NA, NA, NA, NA, -0.1), 
+                  usertheta = c(NA, NA, NA, NA, dyntape[5]), 
                   tranobj = maninfo$tran) 
+  newu <- c(0.1, 0.1, 0.2, 0.2, 0.4)
+  newbeta <- c(-0.9, -0.5, -0.1, -0.1, -0.1)
   expect_equal(dirichwrtsph$eval(sqrt(newu), newbeta[-5]), hardwired$eval(sqrt(newu), newbeta[-5]))
   expect_equal(dirichwrtsph$Jac(sqrt(newu), newbeta[-5]), hardwired$Jac(sqrt(newu), newbeta[-5]))
 })
