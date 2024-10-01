@@ -42,7 +42,7 @@ testquadratic <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE
   #try Jacobian
   stopifnot(isTRUE(nrow(xmat) == nrow(dynparammat)))
   thirdderivs <- lapply(1:nrow(xmat), function(i){
-    pJacobian(tapeH$ptr, xmat[i, ], dynparammat[i, ])
+    tapeH$Jac(xmat[i, ], dynparammat[i, ])
   })
   isallzero <- unlist(lapply(thirdderivs, function(vec){all(vec == 0)}))
   result_thirdderiv <- all(isallzero)

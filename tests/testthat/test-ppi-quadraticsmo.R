@@ -46,19 +46,19 @@ test_that("manual tests on PPI model with sqrt transformation, minsq divergence 
   ppismdtapeH2 <- tapeJacobian(ppismdtapeJ)
 
   expect_equal(
-  pForward0(ppismdtapeH$ptr, ppismdtape$xtape, c(0.1, 0.1, 0.8)),
-  pForward0(ppismdtapeH2$ptr, ppismdtape$xtape, c(0.1, 0.1, 0.8)))
+  ppismdtapeH$eval(ppismdtape$xtape, c(0.1, 0.1, 0.8)),
+  ppismdtapeH2$eval(ppismdtape$xtape, c(0.1, 0.1, 0.8)))
 
   #test that the value of Hessian *does* depend on the measurement vector  
-  Hnearedge <- pForward0(ppismdtapeH2$ptr, ppismdtape$xtape, c(0.1, 0.1, 0.8))
-  Hnearcentre <- pForward0(ppismdtapeH2$ptr, ppismdtape$xtape, c(0.3, 0.3, 0.4))
+  Hnearedge <- ppismdtapeH2$eval(ppismdtape$xtape, c(0.1, 0.1, 0.8))
+  Hnearcentre <- ppismdtapeH2$eval(ppismdtape$xtape, c(0.3, 0.3, 0.4))
   expect_false(isTRUE(all.equal(Hnearedge, Hnearcentre)))
 
   # the next results are false for a reason unknown to me because the tape seems to be doing the right thing
   expect_equal(pParameter(ppismdtapeH$ptr), rep(FALSE, length(ppi_paramvec(p = 3))^2))
   expect_equal(pParameter(ppismdtapeH2$ptr), rep(TRUE, length(ppi_paramvec(p = 3))^2))
   
-  hessgrad <- pJacobian(ppismdtapeH$ptr,
+  hessgrad <- ppismdtapeH$Jac(
                            ppi_paramvec(p = 3, AL=1, bL=1, beta=c(-0.1,-0.1,0.5)),
                            c(0.1, 0.1, 0.8))
   expect_equal(hessgrad, rep(0, length(ppi_paramvec(p = 3))^3))

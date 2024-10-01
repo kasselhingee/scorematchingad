@@ -20,8 +20,8 @@ test_that("custom_uld() can generate a working tape", {
                   ytape = rep(0.2, 5),
                   usertheta = c(NA, NA, NA, NA, -0.1), 
                   tranobj = maninfo$tran) 
-  expect_equal(pForward0(dirichwrtsph, sqrt(newu), newbeta[-5]), pForward0(hardwired$ptr, sqrt(newu), newbeta[-5]))
-  expect_equal(pJacobian(dirichwrtsph, sqrt(newu), newbeta[-5]), pJacobian(hardwired$ptr, sqrt(newu), newbeta[-5]))
+  expect_equal(pForward0(dirichwrtsph, sqrt(newu), newbeta[-5]), hardwired$eval(sqrt(newu), newbeta[-5]))
+  expect_equal(pJacobian(dirichwrtsph, sqrt(newu), newbeta[-5]), hardwired$Jac(sqrt(newu), newbeta[-5]))
 })
 
 
@@ -50,8 +50,8 @@ test_that("customll can compile a ll function that is evaluated by evalll and ta
   psimplex <- manifoldtransform("sim", "identity", "sim")
   lltape <- tapell(dirll, c(0.1, 0.4, 0.5), rep(NA, 3), psimplex$tran, verbose = FALSE)
 
-  expect_equal(pForward0(lltape$ptr, rep(1/3, 3), rep(-0.5, 3)), 3 * (-0.5 * log(1/3)))
-  expect_equal(pJacobian(lltape$ptr, rep(1/3, 3), rep(-0.5, 3)), rep(-0.5 * 3, 3))
+  expect_equal(lltape$eval(rep(1/3, 3), rep(-0.5, 3)), 3 * (-0.5 * log(1/3)))
+  expect_equal(lltape$Jac(rep(1/3, 3), rep(-0.5, 3)), rep(-0.5 * 3, 3))
 })
 
 test_that("customll errors correctly with wrong signature", {
