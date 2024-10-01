@@ -37,7 +37,7 @@ pADFun(Rcpp::XPtr<CppAD::ADFun<double>> p, veca1 xtape, veca1 dyntape, std::stri
 // Properties
 size_t size_order() const { return ptr->size_order(); }
 size_t Domain() const { return ptr->Domain(); }
-size_t Range() const { return ptr->Domain(); }
+size_t Range() const { return ptr->Range(); }
 size_t size_var() const { return ptr->size_var(); }
 size_t size_par() const { return ptr->size_par(); }
 size_t size_op() const { return ptr->size_op(); }
