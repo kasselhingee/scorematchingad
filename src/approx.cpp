@@ -23,6 +23,7 @@ vecd taylorApprox_currentdynparam(pADFun & pfun,  //a tape with independent valu
         out += pfun.Forward(i, diff); //now out[0] is evaluation of a quadratic approximation of f
       }
     }
+    Rcpp::Rcout << "finished." << std::endl;
     return(out);
 } 
 

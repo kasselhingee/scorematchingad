@@ -49,7 +49,7 @@ evaltape <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
   }
   if (any(toapprox)){
     evals_l[toapprox] <- lapply(which(toapprox), function(i){
-      pTaylorApprox(tape, xmat[i, ], xcentres[i, ], pmat[i, ], approxorder)
+      taylorApprox(tape, xmat[i, ], xcentres[i, ], pmat[i, ], approxorder)
     })
   }
 
