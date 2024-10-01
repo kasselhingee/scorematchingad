@@ -124,7 +124,7 @@ test_that("Hess + Offset match gradient for Hclr in interior", {
   values <- quadratictape_parts(tapes$smdtape, Y)
 
   # expect results to match for gradient
-  gradorig <- t(apply(Y, MARGIN = 1, function(x){pJacobian(tapes$smdtape$ptr, mod$theta, x)}))
+  gradorig <- t(apply(Y, MARGIN = 1, function(x){tapes$smdtape$Jac(mod$theta, x)}))
 
   gradpoly <- lapply(1:nrow(values$offset), function(i){
     drop(matrix(values$Hessian[i, ], ncol = length(mod$theta)) %*% mod$theta + 

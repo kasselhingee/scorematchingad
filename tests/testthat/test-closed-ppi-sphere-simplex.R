@@ -35,8 +35,8 @@ test_that("ppi and dirichlet smd value match when AL and bL is zero and p = 3", 
                            rep(0.1, p), theta * NA,
                            bdryw = "minsq", acut = acut)
 
-  ppival <- pForward0(ppitapes$smdtape$ptr, theta, utabl[2, ])
-  dirval <- pForward0(dirtapes$smdtape$ptr, beta, utabl[2, ])
+  ppival <- ppitapes$smdtape$eval(theta, utabl[2, ])
+  dirval <- dirtapes$smdtape$eval(beta, utabl[2, ])
   expect_equal(ppival, dirval)
 })
 
@@ -63,9 +63,9 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   # potentially the ordering of the theta values is wrong??
   out <- cppad_closed(ppitapes$smdtape, Y = utabl)
 
-  expect_equal(pForward0(dirtapes$lltape$ptr, utabl[2, ], beta), pForward0(ppitapes$lltape$ptr, utabl[2, ], beta))
-  expect_equal(pJacobian(dirtapes$lltape$ptr, utabl[2, ], beta), pJacobian(ppitapes$lltape$ptr, utabl[2, ], beta))
-  expect_equal(pForward0(dirtapes$smdtape$ptr, beta, utabl[2, ]), pForward0(ppitapes$smdtape$ptr, beta, utabl[2, ]))
+  expect_equal(dirtapes$lltape$eval(utabl[2, ], beta), ppitapes$lltape$eval(utabl[2, ], beta))
+  expect_equal(dirtapes$lltape$Jac(utabl[2, ], beta), ppitapes$lltape$Jac(utabl[2, ], beta))
+  expect_equal(dirtapes$smdtape$eval(beta, utabl[2, ]), ppitapes$smdtape$eval(beta, utabl[2, ]))
 
   hardcodedestimate <- dir_sqrt_minimah(utabl, acut)
 

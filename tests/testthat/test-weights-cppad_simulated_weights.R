@@ -30,8 +30,8 @@ test_that("evaltape_wsum() matches for simulated weights and constant weights", 
   expect_equal(smd_sim, smd_hardcoded)
 
   # compare results to manual calculation
-  smd_sim_manual <- sum(vapply(1:nrow(vw$newY), function(i){pForward0(tapes$smdtape$ptr, m$theta, vw$newY[i, ])}, FUN.VALUE = 1.3))
-  smd_dir_manual_v <- vapply(1:nrow(m$sample), function(i){pForward0(tapes$smdtape$ptr, m$theta, m$sample[i, ])}, FUN.VALUE = 1.3)
+  smd_sim_manual <- sum(vapply(1:nrow(vw$newY), function(i){tapes$smdtape$eval(m$theta, vw$newY[i, ])}, FUN.VALUE = 1.3))
+  smd_dir_manual_v <- vapply(1:nrow(m$sample), function(i){tapes$smdtape$eval(m$theta, m$sample[i, ])}, FUN.VALUE = 1.3)
   smd_dir_manual <- sum(smd_dir_manual_v*vw$w)
   expect_equal(smd_sim_manual, smd_sim)
   expect_equal(smd_sim_manual, smd_dir_manual)
