@@ -27,118 +27,60 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pForward0
-vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
-RcppExport SEXP _scorematchingad_pForward0(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
+// tapeJacobian
+pADFun tapeJacobian(pADFun& pfun);
+RcppExport SEXP _scorematchingad_tapeJacobian(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
-    Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(pForward0(pfun, x, dynparam));
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
+    rcpp_result_gen = Rcpp::wrap(tapeJacobian(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
-// pJacobian
-vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
-RcppExport SEXP _scorematchingad_pJacobian(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
+// tapeHessian
+pADFun tapeHessian(pADFun& pfun);
+RcppExport SEXP _scorematchingad_tapeHessian(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
-    Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(pJacobian(pfun, x, dynparam));
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
+    rcpp_result_gen = Rcpp::wrap(tapeHessian(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
-// pHessian
-vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
-RcppExport SEXP _scorematchingad_pHessian(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
+// tapeGradOffset
+pADFun tapeGradOffset(pADFun& pfun);
+RcppExport SEXP _scorematchingad_tapeGradOffset(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< vecd >::type x(xSEXP);
-    Rcpp::traits::input_parameter< vecd >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(pHessian(pfun, x, dynparam));
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
+    rcpp_result_gen = Rcpp::wrap(tapeGradOffset(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
-// pParameter
-std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
-RcppExport SEXP _scorematchingad_pParameter(SEXP pfunSEXP) {
+// tapeLogJacDet
+pADFun tapeLogJacDet(pADFun pfun, veca1 x, veca1 dynparam);
+RcppExport SEXP _scorematchingad_tapeLogJacDet(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    rcpp_result_gen = Rcpp::wrap(pParameter(pfun));
-    return rcpp_result_gen;
-END_RCPP
-}
-// pTapeJacobian
-Rcpp::XPtr< CppAD::ADFun<double> > pTapeJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 x, veca1 dynparam);
-RcppExport SEXP _scorematchingad_pTapeJacobian(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< pADFun >::type pfun(pfunSEXP);
     Rcpp::traits::input_parameter< veca1 >::type x(xSEXP);
     Rcpp::traits::input_parameter< veca1 >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(pTapeJacobian(pfun, x, dynparam));
+    rcpp_result_gen = Rcpp::wrap(tapeLogJacDet(pfun, x, dynparam));
     return rcpp_result_gen;
 END_RCPP
 }
-// pTapeHessian
-Rcpp::XPtr< CppAD::ADFun<double> > pTapeHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 x, veca1 dynparam);
-RcppExport SEXP _scorematchingad_pTapeHessian(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
+// tapeSwap
+pADFun tapeSwap(pADFun pfun);
+RcppExport SEXP _scorematchingad_tapeSwap(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type x(xSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(pTapeHessian(pfun, x, dynparam));
-    return rcpp_result_gen;
-END_RCPP
-}
-// pTapeGradOffset
-Rcpp::XPtr< CppAD::ADFun<double> > pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 x, veca1 dynparam);
-RcppExport SEXP _scorematchingad_pTapeGradOffset(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type x(xSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(pTapeGradOffset(pfun, x, dynparam));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ptapelogdetJ
-Rcpp::XPtr< CppAD::ADFun<double> > ptapelogdetJ(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 x, veca1 dynparam);
-RcppExport SEXP _scorematchingad_ptapelogdetJ(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type x(xSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapelogdetJ(pfun, x, dynparam));
-    return rcpp_result_gen;
-END_RCPP
-}
-// swapDynamic
-Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
-RcppExport SEXP _scorematchingad_swapDynamic(SEXP pfunSEXP, SEXP newvalueSEXP, SEXP newdynparamSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type newvalue(newvalueSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type newdynparam(newdynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(swapDynamic(pfun, newvalue, newdynparam));
+    Rcpp::traits::input_parameter< pADFun >::type pfun(pfunSEXP);
+    rcpp_result_gen = Rcpp::wrap(tapeSwap(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -276,15 +218,11 @@ RcppExport SEXP _rcpp_module_boot_cppad_module();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_pTaylorApprox", (DL_FUNC) &_scorematchingad_pTaylorApprox, 5},
-    {"_scorematchingad_pForward0", (DL_FUNC) &_scorematchingad_pForward0, 3},
-    {"_scorematchingad_pJacobian", (DL_FUNC) &_scorematchingad_pJacobian, 3},
-    {"_scorematchingad_pHessian", (DL_FUNC) &_scorematchingad_pHessian, 3},
-    {"_scorematchingad_pParameter", (DL_FUNC) &_scorematchingad_pParameter, 1},
-    {"_scorematchingad_pTapeJacobian", (DL_FUNC) &_scorematchingad_pTapeJacobian, 3},
-    {"_scorematchingad_pTapeHessian", (DL_FUNC) &_scorematchingad_pTapeHessian, 3},
-    {"_scorematchingad_pTapeGradOffset", (DL_FUNC) &_scorematchingad_pTapeGradOffset, 3},
-    {"_scorematchingad_ptapelogdetJ", (DL_FUNC) &_scorematchingad_ptapelogdetJ, 3},
-    {"_scorematchingad_swapDynamic", (DL_FUNC) &_scorematchingad_swapDynamic, 3},
+    {"_scorematchingad_tapeJacobian", (DL_FUNC) &_scorematchingad_tapeJacobian, 1},
+    {"_scorematchingad_tapeHessian", (DL_FUNC) &_scorematchingad_tapeHessian, 1},
+    {"_scorematchingad_tapeGradOffset", (DL_FUNC) &_scorematchingad_tapeGradOffset, 1},
+    {"_scorematchingad_tapeLogJacDet", (DL_FUNC) &_scorematchingad_tapeLogJacDet, 3},
+    {"_scorematchingad_tapeSwap", (DL_FUNC) &_scorematchingad_tapeSwap, 1},
     {"_scorematchingad_set_cppad_error_handler", (DL_FUNC) &_scorematchingad_set_cppad_error_handler, 0},
     {"_scorematchingad_test_Rcpphandler", (DL_FUNC) &_scorematchingad_test_Rcpphandler, 0},
     {"_scorematchingad_fixdynamic", (DL_FUNC) &_scorematchingad_fixdynamic, 3},

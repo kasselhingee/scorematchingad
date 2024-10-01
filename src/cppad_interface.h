@@ -6,6 +6,7 @@
 //for content that is Rcpp specific
 #include "scorematchingad_forward.h"
 #include <Rcpp.h>
+#include <utils/pADFun.h>
 
 //' @noRd
 //' @name evaltape_internal
@@ -25,18 +26,15 @@
 //' @param pfun Rcpp::XPtr to an ADFun. Can be obtained as the `ptr` field of an [`ADFun`] object.
 //' @param x A vector in the domain of the taped function
 //' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
-// [[Rcpp::export]]
-vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
+//vecd pForward0(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
 //' @noRd
 //' @describeIn evaltape_internal Evaluates a the Jacobian of a tape using the `CppAD` `Jacobian` method <https://cppad.readthedocs.io/latest/Jacobian.html>. 
-// [[Rcpp::export]]
-vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
+//vecd pJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
 //' @noRd
 //' @describeIn evaltape_internal Evaluates a the Hessian of a tape using the `CppAD` `Hessian` method <https://cppad.readthedocs.io/latest/Hessian.html>, assuming that range space of the taped function has dimension of `1`. 
-// [[Rcpp::export]]
-vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
+//vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 
 //' @noRd
 //' @describeIn evaltape_internal Test whether the returned values are constant with respect to the independent values using 
@@ -46,8 +44,7 @@ vecd pHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun, vecd x, vecd dynparam);
 //' # pParameter
 //' The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
 //' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/latest/glossary.html#dynamic> ).
-// [[Rcpp::export]]
-std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
+//std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
 // According to the help, applying Variable(u) to each return value would be false if u depends on the dynamic parameters and does not depend on the independent variable vector.
 
 
@@ -70,8 +67,7 @@ std::vector<bool> pParameter(Rcpp::XPtr< CppAD::ADFun<double> > pfun);
 //' The Jacobian as a matrix, could then be obtained by [`as.matrix()`] with `byrow = TRUE` and `ncol = n`.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 // [[Rcpp::export]]
-Rcpp::XPtr< CppAD::ADFun<double> >  pTapeJacobian(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
-                    veca1 x, veca1 dynparam);
+pADFun  tapeJacobian(pADFun & pfun);
 
 //' @noRd
 //' @title Tape the Hessian of a CppAD Tape
@@ -88,8 +84,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeJacobian(Rcpp::XPtr< CppAD::ADFun<doubl
 //' The Hessian as a matrix, can be obtained by using [`as.matrix()`] with `ncol = n`.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 // [[Rcpp::export]]
-Rcpp::XPtr< CppAD::ADFun<double> >  pTapeHessian(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
-                    veca1 x, veca1 dynparam);
+pADFun  tapeHessian(pADFun & pfun);
 
 
 //' @noRd
@@ -110,8 +105,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeHessian(Rcpp::XPtr< CppAD::ADFun<double
 //'  \deqn{b(\theta) = \Delta f(x;\theta) - H f(x; \theta) x,}
 //' which does not depend on \eqn{x}.
 // [[Rcpp::export]]
-Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
-                    veca1 x, veca1 dynparam);
+pADFun tapeGradOffset(pADFun & pfun);
 
 
 //' @noRd
@@ -124,7 +118,7 @@ Rcpp::XPtr< CppAD::ADFun<double> >  pTapeGradOffset(Rcpp::XPtr< CppAD::ADFun<dou
 //' The `x` vector is used as the value to conduct the taping.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 // [[Rcpp::export]]
-Rcpp::XPtr< CppAD::ADFun<double> >  ptapelogdetJ(Rcpp::XPtr< CppAD::ADFun<double> > pfun,
+pADFun  tapeLogJacDet(pADFun pfun,
                     veca1 x, veca1 dynparam);
 
 //' @noRd
@@ -137,6 +131,6 @@ Rcpp::XPtr< CppAD::ADFun<double> >  ptapelogdetJ(Rcpp::XPtr< CppAD::ADFun<double
 //' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
 //' @return A pointer to an ADFun
 // [[Rcpp::export]]
-Rcpp::XPtr< CppAD::ADFun<double> > swapDynamic(Rcpp::XPtr< CppAD::ADFun<double> > pfun, veca1 newvalue, veca1 newdynparam);
+pADFun tapeSwap(pADFun pfun);
 
 # endif

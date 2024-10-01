@@ -32,21 +32,15 @@ NULL
 #' @param pfun Rcpp::XPtr to an ADFun. Can be obtained as the `ptr` field of an [`ADFun`] object.
 #' @param x A vector in the domain of the taped function
 #' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
-pForward0 <- function(pfun, x, dynparam) {
-    .Call('_scorematchingad_pForward0', PACKAGE = 'scorematchingad', pfun, x, dynparam)
-}
+NULL
 
 #' @noRd
 #' @describeIn evaltape_internal Evaluates a the Jacobian of a tape using the `CppAD` `Jacobian` method <https://cppad.readthedocs.io/latest/Jacobian.html>. 
-pJacobian <- function(pfun, x, dynparam) {
-    .Call('_scorematchingad_pJacobian', PACKAGE = 'scorematchingad', pfun, x, dynparam)
-}
+NULL
 
 #' @noRd
 #' @describeIn evaltape_internal Evaluates a the Hessian of a tape using the `CppAD` `Hessian` method <https://cppad.readthedocs.io/latest/Hessian.html>, assuming that range space of the taped function has dimension of `1`. 
-pHessian <- function(pfun, x, dynparam) {
-    .Call('_scorematchingad_pHessian', PACKAGE = 'scorematchingad', pfun, x, dynparam)
-}
+NULL
 
 #' @noRd
 #' @describeIn evaltape_internal Test whether the returned values are constant with respect to the independent values using 
@@ -56,9 +50,7 @@ pHessian <- function(pfun, x, dynparam) {
 #' # pParameter
 #' The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
 #' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/latest/glossary.html#dynamic> ).
-pParameter <- function(pfun) {
-    .Call('_scorematchingad_pParameter', PACKAGE = 'scorematchingad', pfun)
-}
+NULL
 
 #' @noRd
 #' @title Tape the Jacobian of CppAD Tape
@@ -76,8 +68,8 @@ pParameter <- function(pfun) {
 #' The next \eqn{n} elements of the vector is the gradient of the second component of the function output.
 #' The Jacobian as a matrix, could then be obtained by [`as.matrix()`] with `byrow = TRUE` and `ncol = n`.
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
-pTapeJacobian <- function(pfun, x, dynparam) {
-    .Call('_scorematchingad_pTapeJacobian', PACKAGE = 'scorematchingad', pfun, x, dynparam)
+tapeJacobian <- function(pfun) {
+    .Call('_scorematchingad_tapeJacobian', PACKAGE = 'scorematchingad', pfun)
 }
 
 #' @noRd
@@ -94,8 +86,8 @@ pTapeJacobian <- function(pfun, x, dynparam) {
 #' The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
 #' The Hessian as a matrix, can be obtained by using [`as.matrix()`] with `ncol = n`.
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
-pTapeHessian <- function(pfun, x, dynparam) {
-    .Call('_scorematchingad_pTapeHessian', PACKAGE = 'scorematchingad', pfun, x, dynparam)
+tapeHessian <- function(pfun) {
+    .Call('_scorematchingad_tapeHessian', PACKAGE = 'scorematchingad', pfun)
 }
 
 #' @noRd
@@ -115,8 +107,8 @@ pTapeHessian <- function(pfun, x, dynparam) {
 #' The tape calculates \eqn{b(\theta)} as
 #'  \deqn{b(\theta) = \Delta f(x;\theta) - H f(x; \theta) x,}
 #' which does not depend on \eqn{x}.
-pTapeGradOffset <- function(pfun, x, dynparam) {
-    .Call('_scorematchingad_pTapeGradOffset', PACKAGE = 'scorematchingad', pfun, x, dynparam)
+tapeGradOffset <- function(pfun) {
+    .Call('_scorematchingad_tapeGradOffset', PACKAGE = 'scorematchingad', pfun)
 }
 
 #' @noRd
@@ -128,8 +120,8 @@ pTapeGradOffset <- function(pfun, x, dynparam) {
 #' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
 #' The `x` vector is used as the value to conduct the taping.
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
-ptapelogdetJ <- function(pfun, x, dynparam) {
-    .Call('_scorematchingad_ptapelogdetJ', PACKAGE = 'scorematchingad', pfun, x, dynparam)
+tapeLogJacDet <- function(pfun, x, dynparam) {
+    .Call('_scorematchingad_tapeLogJacDet', PACKAGE = 'scorematchingad', pfun, x, dynparam)
 }
 
 #' @noRd
@@ -141,8 +133,8 @@ ptapelogdetJ <- function(pfun, x, dynparam) {
 #' @param newvalue The independent value (in the sense after the switch has occurred) at which to tape the ADFun
 #' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
 #' @return A pointer to an ADFun
-swapDynamic <- function(pfun, newvalue, newdynparam) {
-    .Call('_scorematchingad_swapDynamic', PACKAGE = 'scorematchingad', pfun, newvalue, newdynparam)
+tapeSwap <- function(pfun) {
+    .Call('_scorematchingad_tapeSwap', PACKAGE = 'scorematchingad', pfun)
 }
 
 set_cppad_error_handler <- function() {
