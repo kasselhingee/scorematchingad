@@ -1,7 +1,7 @@
 #include "approx.h"
 #include <RcppEigen.h>
 
-vecd taylorApprox(pADFun & pfun,  //a tape with independent values that are points on the manifold (not the parameters)
+vecd taylorApprox_currentdynparam(pADFun & pfun,  //a tape with independent values that are points on the manifold (not the parameters)
 		  vecd x,
                   vecd centre,
 		  const size_t order){
@@ -33,7 +33,6 @@ vecd taylorApprox(pADFun & pfun,  //a tape with independent values that are poin
 		  const size_t order){
    pfun.new_dynamic(dynparam);
 
-   return taylorApprox(pfun, x, centre, order); 
+   return taylorApprox_currentdynparam(pfun, x, centre, order); 
 } 
 
-# endif
