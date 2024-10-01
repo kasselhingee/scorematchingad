@@ -3,7 +3,7 @@
 
 #include "scorematchingad_forward.h"
 #include "manifoldtransforms/manifolds.hpp"
-#include "utils/approx.hpp"
+#include "approx.hpp"
 #include <Rcpp.h>
 
 //' @noRd
