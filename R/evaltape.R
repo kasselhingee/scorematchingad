@@ -26,9 +26,7 @@
 #'          xcentres = rbind(c(0.0005, 0.0005, 0.999), NA))
 #' @export
 evaltape <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
-  if (R6::is.R6(tape) && inherits(tape, "ADFun")){
-     tape <- tape$ptr
-  }
+  stopifnot(inherits(tape, "Rcpp_ADFun"))
   stopifnot(nrow(xmat) == nrow(xcentres))
   if (is.vector(xmat)){xmat <- matrix(xmat, ncol = length(xmat))}
   if (is.vector(pmat)){pmat <- matrix(pmat, ncol = length(pmat))}
@@ -46,7 +44,7 @@ evaltape <- function(tape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
   # exact evaluations
   if (any(!toapprox)){
     evals_l[!toapprox] <- lapply(which(!toapprox), function(i){
-      pForward0(tape, xmat[i, ], pmat[i, ])
+      tape$eval(xmat[i, ], pmat[i, ])
     })
   }
   if (any(toapprox)){
