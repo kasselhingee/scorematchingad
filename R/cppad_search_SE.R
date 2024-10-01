@@ -1,6 +1,6 @@
 # estimates of the variance of the estimator for cppad_search
 sme_estvar <- function(smdfun, estimate, Y, Yapproxcentres = NA * Y, approxorder = 10){
-  stopifnot(inherits(smdfun, "ADFun"))
+  stopifnot(inherits(smdfun, "Rcpp_ADFun"))
   # generate tapes with respect to the measurement (parameter is dynamic)
   p <- ncol(Y)
   Jsmdfun <- tapeJacobian(smdfun)

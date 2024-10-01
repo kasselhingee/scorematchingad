@@ -16,7 +16,7 @@
 #' smvalues_wsum(smdtape, m$sample, m$theta[1:5])$grad/nrow(m$sample)
 #' @export
 smvalues <- function(smdtape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
-  stopifnot(inherits(smdtape, "ADFun"))
+  stopifnot(inherits(smdtape, "Rcpp_ADFun"))
   # prepare tapes
   Jsmdfun <- tapeJacobian(smdtape)
   Hsmdfun <- tapeJacobian(Jsmdfun)

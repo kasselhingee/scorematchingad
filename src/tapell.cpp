@@ -146,6 +146,7 @@ pADFun tape_uld_inbuilt(std::string name, veca1 x, veca1 theta){
   veca1 y(1);
   y(0) = func(x, theta);
   tape.Dependent(x, y);
+  tape.check_for_nan(false);
   pADFun out(tape, x, theta, name);
   return(out);
 }

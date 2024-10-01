@@ -12,6 +12,15 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// abort_recording
+void abort_recording();
+RcppExport SEXP _scorematchingad_abort_recording() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    abort_recording();
+    return R_NilValue;
+END_RCPP
+}
 // taylorApprox_currentdynparam
 vecd taylorApprox_currentdynparam(pADFun& pfun, vecd x, vecd centre, const size_t order);
 RcppExport SEXP _scorematchingad_taylorApprox_currentdynparam(SEXP pfunSEXP, SEXP xSEXP, SEXP centreSEXP, SEXP orderSEXP) {
@@ -213,6 +222,7 @@ RcppExport SEXP _rcpp_module_boot_manifolds();
 RcppExport SEXP _rcpp_module_boot_cppad_module();
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_scorematchingad_abort_recording", (DL_FUNC) &_scorematchingad_abort_recording, 0},
     {"_scorematchingad_taylorApprox_currentdynparam", (DL_FUNC) &_scorematchingad_taylorApprox_currentdynparam, 4},
     {"_scorematchingad_taylorApprox", (DL_FUNC) &_scorematchingad_taylorApprox, 5},
     {"_scorematchingad_tapeJacobian", (DL_FUNC) &_scorematchingad_tapeJacobian, 1},
