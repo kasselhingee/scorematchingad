@@ -25,19 +25,19 @@
 #'  testquadratic(tapes$smdtape)
 #' @export
 testquadratic <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE){
-  stopifnot(inherits(tape, "ADFun"))
+  stopifnot(inherits(tape, "Rcpp_ADFun"))
   tapeJ <- tapeJacobian(tape)
   tapeH <- tapeJacobian(tapeJ)
 
-  #pParameter() test
-  isparameter <- pParameter(tapeH$ptr)
-  result_pParameter <- all(isparameter)
-  if (verbose && !result_pParameter){
-    message(sprintf("The Hessian was non-constant according to pParameter() for elements %s.",
+  #parameter() test
+  isparameter <- vapply(1:tapeH.range, function(i){tapeH$parameter(i)}, FUN.VALUE = TRUE)
+  result_parameter <- all(isparameter)
+  if (verbose && !result_parameter){
+    message(sprintf("The Hessian was non-constant according to parameter() for elements %s.",
                     paste(which(!isparameter), collapse = ", ")))
   }
 
-  if (is.null(xmat) && is.null(dynparammat)){return(result_pParameter)}
+  if (is.null(xmat) && is.null(dynparammat)){return(result_parameter)}
 
   #try Jacobian
   stopifnot(isTRUE(nrow(xmat) == nrow(dynparammat)))
@@ -51,7 +51,7 @@ testquadratic <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE
                     paste(which(!isallzero), collapse = ", ")))
   }
 
-  finalresult <- result_thirdderiv && result_pParameter
+  finalresult <- result_thirdderiv && result_parameter
   return(finalresult)
 }
 

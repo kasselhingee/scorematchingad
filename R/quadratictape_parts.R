@@ -40,7 +40,7 @@
 #'   tmat = rbind(u, c(1/4, 1/4, 1/2)))
 #' @export
 quadratictape_parts <- function(tape, tmat, tcentres = NA * tmat, approxorder = 10){
-  stopifnot(inherits(tape, "ADFun"))
+  stopifnot(inherits(tape, "Rcpp_ADFun"))
   stopifnot(nrow(tmat) == nrow(tcentres))
   stopifnot(testquadratic(tape))
   toapprox <- !is.na(tcentres[, 1])
