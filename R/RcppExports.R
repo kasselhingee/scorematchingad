@@ -120,8 +120,8 @@ tapeGradOffset <- function(pfun) {
 #' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
 #' The `x` vector is used as the value to conduct the taping.
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
-tapeLogJacDet <- function(pfun, x, dynparam) {
-    .Call('_scorematchingad_tapeLogJacDet', PACKAGE = 'scorematchingad', pfun, x, dynparam)
+tapeLogJacDet <- function(pfun) {
+    .Call('_scorematchingad_tapeLogJacDet', PACKAGE = 'scorematchingad', pfun)
 }
 
 #' @noRd

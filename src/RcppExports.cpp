@@ -61,25 +61,23 @@ BEGIN_RCPP
 END_RCPP
 }
 // tapeLogJacDet
-pADFun tapeLogJacDet(pADFun pfun, veca1 x, veca1 dynparam);
-RcppExport SEXP _scorematchingad_tapeLogJacDet(SEXP pfunSEXP, SEXP xSEXP, SEXP dynparamSEXP) {
+pADFun tapeLogJacDet(pADFun& pfun);
+RcppExport SEXP _scorematchingad_tapeLogJacDet(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< pADFun >::type pfun(pfunSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type x(xSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type dynparam(dynparamSEXP);
-    rcpp_result_gen = Rcpp::wrap(tapeLogJacDet(pfun, x, dynparam));
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
+    rcpp_result_gen = Rcpp::wrap(tapeLogJacDet(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
 // tapeSwap
-pADFun tapeSwap(pADFun pfun);
+pADFun tapeSwap(pADFun& pfun);
 RcppExport SEXP _scorematchingad_tapeSwap(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< pADFun >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
     rcpp_result_gen = Rcpp::wrap(tapeSwap(pfun));
     return rcpp_result_gen;
 END_RCPP
@@ -221,7 +219,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_tapeJacobian", (DL_FUNC) &_scorematchingad_tapeJacobian, 1},
     {"_scorematchingad_tapeHessian", (DL_FUNC) &_scorematchingad_tapeHessian, 1},
     {"_scorematchingad_tapeGradOffset", (DL_FUNC) &_scorematchingad_tapeGradOffset, 1},
-    {"_scorematchingad_tapeLogJacDet", (DL_FUNC) &_scorematchingad_tapeLogJacDet, 3},
+    {"_scorematchingad_tapeLogJacDet", (DL_FUNC) &_scorematchingad_tapeLogJacDet, 1},
     {"_scorematchingad_tapeSwap", (DL_FUNC) &_scorematchingad_tapeSwap, 1},
     {"_scorematchingad_set_cppad_error_handler", (DL_FUNC) &_scorematchingad_set_cppad_error_handler, 0},
     {"_scorematchingad_test_Rcpphandler", (DL_FUNC) &_scorematchingad_test_Rcpphandler, 0},

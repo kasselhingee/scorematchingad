@@ -118,8 +118,7 @@ pADFun tapeGradOffset(pADFun & pfun);
 //' The `x` vector is used as the value to conduct the taping.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 // [[Rcpp::export]]
-pADFun  tapeLogJacDet(pADFun pfun,
-                    veca1 x, veca1 dynparam);
+pADFun  tapeLogJacDet(pADFun & pfun);
 
 //' @noRd
 //' @title Switch Dynamic and Independent Values of a Tape
@@ -131,6 +130,6 @@ pADFun  tapeLogJacDet(pADFun pfun,
 //' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
 //' @return A pointer to an ADFun
 // [[Rcpp::export]]
-pADFun tapeSwap(pADFun pfun);
+pADFun tapeSwap(pADFun & pfun);
 
 # endif
