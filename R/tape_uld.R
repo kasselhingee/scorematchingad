@@ -8,9 +8,17 @@
 #' tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"), rep(0.2, 5), rep(-0.1, 5))
 #' @return A list of the tape and the function itself
 #' @export
-tape_uld <- function(file = "", x, theta, Cppopt = NULL){
-  # check provided code
-  filelines <- readLines(file)
+tape_uld <- function(fileORcode = "", x, theta, Cppopt = NULL){
+  #read code
+  filelines <- string_to_lines(fileORcode)
+  if ((length(filelines) == 1) && (nchar(tools::file_ext(fileORcode)) == 0)){
+    filelines <- readLines(fileORcode)
+  }
+
+  #remove empty first lines
+  blank_lines <- grepl("^\\s*$", filelines)
+  filelines <- filelines[1:length(filelines) >= min(which(!blank_lines))]
+
   # check provided code
   inputsloc <- regexpr("^[[:space:]]*a1type (?<fname>[^[:space:]]+)\\((?<arg1>[^,]+),[[:space:]]*(?<arg2>[^\\)]+)", filelines[1], perl = TRUE)
   starts <- attr(inputsloc, "capture.start")
@@ -34,6 +42,7 @@ tape_uld <- function(file = "", x, theta, Cppopt = NULL){
 "#include <scorematchingad_forward.h>",
 "#include <Rcpp.h>",
 "#include <scorematchingad.h>",
+"#include <likelihoods/likelihoods.hpp>",
 "// [[Rcpp::depends(RcppEigen)]]",
 "// [[Rcpp::depends(scorematchingad)]]",
 "// [[Rcpp::export]]"
@@ -74,6 +83,10 @@ tapingboilerplate <- c(
 "  return(out);",
 "}"
 )
+
+string_to_lines <- function(code_string) {
+  strsplit(code_string, "\r?\n")[[1]]
+}
 
 cppad_module <- Rcpp::Module("cppad_module", PACKAGE="scorematchingad")
 #need to run something from cppad_module to avoid lazy loading. loadModule should work here, but clashes with use of Module for the manifolds module

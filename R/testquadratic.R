@@ -30,7 +30,7 @@ testquadratic <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE
   tapeH <- tapeJacobian(tapeJ)
 
   #parameter() test
-  isparameter <- vapply(1:tapeH.range, function(i){tapeH$parameter(i)}, FUN.VALUE = TRUE)
+  isparameter <- vapply(1:tapeH$range, function(i){tapeH$parameter(i-1)}, FUN.VALUE = TRUE)
   result_parameter <- all(isparameter)
   if (verbose && !result_parameter){
     message(sprintf("The Hessian was non-constant according to parameter() for elements %s.",

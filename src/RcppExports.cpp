@@ -192,22 +192,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ptapelltape
-Rcpp::XPtr< CppAD::ADFun<double> > ptapelltape(veca1 z_ad, veca1 theta_ad, Rcpp::XPtr< CppAD::ADFun<double> > pllf, transform_a1type& tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
-RcppExport SEXP _scorematchingad_ptapelltape(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP pllfSEXP, SEXP tranSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< veca1 >::type z_ad(z_adSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type theta_ad(theta_adSEXP);
-    Rcpp::traits::input_parameter< Rcpp::XPtr< CppAD::ADFun<double> > >::type pllf(pllfSEXP);
-    Rcpp::traits::input_parameter< transform_a1type& >::type tran(tranSEXP);
-    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type fixedtheta(fixedthetaSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapelltape(z_ad, theta_ad, pllf, tran, fixedtheta, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
 // tapesmd
 pADFun tapesmd(pADFun& uldtape, transform<a1type>& tran, manifold<a1type>& M, std::string weightname, const double& acut, bool verbose);
 RcppExport SEXP _scorematchingad_tapesmd(SEXP uldtapeSEXP, SEXP tranSEXP, SEXP MSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
@@ -244,7 +228,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_getllptr", (DL_FUNC) &_scorematchingad_getllptr, 1},
     {"_scorematchingad_tape_uld_inbuilt", (DL_FUNC) &_scorematchingad_tape_uld_inbuilt, 3},
     {"_scorematchingad_evalll", (DL_FUNC) &_scorematchingad_evalll, 3},
-    {"_scorematchingad_ptapelltape", (DL_FUNC) &_scorematchingad_ptapelltape, 6},
     {"_scorematchingad_tapesmd", (DL_FUNC) &_scorematchingad_tapesmd, 6},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
     {"_rcpp_module_boot_cppad_module", (DL_FUNC) &_rcpp_module_boot_cppad_module, 0},
