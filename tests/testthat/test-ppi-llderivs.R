@@ -45,7 +45,7 @@ test_that("ppi likelihood, Jacobian, Hessian for simplex matches numerical estim
   expect_equal(hess, numderiv, ignore_attr = TRUE)
 
   #wrt u
-  lltape_theta <- swapDynamic(lltape, theta, u)
+  lltape_theta <- tapeSwap(lltape)
   expect_equal(ppill_r(u, beta0, AL, bL), lltape_theta$eval(theta, u), ignore_attr = TRUE)
 
   #gradiant
@@ -85,7 +85,7 @@ test_that("ppi likelihood, Jacobian, Hessian for sphere matches numerical estima
   expect_equal(hess, numderiv, ignore_attr = TRUE)
 
   #wrt theta
-  lltape_theta <- swapDynamic(lltape, theta, u)
+  lltape_theta <- tapeSwap(lltape)
   expect_equal(ppill_r_S(u, beta0, AL, bL), lltape_theta$eval(theta, u), ignore_attr = TRUE)
 
   #gradiant
@@ -123,7 +123,7 @@ test_that("dirichlet ll evaluation and Jacobian matches expected", {
   expect_equal(attr(numderiv,"gradient"), lltape$Jac(u, beta), ignore_attr = TRUE, tolerance = 1E-5)
 
   #gradient wrt beta
-  lltape_theta <- swapDynamic(lltape, beta, u)
+  lltape_theta <- tapeSwap(lltape)
   numderiv <- numericDeriv(quote(dirichlet_r(u, beta)), c("beta"))
   expect_equal(attr(numderiv,"gradient"), lltape_theta$Jac(beta, u), ignore_attr = TRUE, tolerance = 1E-5)
 })

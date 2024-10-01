@@ -1,3 +1,4 @@
+# warning: for interactive testing load_all() with install doesn't include scorematchingad.h properly
 test_that("custom_uld() can generate a working tape", {
   utape = rep(0.2, 5)
   dyntape = rep(-0.1, 5)
@@ -23,18 +24,8 @@ test_that("custom_uld() can generate a working tape", {
   expect_equal(dirichwrtsph$Jac(sqrt(newu), newbeta[-5]), hardwired$Jac(sqrt(newu), newbeta[-5]))
 })
 
-
-if (!requireNamespace("RcppEigen", quietly = TRUE)){skip("Need RcppEigen package")}
-test_that("customll_test() returns TRUE or FALSE", {
-  skip_on_cran()
-  suppressWarnings({out <- customll_test()})
-  expect_true(out %in% c(TRUE, FALSE))
-})
-
-# warning: for interactive testing load_all() with install doesn't include scorematchingad.h properly
-
-test_that("customll errors correctly with wrong signature", {
-  expect_error({dirll <- customll("
+test_that("tape_uld() errors correctly with wrong signature", {
+  expect_error({dirll <- tape_uld("
 a1type dirichlet(const vecd &u, const veca1 &beta) {
         size_t d  = u.size();
         a1type y(0.);  // initialize summation

@@ -11,7 +11,7 @@
 tape_uld <- function(fileORcode = "", x, theta, Cppopt = NULL){
   #read code
   filelines <- string_to_lines(fileORcode)
-  if ((length(filelines) == 1) && (nchar(tools::file_ext(fileORcode)) == 0)){
+  if ((length(filelines) == 1) && (nchar(tools::file_ext(fileORcode)) > 0)){
     filelines <- readLines(fileORcode)
   }
 

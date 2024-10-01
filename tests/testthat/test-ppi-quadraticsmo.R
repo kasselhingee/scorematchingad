@@ -14,7 +14,7 @@ test_that("testquadratic passes on PPI model with sqrt transformation, minsq div
   ppismdtape <- tapes$smdtape
 
 
-  # check only with pParameter()
+  # check only with parameter()
   expect_true(testquadratic(ppismdtape))
 
 
@@ -55,8 +55,8 @@ test_that("manual tests on PPI model with sqrt transformation, minsq divergence 
   expect_false(isTRUE(all.equal(Hnearedge, Hnearcentre)))
 
   # the next results are false for a reason unknown to me because the tape seems to be doing the right thing
-  expect_equal(pParameter(ppismdtapeH$ptr), rep(FALSE, length(ppi_paramvec(p = 3))^2))
-  expect_equal(pParameter(ppismdtapeH2$ptr), rep(TRUE, length(ppi_paramvec(p = 3))^2))
+  expect_equal(sapply(0:ppismdtapeH$range, function(i){ppismdtapeH$parameter(i)}), rep(FALSE, length(ppi_paramvec(p = 3))^2))
+  expect_equal(sapply(0:ppismdtapeH2$range, function(i){ppismdtapeH2$parameter(i)}), rep(TRUE, length(ppi_paramvec(p = 3))^2))
   
   hessgrad <- ppismdtapeH$Jac(
                            ppi_paramvec(p = 3, AL=1, bL=1, beta=c(-0.1,-0.1,0.5)),
