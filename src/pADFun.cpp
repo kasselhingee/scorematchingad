@@ -2,15 +2,7 @@
 #include "utils/pADFun.h"
 #include <RcppEigen.h> //need RcppEigen fully included here for Rcpp to find vecd wrap and as for items below
 
-//small function to run that will force Module to initialise as
-//I'm seeing strange loading when using both the manifolds module
-//and the ADFun
-void empty(){}
-
-
 RCPP_MODULE(ADFun) {
-    Rcpp::function("empty", &empty);
-
     Rcpp::class_<pADFun>("ADFun")
         .constructor<Rcpp::XPtr<CppAD::ADFun<double>>>()
         .constructor<Rcpp::XPtr<CppAD::ADFun<double>>, veca1, veca1>()
