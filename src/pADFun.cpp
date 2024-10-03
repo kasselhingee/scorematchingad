@@ -4,11 +4,11 @@
 
 //small function to run that will force Module to initialise as
 //I'm seeing strange loading when using both the manifolds module
-//and the cppad_module
+//and the ADFun
 void empty(){}
 
 
-RCPP_MODULE(cppad_module) {
+RCPP_MODULE(ADFun) {
     Rcpp::function("empty", &empty);
 
     Rcpp::class_<pADFun>("ADFun")

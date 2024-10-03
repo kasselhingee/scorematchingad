@@ -219,7 +219,7 @@ END_RCPP
 }
 
 RcppExport SEXP _rcpp_module_boot_manifolds();
-RcppExport SEXP _rcpp_module_boot_cppad_module();
+RcppExport SEXP _rcpp_module_boot_ADFun();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_abort_recording", (DL_FUNC) &_scorematchingad_abort_recording, 0},
@@ -240,7 +240,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_evalll", (DL_FUNC) &_scorematchingad_evalll, 3},
     {"_scorematchingad_tapesmd", (DL_FUNC) &_scorematchingad_tapesmd, 6},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
-    {"_rcpp_module_boot_cppad_module", (DL_FUNC) &_rcpp_module_boot_cppad_module, 0},
+    {"_rcpp_module_boot_ADFun", (DL_FUNC) &_rcpp_module_boot_ADFun, 0},
     {NULL, NULL, 0}
 };
 
