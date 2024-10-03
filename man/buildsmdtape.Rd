@@ -98,24 +98,21 @@ Currently available improper log-likelihood functions are:
 \item FB
 }
 }
+\section{Warning}{
+ There is no checking of the inputs \code{ytape} and \code{usertheta}.
+}
+
 \section{Introduction to CppAD Tapes}{
 This package uses version 2024000.5 of the algorithmic differentiation library \code{CppAD} \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
 Full help for \code{CppAD} can be found at \url{https://cppad.readthedocs.io/}.
 
 Differentiation proceeds by \emph{taping} the basic (\emph{atomic}) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
 Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and \href{https://cppad.readthedocs.io/}{\code{CppAD}} has a special tool for this called \code{CondExp} (short for \verb{conditional expressions}).
+
 The result of taping is an object of class \code{ADFun} in \code{CppAD} and is often called a \emph{tape}.
 This \code{ADFun} object can be evaluated, differentiated, used for further taping (via \code{CppAD}'s \code{base2ad()}), solving differential equations and more.
 The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new \code{ADFun} object where the dynamic parameters become independent variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
 For the purposes of score matching, there are also \emph{fixed} parameters, which are the elements of the model's parameter vector that are given and not estimated.
-}
-
-\section{Warning: multiple CPU}{
-Each time a tape is evaluated the corresponding \verb{C++} object is altered. Parallel use of the same \code{ADFun} object thus requires care and is not tested. For now I recommend creating a new \code{ADFun} object for each CPU.
-}
-
-\section{Warning}{
- There is no checking of the inputs \code{ytape} and \code{usertheta}.
 }
 
 \examples{

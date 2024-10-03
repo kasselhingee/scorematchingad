@@ -16,20 +16,7 @@
 #' To build a tape for the score matching discrepancy function, the package first tapes the map from a point \eqn{z} on the `end` manifold to the value of the improper log-likelihood, where the independent variable is the \eqn{z}, the dynamic parameter is a vector of the parameters to estimate, and the remaining model parameters are fixed and not estimated.
 #' This tape is then used to generate a tape for the score matching discrepancy function where the parameters to estimate are the independent variable.
 #' 
-#' # Introduction to CppAD Tapes
-#' This package uses version 2024000.5 of the algorithmic differentiation library `CppAD` \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
-#' Full help for `CppAD` can be found at <https://cppad.readthedocs.io/>.
-#' 
-#' Differentiation proceeds by *taping* the basic (*atomic*) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
-#' Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and [`CppAD`](https://cppad.readthedocs.io/) has a special tool for this called `CondExp` (short for `conditional expressions`).
-
-#' The result of taping is an object of class `ADFun` in `CppAD` and is often called a *tape*.
-#' This `ADFun` object can be evaluated, differentiated, used for further taping (via `CppAD`'s `base2ad()`), solving differential equations and more.
-#' The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new `ADFun` object where the dynamic parameters become independent variables (see [`tapeSwap()`]).
-#' For the purposes of score matching, there are also *fixed* parameters, which are the elements of the model's parameter vector that are given and not estimated.
-#' 
-#' # Warning: multiple CPU
-#' Each time a tape is evaluated the corresponding `C++` object is altered. Parallel use of the same `ADFun` object thus requires care and is not tested. For now I recommend creating a new `ADFun` object for each CPU.
+#' @inheritSection ADFun Introduction to CppAD Tapes
 
 #' @references \insertAllCited{}
 
