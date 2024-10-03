@@ -2,25 +2,53 @@
 % Please edit documentation in R/tape_uld.R
 \name{tape_uld}
 \alias{tape_uld}
-\title{Generate a tape of custom unnormalised log-density}
+\title{Generate a tape of a custom unnormalised log-density}
 \usage{
 tape_uld(fileORcode = "", x, theta, Cppopt = NULL)
 }
 \arguments{
-\item{x}{Value of \code{x} for taping.}
+\item{fileORcode}{A character string giving the path name of a file containing the unnormalised log-density definition \emph{OR} code. If the \code{fileORcode} contains no new line characters ('\n' or '\r\n') and has a file extension detected by \code{\link[tools:fileutils]{tools::file_ext()}} then \code{fileORcode} will be treated as file name.}
 
-\item{theta}{Value of the parameter vector for taping.}
+\item{x}{Value of independent variables for taping.}
+
+\item{theta}{Value of the dynamic parameter vector for taping.}
 
 \item{Cppopt}{List of named options passed to \code{Rcpp::sourceCpp()}}
-
-\item{file}{A character string giving the path name of a file containing the unnormalised log-density definition.}
 }
 \value{
-A list of the tape and the function itself
+A list of three objects
+\itemize{
+\item \code{fun} a function that evaluates the function directly
+\item \code{tape} a tape of the function
+\item \code{file} the temporary file storing the final source code passed to \code{\link[Rcpp:sourceCpp]{Rcpp::sourceCpp()}}
+}
 }
 \description{
-Use Rcpp::sourceCpp to generate a tape of a function defined in C++. The result is NOT safe to save or pass to other CPUs in a parallel operation.
+Supply \verb{C++} code to tape a custom unnormalised log-density. The result is NOT safe to save or pass to other CPUs in a parallel operation.
+
+Supply \verb{C++} code to specify a custom log-density much like \code{TMB::compile()} is passed \verb{C++} code that formulate models.
+For score matching the normalising constant of the log-likelihood can be omitted.
 }
+\details{
+The function use [\verb{Rcpp::sourceCpp()]} to generate a tape of a function defined in C++.
+}
+\section{Writing the \code{fileORcode} Argument}{
+The code (possibly in the file pointed to by \code{fileORcode}) must be \verb{C++} that uses only \code{CppAD} and \code{Eigen}, which makes it very similar to the requirements of the input to \code{TMB::compile()} (which also uses \code{CppAD} and \code{Eigen}).
+
+The start of \code{code} should always be "\verb{a1type fname(const veca1 &x, const veca1 &theta)\{}" where \code{fname} is your chosen name of the log-likelihood function, \code{x} represents a point in the data space and \code{theta} is a vector of parameters for the log-likelihood. This specifies that the function will have two vector arguments (of type \code{veca1}) and will return a single numeric value (\code{a1type}).
+
+The type \code{a1type} is a double with special ability for being taped by \code{CppAD}. The \code{veca1} type is a vector of \code{a1type} elements, with the vector wrapping supplied by the \code{Eigen} C++ package (that is an \code{Eigen} matrix with 1 column and dynamic number of rows).
+
+The body of the function must use operations from Eigen and/or CppAD, prefixed by \verb{Eigen::} and \verb{CppAD::} respectively.
+There are no easy instructions for writing these as it is genuine \verb{C++} code, which can be very opaque to those unfamiliar with \verb{C++}.
+However, recently ChatGPT and claude.ai have been able to very quickly translating \code{R} functions to \verb{C++} functions (KLH has been telling these A.I. to use Eigen and CppAD, and giving the definitions of \code{a1type} and \code{veca1}).
+I've found the quick reference pages for for \href{https://eigen.tuxfamily.org/dox/}{\code{Eigen}} useful. Limited unary and binray operations are available directly from \href{https://cppad.readthedocs.io}{\code{CppAD}} without \code{Eigen}.
+For the purposes of score matching the operations should all be smooth to create a smooth log-likelihood and the normalising constant may be omitted.
+}
+
 \examples{
-tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"), rep(0.2, 5), rep(-0.1, 5))
+\dontrun{
+out <- tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"), rep(0.2, 5), rep(-0.1, 5))
+out$
+}
 }

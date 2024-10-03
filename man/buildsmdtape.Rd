@@ -39,7 +39,7 @@ buildsmdtape(
 \item ``Euc'' Euclidean space
 }}
 
-\item{ll}{The name of an inbuilt improper log-likelihood function to tape (which also specifies the parametric model family). On Linux operating systems a custom log-likelihood function created by \code{\link[=customll]{customll()}} can also be used; the \code{ll} should operate on the untransformed (i.e. starting) manifold.}
+\item{ll}{The name of an inbuilt unnormalised log-density function (which also specifies the parametric model family) or the tape created by \code{\link[=tape_uld]{tape_uld()}} of a custom unnormalised log-density function with respect to the starting manifold metric.}
 
 \item{ytape}{An example measurement value to use for creating the tapes. In the natural (i.e. \code{start}) manifold of the log-likelihood function.
 Please ensure that \code{ytape} is the interior of the manifold and non-zero.}

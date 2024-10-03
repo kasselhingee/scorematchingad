@@ -112,7 +112,7 @@ string_to_lines <- function(code_string) {
   strsplit(code_string, "\r?\n")[[1]]
 }
 
-cppad_module <- Rcpp::Module("cppad_module", PACKAGE="scorematchingad")
+Rcpp::loadModule("cppad_module", TRUE)
 #need to run something from cppad_module to avoid lazy loading. loadModule should work here, but clashes with use of Module for the manifolds module
 #otherwise returns of pADFun get error: Error in .getClassesFromCache(Class) : 
 # class should be either a character-string name or a class definition

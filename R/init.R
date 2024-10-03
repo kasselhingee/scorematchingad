@@ -7,5 +7,4 @@
   # without Error in .getClassesFromCache(Class) : 
   # class should be either a character-string name or a class definition
   # and with the manifolds module working
-  cppad_module$empty()
 }

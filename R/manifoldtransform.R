@@ -23,14 +23,14 @@ NULL
 manifoldtransform <- function(start, tran = "identity", end = start){
   if (tran == "none"){tran <- "identity"}
   stopifnot(paste(start, tran, end, sep = "-") %in% mantrancombos)
-  out <- list(tran = methods::new(mantranmodule$transform_ad, tran),
-       man = methods::new(mantranmodule$man_ad, end))
+  out <- list(tran = methods::new(transform_ad, tran),
+       man = methods::new(man_ad, end))
   return(out)
 }
 
-mantranmodule <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
-# documentation can be found in: mantranmodule$transform_ad$help("toM"), but it is pretty poor.
-# also mantranmodule$transform_ad@methods will list all the methods of the transform class
+Rcpp::loadModule("manifolds", TRUE)
+# documentation can be found in: transform_ad$help("toM"), but it is pretty poor.
+# also transform_ad@methods will list all the methods of the transform class
 # documenting these classes looks like a major headache at the moment and they are only used internally
 
 mantrancombos <- c(

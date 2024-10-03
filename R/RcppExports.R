@@ -2,7 +2,7 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 abort_recording <- function() {
-    invisible(.Call('_scorematchingad_abort_recording', PACKAGE = 'scorematchingad'))
+    invisible(.Call(`_scorematchingad_abort_recording`))
 }
 
 #' @noRd
@@ -14,14 +14,14 @@ abort_recording <- function() {
 #' @param centre For pTaylorApprox. A vector in the domain of the taped function to approximate the value at `x` from.
 #' @param order For pTaylorApprox. The order of Taylor expansion to use.
 taylorApprox_currentdynparam <- function(pfun, x, centre, order) {
-    .Call('_scorematchingad_taylorApprox_currentdynparam', PACKAGE = 'scorematchingad', pfun, x, centre, order)
+    .Call(`_scorematchingad_taylorApprox_currentdynparam`, pfun, x, centre, order)
 }
 
 #' @noRd
 #' @describeIn evaltape_internal The value of a recorded function approximated by Taylor expansion.
 #' Returns the approximate value of `pfun` at `x`.
 taylorApprox <- function(pfun, x, centre, dynparam, order) {
-    .Call('_scorematchingad_taylorApprox', PACKAGE = 'scorematchingad', pfun, x, centre, dynparam, order)
+    .Call(`_scorematchingad_taylorApprox`, pfun, x, centre, dynparam, order)
 }
 
 #' @noRd
@@ -80,7 +80,7 @@ NULL
 #' The Jacobian as a matrix, could then be obtained by [`as.matrix()`] with `byrow = TRUE` and `ncol = n`.
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 tapeJacobian <- function(pfun) {
-    .Call('_scorematchingad_tapeJacobian', PACKAGE = 'scorematchingad', pfun)
+    .Call(`_scorematchingad_tapeJacobian`, pfun)
 }
 
 #' @noRd
@@ -98,7 +98,7 @@ tapeJacobian <- function(pfun) {
 #' The Hessian as a matrix, can be obtained by using [`as.matrix()`] with `ncol = n`.
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 tapeHessian <- function(pfun) {
-    .Call('_scorematchingad_tapeHessian', PACKAGE = 'scorematchingad', pfun)
+    .Call(`_scorematchingad_tapeHessian`, pfun)
 }
 
 #' @noRd
@@ -119,7 +119,7 @@ tapeHessian <- function(pfun) {
 #'  \deqn{b(\theta) = \Delta f(x;\theta) - H f(x; \theta) x,}
 #' which does not depend on \eqn{x}.
 tapeGradOffset <- function(pfun) {
-    .Call('_scorematchingad_tapeGradOffset', PACKAGE = 'scorematchingad', pfun)
+    .Call(`_scorematchingad_tapeGradOffset`, pfun)
 }
 
 #' @noRd
@@ -132,7 +132,7 @@ tapeGradOffset <- function(pfun) {
 #' The `x` vector is used as the value to conduct the taping.
 #' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
 tapeLogJacDet <- function(pfun) {
-    .Call('_scorematchingad_tapeLogJacDet', PACKAGE = 'scorematchingad', pfun)
+    .Call(`_scorematchingad_tapeLogJacDet`, pfun)
 }
 
 #' @noRd
@@ -145,23 +145,23 @@ tapeLogJacDet <- function(pfun) {
 #' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
 #' @return A pointer to an ADFun
 tapeSwap <- function(pfun) {
-    .Call('_scorematchingad_tapeSwap', PACKAGE = 'scorematchingad', pfun)
+    .Call(`_scorematchingad_tapeSwap`, pfun)
 }
 
 set_cppad_error_handler <- function() {
-    invisible(.Call('_scorematchingad_set_cppad_error_handler', PACKAGE = 'scorematchingad'))
+    invisible(.Call(`_scorematchingad_set_cppad_error_handler`))
 }
 
 test_Rcpphandler <- function() {
-    invisible(.Call('_scorematchingad_test_Rcpphandler', PACKAGE = 'scorematchingad'))
+    invisible(.Call(`_scorematchingad_test_Rcpphandler`))
 }
 
 fixdynamic <- function(uld, theta, fixedtheta) {
-    .Call('_scorematchingad_fixdynamic', PACKAGE = 'scorematchingad', uld, theta, fixedtheta)
+    .Call(`_scorematchingad_fixdynamic`, uld, theta, fixedtheta)
 }
 
 reembed <- function(uld, tran) {
-    .Call('_scorematchingad_reembed', PACKAGE = 'scorematchingad', uld, tran)
+    .Call(`_scorematchingad_reembed`, uld, tran)
 }
 
 #' @name evalll
@@ -178,7 +178,7 @@ NULL
 #' @param llname name of the likelihood function
 #' @return An RCpp::XPtr object pointing to the ADFun
 ptapell2 <- function(z_ad, theta_ad, llfXPtr, tran, fixedtheta, verbose) {
-    .Call('_scorematchingad_ptapell2', PACKAGE = 'scorematchingad', z_ad, theta_ad, llfXPtr, tran, fixedtheta, verbose)
+    .Call(`_scorematchingad_ptapell2`, z_ad, theta_ad, llfXPtr, tran, fixedtheta, verbose)
 }
 
 #' @noRd
@@ -186,11 +186,11 @@ ptapell2 <- function(z_ad, theta_ad, llfXPtr, tran, fixedtheta, verbose) {
 #' @param llname name of the likelihood function
 #' @return An RCpp::XPtr object pointing to a `llPtr` object of the log-likelihood function. Since `llPtr` is itself a pointer object, we have an XPtr pointing to a pointer that points to a function.
 getllptr <- function(llname) {
-    .Call('_scorematchingad_getllptr', PACKAGE = 'scorematchingad', llname)
+    .Call(`_scorematchingad_getllptr`, llname)
 }
 
 tape_uld_inbuilt <- function(name, x, theta) {
-    .Call('_scorematchingad_tape_uld_inbuilt', PACKAGE = 'scorematchingad', name, x, theta)
+    .Call(`_scorematchingad_tape_uld_inbuilt`, name, x, theta)
 }
 
 #' @param u A vector of measurements for an individual
@@ -198,7 +198,7 @@ tape_uld_inbuilt <- function(name, x, theta) {
 #' @return The value of the log-likelihood at `u` with parameters `theta`.
 #' @export
 evalll <- function(ll, u, theta) {
-    .Call('_scorematchingad_evalll', PACKAGE = 'scorematchingad', ll, u, theta)
+    .Call(`_scorematchingad_evalll`, ll, u, theta)
 }
 
 #' @noRd
@@ -210,6 +210,6 @@ evalll <- function(ll, u, theta) {
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
 tapesmd <- function(uldtape, tran, M, weightname, acut, verbose) {
-    .Call('_scorematchingad_tapesmd', PACKAGE = 'scorematchingad', uldtape, tran, M, weightname, acut, verbose)
+    .Call(`_scorematchingad_tapesmd`, uldtape, tran, M, weightname, acut, verbose)
 }
 

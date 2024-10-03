@@ -1,7 +1,7 @@
 #' @importFrom stats weighted.mean
 #' @importFrom Rdpack reprompt
 #' @importFrom Rcpp evalCpp
-#' @useDynLib scorematchingad
+#' @useDynLib scorematchingad, .registration = TRUE
 #' @details
 #' This package's main features are
 #'  * A general capacity to implement score matching estimators that use algorithmic differentiation to avoid tedious manual algebra.
