@@ -1,6 +1,5 @@
 test_that("Manifold objects can be created, and member functions run", {
-  mod <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
-  Euc <- new(mod$man_ad, "Euc")
+  Euc <- methods::new(man_ad, "Euc")
   expect_s4_class(Euc, "Rcpp_man_ad")
   z <- c(0.1, 0.5)
   expect_equal(dim(Euc$Pmatfun(z)), c(2,2))
@@ -9,9 +8,7 @@ test_that("Manifold objects can be created, and member functions run", {
 })
 
 test_that("Transform objects can be created, and member functions run", {
-  mod <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
-  obj <- mod$transform_ad
-  alr <- new(obj, "alr")
+  alr <- methods::new(transform_ad, "alr")
   expect_s4_class(alr, "Rcpp_transform_ad")
   u <- c(0.1, 0.3, 0.6)
   z <- alr$toM(u)
@@ -19,10 +16,8 @@ test_that("Transform objects can be created, and member functions run", {
   expect_true(is.finite(alr$logdetJfromM(z)))
 })
 
-mod <- Rcpp::Module("manifolds", PACKAGE="scorematchingad")
-
 test_that("Sphere manifold object matches analytic results", {
-  sph <- new(mod$man_ad, "sph")
+  sph <- methods::new(man_ad, "sph")
   z <- c(0.2, 0.8, 0.3)
   z <- z/sqrt(sum(z^2))
   
@@ -36,7 +31,7 @@ test_that("Sphere manifold object matches analytic results", {
 })
 
 test_that("sqrt transform matches other calculations", {
-  sqrt <- new(mod$transform_ad, "sqrt")
+  sqrt <- methods::new(transform_ad, "sqrt")
   u <- c(0.1, 0.3, 0.6)
   z <- sqrt$toM(u)
   expect_equal(z, sqrt(u))
@@ -61,7 +56,7 @@ test_that("sqrt transform matches other calculations", {
 })
 
 test_that("Simplex manifold object matches analytic results", {
-  sim <- new(mod$man_ad, "sim")
+  sim <- methods::new(man_ad, "sim")
   u <- c(0.1, 0.3, 0.6)
   expect_equal(sim$Pmatfun(u), diag(rep(1, 3)) - rep(1, 3) %*% t(rep(1, 3))/3)
 
@@ -76,7 +71,7 @@ test_that("Simplex manifold object matches analytic results", {
 
 
 test_that("Identity transform matches analytic results", {
-  iden <- new(mod$transform_ad, "identity")
+  iden <- methods::new(transform_ad, "identity")
   u <- c(0.1, 0.3, 0.6)
   expect_equal(u, iden$toM(u))
   expect_equal(u, iden$fromM(u))
@@ -84,7 +79,7 @@ test_that("Identity transform matches analytic results", {
 })
 
 test_that("alr transform matches analytic results",{
-  alr <- new(mod$transform_ad, "alr")
+  alr <- methods::new(transform_ad, "alr")
   u <- c(0.1, 0.3, 0.6)
   z <- alr$toM(u)
   expect_length(z, 2)
@@ -107,14 +102,14 @@ test_that("alr transform matches analytic results",{
 
 
 test_that("Euc manifold object matches analytic results",{
-  Euc <- new(mod$man_ad, "Euc")
+  Euc <- methods::new(man_ad, "Euc")
   z <- c(0.5, 3)
   expect_equal(Euc$Pmatfun(z), diag(rep(1, 2)))
   expect_equal(Euc$dPmatfun(z, 2), matrix(0, nrow = 2, ncol = 2))
 })
 
 test_that("Hn111 manifold passes analytic tests",{
-  Hn111 <- new(mod$man_ad, "Hn111")
+  Hn111 <- methods::new(man_ad, "Hn111")
   # check projection matrix
   z <- c(0.1, 0.5, -0.6)
   set.seed(1342)
@@ -141,7 +136,7 @@ test_that("clr transform passes analytic tests",{
     sum(log(u)) + log(length(u))
   }
 
-  clr_cpp <- new(mod$transform_ad, "clr")
+  clr_cpp <- methods::new(transform_ad, "clr")
   u <- c(0.1, 0.3, 0.6)
   z <- clr_cpp$toM(u)
   expect_equal(z, clr(matrix(u, nrow = 1)), ignore_attr = TRUE)
