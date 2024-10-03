@@ -3,14 +3,31 @@
 \name{ADFun}
 \alias{ADFun}
 \title{A Class That Contains CppAD Tapes}
+\arguments{
+\item{x}{A vector of independent variables.}
+
+\item{dyn}{A vector of dynamic parameters.}
+
+\item{q}{Differentiation order.}
+
+\item{i}{Index of range result.}
+}
 \description{
-Tapes are a record of operations performed by a function. Tapes can be evaluated, differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated.
+Tapes are a record of operations performed by a function. Tapes can be evaluated, differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. These classes uses 'reference' semantics, so that changes modify in place and copies all point to the same object (and changes modify that same object).
 }
 \details{
 This class is a reference class that connects to \code{CppAD} tapes in \verb{C++}. Many of the methods available for tapes in \code{CppAD} are also made available here.
 
 Tapes cannot be saved from session to session.
 }
+\section{Fields}{
+
+\describe{
+\item{\code{domain}}{The number of independent variables (i.e. dimension of Euclidean domain space)}
+
+\item{\code{eval}}{Evaluation of the function at \code{x} given new values of the dynamic parameters \code{dyn}. Has two arguments, \code{x} and \code{dyn}.}
+}}
+
 \section{Introduction to CppAD Tapes}{
 This package uses version 2024000.5 of the algorithmic differentiation library \code{CppAD} \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
 Full help for \code{CppAD} can be found at \url{https://cppad.readthedocs.io/}.
@@ -26,5 +43,7 @@ For the purposes of score matching, there are also \emph{fixed} parameters, whic
 
 \section{Warning: multiple CPU}{
 Each time a tape is evaluated the corresponding \verb{C++} object is altered. Parallel use of the same \code{ADFun} object thus requires care and is not tested. For now I recommend creating a new \code{ADFun} object for each CPU.
+
+Some further help is available by \code{ADFun$help()}.
 }
 
