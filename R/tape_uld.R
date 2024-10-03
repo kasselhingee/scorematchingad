@@ -113,7 +113,4 @@ string_to_lines <- function(code_string) {
 }
 
 Rcpp::loadModule("cppad_module", TRUE)
-#need to run something from cppad_module to avoid lazy loading. loadModule should work here, but clashes with use of Module for the manifolds module
-#otherwise returns of pADFun get error: Error in .getClassesFromCache(Class) : 
-# class should be either a character-string name or a class definition
-# so onLoad should include a cppad_module$empty() call. See init.R
+
