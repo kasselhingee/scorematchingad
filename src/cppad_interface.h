@@ -66,6 +66,7 @@
 //' The next \eqn{n} elements of the vector is the gradient of the second component of the function output.
 //' The Jacobian as a matrix, could then be obtained by [`as.matrix()`] with `byrow = TRUE` and `ncol = n`.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+//' @export
 // [[Rcpp::export]]
 pADFun  tapeJacobian(pADFun & pfun);
 
@@ -83,6 +84,7 @@ pADFun  tapeJacobian(pADFun & pfun);
 //' The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
 //' The Hessian as a matrix, can be obtained by using [`as.matrix()`] with `ncol = n`.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+//' @export
 // [[Rcpp::export]]
 pADFun  tapeHessian(pADFun & pfun);
 
@@ -104,6 +106,7 @@ pADFun  tapeHessian(pADFun & pfun);
 //' The tape calculates \eqn{b(\theta)} as
 //'  \deqn{b(\theta) = \Delta f(x;\theta) - H f(x; \theta) x,}
 //' which does not depend on \eqn{x}.
+//' @export
 // [[Rcpp::export]]
 pADFun tapeGradOffset(pADFun & pfun);
 
@@ -117,6 +120,7 @@ pADFun tapeGradOffset(pADFun & pfun);
 //' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
 //' The `x` vector is used as the value to conduct the taping.
 //' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+//' @export
 // [[Rcpp::export]]
 pADFun  tapeLogJacDet(pADFun & pfun);
 
@@ -129,6 +133,7 @@ pADFun  tapeLogJacDet(pADFun & pfun);
 //' @param newvalue The independent value (in the sense after the switch has occurred) at which to tape the ADFun
 //' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
 //' @return A pointer to an ADFun
+//' @export
 // [[Rcpp::export]]
 pADFun tapeSwap(pADFun & pfun);
 
