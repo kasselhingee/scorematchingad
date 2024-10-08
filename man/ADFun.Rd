@@ -16,7 +16,7 @@
 Tapes are a record of operations performed by a function. Tapes can be evaluated, differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. These classes uses 'reference' semantics, so that changes modify in place and copies all point to the same object (and changes modify that same object).
 }
 \details{
-This class is a reference class that connects to \code{CppAD} tapes in \verb{C++}. Many of the methods available for tapes in \code{CppAD} are also made available here.
+\code{print()} will return some properties of the class. Technically the class name is 'Rcpp_ADFun' (so \code{inherits(x, "Rcpp_ADFun")} will return \code{TRUE}) and it is a reference class that connects to \code{CppAD} tapes in \verb{C++}. Many of the methods available for tapes in \code{CppAD} are made available here.
 
 Tapes cannot be saved from session to session.
 }
