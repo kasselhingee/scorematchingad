@@ -33,6 +33,7 @@
 //' @param i Index of range result.
 //' @field domain The number of independent variables (i.e. dimension of Euclidean domain space)
 //' @field eval Evaluation of the function at `x` given new values of the dynamic parameters `dyn`. Has two arguments, `x` and `dyn`.
+//' @export ADFun
 
 RCPP_MODULE(ADFun) {
     Rcpp::class_<pADFun>("ADFun")
