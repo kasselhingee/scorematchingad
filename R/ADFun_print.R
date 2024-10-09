@@ -12,3 +12,7 @@ print.Rcpp_ADFun <- function(x, ...){
   cat(allstr)
   invisible(allstr)
 }
+
+# need to define show too - this the generic that happens automatically when one types object into the console - and usually it automatically print(), but I guess Rcpp has defined show() for these objects differently.
+#' @export
+show.Rcpp_ADFun <- function(object){print(object)}
