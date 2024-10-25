@@ -2,6 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{ADFun}
 \alias{ADFun}
+\alias{Rcpp_ADFun}
 \title{A Class That Contains CppAD Tapes}
 \arguments{
 \item{x}{A vector of independent variables.}
