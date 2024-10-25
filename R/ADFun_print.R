@@ -8,6 +8,9 @@ print.Rcpp_ADFun <- function(x, ...){
   str_dyntape <- paste(format(x$dyntape[seq.int(1, length.out = min(x$size_dyn_ind, 3))], ...), collapse = " ")
   if (x$size_dyn_ind > 3){str_dyntape <- paste0(str_dyntape, "...")}
 
+  #help info
+  end <- 'For help using this object, run help("ADFun", "scorematchingad").\n'
+
   allstr <- paste(intro, "xtape is:", str_xtape, "\n dyntape is:", str_dyntape, "\n", collapse = " ")
   cat(allstr)
   invisible(allstr)
