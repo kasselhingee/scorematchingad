@@ -11,7 +11,7 @@ print.Rcpp_ADFun <- function(x, ...){
   #help info
   end <- 'For help using this object, run help("ADFun", "scorematchingad").\n'
 
-  allstr <- paste(intro, "xtape is:", str_xtape, "\n dyntape is:", str_dyntape, "\n", collapse = " ")
+  allstr <- paste(intro, "xtape is:", str_xtape, "\n dyntape is:", str_dyntape, "\n", end, collapse = " ")
   cat(allstr)
   invisible(allstr)
 }
@@ -19,3 +19,7 @@ print.Rcpp_ADFun <- function(x, ...){
 # need to define show too - this the generic that happens automatically when one types object into the console - and usually it automatically print(), but I guess Rcpp has defined show() for these objects differently.
 #' @export
 show.Rcpp_ADFun <- function(object){print(object)}
+
+setMethod("show", "Rcpp_ADFun", function(object){
+  print(object)
+})

@@ -54,3 +54,7 @@ Each time a tape is evaluated the corresponding \verb{C++} object is altered. Pa
 Some further help is available by \code{ADFun$help()}.
 }
 
+\examples{
+tape <- tape_uld_inbuilt("dirichlet", c(0.1, 0.4, 0.5), c(-0.5, -0.4, -0.2))
+
+}

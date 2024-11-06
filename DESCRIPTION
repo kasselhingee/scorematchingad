@@ -22,7 +22,8 @@ Suggests:
 Enhances:
     RcppXPtrUtils
 Depends: 
-    R (>= 3.5.0)
+    R (>= 3.5.0),
+    methods
 Imports:
     RcppEigen (>= 0.3.3.7),
     MCMCpack,

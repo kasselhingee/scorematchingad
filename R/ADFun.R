@@ -35,6 +35,9 @@
 #' @field xtape The (numeric) vector of independent variable values used for taping.
 #' @field dyntape The (numeric) vector of dynamic parameters used for taping.
 #' @param name An easy to read name for the tape
-#' @exportClass ADFun
+#' @exportClass Rcpp_ADFun
+#' @examples
+#' tape <- tape_uld_inbuilt("dirichlet", c(0.1, 0.4, 0.5), c(-0.5, -0.4, -0.2))
+#' 
 NULL
 
