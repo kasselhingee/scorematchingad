@@ -1760,8 +1760,7 @@ else $as_nop
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$PATH:/Applications/CMake.app/Contents/bin/cmake"
-for as_dir in $as_dummy
+for as_dir in $PATH$PATH_SEPARATOR/Applications/CMake.app/Contents/bin/cmake
 do
   IFS=$as_save_IFS
   case $as_dir in #(((
