@@ -1760,10 +1760,8 @@ else $as_nop
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-echo "STARTING"
-for as_dir in $PATH$PATH_SEPARATOR/Applications/CMake.app/Contents/bin/cmake$PATH_SEPARATOR/opt/homebrew/bin/cmake$PATH_SEPARATOR/Applications/CMake.app/Contents/bin
+for as_dir in $PATH$PATH_SEPARATOR/Applications/CMake.app/Contents/bin
 do
-  echo $as_dir
   IFS=$as_save_IFS
   case $as_dir in #(((
     '') as_dir=./ ;;
@@ -1784,7 +1782,6 @@ IFS=$as_save_IFS
   ;;
 esac
 fi
-echo "FINISHED"
 CMAKE=$ac_cv_path_CMAKE
 if test -n "$CMAKE"; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $CMAKE" >&5
