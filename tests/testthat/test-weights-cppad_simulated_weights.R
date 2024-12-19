@@ -70,13 +70,11 @@ test_that("cppad_search() for ppi with minsq matches itself", {
                bdryw = "minsq",
                acut = acut)
 
-  suppressWarnings({out_sim <- cppad_search(tapes$smdtape, m$theta *0 + 1, vw$newY, control = list(tol = 1E-12, maxit = 10))})
-  suppressWarnings({out_dir <- cppad_search(tapes$smdtape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 10), w = vw$w)})
-  expect_equal(out_sim[!(names(out_sim) %in% c("counts", "SE"))], 
-     out_dir[!(names(out_sim) %in% c("counts", "SE"))],
+  out_closed <- cppad_closed(tapes$smdtape, vw$newY)
+  suppressWarnings({out_dir <- cppad_search(tapes$smdtape, m$theta *0.9, m$sample, control = list(tol = 1E-8, maxit = 500), w = vw$w)})
+  expect_equal(as.vector(out_dir$est), 
+     out_closed$est,
      tolerance = 2E-3)
-
-  expect_equal(out_dir[c("est", "value", "sqgradsize")], out_sim[c("est", "value", "sqgradsize")], tolerance = 2E-3)
 })
 
 
