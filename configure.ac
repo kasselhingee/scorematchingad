@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([scorematchingad], [0.0.62], [kassel.hingee@anu.edu.au])
+AC_INIT([scorematchingad], [0.0.68], [kassel.hingee@anu.edu.au])
 
 AC_PREREQ([2.71])
 
