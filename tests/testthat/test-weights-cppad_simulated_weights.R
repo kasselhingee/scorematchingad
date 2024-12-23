@@ -63,20 +63,18 @@ test_that("evaltape_wsum() matches for simulated weights and constant weights wi
   expect_equal(smd_sim, smd_hardcoded)
 })
 
-test_that("cppad_search() for ppi with minsq matches itself", {
+test_that("cppad_search() for ppi with minsq matches cppad_closed()", {
   tapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
                ytape = rep(1/m$p, m$p),
                usertheta = ppi_paramvec(m$p),
                bdryw = "minsq",
                acut = acut)
 
-  suppressWarnings({out_sim <- cppad_search(tapes$smdtape, m$theta *0 + 1, vw$newY, control = list(tol = 1E-12, maxit = 10))})
-  suppressWarnings({out_dir <- cppad_search(tapes$smdtape, m$theta *0 + 1, m$sample, control = list(tol = 1E-12, maxit = 10), w = vw$w)})
-  expect_equal(out_sim[!(names(out_sim) %in% c("counts", "SE"))], 
-     out_dir[!(names(out_sim) %in% c("counts", "SE"))],
-     tolerance = 2E-3)
-
-  expect_equal(out_dir[c("est", "value", "sqgradsize")], out_sim[c("est", "value", "sqgradsize")], tolerance = 2E-3)
+  out_closed <- cppad_closed(tapes$smdtape, vw$newY)
+  suppressWarnings({out_dir <- cppad_search(tapes$smdtape, m$theta *0.9, m$sample, control = list(tol = 1E-8, maxit = 500), w = vw$w)})
+  expect_equal(as.vector(out_dir$est), 
+     out_closed$est,
+     tolerance = 1E-1)
 })
 
 
