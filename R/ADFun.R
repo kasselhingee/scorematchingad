@@ -40,9 +40,53 @@
 #' @field dyntape The (numeric) vector of dynamic parameters used for taping.
 #' @param name An easy to read name for the tape
 #' @exportClass Rcpp_ADFun
+#' 
+#' @section Methods accessed via `$`:
+#' \describe{
+#'   \item{\code{new_dynamic(dyn_params)}}{Specify new values for the dynamic parameters.}
+#'   \item{\code{forward(order)}}{Perform forward mode evaluation for the specified Taylor coefficient order.}
+#'   \item{\code{Jacobian()}}{Evaluate the Jacobian of the function.}
+#'   \item{\code{Hessiani(i)}}{Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).}
+#'   \item{\code{Hessian0()}}{Evaluate the Hessian for the first element of the range.}
+#'   \item{\code{Hessianw(weights)}}{Evaluate the Hessian for a weighted sum of the range.}
+#'   \item{\code{set_check_for_nan(check)}}{Set whether the tape should check for NaN values during computation (only effective if C++ debugging is enabled).}
+#'   \item{\code{get_check_for_nan()}}{Return whether the tape is configured to check for NaN values during computation.}
+#'   \item{\code{eval(dyn_params)}}{Evaluate the function with new dynamic parameters.}
+#'   \item{\code{Jac(dyn_params)}}{Compute the Jacobian with new dynamic parameters.}
+#'   \item{\code{Hes(dyn_params)}}{Compute the Hessian with new dynamic parameters.}
+#'   \item{\code{parameter(index)}}{Check if the \code{index}-th component of the range corresponds to a constant parameter.}
+#' }
+#'
+#' @section Properties:
+#' \describe{
+#'   \item{\code{size_order}}{Number of Taylor coefficient orders, per variable and direction, currently calculated and stored.}
+#'   \item{\code{domain}}{Dimension of the domain space (i.e., length of the independent variables vector).}
+#'   \item{\code{range}}{Dimension of the range space.}
+#'   \item{\code{size_dyn_ind}}{Number of independent dynamic parameters.}
+#'   \item{\code{name}}{An optional name for the tape.}
+#'   \item{\code{xtape}}{(Read-only) The values of the independent variables used for taping.}
+#'   \item{\code{dyntape}}{(Read-only) The values of the dynamic variables used for taping.}
+#' }
+#'
 #' @examples
 #' tape <- tape_uld_inbuilt("dirichlet", c(0.1, 0.4, 0.5), c(-0.5, -0.4, -0.2))
-#' 
+#' # Example of creating an ADFun object and calling methods
+#' library(Rcpp)
+#' adfun <- new(ADFun, xptr_cppad_adfun)
+#'
+#' # Set dynamic parameters
+#' adfun$new_dynamic(c(1, 2, 3))
+#'
+#' # Evaluate function
+#' result <- adfun$eval(c(1, 2, 3))
+#'
+#' # Compute Jacobian
+#' jacobian <- adfun$Jac(c(1, 2, 3))
+#'
+#' # Check if a parameter is constant
+#' is_param <- adfun$parameter(1)
+
+
 NULL
 
 Rcpp::loadModule("ADFun", TRUE)
