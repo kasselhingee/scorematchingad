@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([scorematchingad], [0.0.62], [kassel.hingee@anu.edu.au])
+AC_INIT([scorematchingad], [0.0.69], [kassel.hingee@anu.edu.au])
 
 AC_PREREQ([2.71])
 
@@ -23,7 +23,7 @@ CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 AC_LANG(C++)
 
 # find cmake looking in the usual macos location too
-AC_PATH_PROG([CMAKE], [cmake], [no], [$PATH:/Applications/CMake.app/Contents/bin/cmake])
+AC_PATH_PROG([CMAKE], [cmake], [no], [$PATH$PATH_SEPARATOR/Applications/CMake.app/Contents/bin])
 if test "$CMAKE" = "no"; then
   AC_MSG_ERROR([CMake is required but was not found. Please install CMake.])
 fi
