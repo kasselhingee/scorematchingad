@@ -2,7 +2,7 @@
 
 #' @name Rcpp_ADFun
 #' @docType class
-#' @aliases Rcpp_ADFun ADFun
+#' @aliases Rcpp_ADFun show,Rcpp_ADFun-method
 #' @title A Class That Contains CppAD Tapes
 #' @description Tapes are a record of operations performed by a function. Tapes can be evaluated, differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. These classes uses 'reference' semantics, so that changes modify in place and copies all point to the same object (and changes modify that same object).
 #'
@@ -10,6 +10,9 @@
 #' @details `print()` will return some properties of the class. Technically the class name is 'Rcpp_ADFun' (so `inherits(x, "Rcpp_ADFun")` will return `TRUE`) and it is a reference class that connects to `CppAD` tapes in `C++`. Many of the methods available for tapes in `CppAD` are made available here.
 #'
 #' Tapes cannot be saved from session to session.
+#'
+#' # Extends
+#' Extends class \linkS4class{C++Object} from the `Rcpp` package ([`Rcpp::C++Object-class`]), which is a `reference class`.
 #'
 #' # Introduction to CppAD Tapes
 #' This package uses version 2024000.5 of the algorithmic differentiation library `CppAD` \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.

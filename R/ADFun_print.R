@@ -15,12 +15,22 @@ print.Rcpp_ADFun <- function(x, ...){
   invisible(allstr)
 }
 
+#' @name Rcpp_ADFun-methods
+#' @aliases print,Rcpp_ADFun-method
+#' @title Methods for Rcpp_ADFun Objects
+#' @description Displays a summary of a \linkS4class{Rcpp_ADFun} object.
+#' @param x An object of class \linkS4class{Rcpp_ADFun}.
+#' @param ... Passed to [`format()`].
 #' @export
 setMethod("print", "Rcpp_ADFun", function(x, ...){
   print.Rcpp_ADFun(x, ...)
 })
 
 # need to define show too - this the generic that happens automatically when one types object into the console - and usually it automatically print(), but I guess Rcpp has defined show() for these objects differently.
+#' @name Rcpp_ADFun-methods
+#' @aliases show,Rcpp_ADFun-method
+#' @description Displays a summary of a \linkS4class{Rcpp_ADFun} object and overrides the default `show()` method for \linkS4class{C++Object} objects from [`Rcpp::C++Object-class`].
+#' @param object An object of class \linkS4class{Rcpp_ADFun}.
 #' @export
 setMethod("show", "Rcpp_ADFun", function(object){
   print.Rcpp_ADFun(object)
