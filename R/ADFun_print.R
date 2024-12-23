@@ -1,4 +1,3 @@
-#' @export
 print.Rcpp_ADFun <- function(x, ...){
   intro <- sprintf("Tape of a function '%s' with %i independent arguments and %i dynamic arguments. Function returns vectors of length %i.\n", x$name, x$domain, x$size_dyn_ind, x$range)
 
@@ -16,10 +15,13 @@ print.Rcpp_ADFun <- function(x, ...){
   invisible(allstr)
 }
 
+#' @export
+setMethod("print", "Rcpp_ADFun", function(x, ...){
+  print.Rcpp_ADFun(x, ...)
+})
+
 # need to define show too - this the generic that happens automatically when one types object into the console - and usually it automatically print(), but I guess Rcpp has defined show() for these objects differently.
 #' @export
-show.Rcpp_ADFun <- function(object){print(object)}
-
 setMethod("show", "Rcpp_ADFun", function(object){
-  print(object)
+  print.Rcpp_ADFun(object)
 })
