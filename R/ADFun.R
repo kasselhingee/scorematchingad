@@ -1,8 +1,8 @@
 # help for the Rcpp_ADFun objects exposed in src/pADFun.cpp
 
-#' @name Rcpp_ADFun
+#' @name Rcpp_ADFun-class
 #' @docType class
-#' @aliases Rcpp_ADFun show,Rcpp_ADFun-method
+#' @aliases Rcpp_ADFun
 #' @title A Class That Contains CppAD Tapes
 #' @description Tapes are a record of operations performed by a function. Tapes can be evaluated, differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. These classes uses 'reference' semantics, so that changes modify in place and copies all point to the same object (and changes modify that same object).
 #'
