@@ -112,5 +112,3 @@ string_to_lines <- function(code_string) {
   strsplit(code_string, "\r?\n")[[1]]
 }
 
-Rcpp::loadModule("ADFun", TRUE)
-

@@ -39,5 +39,6 @@
 #' @examples
 #' tape <- tape_uld_inbuilt("dirichlet", c(0.1, 0.4, 0.5), c(-0.5, -0.4, -0.2))
 #' 
-NULL
+#' @export
+Rcpp::loadModule("ADFun", TRUE)
 
