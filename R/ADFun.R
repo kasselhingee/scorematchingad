@@ -6,18 +6,25 @@
 #' @title A Class for CppAD Tapes
 #' @description Tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, `Rcpp_ADFun` uses `reference' semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
 #'
-#' @usage tape$eval(x, dyn)
-#' @usage tape$Jac(x, dyn)
-#' @usage tape$Hes(x, dyn)
-#' @usage tape$forward(order, x)
-#' @usage tape$Jacobian(x)
-#' @usage tape$Hessiani(x, i)
-#' @usage tape$Hessian0(x)
-#' @usage tape$Hessianw(x, w)
-#' @usage tape$new_dynamic(dyn)
-#' @usage tape$parameter(i)
-#' @usage tape$set_check_for_nan(bool)
-#' @usage tape$get_check_for_nan()
+#' @usage $eval(x, dyn)
+#' @usage $Jac(x, dyn)
+#' @usage $Hes(x, dyn)
+#' @usage $forward(order, x)
+#' @usage $Jacobian(x)
+#' @usage $Hessiani(x, i)
+#' @usage $Hessian0(x)
+#' @usage $Hessianw(x, w)
+#' @usage $new_dynamic(dyn)
+#' @usage $parameter(i)
+#' @usage $set_check_for_nan(bool)
+#' @usage $get_check_for_nan()
+#' @usage $domain
+#' @usage $range
+#' @usage $size_dyn_ind
+#' @usage $name
+#' @usage $xtape
+#' @usage $dyntape
+#' @usage $size_order
 #'
 #' @param x A vector of independent variables.
 #' @param dyn A vector of dynamic parameters.
@@ -27,7 +34,9 @@
 #' @param order Order of differentiation for `$forward()`.
 #' @param bool Either `TRUE` or `FALSE` to set `check_for_nan` behaviour using `$set_check_for_nan()`.
 #'
-#' @details `print()` will return some properties of the class. Technically the class name is 'Rcpp_ADFun' (so `inherits(x, "Rcpp_ADFun")` will return `TRUE`) and it is a reference class that connects to `CppAD` tapes in `C++`. Many of the methods available for tapes in `CppAD` are made available here.
+#' @details 
+#' Default printing of an `Rcpp_ADFun` object gives a short summary of the object and is implemented in the internal `print.Rcpp_ADFun()` function.
+#' Technically the class name is 'Rcpp_ADFun' (so `inherits(x, "Rcpp_ADFun")` will return `TRUE`) and it is a reference class that connects to `CppAD` tapes in `C++`. Many of the methods available for tapes in `CppAD` are made available here.
 #'
 #' Tapes cannot be saved from session to session.
 #'
