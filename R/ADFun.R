@@ -9,7 +9,7 @@
 #' @usage $eval(x, dyn)
 #' @usage $Jac(x, dyn)
 #' @usage $Hes(x, dyn)
-#' @usage $forward(order, x)
+#' @usage $forward(q, x)
 #' @usage $Jacobian(x)
 #' @usage $Hessiani(x, i)
 #' @usage $Hessian0(x)
@@ -28,47 +28,47 @@
 #'
 #' @param x A vector of independent variables.
 #' @param dyn A vector of dynamic parameters.
-#' @param q Differentiation order.
+#' @param q Taylor coefficient order for evaluating derivatives with `$forward()`.
 #' @param i Index of range result.
-#' @param name An easy to read name for the tape
-#' @param order Order of differentiation for `$forward()`.
-#' @param bool Either `TRUE` or `FALSE` to set `check_for_nan` behaviour using `$set_check_for_nan()`.
+#' @param name An easy to read name for the tape.
+#' @param bool `TRUE` or `FALSE` to set `check_for_nan` behaviour using `$set_check_for_nan()`.
 #'
 #' @details 
+#' An objects of class `Rcpp_ADFun` wraps an `ADFun` object from `CppAD`. Many of the properties and behaviour of an `Rcpp_ADFun` object come directly from `ADFun` objects so more details and context can be found by looking at the `ADFun` object help in the `CppAD` [`help`](https://cppad.readthedocs.io).
+#' 
 #' Default printing of an `Rcpp_ADFun` object gives a short summary of the object and is implemented in the internal `print.Rcpp_ADFun()` function.
 #' Technically the class name is 'Rcpp_ADFun' (so `inherits(x, "Rcpp_ADFun")` will return `TRUE`) and it is a reference class that connects to `CppAD` tapes in `C++`. Many of the methods available for tapes in `CppAD` are made available here.
 #'
 #' Tapes cannot be saved from session to session.
-#'
-#' # Methods accessed via `$`:
-#' \describe{
-#'   \item{\code{new_dynamic(dyn_params)}}{Specify new values for the dynamic parameters.}
-#'   \item{\code{forward(order)}}{Perform forward mode evaluation for the specified Taylor coefficient order.}
-#'   \item{\code{Jacobian()}}{Evaluate the Jacobian of the function.}
-#'   \item{\code{Hessiani(i)}}{Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).}
-#'   \item{\code{Hessian0()}}{Evaluate the Hessian for the first element of the range.}
-#'   \item{\code{Hessianw(weights)}}{Evaluate the Hessian for a weighted sum of the range.}
-#'   \item{\code{set_check_for_nan(check)}}{Set whether the tape should check for NaN values during computation (only effective if C++ debugging is enabled).}
-#'   \item{\code{get_check_for_nan()}}{Return whether the tape is configured to check for NaN values during computation.}
-#'   \item{\code{eval(dyn_params)}}{Evaluate the function with new dynamic parameters.}
-#'   \item{\code{Jac(dyn_params)}}{Compute the Jacobian with new dynamic parameters.}
-#'   \item{\code{Hes(dyn_params)}}{Compute the Hessian with new dynamic parameters.}
-#'   \item{\code{parameter(index)}}{Check if the \code{index}-th component of the range corresponds to a constant parameter.}
-#' }
-#'
+#' 
 #' # Properties:
-#' \describe{
-#'   \item{\code{size_order}}{Number of Taylor coefficient orders, per variable and direction, currently calculated and stored.}
-#'   \item{\code{domain}}{Dimension of the domain space (i.e., length of the independent variables vector).}
-#'   \item{\code{range}}{Dimension of the range space.}
-#'   \item{\code{size_dyn_ind}}{Number of independent dynamic parameters.}
-#'   \item{\code{name}}{An optional name for the tape.}
-#'   \item{\code{xtape}}{(Read-only) The values of the independent variables used for taping.}
-#'   \item{\code{dyntape}}{(Read-only) The values of the dynamic variables used for taping.}
-#' }
+#' + `size_order` Number of Taylor coefficient orders, per variable and direction, currently calculated and stored.
+#' + `domain` Dimension of the domain space (i.e., length of the independent variables vector).
+#' + `range` Dimension of the range space (i.e., length of the vector returned by `$eval()`).
+#' + `size_dyn_ind` Number of independent dynamic parameters (i.e., length of the vector of dynamic parameters).
+#' + `name` An optional name for the tape.
+#' + `xtape` The values of the independent variables used for the initial taping.
+#' + `dyntape` The values of the dynamic parameters used for the initial taping.
+#' + `get_check_for_nan()` Debugging: Return whether the tape is configured to check for NaN values during computation. The check for NaN values only occurs if the `C++` compilation enables debugging.
+#' + `set_check_for_nan(bool)` Set whether the tape should check for NaN values during computation (only effective if C++ debugging is enabled).
+#' + `parameter(i)` Check if the `i`th component of the range corresponds to a constant parameter.
+#'
+#' # Methods:
+#' + `new_dynamic(dyn)` Specify new values for the dynamic parameters.
+#' + `forward(q, x)` Perform forward mode evaluation for the specified Taylor coefficient order `q`.
+#' + `Jacobian(x)` Evaluate the Jacobian of the function at the current set of dynamic parameters.
+#' + `Hessiani(i)` Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).
+#' + `Hessian0()` Evaluate the Hessian for the first element of the range.
+#' + `Hessianw(weights)` Evaluate the Hessian for a weighted sum of the range.
+#' + `eval(dyn_params)` Evaluate the function with new dynamic parameters.
+#' + `Jac(dyn_params)` Compute the Jacobian with new dynamic parameters.
+#' + `Hes(dyn_params)` Compute the Hessian with new dynamic parameters.
+#'
 #'
 #' # Extends
 #' Extends class \linkS4class{C++Object} from the `Rcpp` package ([`Rcpp::C++Object-class`]), which is a `reference class`.
+#' 
+#' For those familiar with `C++`: An object of class `Rcpp_ADFun` contains a pointer to a `CppAD` `ADFun` object. 
 #'
 #' # Introduction to CppAD Tapes
 #' This package uses version 2024000.5 of the algorithmic differentiation library `CppAD` \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
@@ -84,6 +84,10 @@
 #' 
 #' # Warning: multiple CPU
 #' Each time a tape is evaluated the corresponding `C++` object is altered. Parallel use of the same `ADFun` object thus requires care and is not tested. For now I recommend creating a new `ADFun` object for each CPU.
+#'
+#' # Improvements
+#' A few methods for `CppAD` `ADFun` objects are not yet available through `Rcpp_ADFun` objects. These ones would be nice to include:
+#' + `optimize()`
 #'
 #' @exportClass Rcpp_ADFun
 #' 

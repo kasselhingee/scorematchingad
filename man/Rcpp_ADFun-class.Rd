@@ -12,7 +12,7 @@ $Jac(x, dyn)
 
 $Hes(x, dyn)
 
-$forward(order, x)
+$forward(q, x)
 
 $Jacobian(x)
 
@@ -49,56 +49,58 @@ $size_order
 
 \item{dyn}{A vector of dynamic parameters.}
 
-\item{q}{Differentiation order.}
+\item{q}{Differentiation order for \verb{$forward()}.}
 
 \item{i}{Index of range result.}
 
-\item{name}{An easy to read name for the tape}
+\item{name}{An easy to read name for the tape.}
 
-\item{order}{Order of differentiation for \verb{$forward()}.}
-
-\item{bool}{Either \code{TRUE} or \code{FALSE} to set \code{check_for_nan} behaviour using \verb{$set_check_for_nan()}.}
+\item{bool}{\code{TRUE} or \code{FALSE} to set \code{check_for_nan} behaviour using \verb{$set_check_for_nan()}.}
 }
 \description{
 Tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, \code{Rcpp_ADFun} uses `reference' semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
 }
 \details{
+An objects of class \code{Rcpp_ADFun} wraps an \code{ADFun} object from \code{CppAD}. Many of the properties and behaviour of an \code{Rcpp_ADFun} object come directly from \code{ADFun} objects so more details and context can be found by looking at the \code{ADFun} object help in the \code{CppAD} \href{https://cppad.readthedocs.io}{\code{help}}.
+
 Default printing of an \code{Rcpp_ADFun} object gives a short summary of the object and is implemented in the internal \code{print.Rcpp_ADFun()} function.
 Technically the class name is 'Rcpp_ADFun' (so \code{inherits(x, "Rcpp_ADFun")} will return \code{TRUE}) and it is a reference class that connects to \code{CppAD} tapes in \verb{C++}. Many of the methods available for tapes in \code{CppAD} are made available here.
 
 Tapes cannot be saved from session to session.
 }
-\section{Methods accessed via \code{$}:}{
-\describe{
-\item{\code{new_dynamic(dyn_params)}}{Specify new values for the dynamic parameters.}
-\item{\code{forward(order)}}{Perform forward mode evaluation for the specified Taylor coefficient order.}
-\item{\code{Jacobian()}}{Evaluate the Jacobian of the function.}
-\item{\code{Hessiani(i)}}{Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).}
-\item{\code{Hessian0()}}{Evaluate the Hessian for the first element of the range.}
-\item{\code{Hessianw(weights)}}{Evaluate the Hessian for a weighted sum of the range.}
-\item{\code{set_check_for_nan(check)}}{Set whether the tape should check for NaN values during computation (only effective if C++ debugging is enabled).}
-\item{\code{get_check_for_nan()}}{Return whether the tape is configured to check for NaN values during computation.}
-\item{\code{eval(dyn_params)}}{Evaluate the function with new dynamic parameters.}
-\item{\code{Jac(dyn_params)}}{Compute the Jacobian with new dynamic parameters.}
-\item{\code{Hes(dyn_params)}}{Compute the Hessian with new dynamic parameters.}
-\item{\code{parameter(index)}}{Check if the \code{index}-th component of the range corresponds to a constant parameter.}
+\section{Properties:}{
+\itemize{
+\item \code{size_order} Number of Taylor coefficient orders, per variable and direction, currently calculated and stored.
+\item \code{domain} Dimension of the domain space (i.e., length of the independent variables vector).
+\item \code{range} Dimension of the range space (i.e., length of the vector returned by \verb{$eval()}).
+\item \code{size_dyn_ind} Number of independent dynamic parameters (i.e., length of the vector of dynamic parameters).
+\item \code{name} An optional name for the tape.
+\item \code{xtape} The values of the independent variables used for the initial taping.
+\item \code{dyntape} The values of the dynamic parameters used for the initial taping.
+\item \code{get_check_for_nan()} Debugging: Return whether the tape is configured to check for NaN values during computation. The check for NaN values only occurs if the \verb{C++} compilation enables debugging.
+\item \code{set_check_for_nan(bool)} Set whether the tape should check for NaN values during computation (only effective if C++ debugging is enabled).
+\item \code{parameter(i)} Check if the \code{i}th component of the range corresponds to a constant parameter.
 }
 }
 
-\section{Properties:}{
-\describe{
-\item{\code{size_order}}{Number of Taylor coefficient orders, per variable and direction, currently calculated and stored.}
-\item{\code{domain}}{Dimension of the domain space (i.e., length of the independent variables vector).}
-\item{\code{range}}{Dimension of the range space.}
-\item{\code{size_dyn_ind}}{Number of independent dynamic parameters.}
-\item{\code{name}}{An optional name for the tape.}
-\item{\code{xtape}}{(Read-only) The values of the independent variables used for taping.}
-\item{\code{dyntape}}{(Read-only) The values of the dynamic variables used for taping.}
+\section{Methods:}{
+\itemize{
+\item \code{new_dynamic(dyn_params)} Specify new values for the dynamic parameters.
+\item \code{forward(order)} Perform forward mode evaluation for the specified Taylor coefficient order.
+\item \code{Jacobian()} Evaluate the Jacobian of the function.
+\item \code{Hessiani(i)} Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).
+\item \code{Hessian0()} Evaluate the Hessian for the first element of the range.
+\item \code{Hessianw(weights)} Evaluate the Hessian for a weighted sum of the range.
+\item \code{eval(dyn_params)} Evaluate the function with new dynamic parameters.
+\item \code{Jac(dyn_params)} Compute the Jacobian with new dynamic parameters.
+\item \code{Hes(dyn_params)} Compute the Hessian with new dynamic parameters.
 }
 }
 
 \section{Extends}{
 Extends class \linkS4class{C++Object} from the \code{Rcpp} package (\code{\link[Rcpp:CppObject-class]{Rcpp::C++Object}}), which is a \verb{reference class}.
+
+For those familiar with \verb{C++}: An object of class \code{Rcpp_ADFun} contains a pointer to a \code{CppAD} \code{ADFun} object.
 }
 
 \section{Introduction to CppAD Tapes}{
