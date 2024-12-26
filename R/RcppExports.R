@@ -194,6 +194,16 @@ getllptr <- function(llname) {
     .Call(`_scorematchingad_getllptr`, llname)
 }
 
+#' @rdname tape_uld
+#' @description `tape_uld_inbuilt()` generates a tape of a function (chosen by `name`) implemented in `C++` within this package. 
+#' @param name Name of an inbuilt function. See details.
+#' @details
+#' Currently available improper log-likelihood functions are:
+#'
+#' ```{r, results = "asis", echo = FALSE}
+#' cat(paste(" +", llnames), sep = "\n")
+#' ```
+#' @export
 tape_uld_inbuilt <- function(name, x, theta) {
     .Call(`_scorematchingad_tape_uld_inbuilt`, name, x, theta)
 }

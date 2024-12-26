@@ -41,6 +41,16 @@ pADFun ptapell2(veca1 z_ad, //data measurement on the M manifold
 // [[Rcpp::export]]
 Rcpp::XPtr<llPtr> getllptr(std::string llname);
 
+//' @rdname tape_uld
+//' @description `tape_uld_inbuilt()` generates a tape of a function (chosen by `name`) implemented in `C++` within this package. 
+//' @param name Name of an inbuilt function. See details.
+//' @details
+//' Currently available improper log-likelihood functions are:
+//'
+//' ```{r, results = "asis", echo = FALSE}
+//' cat(paste(" +", llnames), sep = "\n")
+//' ```
+//' @export
 // [[Rcpp::export]]
 pADFun tape_uld_inbuilt(std::string name, veca1 x, veca1 theta);
 
