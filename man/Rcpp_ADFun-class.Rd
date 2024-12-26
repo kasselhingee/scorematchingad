@@ -7,8 +7,32 @@
 \alias{print,Rcpp_ADFun-method}
 \alias{print,Rcpp_ADFun-method#'}
 \alias{show,Rcpp_ADFun-method}
-\title{A Class That Contains CppAD Tapes}
+\title{A Class for CppAD Tapes}
 \usage{
+tape$eval(x, dyn)
+
+tape$Jac(x, dyn)
+
+tape$Hes(x, dyn)
+
+tape$forward(order, x)
+
+tape$Jacobian(x)
+
+tape$Hessiani(x, i)
+
+tape$Hessian0(x)
+
+tape$Hessianw(x, w)
+
+tape$new_dynamic(dyn)
+
+tape$parameter(i)
+
+tape$set_check_for_nan(bool)
+
+tape$get_check_for_nan()
+
 \S4method{print}{Rcpp_ADFun}(x, ...)
 
 \S4method{show}{Rcpp_ADFun}(object)
@@ -27,9 +51,13 @@
 \item{i}{Index of range result.}
 
 \item{name}{An easy to read name for the tape}
+
+\item{order}{Order of differentiation for \verb{$forward()}.}
+
+\item{bool}{Either \code{TRUE} or \code{FALSE} to set \code{check_for_nan} behaviour using \verb{$set_check_for_nan()}.}
 }
 \description{
-Tapes are a record of operations performed by a function. Tapes can be evaluated, differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. These classes uses 'reference' semantics, so that changes modify in place and copies all point to the same object (and changes modify that same object).
+Tapes are a record of operations performed by a function. Tapes can be evaluated, differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, \code{Rcpp_ADFun} uses `reference' semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
 }
 \details{
 \code{print()} will return some properties of the class. Technically the class name is 'Rcpp_ADFun' (so \code{inherits(x, "Rcpp_ADFun")} will return \code{TRUE}) and it is a reference class that connects to \code{CppAD} tapes in \verb{C++}. Many of the methods available for tapes in \code{CppAD} are made available here.
@@ -74,8 +102,6 @@ For the purposes of score matching, there are also \emph{fixed} parameters, whic
 
 \section{Warning: multiple CPU}{
 Each time a tape is evaluated the corresponding \verb{C++} object is altered. Parallel use of the same \code{ADFun} object thus requires care and is not tested. For now I recommend creating a new \code{ADFun} object for each CPU.
-
-Some further help is available by \code{ADFun$help()}.
 }
 
 \section{Methods accessed via \code{$}}{
@@ -124,12 +150,11 @@ tape$size_order
 tape$eval(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
 tape$Jac(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
 matrix(tape$Hes(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5)), nrow = tape$domain)
-ADFun$help(eval)
 
 # Further methods
 tape$forward(order = 1, x = c(0.2, 0.3, 0.5))
 tape$Jacobian(x = c(0.2, 0.3, 0.5))
-tape$Hessiani(x = c(0.2, 0.3, 0.5), index = 0)
+tape$Hessiani(x = c(0.2, 0.3, 0.5), i = 0)
 tape$Hessian0(x = c(0.2, 0.3, 0.5))
 tape$Hessianw(x = c(0.2, 0.3, 0.5), w = c(2))
 tape$new_dynamic(dyn = c(-0.1, -0.1, -0.5))

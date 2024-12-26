@@ -29,7 +29,6 @@
 #' # Warning: multiple CPU
 #' Each time a tape is evaluated the corresponding `C++` object is altered. Parallel use of the same `ADFun` object thus requires care and is not tested. For now I recommend creating a new `ADFun` object for each CPU.
 #'
-#' Some further help is available by `ADFun$help()`.
 #' @param x A vector of independent variables.
 #' @param dyn A vector of dynamic parameters.
 #' @param q Differentiation order.
@@ -39,6 +38,8 @@
 #' @field xtape The (numeric) vector of independent variable values used for taping.
 #' @field dyntape The (numeric) vector of dynamic parameters used for taping.
 #' @param name An easy to read name for the tape
+#' @param order Order of differentiation for `$forward()`.
+#' @param bool Either `TRUE` or `FALSE` to set `check_for_nan` behaviour using `$set_check_for_nan()`.
 #' @exportClass Rcpp_ADFun
 #' 
 #' @section Methods accessed via `$`:
@@ -67,6 +68,20 @@
 #'   \item{\code{xtape}}{(Read-only) The values of the independent variables used for taping.}
 #'   \item{\code{dyntape}}{(Read-only) The values of the dynamic variables used for taping.}
 #' }
+
+#' @usage tape$eval(x, dyn)
+#' @usage tape$Jac(x, dyn)
+#' @usage tape$Hes(x, dyn)
+#' @usage tape$forward(order, x)
+#' @usage tape$Jacobian(x)
+#' @usage tape$Hessiani(x, i)
+#' @usage tape$Hessian0(x)
+#' @usage tape$Hessianw(x, w)
+#' @usage tape$new_dynamic(dyn)
+#' @usage tape$parameter(i)
+#' @usage tape$set_check_for_nan(bool)
+#' @usage tape$get_check_for_nan()
+
 #'
 #' @examples
 #' tape <- tape_uld_inbuilt("dirichlet", c(0.1, 0.4, 0.5), c(-0.5, -0.4, -0.2))
@@ -83,12 +98,11 @@
 #' tape$eval(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
 #' tape$Jac(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
 #' matrix(tape$Hes(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5)), nrow = tape$domain)
-#' ADFun$help(eval)
 #' 
 #' # Further methods
 #' tape$forward(order = 1, x = c(0.2, 0.3, 0.5))
 #' tape$Jacobian(x = c(0.2, 0.3, 0.5))
-#' tape$Hessiani(x = c(0.2, 0.3, 0.5), index = 0)
+#' tape$Hessiani(x = c(0.2, 0.3, 0.5), i = 0)
 #' tape$Hessian0(x = c(0.2, 0.3, 0.5))
 #' tape$Hessianw(x = c(0.2, 0.3, 0.5), w = c(2))
 #' tape$new_dynamic(dyn = c(-0.1, -0.1, -0.5))
