@@ -3,8 +3,8 @@
 #' @name Rcpp_ADFun-class
 #' @docType class
 #' @aliases Rcpp_ADFun
-#' @title A Class That Contains CppAD Tapes
-#' @description Tapes are a record of operations performed by a function. Tapes can be evaluated, differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. These classes uses 'reference' semantics, so that changes modify in place and copies all point to the same object (and changes modify that same object).
+#' @title A Class for CppAD Tapes
+#' @description Tapes are a record of operations performed by a function. Tapes can be evaluated, differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, `Rcpp_ADFun` uses `reference' semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
 #'
 #'
 #' @details `print()` will return some properties of the class. Technically the class name is 'Rcpp_ADFun' (so `inherits(x, "Rcpp_ADFun")` will return `TRUE`) and it is a reference class that connects to `CppAD` tapes in `C++`. Many of the methods available for tapes in `CppAD` are made available here.

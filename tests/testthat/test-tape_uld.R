@@ -1,5 +1,5 @@
 # warning: for interactive testing load_all() with install doesn't include scorematchingad.h properly
-test_that("custom_uld() can generate a working tape", {
+test_that("tape_uld() can generate a working tape", {
   utape = rep(0.2, 5)
   dyntape = rep(-0.1, 5)
   dirichlet <- tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"),
