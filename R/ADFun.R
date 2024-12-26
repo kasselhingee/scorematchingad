@@ -70,21 +70,31 @@
 #'
 #' @examples
 #' tape <- tape_uld_inbuilt("dirichlet", c(0.1, 0.4, 0.5), c(-0.5, -0.4, -0.2))
-#' # Example of creating an ADFun object and calling methods
-#' library(Rcpp)
-#' adfun <- new(ADFun, xptr_cppad_adfun)
+#' # Properties
+#' tape$domain
+#' tape$range
+#' tape$size_dyn_ind
+#' tape$name
+#' tape$xtape
+#' tape$dyntape
+#' tape$size_order
 #'
-#' # Set dynamic parameters
-#' adfun$new_dynamic(c(1, 2, 3))
-#'
-#' # Evaluate function
-#' result <- adfun$eval(c(1, 2, 3))
-#'
-#' # Compute Jacobian
-#' jacobian <- adfun$Jac(c(1, 2, 3))
-#'
-#' # Check if a parameter is constant
-#' is_param <- adfun$parameter(1)
+#' # Convenient evaluation
+#' tape$eval(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
+#' tape$Jac(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
+#' matrix(tape$Hes(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5)), nrow = tape$domain)
+#' ADFun$help(eval)
+#' 
+#' # Further methods
+#' tape$forward(order = 1, x = c(0.2, 0.3, 0.5))
+#' tape$Jacobian(x = c(0.2, 0.3, 0.5))
+#' tape$Hessiani(x = c(0.2, 0.3, 0.5), index = 0)
+#' tape$Hessian0(x = c(0.2, 0.3, 0.5))
+#' tape$Hessianw(x = c(0.2, 0.3, 0.5), w = c(2))
+#' tape$new_dynamic(dyn = c(-0.1, -0.1, -0.5))
+#' tape$parameter(0)
+#' tape$set_check_for_nan(FALSE)
+#' tape$get_check_for_nan()
 
 
 NULL
