@@ -32,6 +32,7 @@
 #' @param i Index of range result.
 #' @param name An easy to read name for the tape.
 #' @param bool `TRUE` or `FALSE` to set `check_for_nan` behaviour using `$set_check_for_nan()`.
+#' @param w Weights assigned to each element of the range, for use with `$Hessianw()`.
 #'
 #' @details 
 #' An objects of class `Rcpp_ADFun` wraps an `ADFun` object from `CppAD`. Many of the properties and behaviour of an `Rcpp_ADFun` object come directly from `ADFun` objects so more details and context can be found by looking at the `ADFun` object help in the `CppAD` [`help`](https://cppad.readthedocs.io).
@@ -57,12 +58,12 @@
 #' + `new_dynamic(dyn)` Specify new values for the dynamic parameters.
 #' + `forward(q, x)` Perform forward mode evaluation for the specified Taylor coefficient order `q`.
 #' + `Jacobian(x)` Evaluate the Jacobian of the function at the current set of dynamic parameters.
-#' + `Hessiani(i)` Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).
+#' + `Hessiani(x, i)` Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).
 #' + `Hessian0()` Evaluate the Hessian for the first element of the range.
-#' + `Hessianw(weights)` Evaluate the Hessian for a weighted sum of the range.
-#' + `eval(dyn_params)` Evaluate the function with new dynamic parameters.
-#' + `Jac(dyn_params)` Compute the Jacobian with new dynamic parameters.
-#' + `Hes(dyn_params)` Compute the Hessian with new dynamic parameters.
+#' + `Hessianw(x, w)` Evaluate the Hessian for a weighted sum of the range.
+#' + `eval(x, dyn)` Evaluate the function at new values of the variables and dynamic parameters.
+#' + `Jac(x, dyn)` Compute the Jacobian at new values of the variables and dynamic parameters.
+#' + `Hes(x, dyn)` Compute the Hessian (of the first element of the range) at new values of the variables and dynamic parameters.
 #'
 #'
 #' # Extends

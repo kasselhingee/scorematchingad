@@ -49,13 +49,15 @@ $size_order
 
 \item{dyn}{A vector of dynamic parameters.}
 
-\item{q}{Differentiation order for \verb{$forward()}.}
+\item{q}{Taylor coefficient order for evaluating derivatives with \verb{$forward()}.}
 
 \item{i}{Index of range result.}
 
 \item{name}{An easy to read name for the tape.}
 
 \item{bool}{\code{TRUE} or \code{FALSE} to set \code{check_for_nan} behaviour using \verb{$set_check_for_nan()}.}
+
+\item{w}{Weights assigned to each element of the range, for use with \verb{$Hessianw()}.}
 }
 \description{
 Tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, \code{Rcpp_ADFun} uses `reference' semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
@@ -85,15 +87,15 @@ Tapes cannot be saved from session to session.
 
 \section{Methods:}{
 \itemize{
-\item \code{new_dynamic(dyn_params)} Specify new values for the dynamic parameters.
-\item \code{forward(order)} Perform forward mode evaluation for the specified Taylor coefficient order.
-\item \code{Jacobian()} Evaluate the Jacobian of the function.
-\item \code{Hessiani(i)} Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).
+\item \code{new_dynamic(dyn)} Specify new values for the dynamic parameters.
+\item \code{forward(q, x)} Perform forward mode evaluation for the specified Taylor coefficient order \code{q}.
+\item \code{Jacobian(x)} Evaluate the Jacobian of the function at the current set of dynamic parameters.
+\item \code{Hessiani(x, i)} Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).
 \item \code{Hessian0()} Evaluate the Hessian for the first element of the range.
-\item \code{Hessianw(weights)} Evaluate the Hessian for a weighted sum of the range.
-\item \code{eval(dyn_params)} Evaluate the function with new dynamic parameters.
-\item \code{Jac(dyn_params)} Compute the Jacobian with new dynamic parameters.
-\item \code{Hes(dyn_params)} Compute the Hessian with new dynamic parameters.
+\item \code{Hessianw(x, w)} Evaluate the Hessian for a weighted sum of the range.
+\item \code{eval(x, dyn)} Evaluate the function at new values of the variables and dynamic parameters.
+\item \code{Jac(x, dyn)} Compute the Jacobian at new values of the variables and dynamic parameters.
+\item \code{Hes(x, dyn)} Compute the Hessian (of the first element of the range) at new values of the variables and dynamic parameters.
 }
 }
 
@@ -118,6 +120,13 @@ For the purposes of score matching, there are also \emph{fixed} parameters, whic
 
 \section{Warning: multiple CPU}{
 Each time a tape is evaluated the corresponding \verb{C++} object is altered. Parallel use of the same \code{ADFun} object thus requires care and is not tested. For now I recommend creating a new \code{ADFun} object for each CPU.
+}
+
+\section{Improvements}{
+A few methods for \code{CppAD} \code{ADFun} objects are not yet available through \code{Rcpp_ADFun} objects. These ones would be nice to include:
+\itemize{
+\item \code{optimize()}
+}
 }
 
 \examples{
