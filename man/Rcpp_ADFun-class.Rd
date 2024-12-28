@@ -51,7 +51,7 @@ $size_order
 
 \item{q}{Taylor coefficient order for evaluating derivatives with \verb{$forward()}.}
 
-\item{i}{Index of range result.}
+\item{i}{Index of range result. \verb{i = 0, 1, ..., range - 1}.}
 
 \item{name}{An easy to read name for the tape.}
 
@@ -60,28 +60,28 @@ $size_order
 \item{w}{Weights assigned to each element of the range, for use with \verb{$Hessianw()}.}
 }
 \description{
-Tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, \code{Rcpp_ADFun} uses `reference' semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
+Objects of type \code{Rcpp_ADFun} contain a tape of a \verb{C++} function (which has class \code{ADFun} in \code{CppAD}). These tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, \code{Rcpp_ADFun} uses `reference' semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
 }
 \details{
-An objects of class \code{Rcpp_ADFun} wraps an \code{ADFun} object from \code{CppAD}. Many of the properties and behaviour of an \code{Rcpp_ADFun} object come directly from \code{ADFun} objects so more details and context can be found by looking at the \code{ADFun} object help in the \code{CppAD} \href{https://cppad.readthedocs.io}{\code{help}}.
+An object of class \code{Rcpp_ADFun} wraps an \code{ADFun} object from \code{CppAD}. Many of the properties and behaviour of an \code{Rcpp_ADFun} object come directly from \code{ADFun} objects so more details and context can be found by looking at the \code{ADFun} object help in the \code{CppAD} \href{https://cppad.readthedocs.io}{\code{help}}.
+The methods \code{eval()}, \code{Jac()} and \code{Hes()} have been added by \code{scorematchingad} as there were many cases where this seemed like an easier way to evaluate a tape.
 
 Default printing of an \code{Rcpp_ADFun} object gives a short summary of the object and is implemented in the internal \code{print.Rcpp_ADFun()} function.
-Technically the class name is 'Rcpp_ADFun' (so \code{inherits(x, "Rcpp_ADFun")} will return \code{TRUE}) and it is a reference class that connects to \code{CppAD} tapes in \verb{C++}. Many of the methods available for tapes in \code{CppAD} are made available here.
 
 Tapes cannot be saved from session to session.
 }
 \section{Properties:}{
 \itemize{
-\item \code{size_order} Number of Taylor coefficient orders, per variable and direction, currently calculated and stored.
-\item \code{domain} Dimension of the domain space (i.e., length of the independent variables vector).
+\item \code{size_order} Number of Taylor coefficient orders, per variable and direction, currently calculated and stored in the object.
+\item \code{domain} Dimension of the domain space (i.e., length of the independent variables vector \code{x}).
 \item \code{range} Dimension of the range space (i.e., length of the vector returned by \verb{$eval()}).
-\item \code{size_dyn_ind} Number of independent dynamic parameters (i.e., length of the vector of dynamic parameters).
+\item \code{size_dyn_ind} Number of independent dynamic parameters (i.e., length of the vector of dynamic parameters \code{dyn}).
 \item \code{name} An optional name for the tape.
 \item \code{xtape} The values of the independent variables used for the initial taping.
 \item \code{dyntape} The values of the dynamic parameters used for the initial taping.
 \item \code{get_check_for_nan()} Debugging: Return whether the tape is configured to check for NaN values during computation. The check for NaN values only occurs if the \verb{C++} compilation enables debugging.
 \item \code{set_check_for_nan(bool)} Set whether the tape should check for NaN values during computation (only effective if C++ debugging is enabled).
-\item \code{parameter(i)} Check if the \code{i}th component of the range corresponds to a constant parameter.
+\item \code{parameter(i)} Check if the \code{i}th component of the range corresponds to a constant parameter. Indexing is by \verb{C++} default, that is the first component has index \code{0}, the last component has index \verb{$range - 1}.
 }
 }
 
@@ -101,8 +101,7 @@ Tapes cannot be saved from session to session.
 
 \section{Extends}{
 Extends class \linkS4class{C++Object} from the \code{Rcpp} package (\code{\link[Rcpp:CppObject-class]{Rcpp::C++Object}}), which is a \verb{reference class}.
-
-For those familiar with \verb{C++}: An object of class \code{Rcpp_ADFun} contains a pointer to a \code{CppAD} \code{ADFun} object.
+For those familiar with \verb{C++}, an object of class \code{Rcpp_ADFun} contains a pointer to a \code{CppAD} \code{ADFun} object.
 }
 
 \section{Introduction to CppAD Tapes}{
