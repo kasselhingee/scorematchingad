@@ -33,6 +33,6 @@ Other tape builders:
 \code{\link{tapeHessian}()},
 \code{\link{tapeLogJacDet}()},
 \code{\link{tapeSwap}()},
-\code{\link{tape_uld_inbuilt}()}
+\code{\link{tape_uld}()}
 }
 \concept{tape builders}

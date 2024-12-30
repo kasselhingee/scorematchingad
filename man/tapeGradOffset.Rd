@@ -38,6 +38,6 @@ Other tape builders:
 \code{\link{tapeJacobian}()},
 \code{\link{tapeLogJacDet}()},
 \code{\link{tapeSwap}()},
-\code{\link{tape_uld_inbuilt}()}
+\code{\link{tape_uld}()}
 }
 \concept{tape builders}
