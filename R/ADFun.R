@@ -5,34 +5,7 @@
 #' @aliases Rcpp_ADFun
 #' @title A Class for CppAD Tapes
 #' @description Objects of type `Rcpp_ADFun` contain a tape of a `C++` function (which has class `ADFun` in `CppAD`). These tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, `Rcpp_ADFun` uses `reference' semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
-#'
-#' @usage $eval(x, dyn)
-#' @usage $Jac(x, dyn)
-#' @usage $Hes(x, dyn)
-#' @usage $forward(q, x)
-#' @usage $Jacobian(x)
-#' @usage $Hessiani(x, i)
-#' @usage $Hessian0(x)
-#' @usage $Hessianw(x, w)
-#' @usage $new_dynamic(dyn)
-#' @usage $parameter(i)
-#' @usage $set_check_for_nan(bool)
-#' @usage $get_check_for_nan()
-#' @usage $domain
-#' @usage $range
-#' @usage $size_dyn_ind
-#' @usage $name
-#' @usage $xtape
-#' @usage $dyntape
-#' @usage $size_order
-#'
-#' @param x A vector of independent variables.
-#' @param dyn A vector of dynamic parameters.
-#' @param q Taylor coefficient order for evaluating derivatives with `$forward()`.
-#' @param i Index of range result. `i = 0, 1, ..., range - 1`.
-#' @param name An easy to read name for the tape.
-#' @param bool `TRUE` or `FALSE` to set `check_for_nan` behaviour using `$set_check_for_nan()`.
-#' @param w Weights assigned to each element of the range, for use with `$Hessianw()`.
+#' Properties and methods of an `Rcpp_ADFun` object are accessed via `$`.
 #'
 #' @details 
 #' An object of class `Rcpp_ADFun` wraps an `ADFun` object from `CppAD`. Many of the properties and behaviour of an `Rcpp_ADFun` object come directly from `ADFun` objects so more details and context can be found by looking at the `ADFun` object help in the `CppAD` [`help`](https://cppad.readthedocs.io).
@@ -42,28 +15,36 @@
 #'
 #' Tapes cannot be saved from session to session.
 #' 
-#' # Properties:
-#' + `size_order` Number of Taylor coefficient orders, per variable and direction, currently calculated and stored in the object.
-#' + `domain` Dimension of the domain space (i.e., length of the independent variables vector `x`).
-#' + `range` Dimension of the range space (i.e., length of the vector returned by `$eval()`).
-#' + `size_dyn_ind` Number of independent dynamic parameters (i.e., length of the vector of dynamic parameters `dyn`).
-#' + `name` An optional name for the tape.
-#' + `xtape` The values of the independent variables used for the initial taping.
-#' + `dyntape` The values of the dynamic parameters used for the initial taping.
-#' + `get_check_for_nan()` Debugging: Return whether the tape is configured to check for NaN values during computation. The check for NaN values only occurs if the `C++` compilation enables debugging.
-#' + `set_check_for_nan(bool)` Set whether the tape should check for NaN values during computation (only effective if C++ debugging is enabled).
-#' + `parameter(i)` Check if the `i`th component of the range corresponds to a constant parameter. Indexing is by `C++` default, that is the first component has index `0`, the last component has index `$range - 1`.
+#' # Methods - Tape Properties:
+#' + `$size_order` Number of Taylor coefficient orders, per variable and direction, currently calculated and stored in the object.
+#' + `$domain` Dimension of the domain space (i.e., length of the independent variables vector `x`).
+#' + `$range` Dimension of the range space (i.e., length of the vector returned by `$eval()`).
+#' + `$size_dyn_ind` Number of independent dynamic parameters (i.e., length of the vector of dynamic parameters `dyn`).
+#' + `$name` A name for the tape (may be empty). This is yet to incorporate the `CppAD` `function_name` property.
+#' + `$xtape` The values of the independent variables used for the initial taping.
+#' + `$dyntape` The values of the dynamic parameters used for the initial taping.
+#' + `$get_check_for_nan()` Debugging: Return whether the tape is configured to check for NaN values during computation. The check for NaN values only occurs if the `C++` compilation enables debugging.
+#' + `$set_check_for_nan(bool)` Set whether the tape should check for NaN values during computation (only effective if C++ debugging is enabled).
+#' + `$parameter(i)` Check if the `i`th component of the range corresponds to a constant parameter. Indexing is by `C++` default, that is the first component has index `0`, the last component has index `$range - 1`.
+#' + `$new_dynamic(dyn)` Specify new values for the dynamic parameters.
 #'
-#' # Methods:
-#' + `new_dynamic(dyn)` Specify new values for the dynamic parameters.
-#' + `forward(q, x)` Perform forward mode evaluation for the specified Taylor coefficient order `q`.
-#' + `Jacobian(x)` Evaluate the Jacobian of the function at the current set of dynamic parameters.
-#' + `Hessiani(x, i)` Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).
-#' + `Hessian0()` Evaluate the Hessian for the first element of the range.
-#' + `Hessianw(x, w)` Evaluate the Hessian for a weighted sum of the range.
-#' + `eval(x, dyn)` Evaluate the function at new values of the variables and dynamic parameters.
-#' + `Jac(x, dyn)` Compute the Jacobian at new values of the variables and dynamic parameters.
-#' + `Hes(x, dyn)` Compute the Hessian (of the first element of the range) at new values of the variables and dynamic parameters.
+#' # Methods - Tape Evaluation:
+#' + `$forward(q, x)` Perform forward mode evaluation for the specified Taylor coefficient order `q`.
+#' + `$Jacobian(x)` Evaluate the Jacobian of the function at the current set of dynamic parameters.
+#' + `$Hessiani(x, i)` Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).
+#' + `$Hessian0()` Evaluate the Hessian for the first element of the range.
+#' + `$Hessianw(x, w)` Evaluate the Hessian for a weighted sum of the range.
+#' + `$eval(x, dyn)` Evaluate the function at new values of the variables and dynamic parameters.
+#' + `$Jac(x, dyn)` Compute the Jacobian at new values of the variables and dynamic parameters.
+#' + `$Hes(x, dyn)` Compute the Hessian (of the first element of the range) at new values of the variables and dynamic parameters.
+#'
+#' # Method Arguments
+#' + `x` A vector of independent variables.
+#' + `dyn` A vector of dynamic parameters.
+#' + `q` Taylor coefficient order for evaluating derivatives with `$forward()`.
+#' + `i` Index of range result. `i = 0, 1, ..., range - 1`.
+#' + `bool` Either `TRUE` or `FALSE` to set `check_for_nan` behaviour using `$set_check_for_nan()`.
+#' + `w` Weights assigned to each element of the range, for use with `$Hessianw()`.
 #'
 #'
 #' # Extends
@@ -94,6 +75,11 @@
 #'
 #' @examples
 #' tape <- tape_uld_inbuilt("dirichlet", c(0.1, 0.4, 0.5), c(-0.5, -0.4, -0.2))
+#' # Convenient evaluation
+#' tape$eval(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
+#' tape$Jac(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
+#' matrix(tape$Hes(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5)), nrow = tape$domain)
+#' 
 #' # Properties
 #' tape$domain
 #' tape$range
@@ -102,22 +88,17 @@
 #' tape$xtape
 #' tape$dyntape
 #' tape$size_order
+#' tape$new_dynamic(dyn = c(-0.1, -0.1, -0.5))
+#' tape$parameter(0)
+#' tape$set_check_for_nan(FALSE)
+#' tape$get_check_for_nan()
 #'
-#' # Convenient evaluation
-#' tape$eval(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
-#' tape$Jac(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
-#' matrix(tape$Hes(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5)), nrow = tape$domain)
-#' 
 #' # Further methods
 #' tape$forward(order = 1, x = c(0.2, 0.3, 0.5))
 #' tape$Jacobian(x = c(0.2, 0.3, 0.5))
 #' tape$Hessiani(x = c(0.2, 0.3, 0.5), i = 0)
 #' tape$Hessian0(x = c(0.2, 0.3, 0.5))
 #' tape$Hessianw(x = c(0.2, 0.3, 0.5), w = c(2))
-#' tape$new_dynamic(dyn = c(-0.1, -0.1, -0.5))
-#' tape$parameter(0)
-#' tape$set_check_for_nan(FALSE)
-#' tape$get_check_for_nan()
 
 
 NULL
