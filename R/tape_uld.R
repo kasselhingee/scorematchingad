@@ -9,7 +9,8 @@
 #' Supply `C++` code to specify a custom log-density much like `TMB::compile()` is passed `C++` code that formulate models.
 #' For score matching the normalising constant of the log-likelihood can be omitted.
 #' @details
-#' The function use [`Rcpp::sourceCpp()]` to generate a tape of a function defined in C++. 
+#' The function use [`Rcpp::sourceCpp()`] to generate a tape of a function defined in C++. 
+#' (An alternative design, where the function is compiled interactively and then taped using a function internal to `scorematchingad` was not compatible with Windows OS).
 #' 
 #' # Writing the `fileORcode` Argument
 #' The code (possibly in the file pointed to by `fileORcode`) must be `C++` that uses only `CppAD` and `Eigen`, which makes it very similar to the requirements of the input to `TMB::compile()` (which also uses `CppAD` and `Eigen`).
