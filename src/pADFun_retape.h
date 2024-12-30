@@ -1,5 +1,5 @@
-# ifndef CPPAD_INTERFACE
-# define CPPAD_INTERFACE
+# ifndef PADFUN_RETAPE
+# define PADFUN_RETAPE
 
 // things for manipulating and evaluating `Rcpp_ADFun` objects from R
 
