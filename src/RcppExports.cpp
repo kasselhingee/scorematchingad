@@ -50,6 +50,49 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// set_cppad_error_handler
+void set_cppad_error_handler();
+RcppExport SEXP _scorematchingad_set_cppad_error_handler() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    set_cppad_error_handler();
+    return R_NilValue;
+END_RCPP
+}
+// test_Rcpphandler
+void test_Rcpphandler();
+RcppExport SEXP _scorematchingad_test_Rcpphandler() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    test_Rcpphandler();
+    return R_NilValue;
+END_RCPP
+}
+// fixdynamic
+pADFun fixdynamic(pADFun& uld, veca1 theta, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta);
+RcppExport SEXP _scorematchingad_fixdynamic(SEXP uldSEXP, SEXP thetaSEXP, SEXP fixedthetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< pADFun& >::type uld(uldSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type fixedtheta(fixedthetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(fixdynamic(uld, theta, fixedtheta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// reembed
+pADFun reembed(pADFun& uld, transform<a1type>& tran);
+RcppExport SEXP _scorematchingad_reembed(SEXP uldSEXP, SEXP tranSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< pADFun& >::type uld(uldSEXP);
+    Rcpp::traits::input_parameter< transform<a1type>& >::type tran(tranSEXP);
+    rcpp_result_gen = Rcpp::wrap(reembed(uld, tran));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tapeJacobian
 pADFun tapeJacobian(pADFun& pfun);
 RcppExport SEXP _scorematchingad_tapeJacobian(SEXP pfunSEXP) {
@@ -102,49 +145,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
     rcpp_result_gen = Rcpp::wrap(tapeSwap(pfun));
-    return rcpp_result_gen;
-END_RCPP
-}
-// set_cppad_error_handler
-void set_cppad_error_handler();
-RcppExport SEXP _scorematchingad_set_cppad_error_handler() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    set_cppad_error_handler();
-    return R_NilValue;
-END_RCPP
-}
-// test_Rcpphandler
-void test_Rcpphandler();
-RcppExport SEXP _scorematchingad_test_Rcpphandler() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    test_Rcpphandler();
-    return R_NilValue;
-END_RCPP
-}
-// fixdynamic
-pADFun fixdynamic(pADFun& uld, veca1 theta, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta);
-RcppExport SEXP _scorematchingad_fixdynamic(SEXP uldSEXP, SEXP thetaSEXP, SEXP fixedthetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< pADFun& >::type uld(uldSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type fixedtheta(fixedthetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(fixdynamic(uld, theta, fixedtheta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// reembed
-pADFun reembed(pADFun& uld, transform<a1type>& tran);
-RcppExport SEXP _scorematchingad_reembed(SEXP uldSEXP, SEXP tranSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< pADFun& >::type uld(uldSEXP);
-    Rcpp::traits::input_parameter< transform<a1type>& >::type tran(tranSEXP);
-    rcpp_result_gen = Rcpp::wrap(reembed(uld, tran));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -225,15 +225,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_abort_recording", (DL_FUNC) &_scorematchingad_abort_recording, 0},
     {"_scorematchingad_taylorApprox_currentdynparam", (DL_FUNC) &_scorematchingad_taylorApprox_currentdynparam, 4},
     {"_scorematchingad_taylorApprox", (DL_FUNC) &_scorematchingad_taylorApprox, 5},
+    {"_scorematchingad_set_cppad_error_handler", (DL_FUNC) &_scorematchingad_set_cppad_error_handler, 0},
+    {"_scorematchingad_test_Rcpphandler", (DL_FUNC) &_scorematchingad_test_Rcpphandler, 0},
+    {"_scorematchingad_fixdynamic", (DL_FUNC) &_scorematchingad_fixdynamic, 3},
+    {"_scorematchingad_reembed", (DL_FUNC) &_scorematchingad_reembed, 2},
     {"_scorematchingad_tapeJacobian", (DL_FUNC) &_scorematchingad_tapeJacobian, 1},
     {"_scorematchingad_tapeHessian", (DL_FUNC) &_scorematchingad_tapeHessian, 1},
     {"_scorematchingad_tapeGradOffset", (DL_FUNC) &_scorematchingad_tapeGradOffset, 1},
     {"_scorematchingad_tapeLogJacDet", (DL_FUNC) &_scorematchingad_tapeLogJacDet, 1},
     {"_scorematchingad_tapeSwap", (DL_FUNC) &_scorematchingad_tapeSwap, 1},
-    {"_scorematchingad_set_cppad_error_handler", (DL_FUNC) &_scorematchingad_set_cppad_error_handler, 0},
-    {"_scorematchingad_test_Rcpphandler", (DL_FUNC) &_scorematchingad_test_Rcpphandler, 0},
-    {"_scorematchingad_fixdynamic", (DL_FUNC) &_scorematchingad_fixdynamic, 3},
-    {"_scorematchingad_reembed", (DL_FUNC) &_scorematchingad_reembed, 2},
     {"_scorematchingad_ptapell2", (DL_FUNC) &_scorematchingad_ptapell2, 6},
     {"_scorematchingad_getllptr", (DL_FUNC) &_scorematchingad_getllptr, 1},
     {"_scorematchingad_tape_uld_inbuilt", (DL_FUNC) &_scorematchingad_tape_uld_inbuilt, 3},

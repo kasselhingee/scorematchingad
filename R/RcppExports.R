@@ -24,6 +24,22 @@ taylorApprox <- function(pfun, x, centre, dynparam, order) {
     .Call(`_scorematchingad_taylorApprox`, pfun, x, centre, dynparam, order)
 }
 
+set_cppad_error_handler <- function() {
+    invisible(.Call(`_scorematchingad_set_cppad_error_handler`))
+}
+
+test_Rcpphandler <- function() {
+    invisible(.Call(`_scorematchingad_test_Rcpphandler`))
+}
+
+fixdynamic <- function(uld, theta, fixedtheta) {
+    .Call(`_scorematchingad_fixdynamic`, uld, theta, fixedtheta)
+}
+
+reembed <- function(uld, tran) {
+    .Call(`_scorematchingad_reembed`, uld, tran)
+}
+
 #' @noRd
 #' @name evaltape_internal
 #' @title Advanced: Evaluate `CppAD` Tapes via their Pointer
@@ -32,7 +48,7 @@ taylorApprox <- function(pfun, x, centre, dynparam, order) {
 #' There methods access the tapes using `Rcpp::XPtr` objects and perform evaluations a single point at a time. 
 #' @return A vector of numeric values, except `pParameter()`, which returns logical values.
 #' @family tape evaluators
-#' @param pfun Rcpp::XPtr to an ADFun. Can be obtained as the `ptr` field of an [`ADFun`] object.
+#' @param pfun Rcpp::XPtr to an `Rcpp_ADFun`. Can be obtained as the `ptr` field of an [`ADFun`] object.
 #' @param x A vector in the domain of the taped function
 #' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
 NULL
@@ -40,7 +56,7 @@ NULL
 #' @noRd
 #' @describeIn evaltape_internal Evaluates a tape without any differentiation at the given values of `x` and dynparam. 
 #' The name `pForward0` is a reference to the zero order `CppAD` method [`forward`](https://cppad.readthedocs.io/forward_zero.html), and the prefix 'p' is because the tape is passed as a pointer.
-#' @param pfun Rcpp::XPtr to an ADFun. Can be obtained as the `ptr` field of an [`ADFun`] object.
+#' @param pfun Rcpp::XPtr to an `Rcpp_ADFun`. Can be obtained as the `ptr` field of an [`ADFun`] object.
 #' @param x A vector in the domain of the taped function
 #' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
 NULL
@@ -63,28 +79,26 @@ NULL
 #' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/latest/glossary.html#dynamic> ).
 NULL
 
-#' @noRd
 #' @title Tape the Jacobian of CppAD Tape
 #' @family tape builders
-#' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
+#' @param pfun An `Rcpp_ADFun` object.
 #' @param x A vector in the domain of the taped function.
-#' @param dynparam a vector of the dynamic parameters
-#' @description Creates a tape of the Jacobian of function taped by CppAD.
+#' @param dynparam a vector of the dynamic parameters.
+#' @description Creates a tape of the Jacobian of function taped by `CppAD`.
 #' When the function returns a real value (as is the case for densities and the score matching objective) the Jacobian is equivalent to the gradient.
 #' The `x` vector is used as the value to conduct the taping.
 #' @details
-#' When the returned tape is evaluated (via say [`pForward0()`], the resultant vector contains the Jacobian in long format (see <https://cppad.readthedocs.io/latest/Jacobian.html>).
+#' When the returned tape is evaluated (via say `$eval()`, the resultant vector contains the Jacobian in long format (see <https://cppad.readthedocs.io/latest/Jacobian.html>).
 #' Suppose the function represented by `pfun` maps from \eqn{n}-dimensional space to \eqn{m}-dimensional space, then
 #' the first \eqn{n} elements of vector is the gradient of the first component of function output.
 #' The next \eqn{n} elements of the vector is the gradient of the second component of the function output.
 #' The Jacobian as a matrix, could then be obtained by [`as.matrix()`] with `byrow = TRUE` and `ncol = n`.
-#' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+#' @return A `Rcpp::XPtr` to a `Rcpp_ADFun` object.
 #' @export
 tapeJacobian <- function(pfun) {
     .Call(`_scorematchingad_tapeJacobian`, pfun)
 }
 
-#' @noRd
 #' @title Tape the Hessian of a CppAD Tape
 #' @family tape builders
 #' @inheritParams pTapeJacobian
@@ -97,17 +111,16 @@ tapeJacobian <- function(pfun) {
 #' the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
 #' The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
 #' The Hessian as a matrix, can be obtained by using [`as.matrix()`] with `ncol = n`.
-#' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+#' @return A `Rcpp::XPtr` to a `Rcpp_ADFun` object.
 #' @export
 tapeHessian <- function(pfun) {
     .Call(`_scorematchingad_tapeHessian`, pfun)
 }
 
-#' @noRd
 #' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 #' @family tape builders
 #' @inheritParams pTapeJacobian
-#' @return A `Rcpp::XPtr` to a CppAD::ADFun object. The independent argument to the function are the dynamic parameters of `pfun`.
+#' @return A `Rcpp::XPtr` to a `Rcpp_ADFun` object. The independent argument to the function are the dynamic parameters of `pfun`.
 #' @details A quadratic function can be written as
 #' \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
 #' The gradient of \eqn{f(x; \theta)} with respect to \eqn{x} is
@@ -125,48 +138,30 @@ tapeGradOffset <- function(pfun) {
     .Call(`_scorematchingad_tapeGradOffset`, pfun)
 }
 
-#' @noRd
 #' @title Tape the log of Jacobian determinant of a CppAD Tape
 #' @family tape builders
-#' @param pfun Rcpp::XPtr to an ADFun tape a tape with dynamic parameters and independent parameters
+#' @param pfun An `Rcpp_ADFun` object.
 #' @param x A vector in the domain of the taped function.
-#' @param dynparam a vector of the dynamic parameters
+#' @param dynparam a vector of the dynamic parameters (vector of size `0` if ther are no dynamic parameters).
 #' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
 #' The `x` vector is used as the value to conduct the taping.
-#' @return A `Rcpp::XPtr` to a CppAD::ADFun object.
+#' @return An `Rcpp_ADFun` object.
 #' @export
 tapeLogJacDet <- function(pfun) {
     .Call(`_scorematchingad_tapeLogJacDet`, pfun)
 }
 
-#' @noRd
 #' @title Switch Dynamic and Independent Values of a Tape
 #' @family tape builders
-#' @description Convert an ADFun so that the independent values become dynamic parameters
+#' @description Convert an `Rcpp_ADFun` object so that the independent values become dynamic parameters
 #' and the dynamic parameters become independent values
-#' @param pfun An Rcpp::XPtr to an ADFun object (i.e. a tape of a function)
-#' @param newvalue The independent value (in the sense after the switch has occurred) at which to tape the ADFun
-#' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the ADFun
-#' @return A pointer to an ADFun
+#' @param pfun An `Rcpp_ADFun` object. 
+#' @param newvalue The independent value (in the sense after the switch has occurred) at which to tape the `Rcpp_ADFun`
+#' @param newdynparam The value of the dynamic parameters (after the switch) at which to tape the `Rcpp_ADFun`
+#' @return An `Rcpp_ADFun` object.
 #' @export
 tapeSwap <- function(pfun) {
     .Call(`_scorematchingad_tapeSwap`, pfun)
-}
-
-set_cppad_error_handler <- function() {
-    invisible(.Call(`_scorematchingad_set_cppad_error_handler`))
-}
-
-test_Rcpphandler <- function() {
-    invisible(.Call(`_scorematchingad_test_Rcpphandler`))
-}
-
-fixdynamic <- function(uld, theta, fixedtheta) {
-    .Call(`_scorematchingad_fixdynamic`, uld, theta, fixedtheta)
-}
-
-reembed <- function(uld, tran) {
-    .Call(`_scorematchingad_reembed`, uld, tran)
 }
 
 #' @name evalll
