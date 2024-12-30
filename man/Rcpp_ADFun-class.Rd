@@ -6,7 +6,8 @@
 \alias{Rcpp_ADFun}
 \title{A Class for CppAD Tapes}
 \description{
-Objects of type \code{Rcpp_ADFun} contain a tape of a \verb{C++} function (which has class \code{ADFun} in \code{CppAD}). These tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, \code{Rcpp_ADFun} uses \verb{reference' semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object). Properties and methods of an }Rcpp_ADFun\verb{object are accessed via}$`.
+Objects of type \code{Rcpp_ADFun} contain a tape of a \verb{C++} function (which has class \code{ADFun} in \code{CppAD}). These tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, \code{Rcpp_ADFun} uses reference semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
+Properties and methods of an \code{Rcpp_ADFun} object are accessed via \code{$}.
 }
 \details{
 An object of class \code{Rcpp_ADFun} wraps an \code{ADFun} object from \code{CppAD}. Many of the properties and behaviour of an \code{Rcpp_ADFun} object come directly from \code{ADFun} objects so more details and context can be found by looking at the \code{ADFun} object help in the \code{CppAD} \href{https://cppad.readthedocs.io}{\code{help}}.
@@ -34,14 +35,14 @@ Tapes cannot be saved from session to session.
 
 \section{Methods - Tape Evaluation:}{
 \itemize{
-\item \verb{$forward(q, x)} Perform forward mode evaluation for the specified Taylor coefficient order \code{q}.
+\item \verb{$eval(x, dyn)} Evaluate the function at new values of the variables and dynamic parameters. Returns a vector of length \verb{$range}.
+\item \verb{$Jac(x, dyn)} Compute the Jacobian at new values of the variables and dynamic parameters. Returns a vector of length \verb{$range * $domain} arranged so that the first \verb{$domain} elements correspond to the gradient of the first element of the range. The next \verb{$domain} elements correspond to the gradient of the second element of the range, and so on.
+\item \verb{$Hes(x, dyn)} Compute the Hessian of the first element of the range (like \verb{$Hessian0} at new values of the variables and dynamic parameters. Returns a vector of length \verb{$domain * $domain} where the \code{j*n + l} element corresponds to differentiating with respect to the \code{l}th element of the domain, then with respect to the \code{j}th element of the domain, with \code{n} the size of the domain.
 \item \verb{$Jacobian(x)} Evaluate the Jacobian of the function at the current set of dynamic parameters.
-\item \verb{$Hessiani(x, i)} Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).
-\item \verb{$Hessian0()} Evaluate the Hessian for the first element of the range.
-\item \verb{$Hessianw(x, w)} Evaluate the Hessian for a weighted sum of the range.
-\item \verb{$eval(x, dyn)} Evaluate the function at new values of the variables and dynamic parameters.
-\item \verb{$Jac(x, dyn)} Compute the Jacobian at new values of the variables and dynamic parameters.
-\item \verb{$Hes(x, dyn)} Compute the Hessian (of the first element of the range) at new values of the variables and dynamic parameters.
+\item \verb{$Hessiani(x, i)} Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}). Returns a vector arranged the same as \verb{$Hes()}.
+\item \verb{$Hessian0(x)} Evaluate the Hessian for the first element of the range. Returns a vector arranged the same as \verb{$Hes()}.
+\item \verb{$Hessianw(x, w)} Evaluate the Hessian for a weighted sum of the range. Returns a vector arranged the same as \verb{$Hes()}.
+\item \verb{$forward(q, x)} Perform forward mode evaluation for the specified Taylor coefficient order \code{q}.
 }
 }
 

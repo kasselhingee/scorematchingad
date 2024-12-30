@@ -4,7 +4,7 @@
 #' @docType class
 #' @aliases Rcpp_ADFun
 #' @title A Class for CppAD Tapes
-#' @description Objects of type `Rcpp_ADFun` contain a tape of a `C++` function (which has class `ADFun` in `CppAD`). These tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, `Rcpp_ADFun` uses `reference' semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
+#' @description Objects of type `Rcpp_ADFun` contain a tape of a `C++` function (which has class `ADFun` in `CppAD`). These tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, `Rcpp_ADFun` uses reference semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
 #' Properties and methods of an `Rcpp_ADFun` object are accessed via `$`.
 #'
 #' @details 
@@ -29,14 +29,14 @@
 #' + `$new_dynamic(dyn)` Specify new values for the dynamic parameters.
 #'
 #' # Methods - Tape Evaluation:
-#' + `$forward(q, x)` Perform forward mode evaluation for the specified Taylor coefficient order `q`.
+#' + `$eval(x, dyn)` Evaluate the function at new values of the variables and dynamic parameters. Returns a vector of length `$range`.
+#' + `$Jac(x, dyn)` Compute the Jacobian at new values of the variables and dynamic parameters. Returns a vector of length `$range * $domain` arranged so that the first `$domain` elements correspond to the gradient of the first element of the range. The next `$domain` elements correspond to the gradient of the second element of the range, and so on.
+#' + `$Hes(x, dyn)` Compute the Hessian of the first element of the range (like `$Hessian0` at new values of the variables and dynamic parameters. Returns a vector of length `$domain * $domain` where the `j*n + l` element corresponds to differentiating with respect to the `l`th element of the domain, then with respect to the `j`th element of the domain, with `n` the size of the domain.
 #' + `$Jacobian(x)` Evaluate the Jacobian of the function at the current set of dynamic parameters.
-#' + `$Hessiani(x, i)` Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}).
-#' + `$Hessian0()` Evaluate the Hessian for the first element of the range.
-#' + `$Hessianw(x, w)` Evaluate the Hessian for a weighted sum of the range.
-#' + `$eval(x, dyn)` Evaluate the function at new values of the variables and dynamic parameters.
-#' + `$Jac(x, dyn)` Compute the Jacobian at new values of the variables and dynamic parameters.
-#' + `$Hes(x, dyn)` Compute the Hessian (of the first element of the range) at new values of the variables and dynamic parameters.
+#' + `$Hessiani(x, i)` Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}). Returns a vector arranged the same as `$Hes()`.
+#' + `$Hessian0(x)` Evaluate the Hessian for the first element of the range. Returns a vector arranged the same as `$Hes()`.
+#' + `$Hessianw(x, w)` Evaluate the Hessian for a weighted sum of the range. Returns a vector arranged the same as `$Hes()`.
+#' + `$forward(q, x)` Perform forward mode evaluation for the specified Taylor coefficient order `q`.
 #'
 #' # Method Arguments
 #' + `x` A vector of independent variables.
