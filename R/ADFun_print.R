@@ -21,6 +21,7 @@ print.Rcpp_ADFun <- function(x, ...){
 #' @aliases print,Rcpp_ADFun-method
 #' @param x An object of class \linkS4class{Rcpp_ADFun}.
 #' @param ... Passed to [`format()`].
+#' @importFrom methods print
 #' @export
 setMethod("print", "Rcpp_ADFun", function(x, ...){
   print.Rcpp_ADFun(x, ...)
@@ -31,6 +32,7 @@ setMethod("print", "Rcpp_ADFun", function(x, ...){
 #' @describeIn Rcpp_ADFun-class Displays a summary of a \linkS4class{Rcpp_ADFun} object and overrides the default `show()` method for \linkS4class{C++Object} objects from [`Rcpp::C++Object-class`].
 #' @aliases show,Rcpp_ADFun-method
 #' @param object An object of class \linkS4class{Rcpp_ADFun}.
+#' @importFrom methods show
 #' @export
 setMethod("show", "Rcpp_ADFun", function(object){
   print.Rcpp_ADFun(object)
