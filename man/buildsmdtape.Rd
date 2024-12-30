@@ -130,6 +130,10 @@ evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
 }
 \seealso{
 Other tape builders: 
+\code{\link{tapeGradOffset}()},
+\code{\link{tapeHessian}()},
+\code{\link{tapeJacobian}()},
+\code{\link{tapeLogJacDet}()},
 \code{\link{tapeSwap}()}
 }
 \concept{tape builders}

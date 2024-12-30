@@ -40,45 +40,6 @@ reembed <- function(uld, tran) {
     .Call(`_scorematchingad_reembed`, uld, tran)
 }
 
-#' @noRd
-#' @name evaltape_internal
-#' @title Advanced: Evaluate `CppAD` Tapes via their Pointer
-#' @description The recommended method for evaluating tapes is [`evaltape()`].
-#' Internally, `evaltape()` and other methods are using the methods documented here.
-#' There methods access the tapes using `Rcpp::XPtr` objects and perform evaluations a single point at a time. 
-#' @return A vector of numeric values, except `pParameter()`, which returns logical values.
-#' @family tape evaluators
-#' @param pfun Rcpp::XPtr to an `Rcpp_ADFun`. Can be obtained as the `ptr` field of an [`ADFun`] object.
-#' @param x A vector in the domain of the taped function
-#' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
-NULL
-
-#' @noRd
-#' @describeIn evaltape_internal Evaluates a tape without any differentiation at the given values of `x` and dynparam. 
-#' The name `pForward0` is a reference to the zero order `CppAD` method [`forward`](https://cppad.readthedocs.io/forward_zero.html), and the prefix 'p' is because the tape is passed as a pointer.
-#' @param pfun Rcpp::XPtr to an `Rcpp_ADFun`. Can be obtained as the `ptr` field of an [`ADFun`] object.
-#' @param x A vector in the domain of the taped function
-#' @param dynparam a vector of the dynamic parameters, if `pfun` has no dynamic parameter than pass `vector("numeric")`.
-NULL
-
-#' @noRd
-#' @describeIn evaltape_internal Evaluates a the Jacobian of a tape using the `CppAD` `Jacobian` method <https://cppad.readthedocs.io/latest/Jacobian.html>. 
-NULL
-
-#' @noRd
-#' @describeIn evaltape_internal Evaluates a the Hessian of a tape using the `CppAD` `Hessian` method <https://cppad.readthedocs.io/latest/Hessian.html>, assuming that range space of the taped function has dimension of `1`. 
-NULL
-
-#' @noRd
-#' @describeIn evaltape_internal Test whether the returned values are constant with respect to the independent values using 
-#' `CppAD`'s `Parameter` method <https://cppad.readthedocs.io/latest/fun_property.html>.
-#' Returns A vector of logical values. `TRUE` indicates that element of the tape result is constant.
-#' @details 
-#' # pParameter
-#' The `CppAD` function [`Parameter(i)`](https://cppad.readthedocs.io/latest/fun_property.html#parameter) returns `TRUE` when the `i`th component of the range does not depend on the independent value
-#' (the `i`th component may still depend on the value of the dynamic parameters - see <https://cppad.readthedocs.io/latest/glossary.html#dynamic> ).
-NULL
-
 #' @title Tape the Jacobian of CppAD Tape
 #' @family tape builders
 #' @param pfun An `Rcpp_ADFun` object.
