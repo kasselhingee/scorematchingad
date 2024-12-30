@@ -1,4 +1,5 @@
 #' Generate a tape of a custom unnormalised log-density
+#' @family tape builders
 #' @description Supply `C++` code to tape a custom unnormalised log-density. The result is NOT safe to save or pass to other CPUs in a parallel operation.
 #' @param fileORcode A character string giving the path name of a file containing the unnormalised log-density definition *OR* code. If the `fileORcode` contains no new line characters ('\n' or '\r\n') and has a file extension detected by [`tools::file_ext()`] then `fileORcode` will be treated as file name.
 #' @param Cppopt List of named options passed to `Rcpp::sourceCpp()`

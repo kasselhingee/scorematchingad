@@ -134,6 +134,7 @@ Other tape builders:
 \code{\link{tapeHessian}()},
 \code{\link{tapeJacobian}()},
 \code{\link{tapeLogJacDet}()},
-\code{\link{tapeSwap}()}
+\code{\link{tapeSwap}()},
+\code{\link{tape_uld_inbuilt}()}
 }
 \concept{tape builders}

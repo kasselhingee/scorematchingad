@@ -8,16 +8,12 @@ tapeJacobian(pfun)
 }
 \arguments{
 \item{pfun}{An \code{Rcpp_ADFun} object.}
-
-\item{x}{A vector in the domain of the taped function.}
-
-\item{dynparam}{a vector of the dynamic parameters.}
 }
 \value{
-A \code{Rcpp::XPtr} to a \code{Rcpp_ADFun} object.
+An \code{Rcpp_ADFun} object.
 }
 \description{
-Creates a tape of the Jacobian of function taped by \code{CppAD}.
+Creates a tape of the Jacobian of a function taped by \code{CppAD}.
 When the function returns a real value (as is the case for densities and the score matching objective) the Jacobian is equivalent to the gradient.
 The \code{x} vector is used as the value to conduct the taping.
 }
@@ -27,6 +23,8 @@ Suppose the function represented by \code{pfun} maps from \eqn{n}-dimensional sp
 the first \eqn{n} elements of vector is the gradient of the first component of function output.
 The next \eqn{n} elements of the vector is the gradient of the second component of the function output.
 The Jacobian as a matrix, could then be obtained by \code{\link[=as.matrix]{as.matrix()}} with \code{byrow = TRUE} and \code{ncol = n}.
+
+For creating this tape, the values of \code{pfun$xtape} and \code{pfun$dyntape} are used.
 }
 \seealso{
 Other tape builders: 
@@ -34,6 +32,7 @@ Other tape builders:
 \code{\link{tapeGradOffset}()},
 \code{\link{tapeHessian}()},
 \code{\link{tapeLogJacDet}()},
-\code{\link{tapeSwap}()}
+\code{\link{tapeSwap}()},
+\code{\link{tape_uld_inbuilt}()}
 }
 \concept{tape builders}

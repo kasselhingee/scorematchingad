@@ -8,10 +8,6 @@ tapeLogJacDet(pfun)
 }
 \arguments{
 \item{pfun}{An \code{Rcpp_ADFun} object.}
-
-\item{x}{A vector in the domain of the taped function.}
-
-\item{dynparam}{a vector of the dynamic parameters (vector of size \code{0} if ther are no dynamic parameters).}
 }
 \value{
 An \code{Rcpp_ADFun} object.
@@ -19,6 +15,8 @@ An \code{Rcpp_ADFun} object.
 \description{
 Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
 The \code{x} vector is used as the value to conduct the taping.
+
+For creating this tape, the values of \code{pfun$xtape} and \code{pfun$dyntape} are used.
 }
 \seealso{
 Other tape builders: 
@@ -26,6 +24,7 @@ Other tape builders:
 \code{\link{tapeGradOffset}()},
 \code{\link{tapeHessian}()},
 \code{\link{tapeJacobian}()},
-\code{\link{tapeSwap}()}
+\code{\link{tapeSwap}()},
+\code{\link{tape_uld_inbuilt}()}
 }
 \concept{tape builders}

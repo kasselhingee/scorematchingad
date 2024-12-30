@@ -155,6 +155,7 @@ getllptr <- function(llname) {
 }
 
 #' @rdname tape_uld
+#' @name tape_uld
 #' @description `tape_uld_inbuilt()` generates a tape of a function (chosen by `name`) implemented in `C++` within this package. 
 #' @param name Name of an inbuilt function. See details.
 #' @details

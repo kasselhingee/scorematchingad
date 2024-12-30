@@ -42,6 +42,7 @@ pADFun ptapell2(veca1 z_ad, //data measurement on the M manifold
 Rcpp::XPtr<llPtr> getllptr(std::string llname);
 
 //' @rdname tape_uld
+//' @name tape_uld
 //' @description `tape_uld_inbuilt()` generates a tape of a function (chosen by `name`) implemented in `C++` within this package. 
 //' @param name Name of an inbuilt function. See details.
 //' @details

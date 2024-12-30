@@ -68,3 +68,13 @@ out <- tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"),
 out$
 }
 }
+\seealso{
+Other tape builders: 
+\code{\link{buildsmdtape}()},
+\code{\link{tapeGradOffset}()},
+\code{\link{tapeHessian}()},
+\code{\link{tapeJacobian}()},
+\code{\link{tapeLogJacDet}()},
+\code{\link{tapeSwap}()}
+}
+\concept{tape builders}

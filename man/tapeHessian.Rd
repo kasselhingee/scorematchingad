@@ -6,20 +6,25 @@
 \usage{
 tapeHessian(pfun)
 }
+\arguments{
+\item{pfun}{An \code{Rcpp_ADFun} object.}
+}
 \value{
-A \code{Rcpp::XPtr} to a \code{Rcpp_ADFun} object.
+An \code{Rcpp_ADFun} object.
 }
 \description{
-Creates a tape of the Hessian of a function taped by CppAD.
+Creates a tape of the Hessian of a function taped by \code{CppAD}.
 The taped function represented by \code{pfun} must be scalar-valued (i.e. a vector of length 1).
 The \code{x} vector and \code{dynparam} are used as the values to conduct the taping.
 }
 \details{
-When the returned tape is evaluated (via say \code{\link[=pForward0]{pForward0()}}, the resultant vector contains the Hessian in long format (see \url{https://cppad.readthedocs.io/latest/Hessian.html}).
-Suppose the function represented by \code{pfun} maps from \eqn{n}-dimensional space to \eqn{1}-dimensional space, then
-the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain.
-The next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
+When the returned tape is evaluated (via say \code{\link[=Rcpp_ADFun-class]{eval()}}), the resultant vector contains the Hessian in long format (see \url{https://cppad.readthedocs.io/latest/Hessian.html}):
+suppose the function represented by \code{pfun} maps from \eqn{n}-dimensional space to \eqn{1}-dimensional space, then
+the first \eqn{n} elements of the vector is the gradient of the partial derivative with respect to the first dimension of the function's domain;
+the next \eqn{n} elements of the vector is the gradient of the partial derivative of the second dimension of the function's domain.
 The Hessian as a matrix, can be obtained by using \code{\link[=as.matrix]{as.matrix()}} with \code{ncol = n}.
+
+For creating this tape, the values of \code{pfun$xtape} and \code{pfun$dyntape} are used.
 }
 \seealso{
 Other tape builders: 
@@ -27,6 +32,7 @@ Other tape builders:
 \code{\link{tapeGradOffset}()},
 \code{\link{tapeJacobian}()},
 \code{\link{tapeLogJacDet}()},
-\code{\link{tapeSwap}()}
+\code{\link{tapeSwap}()},
+\code{\link{tape_uld_inbuilt}()}
 }
 \concept{tape builders}

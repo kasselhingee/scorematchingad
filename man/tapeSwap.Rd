@@ -8,10 +8,6 @@ tapeSwap(pfun)
 }
 \arguments{
 \item{pfun}{An \code{Rcpp_ADFun} object.}
-
-\item{newvalue}{The independent value (in the sense after the switch has occurred) at which to tape the \code{Rcpp_ADFun}}
-
-\item{newdynparam}{The value of the dynamic parameters (after the switch) at which to tape the \code{Rcpp_ADFun}}
 }
 \value{
 An \code{Rcpp_ADFun} object.
@@ -20,12 +16,16 @@ An \code{Rcpp_ADFun} object.
 Convert an \code{Rcpp_ADFun} object so that the independent values become dynamic parameters
 and the dynamic parameters become independent values
 }
+\details{
+For creating this tape, the values of \code{pfun$xtape} and \code{pfun$dyntape} are used.
+}
 \seealso{
 Other tape builders: 
 \code{\link{buildsmdtape}()},
 \code{\link{tapeGradOffset}()},
 \code{\link{tapeHessian}()},
 \code{\link{tapeJacobian}()},
-\code{\link{tapeLogJacDet}()}
+\code{\link{tapeLogJacDet}()},
+\code{\link{tape_uld_inbuilt}()}
 }
 \concept{tape builders}

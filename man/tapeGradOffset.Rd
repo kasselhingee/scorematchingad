@@ -6,8 +6,11 @@
 \usage{
 tapeGradOffset(pfun)
 }
+\arguments{
+\item{pfun}{An \code{Rcpp_ADFun} object.}
+}
 \value{
-A \code{Rcpp::XPtr} to a \code{Rcpp_ADFun} object. The independent argument to the function are the dynamic parameters of \code{pfun}.
+An \code{Rcpp_ADFun} object. The independent argument to the function are the dynamic parameters of \code{pfun}.
 }
 \description{
 Tape the Gradient Offset of a Quadratic CppAD Tape
@@ -25,6 +28,8 @@ so the gradient of the function can be rewritten as
 The tape calculates \eqn{b(\theta)} as
 \deqn{b(\theta) = \Delta f(x;\theta) - H f(x; \theta) x,}
 which does not depend on \eqn{x}.
+
+For creating this tape, the values of \code{pfun$xtape} and \code{pfun$dyntape} are used.
 }
 \seealso{
 Other tape builders: 
@@ -32,6 +37,7 @@ Other tape builders:
 \code{\link{tapeHessian}()},
 \code{\link{tapeJacobian}()},
 \code{\link{tapeLogJacDet}()},
-\code{\link{tapeSwap}()}
+\code{\link{tapeSwap}()},
+\code{\link{tape_uld_inbuilt}()}
 }
 \concept{tape builders}
