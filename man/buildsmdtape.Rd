@@ -48,7 +48,11 @@ Please ensure that \code{ytape} is the interior of the manifold and non-zero.}
 
 \item{bdryw}{The name of the boundary weight function. "ones" for manifolds without boundary. For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible - see \code{\link[=ppi]{ppi()}} for more information on these.}
 
+\item{acut}{A parameter passed to the boundary weight function \code{bdryw}. Ignored for \code{bdryw = "ones"}.}
+
 \item{thetatape_creator}{A function that accepts an integer \code{n}, and returns a vector of \code{n} length. The function is used to fill in the \code{NA} elements of \code{usertheta} when building the tapes. Please ensure that the values filled by \code{thetatape_creator} lead to plausible parameter vectors for the chosen log-likelihood.}
+
+\item{verbose}{If \code{TRUE} more details are printed when taping. These details are for debugging and will likely be comprehensible only to users familiar with the source code of this package.}
 }
 \value{
 A list of:
