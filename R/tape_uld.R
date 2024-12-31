@@ -33,6 +33,7 @@
 #' + `fun` a function that evaluates the function directly
 #' + `tape` a tape of the function
 #' + `file` the temporary file storing the final source code passed to [`Rcpp::sourceCpp()`]
+#' @importFrom RcppEigen fastLmPure
 #' @export
 tape_uld <- function(fileORcode = "", x, theta, Cppopt = NULL){
   #read code
