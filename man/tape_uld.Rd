@@ -16,7 +16,7 @@ tape_uld(fileORcode = "", x, theta, Cppopt = NULL)
 
 \item{theta}{Value of the dynamic parameter vector for taping.}
 
-\item{fileORcode}{A character string giving the path name of a file containing the unnormalised log-density definition \emph{OR} code. If the \code{fileORcode} contains no new line characters ('\n' or '\r\n') and has a file extension detected by \code{\link[tools:fileutils]{tools::file_ext()}} then \code{fileORcode} will be treated as file name.}
+\item{fileORcode}{A character string giving the path name of a file containing the unnormalised log-density definition \emph{OR} code. If the \code{fileORcode} contains no new line characters ('\\n' or '\\r\\n') and has a file extension detected by \code{\link[tools:fileutils]{tools::file_ext()}} then \code{fileORcode} will be treated as file name.}
 
 \item{Cppopt}{List of named options passed to \code{Rcpp::sourceCpp()}}
 }
