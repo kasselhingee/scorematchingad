@@ -26,7 +26,7 @@ tapell <- function(ll,
   starttheta <- t_u2s(usertheta, filler = thetatape_creator)
   ztape <- tranobj$toM(ytape) #the value of ytape transformed to the manifold
 
-  # choose between a canned log-likelihood or a custom log-likelihood
+  # choose between a canned log-density or a custom log-density
   if (typeof(ll) == "character"){
     ll <- tape_uld_inbuilt(ll, ytape, starttheta)
   } else if (!inherits(ll, "Rcpp_ADFun")){

@@ -7,7 +7,7 @@
 #' @param theta Value of the dynamic parameter vector for taping.
 #' @description
 #' Supply `C++` code to specify a custom log-density much like `TMB::compile()` is passed `C++` code that formulate models.
-#' For score matching the normalising constant of the log-likelihood can be omitted.
+#' For score matching the normalising constant of the log-density can be omitted.
 #' @details
 #' The function use [`Rcpp::sourceCpp()`] to generate a tape of a function defined in C++. 
 #' (An alternative design, where the function is compiled interactively and then taped using a function internal to `scorematchingad` was not compatible with Windows OS).
@@ -15,7 +15,7 @@
 #' # Writing the `fileORcode` Argument
 #' The code (possibly in the file pointed to by `fileORcode`) must be `C++` that uses only `CppAD` and `Eigen`, which makes it very similar to the requirements of the input to `TMB::compile()` (which also uses `CppAD` and `Eigen`).
 #' 
-#' The start of `code` should always be "`a1type fname(const veca1 &x, const veca1 &theta){`" where `fname` is your chosen name of the log-likelihood function, `x` represents a point in the data space and `theta` is a vector of parameters for the log-likelihood. This specifies that the function will have two vector arguments (of type `veca1`) and will return a single numeric value (`a1type`).
+#' The start of `code` should always be "`a1type fname(const veca1 &x, const veca1 &theta){`" where `fname` is your chosen name of the log-density function, `x` represents a point in the data space and `theta` is a vector of parameters for the log-density. This specifies that the function will have two vector arguments (of type `veca1`) and will return a single numeric value (`a1type`).
 #' 
 #' The type `a1type` is a double with special ability for being taped by `CppAD`. The `veca1` type is a vector of `a1type` elements, with the vector wrapping supplied by the `Eigen` C++ package (that is an `Eigen` matrix with 1 column and dynamic number of rows).
 #' 
@@ -23,7 +23,7 @@
 #' There are no easy instructions for writing these as it is genuine `C++` code, which can be very opaque to those unfamiliar with `C++`.
 #' However, recently ChatGPT and claude.ai have been able to very quickly translating `R` functions to `C++` functions (KLH has been telling these A.I. to use Eigen and CppAD, and giving the definitions of `a1type` and `veca1`).
 #' I've found the quick reference pages for for [`Eigen`](https://eigen.tuxfamily.org/dox/) useful. Limited unary and binray operations are available directly from [`CppAD`](https://cppad.readthedocs.io) without `Eigen`. 
-#' For the purposes of score matching the operations should all be smooth to create a smooth log-likelihood and the normalising constant may be omitted.
+#' For the purposes of score matching the operations should all be smooth to create a smooth log-density and the normalising constant may be omitted.
 #' @examples
 #' \dontrun{
 #' out <- tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"), 
@@ -54,7 +54,7 @@ tape_uld <- function(fileORcode = "", x, theta, Cppopt = NULL){
   inputsloc <- regexpr("^[[:space:]]*a1type (?<fname>[^[:space:]]+)\\((?<arg1>[^,]+),[[:space:]]*(?<arg2>[^\\)]+)", filelines[1], perl = TRUE)
   starts <- attr(inputsloc, "capture.start")
   lengths <- attr(inputsloc, "capture.length")
-  if (lengths[, "fname"] < 1){stop("Could not find log-likelihood name")}
+  if (lengths[, "fname"] < 1){stop("Could not find log-density name")}
   if (lengths[, "arg1"] < 1){stop("Could not find first argument")}
   if (lengths[, "arg2"] < 1){stop("Could not find second argument")}
   arg1 <- substr(filelines[1], starts[, "arg1"], starts[, "arg1"] + lengths[, "arg1"] - 1)

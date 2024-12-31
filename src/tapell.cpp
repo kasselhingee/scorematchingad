@@ -45,7 +45,7 @@ CppAD::ADFun<double> tapellcpp(veca1 z, //data measurement tranformed to M manif
     }
   }
 
-  //tape relationship between x and log-likelihood
+  //tape relationship between x and log-density
   CppAD::Independent(z, thetavar);  //for this tape, theta must be altered using new_dynamic
   if (verbose){
     Rcpp::Rcout << "thetavar is: " << thetavar.transpose() << std::endl;
