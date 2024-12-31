@@ -32,7 +32,6 @@ Imports:
     Rcpp (>= 1.0.9),
     methods,
     stats,
-    R6,
     utils,
     rlang (>= 1.1.0)
 RdMacros: Rdpack
