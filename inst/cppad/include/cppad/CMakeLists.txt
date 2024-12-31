@@ -280,5 +280,6 @@ assert( second_block_t_mod_double_zero )
 CONFIGURE_FILE(
    ${CMAKE_CURRENT_SOURCE_DIR}/configure.hpp.in
    ${CMAKE_CURRENT_SOURCE_DIR}/configure.hpp
+   NEWLINE_STYLE LF
 )
 # -----------------------------------------------------------------------------
