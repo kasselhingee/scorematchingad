@@ -82,7 +82,7 @@ vMF_full <- function(sample, usertheta, w = NULL){
   p <- ncol(sample)
   stopifnot(length(usertheta) == p)
 
-  tapes <- buildsmdtape("sph","identity", "sph", "vMF",
+  tapes <- tape_smd("sph","identity", "sph", "vMF",
                         rep(1, p)/sqrt(p), 
                         usertheta = usertheta,
                         bdryw = "ones",

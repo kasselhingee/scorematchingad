@@ -1,4 +1,4 @@
-#' @name buildsmdtape
+#' @name tape_smd
 # @param tranobj A transform object (of type `Rcpp_transform_ad`), typically created by [`manifoldtransform()`].
 #' @param ll The name of an inbuilt unnormalised log-density function (which also specifies the parametric model family) or the tape created by [`tape_uld()`] of a custom unnormalised log-density function with respect to the starting manifold metric.
 #' @param ytape An example measurement value to use for creating the tapes. In the natural (i.e. `start`) manifold of the log-likelihood function. 

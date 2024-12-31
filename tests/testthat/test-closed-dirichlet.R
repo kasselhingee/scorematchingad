@@ -10,7 +10,7 @@ test_that("prodsq weights match estimator2", {
   set.seed(134)
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
-  tapes <- buildsmdtape("sim", "sqrt", "sph", "dirichlet",
+  tapes <- tape_smd("sim", "sqrt", "sph", "dirichlet",
                rep(1/p, p), rep(NA, p),
                "prodsq", acut = acut)
 
@@ -25,7 +25,7 @@ test_that("prodsq weights match estimator2", {
 test_that("minsq weights match estimator2", {
   acut = 0.1
   p = 3
-  tapes <- buildsmdtape("sim", "sqrt", "sph", "dirichlet",
+  tapes <- tape_smd("sim", "sqrt", "sph", "dirichlet",
                         rep(1/p, p), rep(NA, p),
                         "minsq", acut = acut)
 
@@ -43,7 +43,7 @@ test_that("minsq weights match estimator2", {
 test_that("minsq weights match estimator2 for d = 4", {
   acut = 0.1
   p = 4
-  tapes <- buildsmdtape("sim", "sqrt", "sph", "dirichlet",
+  tapes <- tape_smd("sim", "sqrt", "sph", "dirichlet",
                         rep(1/p, p), rep(NA, p),
                         "minsq", acut = acut)
 
@@ -65,7 +65,7 @@ test_that("fixed beta[p] with minsq weights match true value", {
   utabl <- MCMCpack::rdirichlet(n, beta+1)
 
   p = length(beta)
-  tapes <- buildsmdtape("sim", "sqrt", "sph", "dirichlet",
+  tapes <- tape_smd("sim", "sqrt", "sph", "dirichlet",
                         rep(1/p, p), c(NA, NA, beta[3]),
                         "minsq", acut = acut)
   out <- cppad_closed(tapes$smdtape, Y = utabl)
@@ -76,7 +76,7 @@ test_that("fixed beta[p] with minsq weights match true value", {
 
 test_that("cppad-based Score2 estimate leads to a match for large number of observations", {
   p = 3
-  tapes <- buildsmdtape("sim", "identity", "sim", "dirichlet",
+  tapes <- tape_smd("sim", "identity", "sim", "dirichlet",
                         rep(1/p, p), rep(NA, p),
                         "prodsq", acut = 0.1)
 
@@ -90,7 +90,7 @@ test_that("cppad-based Score2 estimate leads to a match for large number of obse
 
 test_that("Simplex calculations are historically consistent", {
   p = 3
-  tapes <- buildsmdtape("sim", "identity", "sim", "dirichlet",
+  tapes <- tape_smd("sim", "identity", "sim", "dirichlet",
                         rep(1/p, p), rep(NA, p),
                         "prodsq", acut = 1)
 

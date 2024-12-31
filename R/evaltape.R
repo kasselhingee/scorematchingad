@@ -13,7 +13,7 @@
 #' A matrix, each row corresponding to the evaluation of the same row in `xmat`, `pmat` and `xcentres`.
 #' @examples
 #' u <- rep(1/3, 3)
-#' tapes <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+#' tapes <- tape_smd("sim", "sqrt", "sph", "ppi",
 #'               ytape = u,
 #'               usertheta = ppi_paramvec(p = 3),
 #'               bdryw = "minsq", acut = 0.01,

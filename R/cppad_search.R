@@ -33,7 +33,7 @@
 #' # Warning
 #' There appears to be floating point issues with evaluation of the gradient leading to slow or no convergence in many situations. Tweaking the convergence tolerance `tol` may be appropriate. If the closed form solution exists please use `cppad_closed()` instead.
 #' @examples
-#' smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+#' smdtape <- tape_smd("sim", "sqrt", "sph", "ppi",
 #'               ytape = rep(1/3, 3),
 #'               usertheta = ppi_paramvec(p = 3),
 #'               bdryw = "minsq", acut = 0.01,

@@ -3,7 +3,7 @@ test_that("Gradient of smd for ppi wrt u is CLOSE TO CORRECT for interior points
   m <- rppi_egmodel(2)
   acut <- 0.1
 
-  tapes <- buildsmdtape("sim", "sqrt", "sph",
+  tapes <- tape_smd("sim", "sqrt", "sph",
                "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
                bdryw = "minsq", acut = acut)
   smdppi_u <- tapeSwap(tapes$smdtape)
@@ -33,7 +33,7 @@ test_that("Gradient of smd for ppi wrt theta is correct for interior points", {
   m <- rppi_egmodel(2)
   acut <- 0.1
 
-  tapes <- buildsmdtape("sim", "sqrt", "sph",
+  tapes <- tape_smd("sim", "sqrt", "sph",
                "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
                bdryw = "minsq", acut = acut)
 
@@ -64,7 +64,7 @@ test_that("Gradient of smd approxcentre for ppi wrt theta is correct", {
   acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-15)
   acut <- 0.1
 
-  tapes <- buildsmdtape("sim", "sqrt", "sph",
+  tapes <- tape_smd("sim", "sqrt", "sph",
                "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
                bdryw = "minsq", acut = acut)
   smdppi_u <- tapeSwap(tapes$smdtape)
@@ -118,7 +118,7 @@ test_that("Gradient of smd approxcentre for ppi wrt u is close", {
   acentres <- simplex_boundaryshift(m$sample, shiftsize = 1E-3)
   acut <- 0.1
 
-  tapes <- buildsmdtape("sim", "sqrt", "sph",
+  tapes <- tape_smd("sim", "sqrt", "sph",
                "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
                bdryw = "minsq", acut = acut)
   smdppi_u <- tapeSwap(tapes$smdtape)

@@ -2,13 +2,13 @@
 #' @family tape evaluators
 #' @description Computes a range of relevant information for investigating score matching estimators.
 #' @inheritParams evaltape
-#' @param smdtape A taped score matching discrepancy. Most easily created by [`buildsmdtape()`].
+#' @param smdtape A taped score matching discrepancy. Most easily created by [`tape_smd()`].
 #' @details Computes the score matching discrepancy function from [`scorematchingtheory`] or weighted sum of the score matching discrepancy function.
 #' The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in `xmat` and `pmat`. 
 #' Convert a Hessian row-vector to a matrix using `matrix(ncol = length(smdtape$xtape))`.
 #' @examples
 #' m <- rppi_egmodel(100)
-#' smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+#' smdtape <- tape_smd("sim", "sqrt", "sph", "ppi",
 #'               ytape = rep(1/m$p, m$p),
 #'               usertheta = ppi_paramvec(beta = m$beta),
 #'               bdryw = "minsq", acut = 0.01)$smdtape

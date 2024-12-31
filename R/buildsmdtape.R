@@ -5,8 +5,8 @@
 #' @param acut A parameter passed to the boundary weight function `bdryw`. Ignored for `bdryw = "ones"`.
 #' @param verbose If `TRUE` more details are printed when taping. These details are for debugging and will likely be comprehensible only to users familiar with the source code of this package.
 #' @description
-#' For a parametric model family, the function `buildsmdtape()` generates `CppAD` tapes for the improper log-likelihood (without normalising constant) of the family and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in [`scorematchingtheory`]).
-#' Three steps are performed by `buildsmdtape()`: first an object that specifies the manifold and any transformation to another manifold is created; then a tape of the log-likelihood (without normalising constant) is created; finally a tape of \eqn{A(z) + B(z) + C(z)} is created.
+#' For a parametric model family, the function `tape_smd()` generates `CppAD` tapes for the improper log-likelihood (without normalising constant) of the family and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in [`scorematchingtheory`]).
+#' Three steps are performed by `tape_smd()`: first an object that specifies the manifold and any transformation to another manifold is created; then a tape of the log-likelihood (without normalising constant) is created; finally a tape of \eqn{A(z) + B(z) + C(z)} is created.
 #' @details
 #' The improper log-likelihood (without normalising constant) must be implemented in `C++` and is selected by name. Similarly the transforms of the manifold must be implemented in `C++` and selected by name.
 #'
@@ -35,7 +35,7 @@
 #' u <- rep(1/sqrt(p), p)
 #' ltheta <- p #length of vMF parameter vector
 #' intheta <- rep(NA, length.out = ltheta)
-#' tapes <- buildsmdtape("sph", "identity", "sph", "vMF",
+#' tapes <- tape_smd("sph", "identity", "sph", "vMF",
 #'               ytape = u,
 #'               usertheta = intheta,
 #'               "ones", verbose = FALSE
@@ -44,7 +44,7 @@
 #' evaltape(tapes$smdtape, runif(n = ltheta), u)
 #' 
 #' u <- rep(1/3, 3)
-#' tapes <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+#' tapes <- tape_smd("sim", "sqrt", "sph", "ppi",
 #'               ytape = u,
 #'               usertheta = ppi_paramvec(p = 3),
 #'               bdryw = "minsq", acut = 0.01,
@@ -53,7 +53,7 @@
 #' evaltape(tapes$lltape, u, rppi_egmodel(1)$theta)
 #' evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
 #' @export
-buildsmdtape <- function(start, tran = "identity", end = start, ll,
+tape_smd <- function(start, tran = "identity", end = start, ll,
                          ytape, usertheta,
                          bdryw = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},

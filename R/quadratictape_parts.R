@@ -21,7 +21,7 @@
 #' When the corresponding `tcentres` row is not `NA`, then approximate (but very accurate) results are calculated using Taylor approximation around the location given by the row of `tcentres`.
 #' 
 #' For score matching \eqn{x} is the set of model parameters and the vector \eqn{t} is a (multivariate) measurement.
-#' @param tape A tape of a quadratic function where the independent and dynamic parameters correspond to the \eqn{x} and \eqn{t} in the details section, respectively. For score matching `tape` should be a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in [`scorematchingtheory`] with \eqn{z} the *dynamic parameters* and the model parameters the *independent variable* (which is the usual for the return of [`buildsmdtape()`]).
+#' @param tape A tape of a quadratic function where the independent and dynamic parameters correspond to the \eqn{x} and \eqn{t} in the details section, respectively. For score matching `tape` should be a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in [`scorematchingtheory`] with \eqn{z} the *dynamic parameters* and the model parameters the *independent variable* (which is the usual for the return of [`tape_smd()`]).
 #' @param tmat A matrix of vectors corresponding to values of \eqn{t} (see details). Each row corresponds to a vector. For score matching, these vectors are measurements.
 #' @param tcentres A matrix of Taylor approximation centres for rows of `tmat` that require approximation. `NA` for rows that do not require approximation.
 #' @param approxorder The order of the Taylor approximation to use.
@@ -30,7 +30,7 @@
 #'  + `Hessian` Array of vectorised \eqn{H f(x; t)} (see [`tapeHessian()`]), each row corresponding to a row in `tmat`. For each row, obtain the Hessian in matrix format by using `matrix(ncol = length(tape$xtape))`.
 #' @examples
 #' u <- rep(1/3, 3)
-#' smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+#' smdtape <- tape_smd("sim", "sqrt", "sph", "ppi",
 #'               ytape = u,
 #'               usertheta = ppi_paramvec(p = 3),
 #'               bdryw = "minsq", acut = 0.01,

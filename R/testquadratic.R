@@ -13,7 +13,7 @@
 #' If `xmat` and `dynparammat` are non-`NULL` then `testquadratic()` also checks the Jacobian of the Hessian at `xmat` and `dynparammat` values. For quadratic form functions the Jacobian of the Hessian should be zero.
 #' @return `TRUE` or `FALSE`
 #' @examples
-#' tapes <- buildsmdtape(
+#' tapes <- tape_smd(
 #'    "sim", "sqrt", "sph",
 #'    ll = "ppi",
 #'    ytape = c(0.2, 0.3, 0.5),

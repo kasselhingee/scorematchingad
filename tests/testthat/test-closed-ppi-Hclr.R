@@ -115,7 +115,7 @@ test_that("Hess + Offset match gradient for Hclr in interior", {
   Y <- mod$sample
   Y <- rbind(Y, rep(1/3, 3))
 
-  tapes <- buildsmdtape("sim","clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
+  tapes <- tape_smd("sim","clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
                         usertheta = ppi_paramvec(p = 3))
 
   # find boundary points and remove them - expect results pJacobian to give good results when no points need approximation
@@ -147,7 +147,7 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
 
   usertheta = ppi_paramvec(p = 3, beta = mod$beta)
   ftheta <- t_ut2f(usertheta, mod$theta)
-  tapes <- buildsmdtape("sim","clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
+  tapes <- tape_smd("sim","clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
                         usertheta = usertheta)
 
   values <- quadratictape_parts(tapes$smdtape, Y)

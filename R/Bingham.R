@@ -53,7 +53,7 @@ Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y))){
   intheta <- Bingham_Amat2theta(A)
 
   ytape <- rep(1, p) / sqrt(p)
-  tapes <- buildsmdtape("sph","identity", "sph", "Bingham",
+  tapes <- tape_smd("sph","identity", "sph", "Bingham",
                            ytape, intheta,
                            bdryw = "ones")
   out <- cppad_closed(tapes$smdtape, Y = Y, w = w)
@@ -88,7 +88,7 @@ Bingham_Mardia <- function(Y, w = rep(1, nrow(Y))){
   diag(A) <- NA
   stopifnot(all(dim(A) == p))
   intheta <- Bingham_Amat2theta(A)
-  tapes <- buildsmdtape("sph","identity", "sph", "Bingham",
+  tapes <- tape_smd("sph","identity", "sph", "Bingham",
                         rep(1, p) / sqrt(p), intheta,
                         bdryw = "ones")
 

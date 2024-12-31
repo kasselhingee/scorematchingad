@@ -46,7 +46,7 @@ test_that("a tape_uld() gets all the way to the correct score matching estimate"
           return y;
   }", c(0.2, 0.3, 0.5), mod$theta)
 
-  tapes_custom <- buildsmdtape(
+  tapes_custom <- tape_smd(
      start = "sim",
      tran = "alr",
      end = "Euc",
@@ -55,7 +55,7 @@ test_that("a tape_uld() gets all the way to the correct score matching estimate"
      usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
      bdryw = "ones",
      verbose = FALSE)
-  tapes <- buildsmdtape(
+  tapes <- tape_smd(
      start = "sim",
      tran = "alr",
      end = "Euc",

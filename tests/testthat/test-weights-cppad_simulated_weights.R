@@ -7,7 +7,7 @@ acut = 0.1
 
 test_that("cppad_closed() w = rep(1, nrow(Y)) is near the result as if w omitted", {
   p <- ncol(m$sample)
-  tapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
+  tapes <- tape_smd("sim","sqrt", "sph", "ppi",
                         ytape = rep(1/p, m$p),
                         usertheta = rep(NA, length(m$theta)),
                         bdryw = "minsq", acut = acut)
@@ -20,7 +20,7 @@ test_that("cppad_closed() w = rep(1, nrow(Y)) is near the result as if w omitted
 
 test_that("evaltape_wsum() matches for simulated weights and constant weights", {
   intheta <- ppi_paramvec(m$p)
-  tapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
+  tapes <- tape_smd("sim","sqrt", "sph", "ppi",
                         m$sample[1, ], intheta,
                         bdryw = "minsq",
                         acut = acut)
@@ -39,7 +39,7 @@ test_that("evaltape_wsum() matches for simulated weights and constant weights", 
 
 test_that("evaltape_wsum() matches for simulated weights and constant weights with boundary data", {
   intheta <- ppi_paramvec(m$p)
-  tapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
+  tapes <- tape_smd("sim","sqrt", "sph", "ppi",
                         m$sample[1, ], intheta,
                         bdryw = "minsq",
                         acut = acut)
@@ -64,7 +64,7 @@ test_that("evaltape_wsum() matches for simulated weights and constant weights wi
 })
 
 test_that("cppad_search() for ppi with minsq matches cppad_closed()", {
-  tapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
+  tapes <- tape_smd("sim","sqrt", "sph", "ppi",
                ytape = rep(1/m$p, m$p),
                usertheta = ppi_paramvec(m$p),
                bdryw = "minsq",

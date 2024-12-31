@@ -1,7 +1,7 @@
 ## ppi() fitting tested with cppad_closed() tests
 
 test_that("testquadratic passes on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
-  tapes <- buildsmdtape(
+  tapes <- tape_smd(
      start = "sim",
      tran = "sqrt",
      end = "sph",
@@ -29,7 +29,7 @@ test_that("testquadratic passes on PPI model with sqrt transformation, minsq div
 
   # manual tests
 test_that("manual tests on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
-  tapes <- buildsmdtape(
+  tapes <- tape_smd(
      start = "sim",
      tran = "sqrt",
      end = "sph",

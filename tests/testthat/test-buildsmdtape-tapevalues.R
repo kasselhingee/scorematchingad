@@ -20,38 +20,38 @@ test_that("Dirichlet with smd values and derivatives independent of tape", {
   }
 
   #Sphere with minsq
-  tapes1 <- buildsmdtape("sim", "sqrt", "sph",
+  tapes1 <- tape_smd("sim", "sqrt", "sph",
                "dirichlet", u1, rep(NA, 3), thetatape_creator = function(n){theta1},
                bdryw = "minsq", acut = acut)
-  tapes2 <- buildsmdtape("sim", "sqrt", "sph",
+  tapes2 <- tape_smd("sim", "sqrt", "sph",
                "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
                bdryw = "minsq", acut = acut)
 
   compare(ueval, thetaeval, tapes1, tapes2)
 
   #Sphere, prodsq
-  tapes1 <- buildsmdtape("sim", "sqrt", "sph",
+  tapes1 <- tape_smd("sim", "sqrt", "sph",
                "dirichlet", u1, rep(NA, 3), thetatape_creator = function(n){theta1},
                bdryw = "prodsq", acut = acut)
-  tapes2 <- buildsmdtape("sim", "sqrt", "sph",
+  tapes2 <- tape_smd("sim", "sqrt", "sph",
                "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
                bdryw = "prodsq", acut = acut)
   compare(ueval, thetaeval, tapes1, tapes2)
 
   #Simplex
-  tapes1 <- buildsmdtape("sim", "identity", "sim",
+  tapes1 <- tape_smd("sim", "identity", "sim",
                "dirichlet", u1, rep(NA, 3), thetatape_creator = function(n){theta1},
                bdryw = "minsq", acut = acut)
-  tapes2 <- buildsmdtape("sim", "identity", "sim",
+  tapes2 <- tape_smd("sim", "identity", "sim",
                "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
                bdryw = "minsq", acut = acut)
   compare(ueval, thetaeval, tapes1, tapes2)
 
   #Simplex, prodsq
-  tapes1 <- buildsmdtape("sim", "identity", "sim",
+  tapes1 <- tape_smd("sim", "identity", "sim",
                "dirichlet", u1, rep(NA, 3), thetatape_creator = function(n){theta1},
                bdryw = "prodsq", acut = acut)
-  tapes2 <- buildsmdtape("sim", "identity", "sim",
+  tapes2 <- tape_smd("sim", "identity", "sim",
                "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
                bdryw = "prodsq", acut = acut)
   compare(ueval, thetaeval, tapes1, tapes2)

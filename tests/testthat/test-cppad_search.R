@@ -4,7 +4,7 @@
 test_that("cppad_search goes towards cppad_closed result", {
   set.seed(354)
   m <- rppi_egmodel(100, maxden = 4)
-  tapes <- buildsmdtape("sim","sqrt", "sph", "ppi",
+  tapes <- tape_smd("sim","sqrt", "sph", "ppi",
                         ytape = rep(1/m$p, m$p),
                         usertheta = rep(NA, length(m$theta)),
                         bdryw = "minsq", acut = 0.1)

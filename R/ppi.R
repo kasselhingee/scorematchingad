@@ -189,7 +189,7 @@ ppi <- function(Y, paramvec = NULL,
     else {stheta <- t_us2s(usertheta, paramvec_start)}
     isfixed <- t_u2i(usertheta)
     # prepare tapes
-    tapes <- buildsmdtape(
+    tapes <- tape_smd(
        start = "sim",
        tran = trans,
        end = man,
