@@ -13,6 +13,9 @@
 #'  * Score matching and hybrid score matching estimators for von Mises Fisher, Bingham and Fisher-Bingham directional distributions \insertCite{mardia2016sc}{scorematchingad}. See [`vMF()`], [`Bingham()`] and [`FB()`].
 #'  * Implementation of a modification of Windham's robustifying method \insertCite{windham1995ro}{scorematchingad} for many exponential family distributions. See [`Windham()`].
 #' For some models the density approaches infinity at some locations, creating difficulties for the weights in Windham's original method \insertCite{scealy2024ro}{scorematchingad}.
+#'  * An interface of `CppAD`'s `ADFun` tape objects. See [`Rcpp_ADFun-class`].
+#'
+#' For an introduction to score matching estimation, see [`scorematchingtheory`].
 #' \insertNoCite{*}{scorematchingad}
 #' # Acknowledgements
 #' Colleagues Andrew T. A. Wood and John T. Kent played important roles in developing the statistical ideas and theory for score matching estimation for the PPI model \insertCite{scealy2024ro}{scorematchingad}.

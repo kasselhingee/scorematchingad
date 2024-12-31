@@ -55,8 +55,11 @@
 #' This package uses version 2024000.5 of the algorithmic differentiation library `CppAD` \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
 #' Full help for `CppAD` can be found at <https://cppad.readthedocs.io/>.
 #' 
-#' Differentiation proceeds by *taping* the basic (*atomic*) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
-#' Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and [`CppAD`](https://cppad.readthedocs.io/) has a special tool for this called `CondExp` (short for `conditional expressions`).
+#' When using `CppAD` one first creates a *tape* of the basic (*atomic*) operations of a function.
+#' The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
+#' These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition (see for example [`tape_swap()`] and [`tape_Jacobian()`]).
+#' Tapes can have both *independent* variables and *dynamic* parameters, and the differentiation occurs with respect to the independent variables.
+#' The atomic operations within a function are taped by following the function evaluation on example values for the variables and parameters, so care must be taken with any conditional (e.g. if-then) operations, and [`CppAD`](https://cppad.readthedocs.io/) has a special tool for this called `CondExp` (short for `conditional expressions`).
 #'
 #' The result of taping is an object of class `ADFun` in `CppAD` and is often called a *tape*.
 #' This `ADFun` object can be evaluated, differentiated, used for further taping (via `CppAD`'s `base2ad()`), solving differential equations and more.

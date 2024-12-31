@@ -5,28 +5,19 @@
 #' @param acut A parameter passed to the boundary weight function `bdryw`. Ignored for `bdryw = "ones"`.
 #' @param verbose If `TRUE` more details are printed when taping. These details are for debugging and will likely be comprehensible only to users familiar with the source code of this package.
 #' @description
-#' For a parametric model family, the function `tape_smd()` generates `CppAD` tapes for the improper log-likelihood (without normalising constant) of the family and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in [`scorematchingtheory`]).
-#' Three steps are performed by `tape_smd()`: first an object that specifies the manifold and any transformation to another manifold is created; then a tape of the log-likelihood (without normalising constant) is created; finally a tape of \eqn{A(z) + B(z) + C(z)} is created.
+#' For a parametric model family, the function `tape_smd()` generates `CppAD` tapes for the unnormalised log-density of the model family and of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in [`scorematchingtheory`]).
+#' Three steps are performed by `tape_smd()`: first an object that specifies the manifold and any transformation to another manifold is created; then a tape of the unnormalised log-density is created; finally a tape of \eqn{A(z) + B(z) + C(z)} is created.
 #' @details
-#' The improper log-likelihood (without normalising constant) must be implemented in `C++` and is selected by name. Similarly the transforms of the manifold must be implemented in `C++` and selected by name.
-#'
-#' When using, `CppAD` one first creates *tapes* of functions. These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition.
-#' The taping relies on specifying typical argument values for the functions (see __Introduction to CppAD Tapes__ below).
-#' Tapes can have both *independent* variables and *dynamic* parameters.
-#' The differentiation with `CppAD` occurs with respect to the independent variables.
-#' Tapes of tapes are possible, including tapes that swap the independent and dynamic variables - this is how this package differentiates with respect to a dynamic variables (see [`tape_swap()`]).
-#'
-#' To build a tape for the score matching discrepancy function, the package first tapes the map from a point \eqn{z} on the `end` manifold to the value of the improper log-likelihood, where the independent variable is the \eqn{z}, the dynamic parameter is a vector of the parameters to estimate, and the remaining model parameters are fixed and not estimated.
+#' To build a tape for the score matching discrepancy function, the `scorematchingad` first tapes the map from a point \eqn{z} on the `end` manifold to the value of the unnormalised log-density, where the independent variable is the \eqn{z}, the dynamic parameter is a vector of the parameters to estimate, and the remaining model parameters are fixed and not estimated.
 #' This tape is then used to generate a tape for the score matching discrepancy function where the parameters to estimate are the independent variable.
 #' 
-#' @inheritSection Rcpp_ADFun-class Introduction to CppAD Tapes
-
+#' The transforms of the manifold must be implemented in `C++` and selected by name.
 #' @references \insertAllCited{}
 
 #' @return
 #' A list of:
-#'   + an [`Rcpp_ADFun`] object containing a tape of an improper likelihood with \eqn{z} on the `end` manifold as the independent variable
-#'   + an [`Rcpp_ADFun`] object containing a tape of the score matching discrepancy function with the non-fixed parameters as the independent variable, and the measurements on the `end` manifold as the dynamic parameter.
+#'   + an [`Rcpp_ADFun`] object containing a tape of the unnormalised log-density using the metric of the "`end`" manifold (that is the independent variable is on the `end` manifold).
+#'   + an [`Rcpp_ADFun`] object containing a tape of the score matching discrepancy function with the non-fixed parameters of the model as the independent variable, and the measurements on the `end` manifold as the dynamic parameter.
 #'   + some information about the tapes
 #'
 #' 
