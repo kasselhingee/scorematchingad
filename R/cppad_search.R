@@ -44,11 +44,11 @@
 #' sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)}
 #' @export
 cppad_search <- function(smdtape, theta, Y, Yapproxcentres = NA * Y, w = rep(1, nrow(Y)), approxorder = 10, control = list(tol = 1E-15, checkgrad = TRUE)){
-  Jsmdfun <- tapeJacobian(smdtape)
-  Hsmdfun <- tapeJacobian(Jsmdfun)
+  Jsmdfun <- tape_Jacobian(smdtape)
+  Hsmdfun <- tape_Jacobian(Jsmdfun)
   
-  smdfun_u <- tapeSwap(smdtape) #don't use a boundary point for taping here!
-  Jsmdfun_u <- tapeSwap(Jsmdfun)
+  smdfun_u <- tape_swap(smdtape) #don't use a boundary point for taping here!
+  Jsmdfun_u <- tape_swap(Jsmdfun)
 
   smdobj <- function(atheta){
     evaltape_wsum(smdfun_u, xmat = Y, pmat = atheta, w = w, xcentres = Yapproxcentres, approxorder = approxorder)

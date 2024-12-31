@@ -34,7 +34,7 @@ test_that("Fisher-Bingham likelihood runs and matches R code", {
                attr(numericDeriv(quote(log(qdFB(u, k, m, A))), "u"), "gradient"),
                ignore_attr = TRUE, tolerance = 1E-5)
   #deriv wrt theta
-  lltape_theta <- tapeSwap(lltape)
+  lltape_theta <- tape_swap(lltape)
   qdFB_theta <- function(u, theta){
     mats <- FB_theta2mats(theta)
     qdFB(u, mats$k, mats$m, mats$A)

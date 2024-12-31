@@ -24,7 +24,7 @@ test_that("evaltape_wsum() matches for simulated weights and constant weights", 
                         m$sample[1, ], intheta,
                         bdryw = "minsq",
                         acut = acut)
-  smd_u <- tapeSwap(tapes$smdtape)
+  smd_u <- tape_swap(tapes$smdtape)
   smd_sim <- evaltape_wsum(smd_u, vw$newY, m$theta)
   smd_hardcoded <- evaltape_wsum(smd_u, m$sample, m$theta, w=vw$w)
   expect_equal(smd_sim, smd_hardcoded)
@@ -43,7 +43,7 @@ test_that("evaltape_wsum() matches for simulated weights and constant weights wi
                         m$sample[1, ], intheta,
                         bdryw = "minsq",
                         acut = acut)
-  smd_u <- tapeSwap(tapes$smdtape)
+  smd_u <- tape_swap(tapes$smdtape)
   Y <- m$sample
   isbdry <- simplex_isboundary(Y, 1E-2)
   Yapproxcentres <- Y 

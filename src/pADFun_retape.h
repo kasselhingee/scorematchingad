@@ -25,11 +25,11 @@
 //' @return An `Rcpp_ADFun` object.
 //' @export
 // [[Rcpp::export]]
-pADFun  tapeJacobian(pADFun & pfun);
+pADFun  tape_Jacobian(pADFun & pfun);
 
 //' @title Tape the Hessian of a CppAD Tape
 //' @family tape builders
-//' @inheritParams tapeJacobian
+//' @inheritParams tape_Jacobian
 //' @description Creates a tape of the Hessian of a function taped by `CppAD`.
 //' The taped function represented by `pfun` must be scalar-valued (i.e. a vector of length 1).
 //' The `x` vector and `dynparam` are used as the values to conduct the taping.
@@ -44,12 +44,12 @@ pADFun  tapeJacobian(pADFun & pfun);
 //' @return An `Rcpp_ADFun` object.
 //' @export
 // [[Rcpp::export]]
-pADFun  tapeHessian(pADFun & pfun);
+pADFun  tape_Hessian(pADFun & pfun);
 
 
 //' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 //' @family tape builders
-//' @inheritParams tapeJacobian
+//' @inheritParams tape_Jacobian
 //' @return An `Rcpp_ADFun` object. The independent argument to the function are the dynamic parameters of `pfun`.
 //' @details A quadratic function can be written as
 //' \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
@@ -67,12 +67,12 @@ pADFun  tapeHessian(pADFun & pfun);
 //' For creating this tape, the values of `pfun$xtape` and `pfun$dyntape` are used.
 //' @export
 // [[Rcpp::export]]
-pADFun tapeGradOffset(pADFun & pfun);
+pADFun tape_gradoffset(pADFun & pfun);
 
 
 //' @title Tape the log of Jacobian determinant of a CppAD Tape
 //' @family tape builders
-//' @inheritParams tapeJacobian
+//' @inheritParams tape_Jacobian
 //' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
 //' The `x` vector is used as the value to conduct the taping.
 //'
@@ -80,11 +80,11 @@ pADFun tapeGradOffset(pADFun & pfun);
 //' @return An `Rcpp_ADFun` object.
 //' @export
 // [[Rcpp::export]]
-pADFun  tapeLogJacDet(pADFun & pfun);
+pADFun  tape_logJacdet(pADFun & pfun);
 
 //' @title Switch Dynamic and Independent Values of a Tape
 //' @family tape builders
-//' @inheritParams tapeJacobian
+//' @inheritParams tape_Jacobian
 //' @description Convert an `Rcpp_ADFun` object so that the independent values become dynamic parameters
 //' and the dynamic parameters become independent values
 //' @details
@@ -92,6 +92,6 @@ pADFun  tapeLogJacDet(pADFun & pfun);
 //' @return An `Rcpp_ADFun` object.
 //' @export
 // [[Rcpp::export]]
-pADFun tapeSwap(pADFun & pfun);
+pADFun tape_swap(pADFun & pfun);
 
 # endif

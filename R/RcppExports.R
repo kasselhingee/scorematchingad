@@ -56,13 +56,13 @@ reembed <- function(uld, tran) {
 #' For creating this tape, the values of `pfun$xtape` and `pfun$dyntape` are used.
 #' @return An `Rcpp_ADFun` object.
 #' @export
-tapeJacobian <- function(pfun) {
-    .Call(`_scorematchingad_tapeJacobian`, pfun)
+tape_Jacobian <- function(pfun) {
+    .Call(`_scorematchingad_tape_Jacobian`, pfun)
 }
 
 #' @title Tape the Hessian of a CppAD Tape
 #' @family tape builders
-#' @inheritParams tapeJacobian
+#' @inheritParams tape_Jacobian
 #' @description Creates a tape of the Hessian of a function taped by `CppAD`.
 #' The taped function represented by `pfun` must be scalar-valued (i.e. a vector of length 1).
 #' The `x` vector and `dynparam` are used as the values to conduct the taping.
@@ -76,13 +76,13 @@ tapeJacobian <- function(pfun) {
 #' For creating this tape, the values of `pfun$xtape` and `pfun$dyntape` are used.
 #' @return An `Rcpp_ADFun` object.
 #' @export
-tapeHessian <- function(pfun) {
-    .Call(`_scorematchingad_tapeHessian`, pfun)
+tape_Hessian <- function(pfun) {
+    .Call(`_scorematchingad_tape_Hessian`, pfun)
 }
 
 #' @title Tape the Gradient Offset of a Quadratic CppAD Tape
 #' @family tape builders
-#' @inheritParams tapeJacobian
+#' @inheritParams tape_Jacobian
 #' @return An `Rcpp_ADFun` object. The independent argument to the function are the dynamic parameters of `pfun`.
 #' @details A quadratic function can be written as
 #' \deqn{f(x;\theta) = \frac{1}{2} x^T W(\theta) x + b(\theta)^Tx + c.}
@@ -99,34 +99,34 @@ tapeHessian <- function(pfun) {
 #'
 #' For creating this tape, the values of `pfun$xtape` and `pfun$dyntape` are used.
 #' @export
-tapeGradOffset <- function(pfun) {
-    .Call(`_scorematchingad_tapeGradOffset`, pfun)
+tape_gradoffset <- function(pfun) {
+    .Call(`_scorematchingad_tape_gradoffset`, pfun)
 }
 
 #' @title Tape the log of Jacobian determinant of a CppAD Tape
 #' @family tape builders
-#' @inheritParams tapeJacobian
+#' @inheritParams tape_Jacobian
 #' @description Creates a tape of the log of the Jacobian determinant of a function taped by CppAD.
 #' The `x` vector is used as the value to conduct the taping.
 #'
 #' For creating this tape, the values of `pfun$xtape` and `pfun$dyntape` are used.
 #' @return An `Rcpp_ADFun` object.
 #' @export
-tapeLogJacDet <- function(pfun) {
-    .Call(`_scorematchingad_tapeLogJacDet`, pfun)
+tape_logJacdet <- function(pfun) {
+    .Call(`_scorematchingad_tape_logJacdet`, pfun)
 }
 
 #' @title Switch Dynamic and Independent Values of a Tape
 #' @family tape builders
-#' @inheritParams tapeJacobian
+#' @inheritParams tape_Jacobian
 #' @description Convert an `Rcpp_ADFun` object so that the independent values become dynamic parameters
 #' and the dynamic parameters become independent values
 #' @details
 #' For creating this tape, the values of `pfun$xtape` and `pfun$dyntape` are used.
 #' @return An `Rcpp_ADFun` object.
 #' @export
-tapeSwap <- function(pfun) {
-    .Call(`_scorematchingad_tapeSwap`, pfun)
+tape_swap <- function(pfun) {
+    .Call(`_scorematchingad_tape_swap`, pfun)
 }
 
 #' @noRd

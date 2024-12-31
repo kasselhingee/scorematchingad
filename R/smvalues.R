@@ -18,12 +18,12 @@
 smvalues <- function(smdtape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
   stopifnot(inherits(smdtape, "Rcpp_ADFun"))
   # prepare tapes
-  Jsmdfun <- tapeJacobian(smdtape)
-  Hsmdfun <- tapeJacobian(Jsmdfun)
+  Jsmdfun <- tape_Jacobian(smdtape)
+  Hsmdfun <- tape_Jacobian(Jsmdfun)
   
-  smdfun_u <- tapeSwap(smdtape) #don't use a boundary for taping!
-  Jsmdfun_u <- tapeSwap(Jsmdfun)
-  Hsmdfun_u <- tapeSwap(Hsmdfun)
+  smdfun_u <- tape_swap(smdtape) #don't use a boundary for taping!
+  Jsmdfun_u <- tape_swap(Jsmdfun)
+  Hsmdfun_u <- tape_swap(Hsmdfun)
 
   smdvals <- evaltape(smdfun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
 

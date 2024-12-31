@@ -14,7 +14,7 @@
 #' The taping relies on specifying typical argument values for the functions (see __Introduction to CppAD Tapes__ below).
 #' Tapes can have both *independent* variables and *dynamic* parameters.
 #' The differentiation with `CppAD` occurs with respect to the independent variables.
-#' Tapes of tapes are possible, including tapes that swap the independent and dynamic variables - this is how this package differentiates with respect to a dynamic variables (see [`tapeSwap()`]).
+#' Tapes of tapes are possible, including tapes that swap the independent and dynamic variables - this is how this package differentiates with respect to a dynamic variables (see [`tape_swap()`]).
 #'
 #' To build a tape for the score matching discrepancy function, the package first tapes the map from a point \eqn{z} on the `end` manifold to the value of the improper log-likelihood, where the independent variable is the \eqn{z}, the dynamic parameter is a vector of the parameters to estimate, and the remaining model parameters are fixed and not estimated.
 #' This tape is then used to generate a tape for the score matching discrepancy function where the parameters to estimate are the independent variable.

@@ -41,9 +41,9 @@ test_that("manual tests on PPI model with sqrt transformation, minsq divergence 
      verbose = FALSE)
   ppismdtape <- tapes$smdtape
 
-  ppismdtapeJ <- tapeJacobian(ppismdtape)
-  ppismdtapeH <- tapeHessian(ppismdtape)
-  ppismdtapeH2 <- tapeJacobian(ppismdtapeJ)
+  ppismdtapeJ <- tape_Jacobian(ppismdtape)
+  ppismdtapeH <- tape_Hessian(ppismdtape)
+  ppismdtapeH2 <- tape_Jacobian(ppismdtapeJ)
 
   expect_equal(
   ppismdtapeH$eval(ppismdtape$xtape, c(0.1, 0.1, 0.8)),

@@ -6,7 +6,7 @@ test_that("Gradient of smd for ppi wrt u is CLOSE TO CORRECT for interior points
   tapes <- tape_smd("sim", "sqrt", "sph",
                "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
                bdryw = "minsq", acut = acut)
-  smdppi_u <- tapeSwap(tapes$smdtape)
+  smdppi_u <- tape_swap(tapes$smdtape)
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
   testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
@@ -67,7 +67,7 @@ test_that("Gradient of smd approxcentre for ppi wrt theta is correct", {
   tapes <- tape_smd("sim", "sqrt", "sph",
                "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
                bdryw = "minsq", acut = acut)
-  smdppi_u <- tapeSwap(tapes$smdtape)
+  smdppi_u <- tape_swap(tapes$smdtape)
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
   testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
@@ -121,7 +121,7 @@ test_that("Gradient of smd approxcentre for ppi wrt u is close", {
   tapes <- tape_smd("sim", "sqrt", "sph",
                "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
                bdryw = "minsq", acut = acut)
-  smdppi_u <- tapeSwap(tapes$smdtape)
+  smdppi_u <- tape_swap(tapes$smdtape)
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
   testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)

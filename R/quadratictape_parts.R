@@ -16,7 +16,7 @@
 #' where the Hessian and offset \eqn{b(t)} depend only on \eqn{t}.
 #'
 #' The functions here evaluate the Hessian and offset \eqn{b(t)} for many values of \eqn{t}.
-#' Tapes of the Hessian and gradient offset are created using [`tapeHessian()`] and [`tapeGradOffset()`] respectively.
+#' Tapes of the Hessian and gradient offset are created using [`tape_Hessian()`] and [`tape_gradoffset()`] respectively.
 #' These tapes are then evaluated for every row of `tmat`.
 #' When the corresponding `tcentres` row is not `NA`, then approximate (but very accurate) results are calculated using Taylor approximation around the location given by the row of `tcentres`.
 #' 
@@ -27,7 +27,7 @@
 #' @param approxorder The order of the Taylor approximation to use.
 #' @return A list of
 #'  + `offset` Array of offsets \eqn{b(t)}, each row corresponding to a row in `tmat`
-#'  + `Hessian` Array of vectorised \eqn{H f(x; t)} (see [`tapeHessian()`]), each row corresponding to a row in `tmat`. For each row, obtain the Hessian in matrix format by using `matrix(ncol = length(tape$xtape))`.
+#'  + `Hessian` Array of vectorised \eqn{H f(x; t)} (see [`tape_Hessian()`]), each row corresponding to a row in `tmat`. For each row, obtain the Hessian in matrix format by using `matrix(ncol = length(tape$xtape))`.
 #' @examples
 #' u <- rep(1/3, 3)
 #' smdtape <- tape_smd("sim", "sqrt", "sph", "ppi",
@@ -45,9 +45,9 @@ quadratictape_parts <- function(tape, tmat, tcentres = NA * tmat, approxorder = 
   stopifnot(testquadratic(tape))
   toapprox <- !is.na(tcentres[, 1])
 
-  Hesstape <- tapeHessian(tape)
-  OffsetTape <- tapeGradOffset(tape)
-  Hesstape_switched <- tapeSwap(Hesstape) #Hesstape is wrt to x (which in smd world is actually the model parameter set), but we want it to be wrt to the dynamic parameter like OffsetTape is
+  Hesstape <- tape_Hessian(tape)
+  OffsetTape <- tape_gradoffset(tape)
+  Hesstape_switched <- tape_swap(Hesstape) #Hesstape is wrt to x (which in smd world is actually the model parameter set), but we want it to be wrt to the dynamic parameter like OffsetTape is
 
   #exact and approximat evalution of Hess
   fakeparametermat <- matrix(0, 

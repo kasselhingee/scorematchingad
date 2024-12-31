@@ -93,58 +93,58 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// tapeJacobian
-pADFun tapeJacobian(pADFun& pfun);
-RcppExport SEXP _scorematchingad_tapeJacobian(SEXP pfunSEXP) {
+// tape_Jacobian
+pADFun tape_Jacobian(pADFun& pfun);
+RcppExport SEXP _scorematchingad_tape_Jacobian(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
-    rcpp_result_gen = Rcpp::wrap(tapeJacobian(pfun));
+    rcpp_result_gen = Rcpp::wrap(tape_Jacobian(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
-// tapeHessian
-pADFun tapeHessian(pADFun& pfun);
-RcppExport SEXP _scorematchingad_tapeHessian(SEXP pfunSEXP) {
+// tape_Hessian
+pADFun tape_Hessian(pADFun& pfun);
+RcppExport SEXP _scorematchingad_tape_Hessian(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
-    rcpp_result_gen = Rcpp::wrap(tapeHessian(pfun));
+    rcpp_result_gen = Rcpp::wrap(tape_Hessian(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
-// tapeGradOffset
-pADFun tapeGradOffset(pADFun& pfun);
-RcppExport SEXP _scorematchingad_tapeGradOffset(SEXP pfunSEXP) {
+// tape_gradoffset
+pADFun tape_gradoffset(pADFun& pfun);
+RcppExport SEXP _scorematchingad_tape_gradoffset(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
-    rcpp_result_gen = Rcpp::wrap(tapeGradOffset(pfun));
+    rcpp_result_gen = Rcpp::wrap(tape_gradoffset(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
-// tapeLogJacDet
-pADFun tapeLogJacDet(pADFun& pfun);
-RcppExport SEXP _scorematchingad_tapeLogJacDet(SEXP pfunSEXP) {
+// tape_logJacdet
+pADFun tape_logJacdet(pADFun& pfun);
+RcppExport SEXP _scorematchingad_tape_logJacdet(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
-    rcpp_result_gen = Rcpp::wrap(tapeLogJacDet(pfun));
+    rcpp_result_gen = Rcpp::wrap(tape_logJacdet(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
-// tapeSwap
-pADFun tapeSwap(pADFun& pfun);
-RcppExport SEXP _scorematchingad_tapeSwap(SEXP pfunSEXP) {
+// tape_swap
+pADFun tape_swap(pADFun& pfun);
+RcppExport SEXP _scorematchingad_tape_swap(SEXP pfunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
-    rcpp_result_gen = Rcpp::wrap(tapeSwap(pfun));
+    rcpp_result_gen = Rcpp::wrap(tape_swap(pfun));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -216,11 +216,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_test_Rcpphandler", (DL_FUNC) &_scorematchingad_test_Rcpphandler, 0},
     {"_scorematchingad_fixdynamic", (DL_FUNC) &_scorematchingad_fixdynamic, 3},
     {"_scorematchingad_reembed", (DL_FUNC) &_scorematchingad_reembed, 2},
-    {"_scorematchingad_tapeJacobian", (DL_FUNC) &_scorematchingad_tapeJacobian, 1},
-    {"_scorematchingad_tapeHessian", (DL_FUNC) &_scorematchingad_tapeHessian, 1},
-    {"_scorematchingad_tapeGradOffset", (DL_FUNC) &_scorematchingad_tapeGradOffset, 1},
-    {"_scorematchingad_tapeLogJacDet", (DL_FUNC) &_scorematchingad_tapeLogJacDet, 1},
-    {"_scorematchingad_tapeSwap", (DL_FUNC) &_scorematchingad_tapeSwap, 1},
+    {"_scorematchingad_tape_Jacobian", (DL_FUNC) &_scorematchingad_tape_Jacobian, 1},
+    {"_scorematchingad_tape_Hessian", (DL_FUNC) &_scorematchingad_tape_Hessian, 1},
+    {"_scorematchingad_tape_gradoffset", (DL_FUNC) &_scorematchingad_tape_gradoffset, 1},
+    {"_scorematchingad_tape_logJacdet", (DL_FUNC) &_scorematchingad_tape_logJacdet, 1},
+    {"_scorematchingad_tape_swap", (DL_FUNC) &_scorematchingad_tape_swap, 1},
     {"_scorematchingad_ptapell2", (DL_FUNC) &_scorematchingad_ptapell2, 6},
     {"_scorematchingad_getllptr", (DL_FUNC) &_scorematchingad_getllptr, 1},
     {"_scorematchingad_tape_uld_inbuilt", (DL_FUNC) &_scorematchingad_tape_uld_inbuilt, 3},

@@ -1,6 +1,6 @@
 #' @title Compute Score Matching Discrepancy Value, Gradient, and Hessian for a PPI Model
 #' @rdname ppi
-#' @description For a given parameter vector `evalparam`, `ppi_smvalues()` computes the score matching discrepancy, the gradient and the Hessian of the score matching discrepancy (see [`smvalues()`]) and the gradient offset of the score matching discrepancy (see [`quadratictape_parts()`] and [`tapeGradOffset()`]). 
+#' @description For a given parameter vector `evalparam`, `ppi_smvalues()` computes the score matching discrepancy, the gradient and the Hessian of the score matching discrepancy (see [`smvalues()`]) and the gradient offset of the score matching discrepancy (see [`quadratictape_parts()`] and [`tape_gradoffset()`]). 
 #' @order 2
 #' @param evalparam The parameter set to evaluate the score matching values.
 #' This is different to `paramvec`, which specifies which parameters to estimate.

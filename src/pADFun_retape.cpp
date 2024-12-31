@@ -1,7 +1,7 @@
 #include "pADFun_retape.h"
 
 
-pADFun tapeSwap(pADFun & pfun){
+pADFun tape_swap(pADFun & pfun){
   //convert taped object to higher order
   CppAD::ADFun<a1type, double> pfunhigher;
   pfunhigher = (pfun.get_ptr())->base2ad();
@@ -27,7 +27,7 @@ pADFun tapeSwap(pADFun & pfun){
 }
 
 
-pADFun  tapeJacobian(pADFun & pfun){
+pADFun  tape_Jacobian(pADFun & pfun){
   //convert taped object to higher order, so that the 'base' type of the tape is a1type, so x and dynparam can be passed into Jacobian()
   CppAD::ADFun<a1type, double> pfunhigher;
   pfunhigher = (pfun.get_ptr())->base2ad();
@@ -50,7 +50,7 @@ pADFun  tapeJacobian(pADFun & pfun){
   return(out);
 }
 
-pADFun  tapeHessian(pADFun & pfun){
+pADFun  tape_Hessian(pADFun & pfun){
   if (pfun.Range()>1){
     Rcpp::stop("Taped function 'pfun' must return a vector of length 1. Currently 'pfun' returns a vector of length %i.", pfun.Range());
   }
@@ -77,7 +77,7 @@ pADFun  tapeHessian(pADFun & pfun){
   return(out);
 }
 
-pADFun  tapeGradOffset(pADFun & pfun){
+pADFun  tape_gradoffset(pADFun & pfun){
   if (pfun.Range()>1){
     Rcpp::stop("Taped function 'pfun' must return a vector of length 1. Currently 'pfun' returns a vector of length %i.", pfun.Range());
   }
@@ -111,7 +111,7 @@ pADFun  tapeGradOffset(pADFun & pfun){
   return(out);
 }
 
-pADFun  tapeLogJacDet(pADFun & pfun){
+pADFun  tape_logJacdet(pADFun & pfun){
   // domain and range must have equal size for the determinant of the Jacobian to make sense
   if (pfun.Domain() != pfun.Range()){Rcpp::stop("Domain (size %i) and range (size %i) need to be equal for determinant of Jacobian.", pfun.Domain(), pfun.Range());}
   // x and dynparam must have elements of a1type so that taping can proceed

@@ -28,7 +28,7 @@ test_that("taped Bingham log-likelihood gives correct values", {
     return(t(u) %*% A %*% u)
   }
   Rgradt <- numericDeriv(quote(llBingham(theta)), c("theta"))
-  lltape_t <- tapeSwap(lltape)
+  lltape_t <- tape_swap(lltape)
   expect_equal(lltape_t$Jac(theta, u), attr(Rgradt, "gradient"),
                tolerance = 1E-5, ignore_attr = TRUE)
 })
