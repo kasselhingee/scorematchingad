@@ -152,10 +152,3 @@ pADFun tape_uld_inbuilt(std::string name, veca1 x, veca1 theta){
 }
 
  
-a1type evalll(Rcpp::XPtr<llPtr> llfXPtr, const veca1& u, const veca1& theta){
-  llPtr func = *Rcpp::XPtr<llPtr>(llfXPtr);
-  a1type out;
-  out = func(u, theta); //implicit dereferencing of function pointer as per: https://www.learncpp.com/cpp-tutorial/function-pointers/
-  return(out);
-}
-
