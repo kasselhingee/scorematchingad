@@ -2,7 +2,7 @@
 #' @family tape builders
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate
 #' @description
-#' For a parametric model family, the function `buildsmdtape()` generates `CppAD` tapes (called `ADFun`s) for the improper log-likelihood (without normalising constant) of the family and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in [`scorematchingtheory`]).
+#' For a parametric model family, the function `buildsmdtape()` generates `CppAD` tapes for the improper log-likelihood (without normalising constant) of the family and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in [`scorematchingtheory`]).
 #' Three steps are performed by `buildsmdtape()`: first an object that specifies the manifold and any transformation to another manifold is created; then a tape of the log-likelihood (without normalising constant) is created; finally a tape of \eqn{A(z) + B(z) + C(z)} is created.
 #' @details
 #' The improper log-likelihood (without normalising constant) must be implemented in `C++` and is selected by name. Similarly the transforms of the manifold must be implemented in `C++` and selected by name.
@@ -16,14 +16,14 @@
 #' To build a tape for the score matching discrepancy function, the package first tapes the map from a point \eqn{z} on the `end` manifold to the value of the improper log-likelihood, where the independent variable is the \eqn{z}, the dynamic parameter is a vector of the parameters to estimate, and the remaining model parameters are fixed and not estimated.
 #' This tape is then used to generate a tape for the score matching discrepancy function where the parameters to estimate are the independent variable.
 #' 
-#' @inheritSection ADFun Introduction to CppAD Tapes
+#' @inheritSection Rcpp_ADFun-class Introduction to CppAD Tapes
 
 #' @references \insertAllCited{}
 
 #' @return
 #' A list of:
-#'   + an [`ADFun`] object containing a tape of an improper likelihood with \eqn{z} on the `end` manifold as the independent variable
-#'   + an [`ADFun`] object containing a tape of the score matching discrepancy function with the non-fixed parameters as the independent variable, and the measurements on the `end` manifold as the dynamic parameter.
+#'   + an [`Rcpp_ADFun`] object containing a tape of an improper likelihood with \eqn{z} on the `end` manifold as the independent variable
+#'   + an [`Rcpp_ADFun`] object containing a tape of the score matching discrepancy function with the non-fixed parameters as the independent variable, and the measurements on the `end` manifold as the dynamic parameter.
 #'   + some information about the tapes
 #'
 #' 
