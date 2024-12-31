@@ -65,8 +65,12 @@ For the purposes of score matching the operations should all be smooth to create
 
 \examples{
 \dontrun{
-out <- tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"), rep(0.2, 5), rep(-0.1, 5))
-out$
+out <- tape_uld(system.file("demo_custom_uld.cpp", package = "scorematchingad"), 
+                rep(0.2, 5), rep(-0.1, 5))
+out$fun(c(0.1, 0.2, 0.2, 0.2, 0.2), c(-0.5, -0.5, -0.1, -0.1, 0))
+out$tape$eval(c(0.1, 0.2, 0.2, 0.2, 0.2), c(-0.5, -0.5, -0.1, -0.1, 0))
+out$tape$Jac(c(0.1, 0.2, 0.2, 0.2, 0.2), c(-0.5, -0.5, -0.1, -0.1, 0))
+out$tape$name
 }
 }
 \seealso{
