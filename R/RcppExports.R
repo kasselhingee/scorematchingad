@@ -129,13 +129,6 @@ tapeSwap <- function(pfun) {
     .Call(`_scorematchingad_tapeSwap`, pfun)
 }
 
-#' @name evalll
-#' @title Evaluate a custom log-likelihood function
-#' @description Evaluates a custom log-likelihood function from [`customll()`] without taping. This is useful to check that the custom log-likelihood is behaving.
-#' To check a tape of the custom log-likelihood use [`buildsmdtape()`] then [`evaltape()`].
-#' @param ll A compiled log-likelihood function created by [`customll()`].
-NULL
-
 #' @noRd
 #' @title Tape of a log-likelihood calculation 2
 #' @param p dimension of measurements
@@ -167,14 +160,6 @@ getllptr <- function(llname) {
 #' @export
 tape_uld_inbuilt <- function(name, x, theta) {
     .Call(`_scorematchingad_tape_uld_inbuilt`, name, x, theta)
-}
-
-#' @param u A vector of measurements for an individual
-#' @param theta A vector of parameters
-#' @return The value of the log-likelihood at `u` with parameters `theta`.
-#' @export
-evalll <- function(ll, u, theta) {
-    .Call(`_scorematchingad_evalll`, ll, u, theta)
 }
 
 #' @noRd

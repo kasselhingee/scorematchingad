@@ -1,6 +1,6 @@
 #' @title Evaluate a CppAD Tape Many Times
 #' @family tape evaluators
-#' @param tape An [`ADFun`] object (i.e. a tape of a function).
+#' @param tape An [`Rcpp_ADFun`] object (i.e. a tape of a function).
 #' @param xmat A matrix of (multivariate) independent variables where each represents a single independent variable vector. Or a single independent variable vector that is used for all rows of `pmat`.
 #' @param pmat A matrix of dynamic parameters where each row specifies a new set of values for the dynamic parameters of `tape`. Or a single vector of dynamic parameters to use for all rows of `xmat`.
 #' @param xcentres A matrix of approximation for Taylor approximation centres for `xmat`. Use values of `NA` for rows that do not require Taylor approximation.

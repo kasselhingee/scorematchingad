@@ -27,7 +27,7 @@ smvalues_wsum(
 
 \item{approxorder}{Order of Taylor approximation}
 
-\item{tape}{An \code{\link{ADFun}} object (i.e. a tape of a function).}
+\item{tape}{An \code{\link{Rcpp_ADFun}} object (i.e. a tape of a function).}
 
 \item{w}{Weights to apply to each row of \code{xmat} for computing the weighted sum. If \code{NULL} then each row is given a weight of \code{1}.}
 }

@@ -4,6 +4,7 @@
 \name{Rcpp_ADFun-class}
 \alias{Rcpp_ADFun-class}
 \alias{Rcpp_ADFun}
+\alias{ADFun}
 \title{A Class for CppAD Tapes}
 \description{
 Objects of type \code{Rcpp_ADFun} contain a tape of a \verb{C++} function (which has class \code{ADFun} in \code{CppAD}). These tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, \code{Rcpp_ADFun} uses reference semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).

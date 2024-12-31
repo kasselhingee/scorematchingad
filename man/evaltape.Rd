@@ -17,7 +17,7 @@ evaltape_wsum(
 )
 }
 \arguments{
-\item{tape}{An \code{\link{ADFun}} object (i.e. a tape of a function).}
+\item{tape}{An \code{\link{Rcpp_ADFun}} object (i.e. a tape of a function).}
 
 \item{xmat}{A matrix of (multivariate) independent variables where each represents a single independent variable vector. Or a single independent variable vector that is used for all rows of \code{pmat}.}
 

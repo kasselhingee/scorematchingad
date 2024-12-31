@@ -188,19 +188,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// evalll
-a1type evalll(Rcpp::XPtr<llPtr> ll, const veca1& u, const veca1& theta);
-RcppExport SEXP _scorematchingad_evalll(SEXP llSEXP, SEXP uSEXP, SEXP thetaSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<llPtr> >::type ll(llSEXP);
-    Rcpp::traits::input_parameter< const veca1& >::type u(uSEXP);
-    Rcpp::traits::input_parameter< const veca1& >::type theta(thetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(evalll(ll, u, theta));
-    return rcpp_result_gen;
-END_RCPP
-}
 // tapesmd
 pADFun tapesmd(pADFun& uldtape, transform<a1type>& tran, manifold<a1type>& M, std::string weightname, const double& acut, bool verbose);
 RcppExport SEXP _scorematchingad_tapesmd(SEXP uldtapeSEXP, SEXP tranSEXP, SEXP MSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
@@ -237,7 +224,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_ptapell2", (DL_FUNC) &_scorematchingad_ptapell2, 6},
     {"_scorematchingad_getllptr", (DL_FUNC) &_scorematchingad_getllptr, 1},
     {"_scorematchingad_tape_uld_inbuilt", (DL_FUNC) &_scorematchingad_tape_uld_inbuilt, 3},
-    {"_scorematchingad_evalll", (DL_FUNC) &_scorematchingad_evalll, 3},
     {"_scorematchingad_tapesmd", (DL_FUNC) &_scorematchingad_tapesmd, 6},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
     {"_rcpp_module_boot_ADFun", (DL_FUNC) &_rcpp_module_boot_ADFun, 0},

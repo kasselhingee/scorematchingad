@@ -57,13 +57,13 @@ Please ensure that \code{ytape} is the interior of the manifold and non-zero.}
 \value{
 A list of:
 \itemize{
-\item an \code{\link{ADFun}} object containing a tape of an improper likelihood with \eqn{z} on the \code{end} manifold as the independent variable
-\item an \code{\link{ADFun}} object containing a tape of the score matching discrepancy function with the non-fixed parameters as the independent variable, and the measurements on the \code{end} manifold as the dynamic parameter.
+\item an \code{\link{Rcpp_ADFun}} object containing a tape of an improper likelihood with \eqn{z} on the \code{end} manifold as the independent variable
+\item an \code{\link{Rcpp_ADFun}} object containing a tape of the score matching discrepancy function with the non-fixed parameters as the independent variable, and the measurements on the \code{end} manifold as the dynamic parameter.
 \item some information about the tapes
 }
 }
 \description{
-For a parametric model family, the function \code{buildsmdtape()} generates \code{CppAD} tapes (called \code{ADFun}s) for the improper log-likelihood (without normalising constant) of the family and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in \code{\link{scorematchingtheory}}).
+For a parametric model family, the function \code{buildsmdtape()} generates \code{CppAD} tapes for the improper log-likelihood (without normalising constant) of the family and the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in \code{\link{scorematchingtheory}}).
 Three steps are performed by \code{buildsmdtape()}: first an object that specifies the manifold and any transformation to another manifold is created; then a tape of the log-likelihood (without normalising constant) is created; finally a tape of \eqn{A(z) + B(z) + C(z)} is created.
 }
 \details{
@@ -100,6 +100,19 @@ Currently available improper log-likelihood functions are:
 }
 \section{Warning}{
  There is no checking of the inputs \code{ytape} and \code{usertheta}.
+}
+
+\section{Introduction to CppAD Tapes}{
+This package uses version 2024000.5 of the algorithmic differentiation library \code{CppAD} \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
+Full help for \code{CppAD} can be found at \url{https://cppad.readthedocs.io/}.
+
+Differentiation proceeds by \emph{taping} the basic (\emph{atomic}) operations performed on the independent variables and dynamic parameters. The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
+Example values for the variables and parameters are used to conduct this taping, so care must be taken with any conditional (e.g. if-then) operations, and \href{https://cppad.readthedocs.io/}{\code{CppAD}} has a special tool for this called \code{CondExp} (short for \verb{conditional expressions}).
+
+The result of taping is an object of class \code{ADFun} in \code{CppAD} and is often called a \emph{tape}.
+This \code{ADFun} object can be evaluated, differentiated, used for further taping (via \code{CppAD}'s \code{base2ad()}), solving differential equations and more.
+The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new \code{ADFun} object where the dynamic parameters become independent variables (see \code{\link[=tapeSwap]{tapeSwap()}}).
+For the purposes of score matching, there are also \emph{fixed} parameters, which are the elements of the model's parameter vector that are given and not estimated.
 }
 
 \examples{
