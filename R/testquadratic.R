@@ -10,8 +10,8 @@
 #' Uses the [`CppAD` parameter property](https://cppad.readthedocs.io/latest/fun_property.html#parameter) and derivatives (via [`tape_Jacobian()`]) to test whether
 #' the tape is quadratic.
 #' @param tape An `ADFun` object.
-#' @param xmat If non-`NULL` and `dynmat` non-`NULL` then the third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynmat` are tested.
-#' @param dynmat If non-`NULL` and `xmat` non-`NULL` then the third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynmat` are tested.
+#' @param xmat The third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynmat` are tested.
+#' @param dynmat  The third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynmat` are tested.
 #' @param verbose If TRUE information about the failed tests is printed.
 #' @details Uses the `xtape` and `dyntape` values stored in `tape` to create new tapes.
 #' A tape of the Hessian is obtained by applying [`tape_Jacobian()`] twice, and then uses the [`CppAD` parameter property](https://cppad.readthedocs.io/latest/fun_property.html#parameter) to test whether the Hessian is constant. A function of quadratic form should have constant Hessian.
@@ -30,7 +30,7 @@
 #'
 #'  testquadratic(tapes$smdtape)
 #' @export
-testquadratic <- function(tape, xmat = NULL, dynmat = NULL, verbose = FALSE){
+testquadratic <- function(tape, xmat = matrix(tape$xtape, nrow = 1), dynmat = matrix(tape$dyntape, nrow = 1), verbose = FALSE){
   stopifnot(inherits(tape, "Rcpp_ADFun"))
   tapeJ <- tape_Jacobian(tape)
   tapeH <- tape_Jacobian(tapeJ)
@@ -42,8 +42,6 @@ testquadratic <- function(tape, xmat = NULL, dynmat = NULL, verbose = FALSE){
     message(sprintf("The Hessian was non-constant according to parameter() for elements %s.",
                     paste(which(!isparameter), collapse = ", ")))
   }
-
-  if (is.null(xmat) && is.null(dynmat)){return(result_parameter)}
 
   #try Jacobian
   stopifnot(isTRUE(nrow(xmat) == nrow(dynmat)))
