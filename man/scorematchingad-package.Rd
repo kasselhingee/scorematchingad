@@ -6,7 +6,7 @@
 \alias{scorematchingad-package}
 \title{scorematchingad: Score Matching Estimation by Automatic Differentiation}
 \description{
-Hyvärinen's score matching (Hyvärinen, 2005) \url{https://jmlr.org/papers/v6/hyvarinen05a.html} is a useful estimation technique when the normalising constant for a probability distribution is difficult to compute. This package implements score matching estimators using automatic differentiation in the 'CppAD' library \url{https://github.com/coin-or/CppAD} and is designed for quickly implementing score matching estimators for new models. Also available is general robustification (Windham, 1995) \url{https://www.jstor.org/stable/2346159}. Already in the package are estimators for directional distributions (Mardia, Kent and Laha, 2016) \doi{10.48550/arXiv.1604.08470} and the flexible Polynomially-Tilted Pairwise Interaction model for compositional data. The latter estimators perform well when there are zeros in the compositions (Scealy and Wood, 2023) \doi{10.1080/01621459.2021.2016422}, even many zeros (Scealy, Hingee, Kent, and Wood, 2024) \doi{10.1007/s11222-024-10412-w}.
+Hyvärinen's score matching (Hyvärinen, 2005) \url{https://jmlr.org/papers/v6/hyvarinen05a.html} is a useful estimation technique when the normalising constant for a probability distribution is difficult to compute. This package implements score matching estimators using automatic differentiation in the 'CppAD' library \url{https://github.com/coin-or/CppAD} and is designed for quickly implementing score matching estimators for new models. Also available is general robustification (Windham, 1995) \url{https://www.jstor.org/stable/2346159}. Already in the package are estimators for directional distributions (Mardia, Kent and Laha, 2016) \doi{10.48550/arXiv.1604.08470} and the flexible Polynomially-Tilted Pairwise Interaction model for compositional data. The latter estimators perform well when there are zeros in the compositions (Scealy and Wood, 2023) \doi{10.1080/01621459.2021.2016422}, even many zeros (Scealy, Hingee, Kent, and Wood, 2024) \doi{10.1007/s11222-024-10412-w}. A partial interface to CppAD's ADFun objects is also available.
 }
 \details{
 This package's main features are
@@ -20,8 +20,11 @@ New manifolds or new transforms require small alterations to the source code of 
 \item Score matching and hybrid score matching estimators for von Mises Fisher, Bingham and Fisher-Bingham directional distributions \insertCite{mardia2016sc}{scorematchingad}. See \code{\link[=vMF]{vMF()}}, \code{\link[=Bingham]{Bingham()}} and \code{\link[=FB]{FB()}}.
 \item Implementation of a modification of Windham's robustifying method \insertCite{windham1995ro}{scorematchingad} for many exponential family distributions. See \code{\link[=Windham]{Windham()}}.
 For some models the density approaches infinity at some locations, creating difficulties for the weights in Windham's original method \insertCite{scealy2024ro}{scorematchingad}.
-\insertNoCite{*}{scorematchingad}
+\item An interface of \code{CppAD}'s \code{ADFun} tape objects. See \code{\linkS4class{Rcpp_ADFun}}.
 }
+
+For an introduction to score matching estimation, see \code{\link{scorematchingtheory}}.
+\insertNoCite{*}{scorematchingad}
 }
 \section{Acknowledgements}{
 Colleagues Andrew T. A. Wood and John T. Kent played important roles in developing the statistical ideas and theory for score matching estimation for the PPI model \insertCite{scealy2024ro}{scorematchingad}.

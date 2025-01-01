@@ -13,11 +13,11 @@ cppad_closed(
 )
 }
 \arguments{
-\item{smdtape}{A \code{CppAD} tape of a score matching discrepancy function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratic]{testquadratic()}}.
+\item{smdtape}{A tape (\code{\link{Rcpp_ADFun}} object) of a score matching discrepancy function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratic]{testquadratic()}}.
 The \code{smdtape}'s independent variables are assumed to be the model parameters to fit
 and the \code{smdtape}'s dynamic parameter is a (multivariate) measurement.}
 
-\item{Y}{A matrix of multivariate observations. Each row is an observation.}
+\item{Y}{A matrix of multivariate observations. Each row is an observation. The number of columns of \code{Y} must be \code{smdtape$size_dyn_ind}.}
 
 \item{Yapproxcentres}{A matrix of Taylor approximation centres for rows of Y that require approximation. \code{NA} for rows that do not require approximation.}
 
@@ -26,9 +26,9 @@ and the \code{smdtape}'s dynamic parameter is a (multivariate) measurement.}
 \item{approxorder}{The order of Taylor approximation to use.}
 }
 \description{
-For a tape (i.e. an \code{ADFun} object) of a quadratic-form score matching discrepancy function, calculates the vector of parameters such that the gradient of the score matching discrepancy is zero.
+For a tape of a quadratic-form score matching discrepancy function, calculates the vector of parameters such that the gradient of the score matching discrepancy is zero.
 Also estimates standard errors and covariance.
-Many score matching estimators have an objective function that has a quadratic form (see \code{\link{scorematchingtheory}}).
+Many score matching discrepancy functions have a quadratic form (see \code{\link{scorematchingtheory}}).
 }
 \details{
 When the score matching discrepancy function is of quadratic form, then the gradient of the score matching discrepancy is zero at \eqn{H^{-1}b}{solve(H) \%*\% b},
@@ -36,7 +36,7 @@ where \eqn{H} is the average of the Hessian of the score matching discrepancy fu
 \eqn{b} is the average of the gradient offset (see \code{\link[=quadratictape_parts]{quadratictape_parts()}}) evaluated at each measurement.
 Both the Hessian and the gradient offset are constant with respect to the model parameters for quadratic-form score matching discrepancy functions.
 
-Standard errors use the Godambe information matrix (aka sandwich method) and are only computed when the weights are constant.
+Standard errors are estimated using the Godambe information matrix (aka sandwich method) and are only computed when the weights are constant.
 The estimate of the negative of the sensitivity matrix \eqn{-G} is
 the average of the Hessian of \code{smdtape} evaluated at each observation in \code{Y}.
 The estimate of the variability matrix \eqn{J} is
@@ -49,7 +49,7 @@ Taylor approximation is available because boundary weight functions and transfor
 If the singularity is ultimately removed, then Taylor approximation from a nearby location will give a very accurate evaluation at the removed singularity.
 }
 \examples{
-smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+smdtape <- tape_smd("sim", "sqrt", "sph", "ppi",
               ytape = rep(1/3, 3),
               usertheta = ppi_paramvec(p = 3),
               bdryw = "minsq", acut = 0.01,
@@ -61,6 +61,7 @@ cppad_closed(smdtape, Y$sample)
 \seealso{
 Other generic score matching tools: 
 \code{\link{Windham}()},
-\code{\link{cppad_search}()}
+\code{\link{cppad_search}()},
+\code{\link{tape_smd}()}
 }
 \concept{generic score matching tools}

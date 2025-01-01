@@ -34,14 +34,14 @@ A matrix, each row corresponding to the evaluation of the same row in \code{xmat
 }
 \description{
 Evaluates a tape exactly or approximately for an array of provided variable values and dynamic parameter values.
-The function \code{evaltape_wsum()} computes the column-wise weighted sum of the result.
+The function \code{evaltape_wsum()} computes the weighted sum of each column of the \code{evaltape()} result.
 }
 \details{
 Approximation is via Taylor approximation of the independent variable around the approximation centre provided in \code{xcentres}.
 }
 \examples{
 u <- rep(1/3, 3)
-tapes <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+tapes <- tape_smd("sim", "sqrt", "sph", "ppi",
               ytape = u,
               usertheta = ppi_paramvec(p = 3),
               bdryw = "minsq", acut = 0.01,

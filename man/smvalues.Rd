@@ -17,7 +17,7 @@ smvalues_wsum(
 )
 }
 \arguments{
-\item{smdtape}{A taped score matching discrepancy. Most easily created by \code{\link[=buildsmdtape]{buildsmdtape()}}.}
+\item{smdtape}{A taped score matching discrepancy. Most easily created by \code{\link[=tape_smd]{tape_smd()}}.}
 
 \item{xmat}{A matrix of (multivariate) independent variables where each represents a single independent variable vector. Or a single independent variable vector that is used for all rows of \code{pmat}.}
 
@@ -49,7 +49,7 @@ Convert a Hessian row-vector to a matrix using \code{matrix(ncol = length(smdtap
 }
 \examples{
 m <- rppi_egmodel(100)
-smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+smdtape <- tape_smd("sim", "sqrt", "sph", "ppi",
               ytape = rep(1/m$p, m$p),
               usertheta = ppi_paramvec(beta = m$beta),
               bdryw = "minsq", acut = 0.01)$smdtape

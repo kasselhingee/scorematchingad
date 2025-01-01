@@ -7,7 +7,7 @@
 quadratictape_parts(tape, tmat, tcentres = NA * tmat, approxorder = 10)
 }
 \arguments{
-\item{tape}{A tape of a quadratic function where the independent and dynamic parameters correspond to the \eqn{x} and \eqn{t} in the details section, respectively. For score matching \code{tape} should be a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in \code{\link{scorematchingtheory}} with \eqn{z} the \emph{dynamic parameters} and the model parameters the \emph{independent variable} (which is the usual for the return of \code{\link[=buildsmdtape]{buildsmdtape()}}).}
+\item{tape}{A tape of a quadratic function where the independent and dynamic parameters correspond to the \eqn{x} and \eqn{t} in the details section, respectively. For score matching \code{tape} should be a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in \code{\link{scorematchingtheory}} with \eqn{z} the \emph{dynamic parameters} and the model parameters the \emph{independent variable} (which is the usual for the return of \code{\link[=tape_smd]{tape_smd()}}).}
 
 \item{tmat}{A matrix of vectors corresponding to values of \eqn{t} (see details). Each row corresponds to a vector. For score matching, these vectors are measurements.}
 
@@ -19,7 +19,7 @@ quadratictape_parts(tape, tmat, tcentres = NA * tmat, approxorder = 10)
 A list of
 \itemize{
 \item \code{offset} Array of offsets \eqn{b(t)}, each row corresponding to a row in \code{tmat}
-\item \code{Hessian} Array of vectorised \eqn{H f(x; t)} (see \code{\link[=tapeHessian]{tapeHessian()}}), each row corresponding to a row in \code{tmat}. For each row, obtain the Hessian in matrix format by using \code{matrix(ncol = length(tape$xtape))}.
+\item \code{Hessian} Array of vectorised \eqn{H f(x; t)} (see \code{\link[=tape_Hessian]{tape_Hessian()}}), each row corresponding to a row in \code{tmat}. For each row, obtain the Hessian in matrix format by using \code{matrix(ncol = length(tape$xtape))}.
 }
 }
 \description{
@@ -39,7 +39,7 @@ The gradient of the function with respect to \eqn{x} can then be written
 where the Hessian and offset \eqn{b(t)} depend only on \eqn{t}.
 
 The functions here evaluate the Hessian and offset \eqn{b(t)} for many values of \eqn{t}.
-Tapes of the Hessian and gradient offset are created using \code{\link[=tapeHessian]{tapeHessian()}} and \code{\link[=tapeGradOffset]{tapeGradOffset()}} respectively.
+Tapes of the Hessian and gradient offset are created using \code{\link[=tape_Hessian]{tape_Hessian()}} and \code{\link[=tape_gradoffset]{tape_gradoffset()}} respectively.
 These tapes are then evaluated for every row of \code{tmat}.
 When the corresponding \code{tcentres} row is not \code{NA}, then approximate (but very accurate) results are calculated using Taylor approximation around the location given by the row of \code{tcentres}.
 
@@ -47,7 +47,7 @@ For score matching \eqn{x} is the set of model parameters and the vector \eqn{t}
 }
 \examples{
 u <- rep(1/3, 3)
-smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+smdtape <- tape_smd("sim", "sqrt", "sph", "ppi",
               ytape = u,
               usertheta = ppi_paramvec(p = 3),
               bdryw = "minsq", acut = 0.01,

@@ -130,7 +130,7 @@ tape_swap <- function(pfun) {
 }
 
 #' @noRd
-#' @title Tape of a log-likelihood calculation 2
+#' @title Tape of a log-density calculation 2
 #' @param p dimension of measurements
 #' @param bd dimension of the parameter vector
 #' @param llname name of the likelihood function
@@ -140,19 +140,18 @@ ptapell2 <- function(z_ad, theta_ad, llfXPtr, tran, fixedtheta, verbose) {
 }
 
 #' @noRd
-#' @title Get an XPtr to a named log-likelihood function in source code of package
+#' @title Get an XPtr to a named log-density function in source code of package
 #' @param llname name of the likelihood function
-#' @return An RCpp::XPtr object pointing to a `llPtr` object of the log-likelihood function. Since `llPtr` is itself a pointer object, we have an XPtr pointing to a pointer that points to a function.
+#' @return An RCpp::XPtr object pointing to a `llPtr` object of the log-density function. Since `llPtr` is itself a pointer object, we have an XPtr pointing to a pointer that points to a function.
 getllptr <- function(llname) {
     .Call(`_scorematchingad_getllptr`, llname)
 }
 
 #' @rdname tape_uld
 #' @name tape_uld
-#' @description `tape_uld_inbuilt()` generates a tape of a function (chosen by `name`) implemented in `C++` within this package. 
 #' @param name Name of an inbuilt function. See details.
 #' @details
-#' Currently available improper log-likelihood functions are:
+#' For `tape_uld_inbuilt()`, currently available unnormalised log-density functions are:
 #'
 #' ```{r, results = "asis", echo = FALSE}
 #' cat(paste(" +", llnames), sep = "\n")

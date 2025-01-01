@@ -4,14 +4,19 @@
 \alias{testquadratic}
 \title{Test Whether a CppAD Tape is a Quadratic Function}
 \usage{
-testquadratic(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE)
+testquadratic(
+  tape,
+  xmat = matrix(tape$xtape, nrow = 1),
+  dynmat = matrix(tape$dyntape, nrow = 1),
+  verbose = FALSE
+)
 }
 \arguments{
 \item{tape}{An \code{ADFun} object.}
 
-\item{xmat}{If non-\code{NULL} and \code{dynparamat} non-\code{NULL} then the third-order derivatives at independent variable values of the rows of \code{xmat} and dynamic parameters from the rows of \code{dynparammat} are tested.}
+\item{xmat}{The third-order derivatives at independent variable values of the rows of \code{xmat} and dynamic parameters from the rows of \code{dynmat} are tested.}
 
-\item{dynparammat}{If non-\code{NULL} and \code{xmat} non-\code{NULL} then the third-order derivatives at independent variable values of the rows of \code{xmat} and dynamic parameters from the rows of \code{dynparammat} are tested.}
+\item{dynmat}{The third-order derivatives at independent variable values of the rows of \code{xmat} and dynamic parameters from the rows of \code{dynmat} are tested.}
 
 \item{verbose}{If TRUE information about the failed tests is printed.}
 }
@@ -19,17 +24,20 @@ testquadratic(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE)
 \code{TRUE} or \code{FALSE}
 }
 \description{
-Uses the \href{https://cppad.readthedocs.io/latest/fun_property.html#parameter}{\code{CppAD} parameter property} and derivatives (via \code{\link[=tapeJacobian]{tapeJacobian()}}) to test whether
+Uses the \href{https://cppad.readthedocs.io/latest/fun_property.html#parameter}{\code{CppAD} parameter property} and derivatives (via \code{\link[=tape_Jacobian]{tape_Jacobian()}}) to test whether
+the tape is quadratic.
+
+Uses the \href{https://cppad.readthedocs.io/latest/fun_property.html#parameter}{\code{CppAD} parameter property} and derivatives (via \code{\link[=tape_Jacobian]{tape_Jacobian()}}) to test whether
 the tape is quadratic.
 }
 \details{
 Uses the \code{xtape} and \code{dyntape} values stored in \code{tape} to create new tapes.
-A tape of the Hessian is obtained by applying \code{\link[=tapeJacobian]{tapeJacobian()}} twice, and then uses a \href{https://cppad.readthedocs.io/latest/fun_property.html#parameter}{\code{CppAD} property} to test whether the Hessian is constant. A function of quadratic form should have constant Hessian.
+A tape of the Hessian is obtained by applying \code{\link[=tape_Jacobian]{tape_Jacobian()}} twice, and then uses the \href{https://cppad.readthedocs.io/latest/fun_property.html#parameter}{\code{CppAD} parameter property} to test whether the Hessian is constant. A function of quadratic form should have constant Hessian.
 
-If \code{xmat} and \code{dynparammat} are non-\code{NULL} then \code{testquadratic()} also checks the Jacobian of the Hessian at \code{xmat} and \code{dynparammat} values. For quadratic form functions the Jacobian of the Hessian should be zero.
+If \code{xmat} and \code{dynmat} are non-\code{NULL} then \code{testquadratic()} also checks the Jacobian of the Hessian at \code{xmat} and \code{dynmat} values. For quadratic form functions the Jacobian of the Hessian should be zero.
 }
 \examples{
-tapes <- buildsmdtape(
+tapes <- tape_smd(
    "sim", "sqrt", "sph",
    ll = "ppi",
    ytape = c(0.2, 0.3, 0.5),
@@ -41,6 +49,11 @@ tapes <- buildsmdtape(
  testquadratic(tapes$smdtape)
 }
 \seealso{
+Other tape evaluators: 
+\code{\link{evaltape}()},
+\code{\link{quadratictape_parts}()},
+\code{\link{smvalues}()}
+
 Other tape evaluators: 
 \code{\link{evaltape}()},
 \code{\link{quadratictape_parts}()},

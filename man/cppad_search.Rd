@@ -15,13 +15,13 @@ cppad_search(
 )
 }
 \arguments{
-\item{smdtape}{A \code{CppAD} tape of a score matching discrepancy function that has \emph{quadratic form}. Test for quadratic form using \code{\link[=testquadratic]{testquadratic()}}.
+\item{smdtape}{A tape (\code{\link{Rcpp_ADFun}} object) of a score matching discrepancy function.
 The \code{smdtape}'s independent variables are assumed to be the model parameters to fit
 and the \code{smdtape}'s dynamic parameter is a (multivariate) measurement.}
 
 \item{theta}{The starting parameter set}
 
-\item{Y}{A matrix of multivariate observations. Each row is an observation.}
+\item{Y}{A matrix of multivariate observations. Each row is an observation. The number of columns of \code{Y} must be \code{smdtape$size_dyn_ind}.}
 
 \item{Yapproxcentres}{A matrix of Taylor approximation centres for rows of Y that require approximation. \code{NA} for rows that do not require approximation.}
 
@@ -51,12 +51,8 @@ where \code{n} is the number of observations.
 Taylor approximation is available because boundary weight functions and transformations of the measure in Hyvärinen divergence can remove singularities in the model log-likelihood, however evaluation at these singularities may still involve computing intermediate values that are unbounded.
 If the singularity is ultimately removed, then Taylor approximation from a nearby location will give a very accurate evaluation at the removed singularity.
 }
-\section{Warning}{
-There appears to be floating point issues with evaluation of the gradient leading to slow or no convergence in many situations. Tweaking the convergence tolerance \code{tol} may be appropriate. If the closed form solution exists please use \code{cppad_closed()} instead.
-}
-
 \examples{
-smdtape <- buildsmdtape("sim", "sqrt", "sph", "ppi",
+smdtape <- tape_smd("sim", "sqrt", "sph", "ppi",
               ytape = rep(1/3, 3),
               usertheta = ppi_paramvec(p = 3),
               bdryw = "minsq", acut = 0.01,
@@ -69,6 +65,7 @@ sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)}
 \seealso{
 Other generic score matching tools: 
 \code{\link{Windham}()},
-\code{\link{cppad_closed}()}
+\code{\link{cppad_closed}()},
+\code{\link{tape_smd}()}
 }
 \concept{generic score matching tools}

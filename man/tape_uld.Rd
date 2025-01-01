@@ -16,7 +16,7 @@ tape_uld(fileORcode = "", x, theta, Cppopt = NULL)
 
 \item{theta}{Value of the dynamic parameter vector for taping.}
 
-\item{fileORcode}{A character string giving the path name of a file containing the unnormalised log-density definition \emph{OR} code. If the \code{fileORcode} contains no new line characters ('\\n' or '\\r\\n') and has a file extension detected by \code{\link[tools:fileutils]{tools::file_ext()}} then \code{fileORcode} will be treated as file name.}
+\item{fileORcode}{A character string giving the path name of a file containing the unnormalised log-density definition \emph{OR} code. \code{fileORcode} will be treated as a file name if \code{fileORcode} contains no new line characters ('\\n' or '\\r\\n') and has a file extension detected by \code{\link[tools:fileutils]{tools::file_ext()}}.}
 
 \item{Cppopt}{List of named options passed to \code{Rcpp::sourceCpp()}}
 }
@@ -29,15 +29,12 @@ A list of three objects
 }
 }
 \description{
-\code{tape_uld_inbuilt()} generates a tape of a function (chosen by \code{name}) implemented in \verb{C++} within this package.
-
-Supply \verb{C++} code to tape a custom unnormalised log-density. The result is NOT safe to save or pass to other CPUs in a parallel operation.
-
-Supply \verb{C++} code to specify a custom log-density much like \code{TMB::compile()} is passed \verb{C++} code that formulate models.
-For score matching the normalising constant of the log-likelihood can be omitted.
+Generate tapes of unnormalised log-densities.
+Use \code{tape_ult()} to specify a custom unnormalised log-density using \verb{C++} code much like \code{TMB::compile()}.
+Use \code{tape_uld_inbuilt()} for tapes of inbuilt unnormalised log-densities implemented in this package.
 }
 \details{
-Currently available improper log-likelihood functions are:
+For \code{tape_uld_inbuilt()}, currently available unnormalised log-density functions are:
 \itemize{
 \item dirichlet
 \item ppi
@@ -46,13 +43,15 @@ Currently available improper log-likelihood functions are:
 \item FB
 }
 
-The function use \code{\link[Rcpp:sourceCpp]{Rcpp::sourceCpp()}} to generate a tape of a function defined in C++.
-(An alternative design, where the function is compiled interactively and then taped using a function internal to \code{scorematchingad} was not compatible with Windows OS).
+The function \code{tape_uld()} uses \code{\link[Rcpp:sourceCpp]{Rcpp::sourceCpp()}} to generate a tape of a function defined in C++.
+(An alternative design, where the function is compiled interactively and then taped using a function internal to \code{scorematchingad}, was not compatible with Windows OS).
+
+The result result is NOT safe to save or pass to other CPUs in a parallel operation.
 }
 \section{Writing the \code{fileORcode} Argument}{
 The code (possibly in the file pointed to by \code{fileORcode}) must be \verb{C++} that uses only \code{CppAD} and \code{Eigen}, which makes it very similar to the requirements of the input to \code{TMB::compile()} (which also uses \code{CppAD} and \code{Eigen}).
 
-The start of \code{code} should always be "\verb{a1type fname(const veca1 &x, const veca1 &theta)\{}" where \code{fname} is your chosen name of the log-likelihood function, \code{x} represents a point in the data space and \code{theta} is a vector of parameters for the log-likelihood. This specifies that the function will have two vector arguments (of type \code{veca1}) and will return a single numeric value (\code{a1type}).
+The start of \code{code} should always be "\verb{a1type fname(const veca1 &x, const veca1 &theta)\{}" where \code{fname} is your chosen name of the log-density function, \code{x} represents a point in the data space and \code{theta} is a vector of parameters for the log-density. This specifies that the function will have two vector arguments (of type \code{veca1}) and will return a single numeric value (\code{a1type}).
 
 The type \code{a1type} is a double with special ability for being taped by \code{CppAD}. The \code{veca1} type is a vector of \code{a1type} elements, with the vector wrapping supplied by the \code{Eigen} C++ package (that is an \code{Eigen} matrix with 1 column and dynamic number of rows).
 
@@ -60,7 +59,7 @@ The body of the function must use operations from Eigen and/or CppAD, prefixed b
 There are no easy instructions for writing these as it is genuine \verb{C++} code, which can be very opaque to those unfamiliar with \verb{C++}.
 However, recently ChatGPT and claude.ai have been able to very quickly translating \code{R} functions to \verb{C++} functions (KLH has been telling these A.I. to use Eigen and CppAD, and giving the definitions of \code{a1type} and \code{veca1}).
 I've found the quick reference pages for for \href{https://eigen.tuxfamily.org/dox/}{\code{Eigen}} useful. Limited unary and binray operations are available directly from \href{https://cppad.readthedocs.io}{\code{CppAD}} without \code{Eigen}.
-For the purposes of score matching the operations should all be smooth to create a smooth log-likelihood and the normalising constant may be omitted.
+For the purposes of score matching the operations should all be smooth to create a smooth log-density and the normalising constant may be omitted.
 }
 
 \examples{
@@ -75,11 +74,11 @@ out$tape$name
 }
 \seealso{
 Other tape builders: 
-\code{\link{buildsmdtape}()},
-\code{\link{tapeGradOffset}()},
-\code{\link{tapeHessian}()},
-\code{\link{tapeJacobian}()},
-\code{\link{tapeLogJacDet}()},
-\code{\link{tapeSwap}()}
+\code{\link{tape_Hessian}()},
+\code{\link{tape_Jacobian}()},
+\code{\link{tape_gradoffset}()},
+\code{\link{tape_logJacdet}()},
+\code{\link{tape_smd}()},
+\code{\link{tape_swap}()}
 }
 \concept{tape builders}
