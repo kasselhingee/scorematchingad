@@ -1,3 +1,24 @@
+# Version 0.0.71
+Cleaning up of help.
+
+# Version 0.0.70
++ Looking for `cmake` in the `/Applications/CMake.app/Contents/bin` means installation works on mac.
++ Help for `Rcpp_ADFun` objects.
++ Removed old `customll()` associated functions/code
++ More stable test of `cppad_search()` due to differing convergence of `optimx::Rcgmin()` on differing OS.
+
+# Version 0.0.69
+__Major improvement and breaking change:__ taping of custom log-density functions occurs at the *same* time as compilation. This works across all OS (previous `customll()` only worked on some cases of unix) and means the major object passed between functions is a 'tape' object. Use `tape_uld()` for this functionality.
+ + New function `tape_uld()`
+ + New class wrapping `ADFun` is from an Rcpp module and contains a special object (`pADFun` class) that points to an `ADFun`.
+   + This new class has many of the properties available of `ADFun`.
+   + It took a lot of experimentation to work out how to get expose this, and then further expose it to external R packages.
+
+Converted all cases of std::exit to Rcpp::stop. See `cout2Rcout.sh` for script.
+
+# Version 0.0.68
+CppAD errors handled when compiled in debug mode
+
 # Version 0.0.67
 changed source code to use && or || for boolean objects
 
