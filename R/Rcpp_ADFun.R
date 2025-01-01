@@ -48,7 +48,7 @@
 #'
 #'
 #' # Extends
-#' Extends class \linkS4class{C++Object} from the `Rcpp` package ([`Rcpp::C++Object-class`]), which is a `reference class`.
+#' Extends class `C++Object` from the `Rcpp` package ([`Rcpp::C++Object-class`]), which is a `reference class`.
 #' For those familiar with `C++`, an object of class `Rcpp_ADFun` contains a pointer to a `CppAD` `ADFun` object. 
 #'
 #' # Introduction to CppAD Tapes

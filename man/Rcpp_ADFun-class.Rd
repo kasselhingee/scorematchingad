@@ -59,7 +59,7 @@ Tapes cannot be saved from session to session.
 }
 
 \section{Extends}{
-Extends class \linkS4class{C++Object} from the \code{Rcpp} package (\code{\link[Rcpp:CppObject-class]{Rcpp::C++Object}}), which is a \verb{reference class}.
+Extends class \code{C++Object} from the \code{Rcpp} package (\code{\link[Rcpp:CppObject-class]{Rcpp::C++Object}}), which is a \verb{reference class}.
 For those familiar with \verb{C++}, an object of class \code{Rcpp_ADFun} contains a pointer to a \code{CppAD} \code{ADFun} object.
 }
 
