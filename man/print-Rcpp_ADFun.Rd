@@ -21,5 +21,5 @@
 Both \code{print()} and \code{show()} will display a summary of a \linkS4class{Rcpp_ADFun} object.
 }
 \details{
-The \code{show()} method overrides the default \code{show()} method for \code{\link[Rcpp:C++Object]{Rcpp::C++Object}} objects from the \code{Rcpp} package.
+The \code{show()} method overrides the default \code{show()} method for \code{\link[Rcpp:CppObject-class]{Rcpp::C++Object}} objects from the \code{Rcpp} package.
 }
