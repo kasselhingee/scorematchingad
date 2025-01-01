@@ -5,7 +5,7 @@
 #' @param n Number of samples to generate
 #' @param paramvec The PPI parameter vector, created easily using [`ppi_paramvec()`] and also returned by [`ppi()`]. Use `paramvec` instead of `...`.
 #' @param maxden This is the constant \eqn{log(C)} in \insertCite{@Appendix A.1.3 @scealy2023sc}{scorematchingad}.
-#' @param maxmemorysize Advanced use. The maximum size, in bytes, for matrices containing simulated Dirchlet samples. The default of `1E5` corresponds to 100 mega bytes.
+#' @param maxmemorysize Advanced use. The maximum size, in bytes, for matrices containing simulated Dirichlet samples. The default of `1E5` corresponds to 100 mega bytes.
 #' @return A matrix with `n` rows and `p` columns. Each row is an independent draw from the specified PPI distribution.
 #' @inheritDotParams ppi_paramvec
 #' @details
