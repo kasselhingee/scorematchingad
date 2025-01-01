@@ -20,7 +20,8 @@
 #' Two further individuals (`IndividualID` of `2079` and `2280`) were deemed outliers by \insertCite{scealy2023sc;textual}{scorematchingad}.
 #'
 #' # Modifications from the Source
-#' The `microbiome` data was created from the file `S1_Table.xlsx` hosted on `Nematode.net` at\
+#' The `microbiome` data was created from the file `S1_Table.xlsx` hosted on `Nematode.net` at
+#'  
 #' `http://nematode.net/Data/environmental_interaction/S1_Table.xlsx` using the below code.
 #'
 #' ```

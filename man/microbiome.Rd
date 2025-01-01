@@ -49,7 +49,8 @@ These measurements can be obtained by running
 Two further individuals (\code{IndividualID} of \code{2079} and \code{2280}) were deemed outliers by \insertCite{scealy2023sc;textual}{scorematchingad}.
 }
 \section{Modifications from the Source}{
-The \code{microbiome} data was created from the file \code{S1_Table.xlsx} hosted on \code{Nematode.net} at\
+The \code{microbiome} data was created from the file \code{S1_Table.xlsx} hosted on \code{Nematode.net} at
+
 \verb{http://nematode.net/Data/environmental_interaction/S1_Table.xlsx} using the below code.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{microbiome <- readxl::read_excel("S1_Table.xlsx",
