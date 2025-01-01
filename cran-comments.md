@@ -1,10 +1,6 @@
-This update is purely to update the internals of the package. It has been checked on windows, mac and linux on old, current and devel versions of R.
+Fixed issue with finding cmake on mac.
+Also fixed a test that was sensitive to the operating system.
+Passes Rhub and R CMD check on windows, mac, linux (https://github.com/kasselhingee/scorematchingad/actions/workflows/rhub.yaml and https://github.com/kasselhingee/scorematchingad/actions/workflows/R-CMD-check.yaml)
 
-I've fixed compilation warnings like "use of bitwise '&' with boolean operands" on mac.
-
-Summary of changes:
-
-+ Upgraded to a recent version of the external library `CppAD`.
-+ Moved to an install method via a `configure` that is more faithful to the recommended installation methods for `CppAD`.
-+ Replaced use of `ellipsis` with `rlang`
+New feature of taping custom functions now works on all platforms. Which required a major change to the way tapes are accessed by R.
 
