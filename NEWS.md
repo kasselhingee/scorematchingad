@@ -1,3 +1,6 @@
+# Version 0.1.0
+Major version number to reflect that functionality of the package is now pretty good.
+
 # Version 0.0.71
 Cleaning up of help.
 
