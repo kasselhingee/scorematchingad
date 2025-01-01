@@ -1,5 +1,6 @@
 #' @title Build CppAD Tapes for Score Matching
 #' @family tape builders
+#' @family generic score matching tools
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate.
 #' @param bdryw The name of the boundary weight function. "ones" for manifolds without boundary. For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible - see [`ppi()`] for more information on these.
 #' @param acut A parameter passed to the boundary weight function `bdryw`. Ignored for `bdryw = "ones"`.

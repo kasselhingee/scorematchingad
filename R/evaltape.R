@@ -6,7 +6,7 @@
 #' @param xcentres A matrix of approximation for Taylor approximation centres for `xmat`. Use values of `NA` for rows that do not require Taylor approximation.
 #' @param approxorder Order of Taylor approximation
 #' @description Evaluates a tape exactly or approximately for an array of provided variable values and dynamic parameter values.
-#' The function `evaltape_wsum()` computes the column-wise weighted sum of the result.
+#' The function `evaltape_wsum()` computes the weighted sum of each column of the `evaltape()` result.
 #' @details
 #' Approximation is via Taylor approximation of the independent variable around the approximation centre provided in `xcentres`.
 #' @return

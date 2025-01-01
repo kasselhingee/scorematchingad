@@ -3,14 +3,20 @@
 #' @description
 #' Uses the [`CppAD` parameter property](https://cppad.readthedocs.io/latest/fun_property.html#parameter) and derivatives (via [`tape_Jacobian()`]) to test whether
 #' the tape is quadratic.
+#' @param tape An [`Rcpp_ADFun`] object.
+#' @title Test Whether a CppAD Tape is a Quadratic Function
+#' @family tape evaluators
+#' @description
+#' Uses the [`CppAD` parameter property](https://cppad.readthedocs.io/latest/fun_property.html#parameter) and derivatives (via [`tape_Jacobian()`]) to test whether
+#' the tape is quadratic.
 #' @param tape An `ADFun` object.
-#' @param xmat If non-`NULL` and `dynparamat` non-`NULL` then the third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynparammat` are tested.
-#' @param dynparammat If non-`NULL` and `xmat` non-`NULL` then the third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynparammat` are tested.
+#' @param xmat If non-`NULL` and `dynmat` non-`NULL` then the third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynmat` are tested.
+#' @param dynmat If non-`NULL` and `xmat` non-`NULL` then the third-order derivatives at independent variable values of the rows of `xmat` and dynamic parameters from the rows of `dynmat` are tested.
 #' @param verbose If TRUE information about the failed tests is printed.
 #' @details Uses the `xtape` and `dyntape` values stored in `tape` to create new tapes.
-#' A tape of the Hessian is obtained by applying [`tape_Jacobian()`] twice, and then uses a [`CppAD` property](https://cppad.readthedocs.io/latest/fun_property.html#parameter) to test whether the Hessian is constant. A function of quadratic form should have constant Hessian.
+#' A tape of the Hessian is obtained by applying [`tape_Jacobian()`] twice, and then uses the [`CppAD` parameter property](https://cppad.readthedocs.io/latest/fun_property.html#parameter) to test whether the Hessian is constant. A function of quadratic form should have constant Hessian.
 #'
-#' If `xmat` and `dynparammat` are non-`NULL` then `testquadratic()` also checks the Jacobian of the Hessian at `xmat` and `dynparammat` values. For quadratic form functions the Jacobian of the Hessian should be zero.
+#' If `xmat` and `dynmat` are non-`NULL` then `testquadratic()` also checks the Jacobian of the Hessian at `xmat` and `dynmat` values. For quadratic form functions the Jacobian of the Hessian should be zero.
 #' @return `TRUE` or `FALSE`
 #' @examples
 #' tapes <- tape_smd(
@@ -24,7 +30,7 @@
 #'
 #'  testquadratic(tapes$smdtape)
 #' @export
-testquadratic <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE){
+testquadratic <- function(tape, xmat = NULL, dynmat = NULL, verbose = FALSE){
   stopifnot(inherits(tape, "Rcpp_ADFun"))
   tapeJ <- tape_Jacobian(tape)
   tapeH <- tape_Jacobian(tapeJ)
@@ -37,22 +43,23 @@ testquadratic <- function(tape, xmat = NULL, dynparammat = NULL, verbose = FALSE
                     paste(which(!isparameter), collapse = ", ")))
   }
 
-  if (is.null(xmat) && is.null(dynparammat)){return(result_parameter)}
+  if (is.null(xmat) && is.null(dynmat)){return(result_parameter)}
 
   #try Jacobian
-  stopifnot(isTRUE(nrow(xmat) == nrow(dynparammat)))
+  stopifnot(isTRUE(nrow(xmat) == nrow(dynmat)))
   thirdderivs <- lapply(1:nrow(xmat), function(i){
-    tapeH$Jac(xmat[i, ], dynparammat[i, ])
+    tapeH$Jac(xmat[i, ], dynmat[i, ])
   })
   isallzero <- unlist(lapply(thirdderivs, function(vec){all(vec == 0)}))
   result_thirdderiv <- all(isallzero)
   if (verbose && !result_thirdderiv){
-    message(sprintf("The Jacobian of the Hessian was non-zero for row %s of xmat and dynparammat",
+    message(sprintf("The Jacobian of the Hessian was non-zero for row %s of xmat and dynmat",
                     paste(which(!isallzero), collapse = ", ")))
   }
 
   finalresult <- result_thirdderiv && result_parameter
   return(finalresult)
 }
+
 
 

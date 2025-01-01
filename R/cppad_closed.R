@@ -1,14 +1,14 @@
 #' @title Score Matching Estimator for Quadratic-Form Score Matching Discrepancies
 #' @family generic score matching tools
 #' @description 
-#' For a tape (i.e. an `ADFun` object) of a quadratic-form score matching discrepancy function, calculates the vector of parameters such that the gradient of the score matching discrepancy is zero.
+#' For a tape of a quadratic-form score matching discrepancy function, calculates the vector of parameters such that the gradient of the score matching discrepancy is zero.
 #' Also estimates standard errors and covariance.
-#' Many score matching estimators have an objective function that has a quadratic form (see [`scorematchingtheory`]).
+#' Many score matching discrepancy functions have a quadratic form (see [`scorematchingtheory`]).
 #' @param Yapproxcentres A matrix of Taylor approximation centres for rows of Y that require approximation. `NA` for rows that do not require approximation.
-#' @param smdtape A `CppAD` tape of a score matching discrepancy function that has *quadratic form*. Test for quadratic form using [`testquadratic()`].
+#' @param smdtape A tape ([`Rcpp_ADFun`] object) of a score matching discrepancy function that has *quadratic form*. Test for quadratic form using [`testquadratic()`].
 #' The `smdtape`'s independent variables are assumed to be the model parameters to fit
 #' and the `smdtape`'s dynamic parameter is a (multivariate) measurement.
-#' @param Y A matrix of multivariate observations. Each row is an observation.
+#' @param Y A matrix of multivariate observations. Each row is an observation. The number of columns of `Y` must be `smdtape$size_dyn_ind`.
 #' @param w Weights for each observation.
 #' @param approxorder The order of Taylor approximation to use.
 #' @details
@@ -17,7 +17,7 @@
 #' \eqn{b} is the average of the gradient offset (see [`quadratictape_parts()`]) evaluated at each measurement. 
 #' Both the Hessian and the gradient offset are constant with respect to the model parameters for quadratic-form score matching discrepancy functions.
 #'
-#' Standard errors use the Godambe information matrix (aka sandwich method) and are only computed when the weights are constant.
+#' Standard errors are estimated using the Godambe information matrix (aka sandwich method) and are only computed when the weights are constant.
 #' The estimate of the negative of the sensitivity matrix \eqn{-G} is
 #' the average of the Hessian of `smdtape` evaluated at each observation in `Y`.
 # \deqn{\hat{G(\theta)} = \hat{E} -H(smd(\theta;Y))),}

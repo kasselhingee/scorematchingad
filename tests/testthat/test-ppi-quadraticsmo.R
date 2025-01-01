@@ -21,10 +21,10 @@ test_that("testquadratic passes on PPI model with sqrt transformation, minsq div
 
   xmat <- matrix(runif(length(ppi_paramvec(p = 3))*10, min = -0.9, max = 1),
                  ncol = length(ppi_paramvec(p = 3)))
-  dynparammat <- matrix(runif(10*2, min=0, max = 0.5), ncol = 2)
-  dynparammat <- cbind(dynparammat, 1-rowSums(dynparammat))
+  dynmat <- matrix(runif(10*2, min=0, max = 0.5), ncol = 2)
+  dynmat <- cbind(dynmat, 1-rowSums(dynmat))
 
-  expect_true(testquadratic(ppismdtape, xmat = xmat, dynparammat = dynparammat))
+  expect_true(testquadratic(ppismdtape, xmat = xmat, dynmat = dynmat))
 })
 
   # manual tests
@@ -77,13 +77,13 @@ test_that("ppi ll tape is fails the quadratic test", {
 
   # check some values
 
-  dynparammat <- matrix(runif(length(ppi_paramvec(p = 3))*10, min = -0.9, max = 1),
+  dynmat <- matrix(runif(length(ppi_paramvec(p = 3))*10, min = -0.9, max = 1),
                  ncol = length(ppi_paramvec(p = 3)))
   xmat <- matrix(runif(10*2, min=0, max = 0.5), ncol = 2)
   xmat <- cbind(xmat, 1-rowSums(xmat))
 
-  expect_false(testquadratic(ppitape, xmat = xmat, dynparammat = dynparammat))
-  testquadratic(ppitape, xmat = xmat, dynparammat = dynparammat, verbose = TRUE) |> 
+  expect_false(testquadratic(ppitape, xmat = xmat, dynmat = dynmat))
+  testquadratic(ppitape, xmat = xmat, dynmat = dynmat, verbose = TRUE) |> 
     expect_message("non-constant") |>
     expect_message("non-zero")
 })

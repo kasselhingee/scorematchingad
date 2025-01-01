@@ -1,16 +1,18 @@
 #' Generate a tape of a custom unnormalised log-density
 #' @family tape builders
-#' @description Supply `C++` code to tape a custom unnormalised log-density. The result is NOT safe to save or pass to other CPUs in a parallel operation.
-#' @param fileORcode A character string giving the path name of a file containing the unnormalised log-density definition *OR* code. If the `fileORcode` contains no new line characters ('\\n' or '\\r\\n') and has a file extension detected by [`tools::file_ext()`] then `fileORcode` will be treated as file name.
+#' @param fileORcode A character string giving the path name of a file containing the unnormalised log-density definition *OR* code. `fileORcode` will be treated as a file name if `fileORcode` contains no new line characters ('\\n' or '\\r\\n') and has a file extension detected by [`tools::file_ext()`].
 #' @param Cppopt List of named options passed to `Rcpp::sourceCpp()`
 #' @param x Value of independent variables for taping.
 #' @param theta Value of the dynamic parameter vector for taping.
 #' @description
-#' Supply `C++` code to specify a custom log-density much like `TMB::compile()` is passed `C++` code that formulate models.
-#' For score matching the normalising constant of the log-density can be omitted.
+#' Generate tapes of unnormalised log-densities.
+#' Use `tape_ult()` to specify a custom unnormalised log-density using `C++` code much like `TMB::compile()`.
+#' Use `tape_uld_inbuilt()` for tapes of inbuilt unnormalised log-densities implemented in this package.
 #' @details
-#' The function use [`Rcpp::sourceCpp()`] to generate a tape of a function defined in C++. 
-#' (An alternative design, where the function is compiled interactively and then taped using a function internal to `scorematchingad` was not compatible with Windows OS).
+#' The function `tape_uld()` uses [`Rcpp::sourceCpp()`] to generate a tape of a function defined in C++. 
+#' (An alternative design, where the function is compiled interactively and then taped using a function internal to `scorematchingad`, was not compatible with Windows OS).
+#'
+#' The result result is NOT safe to save or pass to other CPUs in a parallel operation.
 #' 
 #' # Writing the `fileORcode` Argument
 #' The code (possibly in the file pointed to by `fileORcode`) must be `C++` that uses only `CppAD` and `Eigen`, which makes it very similar to the requirements of the input to `TMB::compile()` (which also uses `CppAD` and `Eigen`).

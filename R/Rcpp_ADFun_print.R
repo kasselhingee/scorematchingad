@@ -29,7 +29,7 @@ setMethod("print", "Rcpp_ADFun", function(x, ...){
 # need to define show too - this the generic that happens automatically when one types object into the console - and usually it automatically print(), but I guess Rcpp has defined show() for these objects differently.
 #' @name print,Rcpp_ADFun
 #' @details
-#' The `show()` method overrides the default `show()` method for \linkS4class{C++Object} objects from [`Rcpp::C++Object-class`].
+#' The `show()` method overrides the default `show()` method for \linkS4class{C++Object} objects from the `Rcpp` package.
 #' @aliases show,Rcpp_ADFun-method
 #' @param object An object of class \linkS4class{Rcpp_ADFun}.
 #' @importFrom methods show

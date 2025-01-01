@@ -4,6 +4,9 @@
 #' @description 
 #' Uses conjugate gradient descent to search for a vector of parameters such that gradient of the score matching discrepancy is within tolerance of zero.
 #' Also estimates standard errors and covariance.
+#' @param smdtape A tape ([`Rcpp_ADFun`] object) of a score matching discrepancy function.
+#' The `smdtape`'s independent variables are assumed to be the model parameters to fit
+#' and the `smdtape`'s dynamic parameter is a (multivariate) measurement.
 #' @inheritParams cppad_closed
 #' @param theta The starting parameter set
 #' @param control Control parameters passed to [`optimx::Rcgmin()`]
@@ -30,8 +33,6 @@
 #' Taylor approximation is available because boundary weight functions and transformations of the measure in Hyvärinen divergence can remove singularities in the model log-likelihood, however evaluation at these singularities may still involve computing intermediate values that are unbounded.
 #' If the singularity is ultimately removed, then Taylor approximation from a nearby location will give a very accurate evaluation at the removed singularity.
 #'
-#' # Warning
-#' There appears to be floating point issues with evaluation of the gradient leading to slow or no convergence in many situations. Tweaking the convergence tolerance `tol` may be appropriate. If the closed form solution exists please use `cppad_closed()` instead.
 #' @examples
 #' smdtape <- tape_smd("sim", "sqrt", "sph", "ppi",
 #'               ytape = rep(1/3, 3),

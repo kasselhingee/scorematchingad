@@ -11,7 +11,7 @@
 #' An object of class `Rcpp_ADFun` wraps an `ADFun` object from `CppAD`. Many of the properties and behaviour of an `Rcpp_ADFun` object come directly from `ADFun` objects so more details and context can be found by looking at the `ADFun` object help in the `CppAD` [`help`](https://cppad.readthedocs.io).
 #' The methods `eval()`, `Jac()` and `Hes()` have been added by `scorematchingad` as there were many cases where this seemed like an easier way to evaluate a tape.
 #' 
-#' Default printing of an `Rcpp_ADFun` object gives a short summary of the object and is implemented in the internal `print.Rcpp_ADFun()` function.
+#' Default printing of an `Rcpp_ADFun` object gives a short summary of the object, see [`print,Rcpp_ADFun`].
 #'
 #' Tapes cannot be saved from session to session.
 #' 
@@ -23,26 +23,26 @@
 #' + `$name` A name for the tape (may be empty). This is yet to incorporate the `CppAD` `function_name` property.
 #' + `$xtape` The values of the independent variables used for the initial taping.
 #' + `$dyntape` The values of the dynamic parameters used for the initial taping.
-#' + `$get_check_for_nan()` Debugging: Return whether the tape is configured to check for NaN values during computation. The check for NaN values only occurs if the `C++` compilation enables debugging.
+#' + `$get_check_for_nan()` Debugging: Return whether the tape is configured to check for NaN values during computation. The check for NaN only occurs if the `C++` compilation enables debugging.
 #' + `$set_check_for_nan(bool)` Set whether the tape should check for NaN values during computation (only effective if C++ debugging is enabled).
-#' + `$parameter(i)` Check if the `i`th component of the range corresponds to a constant parameter. Indexing is by `C++` default, that is the first component has index `0`, the last component has index `$range - 1`.
+#' + `$parameter(i)` Check if the `i`th component of the range corresponds to a constant parameter. Indexing is by the `C++` default, that is the first component has index `0`, the last component has index `$range - 1`.
 #' + `$new_dynamic(dyn)` Specify new values for the dynamic parameters.
 #'
 #' # Methods - Tape Evaluation:
 #' + `$eval(x, dyn)` Evaluate the function at new values of the variables and dynamic parameters. Returns a vector of length `$range`.
 #' + `$Jac(x, dyn)` Compute the Jacobian at new values of the variables and dynamic parameters. Returns a vector of length `$range * $domain` arranged so that the first `$domain` elements correspond to the gradient of the first element of the range. The next `$domain` elements correspond to the gradient of the second element of the range, and so on.
-#' + `$Hes(x, dyn)` Compute the Hessian of the first element of the range (like `$Hessian0` at new values of the variables and dynamic parameters. Returns a vector of length `$domain * $domain` where the `j*n + l` element corresponds to differentiating with respect to the `l`th element of the domain, then with respect to the `j`th element of the domain, with `n` the size of the domain.
+#' + `$Hes(x, dyn)` Compute the Hessian of the first element of the range at new values of the variables and dynamic parameters. Returns a vector of length `$domain * $domain` where the `j*n + l` element corresponds to differentiating with respect to the `l`th element of the domain, then with respect to the `j`th element of the domain, with `n` the size of the domain.
 #' + `$Jacobian(x)` Evaluate the Jacobian of the function at the current set of dynamic parameters.
 #' + `$Hessiani(x, i)` Evaluate the Hessian for the \code{i}-th element of the range (where \code{i = 0, 1, ...}). Returns a vector arranged the same as `$Hes()`.
-#' + `$Hessian0(x)` Evaluate the Hessian for the first element of the range. Returns a vector arranged the same as `$Hes()`.
+#' + `$Hessian0(x)` Evaluate the Hessian for the first element of the range (like `$Hes()` but uses the current values of the dynamic parameters). Returns a vector arranged the same as `$Hes()`.
 #' + `$Hessianw(x, w)` Evaluate the Hessian for a weighted sum of the range. Returns a vector arranged the same as `$Hes()`.
-#' + `$forward(q, x)` Perform forward mode evaluation for the specified Taylor coefficient order `q`.
+#' + `$forward(q, x)` Perform forward mode evaluation for the specified Taylor coefficient order `q`. See the [`CppAD` help](https://cppad.readthedocs.io) for more.
 #'
 #' # Method Arguments
 #' + `x` A vector of independent variables.
 #' + `dyn` A vector of dynamic parameters.
 #' + `q` Taylor coefficient order for evaluating derivatives with `$forward()`.
-#' + `i` Index of range result. `i = 0, 1, ..., range - 1`.
+#' + `i` Index of range result. `i = 0, 1, ..., $range - 1`.
 #' + `bool` Either `TRUE` or `FALSE` to set `check_for_nan` behaviour using `$set_check_for_nan()`.
 #' + `w` Weights assigned to each element of the range, for use with `$Hessianw()`.
 #'
@@ -61,17 +61,20 @@
 #' Tapes can have both *independent* variables and *dynamic* parameters, and the differentiation occurs with respect to the independent variables.
 #' The atomic operations within a function are taped by following the function evaluation on example values for the variables and parameters, so care must be taken with any conditional (e.g. if-then) operations, and [`CppAD`](https://cppad.readthedocs.io/) has a special tool for this called `CondExp` (short for `conditional expressions`).
 #'
-#' The result of taping is an object of class `ADFun` in `CppAD` and is often called a *tape*.
-#' This `ADFun` object can be evaluated, differentiated, used for further taping (via `CppAD`'s `base2ad()`), solving differential equations and more.
-#' The differentiation is with respect to the independent variables, however the dynamic parameters can be altered which allows for creating a new `ADFun` object where the dynamic parameters become independent variables (see [`tape_swap()`]).
+#' The result of taping, called a *tape*, is exposed as an object of class [`Rcpp_ADFun`], which contains a `CppAD` `ADFun` object.
+#' Although the algorithmic differentiation is with respect to the independent variables, a new tape (see [`tape_swap()`]) can be created where the dynamic parameters become independent variables.
 #' For the purposes of score matching, there are also *fixed* parameters, which are the elements of the model's parameter vector that are given and not estimated.
-#' 
+#'
+#' The example values used for taping are saved in the `$xtape` and `$dyntape` properties of [`Rcpp_ADFun`] objects.
+#'
 #' # Warning: multiple CPU
 #' Each time a tape is evaluated the corresponding `C++` object is altered. Parallel use of the same `ADFun` object thus requires care and is not tested. For now I recommend creating a new `ADFun` object for each CPU.
 #'
 #' # Improvements
 #' A few methods for `CppAD` `ADFun` objects are not yet available through `Rcpp_ADFun` objects. These ones would be nice to include:
 #' + `optimize()`
+#' + `function_name_set()` and `function_name_get()` working with `$name`
+#' + `Reverse()`
 #'
 #' @exportClass Rcpp_ADFun
 #' 
