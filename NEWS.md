@@ -1,3 +1,9 @@
+# Version 0.0.68
++ Correctly searching for cmake on mac.
++ CppAD errors handled when compiled in debug mode
++ Converted all cases of std::exit to Rcpp::stop. See `cout2Rcout.sh` for script.
+
+
 # Version 0.0.67
 changed source code to use && or || for boolean objects
 
