@@ -100,7 +100,7 @@
 #' tape$get_check_for_nan()
 #'
 #' # Further methods
-#' tape$forward(order = 1, x = c(0.2, 0.3, 0.5))
+#' tape$forward(order = 0, x = c(0.2, 0.3, 0.5))
 #' tape$Jacobian(x = c(0.2, 0.3, 0.5))
 #' tape$Hessiani(x = c(0.2, 0.3, 0.5), i = 0)
 #' tape$Hessian0(x = c(0.2, 0.3, 0.5))
