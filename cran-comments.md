@@ -1,6 +1,13 @@
-Fixed issue with finding cmake on mac.
-Also fixed a test that was sensitive to the operating system.
-Passes Rhub and R CMD check on windows, mac, linux (https://github.com/kasselhingee/scorematchingad/actions/workflows/rhub.yaml and https://github.com/kasselhingee/scorematchingad/actions/workflows/R-CMD-check.yaml)
+Fixed the two issues note on CRAN:
 
-New feature of taping custom functions now works on all platforms. Which required a major change to the way tapes are accessed by R.
++ finding cmake on mac.
++ test that was sensitive to the operating system.
+
+Package passes:
+
++ R CMD check on windows, mac, linux (https://github.com/kasselhingee/scorematchingad/actions/runs/12644603482)
++ Rhub check with address sanitisation (https://github.com/kasselhingee/scorematchingad/actions/runs/12643534072)
++ Rhub check with valgrind finds only 'blocks are possibly lost' errors, which seems likely related to the timing of R's garbage collection (https://github.com/kasselhingee/scorematchingad/actions/runs/12626828775).
+
+This version of the package now enables taping custom functions that works on all platforms. Which required a major change to the way tapes were accessed by R.
 

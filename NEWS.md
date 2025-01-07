@@ -1,3 +1,7 @@
+# Version 0.1.1
+No longer using RcppXPtrUtils.
+Small fix to creation of XPtr to ADFun in movetoXPtr()
+
 # Version 0.1.0
 Major version number to reflect that functionality of the package is now pretty good.
 
