@@ -15,7 +15,8 @@ private:
 
 //MOVES the tape to a spot with memory management. The previous version of the tape will NOT be available because it this is a MOVE. Move needed because copy operation of ADFun not allowed
 Rcpp::XPtr < CppAD::ADFun<double> > movetoXPtr(CppAD::ADFun<double> & tape){
-  CppAD::ADFun<double> * out = new CppAD::ADFun<double>(std::move(tape));//reserve memory for a tape
+  CppAD::ADFun<double> * out = new CppAD::ADFun<double>;//reserve memory for a tape
+  out->swap(tape);//put contents of tape into the address of out via ADFun's special swap
   Rcpp::XPtr< CppAD::ADFun<double> > pout(out, true);
   return(pout);
 }
