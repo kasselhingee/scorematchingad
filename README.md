@@ -6,7 +6,7 @@
 <!-- badges: end -->
 
 The goal of `scorematchingad` is to enable fast implementation of score matching estimators through the use of automatic differentiation in the CppAD library. 
-Such implementation is best done by either contributing to this package or creating a new package that links to this package. On linux with the `gcc` compiler it is possible to create estimators for new models interactively using `customll()` (*I am pondering how it is that this feature only works on linux with gcc*).
+ Estimators for new models can be created quickly via the `tape_uld()` and the `tape_smd()` function. If the new models require domain/manifold not yet implemented in `scorematchingad`, then (for now) the domain/manifold has to be added to the source of `scorematchingad`.
 
 See the file `DESCRIPTION` for a slightly longer description, and `./R/scorematchingad-package.R` (equivalently `help(scorematchingad, scorematchingad)` from within `R`) for an even longer description. The built-in help for `R` packages is well populated. 
 
@@ -34,17 +34,19 @@ estalr <- ppi(model$sample,
 This is an example of obtaining a tape of the score matching discrepancy of a custom likelihood for compositional data, which most naturally lies on the simplex:
 
 ``` r
-myll <- customll("a1type dirichlet(const veca1 &u, const veca1 &beta) {
+myuld <- tape_uld(
+"a1type dirich(const veca1 &u, const veca1 &beta) {
   size_t d  = u.size();
   a1type y(0.);  // initialize summation at 0
   for(size_t i = 0; i < d; i++)
-  {   y   += beta[i] * log(u[i]);
+  {   y   += beta[i] * CppAD::log(u[i]);
   }
   return y;
-}")
+}",
+  x = rep(0.2, 5), theta = rep(-0.1, 5))
 
-tapes <- buildsmdtape("sim", "identity", "sim", 
- myll, rep(1/3, 3), rep(NA, 3), 
+tapes <- tape_smd("sim", "identity", "sim", 
+ myuld$tape, myuld$tape$xtape, usertheta = NA * myuld$tape$dyntape, 
  bdryw="minsq", acut = 0.01)
 ```
 
