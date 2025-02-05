@@ -33,7 +33,7 @@ tapell <- function(ll,
     stop("ll must be a name or a taped unnormalised log-density")
   }
 
-  uld_dynfixed <- fixdynamic(ll, starttheta, fixedtheta = t_u2i(usertheta)) # fix some of the model parameters if applicable
+  uld_dynfixed <- fixdynamic(ll, theta = starttheta, isfixed = t_u2i(usertheta)) # fix some of the model parameters if applicable
   uld_reembed <- reembed(uld_dynfixed, tran = tranobj) #change the underlying metric of the manifold by using a different isometric embedding
   return(uld_reembed)
 }
