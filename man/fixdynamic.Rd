@@ -22,6 +22,7 @@ For creating this tape, the values of \code{pfun$xtape} is used.
 }
 \seealso{
 Other tape builders: 
+\code{\link{fixindependent}()},
 \code{\link{tape_Hessian}()},
 \code{\link{tape_Jacobian}()},
 \code{\link{tape_gradoffset}()},
