@@ -17,7 +17,7 @@ fixindependent(pfun, x, isfixed)
 An \code{Rcpp_ADFun} object.
 }
 \description{
-Creates a tape of the function taped by \code{CppAD} that has some of the independent arguments of \code{pfun} fixed to specified values in \code{x}.
+Retapes an existing \code{CppAD} tape but with some of original independent arguments fixed to specified values.
 For creating this tape, the values of \code{pfun$dyntape} are used.
 }
 \seealso{

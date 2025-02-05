@@ -9,7 +9,7 @@
 //' @param pfun An `Rcpp_ADFun` object.
 //' @param theta A numerical vector specifying the value of all dynamic parameters of `pfun`. Some of these will be fixed according to `isfixed`, the remainder will remain dynamic.
 //' @param isfixed A boolean vector same length as `theta`. `TRUE` values are fixed at the value of `theta`, `FALSE` values are left dynamic.
-//' @description Creates a tape of the function taped by `CppAD` that has some of the dynamic parameters of `pfun` fixed to specified values in `theta`.
+//' @description Retapes an existing `CppAD` tape but with some of original dynamic parameters fixed to specified values.
 //' For creating this tape, the values of `pfun$xtape` is used.
 //' @return An `Rcpp_ADFun` object.
 //' @export

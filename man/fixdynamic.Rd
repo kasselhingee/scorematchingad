@@ -17,7 +17,7 @@ fixdynamic(pfun, theta, isfixed)
 An \code{Rcpp_ADFun} object.
 }
 \description{
-Creates a tape of the function taped by \code{CppAD} that has some of the dynamic parameters of \code{pfun} fixed to specified values in \code{theta}.
+Retapes an existing \code{CppAD} tape but with some of original dynamic parameters fixed to specified values.
 For creating this tape, the values of \code{pfun$xtape} is used.
 }
 \seealso{
