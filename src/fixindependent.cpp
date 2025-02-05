@@ -2,21 +2,21 @@
 
 pADFun fixindependent(pADFun & pfun, // the unnormalised log density tape
                   veca1 x, //new x to use for taping
-                  Eigen::Matrix<int, Eigen::Dynamic, 1> fixedx){ //TRUE (1) values indicate that the corresponding value of x is not a variable (dynamic or independent)
-  if (fixedx.size() != pfun.Domain()){
-    Rcpp::stop("fixedx must have the same length as the domain of pfun");
+                  Eigen::Matrix<int, Eigen::Dynamic, 1> isfixed){ //TRUE (1) values indicate that the corresponding value of x is not a variable (dynamic or independent)
+  if (isfixed.size() != pfun.Domain()){
+    Rcpp::stop("isfixed must have the same length as the domain of pfun");
   }
-  if (x.size() != fixedx.size()){
-    Rcpp::stop("x and fixedx must have the same length");
+  if (x.size() != isfixed.size()){
+    Rcpp::stop("x and isfixed must have the same length");
   }
   
   //separate fixed and variable x
-  veca1 xvar(x.size() - fixedx.sum());
-  veca1 xfxd(fixedx.sum());
+  veca1 xvar(x.size() - isfixed.sum());
+  veca1 xfxd(isfixed.sum());
   size_t idx_var(0);
   size_t idx_fxd(0);
   for (long int i=0;i<x.size();i++){
-    if (fixedx[i]){
+    if (isfixed[i]){
       xfxd[idx_fxd] = x[i];
       idx_fxd += 1;
     } else {
@@ -29,7 +29,7 @@ pADFun fixindependent(pADFun & pfun, // the unnormalised log density tape
   CppAD::ADFun<a1type, double> pfunhigher;
   pfunhigher = (pfun.get_ptr())->base2ad();
 
-  //redo tape with some of the dynamic parameters fixed as per fixedx
+  //redo tape with some of the dynamic parameters fixed as per isfixed
   veca1 theta = pfun.dyntape;
   CppAD::Independent(xvar, theta);
 
@@ -38,7 +38,7 @@ pADFun fixindependent(pADFun & pfun, // the unnormalised log density tape
   veca1 xrecom(x.size());
   idx_var = 0;
   for (long int i=0;i<x.size();i++){
-    if (fixedx[i]){
+    if (isfixed[i]){
       xrecom[i] = x[i];
     } else {
       xrecom[i] = xvar[idx_var];

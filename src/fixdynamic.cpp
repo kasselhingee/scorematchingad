@@ -4,21 +4,21 @@
 
 pADFun fixdynamic(pADFun & pfun, // the unnormalised log density tape
                   veca1 theta, //new theta to use for taping
-                  Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta){ //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
-  if (fixedtheta.size() != pfun.size_dyn_ind()){
-    Rcpp::stop("fixedtheta must have the same length as the dynamic parameter vector of pfun");
+                  Eigen::Matrix<int, Eigen::Dynamic, 1> isfixed){ //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
+  if (isfixed.size() != pfun.size_dyn_ind()){
+    Rcpp::stop("isfixed must have the same length as the dynamic parameter vector of pfun");
   }
-  if (theta.size() != fixedtheta.size()){
-    Rcpp::stop("theta and fixedtheta must have the same length");
+  if (theta.size() != isfixed.size()){
+    Rcpp::stop("theta and isfixed must have the same length");
   }
   
   //separate fixed and variable theta
-  veca1 thetavar(theta.size() - fixedtheta.sum());
-  veca1 thetafxd(fixedtheta.sum());
+  veca1 thetavar(theta.size() - isfixed.sum());
+  veca1 thetafxd(isfixed.sum());
   size_t idx_var(0);
   size_t idx_fxd(0);
   for (long int i=0;i<theta.size();i++){
-    if (fixedtheta[i]){
+    if (isfixed[i]){
       thetafxd[idx_fxd] = theta[i];
       idx_fxd += 1;
     } else {
@@ -31,7 +31,7 @@ pADFun fixdynamic(pADFun & pfun, // the unnormalised log density tape
   CppAD::ADFun<a1type, double> pfunhigher;
   pfunhigher = (pfun.get_ptr())->base2ad();
 
-  //redo tape with some of the dynamic parameters fixed as per fixedtheta
+  //redo tape with some of the dynamic parameters fixed as per isfixed
   veca1 x = pfun.xtape;
   CppAD::Independent(x, thetavar);
 
@@ -40,7 +40,7 @@ pADFun fixdynamic(pADFun & pfun, // the unnormalised log density tape
   veca1 thetarecom(theta.size());
   idx_var = 0;
   for (long int i=0;i<theta.size();i++){
-    if (fixedtheta[i]){
+    if (isfixed[i]){
       thetarecom[i] = theta[i];
     } else {
       thetarecom[i] = thetavar[idx_var];
