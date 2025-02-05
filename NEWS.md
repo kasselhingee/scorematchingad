@@ -1,3 +1,6 @@
+# Version 0.1.2
+Exposing new functions for modifying the arguments of Rcpp_adfun objects: fixdynamic() and fixindependent().
+
 # Version 0.1.1
 No longer using RcppXPtrUtils.
 Small fix to creation of XPtr to ADFun in movetoXPtr()
