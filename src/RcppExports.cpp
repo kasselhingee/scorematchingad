@@ -93,6 +93,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fixindependent
+pADFun fixindependent(pADFun& pfun, veca1 x, Eigen::Matrix<int, Eigen::Dynamic, 1> isfixed);
+RcppExport SEXP _scorematchingad_fixindependent(SEXP pfunSEXP, SEXP xSEXP, SEXP isfixedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< veca1 >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type isfixed(isfixedSEXP);
+    rcpp_result_gen = Rcpp::wrap(fixindependent(pfun, x, isfixed));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tape_Jacobian
 pADFun tape_Jacobian(pADFun& pfun);
 RcppExport SEXP _scorematchingad_tape_Jacobian(SEXP pfunSEXP) {
@@ -216,6 +229,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_test_Rcpphandler", (DL_FUNC) &_scorematchingad_test_Rcpphandler, 0},
     {"_scorematchingad_fixdynamic", (DL_FUNC) &_scorematchingad_fixdynamic, 3},
     {"_scorematchingad_reembed", (DL_FUNC) &_scorematchingad_reembed, 2},
+    {"_scorematchingad_fixindependent", (DL_FUNC) &_scorematchingad_fixindependent, 3},
     {"_scorematchingad_tape_Jacobian", (DL_FUNC) &_scorematchingad_tape_Jacobian, 1},
     {"_scorematchingad_tape_Hessian", (DL_FUNC) &_scorematchingad_tape_Hessian, 1},
     {"_scorematchingad_tape_gradoffset", (DL_FUNC) &_scorematchingad_tape_gradoffset, 1},

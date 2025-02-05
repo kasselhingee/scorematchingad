@@ -49,6 +49,19 @@ reembed <- function(uld, tran) {
     .Call(`_scorematchingad_reembed`, uld, tran)
 }
 
+#' @title Fix Independent Arguments of a Tape
+#' @family tape builders
+#' @param pfun An `Rcpp_ADFun` object.
+#' @param x A numerical vector specifying the value of all independent arguments of `pfun`. Some of these will be fixed according to `isfixed`, the remainder will remain as independent arguments.
+#' @param isfixed A boolean vector same length as `x`. `TRUE` values are fixed at the value of `x`, `FALSE` values are left as independent arguments.
+#' @description Creates a tape of the function taped by `CppAD` that has some of the independent arguments of `pfun` fixed to specified values in `x`.
+#' For creating this tape, the values of `pfun$dyntape` are used.
+#' @return An `Rcpp_ADFun` object.
+#' @export
+fixindependent <- function(pfun, x, isfixed) {
+    .Call(`_scorematchingad_fixindependent`, pfun, x, isfixed)
+}
+
 #' @title Tape the Jacobian of CppAD Tape
 #' @family tape builders
 #' @param pfun An `Rcpp_ADFun` object.
