@@ -32,8 +32,17 @@ test_Rcpphandler <- function() {
     invisible(.Call(`_scorematchingad_test_Rcpphandler`))
 }
 
-fixdynamic <- function(uld, theta, fixedtheta) {
-    .Call(`_scorematchingad_fixdynamic`, uld, theta, fixedtheta)
+#' @title Fix Dynamic Parameters of a Tape
+#' @family tape builders
+#' @param pfun An `Rcpp_ADFun` object.
+#' @param theta A numerical vector specifying the value of all dynamic parameters of `pfun`. Some of these will be fixed according to `isfixed`, the remainder will remain dynamic.
+#' @param isfixed A boolean vector same length as `theta`. `TRUE` values are fixed at the value of `theta`, `FALSE` values are left dynamic.
+#' @description Creates a tape of the function taped by `CppAD` that has some of the dynamic parameters of `pfun` fixed to specified values in `theta`.
+#' For creating this tape, the values of `pfun$xtape` is used.
+#' @return An `Rcpp_ADFun` object.
+#' @export
+fixdynamic <- function(pfun, theta, isfixed) {
+    .Call(`_scorematchingad_fixdynamic`, pfun, theta, isfixed)
 }
 
 reembed <- function(uld, tran) {

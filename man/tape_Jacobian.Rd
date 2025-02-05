@@ -28,6 +28,7 @@ For creating this tape, the values of \code{pfun$xtape} and \code{pfun$dyntape} 
 }
 \seealso{
 Other tape builders: 
+\code{\link{fixdynamic}()},
 \code{\link{tape_Hessian}()},
 \code{\link{tape_gradoffset}()},
 \code{\link{tape_logJacdet}()},

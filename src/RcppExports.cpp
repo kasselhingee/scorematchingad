@@ -69,15 +69,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // fixdynamic
-pADFun fixdynamic(pADFun& uld, veca1 theta, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta);
-RcppExport SEXP _scorematchingad_fixdynamic(SEXP uldSEXP, SEXP thetaSEXP, SEXP fixedthetaSEXP) {
+pADFun fixdynamic(pADFun& pfun, veca1 theta, Eigen::Matrix<int, Eigen::Dynamic, 1> isfixed);
+RcppExport SEXP _scorematchingad_fixdynamic(SEXP pfunSEXP, SEXP thetaSEXP, SEXP isfixedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< pADFun& >::type uld(uldSEXP);
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
     Rcpp::traits::input_parameter< veca1 >::type theta(thetaSEXP);
-    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type fixedtheta(fixedthetaSEXP);
-    rcpp_result_gen = Rcpp::wrap(fixdynamic(uld, theta, fixedtheta));
+    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type isfixed(isfixedSEXP);
+    rcpp_result_gen = Rcpp::wrap(fixdynamic(pfun, theta, isfixed));
     return rcpp_result_gen;
 END_RCPP
 }

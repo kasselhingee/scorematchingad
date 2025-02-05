@@ -123,6 +123,7 @@ evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
 }
 \seealso{
 Other tape builders: 
+\code{\link{fixdynamic}()},
 \code{\link{tape_Hessian}()},
 \code{\link{tape_Jacobian}()},
 \code{\link{tape_gradoffset}()},
