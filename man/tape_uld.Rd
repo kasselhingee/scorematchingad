@@ -54,6 +54,7 @@ The code (possibly in the file pointed to by \code{fileORcode}) must be \verb{C+
 The start of \code{code} should always be "\verb{a1type fname(const veca1 &x, const veca1 &theta)\{}" where \code{fname} is your chosen name of the log-density function, \code{x} represents a point in the data space and \code{theta} is a vector of parameters for the log-density. This specifies that the function will have two vector arguments (of type \code{veca1}) and will return a single numeric value (\code{a1type}).
 
 The type \code{a1type} is a double with special ability for being taped by \code{CppAD}. The \code{veca1} type is a vector of \code{a1type} elements, with the vector wrapping supplied by the \code{Eigen} C++ package (that is an \code{Eigen} matrix with 1 column and dynamic number of rows).
+In place operations like \verb{+=} on \code{a1type}, \code{veca1} and similar have not worked for me (compile errors); fortunately the efficiency of in place operations is irrelevant for taping operations.
 
 The body of the function must use operations from Eigen and/or CppAD, prefixed by \verb{Eigen::} and \verb{CppAD::} respectively.
 There are no easy instructions for writing these as it is genuine \verb{C++} code, which can be very opaque to those unfamiliar with \verb{C++}.

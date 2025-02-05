@@ -20,6 +20,7 @@
 #' The start of `code` should always be "`a1type fname(const veca1 &x, const veca1 &theta){`" where `fname` is your chosen name of the log-density function, `x` represents a point in the data space and `theta` is a vector of parameters for the log-density. This specifies that the function will have two vector arguments (of type `veca1`) and will return a single numeric value (`a1type`).
 #' 
 #' The type `a1type` is a double with special ability for being taped by `CppAD`. The `veca1` type is a vector of `a1type` elements, with the vector wrapping supplied by the `Eigen` C++ package (that is an `Eigen` matrix with 1 column and dynamic number of rows).
+#' In place operations like `+=` on `a1type`, `veca1` and similar have not worked for me (compile errors); fortunately the efficiency of in place operations is irrelevant for taping operations. 
 #' 
 #' The body of the function must use operations from Eigen and/or CppAD, prefixed by `Eigen::` and `CppAD::` respectively. 
 #' There are no easy instructions for writing these as it is genuine `C++` code, which can be very opaque to those unfamiliar with `C++`.
