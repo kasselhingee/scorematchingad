@@ -1,10 +1,10 @@
 #include "fixindependent.h"
 
-pADFun fixindependent(pADFun & uld, // the unnormalised log density tape
+pADFun fixindependent(pADFun & pfun, // the unnormalised log density tape
                   veca1 x, //new x to use for taping
                   Eigen::Matrix<int, Eigen::Dynamic, 1> fixedx){ //TRUE (1) values indicate that the corresponding value of x is not a variable (dynamic or independent)
-  if (fixedx.size() != uld.Domain()){
-    Rcpp::stop("fixedx must have the same length as the independent vector of uld");
+  if (fixedx.size() != pfun.Domain()){
+    Rcpp::stop("fixedx must have the same length as the domain of pfun");
   }
   if (x.size() != fixedx.size()){
     Rcpp::stop("x and fixedx must have the same length");
@@ -26,11 +26,11 @@ pADFun fixindependent(pADFun & uld, // the unnormalised log density tape
   }
 
   //convert taped object to execute on a1type (not double)
-  CppAD::ADFun<a1type, double> uldhigher;
-  uldhigher = (uld.get_ptr())->base2ad();
+  CppAD::ADFun<a1type, double> pfunhigher;
+  pfunhigher = (pfun.get_ptr())->base2ad();
 
   //redo tape with some of the dynamic parameters fixed as per fixedx
-  veca1 theta = uld.dyntape;
+  veca1 theta = pfun.dyntape;
   CppAD::Independent(xvar, theta);
 
 
@@ -47,14 +47,14 @@ pADFun fixindependent(pADFun & uld, // the unnormalised log density tape
   }
 
   //evaluate tape at new values
-  uldhigher.new_dynamic(theta);
-  veca1 y(uld.Range());
-  y = uldhigher.Forward(0, xrecom);
+  pfunhigher.new_dynamic(theta);
+  veca1 y(pfun.Range());
+  y = pfunhigher.Forward(0, xrecom);
   CppAD::ADFun<double> tape;  //copying the change_parameter example, a1type is used in constructing f, even though the input and outputs to f are both a2type.
   tape.Dependent(xvar, y);
   tape.check_for_nan(false);
 
-  pADFun out(tape, xvar, theta, uld.name);
+  pADFun out(tape, xvar, theta, pfun.name);
   return out;
 }
 
