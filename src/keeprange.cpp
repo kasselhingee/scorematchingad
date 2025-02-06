@@ -1,7 +1,8 @@
 #include "keeprange.h"
 
 pADFun keeprange(pADFun & pfun, // the unnormalised log density tape
-                 Eigen::Matrix<int, Eigen::Dynamic, 1> keep){ //indices of range elements to keep. STARTING AT 1 FOR R COMPATABILITY 
+                 Eigen::Matrix<int, Eigen::Dynamic, 1> keep){ //indices of range elements to keep. STARTING AT 1 FOR R COMPATABILITY
+  if (keep.size() == 0){Rcpp::stop("keep is empty: at least one element of the range must be kept")}
   if (keep.maxCoeff() > pfun.Range()){
     Rcpp::stop("keep has indices larger than range of pfun");
   }
