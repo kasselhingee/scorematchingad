@@ -27,6 +27,6 @@ test_that("keeprange() can drop range elements", {
   dtape <- keeprange(jactape, c(2, 3))
   expect_equal(dtape$forward(0, dtape$xtape), jactape$forward(0, jactape$xtape)[-1])
 
-  # error?
-  dtape <- keeprange(jactape, vector("integer", 0))
+  # error when try to remove all the range
+  expect_error(keeprange(jactape, vector("integer", 0)))
 })
