@@ -62,6 +62,17 @@ fixindependent <- function(pfun, x, isfixed) {
     .Call(`_scorematchingad_fixindependent`, pfun, x, isfixed)
 }
 
+#' @title Reduce Range Dimension of a Tape
+#' @family tape builders
+#' @param pfun An `Rcpp_ADFun` object.
+#' @param keep Integers (lowest of 1, highest of `pfun$range`) specifying which elements of the range to keep. To keep all pass `keep = seq(1, pfun$range)`.
+#' @description Retapes an existing `CppAD` tape omitting some of the returned elements.
+#' For creating this tape, the values of `pfun$dyntape` and `pfun$xtape` are used.
+#' @return An `Rcpp_ADFun` object.
+keeprange <- function(pfun, keep) {
+    .Call(`_scorematchingad_keeprange`, pfun, keep)
+}
+
 #' @title Tape the Jacobian of CppAD Tape
 #' @family tape builders
 #' @param pfun An `Rcpp_ADFun` object.

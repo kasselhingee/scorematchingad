@@ -106,6 +106,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// keeprange
+pADFun keeprange(pADFun& pfun, Eigen::Matrix<int, Eigen::Dynamic, 1> keep);
+RcppExport SEXP _scorematchingad_keeprange(SEXP pfunSEXP, SEXP keepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
+    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type keep(keepSEXP);
+    rcpp_result_gen = Rcpp::wrap(keeprange(pfun, keep));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tape_Jacobian
 pADFun tape_Jacobian(pADFun& pfun);
 RcppExport SEXP _scorematchingad_tape_Jacobian(SEXP pfunSEXP) {
@@ -230,6 +242,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_fixdynamic", (DL_FUNC) &_scorematchingad_fixdynamic, 3},
     {"_scorematchingad_reembed", (DL_FUNC) &_scorematchingad_reembed, 2},
     {"_scorematchingad_fixindependent", (DL_FUNC) &_scorematchingad_fixindependent, 3},
+    {"_scorematchingad_keeprange", (DL_FUNC) &_scorematchingad_keeprange, 2},
     {"_scorematchingad_tape_Jacobian", (DL_FUNC) &_scorematchingad_tape_Jacobian, 1},
     {"_scorematchingad_tape_Hessian", (DL_FUNC) &_scorematchingad_tape_Hessian, 1},
     {"_scorematchingad_tape_gradoffset", (DL_FUNC) &_scorematchingad_tape_gradoffset, 1},
