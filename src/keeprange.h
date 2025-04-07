@@ -11,6 +11,7 @@
 //' @description Retapes an existing `CppAD` tape omitting some of the returned elements.
 //' For creating this tape, the values of `pfun$dyntape` and `pfun$xtape` are used.
 //' @return An `Rcpp_ADFun` object.
+//' @export
 // [[Rcpp::export]]
 pADFun keeprange(pADFun & pfun,
                  Eigen::Matrix<int, Eigen::Dynamic, 1> keep);

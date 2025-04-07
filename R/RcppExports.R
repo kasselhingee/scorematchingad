@@ -69,6 +69,7 @@ fixindependent <- function(pfun, x, isfixed) {
 #' @description Retapes an existing `CppAD` tape omitting some of the returned elements.
 #' For creating this tape, the values of `pfun$dyntape` and `pfun$xtape` are used.
 #' @return An `Rcpp_ADFun` object.
+#' @export
 keeprange <- function(pfun, keep) {
     .Call(`_scorematchingad_keeprange`, pfun, keep)
 }
