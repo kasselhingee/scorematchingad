@@ -9,7 +9,7 @@ sme_estvar <- function(smdfun, estimate, Y, Yapproxcentres = NA * Y, approxorder
   Jsmdfun_u <- tape_swap(Jsmdfun)
   Hsmdfun_u <- tape_swap(Hsmdfun)
 
-  hess <- evaltape_wsum(Hsmdfun_u, xmat = Y, pmat = 0*estimate, xcentres = Yapproxcentres, approxorder = 10)
+  hess <- evaltape_wsum(Hsmdfun_u, xmat = Y, pmat = estimate, xcentres = Yapproxcentres, approxorder = 10)
   sens <- -matrix(hess, byrow = TRUE, ncol = length(estimate))/nrow(Y)
   sensinv <- solve(sens)
 
