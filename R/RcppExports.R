@@ -24,6 +24,17 @@ taylorApprox <- function(pfun, x, centre, dynparam, order) {
     .Call(`_scorematchingad_taylorApprox`, pfun, x, centre, dynparam, order)
 }
 
+#' @title Average Across Range of a Tape
+#' @family tape builders
+#' @param pfun An `Rcpp_ADFun` object.
+#' @description Creates a `CppAD` tape that is the average of the returned values of `pfun`.
+#' For creating this tape, the values of `pfun$dyntape` and `pfun$xtape` are used.
+#' @return An `Rcpp_ADFun` object.
+#' @export
+avgrange <- function(pfun) {
+    .Call(`_scorematchingad_avgrange`, pfun)
+}
+
 set_cppad_error_handler <- function() {
     invisible(.Call(`_scorematchingad_set_cppad_error_handler`))
 }

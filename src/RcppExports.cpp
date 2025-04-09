@@ -50,6 +50,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// avgrange
+pADFun avgrange(pADFun& pfun);
+RcppExport SEXP _scorematchingad_avgrange(SEXP pfunSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< pADFun& >::type pfun(pfunSEXP);
+    rcpp_result_gen = Rcpp::wrap(avgrange(pfun));
+    return rcpp_result_gen;
+END_RCPP
+}
 // set_cppad_error_handler
 void set_cppad_error_handler();
 RcppExport SEXP _scorematchingad_set_cppad_error_handler() {
@@ -237,6 +248,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_abort_recording", (DL_FUNC) &_scorematchingad_abort_recording, 0},
     {"_scorematchingad_taylorApprox_currentdynparam", (DL_FUNC) &_scorematchingad_taylorApprox_currentdynparam, 4},
     {"_scorematchingad_taylorApprox", (DL_FUNC) &_scorematchingad_taylorApprox, 5},
+    {"_scorematchingad_avgrange", (DL_FUNC) &_scorematchingad_avgrange, 1},
     {"_scorematchingad_set_cppad_error_handler", (DL_FUNC) &_scorematchingad_set_cppad_error_handler, 0},
     {"_scorematchingad_test_Rcpphandler", (DL_FUNC) &_scorematchingad_test_Rcpphandler, 0},
     {"_scorematchingad_fixdynamic", (DL_FUNC) &_scorematchingad_fixdynamic, 3},
