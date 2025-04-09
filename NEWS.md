@@ -1,3 +1,7 @@
+# Version 0.1.3
+Bug fixes: export of `evaltape_range()` and `keeprange()`.
+Added a new tape builder that averages range `avgrange()`.
+
 # Version 0.1.2
 Exposing new functions for modifying the arguments of Rcpp_adfun objects: fixdynamic() and fixindependent().
 
