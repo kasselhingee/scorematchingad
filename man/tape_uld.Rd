@@ -75,6 +75,7 @@ out$tape$name
 }
 \seealso{
 Other tape builders: 
+\code{\link{avgrange}()},
 \code{\link{fixdynamic}()},
 \code{\link{fixindependent}()},
 \code{\link{keeprange}()},

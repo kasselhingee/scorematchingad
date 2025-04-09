@@ -123,6 +123,7 @@ evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
 }
 \seealso{
 Other tape builders: 
+\code{\link{avgrange}()},
 \code{\link{fixdynamic}()},
 \code{\link{fixindependent}()},
 \code{\link{keeprange}()},

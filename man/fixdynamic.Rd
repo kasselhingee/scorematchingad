@@ -22,6 +22,7 @@ For creating this tape, the values of \code{pfun$xtape} is used.
 }
 \seealso{
 Other tape builders: 
+\code{\link{avgrange}()},
 \code{\link{fixindependent}()},
 \code{\link{keeprange}()},
 \code{\link{tape_Hessian}()},

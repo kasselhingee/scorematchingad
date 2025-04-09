@@ -22,6 +22,7 @@ For creating this tape, the values of \code{pfun$dyntape} are used.
 }
 \seealso{
 Other tape builders: 
+\code{\link{avgrange}()},
 \code{\link{fixdynamic}()},
 \code{\link{keeprange}()},
 \code{\link{tape_Hessian}()},

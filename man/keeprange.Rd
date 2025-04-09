@@ -20,6 +20,7 @@ For creating this tape, the values of \code{pfun$dyntape} and \code{pfun$xtape} 
 }
 \seealso{
 Other tape builders: 
+\code{\link{avgrange}()},
 \code{\link{fixdynamic}()},
 \code{\link{fixindependent}()},
 \code{\link{tape_Hessian}()},
