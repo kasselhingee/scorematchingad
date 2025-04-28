@@ -24,7 +24,7 @@ template <typename T>
 struct manifold { //exactly like a class, but with default public members https://stackoverflow.com/questions/24196885/can-c-struct-have-member-functions
   //make these members 'pure virtual' means this is an 'abstract class'
   virtual Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> Pmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &) = 0; //projection matrix for manifold, given vector on the manifold.
-  virtual Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> dPmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &, const int &) = 0; //elementwise derivative of projection matrix for manifold
+  virtual Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> dPmatfun(const Eigen::Matrix<T, Eigen::Dynamic, 1> &, const int &) = 0; //elementwise derivative of projection matrix for manifold. Element index given by the int argument. Returns a matrix of the same size as Pmat with each element the derivative of the corresponding element in Pmat
   //for taping will need to pass copies - so that the coefficients of the tape are not updated by other calls part way through
   virtual ~manifold(){}; //destructor
   std::string name() const { //function giving the manifold-transform name

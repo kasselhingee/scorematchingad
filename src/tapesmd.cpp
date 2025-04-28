@@ -80,7 +80,7 @@ pADFun tapesmd(pADFun & uldtape,
     hgPg[0] = 0.5 * h2[0] * (Pmat * jac).dot(jac);
     if (verbose){PrintForVec("\n(1)The value of hgPg is:", hgPg);}
 
-    //hlap
+    //hlap with laplacian of uld, lapl, computed using (14) of Scealy and Wood
     veca1 lapl(1);
     lapl[0] = 0.;
     for(size_t i=0; i < d; i++){
