@@ -25,6 +25,7 @@ Other tape builders:
 \code{\link{fixindependent}()},
 \code{\link{tape_Hessian}()},
 \code{\link{tape_Jacobian}()},
+\code{\link{tape_bdryw}()},
 \code{\link{tape_gradoffset}()},
 \code{\link{tape_logJacdet}()},
 \code{\link{tape_smd}()},

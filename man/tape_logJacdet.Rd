@@ -26,6 +26,7 @@ Other tape builders:
 \code{\link{keeprange}()},
 \code{\link{tape_Hessian}()},
 \code{\link{tape_Jacobian}()},
+\code{\link{tape_bdryw}()},
 \code{\link{tape_gradoffset}()},
 \code{\link{tape_smd}()},
 \code{\link{tape_swap}()},

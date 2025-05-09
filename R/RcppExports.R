@@ -181,7 +181,7 @@ tape_swap <- function(pfun) {
 #' For `tape_bdryw_inbuilt()`, currently available unnormalised log-density functions are:
 #'
 #' ```{r, results = "asis", echo = FALSE}
-#' cat(paste(" +", llnames), sep = "\n")
+#' cat(paste(" +", bdrywnames), sep = "\n")
 #' ```
 #' @export
 tape_bdryw_inbuilt <- function(name, x, acut) {
