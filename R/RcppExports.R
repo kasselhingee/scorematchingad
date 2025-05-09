@@ -218,7 +218,7 @@ tape_uld_inbuilt <- function(name, x, theta) {
 #' @param weightname The name of the weight function to use
 #' @param acut The constraint a_c in the weight function
 #' @return An RCpp::XPtr object pointing to the ADFun
-tapesmd <- function(uldtape, tran, M, weightname, acut, verbose) {
-    .Call(`_scorematchingad_tapesmd`, uldtape, tran, M, weightname, acut, verbose)
+tapesmd <- function(uldtape, tran, M, bdrywtape, verbose) {
+    .Call(`_scorematchingad_tapesmd`, uldtape, tran, M, bdrywtape, verbose)
 }
 

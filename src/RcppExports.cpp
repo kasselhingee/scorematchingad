@@ -222,18 +222,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // tapesmd
-pADFun tapesmd(pADFun& uldtape, transform<a1type>& tran, manifold<a1type>& M, std::string weightname, const double& acut, bool verbose);
-RcppExport SEXP _scorematchingad_tapesmd(SEXP uldtapeSEXP, SEXP tranSEXP, SEXP MSEXP, SEXP weightnameSEXP, SEXP acutSEXP, SEXP verboseSEXP) {
+pADFun tapesmd(pADFun& uldtape, transform<a1type>& tran, manifold<a1type>& M, pADFun& bdrywtape, bool verbose);
+RcppExport SEXP _scorematchingad_tapesmd(SEXP uldtapeSEXP, SEXP tranSEXP, SEXP MSEXP, SEXP bdrywtapeSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< pADFun& >::type uldtape(uldtapeSEXP);
     Rcpp::traits::input_parameter< transform<a1type>& >::type tran(tranSEXP);
     Rcpp::traits::input_parameter< manifold<a1type>& >::type M(MSEXP);
-    Rcpp::traits::input_parameter< std::string >::type weightname(weightnameSEXP);
-    Rcpp::traits::input_parameter< const double& >::type acut(acutSEXP);
+    Rcpp::traits::input_parameter< pADFun& >::type bdrywtape(bdrywtapeSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(tapesmd(uldtape, tran, M, weightname, acut, verbose));
+    rcpp_result_gen = Rcpp::wrap(tapesmd(uldtape, tran, M, bdrywtape, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -260,7 +259,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_tape_bdryw_inbuilt", (DL_FUNC) &_scorematchingad_tape_bdryw_inbuilt, 3},
     {"_scorematchingad_getllptr", (DL_FUNC) &_scorematchingad_getllptr, 1},
     {"_scorematchingad_tape_uld_inbuilt", (DL_FUNC) &_scorematchingad_tape_uld_inbuilt, 3},
-    {"_scorematchingad_tapesmd", (DL_FUNC) &_scorematchingad_tapesmd, 6},
+    {"_scorematchingad_tapesmd", (DL_FUNC) &_scorematchingad_tapesmd, 5},
     {"_rcpp_module_boot_manifolds", (DL_FUNC) &_rcpp_module_boot_manifolds, 0},
     {"_rcpp_module_boot_ADFun", (DL_FUNC) &_rcpp_module_boot_ADFun, 0},
     {NULL, NULL, 0}

@@ -22,8 +22,7 @@
 pADFun tapesmd(pADFun & uldtape, //uld wrt end manifold of `tran` ie M
                transform<a1type> &tran,
                manifold<a1type> &M,
-               std::string weightname, //the weight function h^2 - name of a a1type (*h2fun)(const veca1 &, const double &)
-               const double & acut, //the acut constraint for the weight functions
+               pADFun & bdrywtape,//the weight function h^2 - name of a a1type (*h2fun)(const veca1 &, const double &)
                bool verbose
                );
 

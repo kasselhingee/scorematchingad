@@ -4,25 +4,9 @@
 pADFun tapesmd(pADFun & uldtape,
                transform<a1type> &tran,
                manifold<a1type> &M,
-               std::string weightname, //the weight function h^2 - name of a a1type (*h2fun)(const veca1 &, const double &)
-               const double & acut, //the acut constraint for the weight functions
+               pADFun & bdrywtape,//the weight function h^2 - name of a a1type (*h2fun)(const veca1 &, const double &)
                bool verbose
                ){
-  //choose weight function
-  a1type (*h2fun)(const veca1 &, const double &) = nullptr;
-  if (weightname.compare("prodsq") == 0){
-    h2fun = bdryweight::prodsq;
-  }
-  if (weightname.compare("minsq") == 0){
-    h2fun = bdryweight::minsq;
-  }
-  if (weightname.compare("ones") == 0){
-    h2fun = bdryweight::oneweights;
-  }
-  //check weight function
-  if (h2fun == nullptr){
-    throw std::invalid_argument("Matching weight function not found");
-  }
 
     size_t d(uldtape.Domain()); //manifold is embedded in Euclidean space of dimension d (may be different to simplex)
 
@@ -32,7 +16,7 @@ pADFun tapesmd(pADFun & uldtape,
     //get boundary weight function tape
     veca1 z=uldtape.xtape; //z is on the reembed manifold, uldtape should already be this
     CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
-    h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
+    h2tape = (bdrywtape.get_ptr())->base2ad(); //convert to a function of a1type rather than double
 
     //check inputs and ll tape match
     if (uldtape.Domain() != (unsigned)z.size()){Rcpp::stop("Dimension of z (the input measurement on the manifold) is %i, which does not match domain size of log density function of %i.", z.size(), uldtape.Domain());}
