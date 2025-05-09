@@ -122,3 +122,7 @@ tapingboilerplate_bdryw <- c(
 "}"
 )
 
+bdrywnames <- c(
+"prodsq",
+"minsq",
+"ones")
