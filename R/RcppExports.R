@@ -175,16 +175,6 @@ tape_swap <- function(pfun) {
 }
 
 #' @noRd
-#' @title Tape of a log-density calculation 2
-#' @param p dimension of measurements
-#' @param bd dimension of the parameter vector
-#' @param llname name of the likelihood function
-#' @return An RCpp::XPtr object pointing to the ADFun
-ptapell2 <- function(z_ad, theta_ad, llfXPtr, tran, fixedtheta, verbose) {
-    .Call(`_scorematchingad_ptapell2`, z_ad, theta_ad, llfXPtr, tran, fixedtheta, verbose)
-}
-
-#' @noRd
 #' @title Get an XPtr to a named log-density function in source code of package
 #' @param llname name of the likelihood function
 #' @return An RCpp::XPtr object pointing to a `llPtr` object of the log-density function. Since `llPtr` is itself a pointer object, we have an XPtr pointing to a pointer that points to a function.

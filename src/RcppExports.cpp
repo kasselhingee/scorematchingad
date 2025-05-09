@@ -184,22 +184,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ptapell2
-pADFun ptapell2(veca1 z_ad, veca1 theta_ad, Rcpp::XPtr<llPtr> llfXPtr, transform_a1type& tran, Eigen::Matrix<int, Eigen::Dynamic, 1> fixedtheta, bool verbose);
-RcppExport SEXP _scorematchingad_ptapell2(SEXP z_adSEXP, SEXP theta_adSEXP, SEXP llfXPtrSEXP, SEXP tranSEXP, SEXP fixedthetaSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< veca1 >::type z_ad(z_adSEXP);
-    Rcpp::traits::input_parameter< veca1 >::type theta_ad(theta_adSEXP);
-    Rcpp::traits::input_parameter< Rcpp::XPtr<llPtr> >::type llfXPtr(llfXPtrSEXP);
-    Rcpp::traits::input_parameter< transform_a1type& >::type tran(tranSEXP);
-    Rcpp::traits::input_parameter< Eigen::Matrix<int, Eigen::Dynamic, 1> >::type fixedtheta(fixedthetaSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(ptapell2(z_ad, theta_ad, llfXPtr, tran, fixedtheta, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
 // getllptr
 Rcpp::XPtr<llPtr> getllptr(std::string llname);
 RcppExport SEXP _scorematchingad_getllptr(SEXP llnameSEXP) {
@@ -260,7 +244,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scorematchingad_tape_gradoffset", (DL_FUNC) &_scorematchingad_tape_gradoffset, 1},
     {"_scorematchingad_tape_logJacdet", (DL_FUNC) &_scorematchingad_tape_logJacdet, 1},
     {"_scorematchingad_tape_swap", (DL_FUNC) &_scorematchingad_tape_swap, 1},
-    {"_scorematchingad_ptapell2", (DL_FUNC) &_scorematchingad_ptapell2, 6},
     {"_scorematchingad_getllptr", (DL_FUNC) &_scorematchingad_getllptr, 1},
     {"_scorematchingad_tape_uld_inbuilt", (DL_FUNC) &_scorematchingad_tape_uld_inbuilt, 3},
     {"_scorematchingad_tapesmd", (DL_FUNC) &_scorematchingad_tapesmd, 6},
