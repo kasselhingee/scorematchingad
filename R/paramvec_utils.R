@@ -72,6 +72,7 @@ t_sfi2u <- function(fitted, starttheta, isfixed){
   theta <- t_fu2t(fitted, usertheta)
   return(theta)
 }
+t_fsi2t <- t_sfi2u  #I think this is a better function name than t_sfi2u
 
 #' @noRd
 #' @describeIn t_u2i Convert `starttheta` into a vector of the just the elements to be fitted.
