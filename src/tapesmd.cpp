@@ -30,7 +30,6 @@ pADFun tapesmd(pADFun & uldtape,
     mata1 Pmat(d, d);
 
     //get boundary weight function tape
-    CppAD::ADFun<double> dh2tape;
     veca1 z=uldtape.xtape; //z is on the reembed manifold, uldtape should already be this
     CppAD::ADFun<a1type, double> h2tape; //The second type here 'double' is for the 'RecBase' in ad_fun.hpp. It doesn't seem to change the treatment of the object.
     h2tape = tapeh2(z, h2fun, acut).base2ad(); //convert to a function of a1type rather than double
