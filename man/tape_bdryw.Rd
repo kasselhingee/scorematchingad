@@ -34,11 +34,9 @@ Use \code{tape_bdryw_inbuilt()} for tapes of inbuilt functions implemented in th
 \details{
 For \code{tape_bdryw_inbuilt()}, currently available unnormalised log-density functions are:
 \itemize{
-\item dirichlet
-\item ppi
-\item vMF
-\item Bingham
-\item FB
+\item prodsq
+\item minsq
+\item ones
 }
 
 The function \code{tape_bdryw()} uses \code{\link[Rcpp:sourceCpp]{Rcpp::sourceCpp()}} to generate a tape of a function defined in C++.
