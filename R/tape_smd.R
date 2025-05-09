@@ -2,8 +2,8 @@
 #' @family tape builders
 #' @family generic score matching tools
 #' @param thetatape_creator A function that generates tape values for theta. Must take a single argument, `n` the number for values to generate.
-#' @param bdryw The name of the boundary weight function. "ones" for manifolds without boundary. For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible - see [`ppi()`] for more information on these.
-#' @param acut A parameter passed to the boundary weight function `bdryw`. Ignored for `bdryw = "ones"`.
+#' @param bdryw The name of the boundary weight function or the tape of a custom boundary weight function. See [`tape_bdryw()`]. "ones" for manifolds without boundary. For the simplex and positive orthant of the sphere, "prodsq" and "minsq" are possible - see [`ppi()`] for more information on these.
+#' @param acut An optional parameter passed to the built-in boundary weight functions. See [`ppi()`] for more information.
 #' @param verbose If `TRUE` more details are printed when taping. These details are for debugging and will likely be comprehensible only to users familiar with the source code of this package.
 #' @description
 #' For a parametric model family, the function `tape_smd()` generates `CppAD` tapes for the unnormalised log-density of the model family and of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} (defined in [`scorematchingtheory`]).

@@ -32,11 +32,12 @@ Use \code{tape_bdryw()} to specify a custom function using \verb{C++} code much 
 Use \code{tape_bdryw_inbuilt()} for tapes of inbuilt functions implemented in this package.
 }
 \details{
-For \code{tape_bdryw_inbuilt()}, currently available unnormalised log-density functions are:
+For \code{tape_bdryw_inbuilt()}, currently available functions are:
 \itemize{
 \item prodsq
 \item minsq
 \item ones
+See \code{\link[=ppi]{ppi()}} for details on prodsq and minsq. "ones" is the function that always returns \code{1}, so is the function to use for manifolds without boundary.
 }
 
 The function \code{tape_bdryw()} uses \code{\link[Rcpp:sourceCpp]{Rcpp::sourceCpp()}} to generate a tape of a function defined in C++.
@@ -63,7 +64,7 @@ Non-smooth functions should be used with care, but can be specified using \code{
 \dontrun{
 out <- tape_bdrw(
 "a1type myminsq(const veca1 &x){
-veca1 xsq = x.array.square();
+veca1 xsq = x.array().square();
 a1type minval(0.1 * 0.1);
 for(size_t i=0;i<x.size();i++){
   minval = CppAD::CondExpLe(xsq[i], minval, xsq[i], minval);

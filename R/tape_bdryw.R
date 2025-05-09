@@ -30,7 +30,7 @@
 #' \dontrun{
 #' out <- tape_bdrw(
 #' "a1type myminsq(const veca1 &x){
-#' veca1 xsq = x.array.square();
+#' veca1 xsq = x.array().square();
 #' a1type minval(0.1 * 0.1);
 #' for(size_t i=0;i<x.size();i++){
 #'   minval = CppAD::CondExpLe(xsq[i], minval, xsq[i], minval);

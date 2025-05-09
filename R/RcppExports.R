@@ -178,11 +178,12 @@ tape_swap <- function(pfun) {
 #' @name tape_bdryw
 #' @param name Name of an inbuilt function. See details.
 #' @details
-#' For `tape_bdryw_inbuilt()`, currently available unnormalised log-density functions are:
+#' For `tape_bdryw_inbuilt()`, currently available functions are:
 #'
 #' ```{r, results = "asis", echo = FALSE}
 #' cat(paste(" +", bdrywnames), sep = "\n")
 #' ```
+#' See [`ppi()`] for details on prodsq and minsq. "ones" is the function that always returns `1`, so is the function to use for manifolds without boundary.
 #' @export
 tape_bdryw_inbuilt <- function(name, x, acut) {
     .Call(`_scorematchingad_tape_bdryw_inbuilt`, name, x, acut)
