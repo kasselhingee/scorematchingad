@@ -55,13 +55,7 @@ tape_smd <- function(start, tran = "identity", end = start, ll,
 
   tranman <- manifoldtransform(start, tran, end)
 
-  # check bdryw and associated acut
-  if (!(all(c(tran, end) == c("sqrt", "sph")) | all(c(tran, end) == c("identity", "sim")))){
-    if (bdryw != "ones"){warning("Manifold supplied has no boundary. Using bdryw = 'ones' is strongly recommended.")}
-  }
-  if ((bdryw == "ones") && (abs(acut - 1) > 1E-8)){
-    warning("The value of 'acut' is ignored for bdryw == 'ones'")
-  }
+
 
   lltape <- tapell(ll = ll,
                     ytape = ytape,
@@ -70,11 +64,24 @@ tape_smd <- function(start, tran = "identity", end = start, ll,
                     tranobj = tranman$tran)
   stopifnot(is.numeric(acut))
 
-  bdrywtape <- tape_bdryw_inbuilt(bdryw, x = tranman$tran$toM(ytape), acut = acut)
+  # choose between a canned boundary weight function or a custom boundary weight function
+  if (typeof(bdryw) == "character"){ 
+    # check bdryw and associated acut
+    if (!(all(c(tran, end) == c("sqrt", "sph")) | all(c(tran, end) == c("identity", "sim")))){
+      if (bdryw != "ones"){warning("Manifold supplied has no boundary. Using bdryw = 'ones' is strongly recommended.")}
+    }
+    if ((bdryw == "ones") && (abs(acut - 1) > 1E-8)){
+      warning("The value of 'acut' is ignored for bdryw == 'ones'")
+    }
+    bdryw <- tape_bdryw_inbuilt(bdryw, x = tranman$tran$toM(ytape), acut = acut)
+  } else if (!inherits(bdryw, "Rcpp_ADFun")){
+    stop("bdryw must be a name or a taped boundary weight function")
+  }
+
   smdtape <- tapesmd(uldtape = lltape,
                         tran = tranman$tran,
                         M = tranman$man,
-                        bdrywtape = bdrywtape,
+                        bdrywtape = bdryw,
                         verbose = verbose)
   return(list(
     lltape = lltape,
@@ -83,7 +90,7 @@ tape_smd <- function(start, tran = "identity", end = start, ll,
       transform = tran,
       endmanifold = end,
       ulength = length(ytape),
-      bdryw = bdryw,
+      bdryw = bdryw$name,
       acut = acut
     )
   ))
