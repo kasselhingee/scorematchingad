@@ -174,6 +174,20 @@ tape_swap <- function(pfun) {
     .Call(`_scorematchingad_tape_swap`, pfun)
 }
 
+#' @rdname tape_bdryw
+#' @name tape_bdryw
+#' @param name Name of an inbuilt function. See details.
+#' @details
+#' For `tape_bdryw_inbuilt()`, currently available unnormalised log-density functions are:
+#'
+#' ```{r, results = "asis", echo = FALSE}
+#' cat(paste(" +", llnames), sep = "\n")
+#' ```
+#' @export
+tape_bdryw_inbuilt <- function(name, x, acut) {
+    .Call(`_scorematchingad_tape_bdryw_inbuilt`, name, x, acut)
+}
+
 #' @noRd
 #' @title Get an XPtr to a named log-density function in source code of package
 #' @param llname name of the likelihood function

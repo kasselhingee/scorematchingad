@@ -16,3 +16,12 @@ test_that("print.Rcpp_ADFun() works", {
   tape <- tape_uld_inbuilt("dirichlet", utape, dyntape)
   expect_output(print(tape), "dirichlet.*5")
 })
+
+test_that("tape_bdryw_inbuilt() works", {
+  tape <- tape_bdryw_inbuilt("minsq", rep(0.2, 5), 0.1)
+  expect_equal(tape$dyntape, 0.1)
+  expect_equal(tape$xtape, rep(0.2, 5))
+
+  expect_equal(tape$forward(0, rep(0.2, 5)), 0.1^2)
+  expect_equal(tape$forward(0, c(0.01, 0.19, 0.2, 0.2, 0.2)), 0.01^2)
+})
