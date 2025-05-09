@@ -15,7 +15,7 @@ CppAD::ADFun<double> tapeh2(veca1 z,
 //' For `tape_bdryw_inbuilt()`, currently available unnormalised log-density functions are:
 //'
 //' ```{r, results = "asis", echo = FALSE}
-//' cat(paste(" +", llnames), sep = "\n")
+//' cat(paste(" +", bdrywnames), sep = "\n")
 //' ```
 //' @export
 // [[Rcpp::export]]

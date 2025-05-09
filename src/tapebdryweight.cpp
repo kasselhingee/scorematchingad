@@ -26,7 +26,7 @@ pADFun tape_bdryw_inbuilt(std::string name, veca1 x, const double & acut){
     h2fun = bdryweight::minsq;
   }
   if (name.compare("ones") == 0){
-    h2fun = bdryweight::oneweights;
+    h2fun = bdryweight::ones;
   }
   //check weight function
   if (h2fun == nullptr){

@@ -35,7 +35,7 @@ namespace bdryweight { //namespace for divergence weight functions
 
   //no weights
   template <class Type>
-  Type oneweights(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
+  Type ones(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const double & acut){
     Type out;
     out = 1.;
     return(out);
