@@ -49,7 +49,7 @@ ppi_smvalues(
 
 \item{constrainbeta}{If \code{TRUE}, elements of \eqn{\beta} that are less than \code{-1} are converted to \code{-1 + 1E-7}.}
 
-\item{bdryw}{The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.}
+\item{bdryw}{The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details and \code{\link[=tape_bdryw_inbuilt]{tape_bdryw_inbuilt()}}.}
 
 \item{acut}{The threshold \eqn{a_c} in \code{bdryw} to avoid over-weighting measurements interior to the simplex}
 
@@ -98,18 +98,7 @@ Estimation may be performed via transformation of the measure in Hyvärinen dive
 Properties of the estimator using the square root transform were studied by \insertCite{scealy2023sc;textual}{scorematchingad}.
 Properties of the estimator using the additive log ratio transform were studied by \insertCite{scealy2024ro;textual}{scorematchingad}.
 
-There are three boundary weight functions available:
-\itemize{
-\item The function "ones" applies no weights and should be used whenever the manifold does not have a boundary.
-\item The function "minsq" is the minima-based boundary weight function for the PPI model \insertCite{@Equation 12, @scealy2023sc}{scorematchingad}
-\deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
-where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
-and \eqn{z_j}{zj} is the jth component of z.
-\item The function "prodsq" is the product-based \insertCite{@Equation 9, @scealy2023sc}{scorematchingad}
-\deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2),}
-where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
-and \eqn{z_j}{zj} is the jth component of z.
-}
+There are three boundary weight functions available (see \code{\link[=tape_bdryw_inbuilt]{tape_bdryw_inbuilt()}} for more details): "ones", "minsq", "prodsq".
 
 Scealy and Wood \insertCite{@Theorem 1, @scealy2023sc}{scorematchingad} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See \code{\link{scorematchingtheory}})
 when the boundary weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.

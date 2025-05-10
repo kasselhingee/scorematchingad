@@ -14,6 +14,8 @@ tape_bdryw(fileORcode = "", x, Cppopt = NULL)
 
 \item{x}{Vector giving location in the manifold.}
 
+\item{acut}{The \eqn{a_c} threshold used by the "minsq" and "prodsq" built-in functions. See details.}
+
 \item{fileORcode}{A character string giving the path name of a file containing the unnormalised log-density definition \emph{OR} code. \code{fileORcode} will be treated as a file name if \code{fileORcode} contains no new line characters ('\\n' or '\\r\\n') and has a file extension detected by \code{\link[tools:fileutils]{tools::file_ext()}}.}
 
 \item{Cppopt}{List of named options passed to \code{Rcpp::sourceCpp()}}
@@ -34,11 +36,18 @@ Use \code{tape_bdryw_inbuilt()} for tapes of inbuilt functions implemented in th
 \details{
 For \code{tape_bdryw_inbuilt()}, currently available functions are:
 \itemize{
-\item prodsq
-\item minsq
-\item ones
-See \code{\link[=ppi]{ppi()}} for details on prodsq and minsq. "ones" is the function that always returns \code{1}, so is the function to use for manifolds without boundary.
+\item The function "ones" applies no weights and should be used whenever the manifold does not have a boundary.
+\deqn{h(x)^2 = 1.}
+\item The function "minsq" is the minima-based boundary weight function \insertCite{@Equation 12, @scealy2023sc}{scorematchingad}
+\deqn{h(x)^2 = \min(x_1^2, x_2^2, ..., x_p^2, a_c^2).}{h(x)^2 = min(x1^2, x2^2, ..., xp^2, a_c^2),}
+where \eqn{x_j}{xj} is the jth component of x.
+\item The function "prodsq" is the product-based \insertCite{@Equation 9, @scealy2023sc}{scorematchingad}
+\deqn{h(x)^2 = \min(\prod_{j=1}^{p} x_j^2, a_c^2).}{h(x)^2 = min(x1^2 * x2^2 * ... * xp^2, a_c^2),}
+where \eqn{x_j}{xj} is the jth component of x.
 }
+
+The "minsq" and "prodsq" functions are useful when the manifold is the positive orthant, the p-dimensional unit sphere restricted to the positive orthant, or the unit simplex.
+\insertCite{@scealy2023sc}{scorematchingad} prove that both "minsq" and "prodsq" can be used for score matching the PPI model on the simplex or positive orthant of the sphere.
 
 The function \code{tape_bdryw()} uses \code{\link[Rcpp:sourceCpp]{Rcpp::sourceCpp()}} to generate a tape of a function defined in C++.
 

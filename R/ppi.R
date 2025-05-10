@@ -19,16 +19,7 @@
 #' Properties of the estimator using the square root transform were studied by \insertCite{scealy2023sc;textual}{scorematchingad}.
 #' Properties of the estimator using the additive log ratio transform were studied by \insertCite{scealy2024ro;textual}{scorematchingad}.
 #'
-#' There are three boundary weight functions available:
-#' * The function "ones" applies no weights and should be used whenever the manifold does not have a boundary.
-#' * The function "minsq" is the minima-based boundary weight function for the PPI model \insertCite{@Equation 12, @scealy2023sc}{scorematchingad}
-#' \deqn{\tilde{h}(z)^2 = \min(z_1^2, z_2^2, ..., z_p^2, a_c^2).}{h(z)^2 = min(z1^2, z2^2, ..., zp^2, a_c^2),}
-#' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
-#' and \eqn{z_j}{zj} is the jth component of z.
-#' * The function "prodsq" is the product-based \insertCite{@Equation 9, @scealy2023sc}{scorematchingad}
-#' \deqn{\tilde{h}(z)^2 = \min(\prod_{j=1}^{p} z_j^2, a_c^2).}{h(z)^2 = min(z1^2 * z2^2 * ... * zp^2, a_c^2),}
-#' where \eqn{z} is a point in the positive orthant of the p-dimensional unit sphere
-#' and \eqn{z_j}{zj} is the jth component of z.
+#' There are three boundary weight functions available (see [`tape_bdryw_inbuilt()`] for more details): "ones", "minsq", "prodsq".
 #'
 #' Scealy and Wood \insertCite{@Theorem 1, @scealy2023sc}{scorematchingad} prove that minimising the weighted Hyvärinen Divergence is equivalent to minimising \eqn{\psi(f, f_0)} (See [`scorematchingtheory`])
 #' when the boundary weight function is smooth or for the functions "minsq" and "prodsq"  above when the manifold is the simplex or positive orthant of a sphere.
@@ -49,7 +40,7 @@
 #' @param trans The name of the transformation of the manifold in Hyvärinen divergence (See [`scorematchingtheory`]): "clr" (centred log ratio), "alr" (additive log ratio), "sqrt" or "none".
 #' @param Y A matrix of measurements. Each row is a compositional measurement (i.e. each row sums to 1 and has non-negative elements).
 #' @param paramvec Optionally a vector of the PPI models parameters. `NA`-valued elements of this vector are estimated and non-`NA` values are fixed. Generate `paramvec` easily using [ppi_paramvec()].  If `NULL` then all elements of \eqn{A_L}, \eqn{b_L} and \eqn{\beta} are estimated.
-#' @param bdryw The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details.
+#' @param bdryw The boundary weight function for down weighting measurements as they approach the manifold boundary. Either "ones", "minsq" or "prodsq". See details and [`tape_bdryw_inbuilt()`].
 #' @param acut The threshold \eqn{a_c} in `bdryw` to avoid over-weighting measurements interior to the simplex
 #' @param control `iterative` only. Passed to [`optimx::Rcgmin()`] to control the iterative solver.
 #' @param bdrythreshold `iterative` or `closed` methods only. For measurements within `bdrythreshold` of the simplex boundary a Taylor approximation is applied by shifting the measurement `shiftsize` towards the center of the simplex.
