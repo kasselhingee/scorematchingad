@@ -25,7 +25,7 @@
 #' The body of the function must use operations from Eigen and/or CppAD, prefixed by `Eigen::` and `CppAD::` respectively. 
 #' There are no easy instructions for writing these as it is genuine `C++` code, which can be very opaque to those unfamiliar with `C++`.
 #' However, recently ChatGPT and claude.ai have been able to very quickly translating `R` functions to `C++` functions (KLH has been telling these A.I. to use Eigen and CppAD, and giving the definitions of `a1type` and `veca1`).
-#' I've found the quick reference pages for for [`Eigen`](https://eigen.tuxfamily.org/dox/) useful. Limited unary and binary operations are available directly from [`CppAD`](https://cppad.readthedocs.io) without `Eigen`. 
+#' I've found the quick reference pages for [`Eigen`](https://libeigen.gitlab.io/eigen/docs-nightly/group__QuickRefPage.html) useful. Limited unary and binary operations are available directly from [`CppAD`](https://cppad.readthedocs.io) without `Eigen`. 
 #' For the purposes of score matching the operations should all be smooth to create a smooth log-density and the normalising constant may be omitted.
 #' @examples
 #' \dontrun{
