@@ -83,3 +83,14 @@ Stiefel_proj <- function(Z, A){
 Stiefel_projmat <- function(A){
   diag(ncol(A)) %x% (diag(nrow(A)) - 0.5 * A %*% t(A)) - 0.5 * (t(A) %x% A) %*% commutation_mat(nrow(A), ncol(A))
 }
+
+#' @describeIn Stiefel_projection Element-wise derivative of `Stiefel_projmat()`. `i` and `j` specify the row and column index of the element respectively.
+Stiefel_projmat_d <- function(A, i, j){
+  zeros_m <- rep(0, nrow(A))
+  zeros_p <- rep(0, ncol(A))
+  ei <- zeros_m; ei[i] <- 1
+  ej <- zeros_p; ej[j] <- 1
+  -0.5 * (diag(ncol(A)) %x% (ei %*% t(ej) %*% t(A) + A %*% ej %*% t(ei))  + 
+            ( (ej %*% t(ei)) %x% A ) %*% commutation_mat(nrow(A), ncol(A)) + 
+            (t(A) %x% (ei %*% t(ej))) %*% commutation_mat(nrow(A), ncol(A)) )
+}
