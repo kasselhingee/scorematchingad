@@ -24,7 +24,7 @@ manifoldtransform <- function(start, tran = "identity", end = start){
   if (tran == "none"){tran <- "identity"}
   stopifnot(paste(start, tran, end, sep = "-") %in% mantrancombos)
   out <- list(tran = methods::new(transform_ad, tran),
-       man = methods::new(man_ad, end))
+       man = methods::new(man_ad, end, 0, 0))
   return(out)
 }
 

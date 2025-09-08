@@ -1,7 +1,7 @@
 # include "exposemanifold.h"
 
 // manifold object 'factory' . Per Rcpp instructions it returns a pointer so new must be used. It looks like delete isnt mentioned with factory even in the examples
-manifold<a1type> * newmanifold(const std::string &manifoldname, int param1=0, int param2=0){
+manifold<a1type> * newmanifold(const std::string &manifoldname, int param1, int param2){
   manifold<a1type> * out;  //returning a pointer
   if (manifoldname.compare("sph") == 0){
     out = new mantran::sph<a1type>(); //new needed because its going out of scope when returned by the function

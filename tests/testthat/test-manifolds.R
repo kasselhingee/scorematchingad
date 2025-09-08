@@ -1,5 +1,5 @@
 test_that("Manifold objects can be created, and member functions run", {
-  Euc <- methods::new(man_ad, "Euc")
+  Euc <- methods::new(man_ad, "Euc", 0, 0)
   expect_s4_class(Euc, "Rcpp_man_ad")
   z <- c(0.1, 0.5)
   expect_equal(dim(Euc$Pmatfun(z)), c(2,2))
@@ -17,7 +17,7 @@ test_that("Transform objects can be created, and member functions run", {
 })
 
 test_that("Sphere manifold object matches analytic results", {
-  sph <- methods::new(man_ad, "sph")
+  sph <- methods::new(man_ad, "sph", 0, 0)
   z <- c(0.2, 0.8, 0.3)
   z <- z/sqrt(sum(z^2))
   
@@ -56,7 +56,7 @@ test_that("sqrt transform matches other calculations", {
 })
 
 test_that("Simplex manifold object matches analytic results", {
-  sim <- methods::new(man_ad, "sim")
+  sim <- methods::new(man_ad, "sim", 0, 0)
   u <- c(0.1, 0.3, 0.6)
   expect_equal(sim$Pmatfun(u), diag(rep(1, 3)) - rep(1, 3) %*% t(rep(1, 3))/3)
 
@@ -102,14 +102,14 @@ test_that("alr transform matches analytic results",{
 
 
 test_that("Euc manifold object matches analytic results",{
-  Euc <- methods::new(man_ad, "Euc")
+  Euc <- methods::new(man_ad, "Euc", 0, 0)
   z <- c(0.5, 3)
   expect_equal(Euc$Pmatfun(z), diag(rep(1, 2)))
   expect_equal(Euc$dPmatfun(z, 2), matrix(0, nrow = 2, ncol = 2))
 })
 
 test_that("Hn111 manifold passes analytic tests",{
-  Hn111 <- methods::new(man_ad, "Hn111")
+  Hn111 <- methods::new(man_ad, "Hn111", 0, 0)
   # check projection matrix
   z <- c(0.1, 0.5, -0.6)
   set.seed(1342)
