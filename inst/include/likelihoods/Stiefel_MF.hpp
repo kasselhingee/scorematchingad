@@ -11,7 +11,7 @@ namespace ll { // namespace for log-likelihood functions
     T ll_Stiefel_MF(const Eigen::Matrix<T, Eigen::Dynamic, 1> &u, //u is vectorised matrix
              const Eigen::Matrix<T, Eigen::Dynamic, 1> &theta){//theta is a vectorised matrix too
         Eigen::Matrix<T, 1, 1> ymat = theta.transpose() * u; //ymat should be 1 x 1
-        return y(1);
+        return ymat(1);
   }
     
 

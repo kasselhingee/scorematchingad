@@ -44,5 +44,6 @@ llnames <- c(
   "ppi",
   "vMF",
   "Bingham",
-  "FB"
+  "FB",
+  "Stiefel_MF"
 )

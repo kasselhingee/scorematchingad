@@ -18,6 +18,9 @@ Rcpp::XPtr<llPtr> getllptr(std::string llname){
   if (llname.compare("FB") == 0){
     ll = ll::ll_FB;
   }
+  if (llname.compare("Stiefel_MF") == 0){
+    ll = ll::ll_Stiefel_MF;
+  }
   //check ll function
   if (ll == nullptr){
     Rcpp::stop("Matching ll function not found");
