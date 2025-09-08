@@ -10,7 +10,7 @@ struct Stiefel : public manifold<Type> {
   int ncol;
   Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> commutation_mat;
   ~Stiefel(){};
-  Stiefel(int nrow_, int ncol_) : nrow(nrow_) ncol(ncol_) {
+  Stiefel(int nrow_, int ncol_) : nrow(nrow_), ncol(ncol_) {
       commutation_mat = build_commutation_mat(nrow_, ncol_);
   };
 
@@ -48,7 +48,6 @@ struct Stiefel : public manifold<Type> {
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Ip = Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>::Identity(this->ncol, this->ncol);
 
     // build matrix out of x (invvec)
-    Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Xmat(this->nrow, this->ncol);
     Eigen::Map<Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>> Xmat(x.data(), this->nrow, this->ncol);
 
     // first term of proj matrix

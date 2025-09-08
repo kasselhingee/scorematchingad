@@ -4,4 +4,5 @@
 # include "manifold_Hn111.hpp"
 # include "manifold_simplex.hpp"
 # include "manifold_sph.hpp"
+# include "manifold_Stiefel.hpp"
 #endif
