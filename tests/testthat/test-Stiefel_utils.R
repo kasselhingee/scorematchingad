@@ -10,7 +10,7 @@ test_that("Stiefel_proj() and Stiefel_projmat() get to same result", {
   expect_equal(invvec(Stiefel_projmat(A) %*% vec(Z), 5), Stiefel_proj(Z, A))
 })
 
-test_that("Stiefel_projmat_d() matched iterative estimate of derivative", {
+test_that("Stiefel_projmat_d() matches iterative estimate of derivative", {
   A <- rstiefel::rustiefel(5, 3)
   i <- sample.int(5, 1)
   j <- sample.int(3, 1)
