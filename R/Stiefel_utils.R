@@ -65,3 +65,21 @@ commutation_mat_direct <- function(m, p){
 #' Uses memoisation to avoid recalculating the matrix for the same set of dimensions
 #' @export
 commutation_mat <- memoise_simple_function(commutation_mat_direct)
+
+#' @noRd
+#' @title Matrix for projection from Stiefel manifold to tangent space
+#' @description
+#' The projection of a matrix `Z` in the Stiefel manifold to the tangent space at `A` in the Stiefel manifold.
+#' The formula is from \insertCite{@eq2.4, @edelman1998ge}{scorematchingad} and has been rearranged for vec(Z)
+#' @name Stiefel_projection
+NULL
+
+#' @describeIn Stiefel_projection Function that projects `Z` onto the tangent space at `A` according to \insertCite{@eq2.4, @edelman1998ge}{scorematchingad}.
+Stiefel_proj <- function(Z, A){
+  (diag(nrow(A)) - 0.5 * A %*% t(A)) %*% Z - 0.5 * A %*% t(Z) %*% A
+}
+
+#' @describeIn Stiefel_projection Projection matrix for vectorised representation of `Z`. So that `invvec(Stiefel_projmat(A) %*% vec(Z)) = Stiefel_proj(Z, A)`
+Stiefel_projmat <- function(A){
+  diag(ncol(A)) %x% (diag(nrow(A)) - 0.5 * A %*% t(A)) - 0.5 * (t(A) %x% A) %*% commutation_mat(nrow(A), ncol(A))
+}
