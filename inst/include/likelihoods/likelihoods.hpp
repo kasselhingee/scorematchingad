@@ -7,6 +7,7 @@
 #include "vMF.hpp"
 #include "Bingham.hpp"
 #include "FB.hpp"
+#include "Stiefel_MF.hpp"
 
 #endif
 
