@@ -27,6 +27,7 @@ Imports:
     MCMCpack,
     optimx,
     FixedPoint,
+    rstiefel,
     Rdpack,
     Rcpp (>= 1.0.9),
     methods,
