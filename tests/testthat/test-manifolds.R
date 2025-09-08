@@ -163,3 +163,10 @@ test_that("clr transform passes analytic tests",{
 })
 
 
+test_that("Stiefel manifold object has correct matrices", {
+  A <- rstiefel::rustiefel(5, 3)
+  Stf <- methods::new(man_ad, "Stiefel", 5, 3)
+  expect_s4_class(Stf, "Rcpp_man_ad")
+  expect_equal(Stf$Pmatfun(vec(A)), Stiefel_projmat(A))
+  expect_equal(Stf$dPmatfun(vec(A), 3), Stiefel_projmat_d(A, 3, 1))
+})
