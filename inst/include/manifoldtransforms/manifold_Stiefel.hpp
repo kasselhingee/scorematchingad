@@ -61,6 +61,7 @@ struct Stiefel : public manifold<Type> {
 
   //partial derivative of the tangent-plane projection matrix should replicate R function `Stiefel_projmat_d()`
   Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> dPmatfun(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &x, const int &d) override {
+    //d runs from 0 to nrow*ncol - 1
     // build matrix out of x (invvec)
     Eigen::Map<const Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>> Xmat(x.data(), this->nrow, this->ncol);
 
@@ -74,7 +75,7 @@ struct Stiefel : public manifold<Type> {
 
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Ip = Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>::Identity(this->ncol, this->ncol);
 
-    Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> term1 = kronecker(Ip, ei * (ej.transpose() * (Xmat.transpose()) + Xmat * (ej * ei.transpose())));
+    Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> term1 = kronecker(Ip, ei * ej.transpose() * Xmat.transpose() + Xmat * ej * ei.transpose());
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> term2 = kronecker(ej * ei.transpose(), Xmat) * commutation_mat;
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> term3 = kronecker(Xmat.transpose(), ei * ej.transpose()) * commutation_mat;
 

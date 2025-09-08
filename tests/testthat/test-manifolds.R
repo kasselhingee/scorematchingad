@@ -168,5 +168,6 @@ test_that("Stiefel manifold object has correct matrices", {
   Stf <- methods::new(man_ad, "Stiefel", 5, 3)
   expect_s4_class(Stf, "Rcpp_man_ad")
   expect_equal(Stf$Pmatfun(vec(A)), Stiefel_projmat(A))
-  expect_equal(Stf$dPmatfun(vec(A), 3), Stiefel_projmat_d(A, 3, 1))
+  expect_equal(Stf$dPmatfun(vec(A), 3), Stiefel_projmat_d(A, 4, 1)) #note 3 in C++ vec(A) corresponds to [4,1] in R's A.
+  expect_equal(Stf$dPmatfun(vec(A), 2 + 5), Stiefel_projmat_d(A, 3, 2)) #note 2 in C++ vec(A) corresponds to [3,1] in R's A.
 })
