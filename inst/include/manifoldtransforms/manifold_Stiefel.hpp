@@ -48,7 +48,7 @@ struct Stiefel : public manifold<Type> {
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> Ip = Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>::Identity(this->ncol, this->ncol);
 
     // build matrix out of x (invvec)
-    Eigen::Map<Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>> Xmat(x.data(), this->nrow, this->ncol);
+    Eigen::Map<const Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic>> Xmat(x.data(), this->nrow, this->ncol);
 
     // first term of proj matrix
     Eigen::Matrix<Type, Eigen::Dynamic, Eigen::Dynamic> term1 =  kronecker(Ip, Im - Type(0.5) * (Xmat * Xmat.transpose()));

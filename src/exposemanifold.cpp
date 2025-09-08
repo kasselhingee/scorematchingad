@@ -1,7 +1,7 @@
 # include "exposemanifold.h"
 
 // manifold object 'factory' . Per Rcpp instructions it returns a pointer so new must be used. It looks like delete isnt mentioned with factory even in the examples
-manifold<a1type> * newmanifold(const std::string &manifoldname){
+manifold<a1type> * newmanifold(const std::string &manifoldname, int param1=0, int param2=0){
   manifold<a1type> * out;  //returning a pointer
   if (manifoldname.compare("sph") == 0){
     out = new mantran::sph<a1type>(); //new needed because its going out of scope when returned by the function
@@ -11,6 +11,8 @@ manifold<a1type> * newmanifold(const std::string &manifoldname){
     out = new mantran::Euc<a1type>();
   } else if (manifoldname.compare("Hn111") == 0){
     out = new mantran::Hn111<a1type>();
+  } else if (manifoldname.compare("Stiefel") == 0){
+    out = new mantran::Stiefel<a1type>(param1, param2);
   } else {
     Rcpp::stop("Manifold not found");
   }
@@ -40,7 +42,7 @@ transform<a1type> * newtransform(const std::string &name){
 
 RCPP_MODULE(manifolds) {
   Rcpp::class_< manifold_a1type >("man_ad") //manifold_a1type is a synonym with manifold<a1type> due to typedef in scorematchingad_forward.h
-      .factory<const std::string &>(newmanifold)
+      .factory<const std::string &, int, int>(newmanifold)
       .method("Pmatfun", &manifold_a1type::Pmatfun, "Pmatfun(z) returns the matrix that orthogonally projects onto the manifold's tangent space at z")
       .method("dPmatfun", &manifold_a1type::dPmatfun, "dPmatfun(z, i) returns the element-wise derivative of Pmatfun() at location z with respect to the ith dimension")
       .method("name", &manifold_a1type::name)
