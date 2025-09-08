@@ -12,7 +12,7 @@ vec <- function(A){ as.vector(A) }
 
 #' @describeIn Stiefel_embedding Break up a vector into columns of length `m`, and return as a matrix.
 #' @export
-invvec <- function(v, m){ as.matrix(v, nrow = m) }
+invvec <- function(v, m){ matrix(v, nrow = m) }
 
 #' @describeIn Stiefel_embedding Check is matrix is an element of Stiefel manifold.
 #' @export
@@ -28,3 +28,40 @@ in_Stiefel <- function(v, m, tol = 1E-8){
   A <- invvec(v, m)
   is_orthonormal(A, tol = tol)
 }
+
+# function f must have atomic inputs only
+memoise_simple_function <- function(f) {
+  cache <- new.env(parent = emptyenv())  # Create an isolated environment
+  
+  function(...) {
+    key <- paste(..., collapse = "_")  # Simple key (works for atomic inputs)
+    if (exists(key, envir = cache)) {
+      return(get(key, envir = cache))  # Return cached result
+    }
+    
+    result <- f(...)  # Compute function
+    assign(key, result, envir = cache)  # Store result in cache
+    return(result)
+  }
+}
+
+commutation_mat_direct <- function(m, p){
+  idxvec <- seq.int(1, m*p)
+  idxmat <- invvec(idxvec, m)
+  vectidxmat <- vec(t(idxmat))
+  out <- diag(m*p)[match(vectidxmat, idxvec), ]
+  out
+}
+
+
+#' @title Commutation matrix
+#' @description
+#' The \insertCite{magnus2019ma}{scorematchingad} commutation matrix \eqn{K_{m,p}} that is such that
+#' `K %*% vec(A) == vec(t(A))` for any m x p matrix `A`.
+#' @param m Number of rows of matrix `A`
+#' @param p Number of columns of matrix `A`
+#' @return Matrix of size mp x mp.
+#' @details
+#' Uses memoisation to avoid recalculating the matrix for the same set of dimensions
+#' @export
+commutation_mat <- memoise_simple_function(commutation_mat_direct)
