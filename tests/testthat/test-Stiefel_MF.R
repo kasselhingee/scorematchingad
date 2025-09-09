@@ -2,7 +2,7 @@ test_that("estimating matrix von Mises-Fisher get close to correct", {
   set.seed(1)
   M <- matrix(rnorm(4*2), nrow = 4, ncol = 2)
   set.seed(3)
-  samp <- replicate(100, rstiefel::rmf.matrix(M))
+  samp <- replicate(1000, rstiefel::rmf.matrix(M))
   
   set.seed(4)
   Mother <- matrix(rnorm(nrow(M)*ncol(M)),
@@ -18,5 +18,4 @@ test_that("estimating matrix von Mises-Fisher get close to correct", {
   expect_absdiff_lte_v(est$est, vec(M), 3 * est$SE) 
   
   # standard errors in est$SE are on the same scale as the error and the estimated values at n = 100. n = 1000 is much better
-  est$SE
 })
