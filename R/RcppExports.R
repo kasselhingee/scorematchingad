@@ -56,6 +56,16 @@ fixdynamic <- function(pfun, theta, isfixed) {
     .Call(`_scorematchingad_fixdynamic`, pfun, theta, isfixed)
 }
 
+#' @title Build unnormalised log-density in new embedding
+#' @param pfun An `Rcpp_ADFun` object.
+#' @param tran A transform object.
+#' @description Build a tape of the unnormalised log-density on a different embedding of the manifold.
+#' @details
+#' When the embedding of a manifold changes according to `tran`, then the Riemannian metric on the manifold changes and so the uniform measure of the manifold also changes.
+#' This change is accounted for using the `logdetJfromM()` property of transform objects.
+#'
+#' The returned tape has an independent variable that is on the newly embedded manifold, and the value used for taping was `tran$toM(pfun$xtape)`.
+#' @export
 reembed <- function(uld, tran) {
     .Call(`_scorematchingad_reembed`, uld, tran)
 }

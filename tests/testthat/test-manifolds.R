@@ -1,5 +1,6 @@
 test_that("Manifold objects can be created, and member functions run", {
   Euc <- methods::new(man_ad, "Euc", 0, 0)
+  expect_true(inherits(Euc, "Rcpp_man_ad"))
   expect_s4_class(Euc, "Rcpp_man_ad")
   z <- c(0.1, 0.5)
   expect_equal(dim(Euc$Pmatfun(z)), c(2,2))
