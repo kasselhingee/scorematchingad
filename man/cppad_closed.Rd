@@ -62,6 +62,7 @@ cppad_closed(smdtape, Y$sample)
 Other generic score matching tools: 
 \code{\link{Windham}()},
 \code{\link{cppad_search}()},
-\code{\link{tape_smd}()}
+\code{\link{tape_smd}()},
+\code{\link{tape_smi}()}
 }
 \concept{generic score matching tools}

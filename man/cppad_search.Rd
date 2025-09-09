@@ -66,6 +66,7 @@ sum((smvalues_wsum(smdtape, Y$sample, Y$theta)$grad/nrow(Y$sample))^2)}
 Other generic score matching tools: 
 \code{\link{Windham}()},
 \code{\link{cppad_closed}()},
-\code{\link{tape_smd}()}
+\code{\link{tape_smd}()},
+\code{\link{tape_smi}()}
 }
 \concept{generic score matching tools}

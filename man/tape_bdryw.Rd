@@ -98,6 +98,7 @@ Other tape builders:
 \code{\link{tape_gradoffset}()},
 \code{\link{tape_logJacdet}()},
 \code{\link{tape_smd}()},
+\code{\link{tape_smi}()},
 \code{\link{tape_swap}()},
 \code{\link{tape_uld}()}
 }

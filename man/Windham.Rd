@@ -77,7 +77,8 @@ Windham(Y = Y,
 Other generic score matching tools: 
 \code{\link{cppad_closed}()},
 \code{\link{cppad_search}()},
-\code{\link{tape_smd}()}
+\code{\link{tape_smd}()},
+\code{\link{tape_smi}()}
 
 Other Windham robustness functions: 
 \code{\link{ppi_robust}()},

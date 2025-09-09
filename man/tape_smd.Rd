@@ -89,6 +89,7 @@ Currently available unnormalised log-density functions are:
 \item vMF
 \item Bingham
 \item FB
+\item Stiefel_MF
 }
 }
 \section{Warning}{
@@ -132,13 +133,15 @@ Other tape builders:
 \code{\link{tape_bdryw}()},
 \code{\link{tape_gradoffset}()},
 \code{\link{tape_logJacdet}()},
+\code{\link{tape_smi}()},
 \code{\link{tape_swap}()},
 \code{\link{tape_uld}()}
 
 Other generic score matching tools: 
 \code{\link{Windham}()},
 \code{\link{cppad_closed}()},
-\code{\link{cppad_search}()}
+\code{\link{cppad_search}()},
+\code{\link{tape_smi}()}
 }
 \concept{generic score matching tools}
 \concept{tape builders}

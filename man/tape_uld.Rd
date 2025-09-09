@@ -41,6 +41,7 @@ For \code{tape_uld_inbuilt()}, currently available unnormalised log-density func
 \item vMF
 \item Bingham
 \item FB
+\item Stiefel_MF
 }
 
 The function \code{tape_uld()} uses \code{\link[Rcpp:sourceCpp]{Rcpp::sourceCpp()}} to generate a tape of a function defined in C++.
@@ -85,6 +86,7 @@ Other tape builders:
 \code{\link{tape_gradoffset}()},
 \code{\link{tape_logJacdet}()},
 \code{\link{tape_smd}()},
+\code{\link{tape_smi}()},
 \code{\link{tape_swap}()}
 }
 \concept{tape builders}
