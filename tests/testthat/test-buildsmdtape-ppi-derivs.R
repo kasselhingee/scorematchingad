@@ -3,25 +3,28 @@ test_that("Gradient of smd for ppi wrt u is CLOSE TO CORRECT for interior points
   m <- rppi_egmodel(2)
   acut <- 0.1
 
-  tapes <- tape_smd("sim", "sqrt", "sph",
-               "ppi", c(0.1,0.1,0.1), rep(NA, length(m$theta)),
-               bdryw = "minsq", acut = acut)
-  smdppi_u <- tape_swap(tapes$smdtape)
+  tapes <- tape_smi(manifold = "sph",
+                uld = "ppi",
+                transform = "sqrt",
+                xtape = c(0.1,0.1,0.1), 
+                fixedparams = rep(NA, length(m$theta)),
+                bdryw =  tape_bdryw_inbuilt("minsq", c(0.1,0.1,0.1), acut = acut))
+  smippi_u <- tape_swap(tapes$smi)
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)
   testtheta <- ppi_paramvec(AL=m$AL + 1, bL=m$bL + 1, beta=m$beta + 1)
 
-  # double check that smd values are equal
+  # double check that smi values are equal
   hardcodedsmdval <- estimatorall1_smd(testcanntheta, m$sample[1, , drop = FALSE], acut)
-  cppadsmdval <- smdppi_u$eval(m$sample[1, ], testtheta)
+  cppadsmdval <- smippi_u$eval(m$sample[1, ], testtheta)
   expect_equal(cppadsmdval, hardcodedsmdval)
 
   # test gradients wrt u
-  gradu_cppad <- smdppi_u$Jac(m$sample[1, ], testtheta)
+  gradu_cppad <- smippi_u$Jac(m$sample[1, ], testtheta)
   u <- m$sample[1, , drop = FALSE]
   gradu_hardcoded <- numericDeriv(quote(estimatorall1_smd(testcanntheta, u, acut)), c("u"))
-  gradu_cppad_numerical1 <- numericDeriv(quote(tapes$smdtape$eval(testtheta, u)), c("u"))
-  gradu_cppad_numerical2 <- numericDeriv(quote(smdppi_u$eval(u, testtheta)), c("u"))
+  gradu_cppad_numerical1 <- numericDeriv(quote(tapes$smi$eval(testtheta, u)), c("u"))
+  gradu_cppad_numerical2 <- numericDeriv(quote(smippi_u$eval(u, testtheta)), c("u"))
   expect_equal(gradu_cppad, attr(gradu_hardcoded,"gradient"), tolerance = 1E-2, ignore_attr = TRUE)
   expect_equal(attr(gradu_cppad_numerical1, "gradient"), attr(gradu_hardcoded,"gradient"),
                tolerance = 1E-2, ignore_attr = TRUE)
