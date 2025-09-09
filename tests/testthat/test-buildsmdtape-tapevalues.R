@@ -21,12 +21,10 @@ test_that("Dirichlet with smd values and derivatives independent of tape", {
 
   #Sphere with minsq
   tapes1 <- tape_smi(manifold = "sph",
-               uld = "dirichlet",
+               uld = tape_uld_inbuilt("dirichlet", amdim = length(u1)),
                transform = "sqrt",
-               xtape = u1,
-               fixedparams = rep(NA_real_, 3),
-               bdryw = tape_bdryw_inbuilt("minsq", u1, acut = acut),
-               dynparam_filler = function(n){theta1})
+               bdryw = tape_bdryw_inbuilt("minsq", u1, acut = acut)
+               )
   tapes2 <- tape_smd("sim", "sqrt", "sph",
                "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
                bdryw = "minsq", acut = acut)
