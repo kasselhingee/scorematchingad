@@ -13,6 +13,6 @@ expect_type(ppitape$name, "character")
 test_that("print.Rcpp_ADFun() works", {
   utape = rep(0.2, 5)
   dyntape = rep(-0.1, 5)
-  tape <- tape_uld_inbuilt("dirichlet", utape, dyntape)
+  tape <- tape_uld_inbuilt("dirichlet", x = utape, theta = dyntape)
   expect_output(print(tape), "dirichlet.*5")
 })

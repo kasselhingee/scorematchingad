@@ -1,7 +1,7 @@
 test_that("reembed() is correct for sqrt transform of simplex metric", {
   utape = rep(0.2, 5)
   dyntape = rep(-0.1, 5)
-  tape <- tape_uld_inbuilt("dirichlet", utape, dyntape)
+  tape <- tape_uld_inbuilt("dirichlet", x = utape, theta = dyntape)
 
 
   maninfo <- manifoldtransform("sim", "sqrt", "sph")
