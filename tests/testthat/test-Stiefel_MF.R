@@ -15,5 +15,8 @@ test_that("estimating matrix von Mises-Fisher get close to correct", {
   expect_true(testquadratic(tapes$smi))
   Y <- t(apply(samp, 3, vec))
   est <- cppad_closed(tapes$smi, Y)
-  expect_absdiff_lte_v(est$est, vec(M), 3 * est$SE)
+  expect_absdiff_lte_v(est$est, vec(M), 3 * est$SE) 
+  
+  # standard errors in est$SE are on the same scale as the error and the estimated values at n = 100. n = 1000 is much better
+  est$SE
 })
