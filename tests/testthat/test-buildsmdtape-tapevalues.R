@@ -43,18 +43,20 @@ test_that("Dirichlet with smd values and derivatives independent of tape", {
   compare(ueval, thetaeval, tapes1, tapes2)
 
   #Simplex
-  tapes1 <- tape_smd("sim", "identity", "sim",
-               "dirichlet", u1, rep(NA, 3), thetatape_creator = function(n){theta1},
-               bdryw = "minsq", acut = acut)
+  tapes1 <- tape_smi(manifold = "sim",
+               uld = tape_uld_inbuilt("dirichlet", x = u1),
+               bdryw = tape_bdryw_inbuilt("minsq", u1, acut = acut)
+               )
   tapes2 <- tape_smd("sim", "identity", "sim",
                "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
                bdryw = "minsq", acut = acut)
   compare(ueval, thetaeval, tapes1, tapes2)
 
   #Simplex, prodsq
-  tapes1 <- tape_smd("sim", "identity", "sim",
-               "dirichlet", u1, rep(NA, 3), thetatape_creator = function(n){theta1},
-               bdryw = "prodsq", acut = acut)
+  tapes1 <- tape_smi(manifold = "sim",
+               uld = tape_uld_inbuilt("dirichlet", x = u1),
+               bdryw = tape_bdryw_inbuilt("prodsq", u1, acut = acut)
+               )
   tapes2 <- tape_smd("sim", "identity", "sim",
                "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
                bdryw = "prodsq", acut = acut)
