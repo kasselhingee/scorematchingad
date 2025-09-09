@@ -18,7 +18,16 @@ pADFun fixdynamic(pADFun & pfun, // the unnormalised log density tape
                   veca1 theta, //new theta to use for taping
                   Eigen::Matrix<int, Eigen::Dynamic, 1> isfixed); //TRUE (1) values indicate that the corresponding value of theta is not a variable (dynamic or independent)
 
-// Rembed the unnormalised log-density using a different metric, which means the embedding in Euclidean space changes (so the 'x' changes too)
+//' @title Build unnormalised log-density in new embedding
+//' @param pfun An `Rcpp_ADFun` object.
+//' @param tran A transform object.
+//' @description Build a tape of the unnormalised log-density on a different embedding of the manifold.
+//' @details
+//' When the embedding of a manifold changes according to `tran`, then the Riemannian metric on the manifold changes and so the uniform measure of the manifold also changes.
+//' This change is accounted for using the `logdetJfromM()` property of transform objects.
+//'
+//' The returned tape has an independent variable that is on the newly embedded manifold, and the value used for taping was `tran$toM(pfun$xtape)`.
+//' @export
 // [[Rcpp::export]]
 pADFun reembed(pADFun & uld, 
                transform<a1type> & tran); //it seems pointer or references must be passed for abstract classes (note error when compiling without the *, and Stefan's demo)
