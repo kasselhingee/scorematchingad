@@ -9,7 +9,7 @@ struct sph : public manifold<Type> {
   ~sph(){};
   sph(){};
 
-  std::string name() const {
+  std::string name() const override {
     std::string out = "sph";
     return(out);
   }

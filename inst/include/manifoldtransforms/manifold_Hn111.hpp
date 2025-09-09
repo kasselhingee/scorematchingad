@@ -9,7 +9,7 @@ struct Hn111 : public manifold<Type> {
   ~Hn111(){};
   Hn111(){};
   
-  std::string name() const {
+  std::string name() const override {
     std::string out = "Hn111";
     return(out);
   }

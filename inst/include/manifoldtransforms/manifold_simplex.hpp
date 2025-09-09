@@ -7,7 +7,7 @@ struct sim : public manifold<T> {
   ~sim(){};
   sim(){};
 
-  std::string name() const {
+  std::string name() const override {
     std::string out = "sim";
     return(out);
   }

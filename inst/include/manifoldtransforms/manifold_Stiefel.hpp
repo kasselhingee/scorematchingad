@@ -14,7 +14,7 @@ struct Stiefel : public manifold<Type> {
       commutation_mat = build_commutation_mat(nrow_, ncol_);
   };
 
-  std::string name() const {
+  std::string name() const override {
     std::string out = "Stiefel";
     return(out);
   }

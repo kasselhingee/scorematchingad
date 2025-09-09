@@ -8,7 +8,7 @@ struct Euc : public manifold<Type> {
   ~Euc(){};
   Euc(){};
 
-  std::string name() const {
+  std::string name() const override {
     std::string out = "Euc";
     return(out);
   }
