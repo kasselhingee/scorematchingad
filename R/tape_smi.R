@@ -101,7 +101,6 @@ tape_smi <- function(manifold,
                         M = manifold,
                         bdrywtape = bdryw,
                         verbose = verbose)
-  browser()
   return(list(
     uld_reembed = uld,
     smi = smitape,
