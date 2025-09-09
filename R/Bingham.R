@@ -140,3 +140,13 @@ Bingham_theta2Amat <- function(theta){
   return(A)
 }
 
+# for use by `tape_uld_inbuilt()`
+Bingham_default_xtheta <- function(amdim, x, theta){
+  x <- switch(1+is.null(x), x, rep(1, amdim)/sqrt(amdim))
+  A <- matrix(1:(amdim*amdim), nrow = amdim, ncol = amdim)
+  intheta <- Bingham_Amat2theta(A)
+  theta <- switch(1+is.null(theta), theta, intheta)
+  return(list(x = x, theta = theta))
+}
+
+

@@ -30,7 +30,7 @@ Rcpp::XPtr<llPtr> getllptr(std::string llname){
   return(pout);
 }
 
-pADFun tape_uld_inbuilt(std::string name, veca1 x, veca1 theta){
+pADFun tape_uld_inbuilt_cpp(std::string name, veca1 x, veca1 theta){
   Rcpp::XPtr < llPtr > ptr = getllptr(name); 
   llPtr func = *ptr;
   CppAD::ADFun<double> tape;

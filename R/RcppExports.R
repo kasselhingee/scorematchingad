@@ -214,8 +214,7 @@ getllptr <- function(llname) {
     .Call(`_scorematchingad_getllptr`, llname)
 }
 
-#' @rdname tape_uld
-#' @name tape_uld
+#' @noRd
 #' @param name Name of an inbuilt function. See details.
 #' @details
 #' For `tape_uld_inbuilt()`, currently available unnormalised log-density functions are:
@@ -223,9 +222,8 @@ getllptr <- function(llname) {
 #' ```{r, results = "asis", echo = FALSE}
 #' cat(paste(" +", llnames), sep = "\n")
 #' ```
-#' @export
-tape_uld_inbuilt <- function(name, x, theta) {
-    .Call(`_scorematchingad_tape_uld_inbuilt`, name, x, theta)
+tape_uld_inbuilt_cpp <- function(name, x, theta) {
+    .Call(`_scorematchingad_tape_uld_inbuilt_cpp`, name, x, theta)
 }
 
 #' @noRd

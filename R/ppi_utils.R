@@ -52,6 +52,19 @@ ppi_parammats <- function(paramvec){
   ))
 }
 
+# for use by `tape_uld_inbuilt()`
+ppi_default_xtheta <- function(amdim, x, theta){
+  x <- switch(1+is.null(x), x, rep(1/amdim, amdim))
+  theta <- switch(1+is.null(theta), theta, seq.int(1, ppithetalength(amdim)))
+  return(list(x = x, theta = theta))
+}
+# for use by `tape_uld_inbuilt()`
+dirichlet_default_xtheta <- function(amdim, x, theta){
+  x <- switch(1+is.null(x), x, rep(1/amdim, amdim))
+  theta <- switch(1+is.null(theta), theta, seq.int(1, amdim))
+  return(list(x = x, theta = theta))
+}
+
 #' @noRd
 #' @title Functions to prepare microbiome data for unit tests
 #' @description 

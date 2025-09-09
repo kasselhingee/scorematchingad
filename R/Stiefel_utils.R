@@ -94,3 +94,11 @@ Stiefel_projmat_d <- function(A, i, j){
             ( (ej %*% t(ei)) %x% A ) %*% commutation_mat(nrow(A), ncol(A)) + 
             (t(A) %x% (ei %*% t(ej))) %*% commutation_mat(nrow(A), ncol(A)) )
 }
+
+
+# for use by `tape_uld_inbuilt()`
+Stiefel_MF_default_xtheta <- function(amdim, x, theta){
+  if (is.null(x)){stop("Default taping values for Stiefel_MF cannot be chosen using ambient dimension (amdim) alone")}
+  theta <- switch(1+is.null(theta), theta, seq.int(1, amdim))
+  return(list(x = x, theta = theta))
+}

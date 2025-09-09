@@ -4,11 +4,9 @@ test_that("Gradient of smd for ppi wrt u is CLOSE TO CORRECT for interior points
   acut <- 0.1
 
   tapes <- tape_smi(manifold = "sph",
-                uld = "ppi",
+                uld = tape_uld_inbuilt("ppi", amdim = 3),
                 transform = "sqrt",
-                xtape = c(0.1,0.1,0.1), 
-                fixedparams = rep(NA, length(m$theta)),
-                bdryw =  tape_bdryw_inbuilt("minsq", c(0.1,0.1,0.1), acut = acut))
+                bdryw =  tape_bdryw_inbuilt("minsq", uld$xtape, acut = acut))
   smippi_u <- tape_swap(tapes$smi)
 
   testcanntheta <- toPPIcannparam(m$AL + 1, m$bL + 1, m$beta + 1)

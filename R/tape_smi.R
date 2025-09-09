@@ -74,14 +74,14 @@ tape_smi <- function(manifold,
               x = xtape, 
               theta = t_u2s(fixedparams, filler = dynparam_filler))
   } else { #else just fix parameters of passed uld using fiexdparams and dynparam_filler
-    stopifnot(inherits("Rcpp_ADFun"))
+    stopifnot(inherits(uld, "Rcpp_ADFun"))
     if (is.null(dynparam_filler)){
       theta <- fixedparams
-      theta[t_u2i(fixedparams)] <- uld$dyntape[t_u2i(fixedparams)]
+      theta[!t_u2i(fixedparams)] <- uld$dyntape[!t_u2i(fixedparams)]
     } else {
       theta <- t_u2s(fixedparams, filler = dynparam_filler)
     }
-    uld <- fixdynamic(uld, theta = theta, isfixed = t_u2i(usertheta)) # fix some of the model parameters if applicable
+    uld <- fixdynamic(uld, theta = theta, isfixed = t_u2i(fixedparams)) # fix some of the model parameters if applicable
   }
 
   #reembed uld

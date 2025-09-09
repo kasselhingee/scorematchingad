@@ -25,7 +25,7 @@
 #' The body of the function must use operations from Eigen and/or CppAD, prefixed by `Eigen::` and `CppAD::` respectively. 
 #' There are no easy instructions for writing these as it is genuine `C++` code, which can be very opaque to those unfamiliar with `C++`.
 #' However, recently ChatGPT and claude.ai have been able to very quickly translating `R` functions to `C++` functions (KLH has been telling these A.I. to use Eigen and CppAD, and giving the definitions of `a1type` and `veca1`).
-#' I've found the quick reference pages for [`Eigen`](https://libeigen.gitlab.io/eigen/docs-nightly/group__QuickRefPage.html) useful. Limited unary and binary operations are available directly from [`CppAD`](https://cppad.readthedocs.io) without `Eigen`. 
+#' I've found the quick reference pages for [`Eigen`](https:#libeigen.gitlab.io/eigen/docs-nightly/group__QuickRefPage.html) useful. Limited unary and binary operations are available directly from [`CppAD`](https:#cppad.readthedocs.io) without `Eigen`. 
 #' For the purposes of score matching the operations should all be smooth to create a smooth log-density and the normalising constant may be omitted.
 #' @examples
 #' \dontrun{
@@ -77,9 +77,9 @@ tape_uld <- function(fileORcode = "", x, theta, Cppopt = NULL){
 "#include <Rcpp.h>",
 "#include <scorematchingad.h>",
 "#include <likelihoods/likelihoods.hpp>",
-"// [[Rcpp::depends(RcppEigen)]]",
-"// [[Rcpp::depends(scorematchingad)]]",
-"// [[Rcpp::export]]"
+"# [[Rcpp::depends(RcppEigen)]]",
+"# [[Rcpp::depends(scorematchingad)]]",
+"# [[Rcpp::export]]"
 ), file = expandedfile, append = FALSE, sep = "\n")
   ## add in file
   cat(filelines, file = expandedfile, append = TRUE, sep = "\n")
@@ -106,7 +106,7 @@ tape_uld <- function(fileORcode = "", x, theta, Cppopt = NULL){
    
   ## boiler plate for taping
 tapingboilerplate <- c(
-"// [[Rcpp::export]]",
+"# [[Rcpp::export]]",
 "pADFun tapeld(veca1 & x, veca1 & theta){",
 "  CppAD::ADFun<double> tape;",
 "  CppAD::Independent(x, theta);",
@@ -121,4 +121,37 @@ tapingboilerplate <- c(
 string_to_lines <- function(code_string) {
   strsplit(code_string, "\r?\n")[[1]]
 }
+
+#' @rdname tape_uld
+#' @name tape_uld
+#' @export
+#' @param name Name of an inbuilt function. See details.
+#' @param amdim Dimension of the ambient Euclidean domain of the function. Only required if `x = NULL`. Ignored if `x` is not `NULL`.
+#' @details
+#' For `tape_uld_inbuilt()`, if `x = NULL` or `theta = NULL`, then default values for this model will be used and `amdim` is required.
+#'
+#' For `tape_uld_inbuilt()`, currently available unnormalised log-density functions are:
+#'
+#' ```{r, results = "asis", echo = FALSE}
+#' cat(paste(" +", llnames), sep = "\n")
+#' ```
+tape_uld_inbuilt <- function(name, amdim = NULL, x = NULL, theta = NULL){
+  stopifnot(name %in% llnames)
+  amdim <- switch(1+is.null(amdim), amdim, length(x))
+
+  # build default x and theta for each model
+  xtheta <- switch(name,
+     "dirichlet"   = dirichlet_default_xtheta(amdim, x, theta),
+     "ppi"         = ppi_default_xtheta(amdim, x, theta),
+     "vMF"         = vMF_default_xtheta(amdim, x, theta),
+     "Bingham"     = Bingham_default_xtheta(amdim, x, theta),
+     "FB"          = FB_default_xtheta(amdim, x, theta),
+     "Stiefel_MF"  = Stiefel_MF_default_xtheta(amdim, x, theta)
+  )
+  tape_uld_inbuilt_cpp(name, x = xtheta$x, theta = xtheta$theta)
+}
+
+
+
+
 

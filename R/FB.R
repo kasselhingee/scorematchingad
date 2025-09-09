@@ -111,3 +111,16 @@ FB_theta2mats <- function(theta, isSE = FALSE){
     ))
   }
 }
+
+
+# for use by `tape_uld_inbuilt()`
+FB_default_xtheta <- function(amdim, x, theta){
+  x <- switch(1+is.null(x), x, rep(1, amdim)/sqrt(amdim))
+  A <- matrix(1:(amdim)*(amdim), nrow = amdim, ncol = amdim)
+  km <- seq.int(1, amdim)
+  intheta <- FB_mats2theta(1, km, A)
+  theta <- switch(1+is.null(theta), theta, intheta)
+  return(list(x = x, theta = theta))
+}
+
+

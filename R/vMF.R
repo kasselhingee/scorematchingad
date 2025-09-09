@@ -112,3 +112,13 @@ vMF_fromparamvec <- function(paramvec){
   m <- paramvec / k
   return(list(m = m, k = k))
 }
+
+
+# for use by `tape_uld_inbuilt()`
+vMF_default_xtheta <- function(amdim, x, theta){
+  x <- switch(1+is.null(x), x, rep(1, amdim)/sqrt(amdim))
+  theta <- switch(1+is.null(theta), theta, seq.int(1, amdim))
+  return(list(x = x, theta = theta))
+}
+
+

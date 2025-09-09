@@ -16,8 +16,7 @@
 // [[Rcpp::export]]
 Rcpp::XPtr<llPtr> getllptr(std::string llname);
 
-//' @rdname tape_uld
-//' @name tape_uld
+//' @noRd
 //' @param name Name of an inbuilt function. See details.
 //' @details
 //' For `tape_uld_inbuilt()`, currently available unnormalised log-density functions are:
@@ -25,8 +24,7 @@ Rcpp::XPtr<llPtr> getllptr(std::string llname);
 //' ```{r, results = "asis", echo = FALSE}
 //' cat(paste(" +", llnames), sep = "\n")
 //' ```
-//' @export
 // [[Rcpp::export]]
-pADFun tape_uld_inbuilt(std::string name, veca1 x, veca1 theta);
+pADFun tape_uld_inbuilt_cpp(std::string name, veca1 x, veca1 theta);
 
 #endif
