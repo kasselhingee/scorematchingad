@@ -8,7 +8,7 @@ struct sqrt : public transform<Type> {
   ~sqrt(){};
   sqrt(){};
 
-  std::string name() const {
+  std::string name() const override {
     std::string out = "sqrt";
     return(out);
   }
@@ -27,7 +27,7 @@ struct sqrt : public transform<Type> {
 
   Type logdetJfromM(const Eigen::Matrix<Type, Eigen::Dynamic, 1> &z) override {
      Type out;
-     out = z.array().log().sum() + 0.6931472 * z.size(); //final number here is log(2)
+     out = z.array().log().sum() + Type(std::log(2.0)) * z.size(); //final number here is log(2)
      return(out);
   }
 

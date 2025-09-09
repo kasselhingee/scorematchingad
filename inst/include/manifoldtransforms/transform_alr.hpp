@@ -8,7 +8,7 @@ struct alr : public transform<Type> {
   ~alr(){};
   alr(){};
 
-  std::string name() const {
+  std::string name() const override {
     std::string out = "alr";
     return(out);
   }

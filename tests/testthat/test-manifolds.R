@@ -6,6 +6,7 @@ test_that("Manifold objects can be created, and member functions run", {
   expect_equal(dim(Euc$Pmatfun(z)), c(2,2))
   expect_type(Euc$Pmatfun(z), "double")
   expect_equal(dim(Euc$dPmatfun(z, 1)), c(2,2))
+  expect_equal(Euc$name(), "Euc")
 })
 
 test_that("Transform objects can be created, and member functions run", {
@@ -15,6 +16,7 @@ test_that("Transform objects can be created, and member functions run", {
   z <- alr$toM(u)
   expect_equal(alr$fromM(z), u)
   expect_true(is.finite(alr$logdetJfromM(z)))
+  expect_equal(alr$name(), "alr")
 })
 
 test_that("Sphere manifold object matches analytic results", {
@@ -29,6 +31,7 @@ test_that("Sphere manifold object matches analytic results", {
   z1 <- z[1]
   numgrad <- numericDeriv(quote(sph$Pmatfun(c(z1, z[2:3]))), theta = "z1")
   expect_equal(drop(attr(numgrad, "gradient")), sph$dPmatfun(z, 0))
+  expect_equal(sph$name(), "sph")
 })
 
 test_that("sqrt transform matches other calculations", {
@@ -38,6 +41,7 @@ test_that("sqrt transform matches other calculations", {
   expect_equal(z, sqrt(u))
   expect_equal(sum(z^2), 1)
   expect_equal(sqrt$fromM(z), u)
+  expect_equal(sqrt$name(), "sqrt")
   
   #check determinant using integration over a unitcube
   integrand <- function(zmat){#each column is a measurement
@@ -68,6 +72,7 @@ test_that("Simplex manifold object matches analytic results", {
   expect_equal(t(u2) %*% rep(1, 3), 0, ignore_attr = TRUE)
 
   expect_equal(sim$dPmatfun(u, 2), matrix(0, nrow = 3, ncol = 3))
+  expect_equal(sim$name(), "sim")
 })
 
 
@@ -77,6 +82,7 @@ test_that("Identity transform matches analytic results", {
   expect_equal(u, iden$toM(u))
   expect_equal(u, iden$fromM(u))
   expect_equal(iden$logdetJfromM(u), log(1))
+  expect_equal(iden$name(), "")
 })
 
 test_that("alr transform matches analytic results",{
@@ -107,6 +113,7 @@ test_that("Euc manifold object matches analytic results",{
   z <- c(0.5, 3)
   expect_equal(Euc$Pmatfun(z), diag(rep(1, 2)))
   expect_equal(Euc$dPmatfun(z, 2), matrix(0, nrow = 2, ncol = 2))
+  expect_equal(Euc$name(), "Euc")
 })
 
 test_that("Hn111 manifold passes analytic tests",{
@@ -119,6 +126,7 @@ test_that("Hn111 manifold passes analytic tests",{
   expect_equal(t(x2) %*% rep(1, 3), 0, ignore_attr = TRUE)
 
   expect_equal(Hn111$dPmatfun(z, 2), matrix(0, nrow = 3, ncol = 3))
+  expect_equal(Hn111$name(), "Hn111")
 })
 
 test_that("clr transform passes analytic tests",{
@@ -171,4 +179,5 @@ test_that("Stiefel manifold object has correct matrices", {
   expect_equal(Stf$Pmatfun(vec(A)), Stiefel_projmat(A))
   expect_equal(Stf$dPmatfun(vec(A), 3), Stiefel_projmat_d(A, 4, 1)) #note 3 in C++ vec(A) corresponds to [4,1] in R's A.
   expect_equal(Stf$dPmatfun(vec(A), 2 + 5), Stiefel_projmat_d(A, 3, 2)) #note 2 in C++ vec(A) corresponds to [3,1] in R's A.
+  expect_equal(Stf$name(), "Stiefel")
 })

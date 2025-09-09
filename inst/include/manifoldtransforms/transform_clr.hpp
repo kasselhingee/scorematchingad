@@ -8,7 +8,7 @@ struct clr : public transform<Type> {
   ~clr(){};
   clr(){};
 
-  std::string name() const {
+  std::string name() const override {
     std::string out = "clr";
     return(out);
   }

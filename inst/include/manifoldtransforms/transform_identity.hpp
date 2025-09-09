@@ -7,7 +7,7 @@ struct identity : public transform<T> {
   ~identity(){};
   identity(){};
 
-  std::string name() const {
+  std::string name() const override {
     std::string out = "";
     return(out);
   }
