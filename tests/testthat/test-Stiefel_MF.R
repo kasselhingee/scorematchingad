@@ -7,8 +7,13 @@ test_that("estimating matrix von Mises-Fisher get close to correct", {
   set.seed(4)
   Mother <- matrix(rnorm(nrow(M)*ncol(M)),
                    nrow = nrow(M), ncol = ncol(M))
-  tape_smd("Steifel", nrow = nrow(M), ncol = ncol(M),
-           ll = "Stiefel_MF",
-           ytape = vec(samp[,,1]),
-           usertheta = vec(Mother))
+  tapes <- tape_smi(
+    manifold = make_manifold("Stiefel", param1 = nrow(M), param2 = ncol(M)),
+    uld = "Stiefel_MF",
+    xtape = vec(samp[,,1]),
+    fixedparams = NA_real_*vec(M))
+  expect_true(testquadratic(tapes$smi))
+  Y <- t(apply(samp, 3, vec))
+  est <- cppad_closed(tapes$smi, Y)
+  expect_absdiff_lte_v(est$est, vec(M), 3 * est$SE)
 })
