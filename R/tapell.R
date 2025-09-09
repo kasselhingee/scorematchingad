@@ -28,7 +28,7 @@ tapell <- function(ll,
 
   # choose between a canned log-density or a custom log-density
   if (typeof(ll) == "character"){
-    ll <- tape_uld_inbuilt(ll, ytape, starttheta)
+    ll <- tape_uld_inbuilt_cpp(ll, ytape, starttheta)
   } else if (!inherits(ll, "Rcpp_ADFun")){
     stop("ll must be a name or a taped unnormalised log-density")
   }

@@ -128,9 +128,9 @@ string_to_lines <- function(code_string) {
 #' @param name Name of an inbuilt function. See details.
 #' @param amdim Dimension of the ambient Euclidean domain of the function. Only required if `x = NULL`. Ignored if `x` is not `NULL`.
 #' @details
-#' For `tape_uld_inbuilt()`, if `x = NULL` or `theta = NULL`, then default values for this model will be used and `amdim` is required.
+#' For tape_uld_inbuilt(), if `x = NULL` or `theta = NULL`, then default values for this model will be used and `amdim` is required.
 #'
-#' For `tape_uld_inbuilt()`, currently available unnormalised log-density functions are:
+#' For tape_uld_inbuilt(), currently available unnormalised log-density functions are:
 #'
 #' ```{r, results = "asis", echo = FALSE}
 #' cat(paste(" +", llnames), sep = "\n")
