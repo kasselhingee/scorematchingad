@@ -20,14 +20,14 @@
 #' ```
 NULL
 
-makemanifold <- function(name, param1 = 0, param2 = 0){
+make_manifold <- function(name, param1 = 0, param2 = 0){
   out <- methods::new(man_ad, name, param1, param2)
   return(out)
 }
 
-maketransform <- function(name = "identity"){
-  if (tran == "none"){tran <- "identity"}
-  out <- methods::new(transform_ad, tran)
+make_transform <- function(name = "identity"){
+  if (name == "none"){name <- "identity"}
+  out <- methods::new(transform_ad, name)
   return(out)
 }
 

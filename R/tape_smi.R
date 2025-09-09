@@ -57,9 +57,10 @@ tape_smi <- function(manifold,
                      xtape = uld$xtape,
                      fixedparams = NA_real_*uld$dyntape,
                      bdryw = "ones",
-                     dynparam_filler = NULL) {
+                     dynparam_filler = NULL,
+                     verbose = FALSE) {
   # if manifold a name, build manifold here
-  if (is.character(manifold)){manifold <- methods::new(man_ad, manifold, 0, 0)}
+  if (is.character(manifold)){manifold <- make_manifold(manifold)}
   stopifnot(inherits(manifold, "Rcpp_man_ad"))
 
   # prepare uld
@@ -84,7 +85,7 @@ tape_smi <- function(manifold,
   }
 
   #reembed uld
-  transform <- maketransform(transform)
+  transform <- make_transform(transform)
   uld <- reembed(uld, tran = transform) #change the underlying metric of the manifold by using a different isometric embedding
 
   # choose between a canned boundary weight function or a custom boundary weight function
@@ -100,12 +101,13 @@ tape_smi <- function(manifold,
                         M = manifold,
                         bdrywtape = bdryw,
                         verbose = verbose)
+  browser()
   return(list(
     uld_reembed = uld,
     smi = smitape,
     info = list(
-      transform = transform$name,
-      manifold = manifold$name,
+      transform = transform$name(),
+      manifold = manifold$name(),
       bdryw = bdryw
     )
   ))
