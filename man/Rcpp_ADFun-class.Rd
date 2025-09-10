@@ -94,7 +94,7 @@ A few methods for \code{CppAD} \code{ADFun} objects are not yet available throug
 }
 
 \examples{
-tape <- tape_uld_inbuilt("dirichlet", c(0.1, 0.4, 0.5), c(-0.5, -0.4, -0.2))
+tape <- tape_uld_inbuilt("dirichlet", x = c(0.1, 0.4, 0.5), theta = c(-0.5, -0.4, -0.2))
 # Convenient evaluation
 tape$eval(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
 tape$Jac(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
