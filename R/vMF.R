@@ -82,12 +82,11 @@ vMF_full <- function(sample, usertheta, w = NULL){
   p <- ncol(sample)
   stopifnot(length(usertheta) == p)
 
-  tapes <- tape_smd("sph","identity", "sph", "vMF",
-                        rep(1, p)/sqrt(p), 
-                        usertheta = usertheta,
-                        bdryw = "ones",
-                        verbose = FALSE)
-  out <- cppad_closed(tapes$smdtape, Y = sample, w=w)
+  tapes <- tape_smi(manifold = "sph", 
+              uld = tape_uld_inbuilt("vMF", amdim = p),
+              fixedparams = usertheta)
+
+  out <- cppad_closed(tapes$smi, Y = sample, w=w)
   theta <- t_fu2t(out$est, usertheta)
 
   if (isa(out$SE, "numeric")){
