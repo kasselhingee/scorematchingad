@@ -51,17 +51,13 @@ ppi_smvalues <- function(Y, paramvec = NULL, evalparam,
 
   if (is.null(paramvec)){paramvec <- rep(NA, ppithetalength(ncol(Y)))}
 
-  tapes <- tape_smd(
-     start = "sim",
-     tran = trans,
-     end = man,
-     ll = "ppi",
-     ytape =  rep(1/p, p),
-     usertheta = paramvec,
-     bdryw = bdryw,
-     acut = acut,
-     verbose = FALSE)
-  smdtape <- tapes$smdtape
+  tapes <- tape_smi(manifold = man, 
+                    uld = tape_uld_inbuilt("ppi", amdim = p), 
+                    transform = trans, 
+                    fixedparams = paramvec,
+                    bdryw = tape_bdryw_inbuilt(bdryw, make_transform(trans)$toM(rep(1/p, p)), acut = acut)
+                    )
+  smdtape <- tapes$smi
 
   # find boundary points and their approximation centres
   isbdry <- simplex_isboundary(Y, bdrythreshold)
