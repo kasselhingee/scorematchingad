@@ -82,7 +82,7 @@ test_that("cppad-based Score2 estimate leads to a match for large number of obse
   p = 3
   tapes <- tape_smi(manifold = "sim",
                     uld = tape_uld_inbuilt("dirichlet", amdim = p),
-                    bdryw = tape_bdryw_inbuilt("prodsq", rep(1/p, p), acut = acut))
+                    bdryw = tape_bdryw_inbuilt("prodsq", rep(1/p, p), acut = 0.1))
 
   beta = c(-0.3, -0.1, 3)
   n = 1000
