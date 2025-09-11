@@ -40,12 +40,12 @@ FB <- function(Y, km = NULL, A = NULL){
 
   intheta <- FB_mats2theta(1, km, A)
 
-  tapes <- tape_smd("sph","identity", "sph", "FB",
-               rep(1, p)/sqrt(p), intheta,
-               bdryw = "ones",
-               verbose = FALSE)
+  tapes <- tape_smi(manifold = "sph",
+                    uld = tape_uld_inbuilt("FB", amdim = p),
+                    fixedparams = intheta)
 
-  sminfo <- cppad_closed(tapes$smdtape, Y)
+
+  sminfo <- cppad_closed(tapes$smi, Y)
   theta <- intheta
   theta[is.na(intheta)] <- sminfo$est
   thetamat <- FB_theta2mats(theta)
@@ -116,9 +116,9 @@ FB_theta2mats <- function(theta, isSE = FALSE){
 # for use by `tape_uld_inbuilt()`
 FB_default_xtheta <- function(amdim, x, theta){
   x <- switch(1+is.null(x), x, rep(1, amdim)/sqrt(amdim))
-  A <- matrix(1:(amdim)*(amdim), nrow = amdim, ncol = amdim)
-  km <- seq.int(1, amdim)
-  intheta <- FB_mats2theta(1, km, A)
+  A <- matrix(NA, nrow = amdim, ncol = amdim)
+  km <- rep(NA, amdim)
+  intheta <- seq.int(1, length(FB_mats2theta(1, km, A)))
   theta <- switch(1+is.null(theta), theta, intheta)
   return(list(x = x, theta = theta))
 }
