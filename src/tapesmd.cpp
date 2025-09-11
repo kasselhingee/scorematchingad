@@ -20,6 +20,7 @@ pADFun tapesmd(pADFun & uldtape,
 
     //check inputs and ll tape match
     if (uldtape.Domain() != (unsigned)z.size()){Rcpp::stop("Dimension of z (the input measurement on the manifold) is %i, which does not match domain size of log density function of %i.", z.size(), uldtape.Domain());}
+    if (bdrywtape.Domain() != (unsigned)z.size()){Rcpp::stop("Dimension of z (the input measurement on the manifold) is %i, which does not match domain size of bdryw function of %i.", z.size(), bdrywtape.Domain());}
 
     // make ll tape higher order (i.e. as if it was taped using a2type instead of a1type)
     CppAD::ADFun<a1type, double> uldtapehigher;
