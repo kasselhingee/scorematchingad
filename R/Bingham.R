@@ -88,11 +88,11 @@ Bingham_Mardia <- function(Y, w = rep(1, nrow(Y))){
   diag(A) <- NA
   stopifnot(all(dim(A) == p))
   intheta <- Bingham_Amat2theta(A)
-  tapes <- tape_smd("sph","identity", "sph", "Bingham",
-                        rep(1, p) / sqrt(p), intheta,
-                        bdryw = "ones")
+  tapes <- tape_smi(manifold = "sph",
+                    uld = tape_uld_inbuilt("Bingham", amdim = p),
+                    fixedparams = intheta)
 
-  sm <- cppad_closed(tapes$smdtape, Y = Ystd, w = w)
+  sm <- cppad_closed(tapes$smi, Y = Ystd, w = w)
   theta <- intheta
   theta[is.na(intheta)] <- sm$est
   Astd <- Bingham_theta2Amat(theta)
