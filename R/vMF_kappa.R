@@ -21,10 +21,11 @@ vMF_kappa <- function(Y, w = rep(1, nrow(Y))){
   # do estimate, where all but the first component of theta are fixed at zero
   # because kappa * e1 = (kappa, 0, 0, 0, ...)
     p <- ncol(Y)
-    tapes <- tape_smd("sph","identity", "sph", "vMF",
-                          ytape = rep(1, p)/sqrt(p),
-                          usertheta = c(NA, rep(0, p-1)))
-    sminfo <- cppad_closed(tapes$smdtape, Y, w = w)
+    tapes <- tape_smi(manifold = "sph",
+             uld = tape_uld_inbuilt("vMF", amdim = p),
+             fixedparams = c(NA, rep(0, p - 1)))
+
+    sminfo <- cppad_closed(tapes$smi, Y, w = w)
     k <- sminfo$est
     SE <- sminfo$SE
   return(list(
