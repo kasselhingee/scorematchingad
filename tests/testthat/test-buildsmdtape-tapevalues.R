@@ -9,13 +9,13 @@ test_that("Dirichlet with smd values and derivatives independent of tape", {
   thetaeval <- c(-0.1, -0.5, 2)
 
   compare <- function(uval, thetaeval, tapes1, tapes2){
-  expect_equal(tapes1$uld_reembed$eval(ueval, thetaeval), tapes2$lltape$eval(ueval, thetaeval))
-  expect_equal(tapes1$uld_reembed$Jac(ueval, thetaeval),  tapes2$lltape$Jac(ueval, thetaeval))
-  expect_equal(tapes1$uld_reembed$Hes(ueval, thetaeval),  tapes2$lltape$Hes(ueval, thetaeval))
+  expect_equal(tapes1$uld_reembed$eval(ueval, thetaeval), tapes2$uld_reembed$eval(ueval, thetaeval))
+  expect_equal(tapes1$uld_reembed$Jac(ueval, thetaeval),  tapes2$uld_reembed$Jac(ueval, thetaeval))
+  expect_equal(tapes1$uld_reembed$Hes(ueval, thetaeval),  tapes2$uld_reembed$Hes(ueval, thetaeval))
 
-  expect_equal(tapes1$smi$eval(thetaeval, ueval), tapes2$smdtape$eval(thetaeval, ueval))
-  expect_equal(tapes1$smi$Jac(thetaeval, ueval),  tapes2$smdtape$Jac(thetaeval, ueval))
-  expect_equal(tapes1$smi$Hes(thetaeval, ueval),  tapes2$smdtape$Hes(thetaeval, ueval))
+  expect_equal(tapes1$smi$eval(thetaeval, ueval), tapes2$smi$eval(thetaeval, ueval))
+  expect_equal(tapes1$smi$Jac(thetaeval, ueval),  tapes2$smi$Jac(thetaeval, ueval))
+  expect_equal(tapes1$smi$Hes(thetaeval, ueval),  tapes2$smi$Hes(thetaeval, ueval))
   return(NULL)
   }
 
@@ -25,9 +25,10 @@ test_that("Dirichlet with smd values and derivatives independent of tape", {
                transform = "sqrt",
                bdryw = tape_bdryw_inbuilt("minsq", u1, acut = acut)
                )
-  tapes2 <- tape_smd("sim", "sqrt", "sph",
-               "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
-               bdryw = "minsq", acut = acut)
+  tapes2 <- tape_smi(manifold = "sph",
+                     uld = tape_uld_inbuilt("dirichlet", x = u2),
+                     transform = "sqrt", 
+                     bdryw = tape_bdryw_inbuilt("minsq", u2, acut = acut))
 
   compare(ueval, thetaeval, tapes1, tapes2)
 
@@ -37,9 +38,11 @@ test_that("Dirichlet with smd values and derivatives independent of tape", {
                transform = "sqrt",
                bdryw = tape_bdryw_inbuilt("prodsq", u1, acut = acut)
                )
-  tapes2 <- tape_smd("sim", "sqrt", "sph",
-               "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
-               bdryw = "prodsq", acut = acut)
+  tapes2 <- tape_smi(manifold = "sph",
+               uld = tape_uld_inbuilt("dirichlet", x = u2),
+               transform = "sqrt",
+               bdryw = tape_bdryw_inbuilt("prodsq", u2, acut = acut)
+               )
   compare(ueval, thetaeval, tapes1, tapes2)
 
   #Simplex
@@ -47,9 +50,10 @@ test_that("Dirichlet with smd values and derivatives independent of tape", {
                uld = tape_uld_inbuilt("dirichlet", x = u1),
                bdryw = tape_bdryw_inbuilt("minsq", u1, acut = acut)
                )
-  tapes2 <- tape_smd("sim", "identity", "sim",
-               "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
-               bdryw = "minsq", acut = acut)
+  tapes2 <- tape_smi(manifold = "sim",
+               uld = tape_uld_inbuilt("dirichlet", x = u2),
+               bdryw = tape_bdryw_inbuilt("minsq", u2, acut = acut)
+               )
   compare(ueval, thetaeval, tapes1, tapes2)
 
   #Simplex, prodsq
@@ -57,9 +61,10 @@ test_that("Dirichlet with smd values and derivatives independent of tape", {
                uld = tape_uld_inbuilt("dirichlet", x = u1),
                bdryw = tape_bdryw_inbuilt("prodsq", u1, acut = acut)
                )
-  tapes2 <- tape_smd("sim", "identity", "sim",
-               "dirichlet", u2, rep(NA, 3), thetatape_creator = function(n){theta2},
-               bdryw = "prodsq", acut = acut)
+  tapes2 <- tape_smi(manifold = "sim",
+               uld = tape_uld_inbuilt("dirichlet", x = u2),
+               bdryw = tape_bdryw_inbuilt("prodsq", u2, acut = acut)
+               )
   compare(ueval, thetaeval, tapes1, tapes2)
 })
 

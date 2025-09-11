@@ -28,15 +28,17 @@ test_that("ppi and dirichlet smd value match when AL and bL is zero and p = 3", 
   utabl <- rppi(10,beta=beta,AL=ALs,bL=bL,maxden=4)
 
   acut = 0.1
-  dirtapes <- tape_smd("sim","sqrt", "sph", "dirichlet",
-                           rep(0.1, p), rep(0.1, p) * NA,
-                           bdryw = "minsq", acut = acut)
-  ppitapes <- tape_smd("sim","sqrt", "sph", "ppi",
-                           rep(0.1, p), theta * NA,
-                           bdryw = "minsq", acut = acut)
+  dirtapes <- tape_smi(manifold = "sph",
+                       uld = tape_uld_inbuilt("dirichlet", amdim = p),
+                       transform = "sqrt",
+                       bdryw = tape_bdryw_inbuilt("minsq", rep(0.1, p), acut = acut))
+  ppitapes <- tape_smi(manifold = "sph",
+                       uld = tape_uld_inbuilt("ppi", amdim = p),
+                       transform = "sqrt",
+                       bdryw = tape_bdryw_inbuilt("minsq", rep(0.1, p), acut = acut))
 
-  ppival <- ppitapes$smdtape$eval(theta, utabl[2, ])
-  dirval <- dirtapes$smdtape$eval(beta, utabl[2, ])
+  ppival <- ppitapes$smi$eval(theta, utabl[2, ])
+  dirval <- dirtapes$smi$eval(beta, utabl[2, ])
   expect_equal(ppival, dirval)
 })
 
@@ -52,20 +54,23 @@ test_that("cppad ppi estimate works when AL and bL is zero and p = 4", {
   utabl <- rppi(100,beta=beta,AL=ALs,bL=bL,maxden=4)
 
   acut = 0.1
-  dirtapes <- tape_smd("sim","sqrt", "sph", "dirichlet",
-                           rep(0.1, p), rep(0.1, p) * NA,
-                           bdryw = "minsq", acut = acut)
-  ppitapes <- tape_smd("sim","sqrt", "sph", "ppi",
-                           rep(0.1, p), ppi_paramvec(AL = 0, bL=0, p = p),
-                           bdryw = "minsq", acut = acut)
+  dirtapes <- tape_smi(manifold = "sph",
+                       uld = tape_uld_inbuilt("dirichlet", amdim = p),
+                       transform = "sqrt",
+                       bdryw = tape_bdryw_inbuilt("minsq", rep(0.1, p), acut = acut))
+  ppitapes <- tape_smi(manifold = "sph",
+                       uld = tape_uld_inbuilt("ppi", amdim = p),
+                       transform = "sqrt",
+                       fixedparams = ppi_paramvec(AL = 0, bL=0, p = p),
+                       bdryw = tape_bdryw_inbuilt("minsq", rep(0.1, p), acut = acut))
 
   # it looks like the taped function above is not altering bL or beta
   # potentially the ordering of the theta values is wrong??
-  out <- cppad_closed(ppitapes$smdtape, Y = utabl)
+  out <- cppad_closed(ppitapes$smi, Y = utabl)
 
-  expect_equal(dirtapes$lltape$eval(utabl[2, ], beta), ppitapes$lltape$eval(utabl[2, ], beta))
-  expect_equal(dirtapes$lltape$Jac(utabl[2, ], beta), ppitapes$lltape$Jac(utabl[2, ], beta))
-  expect_equal(dirtapes$smdtape$eval(beta, utabl[2, ]), ppitapes$smdtape$eval(beta, utabl[2, ]))
+  expect_equal(dirtapes$uld_reembed$eval(utabl[2, ], beta), ppitapes$uld_reembed$eval(utabl[2, ], beta))
+  expect_equal(dirtapes$uld_reembed$Jac(utabl[2, ], beta), ppitapes$uld_reembed$Jac(utabl[2, ], beta))
+  expect_equal(dirtapes$smi$eval(beta, utabl[2, ]), ppitapes$smi$eval(beta, utabl[2, ]))
 
   hardcodedestimate <- dir_sqrt_minimah(utabl, acut)
 
@@ -215,13 +220,15 @@ test_that("ppi via cppad matches Score1 for p=5 and has SM discrepancy has small
                ignore_attr = TRUE)
 
   #also it makes sense that the smd and gradient are v low at the hardcoded estimate
-  ppitapes <- tape_smd("sim","sqrt", "sph", "ppi",
-                           rep(0.1, p), ppi_paramvec(p, bL = bL, beta = beta),
-                           bdryw = "minsq", acut = acut)
-  smvals <- smvalues_wsum(ppitapes$smdtape, prop, fromsmatrix(est_hardcoded$est$AL))
+  ppitapes <- tape_smi(manifold = "sph",
+                       uld = tape_uld_inbuilt("ppi", amdim = p),
+                       transform = "sqrt",
+                       fixedparams = ppi_paramvec(bL=bL, beta=beta),
+                       bdryw = tape_bdryw_inbuilt("minsq", rep(0.1, p), acut = acut))
+  smvals <- smvalues_wsum(ppitapes$smi, prop, fromsmatrix(est_hardcoded$est$AL))
   expect_lt(sum(smvals$grad^2), 1E-20)
 
   # check that rearrangement has large gradient
-  smvals <- smvalues_wsum(ppitapes$smdtape, prop, fromsmatrix(est_hardcoded$est$AL)[c(1:6, 8, 7, 9, 10)])
+  smvals <- smvalues_wsum(ppitapes$smi, prop, fromsmatrix(est_hardcoded$est$AL)[c(1:6, 8, 7, 9, 10)])
   expect_gt(sum(smvals$grad^2), 1E-2)
 })

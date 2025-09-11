@@ -3,16 +3,11 @@ test_that("Solution without boundary considerations for PPI has zero gradient an
   mod <- rppi_egmodel(100)
   Y <- mod$sample
 
-  tapes <- tape_smd(
-     start = "sim",
-     tran = "alr",
-     end = "Euc",
-     ll = "ppi",
-     ytape = c(0.2, 0.3, 0.5),
-     usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
-     bdryw = "ones",
-     verbose = FALSE)
-  smdtape <- tapes$smdtape
+  tapes <- tape_smi(manifold = "Euc",
+                    uld = tape_uld_inbuilt("ppi", amdim = length(c(0.2, 0.3, 0.5))),
+                    transform = "alr",
+                    fixedparams = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)))
+  smdtape <- tapes$smi
 
   estobj <- cppad_closed(smdtape, Y)
 
@@ -38,17 +33,12 @@ test_that("Closed-from solution with boundary points matches hard-coded version"
   Yapproxcentres[!isbdry, ] <- NA 
   Yapproxcentres[isbdry, ] <- simplex_boundaryshift(dsample[isbdry, , drop = FALSE])
 
-  tapes <- tape_smd(
-     start = "sim",
-     tran = "alr",
-     end = "Euc",
-     ll = "ppi",
-     ytape = c(0.2, 0.3, 0.5),
-     usertheta = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)), 
-     bdryw = "ones",
-     verbose = FALSE)
+  tapes <- tape_smi(manifold = "Euc",
+                    uld = tape_uld_inbuilt("ppi", amdim = length(c(0.2, 0.3, 0.5))),
+                    transform = "alr",
+                    fixedparams = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)))
 
-  estobj <- cppad_closed(tapes$smdtape, Y = dsample, Yapproxcentres, approxorder = 10)
+  estobj <- cppad_closed(tapes$smi, Y = dsample, Yapproxcentres, approxorder = 10)
 
   est_hardcode <- ppi(dsample, paramvec = ppi_paramvec(p = 3, bL = 0, betap = tail(theta, 1)),
       trans = "alr", method = "hardcoded")

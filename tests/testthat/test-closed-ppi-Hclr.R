@@ -115,16 +115,18 @@ test_that("Hess + Offset match gradient for Hclr in interior", {
   Y <- mod$sample
   Y <- rbind(Y, rep(1/3, 3))
 
-  tapes <- tape_smd("sim","clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
-                        usertheta = ppi_paramvec(p = 3))
+  tapes <- tape_smi(manifold = "Hn111",
+                    uld = tape_uld_inbuilt("ppi", amdim = 3),
+                    transform = "clr", 
+                    fixedparams = ppi_paramvec(p = 3))
 
   # find boundary points and remove them - expect results pJacobian to give good results when no points need approximation
   isbdry <- simplex_isboundary(Y, 1E-5)
   Y <- Y[!isbdry, ]
-  values <- quadratictape_parts(tapes$smdtape, Y)
+  values <- quadratictape_parts(tapes$smi, Y)
 
   # expect results to match for gradient
-  gradorig <- t(apply(Y, MARGIN = 1, function(x){tapes$smdtape$Jac(mod$theta, x)}))
+  gradorig <- t(apply(Y, MARGIN = 1, function(x){tapes$smi$Jac(mod$theta, x)}))
 
   gradpoly <- lapply(1:nrow(values$offset), function(i){
     drop(matrix(values$Hessian[i, ], ncol = length(mod$theta)) %*% mod$theta + 
@@ -147,12 +149,14 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
 
   usertheta = ppi_paramvec(p = 3, beta = mod$beta)
   ftheta <- t_ut2f(usertheta, mod$theta)
-  tapes <- tape_smd("sim","clr", "Hn111", "ppi", ytape = c(0.2, 0.3, 0.5), 
-                        usertheta = usertheta)
+  tapes <- tape_smi(manifold = "Hn111",
+                    uld = tape_uld_inbuilt("ppi", amdim = 3),
+                    transform = "clr", 
+                    fixedparams = usertheta)
 
-  values <- quadratictape_parts(tapes$smdtape, Y)
+  values <- quadratictape_parts(tapes$smi, Y)
 
-  smdorig <- evaltape(tapes$smdtape, pmat = Y, xmat = ftheta)
+  smdorig <- evaltape(tapes$smi, pmat = Y, xmat = ftheta)
 
   smdpoly <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * ftheta %*% matrix(values$Hessian[i, ], ncol = length(ftheta)) %*% ftheta + 
@@ -163,7 +167,7 @@ test_that("W is symmetric for ppi with clr, fitting all parameters", {
   
   #test constant by trying another theta
   ftheta2 <- ftheta+1
-  smdorig2 <- evaltape(tapes$smdtape, pmat = Y, xmat = ftheta2)
+  smdorig2 <- evaltape(tapes$smi, pmat = Y, xmat = ftheta2)
   smdpoly2 <- lapply(1:nrow(values$offset), function(i){
     drop(0.5 * ftheta2 %*% matrix(values$Hessian[i, ], ncol = length(ftheta2)) %*% ftheta2 +
       values$offset[i, , drop = FALSE] %*% ftheta2)
