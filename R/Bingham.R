@@ -52,11 +52,11 @@ Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y))){
 
   intheta <- Bingham_Amat2theta(A)
 
-  ytape <- rep(1, p) / sqrt(p)
-  tapes <- tape_smd("sph","identity", "sph", "Bingham",
-                           ytape, intheta,
-                           bdryw = "ones")
-  out <- cppad_closed(tapes$smdtape, Y = Y, w = w)
+  tapes <- tape_smi(manifold = "sph",
+                    uld = tape_uld_inbuilt("Bingham", amdim = p),
+                    fixedparams = intheta)
+
+  out <- cppad_closed(tapes$smi, Y = Y, w = w)
   theta <- intheta
   theta[is.na(intheta)] <- out$est
   A = Bingham_theta2Amat(theta)
@@ -143,8 +143,8 @@ Bingham_theta2Amat <- function(theta){
 # for use by `tape_uld_inbuilt()`
 Bingham_default_xtheta <- function(amdim, x, theta){
   x <- switch(1+is.null(x), x, rep(1, amdim)/sqrt(amdim))
-  A <- matrix(1:(amdim*amdim), nrow = amdim, ncol = amdim)
-  intheta <- Bingham_Amat2theta(A)
+  A <- matrix(NA, nrow = amdim, ncol = amdim)
+  intheta <- seq.int(1, length(Bingham_Amat2theta(A)))
   theta <- switch(1+is.null(theta), theta, intheta)
   return(list(x = x, theta = theta))
 }
