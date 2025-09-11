@@ -50,6 +50,7 @@ tape_smd <- function(start, tran = "identity", end = start, ll,
                          bdryw = "ones", acut = 1,
                          thetatape_creator = function(n){seq(length.out = n)},
                          verbose = FALSE){
+  warning("This function is obsolete - please use tape_smi() instead")
 
   if(all(!is.na(usertheta))){stop("All elements of theta are fixed")}
 
