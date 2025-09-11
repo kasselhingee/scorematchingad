@@ -6,13 +6,13 @@ vw <- virtualweights(m$sample)
 acut = 0.1
 
 test_that("cppad_closed() w = rep(1, nrow(Y)) is near the result as if w omitted", {
-  p <- ncol(m$sample)
-  tapes <- tape_smd("sim","sqrt", "sph", "ppi",
-                        ytape = rep(1/p, m$p),
-                        usertheta = rep(NA, length(m$theta)),
-                        bdryw = "minsq", acut = acut)
-  out_constant <- cppad_closed(tapes$smdtape, m$sample, w = rep(1, nrow(m$sample)))
-  out_ommit <- cppad_closed(tapes$smdtape, m$sample)
+  tapes <- tape_smi(manifold = "sph",
+                    uld = tape_uld_inbuilt("ppi", amdim = m$p),
+                    transform = "sqrt", 
+                    bdryw = tape_bdryw_inbuilt("minsq", rep(1/m$p, m$p), acut = acut))
+
+  out_constant <- cppad_closed(tapes$smi, m$sample, w = rep(1, nrow(m$sample)))
+  out_ommit <- cppad_closed(tapes$smi, m$sample)
 
   expect_equal(out_ommit$est, out_constant$est)
   expect_equal(out_ommit$value, out_constant$value)
@@ -20,18 +20,19 @@ test_that("cppad_closed() w = rep(1, nrow(Y)) is near the result as if w omitted
 
 test_that("evaltape_wsum() matches for simulated weights and constant weights", {
   intheta <- ppi_paramvec(m$p)
-  tapes <- tape_smd("sim","sqrt", "sph", "ppi",
-                        m$sample[1, ], intheta,
-                        bdryw = "minsq",
-                        acut = acut)
-  smd_u <- tape_swap(tapes$smdtape)
+  tapes <- tape_smi(manifold = "sph",
+                    uld = tape_uld_inbuilt("ppi", amdim = m$p),
+                    transform = "sqrt", 
+                    fixedparams = intheta,
+                    bdryw = tape_bdryw_inbuilt("minsq", rep(1/m$p, m$p), acut = acut))
+  smd_u <- tape_swap(tapes$smi)
   smd_sim <- evaltape_wsum(smd_u, vw$newY, m$theta)
   smd_hardcoded <- evaltape_wsum(smd_u, m$sample, m$theta, w=vw$w)
   expect_equal(smd_sim, smd_hardcoded)
 
   # compare results to manual calculation
-  smd_sim_manual <- sum(vapply(1:nrow(vw$newY), function(i){tapes$smdtape$eval(m$theta, vw$newY[i, ])}, FUN.VALUE = 1.3))
-  smd_dir_manual_v <- vapply(1:nrow(m$sample), function(i){tapes$smdtape$eval(m$theta, m$sample[i, ])}, FUN.VALUE = 1.3)
+  smd_sim_manual <- sum(vapply(1:nrow(vw$newY), function(i){tapes$smi$eval(m$theta, vw$newY[i, ])}, FUN.VALUE = 1.3))
+  smd_dir_manual_v <- vapply(1:nrow(m$sample), function(i){tapes$smi$eval(m$theta, m$sample[i, ])}, FUN.VALUE = 1.3)
   smd_dir_manual <- sum(smd_dir_manual_v*vw$w)
   expect_equal(smd_sim_manual, smd_sim)
   expect_equal(smd_sim_manual, smd_dir_manual)
@@ -39,11 +40,12 @@ test_that("evaltape_wsum() matches for simulated weights and constant weights", 
 
 test_that("evaltape_wsum() matches for simulated weights and constant weights with boundary data", {
   intheta <- ppi_paramvec(m$p)
-  tapes <- tape_smd("sim","sqrt", "sph", "ppi",
-                        m$sample[1, ], intheta,
-                        bdryw = "minsq",
-                        acut = acut)
-  smd_u <- tape_swap(tapes$smdtape)
+  tapes <- tape_smi(manifold = "sph",
+                    uld = tape_uld_inbuilt("ppi", amdim = m$p),
+                    transform = "sqrt", 
+                    fixedparams = intheta,
+                    bdryw = tape_bdryw_inbuilt("minsq", rep(1/m$p, m$p), acut = acut))
+  smd_u <- tape_swap(tapes$smi)
   Y <- m$sample
   isbdry <- simplex_isboundary(Y, 1E-2)
   Yapproxcentres <- Y 
@@ -64,14 +66,13 @@ test_that("evaltape_wsum() matches for simulated weights and constant weights wi
 })
 
 test_that("cppad_search() for ppi with minsq matches cppad_closed()", {
-  tapes <- tape_smd("sim","sqrt", "sph", "ppi",
-               ytape = rep(1/m$p, m$p),
-               usertheta = ppi_paramvec(m$p),
-               bdryw = "minsq",
-               acut = acut)
+  tapes <- tape_smi(manifold = "sph",
+                    uld = tape_uld_inbuilt("ppi", amdim = m$p),
+                    transform = "sqrt", 
+                    bdryw = tape_bdryw_inbuilt("minsq", rep(1/m$p, m$p), acut = acut))
 
-  out_closed <- cppad_closed(tapes$smdtape, vw$newY)
-  suppressWarnings({out_dir <- cppad_search(tapes$smdtape, m$theta *0.9, m$sample, control = list(tol = 1E-8, maxit = 500), w = vw$w)})
+  out_closed <- cppad_closed(tapes$smi, vw$newY)
+  suppressWarnings({out_dir <- cppad_search(tapes$smi, m$theta *0.9, m$sample, control = list(tol = 1E-8, maxit = 500), w = vw$w)})
   expect_equal(as.vector(out_dir$est), 
      out_closed$est,
      tolerance = 1E-1)

@@ -7,12 +7,11 @@ test_that("von-Mises Fisher likelihood runs and fits", {
 
   p <- length(theta)
   intheta <- c(NA, rep(0, p - 1))
-  tapes <- tape_smd("sph", "identity", "sph", "vMF",
-                        rep(1, p)/sqrt(p), rep(NA, p),
-                        bdryw = "ones",
-                        verbose = FALSE)
-  expect_equal(tapes$lltape$eval(sample[1, ], theta), sum(sample[1, ]  * theta)) ## very important to check a tape
-  out <- cppad_closed(tapes$smdtape, Y = sample)
+  tapes <- tape_smi(manifold = "sph",
+                    uld = tape_uld_inbuilt("vMF", amdim = p)
+                    )
+  expect_equal(tapes$uld_reembed$eval(sample[1, ], theta), sum(sample[1, ]  * theta)) ## very important to check a tape
+  out <- cppad_closed(tapes$smi, Y = sample)
   expect_absdiff_lte_v(out$est, theta, 3 * out$SE)
 })
 

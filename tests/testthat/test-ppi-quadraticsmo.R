@@ -1,17 +1,11 @@
 ## ppi() fitting tested with cppad_closed() tests
 
 test_that("testquadratic passes on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
-  tapes <- tape_smd(
-     start = "sim",
-     tran = "sqrt",
-     end = "sph",
-     ll = "ppi",
-     ytape = c(0.2, 0.3, 0.5),
-     usertheta = ppi_paramvec(p = 3), 
-     bdryw = "minsq",
-     acut = 0.1,
-     verbose = FALSE)
-  ppismdtape <- tapes$smdtape
+  tapes <- tape_smi(manifold = "sph",
+                    uld = tape_uld_inbuilt("ppi", x = c(0.2, 0.3, 0.5)),
+                    transform = "sqrt", 
+                    bdryw = tape_bdryw_inbuilt("minsq", c(0.2, 0.3, 0.5), acut = 0.1))
+  ppismdtape <- tapes$smi
 
 
   # check only with parameter()
@@ -29,17 +23,11 @@ test_that("testquadratic passes on PPI model with sqrt transformation, minsq div
 
   # manual tests
 test_that("manual tests on PPI model with sqrt transformation, minsq divergence weight, acut of 0.1", {
-  tapes <- tape_smd(
-     start = "sim",
-     tran = "sqrt",
-     end = "sph",
-     ll = "ppi",
-     ytape = c(0.2, 0.3, 0.5),
-     usertheta = ppi_paramvec(p = 3), 
-     bdryw = "minsq",
-     acut = 0.1,
-     verbose = FALSE)
-  ppismdtape <- tapes$smdtape
+  tapes <- tape_smi(manifold = "sph",
+                    uld = tape_uld_inbuilt("ppi", x = c(0.2, 0.3, 0.5)),
+                    transform = "sqrt", 
+                    bdryw = tape_bdryw_inbuilt("minsq", c(0.2, 0.3, 0.5), acut = 0.1))
+  ppismdtape <- tapes$smi
 
   ppismdtapeJ <- tape_Jacobian(ppismdtape)
   ppismdtapeH <- tape_Hessian(ppismdtape)

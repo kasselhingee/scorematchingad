@@ -46,27 +46,17 @@ test_that("a tape_uld() gets all the way to the correct score matching estimate"
           return y;
   }", c(0.2, 0.3, 0.5), mod$theta)
 
-  tapes_custom <- tape_smd(
-     start = "sim",
-     tran = "alr",
-     end = "Euc",
-     ll = ll$tape,
-     ytape = c(0.2, 0.3, 0.5),
-     usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
-     bdryw = "ones",
-     verbose = FALSE)
-  tapes <- tape_smd(
-     start = "sim",
-     tran = "alr",
-     end = "Euc",
-     ll = "ppi",
-     ytape = c(0.2, 0.3, 0.5),
-     usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
-     bdryw = "ones",
-     verbose = FALSE)
+  tapes_custom <- tape_smi(manifold = "Euc", 
+                    uld = ll$tape,
+                    transform = "alr",
+                    fixedparams = ppi_paramvec(p = mod$p, betap = tail(mod$beta, 1)))
+  tapes <- tape_smi(manifold = "Euc", 
+                    uld = tape_uld_inbuilt("ppi", amdim = mod$p),
+                    transform = "alr",
+                    fixedparams = ppi_paramvec(p = mod$p, betap = tail(mod$beta, 1)))
 
-  est_custom <- cppad_closed(tapes_custom$smdtape, Y) 
-  est <- cppad_closed(tapes$smdtape, Y) 
+  est_custom <- cppad_closed(tapes_custom$smi, Y) 
+  est <- cppad_closed(tapes$smi, Y) 
   expect_equal(est_custom$est, est$est)
   expect_equal(est_custom$covar, est$covar)
 })

@@ -2,15 +2,11 @@ test_that("Hess + Offset match gradient for a PPI Example", {
   mod <- rppi_egmodel(100)
   Y <- mod$sample
 
-  tapes <- tape_smd(
-     start = "sim",
-     tran = "alr",
-     end = "Euc",
-     ll = "ppi",
-     ytape = c(0.2, 0.3, 0.5),
-     usertheta = ppi_paramvec(p = 3, betap=0.5), 
-     verbose = FALSE)
-  smdtape <- tapes$smdtape
+  tapes <- tape_smi(manifold = "Euc", 
+                    uld = tape_uld_inbuilt("ppi", amdim = 3),
+                    transform = "alr",
+                    fixedparams = ppi_paramvec(p = 3, betap=0.5)) 
+  smdtape <- tapes$smi
 
   values <- quadratictape_parts(smdtape, Y)
 
@@ -52,15 +48,10 @@ test_that("quadratictape_parts with approx centres is close to quadratic_parts f
   Y <- mod$sample
   Ycen <- simplex_boundaryshift(Y)
 
-  tapes <- tape_smd(
-     start = "sim",
-     tran = "alr",
-     end = "Euc",
-     ll = "ppi",
-     ytape = c(0.2, 0.3, 0.5),
-     usertheta = ppi_paramvec(p = 3), 
-     verbose = FALSE)
-  smdtape <- tapes$smdtape
+  tapes <- tape_smi(manifold = "Euc", 
+                    uld = tape_uld_inbuilt("ppi", amdim = 3),
+                    transform = "alr") 
+  smdtape <- tapes$smi
   
   valuesexact <- quadratictape_parts(smdtape, Y)
   valuesapprox <- quadratictape_parts(smdtape, Y, tcentres = Ycen, approxorder = 1)

@@ -105,10 +105,10 @@ test_that("smdbjgrad at true parameters is poor for FB()", {
   Y <- simdd::rFisherBingham(1E6, mu = thetamats$k * thetamats$m, Aplus = thetamats$A)
 
   # evaluate gradient
-  tapes <- tape_smd("sph", "identity", "sph", 
-                        ll = "FB",
-                        Y[1, ], 
-                        usertheta = NA * theta)
+  tapes <- tape_smi(manifold = "sph", 
+                    uld = tape_uld_inbuilt("FB", amdim = length(Y[1, ])),
+                    )
+
   smvals <- smvalues_wsum(tapes$smdtape, Y, theta)
   expect_gt(sqrt(sum((smvals$grad/nrow(sample))^2)), 0.001)
 })
@@ -127,10 +127,10 @@ test_that("FB() with many fixed elements leads to small smdbjgrad", {
   #many fixed elements
   intheta <- theta
   intheta[8] <- NA
-  tapes <- tape_smd("sph", "identity", "sph", 
-                        ll = "FB",
-                        sample[1, ], 
-                        usertheta = intheta)
+  tapes <- tape_smi(manifold = "sph", 
+                    uld = tape_uld_inbuilt("FB", amdim = length(sample[1, ])),
+                    fixedparams = intheta
+                    )
   smvals <- smvalues_wsum(tapes$smdtape, sample, theta[is.na(intheta)])
   expect_gt(abs(smvals$grad/nrow(sample)), 0.001)
 })

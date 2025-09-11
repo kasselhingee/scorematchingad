@@ -33,17 +33,12 @@ test_that("a tape_bdryw() gets all the way to the correct score matching estimat
   set.seed(13411)
   mod <- rppi_egmodel(100)
   Y <- mod$sample
-  tapes <- tape_smd(
-     start = "sim",
-     tran = "sqrt",
-     end = "sph",
-     ll = "ppi",
-     ytape = c(0.2, 0.3, 0.5),
-     usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
-     bdryw = "minsq",
-     acut = 0.1,
-     verbose = FALSE)
-  
+  tapes <- tape_smi(manifold = "sph", 
+                    uld = tape_uld_inbuilt("ppi", amdim = mod$p),
+                    transform = "sqrt",
+                    fixedparams = ppi_paramvec(p = mod$p, betap = tail(mod$beta, 1)),
+                    bdryw = tape_bdryw_inbuilt("minsq", c(0.2, 0.3, 0.5), acut = 0.1))
+
   myminsq <- tape_bdryw(
     "a1type myminsq(const veca1 &x){
     veca1 xsq = x.array().square();
@@ -55,18 +50,14 @@ test_that("a tape_bdryw() gets all the way to the correct score matching estimat
     }", 
     rep(0.2, 3))
   
-  tapes_custom <- tape_smd(
-    start = "sim",
-    tran = "sqrt",
-    end = "sph",
-    ll = "ppi",
-    ytape = c(0.2, 0.3, 0.5),
-    usertheta = ppi_paramvec(p = 3, betap = tail(mod$beta, 1)),
-    bdryw = myminsq$tape,
-    verbose = FALSE)
+  tapes_custom <- tape_smi(manifold = "sph", 
+                    uld = tape_uld_inbuilt("ppi", amdim = mod$p),
+                    transform = "sqrt",
+                    fixedparams = ppi_paramvec(p = mod$p, betap = tail(mod$beta, 1)),
+                    bdryw = myminsq$tape)
 
-  est_custom <- cppad_closed(tapes_custom$smdtape, Y) 
-  est <- cppad_closed(tapes$smdtape, Y) 
+  est_custom <- cppad_closed(tapes_custom$smi, Y) 
+  est <- cppad_closed(tapes$smi, Y) 
   expect_equal(est_custom$est, est$est)
   expect_equal(est_custom$covar, est$covar)
 })
