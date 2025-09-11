@@ -180,17 +180,13 @@ ppi <- function(Y, paramvec = NULL,
     else {stheta <- t_us2s(usertheta, paramvec_start)}
     isfixed <- t_u2i(usertheta)
     # prepare tapes
-    tapes <- tape_smd(
-       start = "sim",
-       tran = trans,
-       end = man,
-       ll = "ppi",
-       ytape =  rep(1/p, p),
-       usertheta = t_si2u(stheta, isfixed),
-       bdryw = bdryw,
-       acut = acut,
-       verbose = FALSE)
-    smdtape <- tapes$smdtape
+    tapes <- tape_smi(manifold = man, 
+                      uld = tape_uld_inbuilt("ppi", amdim = p), 
+                      transform = trans, 
+                      fixedparams = usertheta,
+                      bdryw = tape_bdryw_inbuilt(bdryw, make_transform(trans)$toM(rep(1/p, p)), acut = acut)
+                      )
+    smdtape <- tapes$smi
   
     # find boundary points and their approximation centres
     isbdry <- simplex_isboundary(Y, bdrythreshold)
