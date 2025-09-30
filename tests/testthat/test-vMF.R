@@ -99,7 +99,7 @@ test_that("vMF matches for simulated weights, ignoring SE, which shouldn't match
   sim3_m <- vMF_m(vw$newY)
   dir3_m <- vMF_m(Y, w = vw$w)
   expect_equal(sim3_m, dir3_m)
-  expect_error(expect_equal(dir3_m, vMF_m(Y)), "not equal to")
+  expect_error(expect_equal(dir3_m, vMF_m(Y)), class = "expectation_failure")
 })
 
 
