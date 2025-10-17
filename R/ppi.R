@@ -93,6 +93,7 @@ ppi <- function(Y, paramvec = NULL,
            none = "sim")
   if (trans == "none"){trans <- "identity"}
 
+  if (bdryw == "none"){bdryw <- "ones"} # convenience argument option
   if (man %in% c("sim", "sph")){
     if (bdryw == "ones"){stop("Manifold supplied has a boundary - set bdryw to something that isn't 'ones'")}
   } else {
