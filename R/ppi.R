@@ -100,7 +100,7 @@ ppi <- function(Y, paramvec = NULL,
     if (bdryw != "ones"){warning("Manifold supplied has no boundary. Setting bdryw to 'ones'.")}
   }
   if (bdryw == "ones"){
-    if (is.null(acut) || (length(acut) == 1 && is.na(acut))){warning("The value of 'acut' is ignored for bdryw == 'ones'")}
+    if (!is.null(acut) && (length(acut) >= 1 && is.finite(acut))){warning("The value of 'acut' is ignored for bdryw == 'ones'")}
     acut <- 1 #set just for passing to CppAD
   }
   if (is.null(paramvec)){usertheta <- rep(NA, ppithetalength(p))}
