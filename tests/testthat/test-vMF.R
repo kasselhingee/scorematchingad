@@ -101,7 +101,7 @@ test_that("vMF matches for simulated weights, ignoring SE, which shouldn't match
   expect_equal(sim3_m, dir3_m)
   # and as a sanity check the average of the original data
   # should not be equal to the weighted average of the original data
-  expect_gt(sqrt(sum((dir3_m - vMF_m(Y) )^2)), 0.1)
+  expect_gt(acos(sum(dir3_m * vMF_m(Y))), pi/100)
 })
 
 
