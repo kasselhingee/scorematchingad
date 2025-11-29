@@ -99,7 +99,9 @@ test_that("vMF matches for simulated weights, ignoring SE, which shouldn't match
   sim3_m <- vMF_m(vw$newY)
   dir3_m <- vMF_m(Y, w = vw$w)
   expect_equal(sim3_m, dir3_m)
-  expect_error(expect_equal(dir3_m, vMF_m(Y)), class = "expectation_failure")
+  # and as a sanity check the average of the original data
+  # should not be equal to the weighted average of the original data
+  expect_gt(sqrt(sum((dir3_m - vMF_m(Y) )^2)), 0.1)
 })
 
 
