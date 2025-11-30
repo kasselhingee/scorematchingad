@@ -1,3 +1,6 @@
+# Version 0.1.6
+No change - version increment due to submission mistake.
+
 # Version 0.1.5
 Fixed a lazily-written unit test.
 
