@@ -1,3 +1,6 @@
+# Version 0.1.5
+Fixed a lazily-written unit test.
+
 # Version 0.1.4
 Custom boundary weight functions enabled through `tape_bdryw()`, the results of which can be passed to `tape_smd()`.
 
