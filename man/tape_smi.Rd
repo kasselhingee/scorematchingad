@@ -67,7 +67,7 @@ evaltape(tapes$smi, runif(n = p), rep(1/sqrt(p), p))
 u <- rep(1/3, 3)
 tapes <- tape_smi(manifold = "sph",
               uld = "ppi",
-              transform = "sqrt"
+              transform = "sqrt",
               xtape = u,
               fixedparams = ppi_paramvec(p = 3), #no fixed params
               bdryw = "minsq" #uses default threshold for minsq
