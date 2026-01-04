@@ -49,8 +49,8 @@ tapes <- tape_smd("sim", "sqrt", "sph", "ppi",
               )
 evaltape(tapes$lltape, u, rppi_egmodel(1)$theta)
 evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
-evaltape(tapes$lltape, rbind(c(0, 0, 1), c(0,0,1)), 
-         rppi_egmodel(1)$theta, 
+evaltape(tapes$lltape, rbind(c(0, 0, 1), c(0,0,1)),
+         rppi_egmodel(1)$theta,
          xcentres = rbind(c(0.0005, 0.0005, 0.999), NA))
 }
 \seealso{

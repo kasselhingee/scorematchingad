@@ -1,7 +1,7 @@
 #' @noRd
 #' @title Estimate the concentration for a von Mises Fisher distribution
 #' @family directional model estimators
-#' @description Using score matching, estimates the concentration \eqn{\kappa} from a sample with mean direction of `c(1, 0, 0, ..., 0)`. 
+#' @description Using score matching, estimates the concentration \eqn{\kappa} from a sample with mean direction of `c(1, 0, 0, ..., 0)`.
 #' Results by \insertCite{mardia2016sc;textual}{scorematchingad} and some experiments of our own suggest that good implementations of the maximum likelihood estimator (e.g. [`movMF::movMF()`] ) will out perform `vMF_kappa()`.
 #'
 #' Often a sample with mean direction of `c(1, 0, 0, ...., 0)` is created by estimating the mean direction and rotating the data such that the mean direction equals `c(1, 0, 0, ...)`.
@@ -17,21 +17,22 @@
 #' `info` contains a variety of information about the model fitting procedure.
 #' @param Y A data matrix, each row is an observation.
 #' @param w Weights corresponding to each row of `Y`.
-vMF_kappa <- function(Y, w = rep(1, nrow(Y))){
+vMF_kappa <- function(Y, w = rep(1, nrow(Y))) {
   # do estimate, where all but the first component of theta are fixed at zero
   # because kappa * e1 = (kappa, 0, 0, 0, ...)
-    p <- ncol(Y)
-    tapes <- tape_smi(manifold = "sph",
-             uld = tape_uld_inbuilt("vMF", amdim = p),
-             fixedparams = c(NA, rep(0, p - 1)))
+  p <- ncol(Y)
+  tapes <- tape_smi(
+    manifold = "sph",
+    uld = tape_uld_inbuilt("vMF", amdim = p),
+    fixedparams = c(NA, rep(0, p - 1))
+  )
 
-    sminfo <- cppad_closed(tapes$smi, Y, w = w)
-    k <- sminfo$est
-    SE <- sminfo$SE
+  sminfo <- cppad_closed(tapes$smi, Y, w = w)
+  k <- sminfo$est
+  SE <- sminfo$SE
   return(list(
     k = k,
     SE = SE,
     sminfo = sminfo
   ))
 }
-

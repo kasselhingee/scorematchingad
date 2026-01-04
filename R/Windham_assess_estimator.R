@@ -1,14 +1,16 @@
 #' @noRd
 #' @param ... passed directly to estimator for testing purposes
 
-Windham_assess_estimator <- function(estimator, Y, ..., w = NULL){
-  if (is.null(estimator)){stop("estimator is NULL")}
+Windham_assess_estimator <- function(estimator, Y, ..., w = NULL) {
+  if (is.null(estimator)) {
+    stop("estimator is NULL")
+  }
   estimatorformals <- formals(estimator)
-  if (length(setdiff(c("Y", "w"), names(estimatorformals))) != 0){
+  if (length(setdiff(c("Y", "w"), names(estimatorformals))) != 0) {
     stop("Estimator must have arguments 'Y' and 'w'.")
   }
 
-  if (is.null(w)){
+  if (is.null(w)) {
     w <- rep(1, nrow(Y)) / sqrt(nrow(Y))
   }
 
@@ -22,28 +24,55 @@ Windham_assess_estimator <- function(estimator, Y, ..., w = NULL){
 
   # check that newparamvec has the correct length, if the length can be determined
   paramvec_length = 0
-  paramvec = FALSE 
-  if ("paramvec" %in% names(estimatorformals)){
+  paramvec = FALSE
+  if ("paramvec" %in% names(estimatorformals)) {
     paramvec = TRUE
-    if (!is.null(estargs$paramvec)){paramvec_length <- max(paramvec_length, length(estargs$paramvec))} #use max here to ignore times when the default is 'NULL'
-    else if (isa(estimatorformals$paramvec, "call")){paramvec_length <- max(paramvec_length, length(eval(estimatorformals$paramvec)))}
+    if (!is.null(estargs$paramvec)) {
+      #use max here to ignore times when the default is 'NULL'
+      paramvec_length <- max(paramvec_length, length(estargs$paramvec))
+    } else if (isa(estimatorformals$paramvec, "call")) {
+      paramvec_length <- max(
+        paramvec_length,
+        length(eval(estimatorformals$paramvec))
+      )
+    }
   }
-  paramvec_start = FALSE 
-  if ("paramvec_start" %in% names(estimatorformals)){
+  paramvec_start = FALSE
+  if ("paramvec_start" %in% names(estimatorformals)) {
     paramvec_start = TRUE
-    if (!is.null(estargs$paramvec_start)){paramvec_length <- max(paramvec_length, length(estargs$paramvec_start))}
-    else if (isa(estimatorformals$paramvec_start, "call")){paramvec_length <- max(paramvec_length, length(eval(estimatorformals$paramvec_start)))}
-  } 
-  if ((paramvec_length > 0) && (length(newparamvec) != paramvec_length)){
-    stop(sprintf("Returned estimate has different length (%i) to input paramvec or paramvec_start (%i)", length(newparamvec), paramvec_length))
+    if (!is.null(estargs$paramvec_start)) {
+      paramvec_length <- max(paramvec_length, length(estargs$paramvec_start))
+    } else if (isa(estimatorformals$paramvec_start, "call")) {
+      paramvec_length <- max(
+        paramvec_length,
+        length(eval(estimatorformals$paramvec_start))
+      )
+    }
+  }
+  if ((paramvec_length > 0) && (length(newparamvec) != paramvec_length)) {
+    stop(sprintf(
+      "Returned estimate has different length (%i) to input paramvec or paramvec_start (%i)",
+      length(newparamvec),
+      paramvec_length
+    ))
   }
 
   #check that fixing works, but only when paramvec is passed
-  if (paramvec){
-    if (!is.null(estargs[["paramvec"]])){ #this [[ doesn't seem to do partial matching compared to $paramvec
-      if (any(abs(newparamvec[t_u2i(estargs$paramvec)] - estargs$paramvec[t_u2i(estargs$paramvec)]) > sqrt(.Machine$double.eps))){
+  if (paramvec) {
+    if (!is.null(estargs[["paramvec"]])) {
+      #this [[ doesn't seem to do partial matching compared to $paramvec
+      if (
+        any(
+          abs(
+            newparamvec[t_u2i(estargs$paramvec)] -
+              estargs$paramvec[t_u2i(estargs$paramvec)]
+          ) >
+            sqrt(.Machine$double.eps)
+        )
+      ) {
         stop("Fixed elements of the parameter vector are altered by estimator.")
-    }}
+      }
+    }
   }
 
   return(list(
@@ -54,6 +83,3 @@ Windham_assess_estimator <- function(estimator, Y, ..., w = NULL){
     est = newparamvec
   ))
 }
-
-
-

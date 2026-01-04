@@ -19,7 +19,7 @@
 #' Tapes of the Hessian and gradient offset are created using [`tape_Hessian()`] and [`tape_gradoffset()`] respectively.
 #' These tapes are then evaluated for every row of `tmat`.
 #' When the corresponding `tcentres` row is not `NA`, then approximate (but very accurate) results are calculated using Taylor approximation around the location given by the row of `tcentres`.
-#' 
+#'
 #' For score matching \eqn{x} is the set of model parameters and the vector \eqn{t} is a (multivariate) measurement.
 #' @param tape A tape of a quadratic function where the independent and dynamic parameters correspond to the \eqn{x} and \eqn{t} in the details section, respectively. For score matching `tape` should be a tape of the score matching discrepancy function \eqn{A(z) + B(z) + C(z)} in [`scorematchingtheory`] with \eqn{z} the *dynamic parameters* and the model parameters the *independent variable* (which is the usual for the return of [`tape_smd()`]).
 #' @param tmat A matrix of vectors corresponding to values of \eqn{t} (see details). Each row corresponds to a vector. For score matching, these vectors are measurements.
@@ -36,10 +36,15 @@
 #'               bdryw = "minsq", acut = 0.01,
 #'               verbose = FALSE
 #'               )$smdtape
-#' quadratictape_parts(smdtape, 
+#' quadratictape_parts(smdtape,
 #'   tmat = rbind(u, c(1/4, 1/4, 1/2)))
 #' @export
-quadratictape_parts <- function(tape, tmat, tcentres = NA * tmat, approxorder = 10){
+quadratictape_parts <- function(
+  tape,
+  tmat,
+  tcentres = NA * tmat,
+  approxorder = 10
+) {
   stopifnot(inherits(tape, "Rcpp_ADFun"))
   stopifnot(nrow(tmat) == nrow(tcentres))
   stopifnot(testquadratic(tape))
@@ -50,18 +55,31 @@ quadratictape_parts <- function(tape, tmat, tcentres = NA * tmat, approxorder = 
   Hesstape_switched <- tape_swap(Hesstape) #Hesstape is wrt to x (which in smd world is actually the model parameter set), but we want it to be wrt to the dynamic parameter like OffsetTape is
 
   #exact and approximat evalution of Hess
-  fakeparametermat <- matrix(0, 
-                            ncol = length(tape$xtape),
-                            nrow = nrow(tmat))   #fake because the results don't depend on it
-  emptyparametermat <- matrix(vector(mode = "double"), ncol = 0, nrow = nrow(tmat)) 
+  fakeparametermat <- matrix(0, ncol = length(tape$xtape), nrow = nrow(tmat)) #fake because the results don't depend on it
+  emptyparametermat <- matrix(
+    vector(mode = "double"),
+    ncol = 0,
+    nrow = nrow(tmat)
+  )
   # for OffsetTape which has no dynamic parameters
 
-  Hesss <- evaltape(Hesstape_switched, xmat = tmat, pmat = fakeparametermat, xcentres = tcentres, approxorder = approxorder)
-  offsets <- evaltape(OffsetTape, xmat = tmat, pmat = emptyparametermat, xcentres = tcentres, approxorder = approxorder)
+  Hesss <- evaltape(
+    Hesstape_switched,
+    xmat = tmat,
+    pmat = fakeparametermat,
+    xcentres = tcentres,
+    approxorder = approxorder
+  )
+  offsets <- evaltape(
+    OffsetTape,
+    xmat = tmat,
+    pmat = emptyparametermat,
+    xcentres = tcentres,
+    approxorder = approxorder
+  )
 
   return(list(
     offset = offsets,
     Hessian = Hesss
   ))
 }
-

@@ -11,7 +11,7 @@
 #' @details
 #' To build a tape for the score matching discrepancy function, the `scorematchingad` first tapes the map from a point \eqn{z} on the `end` manifold to the value of the unnormalised log-density, where the independent variable is the \eqn{z}, the dynamic parameter is a vector of the parameters to estimate, and the remaining model parameters are fixed and not estimated.
 #' This tape is then used to generate a tape for the score matching discrepancy function where the parameters to estimate are the independent variable.
-#' 
+#'
 #' The transforms of the manifold must be implemented in `C++` and selected by name.
 #' @references \insertAllCited{}
 
@@ -21,7 +21,7 @@
 #'   + an [`Rcpp_ADFun`] object containing a tape of the score matching discrepancy function with the non-fixed parameters of the model as the independent variable, and the measurements on the `end` manifold as the dynamic parameter.
 #'   + some information about the tapes
 #'
-#' 
+#'
 #' @examples
 #' p <- 3
 #' u <- rep(1/sqrt(p), p)
@@ -34,7 +34,7 @@
 #'               )
 #' evaltape(tapes$lltape, u, runif(n = ltheta))
 #' evaltape(tapes$smdtape, runif(n = ltheta), u)
-#' 
+#'
 #' u <- rep(1/3, 3)
 #' tapes <- tape_smd("sim", "sqrt", "sph", "ppi",
 #'               ytape = u,
@@ -45,45 +45,65 @@
 #' evaltape(tapes$lltape, u, rppi_egmodel(1)$theta)
 #' evaltape(tapes$smdtape, rppi_egmodel(1)$theta, u)
 #' @export
-tape_smd <- function(start, tran = "identity", end = start, ll,
-                         ytape, usertheta,
-                         bdryw = "ones", acut = 1,
-                         thetatape_creator = function(n){seq(length.out = n)},
-                         verbose = FALSE){
+tape_smd <- function(
+  start,
+  tran = "identity",
+  end = start,
+  ll,
+  ytape,
+  usertheta,
+  bdryw = "ones",
+  acut = 1,
+  thetatape_creator = function(n) {
+    seq(length.out = n)
+  },
+  verbose = FALSE
+) {
   warning("This function is obsolete - please use tape_smi() instead")
 
-  if(all(!is.na(usertheta))){stop("All elements of theta are fixed")}
+  if (all(!is.na(usertheta))) {
+    stop("All elements of theta are fixed")
+  }
 
   tranman <- manifoldtransform(start, tran, end)
 
-
-
-  lltape <- tapell(ll = ll,
-                    ytape = ytape,
-                    usertheta = usertheta, 
-                    thetatape_creator = thetatape_creator,
-                    tranobj = tranman$tran)
+  lltape <- tapell(
+    ll = ll,
+    ytape = ytape,
+    usertheta = usertheta,
+    thetatape_creator = thetatape_creator,
+    tranobj = tranman$tran
+  )
   stopifnot(is.numeric(acut))
 
   # choose between a canned boundary weight function or a custom boundary weight function
-  if (typeof(bdryw) == "character"){ 
+  if (typeof(bdryw) == "character") {
     # check bdryw and associated acut
-    if (!(all(c(tran, end) == c("sqrt", "sph")) | all(c(tran, end) == c("identity", "sim")))){
-      if (bdryw != "ones"){warning("Manifold supplied has no boundary. Using bdryw = 'ones' is strongly recommended.")}
+    if (
+      !(all(c(tran, end) == c("sqrt", "sph")) |
+        all(c(tran, end) == c("identity", "sim")))
+    ) {
+      if (bdryw != "ones") {
+        warning(
+          "Manifold supplied has no boundary. Using bdryw = 'ones' is strongly recommended."
+        )
+      }
     }
-    if ((bdryw == "ones") && (abs(acut - 1) > 1E-8)){
+    if ((bdryw == "ones") && (abs(acut - 1) > 1E-8)) {
       warning("The value of 'acut' is ignored for bdryw == 'ones'")
     }
     bdryw <- tape_bdryw_inbuilt(bdryw, x = tranman$tran$toM(ytape), acut = acut)
-  } else if (!inherits(bdryw, "Rcpp_ADFun")){
+  } else if (!inherits(bdryw, "Rcpp_ADFun")) {
     stop("bdryw must be a name or a taped boundary weight function")
   }
 
-  smdtape <- tapesmd(uldtape = lltape,
-                        tran = tranman$tran,
-                        M = tranman$man,
-                        bdrywtape = bdryw,
-                        verbose = verbose)
+  smdtape <- tapesmd(
+    uldtape = lltape,
+    tran = tranman$tran,
+    M = tranman$man,
+    bdrywtape = bdryw,
+    verbose = verbose
+  )
   return(list(
     lltape = lltape,
     smdtape = smdtape,
@@ -96,5 +116,3 @@ tape_smd <- function(start, tran = "identity", end = start, ll,
     )
   ))
 }
-
-

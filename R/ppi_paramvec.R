@@ -40,96 +40,133 @@ NULL
 #' @examples
 #' ppi_paramvec(AL = "diag", bL = 0, betap = -0.5, p = 3)
 #' @export
-ppi_paramvec <- function(p = NULL, AL = NULL, bL = NULL, Astar = NULL, beta = NULL, betaL = NULL, betap = NULL){
+ppi_paramvec <- function(
+  p = NULL,
+  AL = NULL,
+  bL = NULL,
+  Astar = NULL,
+  beta = NULL,
+  betaL = NULL,
+  betap = NULL
+) {
   # search for a p
-  if (is.null(p)){
-    if (!is.null(Astar)){p <- nrow(Astar)}
-    else if (isTRUE(is.matrix(AL))){p <- nrow(as.matrix(AL)) + 1}
-    else if (isTRUE((is.matrix(bL) || is.vector(bL)) && (length(bL) > 1))){p <- length(as.vector(bL)) + 1}
-    else if (isTRUE( (is.matrix(betaL) || is.vector(betaL)) && (length(betaL) > 1))){p <- length(as.vector(betaL)) + 1}
-    else if (isTRUE( (is.matrix(beta) || is.vector(beta)) && (length(beta) > 1))){p <- length(as.vector(beta))}
-    else {stop("Could not guess 'p' from other arguments. Please specify 'p'.")}
+  if (is.null(p)) {
+    if (!is.null(Astar)) {
+      p <- nrow(Astar)
+    } else if (isTRUE(is.matrix(AL))) {
+      p <- nrow(as.matrix(AL)) + 1
+    } else if (isTRUE((is.matrix(bL) || is.vector(bL)) && (length(bL) > 1))) {
+      p <- length(as.vector(bL)) + 1
+    } else if (
+      isTRUE((is.matrix(betaL) || is.vector(betaL)) && (length(betaL) > 1))
+    ) {
+      p <- length(as.vector(betaL)) + 1
+    } else if (
+      isTRUE((is.matrix(beta) || is.vector(beta)) && (length(beta) > 1))
+    ) {
+      p <- length(as.vector(beta))
+    } else {
+      stop("Could not guess 'p' from other arguments. Please specify 'p'.")
+    }
   }
   stopifnot(is.vector(p, mode = "numeric"))
   stopifnot(length(p) == 1)
 
   # initialise parameter objects
-  bLprep = rep(NA, p-1)
-  betaLprep = rep(NA, p-1)
+  bLprep = rep(NA, p - 1)
+  betaLprep = rep(NA, p - 1)
   betapprep = NA
   # AL, bL and A
-  if (!is.null(Astar)){
-    if (!(is.null(AL) & is.null(bL))){warning("AL, bL and Astar supplied. Astar argument will override AL and bL.")}
+  if (!is.null(Astar)) {
+    if (!(is.null(AL) & is.null(bL))) {
+      warning(
+        "AL, bL and Astar supplied. Astar argument will override AL and bL."
+      )
+    }
     translated <- ppi_fromAstar(Astar)
     ALprep <- translated$AL
     bLprep <- translated$bL
   } else {
     # AL
-    if (is.null(AL)){
-      ALprep = matrix(NA, nrow = p-1, ncol = p-1) #could also do nothing
-    } else if (is.matrix(AL)){
-    # If a matrix, then the NA elements will be estimated and the others will be fixed at the supplied value (i.e. not estimated).
-      if(!isSymmetric.matrix(AL)){stop("AL must be symmetric.")}
+    if (is.null(AL)) {
+      ALprep = matrix(NA, nrow = p - 1, ncol = p - 1) #could also do nothing
+    } else if (is.matrix(AL)) {
+      # If a matrix, then the NA elements will be estimated and the others will be fixed at the supplied value (i.e. not estimated).
+      if (!isSymmetric.matrix(AL)) {
+        stop("AL must be symmetric.")
+      }
       ALprep = AL
-    } else if (is.numeric(AL)){#' If a single number, then AL will be fixed as a matrix of the given value.
-      ALprep = matrix(AL, nrow = p-1, ncol = p-1)
-    } else if (is.character(AL)){#' If "diag" then the non-diagonal elements of AL will be fixed to 0.
+    } else if (is.numeric(AL)) {
+      # If a single number, then AL will be fixed as a matrix of the given value.
+      ALprep = matrix(AL, nrow = p - 1, ncol = p - 1)
+    } else if (is.character(AL)) {
+      # If "diag" then the non-diagonal elements of AL will be fixed to 0.
       stopifnot((AL == "diag") | (AL == "d") | (AL == "diagonal"))
-      ALprep <- matrix(0, nrow = p-1, ncol = p-1)
+      ALprep <- matrix(0, nrow = p - 1, ncol = p - 1)
       diag(ALprep) <- NA
-    } else if (is.logical(AL)){
-      ALprep = matrix(AL, nrow = p-1, ncol = p-1) #covers NA, TRUE, and FALSE
+    } else if (is.logical(AL)) {
+      ALprep = matrix(AL, nrow = p - 1, ncol = p - 1) #covers NA, TRUE, and FALSE
     } else {
       stop("AL is not of required type.")
     }
     #bL
     # If a number, then bL will be fixed at the supplied value.
-    if (!is.null(bL)){
-      if (is.matrix(bL)){
-         if ((nrow(bL) == 1) || (ncol(bL) == 1)){bL <- as.vector(bL)}
-         else {stop("bL is a matrix with multiple rows and columns")}
+    if (!is.null(bL)) {
+      if (is.matrix(bL)) {
+        if ((nrow(bL) == 1) || (ncol(bL) == 1)) {
+          bL <- as.vector(bL)
+        } else {
+          stop("bL is a matrix with multiple rows and columns")
+        }
       }
-      if (!is.vector(bL, mode = "any")){stop("bL must be a vector or value")}
-      if (length(bL) == 1){
-        bLprep = rep(bL, p-1)
-      } else {#' If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
-        if (length(bL) != p-1){stop("bL must have length p-1")}
+      if (!is.vector(bL, mode = "any")) {
+        stop("bL must be a vector or value")
+      }
+      if (length(bL) == 1) {
+        bLprep = rep(bL, p - 1)
+      } else {
+        # If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
+        if (length(bL) != p - 1) {
+          stop("bL must have length p-1")
+        }
         bLprep = bL
       }
     }
   }
 
   # beta
-  if (!is.null(betaL)){
+  if (!is.null(betaL)) {
     stopifnot(is.vector(betaL, "numeric") | is.vector(betaL, "logical"))
     stopifnot(is.null(beta))
-    if (length(betaL) == 1){
+    if (length(betaL) == 1) {
       # If a number then the 1...(p-1) beta elements fixed at the given number.
-      betaLprep = rep(betaL, p-1)
-    } else if (length(betaL) == p-1){
+      betaLprep = rep(betaL, p - 1)
+    } else if (length(betaL) == p - 1) {
       # If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
       betaLprep = betaL
     } else {
       stop("betaL must have length p-1")
     }
   }
-  if (!is.null(betap)){
+  if (!is.null(betap)) {
     stopifnot(length(betap) == 1)
     stopifnot(is.numeric(betap) | is.logical(betap))
     stopifnot(is.null(beta))
     betapprep = betap
   }
-  if (!is.null(beta)){
+  if (!is.null(beta)) {
     stopifnot(is.null(betaL))
     stopifnot(is.null(betap))
-    if (is.matrix(beta)){beta <- drop(beta)}
+    if (is.matrix(beta)) {
+      beta <- drop(beta)
+    }
     stopifnot(is.vector(beta, "numeric") | is.vector(beta, "logical"))
-    if (length(beta) == 1){
-      betaLprep = rep(beta, p-1)
+    if (length(beta) == 1) {
+      betaLprep = rep(beta, p - 1)
       betapprep = beta
-    } else if (length(beta) == p){
+    } else if (length(beta) == p) {
       # If a vector, then the NA elements will be estimated and the others will be fixed at the supplied value.
-      betaLprep = beta[1:(p-1)]
+      betaLprep = beta[1:(p - 1)]
       betapprep = beta[p]
     } else {
       stop("beta must have length p")

@@ -4,7 +4,7 @@
 #' @inheritParams evaltape
 #' @param smdtape A taped score matching discrepancy. Most easily created by [`tape_smd()`].
 #' @details Computes the score matching discrepancy function from [`scorematchingtheory`] or weighted sum of the score matching discrepancy function.
-#' The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in `xmat` and `pmat`. 
+#' The gradient and Hessian are returned as arrays of row-vectors with each row corresponding to a row in `xmat` and `pmat`.
 #' Convert a Hessian row-vector to a matrix using `matrix(ncol = length(smdtape$xtape))`.
 #' @examples
 #' m <- rppi_egmodel(100)
@@ -15,20 +15,44 @@
 #' smvalues(smdtape, xmat = m$sample, pmat = m$theta[1:5])
 #' smvalues_wsum(smdtape, m$sample, m$theta[1:5])$grad/nrow(m$sample)
 #' @export
-smvalues <- function(smdtape, xmat, pmat, xcentres = NA * xmat, approxorder = 10){
+smvalues <- function(
+  smdtape,
+  xmat,
+  pmat,
+  xcentres = NA * xmat,
+  approxorder = 10
+) {
   stopifnot(inherits(smdtape, "Rcpp_ADFun"))
   # prepare tapes
   Jsmdfun <- tape_Jacobian(smdtape)
   Hsmdfun <- tape_Jacobian(Jsmdfun)
-  
+
   smdfun_u <- tape_swap(smdtape) #don't use a boundary for taping!
   Jsmdfun_u <- tape_swap(Jsmdfun)
   Hsmdfun_u <- tape_swap(Hsmdfun)
 
-  smdvals <- evaltape(smdfun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
+  smdvals <- evaltape(
+    smdfun_u,
+    xmat,
+    pmat,
+    xcentres = xcentres,
+    approxorder = approxorder
+  )
 
-  gradvals <- evaltape(Jsmdfun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
-  hessvals <- evaltape(Hsmdfun_u, xmat, pmat, xcentres = xcentres, approxorder = approxorder)
+  gradvals <- evaltape(
+    Jsmdfun_u,
+    xmat,
+    pmat,
+    xcentres = xcentres,
+    approxorder = approxorder
+  )
+  hessvals <- evaltape(
+    Hsmdfun_u,
+    xmat,
+    pmat,
+    xcentres = xcentres,
+    approxorder = approxorder
+  )
 
   return(list(
     obj = smdvals,
@@ -37,7 +61,7 @@ smvalues <- function(smdtape, xmat, pmat, xcentres = NA * xmat, approxorder = 10
   ))
 }
 #' @return
-#' A list of 
+#' A list of
 #'  + `obj` the score matching discrepancy values
 #'  + `grad` the gradient of the score matching discrepancy
 #'  + `hess` the Hessian of the score matching discrepancy
@@ -45,12 +69,23 @@ smvalues <- function(smdtape, xmat, pmat, xcentres = NA * xmat, approxorder = 10
 #' @rdname smvalues
 #' @param w Weights to apply to each row of `xmat` for computing the weighted sum. If `NULL` then each row is given a weight of `1`.
 #' @export
-smvalues_wsum <- function(tape, xmat, pmat, w=NULL, xcentres = NA * xmat, approxorder = 10){
-  evals_l <- smvalues(tape, xmat = xmat, pmat = pmat,
-                     xcentres = xcentres, approxorder = approxorder)
-  
+smvalues_wsum <- function(
+  tape,
+  xmat,
+  pmat,
+  w = NULL,
+  xcentres = NA * xmat,
+  approxorder = 10
+) {
+  evals_l <- smvalues(
+    tape,
+    xmat = xmat,
+    pmat = pmat,
+    xcentres = xcentres,
+    approxorder = approxorder
+  )
+
   # do weight checks afterwards so that eval results can be used to choose weights
   out <- lapply(evals_l, wcolSums, w = w)
   return(out)
 }
-

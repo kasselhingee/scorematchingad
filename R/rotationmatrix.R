@@ -12,20 +12,20 @@
 #' a <- c(1,2,3,4,5)
 #' b <- c(0,3,4,1,2)
 #' rotationmatrix(a, b) %*% b
-rotationmatrix <- function(a, b){
+rotationmatrix <- function(a, b) {
   stopifnot(is.vector(a))
   stopifnot(is.vector(b))
   stopifnot(length(a) == length(b))
-  a <- a/sqrt(a %*% a)[[1]]
-  b <- b/sqrt(b %*% b)[[1]]
-  if (all(a == -b)){
+  a <- a / sqrt(a %*% a)[[1]]
+  b <- b / sqrt(b %*% b)[[1]]
+  if (all(a == -b)) {
     d <- length(a)
-    nthpole <- c(1, rep(0, d-1))
+    nthpole <- c(1, rep(0, d - 1))
     sthpole <- -nthpole
-    halfway <- c(1/sqrt(2), 1/sqrt(2), rep(0, d-2))
+    halfway <- c(1 / sqrt(2), 1 / sqrt(2), rep(0, d - 2))
     b2sthpole <- rotationmat_amaral(sthpole, b)
-    sth2nth <- diag(c(-1, -1, rep(1, d-2)))
-    Q <- t(b2sthpole)%*%sth2nth%*%b2sthpole
+    sth2nth <- diag(c(-1, -1, rep(1, d - 2)))
+    Q <- t(b2sthpole) %*% sth2nth %*% b2sthpole
   } else {
     Q <- rotationmat_amaral(a, b)
   }
@@ -33,14 +33,13 @@ rotationmatrix <- function(a, b){
 }
 
 # the exact method described in amaral et al
-rotationmat_amaral  <- function(a, b){ #assumes a and b are unit vectors
+rotationmat_amaral <- function(a, b) {
+  #assumes a and b are unit vectors
   ab <- (a %*% b)[[1]]
   alpha <- acos(ab)
-  c <- b - a*ab
-  c <- c/sqrt(c %*% c)[[1]]
-  A <- a%o%c - c%o%a
-  Q = diag(length(a)) + sin(alpha)*A + (cos(alpha) - 1)*(a%o%a + c%o%c)
+  c <- b - a * ab
+  c <- c / sqrt(c %*% c)[[1]]
+  A <- a %o% c - c %o% a
+  Q = diag(length(a)) + sin(alpha) * A + (cos(alpha) - 1) * (a %o% a + c %o% c)
   return(Q)
 }
-
-

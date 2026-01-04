@@ -23,41 +23,55 @@
 #'    "sim", "sqrt", "sph",
 #'    ll = "ppi",
 #'    ytape = c(0.2, 0.3, 0.5),
-#'    usertheta = ppi_paramvec(p = 3), 
+#'    usertheta = ppi_paramvec(p = 3),
 #'    bdryw = "minsq",
 #'    acut = 0.1,
 #'    verbose = FALSE)
 #'
 #'  testquadratic(tapes$smdtape)
 #' @export
-testquadratic <- function(tape, xmat = matrix(tape$xtape, nrow = 1), dynmat = matrix(tape$dyntape, nrow = 1), verbose = FALSE){
+testquadratic <- function(
+  tape,
+  xmat = matrix(tape$xtape, nrow = 1),
+  dynmat = matrix(tape$dyntape, nrow = 1),
+  verbose = FALSE
+) {
   stopifnot(inherits(tape, "Rcpp_ADFun"))
   tapeJ <- tape_Jacobian(tape)
   tapeH <- tape_Jacobian(tapeJ)
 
   #parameter() test
-  isparameter <- vapply(1:tapeH$range, function(i){tapeH$parameter(i-1)}, FUN.VALUE = TRUE)
+  isparameter <- vapply(
+    1:tapeH$range,
+    function(i) {
+      tapeH$parameter(i - 1)
+    },
+    FUN.VALUE = TRUE
+  )
   result_parameter <- all(isparameter)
-  if (verbose && !result_parameter){
-    message(sprintf("The Hessian was non-constant according to parameter() for elements %s.",
-                    paste(which(!isparameter), collapse = ", ")))
+  if (verbose && !result_parameter) {
+    message(sprintf(
+      "The Hessian was non-constant according to parameter() for elements %s.",
+      paste(which(!isparameter), collapse = ", ")
+    ))
   }
 
   #try Jacobian
   stopifnot(isTRUE(nrow(xmat) == nrow(dynmat)))
-  thirdderivs <- lapply(1:nrow(xmat), function(i){
+  thirdderivs <- lapply(1:nrow(xmat), function(i) {
     tapeH$Jac(xmat[i, ], dynmat[i, ])
   })
-  isallzero <- unlist(lapply(thirdderivs, function(vec){all(vec == 0)}))
+  isallzero <- unlist(lapply(thirdderivs, function(vec) {
+    all(vec == 0)
+  }))
   result_thirdderiv <- all(isallzero)
-  if (verbose && !result_thirdderiv){
-    message(sprintf("The Jacobian of the Hessian was non-zero for row %s of xmat and dynmat",
-                    paste(which(!isallzero), collapse = ", ")))
+  if (verbose && !result_thirdderiv) {
+    message(sprintf(
+      "The Jacobian of the Hessian was non-zero for row %s of xmat and dynmat",
+      paste(which(!isallzero), collapse = ", ")
+    ))
   }
 
   finalresult <- result_thirdderiv && result_parameter
   return(finalresult)
 }
-
-
-

@@ -53,7 +53,7 @@ smdtape <- tape_smd("sim", "sqrt", "sph", "ppi",
               bdryw = "minsq", acut = 0.01,
               verbose = FALSE
               )$smdtape
-quadratictape_parts(smdtape, 
+quadratictape_parts(smdtape,
   tmat = rbind(u, c(1/4, 1/4, 1/2)))
 }
 \seealso{

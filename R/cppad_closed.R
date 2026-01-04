@@ -1,6 +1,6 @@
 #' @title Score Matching Estimator for Quadratic-Form Score Matching Discrepancies
 #' @family generic score matching tools
-#' @description 
+#' @description
 #' For a tape of a quadratic-form score matching discrepancy function, calculates the vector of parameters such that the gradient of the score matching discrepancy is zero.
 #' Also estimates standard errors and covariance.
 #' Many score matching discrepancy functions have a quadratic form (see [`scorematchingtheory`]).
@@ -13,8 +13,8 @@
 #' @param approxorder The order of Taylor approximation to use.
 #' @details
 #' When the score matching discrepancy function is of quadratic form, then the gradient of the score matching discrepancy is zero at \eqn{H^{-1}b}{solve(H) %*% b},
-#' where \eqn{H} is the average of the Hessian of the score matching discrepancy function evaluated at each measurement and 
-#' \eqn{b} is the average of the gradient offset (see [`quadratictape_parts()`]) evaluated at each measurement. 
+#' where \eqn{H} is the average of the Hessian of the score matching discrepancy function evaluated at each measurement and
+#' \eqn{b} is the average of the gradient offset (see [`quadratictape_parts()`]) evaluated at each measurement.
 #' Both the Hessian and the gradient offset are constant with respect to the model parameters for quadratic-form score matching discrepancy functions.
 #'
 #' Standard errors are estimated using the Godambe information matrix (aka sandwich method) and are only computed when the weights are constant.
@@ -23,8 +23,8 @@
 # \deqn{\hat{G(\theta)} = \hat{E} -H(smd(\theta;Y))),}
 # where \eqn{smd} is the score matching discrepancy function represented by `smdtape`,
 # \eqn{H} is the Hessian with respect to \eqn{\theta}, which is constant for quadratic-form functions,
-# 
-#' The estimate of the variability matrix \eqn{J} is 
+#
+#' The estimate of the variability matrix \eqn{J} is
 #' the sample covariance (denominator of \eqn{n-1}) of the gradient of `smdtape` evaluated at each of the observations in `Y` for the estimated \eqn{\theta}.
 # \deqn{\hat{J}(\theta) = var(grad(w smd(\theta;Y))),}
 
@@ -45,33 +45,44 @@
 #' Y <- rppi_egmodel(100)
 #' cppad_closed(smdtape, Y$sample)
 #' @export
-cppad_closed <- function(smdtape, Y, Yapproxcentres = NA * Y, 
-                         w = rep(1, nrow(Y)),
-                         approxorder = 10){
+cppad_closed <- function(
+  smdtape,
+  Y,
+  Yapproxcentres = NA * Y,
+  w = rep(1, nrow(Y)),
+  approxorder = 10
+) {
   stopifnot(nrow(Y) == length(w))
   stopifnot(nrow(Y) == nrow(Yapproxcentres))
-  
-  parts <- quadratictape_parts(smdtape, tmat = Y,
-                               tcentres = Yapproxcentres,
-                               approxorder = approxorder)
+
+  parts <- quadratictape_parts(
+    smdtape,
+    tmat = Y,
+    tcentres = Yapproxcentres,
+    approxorder = approxorder
+  )
 
   # weight parts
   partsT <- lapply(parts, wcolSums, w = w)
   offset <- partsT$offset
   Hess <- partsT$Hessian
   Hess <- matrix(Hess, ncol = sqrt(ncol(parts$Hessian)))
-  invHess <- tryCatch(solve(Hess),
-               error = function(e) {
-     if (grepl("system.*singular", e)){
-          stop(paste("Hessian of the score-matching discrepancy function is not invertible.", e))
-        } else {stop(e)}
-     })
+  invHess <- tryCatch(solve(Hess), error = function(e) {
+    if (grepl("system.*singular", e)) {
+      stop(paste(
+        "Hessian of the score-matching discrepancy function is not invertible.",
+        e
+      ))
+    } else {
+      stop(e)
+    }
+  })
   root <- drop(-1 * invHess %*% offset)
 
   # compute SEs
   SE <- "Not calculated."
   covar <- "Not calculated."
-  if (all(w[[1]] == w)){
+  if (all(w[[1]] == w)) {
     covar <- cppad_closed_estvar(Y, root, parts$offset, parts$Hess)
     SE <- sqrt(diag(covar))
   }
@@ -85,20 +96,21 @@ cppad_closed <- function(smdtape, Y, Yapproxcentres = NA * Y,
 }
 
 # function for getting standard errors for the above function
-cppad_closed_estvar <- function(Y, theta, offsets, Hesss){
-  sens <- - matrix(colMeans(Hesss), ncol = sqrt(ncol(Hesss)))
+cppad_closed_estvar <- function(Y, theta, offsets, Hesss) {
+  sens <- -matrix(colMeans(Hesss), ncol = sqrt(ncol(Hesss)))
   sensinv <- solve(sens)
 
   # compute gradients
-  grads <- lapply(1:nrow(offsets), function(i){
-    drop(matrix(Hesss[i, ], ncol = ncol(offsets)) %*% theta + 
-      t(offsets[i, , drop = FALSE]))
+  grads <- lapply(1:nrow(offsets), function(i) {
+    drop(
+      matrix(Hesss[i, ], ncol = ncol(offsets)) %*%
+        theta +
+        t(offsets[i, , drop = FALSE])
+    )
   })
   grads <- do.call(rbind, grads)
   variability <- stats::cov(grads)
 
   Ginfinv <- sensinv %*% variability %*% sensinv / nrow(offsets) #inverse of the Godambe information matrix, also called the sandwich information matrix
-  return(Ginfinv) 
+  return(Ginfinv)
 }
-
-

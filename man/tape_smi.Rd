@@ -56,7 +56,7 @@ This tape is returned as \code{smi}.
 }
 \examples{
 p <- 3
-tapes <- tape_smi(manifold = "sph", 
+tapes <- tape_smi(manifold = "sph",
                   uld = "vMF",
                   xtape = rep(1/sqrt(p), p),
                   fixedparams = rep(NA, p),

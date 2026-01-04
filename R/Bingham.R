@@ -11,8 +11,8 @@
 #'
 #' The full score matching method estimates all elements of \eqn{A} directly except the final element of the diagonal, which is calculated from the sum of the other diagonal elements to ensure that the trace of \eqn{A} is zero.
 #'
-#' The method by \insertCite{mardia2016sc;textual}{scorematchingad} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}. 
-#' The observations `Y` are then standardised to `Y`\eqn{G}. 
+#' The method by \insertCite{mardia2016sc;textual}{scorematchingad} first calculates the maximum-likelihood estimate of the eigenvectors \eqn{G} of \eqn{A}.
+#' The observations `Y` are then standardised to `Y`\eqn{G}.
 #' This standardisation corresponds to diagonalising \eqn{A}
 #' where the eigenvalues of \eqn{A} become the diagonal elements of the new \eqn{A}.
 #' The diagonal elements of the new \eqn{A} are then estimated using score matching, with the final diagonal element calculated from the sum of the other elements.
@@ -32,35 +32,42 @@
 #'  * `SE` contains estimates of the standard errors if computed. See [`cppad_closed()`].
 #'  * `info` contains a variety of information about the model fitting procedure and results.
 #' @export
-Bingham <- function(Y, A = NULL, w = rep(1, nrow(Y)), method = "Mardia"){
-  if (method == "smfull"){
-    out <- Bingham_full(Y, A = A, w = w)}
-  if (method %in% c("Mardia", "hybrid")){
+Bingham <- function(Y, A = NULL, w = rep(1, nrow(Y)), method = "Mardia") {
+  if (method == "smfull") {
+    out <- Bingham_full(Y, A = A, w = w)
+  }
+  if (method %in% c("Mardia", "hybrid")) {
     stopifnot(is.null(A))
     out <- Bingham_Mardia(Y, w = w)
-    }
+  }
   return(out)
 }
 
-Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y))){
+Bingham_full <- function(Y, A = NULL, w = rep(1, nrow(Y))) {
   p <- ncol(Y)
-  if (is.null(A)){
+  if (is.null(A)) {
     A <- matrix(NA, nrow = p, ncol = p)
   }
   stopifnot(all(dim(A) == c(p, p)))
-  if (!is.na(A[p,p])){stop("The final diagonal element of matrix A cannot be fixed in this software. Please consider reordering your dimensions.")}
+  if (!is.na(A[p, p])) {
+    stop(
+      "The final diagonal element of matrix A cannot be fixed in this software. Please consider reordering your dimensions."
+    )
+  }
 
   intheta <- Bingham_Amat2theta(A)
 
-  tapes <- tape_smi(manifold = "sph",
-                    uld = tape_uld_inbuilt("Bingham", amdim = p),
-                    fixedparams = intheta)
+  tapes <- tape_smi(
+    manifold = "sph",
+    uld = tape_uld_inbuilt("Bingham", amdim = p),
+    fixedparams = intheta
+  )
 
   out <- cppad_closed(tapes$smi, Y = Y, w = w)
   theta <- intheta
   theta[is.na(intheta)] <- out$est
   A = Bingham_theta2Amat(theta)
-  if (is.numeric(out$SE)){
+  if (is.numeric(out$SE)) {
     tSE <- intheta * 0
     tSE[is.na(intheta)] <- out$SE
     SE = Bingham_theta2Amat(tSE)
@@ -77,8 +84,8 @@ Bingham_full <- function(Y,  A = NULL, w = rep(1, nrow(Y))){
   ))
 }
 
-Bingham_Mardia <- function(Y, w = rep(1, nrow(Y))){
-  Tmat <- t(Y) %*% (Y * w/sum(w))  #elements of Tmat are sample averages Yj*Yi being squares or cross products between the coordinates
+Bingham_Mardia <- function(Y, w = rep(1, nrow(Y))) {
+  Tmat <- t(Y) %*% (Y * w / sum(w)) #elements of Tmat are sample averages Yj*Yi being squares or cross products between the coordinates
   Tmat_es <- eigen(Tmat)
   Gammahat <- Tmat_es$vectors
   Ystd <- Y %*% Gammahat
@@ -88,9 +95,11 @@ Bingham_Mardia <- function(Y, w = rep(1, nrow(Y))){
   diag(A) <- NA
   stopifnot(all(dim(A) == p))
   intheta <- Bingham_Amat2theta(A)
-  tapes <- tape_smi(manifold = "sph",
-                    uld = tape_uld_inbuilt("Bingham", amdim = p),
-                    fixedparams = intheta)
+  tapes <- tape_smi(
+    manifold = "sph",
+    uld = tape_uld_inbuilt("Bingham", amdim = p),
+    fixedparams = intheta
+  )
 
   sm <- cppad_closed(tapes$smi, Y = Ystd, w = w)
   theta <- intheta
@@ -98,55 +107,59 @@ Bingham_Mardia <- function(Y, w = rep(1, nrow(Y))){
   Astd <- Bingham_theta2Amat(theta)
   Lambda <- diag(Astd)
 
-  if (is.numeric(sm$SE)){
+  if (is.numeric(sm$SE)) {
     SE <- intheta * 0
     SE[is.na(intheta)] <- sm$SE
     SE <- Bingham_theta2Amat(SE)
-    SE[p, p] <- NA#final NA because final diagonal element is not estimated directly
+    SE[p, p] <- NA #final NA because final diagonal element is not estimated directly
     evalSE <- diag(SE)
   } else {
     evalSE <- sm$SE
   }
   A <- Gammahat %*% diag(Lambda) %*% t(Gammahat)
   return(list(
-    est = list(A = A,
-               evals = Lambda,
-               G = Gammahat,
-               paramvec = Bingham_Amat2theta(A)),
+    est = list(
+      A = A,
+      evals = Lambda,
+      G = Gammahat,
+      paramvec = Bingham_Amat2theta(A)
+    ),
     SE = list(evals = evalSE),
     info = c(sm, list(Aforstddata = Astd))
   ))
 }
 
-Bingham_Amat2theta <- function(A){
+Bingham_Amat2theta <- function(A) {
   p <- ncol(A)
   stopifnot(isSymmetric(A))
-  if(isTRUE(abs(sum(diag(A))) > 1E-8)){warning("Trace of A is not zero, final diagonal element of A will be altered.")}
-  theta <- c(diag(A)[1:(p-1)], A[upper.tri(A)])
+  if (isTRUE(abs(sum(diag(A))) > 1E-8)) {
+    warning(
+      "Trace of A is not zero, final diagonal element of A will be altered."
+    )
+  }
+  theta <- c(diag(A)[1:(p - 1)], A[upper.tri(A)])
   return(theta)
 }
 
-Bingham_theta2Amat <- function(theta){
+Bingham_theta2Amat <- function(theta) {
   #length of theta is p-1 + (p - 1) * p/2 = p2/2 - p/2 + p - 1 = p2/2 + p/2 - 1
   # => 0 = p2/2 + p/2 - 1 - length
   # => 0 = p2 + p - 2(1+length)
   # => p = (-1 +/- sqrt(1 + 4 * 2 * (1+length))) / 2
-  p = (-1 + sqrt(1 + 4 * 2 * (1+length(theta)))) / 2  #the '-' alternative is always negative because sqrt(1 +epsilon) > 1
+  p = (-1 + sqrt(1 + 4 * 2 * (1 + length(theta)))) / 2 #the '-' alternative is always negative because sqrt(1 +epsilon) > 1
   A <- matrix(NA, ncol = p, nrow = p)
-  diag(A) <- c(theta[1:(p-1)], NA)
+  diag(A) <- c(theta[1:(p - 1)], NA)
   A[upper.tri(A)] <- theta[p:length(theta)]
   A[lower.tri(A)] <- t(A)[lower.tri(A)]
-  A[p,p] <- -sum(diag(A)[1:(p-1)]) #trace is 0 constraint
+  A[p, p] <- -sum(diag(A)[1:(p - 1)]) #trace is 0 constraint
   return(A)
 }
 
 # for use by `tape_uld_inbuilt()`
-Bingham_default_xtheta <- function(amdim, x, theta){
-  x <- switch(1+is.null(x), x, rep(1, amdim)/sqrt(amdim))
+Bingham_default_xtheta <- function(amdim, x, theta) {
+  x <- switch(1 + is.null(x), x, rep(1, amdim) / sqrt(amdim))
   A <- matrix(NA, nrow = amdim, ncol = amdim)
   intheta <- seq.int(1, length(Bingham_Amat2theta(A)))
-  theta <- switch(1+is.null(theta), theta, intheta)
+  theta <- switch(1 + is.null(theta), theta, intheta)
   return(list(x = x, theta = theta))
 }
-
-

@@ -19,17 +19,14 @@
 #'   paramvec_start = model$theta,
 #'   trans = "sqrt", bdryw = "minsq", acut = 0.1)
 #' @export
-ppi_robust <- function(Y, cW, ...){
+ppi_robust <- function(Y, cW, ...) {
   rlang::check_dots_used()
-  ldenfun <- function(Y, theta){ #here theta is the usual parameters of PPI model from
+  ldenfun <- function(Y, theta) {
+    #here theta is the usual parameters of PPI model from
     return(drop(dppi(Y, paramvec = theta)))
   }
 
-  est = Windham(Y = Y,
-                    estimator = ppi,
-                    ldenfun = ldenfun,
-                    cW = cW,
-                    ...)
+  est = Windham(Y = Y, estimator = ppi, ldenfun = ldenfun, cW = cW, ...)
 
   #make results nicer and consistent with ppi()
   out <- list(

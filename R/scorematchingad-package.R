@@ -19,9 +19,8 @@
 #' \insertNoCite{*}{scorematchingad}
 #' # Acknowledgements
 #' Colleagues Andrew T. A. Wood and John T. Kent played important roles in developing the statistical ideas and theory for score matching estimation for the PPI model \insertCite{scealy2024ro}{scorematchingad}.
-#' 
+#'
 #' We developed this package on Ngunnawal and Ngambri Country. We thank the Country for its influence.
 #' @references
 #' \insertAllCited{}
 "_PACKAGE"
-

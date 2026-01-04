@@ -56,7 +56,7 @@ The \code{microbiome} data was created from the file \code{S1_Table.xlsx} hosted
 \if{html}{\out{<div class="sourceCode">}}\preformatted{microbiome <- readxl::read_excel("S1_Table.xlsx",
   range = "A3:AE303") #avoids the genus data, keeping - only phyla
 metacolnames <- readxl::read_excel("S1_Table.xlsx",
-  range = "A2:J2", 
+  range = "A2:J2",
   col_names = FALSE)
 colnames(microbiome)[1:ncol(metacolnames)] <- metacolnames[1, ]
 colnames(microbiome)[2] <- "Year"

@@ -17,33 +17,38 @@
 #' @param A Optional. The Bingham matrix. If supplied the non-NA elements of the Bingham matrix are fixed.
 #' The final element of the diagonal of `A` must be NA as the software calculates this value to ensure the trace of the Bingham matrix is zero.
 #' @details
-#' The density of the Fisher-Bingham distribution is proportional to 
+#' The density of the Fisher-Bingham distribution is proportional to
 #' \deqn{\exp(z^TAz + \kappa\mu^Tz),}
 #' where \eqn{A} is a matrix as in the Bingham distribution, and
 #' \eqn{\kappa} and \eqn{\mu} are the concentration and mean direction, respectively, as in the von Mises-Fisher distribution.
-#' 
+#'
 #' # Warning: Slow Convergence with Sample Size
 #' Score matching estimates of all elements of \eqn{A} and \eqn{\kappa\mu} converge slowly with sample size.
 #' Even with a million simulated measurements,
 #'  the gradient of the score matching discrepancy at the true parameters can have size (L2 Euclidean norm) more than 0.001, which is substantially non-zero.
 #' @export
-FB <- function(Y, km = NULL, A = NULL){
+FB <- function(Y, km = NULL, A = NULL) {
   p <- ncol(Y)
-  if (is.null(A)){
+  if (is.null(A)) {
     A <- matrix(NA, nrow = p, ncol = p)
   }
   stopifnot(all(dim(A) == c(p, p)))
-  if (!is.na(A[p,p])){stop("The final diagonal element of matrix A cannot be fixed in this software. Please consider reordering your dimensions.")}
-  if (is.null(km)){
+  if (!is.na(A[p, p])) {
+    stop(
+      "The final diagonal element of matrix A cannot be fixed in this software. Please consider reordering your dimensions."
+    )
+  }
+  if (is.null(km)) {
     km <- rep(NA, p)
   }
 
   intheta <- FB_mats2theta(1, km, A)
 
-  tapes <- tape_smi(manifold = "sph",
-                    uld = tape_uld_inbuilt("FB", amdim = p),
-                    fixedparams = intheta)
-
+  tapes <- tape_smi(
+    manifold = "sph",
+    uld = tape_uld_inbuilt("FB", amdim = p),
+    fixedparams = intheta
+  )
 
   sminfo <- cppad_closed(tapes$smi, Y)
   theta <- intheta
@@ -53,9 +58,9 @@ FB <- function(Y, km = NULL, A = NULL){
   SE[is.na(intheta)] <- sminfo$SE
   SE <- FB_theta2mats(SE, isSE = TRUE)
   return(list(
-   est = c(thetamat, list(paramvec = theta)),
-   SE = c(SE, list(paramvec = sminfo$SE)),
-   info = sminfo
+    est = c(thetamat, list(paramvec = theta)),
+    SE = c(SE, list(paramvec = sminfo$SE)),
+    info = sminfo
   ))
 }
 #' @return
@@ -66,17 +71,17 @@ FB <- function(Y, km = NULL, A = NULL){
 
 # non-normalised density function
 #' @noRd
-qdFB <- function(u, k, m, A){
+qdFB <- function(u, k, m, A) {
   exp(u %*% A %*% u + k * m %*% u)
 }
 
-FB_mats2theta <- function(k, m, A){
+FB_mats2theta <- function(k, m, A) {
   Binghamtheta <- Bingham_Amat2theta(A)
   theta <- c(Binghamtheta, k * m)
   return(theta)
 }
 
-FB_theta2mats <- function(theta, isSE = FALSE){
+FB_theta2mats <- function(theta, isSE = FALSE) {
   #length of theta is:
   # l = p-1 + (p - 1) * p/2 + p
   # = p^2/2 + p * (1 - 1/2 + 1) - 1
@@ -87,16 +92,16 @@ FB_theta2mats <- function(theta, isSE = FALSE){
   #  = (-3 pm sqrt(9 + 8 + 8l)))/2
   #  = (-3 pm sqrt(17 + 8l)))/2
   # = (-3 + sqrt(17 + 8l)))/2  # because sqrt(17 + 8l) >= 3
-  p <- (-3 + sqrt(17 + 8 * length(theta)))/2
+  p <- (-3 + sqrt(17 + 8 * length(theta))) / 2
   A <- matrix(NA, ncol = p, nrow = p)
-  diag(A) <- c(theta[1:(p-1)], NA)
-  A[upper.tri(A)] <- theta[seq.int(p, length.out = (p - 1) * p/2)]
+  diag(A) <- c(theta[1:(p - 1)], NA)
+  A[upper.tri(A)] <- theta[seq.int(p, length.out = (p - 1) * p / 2)]
   A[lower.tri(A)] <- t(A)[lower.tri(A)]
-  km <- theta[seq.int(p-1 + (p - 1) * p/2 + 1, length.out = p)]
-  if (!isSE){
-    A[p,p] <- -sum(diag(A)[1:(p-1)]) #trace is 0 constraint
+  km <- theta[seq.int(p - 1 + (p - 1) * p / 2 + 1, length.out = p)]
+  if (!isSE) {
+    A[p, p] <- -sum(diag(A)[1:(p - 1)]) #trace is 0 constraint
     k <- sqrt(sum(km^2))
-    m <- km/k
+    m <- km / k
     return(list(
       k = k,
       m = m,
@@ -104,7 +109,7 @@ FB_theta2mats <- function(theta, isSE = FALSE){
       A = A
     ))
   } else {
-    A[p,p] <- NA #trace is 0 constraint
+    A[p, p] <- NA #trace is 0 constraint
     return(list(
       km = km,
       A = A
@@ -114,13 +119,11 @@ FB_theta2mats <- function(theta, isSE = FALSE){
 
 
 # for use by `tape_uld_inbuilt()`
-FB_default_xtheta <- function(amdim, x, theta){
-  x <- switch(1+is.null(x), x, rep(1, amdim)/sqrt(amdim))
+FB_default_xtheta <- function(amdim, x, theta) {
+  x <- switch(1 + is.null(x), x, rep(1, amdim) / sqrt(amdim))
   A <- matrix(NA, nrow = amdim, ncol = amdim)
   km <- rep(NA, amdim)
   intheta <- seq.int(1, length(FB_mats2theta(1, km, A)))
-  theta <- switch(1+is.null(theta), theta, intheta)
+  theta <- switch(1 + is.null(theta), theta, intheta)
   return(list(x = x, theta = theta))
 }
-
-

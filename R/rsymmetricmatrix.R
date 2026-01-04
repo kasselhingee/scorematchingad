@@ -9,7 +9,7 @@
 #' @examples
 #' rsymmetricmatrix(5)
 #' @export
-rsymmetricmatrix <- function(p, min = 0, max = 1){
+rsymmetricmatrix <- function(p, min = 0, max = 1) {
   A <- matrix(NA, ncol = p, nrow = p)
   A[upper.tri(A)] <- stats::runif(sum(upper.tri(A)), max = max, min = min)
   A[lower.tri(A)] <- t(A)[lower.tri(A)]

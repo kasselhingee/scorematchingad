@@ -7,14 +7,14 @@
 #' @description Objects of type `Rcpp_ADFun` contain a tape of a `C++` function (which has class `ADFun` in `CppAD`). These tapes are a record of operations performed by a function. Tapes can be evaluated and differentiated, and have properties (such as domain and range dimensions). Tapes also have dynamic parameters that can be updated. This class, `Rcpp_ADFun` uses reference semantics, so that copies all point to the same object and changes modify in place (i.e. changes modify the same object).
 #' Properties and methods of an `Rcpp_ADFun` object are accessed via `$`.
 #'
-#' @details 
+#' @details
 #' An object of class `Rcpp_ADFun` wraps an `ADFun` object from `CppAD`. Many of the properties and behaviour of an `Rcpp_ADFun` object come directly from `ADFun` objects so more details and context can be found by looking at the `ADFun` object help in the `CppAD` [`help`](https://cppad.readthedocs.io).
 #' The methods `eval()`, `Jac()` and `Hes()` have been added by `scorematchingad` as there were many cases where this seemed like an easier way to evaluate a tape.
-#' 
+#'
 #' Default printing of an `Rcpp_ADFun` object gives a short summary of the object, see [`print,Rcpp_ADFun`].
 #'
 #' Tapes cannot be saved from session to session.
-#' 
+#'
 #' # Methods - Tape Properties:
 #' + `$size_order` Number of Taylor coefficient orders, per variable and direction, currently calculated and stored in the object.
 #' + `$domain` Dimension of the domain space (i.e., length of the independent variables vector `x`).
@@ -49,12 +49,12 @@
 #'
 #' # Extends
 #' Extends class `C++Object` from the `Rcpp` package ([`Rcpp::C++Object-class`]), which is a `reference class`.
-#' For those familiar with `C++`, an object of class `Rcpp_ADFun` contains a pointer to a `CppAD` `ADFun` object. 
+#' For those familiar with `C++`, an object of class `Rcpp_ADFun` contains a pointer to a `CppAD` `ADFun` object.
 #'
 #' # Introduction to CppAD Tapes
 #' This package uses version 2024000.5 of the algorithmic differentiation library `CppAD` \insertCite{bell2023cp}{scorematchingad} to build score matching estimators.
 #' Full help for `CppAD` can be found at <https://cppad.readthedocs.io/>.
-#' 
+#'
 #' When using `CppAD` one first creates a *tape* of the basic (*atomic*) operations of a function.
 #' The atomic operations include multiplication, division, addition, sine, cosine, exponential and many more.
 #' These tapes can then be used for evaluating the function and its derivatives, and generating further tapes through argument swapping, differentiation and composition (see for example [`tape_swap()`] and [`tape_Jacobian()`]).
@@ -77,7 +77,7 @@
 #' + `Reverse()`
 #'
 #' @exportClass Rcpp_ADFun
-#' 
+#'
 #'
 #' @examples
 #' tape <- tape_uld_inbuilt("dirichlet", x = c(0.1, 0.4, 0.5), theta = c(-0.5, -0.4, -0.2))
@@ -85,7 +85,7 @@
 #' tape$eval(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
 #' tape$Jac(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5))
 #' matrix(tape$Hes(x = c(0.2, 0.3, 0.5), dyn = c(-0.1, -0.1, -0.5)), nrow = tape$domain)
-#' 
+#'
 #' # Properties
 #' tape$domain
 #' tape$range
@@ -106,8 +106,6 @@
 #' tape$Hessian0(x = c(0.2, 0.3, 0.5))
 #' tape$Hessianw(x = c(0.2, 0.3, 0.5), w = c(2))
 
-
 NULL
 
 Rcpp::loadModule("ADFun", TRUE)
-

@@ -17,8 +17,8 @@
 #' This tape has an independent variable \eqn{z} on `manifold`.
 #' If supplied, `fixedparams` is applied using [`fixdynamic()`].
 #' This tape is returned as `uld_reembed`.
-#' 
-#' This tape is then used to generate a tape for the score matching integrand where the parameters to estimate become the independent variable. 
+#'
+#' This tape is then used to generate a tape for the score matching integrand where the parameters to estimate become the independent variable.
 #' The dynamic parameters of the tape correspond to the original manifold (domain) of `uld`, which reflects the fact that the score matching integrand is altered by `transform`, not the model or data (the data is not transformed and the model is unchanged).
 #' This tape is returned as `smi`.
 #' @references \insertAllCited{}
@@ -29,17 +29,17 @@
 #'   + an [`Rcpp_ADFun`] object containing a tape of the score matching integrand with the non-fixed parameters of the model as the independent variable, and the measurements on the `end` manifold as the dynamic parameter.
 #'   + some information about the tapes
 #'
-#' 
+#'
 #' @examples
 #' p <- 3
-#' tapes <- tape_smi(manifold = "sph", 
+#' tapes <- tape_smi(manifold = "sph",
 #'                   uld = "vMF",
 #'                   xtape = rep(1/sqrt(p), p),
 #'                   fixedparams = rep(NA, p),
 #'                   )
 #' evaltape(tapes$uld_reembed, rep(1/sqrt(p), p), runif(n = p))
 #' evaltape(tapes$smi, runif(n = p), rep(1/sqrt(p), p))
-#' 
+#'
 #' u <- rep(1/3, 3)
 #' tapes <- tape_smi(manifold = "sph",
 #'               uld = "ppi",
@@ -51,31 +51,47 @@
 #' evaltape(tapes$uld_reembed, sqrt(u), rppi_egmodel(1)$theta)
 #' evaltape(tapes$smi, rppi_egmodel(1)$theta, u)
 #' @export
-tape_smi <- function(manifold,
-                     uld,
-                     transform = "none",
-                     xtape = uld$xtape,
-                     fixedparams = NA_real_*uld$dyntape,
-                     bdryw = "ones",
-                     dynparam_filler = NULL,
-                     verbose = FALSE) {
+tape_smi <- function(
+  manifold,
+  uld,
+  transform = "none",
+  xtape = uld$xtape,
+  fixedparams = NA_real_ * uld$dyntape,
+  bdryw = "ones",
+  dynparam_filler = NULL,
+  verbose = FALSE
+) {
   # if manifold a name, build manifold here
-  if (is.character(manifold)){manifold <- make_manifold(manifold)}
+  if (is.character(manifold)) {
+    manifold <- make_manifold(manifold)
+  }
   stopifnot(inherits(manifold, "Rcpp_man_ad"))
 
   # prepare uld
-  if (all(!is.na(fixedparams))){stop("No elements of fixedparams are NA so no parameters will be estimated by this score matching.")}
-  if (is.character(uld)){ #if uld is a name, build uld using xtape, fixedparams, and dynparam_filler
+  if (all(!is.na(fixedparams))) {
+    stop(
+      "No elements of fixedparams are NA so no parameters will be estimated by this score matching."
+    )
+  }
+  if (is.character(uld)) {
+    #if uld is a name, build uld using xtape, fixedparams, and dynparam_filler
     stopifnot(is.numeric(xtape))
     stopifnot(length(xtape) > 0)
     stopifnot(length(fixedparams) > 0) #score matching doesnt make sense if no parameters to optimise
-    if (is.null(dynparam_filler)){dynparam_filler <- function(n){seq(length.out = n)}}
-    uld <- tape_uld_inbuilt(uld, 
-              x = xtape, 
-              theta = t_u2s(fixedparams, filler = dynparam_filler))
-  } else { #else just fix parameters of passed uld using fiexdparams and dynparam_filler
+    if (is.null(dynparam_filler)) {
+      dynparam_filler <- function(n) {
+        seq(length.out = n)
+      }
+    }
+    uld <- tape_uld_inbuilt(
+      uld,
+      x = xtape,
+      theta = t_u2s(fixedparams, filler = dynparam_filler)
+    )
+  } else {
+    #else just fix parameters of passed uld using fiexdparams and dynparam_filler
     stopifnot(inherits(uld, "Rcpp_ADFun"))
-    if (is.null(dynparam_filler)){
+    if (is.null(dynparam_filler)) {
       theta <- fixedparams
       theta[!t_u2i(fixedparams)] <- uld$dyntape[!t_u2i(fixedparams)]
     } else {
@@ -89,18 +105,20 @@ tape_smi <- function(manifold,
   uld <- reembed(uld, tran = transform) #change the underlying metric of the manifold by using a different isometric embedding
 
   # choose between a canned boundary weight function or a custom boundary weight function
-  if (is.character(bdryw)){ 
+  if (is.character(bdryw)) {
     bdryw <- tape_bdryw_inbuilt(bdryw, x = uld$xtape, acut = 0.2) #0.2 chosen as default for the 20% discussed around
-  } else if (!inherits(bdryw, "Rcpp_ADFun")){
+  } else if (!inherits(bdryw, "Rcpp_ADFun")) {
     stop("bdryw must be a name or a taped boundary weight function")
   }
 
   # combine everything for a full smi tape
-  smitape <- tapesmd(uldtape = uld,
-                        tran = transform,
-                        M = manifold,
-                        bdrywtape = bdryw,
-                        verbose = verbose)
+  smitape <- tapesmd(
+    uldtape = uld,
+    tran = transform,
+    M = manifold,
+    bdrywtape = bdryw,
+    verbose = verbose
+  )
   return(list(
     uld_reembed = uld,
     smi = smitape,
@@ -111,5 +129,3 @@ tape_smi <- function(manifold,
     )
   ))
 }
-
-

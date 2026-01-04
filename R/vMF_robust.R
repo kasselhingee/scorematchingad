@@ -16,13 +16,13 @@
 #' vMF_robust(Y, cW = c(0.01, 0.01), method = "smfull")
 #' vMF_robust(Y, cW = c(0.01, 0.01), method = "Mardia")
 #' @export
-vMF_robust <- function(Y, cW, ...){
+vMF_robust <- function(Y, cW, ...) {
   rlang::check_dots_used()
   extraargs <- list(...)
 
   # user friendly cW
-  if (length(cW) == 1){
-    if (!is.null(extraargs$paramvec)){
+  if (length(cW) == 1) {
+    if (!is.null(extraargs$paramvec)) {
       isfixed = t_u2i(extraargs$paramvec)
       cW <- cW * !isfixed
     } else {
@@ -30,15 +30,11 @@ vMF_robust <- function(Y, cW, ...){
     }
   }
 
-
-  ldenfun <- function(Y, theta){ #here theta is km
+  ldenfun <- function(Y, theta) {
+    #here theta is km
     return(drop(Y %*% theta))
   }
-  est <- Windham(Y = Y,
-                     estimator = vMF,
-                     ldenfun = ldenfun,
-                     cW = cW,
-                     ...)
+  est <- Windham(Y = Y, estimator = vMF, ldenfun = ldenfun, cW = cW, ...)
   out <- list(
     est = c(list(paramvec = est$paramvec), vMF_fromparamvec(est$paramvec)),
     SE = "Not calculated.",
@@ -47,18 +43,15 @@ vMF_robust <- function(Y, cW, ...){
   return(out)
 }
 
-vMF_kappa_robust <- function(Y, cW, ...){
+vMF_kappa_robust <- function(Y, cW, ...) {
   extraargs <- list(...)
   Y <- vMF_stdY(Y, w = extraargs$w)
   rlang::check_dots_used()
-  ldenfun <- function(Y, theta){ #here theta is k and m is c(1, 0, ...)
+  ldenfun <- function(Y, theta) {
+    #here theta is k and m is c(1, 0, ...)
     return(drop(theta * Y[, 1]))
   }
-  est <- Windham(Y = Y,
-                     estimator = vMF_kappa,
-                     ldenfun = ldenfun,
-                     cW = cW,
-                     ...)
+  est <- Windham(Y = Y, estimator = vMF_kappa, ldenfun = ldenfun, cW = cW, ...)
   out <- list(
     est = list(paramvec = est$paramvec, k = est$paramvec),
     SE = "Not calculated.",

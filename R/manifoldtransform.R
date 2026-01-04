@@ -20,22 +20,28 @@
 #' ```
 NULL
 
-make_manifold <- function(name, param1 = 0, param2 = 0){
+make_manifold <- function(name, param1 = 0, param2 = 0) {
   out <- methods::new(man_ad, name, param1, param2)
   return(out)
 }
 
-make_transform <- function(name = "identity"){
-  if (name == "none"){name <- "identity"}
+make_transform <- function(name = "identity") {
+  if (name == "none") {
+    name <- "identity"
+  }
   out <- methods::new(transform_ad, name)
   return(out)
 }
 
-manifoldtransform <- function(start, tran = "identity", end = start){
-  if (tran == "none"){tran <- "identity"}
+manifoldtransform <- function(start, tran = "identity", end = start) {
+  if (tran == "none") {
+    tran <- "identity"
+  }
   stopifnot(paste(start, tran, end, sep = "-") %in% mantrancombos)
-  out <- list(tran = methods::new(transform_ad, tran),
-       man = methods::new(man_ad, end, 0, 0))
+  out <- list(
+    tran = methods::new(transform_ad, tran),
+    man = methods::new(man_ad, end, 0, 0)
+  )
   return(out)
 }
 
@@ -52,4 +58,3 @@ mantrancombos <- c(
   "sph-identity-sph",
   "Euc-identity-Euc"
 )
-

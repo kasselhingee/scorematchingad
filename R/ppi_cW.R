@@ -12,15 +12,17 @@
 #' \insertCite{scealy2024ro;textual}{scorematchingad} set the remaining tuning exponents to a constant.
 #' @references \insertAllCited{}
 #' @export
-ppi_cW <- function(cW, ...){
+ppi_cW <- function(cW, ...) {
   rlang::check_dots_used()
   bools <- unlist(list(...))
   bools <- as.logical(bools)
-  if (any(is.na(bools))){stop("An argument after 'cW' is neither TRUE nor FALSE")}
+  if (any(is.na(bools))) {
+    stop("An argument after 'cW' is neither TRUE nor FALSE")
+  }
   #if (tail(bools, 1)){stop("The final component must be set to FALSE")}
 
-  p <- length(bools) 
-  ALs_ww <- matrix(0, p-1, p-1)
+  p <- length(bools)
+  ALs_ww <- matrix(0, p - 1, p - 1)
   ALs_ww[bools[-p], bools[-p]] <- 1
   inWW <- ppi_paramvec(p, AL = ALs_ww, bL = bools[-p], beta = FALSE)
 
@@ -36,12 +38,13 @@ ppi_cW <- function(cW, ...){
 #' ppi_cW_auto(0.01, Y)
 #' ppi_cW(0.01, TRUE, TRUE, FALSE)
 #' @export
-ppi_cW_auto <- function(cW, Y){
-  anest <- ppi(Y = Y, paramvec = ppi_paramvec(p = ncol(Y), AL=0, bL=0),
-    trans = "clr")
+ppi_cW_auto <- function(cW, Y) {
+  anest <- ppi(
+    Y = Y,
+    paramvec = ppi_paramvec(p = ncol(Y), AL = 0, bL = 0),
+    trans = "clr"
+  )
   betaest <- anest$est$beta
   cW <- do.call(ppi_cW, c(list(cW = cW), as.list(betaest < 0)))
   return(cW)
 }
-
-

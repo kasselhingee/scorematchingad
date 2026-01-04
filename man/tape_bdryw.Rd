@@ -79,7 +79,7 @@ for(size_t i=0;i<x.size();i++){
   minval = CppAD::CondExpLe(xsq[i], minval, xsq[i], minval);
 }
 return(minval);
-}", 
+}",
    rep(0.2, 5))
 out$fun(c(0.01, 0.2, 0.2, 0.2, 0.2))
 out$tape$forward(0, c(0.1, 0.2, 0.2, 0.2, 0.2))
